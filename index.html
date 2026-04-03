@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Swiper.js CSS -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <style>
@@ -151,41 +153,46 @@
 
         <!-- Hero Content -->
         <div class="z-20 p-5">
-            <h1 class="text-4xl font-bold md:text-6xl">SMA Negeri 1 Nogosari</h1>
-            <p class="mt-4 text-lg opacity-90 md:text-xl -mt-2">Mencetak Generasi Unggul, Berkarakter, dan Berwawasan Global</p>
+            <h1 class="text-2xl sm:text-4xl font-bold md:text-6xl">SMA Negeri 1 Nogosari</h1>
+            <p class="mt-4 text-md sm:text-lg opacity-90 md:text-xl -mt-2 text-center">
+                <span class="inline-flex items-center justify-center ">
+                    <i data-lucide="quote" class="w-5 h-5 mr-2 hidden sm:block"></i>
+                    Mencetak Generasi Unggul, Berkarakter, dan Berwawasan Global
+                </span>
+            </p>
             <div class="w-full max-w-96 sm:max-w-2xl  mx-auto mt-12 overflow-hidden bg-white/15 backdrop-blur-sm rounded-lg shadow-lg border border-white/20">
                 <div class="p-4 stats-swiper">
-                    <div class="swiper-wrapper">
+                    <div class="swiper-wrapper text-lg sm:text-2xl">
                         <div class="text-center swiper-slide">
-                            <h3 class="text-2xl font-bold text-white">A</h3>
+                            <h3 class="font-bold text-white">A</h3>
                             <p class="mt-1 text-xs font-semibold uppercase text-white/80">Akreditasi</p>
                         </div>
                         <div class="text-center swiper-slide">
-                            <h3 class="text-2xl font-bold text-white">1100+</h3>
+                            <h3 class="font-bold text-white">1100+</h3>
                             <p class="mt-1 text-xs font-semibold uppercase text-white/80">Jumlah Siswa</p>
                         </div>
                         <div class="text-center swiper-slide">
-                            <h3 class="text-2xl font-bold text-white">75</h3>
+                            <h3 class="font-bold text-white">75</h3>
                             <p class="mt-1 text-xs font-semibold uppercase text-white/80">Tenaga Pendidik</p>
                         </div>
                         <div class="text-center swiper-slide">
-                            <h3 class="text-2xl font-bold text-white">20+</h3>
+                            <h3 class="font-bold text-white">20+</h3>
                             <p class="mt-1 text-xs font-semibold uppercase text-white/80">Ekstrakurikuler</p>
                         </div>
                         <div class="text-center swiper-slide">
-                            <h3 class="text-2xl font-bold text-white">32</h3>
+                            <h3 class="font-bold text-white">32</h3>
                             <p class="mt-1 text-xs font-semibold uppercase text-white/80">Ruang Kelas</p>
                         </div>
                         <div class="text-center swiper-slide">
-                            <h3 class="text-2xl font-bold text-white">5</h3>
+                            <h3 class="font-bold text-white">5</h3>
                             <p class="mt-1 text-xs font-semibold uppercase text-white/80">Laboratorium</p>
                         </div>
                         <div class="text-center swiper-slide">
-                            <h3 class="text-2xl font-bold text-white">10k+</h3>
+                            <h3 class="font-bold text-white">10k+</h3>
                             <p class="mt-1 text-xs font-semibold uppercase text-white/80">Koleksi Buku</p>
                         </div>
                         <div class="text-center swiper-slide">
-                            <h3 class="text-2xl font-bold text-white">50+</h3>
+                            <h3 class="font-bold text-white">50+</h3>
                             <p class="mt-1 text-xs font-semibold uppercase text-white/80">Prestasi</p>
                         </div>
                     </div>
@@ -276,6 +283,7 @@
                             },
                         }
                     });
+                    lucide.createIcons(); // Initialize Lucide icons
 
                     window.addEventListener('scroll', handleScroll);
                     handleScroll(); // Set initial state
