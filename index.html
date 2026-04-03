@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,16 +16,21 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <style>
         /* Custom Font */
-        body { font-family: 'Poppins', sans-serif; }
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
         /* Styling untuk Swiper agar terlihat jelas */
         .swiper-pagination-bullet-active {
             background-color: #ffffff !important;
         }
+
         .swiper-pagination-bullet {
             background-color: rgba(255, 255, 255, 0.5) !important;
         }
     </style>
 </head>
+
 <body class="bg-gray-50" id="app">
 
     <!-- Header Section -->
@@ -33,18 +39,23 @@
         <nav id="navbar" class="fixed top-0 left-0 z-50 w-full px-6 py-4 transition-all duration-300 ease-in-out">
             <div class="container flex items-center justify-between max-w-6xl mx-auto">
                 <a href="#" class="text-2xl font-bold">SMAN 1 Nogosari</a>
-                
+
                 <!-- Desktop Menu -->
                 <div class="hidden items-center space-x-2 md:flex">
                     <a href="#" class="rounded-md px-3 py-2 hover:bg-blue-500/10 hover:text-blue-300">Beranda</a>
-                    
+
                     <!-- Profil Dropdown -->
                     <div class="group relative">
                         <button class="flex items-center rounded-md px-3 py-2 hover:bg-blue-500/10 hover:text-blue-300">
                             <span>Profil</span>
-                            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
                         </button>
-                        <div class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white py-2 text-gray-800 shadow-lg group-hover:block">
+                        <div
+                            class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white py-2 text-gray-800 shadow-lg group-hover:block">
                             <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Sejarah Sekolah</a>
                             <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Visi & Misi</a>
                             <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Struktur Organisasi</a>
@@ -58,9 +69,14 @@
                     <div class="group relative">
                         <button class="flex items-center rounded-md px-3 py-2 hover:bg-blue-500/10 hover:text-blue-300">
                             <span>Akademik</span>
-                            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
                         </button>
-                        <div class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white py-2 text-gray-800 shadow-lg group-hover:block">
+                        <div
+                            class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white py-2 text-gray-800 shadow-lg group-hover:block">
                             <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Kurikulum</a>
                             <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Program Jurusan</a>
                             <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Ekstrakurikuler</a>
@@ -71,44 +87,55 @@
 
                     <a href="#" class="rounded-md px-3 py-2 hover:bg-blue-500/10 hover:text-blue-300">Kontak</a>
                 </div>
-                
+
                 <div class="hidden items-center md:flex">
-                    <a href="#" class="rounded-full bg-blue-600 px-5 py-2 font-semibold text-white transition-colors hover:bg-blue-700">Pendaftaran</a>
+                    <a href="#"
+                        class="rounded-full bg-blue-600 px-5 py-2 font-semibold text-white transition-colors hover:bg-blue-700">Pendaftaran</a>
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <div class="md:hidden" >
-                    <button @click="toggleMobileMenu" :class="{'text-gray-800': isNavbarScrolled, 'text-white': !isNavbarScrolled}" class="focus:outline-none">
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                <div class="md:hidden">
+                    <button @click="toggleMobileMenu"
+                        :class="{'text-gray-800': isNavbarScrolled, 'text-white': !isNavbarScrolled}"
+                        class="focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
                     </button>
                 </div>
             </div>
 
             <!-- Mobile Menu -->
-            <div 
-                :class="{ 
+            <div :class="{ 
                     'max-h-screen opacity-100': isMobileMenuOpen, 
                     'max-h-0 opacity-0': !isMobileMenuOpen 
-                }"
-                class="md:hidden overflow-hidden transition-all duration-300 ease-in-out">
+                }" class="md:hidden overflow-hidden transition-all duration-300 ease-in-out">
                 <div class="mt-4 space-y-1 rounded-lg bg-white p-4 text-gray-800 shadow-xl">
                     <a href="#" class="block rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200">Beranda</a>
-                    
+
                     <!-- Mobile Profil Dropdown -->
                     <div>
-                        <button class="mobile-dropdown-toggle flex w-full items-center justify-between rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200">
+                        <button
+                            class="mobile-dropdown-toggle flex w-full items-center justify-between rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200">
                             <span>Profil</span>
-                            <svg @click.stop="toggleMobileDropdown('profil')" :class="{'rotate-180': mobileDropdowns.profil}" class="h-5 w-5 transform transition-transform duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg @click.stop="toggleMobileDropdown('profil')"
+                                :class="{'rotate-180': mobileDropdowns.profil}"
+                                class="h-5 w-5 transform transition-transform duration-300 ease-in-out" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
                         </button>
-                        <div 
-                            :class="{ 
+                        <div :class="{ 
                                 'max-h-screen': mobileDropdowns.profil, 
                                 'max-h-0': !mobileDropdowns.profil 
-                            }"
-                            class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4">
+                            }" class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4">
                             <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Sejarah Sekolah</a>
                             <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Visi & Misi</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Struktur Organisasi</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Struktur
+                                Organisasi</a>
                             <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Guru & Staf</a>
                             <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Fasilitas</a>
                             <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Akreditasi</a>
@@ -117,26 +144,33 @@
 
                     <!-- Mobile Akademik Dropdown -->
                     <div>
-                        <button class="mobile-dropdown-toggle flex w-full items-center justify-between rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200">
+                        <button
+                            class="mobile-dropdown-toggle flex w-full items-center justify-between rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200">
                             <span>Akademik</span>
-                            <svg @click.stop="toggleMobileDropdown('akademik')" :class="{'rotate-180': mobileDropdowns.akademik}" class="h-5 w-5 transform transition-transform duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg @click.stop="toggleMobileDropdown('akademik')"
+                                :class="{'rotate-180': mobileDropdowns.akademik}"
+                                class="h-5 w-5 transform transition-transform duration-300 ease-in-out" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
                         </button>
-                        <div 
-                            :class="{ 
+                        <div :class="{ 
                                 'max-h-screen': mobileDropdowns.akademik, 
                                 'max-h-0': !mobileDropdowns.akademik 
-                            }"
-                            class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4">
+                            }" class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4">
                             <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Kurikulum</a>
                             <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Program Jurusan</a>
                             <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Ekstrakurikuler</a>
                             <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Prestasi</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Kalender Akademik</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Kalender
+                                Akademik</a>
                         </div>
                     </div>
 
                     <a href="#" class="block rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200">Kontak</a>
-                    <a href="#" class="mt-2 block w-auto mx-auto rounded-md bg-blue-600 px-5 py-2 text-center font-semibold text-white transition-colors hover:bg-blue-700">Pendaftaran</a>
+                    <a href="#"
+                        class="mt-2 block w-auto mx-auto rounded-md bg-blue-600 px-5 py-2 text-center font-semibold text-white transition-colors hover:bg-blue-700">Pendaftaran</a>
                 </div>
             </div>
         </nav>
@@ -144,8 +178,12 @@
         <!-- Swiper Carousel Background -->
         <div class="absolute top-0 left-0 w-full h-full swiper-container -z-10">
             <div class="swiper-wrapper">
-                <div class="swiper-slide bg-cover bg-center" style="background-image: linear-gradient(rgba(0, 18, 32, 0.7), rgba(0, 18, 32, 0.7)), url('./img/banner2.jpeg');"></div>
-                <div class="swiper-slide bg-cover bg-center" style="background-image: linear-gradient(rgba(0, 18, 32, 0.7), rgba(0, 18, 32, 0.7)), url('./img/banner1.jpg');"></div>
+                <div class="swiper-slide bg-cover bg-center"
+                    style="background-image: linear-gradient(rgba(0, 18, 32, 0.7), rgba(0, 18, 32, 0.7)), url('./img/banner2.jpeg');">
+                </div>
+                <div class="swiper-slide bg-cover bg-center"
+                    style="background-image: linear-gradient(rgba(0, 18, 32, 0.7), rgba(0, 18, 32, 0.7)), url('./img/banner1.jpg');">
+                </div>
             </div>
             <!-- Swiper Controls -->
             <div class="swiper-pagination"></div>
@@ -160,7 +198,8 @@
                     Mencetak Generasi Unggul, Berkarakter, dan Berwawasan Global
                 </span>
             </p>
-            <div class="w-full max-w-96 sm:max-w-2xl  mx-auto mt-12 overflow-hidden bg-white/15 backdrop-blur-sm rounded-lg shadow-lg border border-white/20">
+            <div
+                class="w-full max-w-96 sm:max-w-2xl  mx-auto mt-12 overflow-hidden bg-white/15 backdrop-blur-sm rounded-lg shadow-lg border border-white/20">
                 <div class="p-4 stats-swiper">
                     <div class="swiper-wrapper text-lg sm:text-2xl">
                         <div class="text-center swiper-slide">
@@ -201,16 +240,120 @@
         </div>
 
         <!-- SVG Wave Divider -->
-        <div class="absolute bottom-0 left-0 z-10 w-full leading-none pointer-events-none">
+        <!-- <div class="absolute bottom-0 left-0 z-10 w-full leading-none pointer-events-none">
             <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0,224L48,213.3C96,203,192,181,288,186.7C384,192,480,224,576,240C672,256,768,256,864,234.7C960,213,1056,171,1152,154.7C1248,139,1344,149,1392,154.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" fill="#f9fafb" fill-opacity="1"></path>
+                <path
+                    d="M0,224L48,213.3C96,203,192,181,288,186.7C384,192,480,224,576,240C672,256,768,256,864,234.7C960,213,1056,171,1152,154.7C1248,139,1344,149,1392,154.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+                    fill="#f9fafb" fill-opacity="1"></path>
             </svg>
-        </div>
+        </div> -->
     </header>
 
     <!-- Main Content -->
-    <main class="px-6 py-10 pt-20">
-       
+    <main class="px-6 py-10 pt-20 bg-gray-50">
+        <!-- Jurusan Section -->
+        <section class="relative -my-12 bg-gray-50 overflow-hidden">
+            <div class="container mx-auto px-4">
+
+                <!-- HEADER -->
+                <div class="relative rounded-2xl overflow-hidden shadow-2xl min-h-[450px] flex items-center">
+
+                    <div class="absolute inset-0">
+                        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop"
+                            class="w-full h-full object-cover scale-110 blur-sm" />
+                    </div>
+
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40"></div>
+
+                    <div class="relative z-10 px-8 md:px-14 max-w-2xl text-white">
+                        <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                            Pilihan Jurusan Unggulan
+                        </h2>
+                        <p class="text-lg md:text-xl text-gray-200">
+                            Temukan minat dan bakatmu dengan pilihan jurusan terbaik untuk masa depanmu.
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- CARD JURUSAN -->
+                <div class="relative z-20 mt-[-100px]">
+
+                    <!-- dibuat 80% dari header -->
+                    <div class="max-w-[90%] mx-auto">
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-0 rounded-2xl overflow-hidden shadow-xl">
+
+                            <!-- IPA -->
+                            <div class="relative min-h-[200px] md:min-h-[220px] overflow-hidden border border-white/10">
+
+                                <div class="absolute inset-0">
+                                    <img src="https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=1200&auto=format&fit=crop"
+                                        class="w-full h-full object-cover blur-md scale-110" />
+                                </div>
+
+                                <div class="absolute inset-0 bg-gradient-to-br from-blue-900/80 to-black/70"></div>
+
+                                <!-- TEXT DI ATAS -->
+                                <div class="relative z-10 p-6 text-white flex flex-col justify-start h-full">
+                                    <h3 class="text-2xl font-bold mb-2">IPA</h3>
+                                    <p class="text-gray-200 text-md">
+                                        Fokus pada sains seperti fisika, kimia, dan biologi untuk membuka peluang di
+                                        bidang teknologi.
+                                    </p>
+                                </div>
+
+                            </div>
+
+
+                            <!-- IPS -->
+                            <div class="relative min-h-[200px] md:min-h-[220px] overflow-hidden border border-white/10">
+
+                                <div class="absolute inset-0">
+                                    <img src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=1200&auto=format&fit=crop"
+                                        class="w-full h-full object-cover blur-md scale-110" />
+                                </div>
+
+                                <div class="absolute inset-0 bg-gradient-to-br from-green-900/80 to-black/70"></div>
+
+                                <div class="relative z-10 p-6 text-white flex flex-col justify-start h-full">
+                                    <h3 class="text-2xl font-bold mb-2">IPS</h3>
+                                    <p class="text-gray-200 text-md">
+                                        Mempelajari ekonomi, sejarah, dan geografi untuk memahami masyarakat dan dunia.
+                                    </p>
+                                </div>
+
+                            </div>
+
+
+                            <!-- BAHASA -->
+                            <div class="relative min-h-[200px] md:min-h-[220px] overflow-hidden border border-white/10">
+
+                                <div class="absolute inset-0">
+                                    <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1200&auto=format&fit=crop"
+                                        class="w-full h-full object-cover blur-md scale-110" />
+                                </div>
+
+                                <div class="absolute inset-0 bg-gradient-to-br from-purple-900/80 to-black/70"></div>
+
+                                <div class="relative z-10 p-6 text-white flex flex-col justify-start h-full">
+                                    <h3 class="text-2xl font-bold mb-2">Bahasa</h3>
+                                    <p class="text-gray-200 text-md">
+                                        Mendalami bahasa dan budaya untuk peluang di bidang komunikasi dan pariwisata.
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
     </main>
 
     <!-- Swiper.js & Custom Scripts -->
@@ -304,4 +447,5 @@
         }).mount('#app');
     </script>
 </body>
+
 </html>
