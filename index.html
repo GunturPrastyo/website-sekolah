@@ -26,23 +26,106 @@
 <body class="bg-gray-50 font-sans">
 
     <!-- Header Section -->
-    <header class="relative flex flex-col items-center justify-center min-h-screen h-64 text-center text-white">
+    <header class="relative flex flex-col items-center justify-center h-[70vh] md:h-screen text-center text-white">
         <!-- Navbar -->
-        <nav id="navbar" class="fixed top-0 left-0 z-50 w-full px-6 py-4 transition-all duration-300">
+        <nav id="navbar" class="fixed top-0 left-0 z-50 w-full px-6 py-4 transition-all duration-300 ease-in-out">
             <div class="container flex items-center justify-between max-w-6xl mx-auto">
                 <a href="#" class="text-2xl font-bold">SMAN 1 Nogosari</a>
-                <div class="hidden space-x-8 md:flex">
-                    <a href="#" class="hover:text-blue-300">Beranda</a>
-                    <a href="#" class="hover:text-blue-300">Profil</a>
-                    <a href="#" class="hover:text-blue-300">Akademik</a>
-                    <a href="#" class="hover:text-blue-300">Kontak</a>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden items-center space-x-2 md:flex">
+                    <a href="#" class="rounded-md px-3 py-2 hover:bg-blue-500/10 hover:text-blue-300">Beranda</a>
+                    
+                    <!-- Profil Dropdown -->
+                    <div class="group relative">
+                        <button class="flex items-center rounded-md px-3 py-2 hover:bg-blue-500/10 hover:text-blue-300">
+                            <span>Profil</span>
+                            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white py-2 text-gray-800 shadow-lg group-hover:block">
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Sejarah Sekolah</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Visi & Misi</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Struktur Organisasi</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Guru & Staf</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Fasilitas</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Akreditasi</a>
+                        </div>
+                    </div>
+
+                    <!-- Akademik Dropdown -->
+                    <div class="group relative">
+                        <button class="flex items-center rounded-md px-3 py-2 hover:bg-blue-500/10 hover:text-blue-300">
+                            <span>Akademik</span>
+                            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white py-2 text-gray-800 shadow-lg group-hover:block">
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Kurikulum</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Program Jurusan</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Ekstrakurikuler</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Prestasi</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Kalender Akademik</a>
+                        </div>
+                    </div>
+
+                    <a href="#" class="rounded-md px-3 py-2 hover:bg-blue-500/10 hover:text-blue-300">Kontak</a>
                 </div>
-                <a href="#" class="hidden px-5 py-2 font-semibold text-white transition-colors bg-blue-600 rounded-full md:block hover:bg-blue-700">Pendaftaran</a>
+                
+                <div class="hidden items-center md:flex">
+                    <a href="#" class="rounded-full bg-blue-600 px-5 py-2 font-semibold text-white transition-colors hover:bg-blue-700">Pendaftaran</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="menu-btn" class="focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                <div class="mt-4 space-y-1 rounded-lg bg-white p-4 text-gray-800 shadow-xl">
+                    <a href="#" class="block rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200">Beranda</a>
+                    
+                    <!-- Mobile Profil Dropdown -->
+                    <div>
+                        <button class="mobile-dropdown-toggle flex w-full items-center justify-between rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200">
+                            <span>Profil</span>
+                            <svg class="h-5 w-5 transform transition-transform duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="mt-1 max-h-0 overflow-hidden transition-all duration-300 ease-in-out pl-4">
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Sejarah Sekolah</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Visi & Misi</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Struktur Organisasi</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Guru & Staf</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Fasilitas</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Akreditasi</a>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Akademik Dropdown -->
+                    <div>
+                        <button class="mobile-dropdown-toggle flex w-full items-center justify-between rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200">
+                            <span>Akademik</span>
+                            <svg class="h-5 w-5 transform transition-transform duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="mt-1 max-h-0 overflow-hidden transition-all duration-300 ease-in-out pl-4">
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Kurikulum</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Program Jurusan</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Ekstrakurikuler</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Prestasi</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Kalender Akademik</a>
+                        </div>
+                    </div>
+
+                    <a href="#" class="block rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200">Kontak</a>
+                    <a href="#" class="mt-2 block w-auto mx-auto rounded-md bg-blue-600 px-5 py-2 text-center font-semibold text-white transition-colors hover:bg-blue-700">Pendaftaran</a>
+                </div>
             </div>
         </nav>
 
         <!-- Swiper Carousel Background -->
-        <div class="absolute top-0 left-0 w-full h-full swiper-container">
+        <div class="absolute top-0 left-0 w-full h-full swiper-container -z-10">
             <div class="swiper-wrapper">
                 <div class="swiper-slide bg-cover bg-center" style="background-image: linear-gradient(rgba(0, 18, 32, 0.7), rgba(0, 18, 32, 0.7)), url('./img/banner2.jpeg');"></div>
                 <div class="swiper-slide bg-cover bg-center" style="background-image: linear-gradient(rgba(0, 18, 32, 0.7), rgba(0, 18, 32, 0.7)), url('./img/banner1.jpg');"></div>
@@ -147,15 +230,44 @@
         });
 
         // Navbar Scroll Effect
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
+            const menuBtn = document.getElementById('menu-btn');
             if (window.scrollY > 50) {
                 navbar.classList.add('bg-white', 'shadow-md', 'text-gray-800');
                 navbar.classList.remove('text-white');
+                menuBtn.classList.add('text-gray-800');
+                menuBtn.classList.remove('text-white');
             } else {
                 navbar.classList.remove('bg-white', 'shadow-md', 'text-gray-800');
                 navbar.classList.add('text-white');
+                menuBtn.classList.add('text-white');
+                menuBtn.classList.remove('text-gray-800');
             }
+        });
+
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('max-h-0');
+            mobileMenu.classList.toggle('max-h-screen');
+            mobileMenu.classList.toggle('opacity-0');
+            mobileMenu.classList.toggle('opacity-100');
+        });
+
+        // Mobile Dropdown Toggle
+        const dropdownToggles = document.querySelectorAll('.mobile-dropdown-toggle');
+        dropdownToggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const dropdownContent = toggle.nextElementSibling;
+                const icon = toggle.querySelector('svg');
+                
+                dropdownContent.classList.toggle('max-h-0');
+                dropdownContent.classList.toggle('max-h-screen');
+                icon.classList.toggle('rotate-180'); // Rotate the arrow icon
+            });
         });
     </script>
 </body>
