@@ -28,6 +28,29 @@
         .swiper-pagination-bullet {
             background-color: rgba(255, 255, 255, 0.5) !important;
         }
+
+        /* Custom styling for Jurusan Swiper pagination */
+        .jurusan-pagination .swiper-pagination-bullet {
+            background-color: rgba(0, 0, 0, 0.3) !important; /* Lighter base for contrast */
+            transition: all 0.3s ease;
+        }
+
+        .jurusan-pagination .swiper-pagination-bullet-active {
+            background-color: #000000 !important; /* Darker for light background */
+            width: 24px !important; /* Make it longer */
+            border-radius: 6px !important; /* Rounded ends */
+        }
+
+        /* Ensure desktop grid layout for cards */
+        @media (min-width: 768px) {
+            .jurusan-swiper .swiper-wrapper {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+            .jurusan-swiper .swiper-slide {
+                width: auto !important; /* Allow grid to size slides */
+            }
+        }
     </style>
 </head>
 
@@ -252,19 +275,16 @@
     <!-- Main Content -->
     <main class="px-6 py-10 pt-20 bg-gray-50">
         <!-- Jurusan Section -->
-        <section class="relative -my-12 bg-gray-50 overflow-hidden">
-            <div class="container mx-auto px-4">
+        <section class="relative -my-12 -mx-6 md:mx-0 bg-gray-50 overflow-hidden px-0 md:px-6">
 
                 <!-- HEADER -->
-                <div class="relative rounded-2xl overflow-hidden shadow-2xl min-h-[450px] flex items-center">
+                <div class="relative overflow-hidden shadow-2xl min-h-[450px] flex items-center md:rounded-2xl">
 
                     <div class="absolute inset-0">
                         <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop"
                             class="w-full h-full object-cover scale-110 blur-sm" />
                     </div>
-
                     <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40"></div>
-
                     <div class="relative z-10 px-8 md:px-14 max-w-2xl text-white">
                         <h2 class="text-4xl md:text-5xl font-bold mb-4">
                             Pilihan Jurusan Unggulan
@@ -277,15 +297,18 @@
 
 
                 <!-- CARD JURUSAN -->
-                <div class="relative z-20 mt-[-100px]">
+                <div class="relative z-20 mt-[-100px] md:mt-[-100px]">
 
                     <!-- dibuat 80% dari header -->
-                    <div class="max-w-[90%] mx-auto">
+                    <div class="max-w-[90%] mx-auto md:max-w-full">
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-0 rounded-2xl overflow-hidden shadow-xl">
+                        <div class="swiper jurusan-swiper rounded-2xl overflow-hidden shadow-xl">
+                            <div class="swiper-wrapper">
 
                             <!-- IPA -->
-                            <div class="relative min-h-[200px] md:min-h-[220px] overflow-hidden border border-white/10">
+                            <div
+                                class="swiper-slide relative min-h-[200px] md:min-h-[220px] overflow-hidden border border-white/10 md:border-none">
+
 
                                 <div class="absolute inset-0">
                                     <img src="https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=1200&auto=format&fit=crop"
@@ -307,7 +330,9 @@
 
 
                             <!-- IPS -->
-                            <div class="relative min-h-[200px] md:min-h-[220px] overflow-hidden border border-white/10">
+                            <div
+                                class="swiper-slide relative min-h-[200px] md:min-h-[220px] overflow-hidden border border-white/10 md:border-none">
+
 
                                 <div class="absolute inset-0">
                                     <img src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=1200&auto=format&fit=crop"
@@ -327,7 +352,9 @@
 
 
                             <!-- BAHASA -->
-                            <div class="relative min-h-[200px] md:min-h-[220px] overflow-hidden border border-white/10">
+                            <div
+                                class="swiper-slide relative min-h-[200px] md:min-h-[220px] overflow-hidden border border-white/10 md:border-none">
+
 
                                 <div class="absolute inset-0">
                                     <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1200&auto=format&fit=crop"
@@ -346,6 +373,9 @@
                             </div>
 
                         </div>
+
+                        <!-- Jurusan Pagination (Mobile Only) -->
+                        <div class="jurusan-pagination flex justify-center mt-6 md:hidden"></div>
 
                     </div>
 
@@ -430,6 +460,33 @@
 
                     window.addEventListener('scroll', handleScroll);
                     handleScroll(); // Set initial state
+
+                    // Initialize Jurusan Swiper
+                    new Swiper('.jurusan-swiper', {
+                        loop: true, // Loop on mobile
+                        autoplay: {
+                            delay: 3000,
+                            disableOnInteraction: false,
+                        },
+                        slidesPerView: 1, // 1 slide on mobile
+                        spaceBetween: 10,
+                        pagination: {
+                            el: '.jurusan-pagination',
+                            clickable: true,
+                        },
+                        breakpoints: {
+                            768: { // md breakpoint
+                                slidesPerView: 3, // 3 slides on desktop
+                                spaceBetween: 0,
+                                allowTouchMove: false, // Disable swiping on desktop
+                                loop: false, // No loop on desktop
+                                autoplay: false, // No autoplay on desktop
+                                pagination: { // Hide pagination on desktop
+                                    enabled: false,
+                                }
+                            }
+                        }
+                    });
                 });
 
                 onBeforeUnmount(() => {
