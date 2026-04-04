@@ -78,7 +78,24 @@
             width: 24px !important;
             border-radius: 6px !important;
         }
+
+
+        @keyframes scrollX {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .animate-scroll-x {
+            animation: scrollX 20s linear infinite;
+            width: max-content;
+        }
     </style>
+
 </head>
 
 <body class="bg-gray-50" id="app">
@@ -306,7 +323,7 @@
 
             <!-- HEADER -->
             <div
-                class="relative overflow-hidden shadow-2xl min-h-[350px] sm:min-h-[450px] flex items-center md:rounded-2xl">
+                class="relative overflow-hidden shadow-2xl min-h-[320px] sm:min-h-[450px] flex items-center md:rounded-2xl">
 
                 <div class="absolute inset-0">
                     <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop"
@@ -314,7 +331,7 @@
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40"></div>
                 <div class="relative z-10 -mt-12 pl-2 md:px-14 max-w-2xl text-white">
-                    <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <h2 class="text-2xl md:text-5xl font-bold mb-4">
                         Pilihan Jurusan Unggulan
                     </h2>
                     <p class="text-lg md:text-xl text-gray-200">
@@ -335,7 +352,7 @@
 
                             <!-- IPA -->
                             <div
-                                class="swiper-slide relative min-h-[200px] md:min-h-[220px] overflow-hidden border border-white/10 md:border-none">
+                                class="swiper-slide relative min-h-[220px] overflow-hidden border border-white/10 md:border-none">
 
 
                                 <div class="absolute inset-0">
@@ -359,7 +376,7 @@
 
                             <!-- IPS -->
                             <div
-                                class="swiper-slide relative min-h-[200px] md:min-h-[220px] overflow-hidden border border-white/10 md:border-none">
+                                class="swiper-slide relative min-h-[220px] overflow-hidden border border-white/10 md:border-none">
 
 
                                 <div class="absolute inset-0">
@@ -381,7 +398,7 @@
 
                             <!-- BAHASA -->
                             <div
-                                class="swiper-slide relative min-h-[200px] md:min-h-[220px] overflow-hidden border border-white/10 md:border-none">
+                                class="swiper-slide relative min-h-[220px] overflow-hidden border border-white/10 md:border-none">
 
 
                                 <div class="absolute inset-0">
@@ -420,15 +437,15 @@
             <div class="container relative z-10 mx-auto px-0 md:px-4">
 
                 <!-- HEADER -->
-                <div class="mb-10 md:mb-14 px-6 md:px-0">
+                <div class="mb-2 md:mb-8 px-2 md:px-0 mt-12 sm:mt-8">
                     <div class="relative inline-block">
-                        <h2 class="text-2xl md:text-4xl font-bold text-gray-800 pb-3">
+                        <h2 class="text-xl md:text-4xl font-bold text-gray-800 pb-3">
                             Kenapa Pilih Sekolah Ini?
                         </h2>
 
                         <!-- Swoosh -->
-                        <svg class="absolute -bottom-1 left-0 w-2/3 h-3 md:h-5 text-blue-500" viewBox="0 0 100 20"
-                            preserveAspectRatio="none">
+                        <svg class="absolute -bottom-1 left-0 w-2/3 h-3 md:h-5 text-blue-500 hidden sm:block"
+                            viewBox="0 0 100 20" preserveAspectRatio="none">
                             <path d="M0 20 Q 40 -5 100 5 Q 40 15 0 20 Z" fill="currentColor"></path>
                         </svg>
                     </div>
@@ -545,6 +562,71 @@
                     <div class="alasan-pagination mt-6 flex justify-center md:hidden"></div>
                 </div>
 
+            </div>
+
+            <!-- ALUMNI / PTN -->
+            <div class="mt-0 sm:mt-8 px-0">
+                <div
+                    class="bg-white rounded-xl border border-gray-100 p-5 md:p-8 flex flex-col md:flex-row items-center gap-6 overflow-hidden">
+
+                    <!-- LEFT TEXT -->
+                    <div class="md:w-1/3">
+                        <h3 class="text-lg md:text-2xl font-bold text-gray-800 mb-2">
+                            Alumni Diterima di PTN Favorit
+                        </h3>
+                        <p class="text-sm md:text-base text-gray-600 leading-relaxed">
+                            Lulusan kami telah berhasil melanjutkan pendidikan ke berbagai perguruan tinggi ternama di
+                            Indonesia.
+                        </p>
+                    </div>
+
+                    <!-- RIGHT LOGO SCROLL -->
+                    <div class="md:w-2/3 w-full overflow-hidden relative">
+
+                        <!-- GRADIENT FADE (biar smooth pinggirnya) -->
+                        <div class="absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-white to-transparent z-10">
+                        </div>
+                        <div class="absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-white to-transparent z-10">
+                        </div>
+
+                        <!-- SCROLL WRAPPER -->
+                        <div class="flex items-center gap-8 animate-scroll-x">
+
+                            <!-- LOGO ITEM -->
+                            <img src="https://upload.wikimedia.org/wikipedia/id/thumb/9/9f/Logo_UI.svg/512px-Logo_UI.svg.png"
+                                class="h-10 md:h-14 object-contain opacity-80 hover:opacity-100 transition" />
+
+                            <img src="https://upload.wikimedia.org/wikipedia/id/thumb/0/02/Logo_Universitas_Gadjah_Mada.svg/512px-Logo_Universitas_Gadjah_Mada.svg.png"
+                                class="h-10 md:h-14 object-contain opacity-80 hover:opacity-100 transition" />
+
+                            <img src="https://upload.wikimedia.org/wikipedia/id/thumb/2/2e/Institut_Teknologi_Bandung_logo.svg/512px-Institut_Teknologi_Bandung_logo.svg.png"
+                                class="h-10 md:h-14 object-contain opacity-80 hover:opacity-100 transition" />
+
+                            <img src="https://upload.wikimedia.org/wikipedia/id/thumb/5/5c/Logo_ITS.svg/512px-Logo_ITS.svg.png"
+                                class="h-10 md:h-14 object-contain opacity-80 hover:opacity-100 transition" />
+
+                            <img src="https://upload.wikimedia.org/wikipedia/id/thumb/4/4d/Logo_UNNES.svg/512px-Logo_UNNES.svg.png"
+                                class="h-10 md:h-14 object-contain opacity-80 hover:opacity-100 transition" />
+
+                            <!-- DUPLIKASI (biar infinite loop mulus) -->
+                            <img src="https://upload.wikimedia.org/wikipedia/id/thumb/9/9f/Logo_UI.svg/512px-Logo_UI.svg.png"
+                                class="h-10 md:h-14 object-contain opacity-80" />
+
+                            <img src="https://upload.wikimedia.org/wikipedia/id/thumb/0/02/Logo_Universitas_Gadjah_Mada.svg/512px-Logo_Universitas_Gadjah_Mada.svg.png"
+                                class="h-10 md:h-14 object-contain opacity-80" />
+
+                            <img src="https://upload.wikimedia.org/wikipedia/id/thumb/2/2e/Institut_Teknologi_Bandung_logo.svg/512px-Institut_Teknologi_Bandung_logo.svg.png"
+                                class="h-10 md:h-14 object-contain opacity-80" />
+
+                            <img src="https://upload.wikimedia.org/wikipedia/id/thumb/5/5c/Logo_ITS.svg/512px-Logo_ITS.svg.png"
+                                class="h-10 md:h-14 object-contain opacity-80" />
+
+                            <img src="https://upload.wikimedia.org/wikipedia/id/thumb/4/4d/Logo_UNNES.svg/512px-Logo_UNNES.svg.png"
+                                class="h-10 md:h-14 object-contain opacity-80" />
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
