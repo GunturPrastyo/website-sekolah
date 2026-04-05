@@ -640,10 +640,10 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
                     
                     <!-- KIRI: Bagian Kegiatan & Berita (Grid 1 Atas, 3 Bawah) -->
-                    <div class="lg:col-span-2 flex flex-col gap-6 h-full">
+                    <div class="lg:col-span-2 flex flex-col gap-6">
                         
                         <!-- Berita Utama (Atas - 1 Besar) -->
-                        <a href="#" class="group relative rounded-2xl overflow-hidden shadow-lg h-[280px] sm:h-[350px] md:h-[400px] w-full block flex-shrink-0">
+                        <a href="#" class="group relative rounded-2xl overflow-hidden shadow-lg h-[280px] sm:h-[350px] md:h-[400px] w-full block">
                             <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&auto=format&fit=crop" 
                                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Berita Utama">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
@@ -662,7 +662,7 @@
                         </a>
 
                         <!-- Berita Pendukung (Bawah - 3 Kecil) -->
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 flex-grow">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
                             
                             <!-- Card 1 -->
                             <a href="#" class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 flex flex-col h-full">
@@ -672,8 +672,8 @@
                                 </div>
                                 <div class="p-4 flex flex-col flex-grow">
                                     <span class="text-xs font-semibold text-blue-600 mb-1.5">Prestasi</span>
-                                    <h4 class="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600 transition-colors line-clamp-2">Siswa SMAN 1 Meraih Juara 1 Olimpiade Sains Tingkat Nasional</h4>
-                                    <p class="text-xs text-gray-500 line-clamp-2 mb-2">Prestasi membanggakan kembali ditorehkan oleh siswa-siswi kita di kancah nasional dalam bidang sains terapan.</p>
+                                    <h4 class="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600 transition-colors line-clamp-2 min-h-[40px]">Siswa SMAN 1 Meraih Juara 1 Olimpiade Sains Tingkat Nasional</h4>
+                                    <p class="text-xs text-gray-500 line-clamp-2 mb-2 min-h-[32px]">Prestasi membanggakan kembali ditorehkan oleh siswa-siswi kita di kancah nasional dalam bidang sains terapan.</p>
                                     <div class="mt-auto flex items-center text-gray-500 text-xs pt-3">
                                         <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1"></i> 10 Jan 2026
                                     </div>
@@ -688,8 +688,8 @@
                                 </div>
                                 <div class="p-4 flex flex-col flex-grow">
                                     <span class="text-xs font-semibold text-green-600 mb-1.5">Fasilitas</span>
-                                    <h4 class="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600 transition-colors line-clamp-2">Peresmian Laboratorium Komputer Baru untuk Menunjang Digitalisasi</h4>
-                                    <p class="text-xs text-gray-500 line-clamp-2 mb-2">Fasilitas lab baru telah dilengkapi dengan 40 unit komputer berspesifikasi tinggi untuk mendukung pembelajaran siswa.</p>
+                                    <h4 class="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600 transition-colors line-clamp-2 min-h-[40px]">Peresmian Laboratorium Komputer Baru untuk Menunjang Digitalisasi</h4>
+                                    <p class="text-xs text-gray-500 line-clamp-2 mb-2 min-h-[32px]">Fasilitas lab baru telah dilengkapi dengan 40 unit komputer berspesifikasi tinggi untuk mendukung pembelajaran siswa.</p>
                                     <div class="mt-auto flex items-center text-gray-500 text-xs pt-3">
                                         <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1"></i> 05 Feb 2026
                                     </div>
@@ -704,8 +704,8 @@
                                 </div>
                                 <div class="p-4 flex flex-col flex-grow">
                                     <span class="text-xs font-semibold text-purple-600 mb-1.5">Kegiatan</span>
-                                    <h4 class="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600 transition-colors line-clamp-2">Kunjungan Edukasi Sejarah ke Museum Nasional Jakarta</h4>
-                                    <p class="text-xs text-gray-500 line-clamp-2 mb-2">Kegiatan rutin tahunan ini diikuti oleh seluruh siswa kelas X guna mengenal lebih dekat peninggalan sejarah bangsa.</p>
+                                    <h4 class="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600 transition-colors line-clamp-2 min-h-[40px]">Kunjungan Edukasi Sejarah ke Museum Nasional Jakarta</h4>
+                                    <p class="text-xs text-gray-500 line-clamp-2 mb-2 min-h-[32px]">Kegiatan rutin tahunan ini diikuti oleh seluruh siswa kelas X guna mengenal lebih dekat peninggalan sejarah bangsa.</p>
                                     <div class="mt-auto flex items-center text-gray-500 text-xs pt-3">
                                         <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1"></i> 20 Mar 2026
                                     </div>
@@ -716,7 +716,7 @@
                     </div>
 
                     <!-- KANAN: Bagian Pengumuman (Auto Scroll-Y) -->
-                    <div class="lg:col-span-1 bg-white rounded-2xl shadow-lg border border-gray-100 flex flex-col h-[500px] lg:h-full overflow-hidden relative">
+                    <div class="lg:col-span-1 bg-white rounded-2xl shadow-lg border border-gray-100 flex flex-col h-[500px] lg:h-auto overflow-hidden relative">
                         
                         <!-- Header Pengumuman -->
                         <div class="p-5 md:p-6 border-b border-gray-100 bg-gray-50/80 z-20 flex items-center justify-between shadow-sm">
