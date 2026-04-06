@@ -320,20 +320,182 @@
             </div>
         </div>
 
-        <!-- SVG Wave Divider -->
-        <!-- <div class="absolute bottom-0 left-0 z-10 w-full leading-none pointer-events-none">
-            <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
-                <path
-                    d="M0,224L48,213.3C96,203,192,181,288,186.7C384,192,480,224,576,240C672,256,768,256,864,234.7C960,213,1056,171,1152,154.7C1248,139,1344,149,1392,154.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-                    fill="#f9fafb" fill-opacity="1"></path>
-            </svg>
-        </div> -->
     </header>
 
     <!-- Main Content -->
-    <main class="px-6 py-10 pt-20 bg-gray-50">
+    <main class="px-6 bg-gray-50">
+           <!-- SECTION -->
+        <section class="relative mt-4 sm:mt-8 -mx-6 md:mx-0 overflow-hidden">
+
+            <div class="container relative z-10 mx-auto px-0 md:px-4">
+
+                <!-- HEADER -->
+                <div class="mb-2 md:mb-8 px-2 md:px-0 mt-4 sm:mt-6">
+                    <div class="relative inline-block">
+                        <h2 class="text-xl md:text-4xl font-bold text-gray-800 pb-3">
+                            Kenapa Pilih Sekolah Ini?
+                        </h2>
+
+               
+                    </div>
+                </div>
+
+                <!-- SWIPER / GRID -->
+                <div class="swiper alasan-swiper overflow-visible px-4 md:px-0">
+                    <div class="swiper-wrapper md:grid md:grid-cols-4 md:auto-rows-[250px] md:gap-6">
+
+                        <!-- FASILITAS (2x2 Desktop) -->
+                        <div class="swiper-slide md:!w-auto relative rounded-xl md:rounded-2xl overflow-hidden shadow-lg group flex flex-col 
+                            min-h-[220px] md:min-h-0 md:col-span-2 md:row-span-2">
+
+                            <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=1200&auto=format&fit=crop"
+                                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                            </div>
+
+                            <!-- GLASS EFFECT -->
+                            <div
+                                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-end h-full backdrop-blur-[2px]">
+                                <h3 class="text-lg md:text-2xl font-semibold mb-1 md:mb-2">
+                                    Fasilitas Lengkap
+                                </h3>
+                                <p class="text-gray-200 text-xs md:text-sm leading-relaxed line-clamp-3">
+                                    Didukung dengan lab modern, ruang kelas nyaman, dan sarana belajar yang menunjang.
+                                </p>
+                                <a href="#"
+                                    class="mt-2 text-xs md:text-sm font-medium text-blue-400 inline-flex items-center">
+                                    Lihat <span class="ml-1">&gt;</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- GURU -->
+                        <div class="swiper-slide md:!w-auto relative rounded-xl md:rounded-2xl overflow-hidden shadow-lg group flex flex-col 
+                            min-h-[220px] md:min-h-0 md:col-span-2">
+
+                            <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&auto=format&fit=crop"
+                                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                            </div>
+
+                            <div
+                                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-end h-full backdrop-blur-[2px]">
+                                <h3 class="text-lg md:text-2xl font-semibold mb-1 md:mb-2">
+                                    Guru Berpengalaman
+                                </h3>
+                                <p class="text-gray-200 text-xs md:text-sm leading-relaxed line-clamp-3">
+                                    Tenaga pengajar profesional yang siap membimbing siswa mencapai prestasi terbaik.
+                                </p>
+                                <a href="#"
+                                    class="mt-2 text-xs md:text-sm font-medium text-blue-400 inline-flex items-center">
+                                    Lihat <span class="ml-1">&gt;</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- PRESTASI -->
+                        <div class="swiper-slide md:!w-auto relative rounded-xl md:rounded-2xl overflow-hidden shadow-lg group flex flex-col 
+                            min-h-[220px] md:min-h-0 md:col-span-2">
+
+                            <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=1200&auto=format&fit=crop"
+                                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                            </div>
+
+                            <div
+                                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-end h-full backdrop-blur-[2px]">
+                                <h3 class="text-lg md:text-2xl font-semibold mb-1 md:mb-2">
+                                    Prestasi Siswa
+                                </h3>
+                                <p class="text-gray-200 text-xs md:text-sm leading-relaxed line-clamp-3">
+                                    Berbagai pencapaian di tingkat lokal hingga nasional.
+                                </p>
+                                <a href="#"
+                                    class="mt-2 text-xs md:text-sm font-medium text-blue-400 inline-flex items-center">
+                                    Lihat <span class="ml-1">&gt;</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PAGINATION -->
+                    <div class="alasan-pagination mt-6 flex justify-center md:hidden"></div>
+                </div>
+
+            </div>
+
+            <!-- ALUMNI / PTN -->
+            <div class="mt-0 sm:mt-8 px-0 mb-20 md:mb-24">
+                <div
+                    class="bg-gradient-to-r from-sky-500 to-blue-700 rounded-xl border border-sky-400 shadow-xl p-5 md:p-8 flex flex-col md:flex-row items-center gap-6 overflow-hidden">
+
+                    <!-- LEFT TEXT -->
+                    <div class="md:w-1/3">
+                        <h3 class="text-lg md:text-2xl font-bold text-white mb-2">
+                            Alumni Diterima di PTN Favorit
+                        </h3>
+                        <p class="text-sm md:text-base text-sky-50 leading-relaxed">
+                            Lulusan kami telah berhasil melanjutkan pendidikan ke berbagai perguruan tinggi ternama di
+                            Indonesia.
+                        </p>
+                    </div>
+
+                    <!-- RIGHT LOGO SCROLL -->
+                    <div class="md:w-2/3 w-full overflow-hidden relative">
+
+                        <!-- GRADIENT FADE (biar smooth pinggirnya) -->
+                        <div class="absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-blue-500 to-transparent z-10">
+                        </div>
+                        <div class="absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-blue-700 to-transparent z-10">
+                        </div>
+
+                        <!-- SCROLL WRAPPER -->
+                        <div class="flex items-center gap-6 md:gap-8 animate-scroll-x py-2">
+
+                            <!-- LOGO ITEM -->
+                            <img src="img/ipb.png"
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+
+                            <img src="img/itb.png"
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+
+                            <img src="img/ugm.png"
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+
+                            <img src="img/ui.png"
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+
+                            <img src="img/undip.png"
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+
+                            <!-- DUPLIKASI (biar infinite loop mulus) -->
+                            <img src="img/ipb.png"
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+
+                            <img src="img/itb.png"
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+
+                            <img src="img/ugm.png"
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+
+                            <img src="img/ui.png"
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+
+                            <img src="img/undip.png"
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Jurusan Section -->
-        <section class="relative -my-12 -mx-6 md:mx-0 bg-gray-50 overflow-hidden px-0 md:px-6 ">
+        <section class="relative -my-12 -mx-6 md:mx-0 bg-gray-50 overflow-hidden px-0 md:px-6 mb-12 md:mb-20">
+             <div class="container relative z-10 mx-auto px-0 md:px-4">
 
             <!-- HEADER -->
             <div
@@ -445,179 +607,6 @@
             </div>
         </section>
 
-        <!-- SECTION -->
-        <section class="relative py-16 md:py-28 -mx-6 md:mx-0 overflow-hidden">
-
-            <div class="container relative z-10 mx-auto px-0 md:px-4">
-
-                <!-- HEADER -->
-                <div class="mb-2 md:mb-8 px-2 md:px-0 mt-4 sm:mt-6">
-                    <div class="relative inline-block">
-                        <h2 class="text-xl md:text-4xl font-bold text-gray-800 pb-3">
-                            Kenapa Pilih Sekolah Ini?
-                        </h2>
-
-                        <!-- Swoosh -->
-                        <svg class="absolute -bottom-1 left-0 w-2/3 h-3 md:h-5 text-blue-500 hidden sm:block"
-                            viewBox="0 0 100 20" preserveAspectRatio="none">
-                            <path d="M0 20 Q 40 -5 100 5 Q 40 15 0 20 Z" fill="currentColor"></path>
-                        </svg>
-                    </div>
-                </div>
-
-                <!-- SWIPER / GRID -->
-                <div class="swiper alasan-swiper overflow-visible px-4 md:px-0">
-                    <div class="swiper-wrapper md:grid md:grid-cols-4 md:auto-rows-[250px] md:gap-6">
-
-                        <!-- FASILITAS (2x2 Desktop) -->
-                        <div class="swiper-slide md:!w-auto relative rounded-xl md:rounded-2xl overflow-hidden shadow-lg group flex flex-col 
-                            min-h-[220px] md:min-h-0 md:col-span-2 md:row-span-2">
-
-                            <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=1200&auto=format&fit=crop"
-                                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                            </div>
-
-                            <!-- GLASS EFFECT -->
-                            <div
-                                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-end h-full backdrop-blur-[2px]">
-                                <h3 class="text-lg md:text-2xl font-semibold mb-1 md:mb-2">
-                                    Fasilitas Lengkap
-                                </h3>
-                                <p class="text-gray-200 text-xs md:text-sm leading-relaxed line-clamp-3">
-                                    Didukung dengan lab modern, ruang kelas nyaman, dan sarana belajar yang menunjang.
-                                </p>
-                                <a href="#"
-                                    class="mt-2 text-xs md:text-sm font-medium text-blue-400 inline-flex items-center">
-                                    Lihat <span class="ml-1">&gt;</span>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- GURU -->
-                        <div class="swiper-slide md:!w-auto relative rounded-xl md:rounded-2xl overflow-hidden shadow-lg group flex flex-col 
-                            min-h-[220px] md:min-h-0 md:col-span-2">
-
-                            <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&auto=format&fit=crop"
-                                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                            </div>
-
-                            <div
-                                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-end h-full backdrop-blur-[2px]">
-                                <h3 class="text-lg md:text-2xl font-semibold mb-1 md:mb-2">
-                                    Guru Berpengalaman
-                                </h3>
-                                <p class="text-gray-200 text-xs md:text-sm leading-relaxed line-clamp-3">
-                                    Tenaga pengajar profesional yang siap membimbing siswa mencapai prestasi terbaik.
-                                </p>
-                                <a href="#"
-                                    class="mt-2 text-xs md:text-sm font-medium text-blue-400 inline-flex items-center">
-                                    Lihat <span class="ml-1">&gt;</span>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- PRESTASI -->
-                        <div class="swiper-slide md:!w-auto relative rounded-xl md:rounded-2xl overflow-hidden shadow-lg group flex flex-col 
-                            min-h-[220px] md:min-h-0 md:col-span-2">
-
-                            <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=1200&auto=format&fit=crop"
-                                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                            </div>
-
-                            <div
-                                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-end h-full backdrop-blur-[2px]">
-                                <h3 class="text-lg md:text-2xl font-semibold mb-1 md:mb-2">
-                                    Prestasi Siswa
-                                </h3>
-                                <p class="text-gray-200 text-xs md:text-sm leading-relaxed line-clamp-3">
-                                    Berbagai pencapaian di tingkat lokal hingga nasional.
-                                </p>
-                                <a href="#"
-                                    class="mt-2 text-xs md:text-sm font-medium text-blue-400 inline-flex items-center">
-                                    Lihat <span class="ml-1">&gt;</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PAGINATION -->
-                    <div class="alasan-pagination mt-6 flex justify-center md:hidden"></div>
-                </div>
-
-            </div>
-
-            <!-- ALUMNI / PTN -->
-            <div class="mt-0 sm:mt-8 px-0">
-                <div
-                    class="bg-gradient-to-r from-sky-500 to-blue-700 rounded-xl border border-sky-400 shadow-xl p-5 md:p-8 flex flex-col md:flex-row items-center gap-6 overflow-hidden">
-
-                    <!-- LEFT TEXT -->
-                    <div class="md:w-1/3">
-                        <h3 class="text-lg md:text-2xl font-bold text-white mb-2">
-                            Alumni Diterima di PTN Favorit
-                        </h3>
-                        <p class="text-sm md:text-base text-sky-50 leading-relaxed">
-                            Lulusan kami telah berhasil melanjutkan pendidikan ke berbagai perguruan tinggi ternama di
-                            Indonesia.
-                        </p>
-                    </div>
-
-                    <!-- RIGHT LOGO SCROLL -->
-                    <div class="md:w-2/3 w-full overflow-hidden relative">
-
-                        <!-- GRADIENT FADE (biar smooth pinggirnya) -->
-                        <div class="absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-blue-500 to-transparent z-10">
-                        </div>
-                        <div class="absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-blue-700 to-transparent z-10">
-                        </div>
-
-                        <!-- SCROLL WRAPPER -->
-                        <div class="flex items-center gap-6 md:gap-8 animate-scroll-x py-2">
-
-                            <!-- LOGO ITEM -->
-                            <img src="img/ipb.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <img src="img/itb.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <img src="img/ugm.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <img src="img/ui.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <img src="img/undip.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <!-- DUPLIKASI (biar infinite loop mulus) -->
-                            <img src="img/ipb.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <img src="img/itb.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <img src="img/ugm.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <img src="img/ui.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <img src="img/undip.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Berita & Pengumuman Section -->
         <section class="relative py-0 md:py-4 -mx-6 md:mx-0 overflow-hidden px-6 md:px-0">
             <div class="container mx-auto px-0 md:px-4">
@@ -628,11 +617,7 @@
                         <h2 class="text-xl md:text-4xl font-bold text-gray-800 pb-3">
                             Berita & Pengumuman
                         </h2>
-                        <!-- Swoosh -->
-                        <svg class="absolute -bottom-1 left-0 w-2/3 h-3 md:h-5 text-blue-500 hidden sm:block"
-                            viewBox="0 0 100 20" preserveAspectRatio="none">
-                            <path d="M0 20 Q 40 -5 100 5 Q 40 15 0 20 Z" fill="currentColor"></path>
-                        </svg>
+                       
                     </div>
                 </div>
 
@@ -781,103 +766,7 @@
             </div>
         </section>
         
-        <!-- Galeri & Video Profil Section -->
-        <section class="relative py-16 md:py-24 -mx-6 md:mx-0 overflow-hidden bg-gray-900 text-white">
-            
-            <!-- SVG Divider Top (Memisahkan dari Berita yang warnanya putih) -->
-            <div class="absolute top-0 left-0 w-full overflow-hidden leading-none pointer-events-none">
-                <svg viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg" class="w-full h-8 md:h-16">
-                    <path d="M0,50 C400,-50 1000,150 1440,50 L1440,0 L0,0 Z" fill="#ffffff"></path>
-                </svg>
-            </div>
-
-            <div class="container relative z-10 mx-auto px-6 md:px-4">
-                
-                <!-- Header -->
-                <div class="mb-8 md:mb-12 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-4 mt-2">
-                    <div class="max-w-2xl">
-                        <span class="text-blue-400 font-semibold tracking-wider text-sm uppercase mb-2 block">Jelajahi SMAN 1</span>
-                        <h2 class="text-2xl md:text-4xl font-bold mb-4">Galeri & Video Profil</h2>
-                        <p class="text-gray-400 text-sm md:text-base">
-                            Intip berbagai momen keseruan, fasilitas, serta kegiatan ekstrakurikuler yang mendukung minat dan bakat siswa-siswi kami.
-                        </p>
-                    </div>
-                    <a href="#" class="inline-flex items-center justify-center px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors border border-white/20 text-sm font-medium w-full md:w-auto">
-                        Lihat Semua Galeri <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
-                    </a>
-                </div>
-
-                <!-- BENTO GRID LAYOUT -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5 auto-rows-[160px] md:auto-rows-[240px]">
-                    
-                    <!-- 1. Video Profile (Besar) -->
-                    <div class="col-span-2 row-span-2 relative rounded-2xl overflow-hidden group shadow-lg cursor-pointer border border-white/10">
-                        <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1200&auto=format&fit=crop" 
-                            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Video Profil Sekolah" />
-                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors"></div>
-                        
-                        <!-- Play Button -->
-                        <div class="absolute inset-0 flex items-center justify-center z-10">
-                            <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-sm group-hover:bg-blue-600 group-hover:scale-110 transition-all shadow-lg shadow-blue-600/30">
-                                <i data-lucide="play" class="w-8 h-8 ml-1"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="absolute bottom-0 left-0 w-full p-6 md:p-8 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10">
-                            <span class="px-3 py-1 bg-red-600 text-white text-xs font-semibold rounded-full mb-3 inline-flex items-center">
-                                <i data-lucide="video" class="w-3 h-3 mr-1"></i> Video
-                            </span>
-                            <h3 class="text-white text-xl md:text-3xl font-bold group-hover:text-blue-300 transition-colors">Mengenal Lebih Dekat SMAN 1 Nogosari</h3>
-                        </div>
-                    </div>
-
-                    <!-- 2. Galeri Ekskul 1 -->
-                    <div class="relative rounded-2xl overflow-hidden group shadow-md border border-white/10">
-                        <img src="https://images.unsplash.com/photo-1526676037777-05a232554f77?q=80&w=600&auto=format&fit=crop" 
-                            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Pramuka" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 w-full p-4 text-white z-10">
-                            <h4 class="font-bold text-sm md:text-base">Pramuka</h4>
-                            <p class="text-xs text-gray-300 hidden md:block mt-1">Jelajah Alam</p>
-                        </div>
-                    </div>
-
-                    <!-- 3. Galeri Ekskul 2 -->
-                    <div class="relative rounded-2xl overflow-hidden group shadow-md border border-white/10">
-                        <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=600&auto=format&fit=crop" 
-                            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Tim Basket" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 w-full p-4 text-white z-10">
-                            <h4 class="font-bold text-sm md:text-base">Tim Basket</h4>
-                            <p class="text-xs text-gray-300 hidden md:block mt-1">Kejuaraan DBL</p>
-                        </div>
-                    </div>
-
-                    <!-- 4. Galeri Ekskul 3 -->
-                    <div class="relative rounded-2xl overflow-hidden group shadow-md border border-white/10">
-                        <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=600&auto=format&fit=crop" 
-                            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Pentas Seni" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 w-full p-4 text-white z-10">
-                            <h4 class="font-bold text-sm md:text-base">Pentas Seni</h4>
-                            <p class="text-xs text-gray-300 hidden md:block mt-1">Kreativitas Siswa</p>
-                        </div>
-                    </div>
-
-                    <!-- 5. Galeri Ekskul 4 -->
-                    <div class="relative rounded-2xl overflow-hidden group shadow-md border border-white/10">
-                        <img src="https://images.unsplash.com/photo-1576267423048-15c0040fec78?q=80&w=600&auto=format&fit=crop" 
-                            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Paskibra" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 w-full p-4 text-white z-10">
-                            <h4 class="font-bold text-sm md:text-base">Paskibra</h4>
-                            <p class="text-xs text-gray-300 hidden md:block mt-1">Upacara Bendera</p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
+   
 
     </main>
 
