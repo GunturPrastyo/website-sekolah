@@ -201,10 +201,17 @@
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <div class="lg:hidden">
+                <div class="flex items-center gap-2 lg:hidden">
+                    <!-- Mobile Dark Mode Toggle -->
+                    <button @click="toggleDarkMode" class="p-2 rounded-full focus:outline-none transition-colors"
+                        :class="[isNavbarScrolled ? 'text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-slate-700' : 'text-white hover:bg-white/10']">
+                        <i v-show="!isDarkMode" data-lucide="moon" class="w-5 h-5"></i>
+                        <i v-show="isDarkMode" data-lucide="sun" class="w-5 h-5"></i>
+                    </button>
+                    
                     <button @click="toggleMobileMenu"
-                        :class="{'text-gray-800': isNavbarScrolled, 'text-white': !isNavbarScrolled}"
-                        class="focus:outline-none">
+                        :class="[isNavbarScrolled ? 'text-gray-800 hover:bg-gray-200 dark:text-gray-200 dark:hover:bg-slate-700' : 'text-white hover:bg-white/10']"
+                        class="p-2 rounded-md focus:outline-none transition-colors">
                         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -219,13 +226,13 @@
                     'max-h-screen opacity-100': isMobileMenuOpen, 
                     'max-h-0 opacity-0': !isMobileMenuOpen 
                 }" class="lg:hidden overflow-hidden transition-all duration-300 ease-in-out">
-                <div class="mt-4 space-y-1 rounded-lg text-left bg-white dark:bg-slate-800 p-4 text-gray-800 dark:text-gray-200 shadow-xl">
-                    <a href="#" class="block rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200 dark:hover:bg-slate-700">Beranda</a>
+                <div class="mt-4 space-y-2 rounded-xl text-left bg-white/95 backdrop-blur-md dark:bg-slate-800/95 border border-gray-100 dark:border-slate-700/50 p-5 text-gray-800 dark:text-gray-200 shadow-2xl mx-1">
+                    <a href="#" class="block rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors">Beranda</a>
 
                     <!-- Mobile Profil Dropdown -->
                     <div>
                         <button
-                            class="mobile-dropdown-toggle flex w-full items-left justify-between rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200 dark:hover:bg-slate-700">
+                            class="mobile-dropdown-toggle flex w-full items-center justify-between rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors">
                             <span>Profil</span>
                             <svg @click.stop="toggleMobileDropdown('profil')"
                                 :class="{'rotate-180': mobileDropdowns.profil}"
@@ -238,21 +245,20 @@
                         <div :class="{ 
                                 'max-h-screen': mobileDropdowns.profil, 
                                 'max-h-0': !mobileDropdowns.profil 
-                            }" class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4">
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Sejarah Sekolah</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Visi & Misi</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Struktur
-                                Organisasi</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Guru & Staf</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Fasilitas</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Akreditasi</a>
+                            }" class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4 pr-2 space-y-1">
+                            <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Sejarah Sekolah</a>
+                            <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Visi & Misi</a>
+                            <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Struktur Organisasi</a>
+                            <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Guru & Staf</a>
+                            <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Fasilitas</a>
+                            <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Akreditasi</a>
                         </div>
                     </div>
 
                     <!-- Mobile Akademik Dropdown -->
                     <div>
                         <button
-                            class="mobile-dropdown-toggle flex w-full items-center justify-between rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200 dark:hover:bg-slate-700">
+                            class="mobile-dropdown-toggle flex w-full items-center justify-between rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors">
                             <span>Akademik</span>
                             <svg @click.stop="toggleMobileDropdown('akademik')"
                                 :class="{'rotate-180': mobileDropdowns.akademik}"
@@ -265,26 +271,20 @@
                         <div :class="{ 
                                 'max-h-screen': mobileDropdowns.akademik, 
                                 'max-h-0': !mobileDropdowns.akademik 
-                            }" class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4">
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Kurikulum</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Program Jurusan</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Ekstrakurikuler</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Prestasi</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Kalender
-                                Akademik</a>
+                            }" class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4 pr-2 space-y-1">
+                            <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Kurikulum</a>
+                            <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Program Jurusan</a>
+                            <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Ekstrakurikuler</a>
+                            <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Prestasi</a>
+                            <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Kalender Akademik</a>
                         </div>
                     </div>
 
-                    <a href="#" class="block rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200 dark:hover:bg-slate-700">Kontak</a>
-                    <a href="#"
-                        class="mt-2 block w-1/2 rounded-xl bg-blue-600 px-3 py-2 text-left font-semibold text-white transition-colors hover:bg-blue-700">Pendaftaran</a>
+                    <a href="#" class="block rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors">Kontak</a>
                     
-                    <div class="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700 flex justify-between items-center">
-                        <span class="font-medium text-base">Mode Gelap</span>
-                        <label for="dark-toggle-mobile" class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="dark-toggle-mobile" class="sr-only peer" :checked="isDarkMode" @change="toggleDarkMode">
-                            <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                        </label>
+                    <div class="pt-2 mt-2 border-t border-gray-100 dark:border-slate-700/50">
+                        <a href="#"
+                            class="block w-full rounded-xl bg-blue-600 px-4 py-3 text-center font-semibold text-white shadow-md shadow-blue-500/30 transition-colors hover:bg-blue-700 active:scale-[0.98]">Pendaftaran</a>
                     </div>
                 </div>
             </div>
