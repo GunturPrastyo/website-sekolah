@@ -6,10 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Header Landing Page Sekolah</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Swiper.js CSS -->
@@ -112,22 +125,27 @@
 
 </head>
 
-<body class="bg-blue-50 overflow-x-hidden relative w-full" id="app">
+<body class="bg-blue-50 dark:bg-slate-900 overflow-x-hidden relative w-full" id="app">
 
     <!-- Header Section -->
     <header class="relative flex flex-col items-center justify-center h-[70vh] md:h-screen text-center text-white">
         <!-- Navbar -->
-        <nav id="navbar" class="fixed top-0 left-0 z-50 w-full px-6 py-4 transition-all duration-300 ease-in-out">
+        <nav id="navbar" class="fixed top-0 left-0 z-50 w-full px-6 py-4 transition-all duration-300 ease-in-out"
+            :class="{'bg-white/80 shadow-md backdrop-blur-sm dark:bg-slate-900/80 dark:border-b dark:border-slate-800': isNavbarScrolled}">
             <div class="container flex items-center justify-between max-w-6xl mx-auto">
-                <a href="#" class="text-2xl font-bold">SMAN 1 Nogosari</a>
+                <a href="#" class="text-2xl font-bold"
+                    :class="{'text-gray-800 dark:text-white': isNavbarScrolled, 'text-white': !isNavbarScrolled}">SMAN 1
+                    Nogosari</a>
 
                 <!-- Desktop Menu -->
                 <div class="hidden items-center space-x-2 lg:flex">
-                    <a href="#" class="rounded-md px-3 py-2 hover:bg-blue-500/10 hover:text-blue-300">Beranda</a>
+                    <a href="#" class="rounded-md px-3 py-2"
+                        :class="{'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400': isNavbarScrolled, 'text-white hover:bg-blue-500/10 hover:text-blue-300': !isNavbarScrolled}">Beranda</a>
 
                     <!-- Profil Dropdown -->
                     <div class="group relative">
-                        <button class="flex items-center rounded-md px-3 py-2 hover:bg-blue-500/10 hover:text-blue-300">
+                        <button
+                            class="flex items-center rounded-md px-3 py-2" :class="{'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400': isNavbarScrolled, 'text-white hover:bg-blue-500/10 hover:text-blue-300': !isNavbarScrolled}">
                             <span>Profil</span>
                             <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -136,19 +154,20 @@
                             </svg>
                         </button>
                         <div
-                            class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white py-2 text-gray-800 shadow-lg group-hover:block">
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Sejarah Sekolah</a>
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Visi & Misi</a>
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Struktur Organisasi</a>
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Guru & Staf</a>
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Fasilitas</a>
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Akreditasi</a>
+                            class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white dark:bg-slate-800 py-2 text-gray-800 dark:text-gray-200 shadow-lg group-hover:block">
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Sejarah Sekolah</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Visi & Misi</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Struktur Organisasi</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Guru & Staf</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Fasilitas</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Akreditasi</a>
                         </div>
                     </div>
 
                     <!-- Akademik Dropdown -->
                     <div class="group relative">
-                        <button class="flex items-center rounded-md px-3 py-2 hover:bg-blue-500/10 hover:text-blue-300">
+                        <button
+                            class="flex items-center rounded-md px-3 py-2" :class="{'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400': isNavbarScrolled, 'text-white hover:bg-blue-500/10 hover:text-blue-300': !isNavbarScrolled}">
                             <span>Akademik</span>
                             <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -157,21 +176,28 @@
                             </svg>
                         </button>
                         <div
-                            class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white py-2 text-gray-800 shadow-lg group-hover:block">
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Kurikulum</a>
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Program Jurusan</a>
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Ekstrakurikuler</a>
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Prestasi</a>
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Kalender Akademik</a>
+                            class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white dark:bg-slate-800 py-2 text-gray-800 dark:text-gray-200 shadow-lg group-hover:block">
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Kurikulum</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Program Jurusan</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Ekstrakurikuler</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Prestasi</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Kalender Akademik</a>
                         </div>
                     </div>
 
-                    <a href="#" class="rounded-md px-3 py-2 hover:bg-blue-500/10 hover:text-blue-300">Kontak</a>
+                    <a href="#" class="rounded-md px-3 py-2"
+                        :class="{'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400': isNavbarScrolled, 'text-white hover:bg-blue-500/10 hover:text-blue-300': !isNavbarScrolled}">Kontak</a>
                 </div>
 
                 <div class="hidden items-center lg:flex">
                     <a href="#"
                         class="rounded-full bg-blue-600 px-5 py-2 font-semibold text-white transition-colors hover:bg-blue-700">Pendaftaran</a>
+                    <!-- Dark Mode Toggle -->
+                    <button @click="toggleDarkMode" class="ml-2 p-2 rounded-full focus:outline-none transition-colors"
+                        :class="[isNavbarScrolled ? 'text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-slate-700' : 'text-white hover:bg-white/10']">
+                        <i v-show="!isDarkMode" data-lucide="moon" class="w-5 h-5"></i>
+                        <i v-show="isDarkMode" data-lucide="sun" class="w-5 h-5"></i>
+                    </button>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -193,13 +219,13 @@
                     'max-h-screen opacity-100': isMobileMenuOpen, 
                     'max-h-0 opacity-0': !isMobileMenuOpen 
                 }" class="lg:hidden overflow-hidden transition-all duration-300 ease-in-out">
-                <div class="mt-4 space-y-1 rounded-lg text-left bg-white p-4 text-gray-800 shadow-xl">
-                    <a href="#" class="block rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200">Beranda</a>
+                <div class="mt-4 space-y-1 rounded-lg text-left bg-white dark:bg-slate-800 p-4 text-gray-800 dark:text-gray-200 shadow-xl">
+                    <a href="#" class="block rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200 dark:hover:bg-slate-700">Beranda</a>
 
                     <!-- Mobile Profil Dropdown -->
                     <div>
                         <button
-                            class="mobile-dropdown-toggle flex w-full items-left justify-between rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200">
+                            class="mobile-dropdown-toggle flex w-full items-left justify-between rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200 dark:hover:bg-slate-700">
                             <span>Profil</span>
                             <svg @click.stop="toggleMobileDropdown('profil')"
                                 :class="{'rotate-180': mobileDropdowns.profil}"
@@ -213,20 +239,20 @@
                                 'max-h-screen': mobileDropdowns.profil, 
                                 'max-h-0': !mobileDropdowns.profil 
                             }" class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4">
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Sejarah Sekolah</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Visi & Misi</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Struktur
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Sejarah Sekolah</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Visi & Misi</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Struktur
                                 Organisasi</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Guru & Staf</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Fasilitas</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Akreditasi</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Guru & Staf</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Fasilitas</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Akreditasi</a>
                         </div>
                     </div>
 
                     <!-- Mobile Akademik Dropdown -->
                     <div>
                         <button
-                            class="mobile-dropdown-toggle flex w-full items-center justify-between rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200">
+                            class="mobile-dropdown-toggle flex w-full items-center justify-between rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200 dark:hover:bg-slate-700">
                             <span>Akademik</span>
                             <svg @click.stop="toggleMobileDropdown('akademik')"
                                 :class="{'rotate-180': mobileDropdowns.akademik}"
@@ -240,18 +266,26 @@
                                 'max-h-screen': mobileDropdowns.akademik, 
                                 'max-h-0': !mobileDropdowns.akademik 
                             }" class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4">
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Kurikulum</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Program Jurusan</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Ekstrakurikuler</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Prestasi</a>
-                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200">Kalender
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Kurikulum</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Program Jurusan</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Ekstrakurikuler</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Prestasi</a>
+                            <a href="#" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-slate-700">Kalender
                                 Akademik</a>
                         </div>
                     </div>
 
-                    <a href="#" class="block rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200">Kontak</a>
+                    <a href="#" class="block rounded-md px-3 py-2 text-base font-medium hover:bg-gray-200 dark:hover:bg-slate-700">Kontak</a>
                     <a href="#"
                         class="mt-2 block w-1/2 rounded-xl bg-blue-600 px-3 py-2 text-left font-semibold text-white transition-colors hover:bg-blue-700">Pendaftaran</a>
+                    
+                    <div class="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700 flex justify-between items-center">
+                        <span class="font-medium text-base">Mode Gelap</span>
+                        <label for="dark-toggle-mobile" class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="dark-toggle-mobile" class="sr-only peer" :checked="isDarkMode" @change="toggleDarkMode">
+                            <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -323,7 +357,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="px-6 bg-blue-50">
+    <main class="px-6 bg-blue-50 dark:bg-slate-900">
         <!-- Sambutan Kepala Sekolah -->
         <!-- <section class="relative py-16 md:py-24 -mx-6 md:mx-0 px-6 md:px-0 bg-cover bg-center bg-fixed" style="background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1600&auto=format&fit=crop');">
             <div class="absolute inset-0 bg-blue-950/80 backdrop-blur-[2px]"></div>
@@ -362,10 +396,10 @@
                 <div class="mb-4 md:mb-8 px-2 md:px-0 mt-4 sm:mt-6">
                     <div class="relative block">
                         <h2
-                            class="text-xl md:text-4xl font-bold text-blue-950 pl-4 border-l-4 border-blue-600 mb-2">
+                            class="text-xl md:text-4xl font-bold text-blue-950 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-2">
                             Kenapa Pilih Sekolah Ini?
                         </h2>
-                        <p class="text-slate-800/80 text-sm md:text-base ml-4 max-w-2xl">
+                        <p class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base ml-4 max-w-2xl">
                             Kenali lebih jauh berbagai keunggulan dan fasilitas yang kami sediakan 
                         </p>
                     </div>
@@ -490,35 +524,35 @@
 
                             <!-- LOGO ITEM -->
                             <img src="img/ipb.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
                             <img src="img/itb.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
                             <img src="img/ugm.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
                             <img src="img/ui.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
                             <img src="img/undip.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
                             <!-- DUPLIKASI (biar infinite loop mulus) -->
                             <img src="img/ipb.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
                             <img src="img/itb.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
                             <img src="img/ugm.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
                             <img src="img/ui.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
                             <img src="img/undip.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
                         </div>
                     </div>
@@ -651,10 +685,10 @@
                 <div class="mb-4 md:mb-10">
                     <div class="relative block">
                         <h2
-                            class="text-xl md:text-4xl font-bold text-blue-950 pl-4 border-l-4 border-blue-600 mb-4 sm:mb-2">
+                            class="text-xl md:text-4xl font-bold text-blue-950 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2">
                             Berita & Pengumuman
                         </h2>
-                        <p class="text-slate-800/80 text-sm md:text-base ml-0 sm:ml-4 max-w-2xl">
+                        <p class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base ml-0 sm:ml-4 max-w-2xl">
                             Ikuti terus perkembangan informasi terbaru seputar kegiatan, prestasi, dan agenda penting di
                             lingkungan sekolah kami.
                         </p>
@@ -704,7 +738,7 @@
 
                             <!-- Card 1 -->
                             <a href="#"
-                                class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 flex flex-col h-full">
+                                class="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-slate-700 flex flex-col h-full">
                                 <div class="h-40 overflow-hidden relative">
                                     <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=600&auto=format&fit=crop"
                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -713,16 +747,16 @@
                                 <div class="p-4 flex flex-col flex-grow">
                                     <span class="text-xs font-semibold text-blue-600 mb-1.5">Prestasi</span>
                                     <h4
-                                        class="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600 transition-colors line-clamp-2 min-h-[40px]">
+                                        class="font-bold text-gray-800 dark:text-slate-100 text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 min-h-[40px]">
                                         Siswa SMAN 1 Meraih Juara 1 Olimpiade Sains Tingkat Nasional</h4>
-                                    <p class="text-xs text-gray-500 line-clamp-2 mb-2 min-h-[32px]">Prestasi
+                                    <p class="text-xs text-gray-500 dark:text-slate-400 line-clamp-2 mb-2 min-h-[32px]">Prestasi
                                         membanggakan kembali ditorehkan oleh siswa-siswi kita di kancah nasional dalam
                                         bidang sains terapan.</p>
-                                <div class="mt-auto flex items-center justify-between text-gray-500 text-xs pt-3">
+                                <div class="mt-auto flex items-center justify-between text-gray-500 dark:text-slate-400 text-xs pt-3">
                                     <div class="flex items-center">
                                         <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1"></i> 10 Jan 2026
                                     </div>
-                                    <button @click.prevent.stop="openShareModal('Siswa SMAN 1 Meraih Juara 1 Olimpiade Sains Tingkat Nasional')" class="hover:text-blue-600 flex items-center transition-colors z-10 relative">
+                                    <button @click.prevent.stop="openShareModal('Siswa SMAN 1 Meraih Juara 1 Olimpiade Sains Tingkat Nasional')" class="hover:text-blue-600 dark:hover:text-blue-400 flex items-center transition-colors z-10 relative">
                                         <i data-lucide="share" class="w-3.5 h-3.5 mr-1"></i> Bagikan
                                     </button>
                                     </div>
@@ -731,7 +765,7 @@
 
                             <!-- Card 2 -->
                             <a href="#"
-                                class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 flex flex-col h-full">
+                                class="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-slate-700 flex flex-col h-full">
                                 <div class="h-40 overflow-hidden relative">
                                     <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=600&auto=format&fit=crop"
                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -740,16 +774,16 @@
                                 <div class="p-4 flex flex-col flex-grow">
                                     <span class="text-xs font-semibold text-sky-600 mb-1.5">Fasilitas</span>
                                     <h4
-                                        class="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600 transition-colors line-clamp-2 min-h-[40px]">
+                                        class="font-bold text-gray-800 dark:text-slate-100 text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 min-h-[40px]">
                                         Peresmian Laboratorium Komputer Baru untuk Menunjang Digitalisasi</h4>
-                                    <p class="text-xs text-gray-500 line-clamp-2 mb-2 min-h-[32px]">Fasilitas lab baru
+                                    <p class="text-xs text-gray-500 dark:text-slate-400 line-clamp-2 mb-2 min-h-[32px]">Fasilitas lab baru
                                         telah dilengkapi dengan 40 unit komputer berspesifikasi tinggi untuk mendukung
                                         pembelajaran siswa.</p>
-                                <div class="mt-auto flex items-center justify-between text-gray-500 text-xs pt-3">
+                                <div class="mt-auto flex items-center justify-between text-gray-500 dark:text-slate-400 text-xs pt-3">
                                     <div class="flex items-center">
                                         <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1"></i> 05 Feb 2026
                                     </div>
-                                    <button @click.prevent.stop="openShareModal('Peresmian Laboratorium Komputer Baru untuk Menunjang Digitalisasi')" class="hover:text-blue-600 flex items-center transition-colors z-10 relative">
+                                    <button @click.prevent.stop="openShareModal('Peresmian Laboratorium Komputer Baru untuk Menunjang Digitalisasi')" class="hover:text-blue-600 dark:hover:text-blue-400 flex items-center transition-colors z-10 relative">
                                         <i data-lucide="share" class="w-3.5 h-3.5 mr-1"></i> Bagikan
                                     </button>
                                     </div>
@@ -758,7 +792,7 @@
 
                             <!-- Card 3 -->
                             <a href="#"
-                                class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 flex flex-col h-full">
+                                class="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-slate-700 flex flex-col h-full">
                                 <div class="h-40 overflow-hidden relative">
                                     <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600&auto=format&fit=crop"
                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -767,16 +801,16 @@
                                 <div class="p-4 flex flex-col flex-grow">
                                     <span class="text-xs font-semibold text-cyan-600 mb-1.5">Kegiatan</span>
                                     <h4
-                                        class="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600 transition-colors line-clamp-2 min-h-[40px]">
+                                        class="font-bold text-gray-800 dark:text-slate-100 text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 min-h-[40px]">
                                         Kunjungan Edukasi Sejarah ke Museum Nasional Jakarta</h4>
-                                    <p class="text-xs text-gray-500 line-clamp-2 mb-2 min-h-[32px]">Kegiatan rutin
+                                    <p class="text-xs text-gray-500 dark:text-slate-400 line-clamp-2 mb-2 min-h-[32px]">Kegiatan rutin
                                         tahunan ini diikuti oleh seluruh siswa kelas X guna mengenal lebih dekat
                                         peninggalan sejarah bangsa.</p>
-                                <div class="mt-auto flex items-center justify-between text-gray-500 text-xs pt-3">
+                                <div class="mt-auto flex items-center justify-between text-gray-500 dark:text-slate-400 text-xs pt-3">
                                     <div class="flex items-center">
                                         <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1"></i> 20 Mar 2026
                                     </div>
-                                    <button @click.prevent.stop="openShareModal('Kunjungan Edukasi Sejarah ke Museum Nasional Jakarta')" class="hover:text-blue-600 flex items-center transition-colors z-10 relative">
+                                    <button @click.prevent.stop="openShareModal('Kunjungan Edukasi Sejarah ke Museum Nasional Jakarta')" class="hover:text-blue-600 dark:hover:text-blue-400 flex items-center transition-colors z-10 relative">
                                         <i data-lucide="share" class="w-3.5 h-3.5 mr-1"></i> Bagikan
                                     </button>
                                     </div>
@@ -789,12 +823,12 @@
                     <!-- KANAN: Bagian Pengumuman (Auto Scroll-Y) -->
                     <div class="lg:col-span-1 relative h-[500px] lg:h-auto">
                         <div
-                            class="absolute inset-0 bg-white rounded-xl shadow-lg border border-gray-100 flex flex-col overflow-hidden">
+                            class="absolute inset-0 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col overflow-hidden">
 
                             <!-- Header Pengumuman -->
                             <div
-                                class="p-5 md:p-6 border-b border-blue-100 bg-blue-gray-100 z-20 flex items-center justify-between shadow-sm">
-                                <h3 class="text-md md:text-xl font-bold text-blue-950 flex items-center">
+                                class="p-5 md:p-6 border-b border-blue-100 dark:border-slate-700/50 bg-gray-50 dark:bg-slate-700/50 z-20 flex items-center justify-between shadow-sm">
+                                <h3 class="text-md md:text-xl font-bold text-blue-950 dark:text-blue-200 flex items-center">
                                     <i data-lucide="bell" class="w-5 h-5 mr-2 text-blue-600"></i> Pengumuman
                                 </h3>
 
@@ -802,14 +836,14 @@
                             </div>
 
                             <!-- Scroll Y Container -->
-                            <div class="relative flex-1 overflow-hidden group bg-white z-10 min-h-0">
+                            <div class="relative flex-1 overflow-hidden group bg-white dark:bg-slate-800 z-10 min-h-0">
 
                                 <!-- Efek Gradasi Atas-Bawah (Biar scrollnya terlihat smooth) -->
                                 <div
-                                    class="absolute top-0 left-0 w-full h-10 bg-gradient-to-b from-white to-transparent z-20 pointer-events-none">
+                                    class="absolute top-0 left-0 w-full h-10 bg-gradient-to-b from-white dark:from-slate-800 to-transparent z-20 pointer-events-none">
                                 </div>
                                 <div
-                                    class="absolute bottom-0 left-0 w-full h-10 bg-gradient-to-t from-white to-transparent z-20 pointer-events-none">
+                                    class="absolute bottom-0 left-0 w-full h-10 bg-gradient-to-t from-white dark:from-slate-800 to-transparent z-20 pointer-events-none">
                                 </div>
 
                                 <!-- Wrapper Animasi Scroll Y -->
@@ -821,7 +855,7 @@
                                         <div class="flex flex-col">
                                             <!-- Item Pengumuman -->
                                             <a href="#"
-                                                class="p-5 border-b border-blue-50 hover:bg-blue-100/50 transition-colors flex items-start"
+                                                class="p-5 border-b border-blue-50 dark:border-slate-700/50 hover:bg-blue-100/50 dark:hover:bg-slate-700 transition-colors flex items-start"
                                                 v-for="(item, index) in [
                                                {tgl: '15', bln: 'Apr', title: 'Pengambilan Raport Semester Ganjil 2025/2026', desc: 'Wajib dihadiri oleh orang tua/wali murid di ruang kelas. Harap membawa surat undangan dan datang tepat waktu sesuai jadwal.'},
                                                {tgl: '20', bln: 'Apr', title: 'Jadwal Ujian Sekolah (USBN) Kelas XII', desc: 'Persiapkan diri dengan baik dan perhatikan jadwal ujian. Pastikan membawa kartu peserta serta kelengkapan alat tulis.'},
@@ -831,7 +865,7 @@
 
                                                 <!-- Date Badge -->
                                                 <div
-                                                    class="bg-blue-100 text-blue-700 rounded-lg p-2 mr-4 text-center min-w-[60px] flex-shrink-0">
+                                                    class="bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 rounded-lg p-2 mr-4 text-center min-w-[60px] flex-shrink-0">
                                                     <span class="block text-xl font-bold leading-none">{{ item.tgl
                                                         }}</span>
                                                     <span class="block text-xs uppercase mt-1 font-semibold">{{ item.bln
@@ -839,9 +873,9 @@
                                                 </div>
                                                 <!-- Content -->
                                                 <div>
-                                                    <h4 class="font-semibold text-blue-950 text-sm mb-1 line-clamp-2">{{
+                                                    <h4 class="font-semibold text-blue-950 dark:text-slate-100 text-sm mb-1 line-clamp-2">{{
                                                         item.title }}</h4>
-                                                    <p class="text-xs text-gray-500 line-clamp-3 leading-relaxed">{{
+                                                    <p class="text-xs text-gray-500 dark:text-slate-400 line-clamp-3 leading-relaxed">{{
                                                         item.desc }}</p>
                                                 </div>
                                             </a>
@@ -851,9 +885,9 @@
                             </div>
 
                             <!-- Action Button Bawah -->
-                            <div class="p-4 bg-white z-20 border-t border-white text-center shadow-md">
+                            <div class="p-4 bg-white dark:bg-slate-800 z-20 border-t border-white dark:border-slate-800 text-center shadow-md">
                                 <a href="#"
-                                    class="text-sm font-semibold text-gray-600 hover:text-gray-800 transition-colors inline-flex items-center">
+                                    class="text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors inline-flex items-center">
                                     Lihat Semua Pengumuman 
                                 </a>
                             </div>
@@ -960,10 +994,10 @@
                 <!-- Header Section -->
                 <div class="mb-6 md:mb-10">
                     <div class="relative block">
-                        <h2 class="text-xl md:text-4xl font-bold text-blue-950 pl-4 border-l-4 border-blue-600 mb-4 sm:mb-2">
+                        <h2 class="text-xl md:text-4xl font-bold text-blue-950 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2">
                             Agenda Sekolah
                         </h2>
-                        <p class="text-slate-800/80 text-sm md:text-base ml-0 sm:ml-5 max-w-2xl">
+                        <p class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base ml-0 sm:ml-5 max-w-2xl">
                             Jadwal kegiatan akademik dan non-akademik SMAN 1 Nogosari. Pantau kalender agar tidak tertinggal event penting kami.
                         </p>
                     </div>
@@ -973,21 +1007,21 @@
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-stretch">
                     
                     <!-- KIRI: Kalender -->
-                    <div class="lg:col-span-5 bg-white rounded-2xl shadow-lg border border-gray-100 p-5 md:p-6 flex flex-col">
+                    <div class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-700 p-5 md:p-6 flex flex-col">
                         <div class="flex items-center justify-between mb-6">
-                            <button class="p-2 hover:bg-gray-100 rounded-full transition-colors focus:outline-none"><i data-lucide="chevron-left" class="w-5 h-5 text-gray-600"></i></button>
-                            <h3 class="text-lg font-bold text-blue-950">April 2026</h3>
-                            <button class="p-2 hover:bg-gray-100 rounded-full transition-colors focus:outline-none"><i data-lucide="chevron-right" class="w-5 h-5 text-gray-600"></i></button>
+                            <button class="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors focus:outline-none"><i data-lucide="chevron-left" class="w-5 h-5 text-gray-600 dark:text-gray-400"></i></button>
+                            <h3 class="text-lg font-bold text-blue-950 dark:text-blue-200">April 2026</h3>
+                            <button class="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors focus:outline-none"><i data-lucide="chevron-right" class="w-5 h-5 text-gray-600 dark:text-gray-400"></i></button>
                         </div>
                         
                         <div class="grid grid-cols-7 gap-2 text-center mb-2">
-                            <div class="text-xs font-bold text-red-500 py-1">Min</div>
-                            <div class="text-xs font-bold text-gray-500 py-1">Sen</div>
-                            <div class="text-xs font-bold text-gray-500 py-1">Sel</div>
-                            <div class="text-xs font-bold text-gray-500 py-1">Rab</div>
-                            <div class="text-xs font-bold text-gray-500 py-1">Kam</div>
-                            <div class="text-xs font-bold text-gray-500 py-1">Jum</div>
-                            <div class="text-xs font-bold text-gray-500 py-1">Sab</div>
+                            <div class="text-xs font-bold text-red-500 dark:text-red-400 py-1">Min</div>
+                            <div class="text-xs font-bold text-gray-500 dark:text-gray-400 py-1">Sen</div>
+                            <div class="text-xs font-bold text-gray-500 dark:text-gray-400 py-1">Sel</div>
+                            <div class="text-xs font-bold text-gray-500 dark:text-gray-400 py-1">Rab</div>
+                            <div class="text-xs font-bold text-gray-500 dark:text-gray-400 py-1">Kam</div>
+                            <div class="text-xs font-bold text-gray-500 dark:text-gray-400 py-1">Jum</div>
+                            <div class="text-xs font-bold text-gray-500 dark:text-gray-400 py-1">Sab</div>
                         </div>
                         
                         <div class="grid grid-cols-7 gap-y-2 text-sm text-center">
@@ -996,142 +1030,135 @@
                             <div class="py-2"></div>
                             <div class="py-2"></div>
                             
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">1</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">1</div>
                             
                             <!-- Event Gantt Chart UTS (2-8) -->
                             <!-- Baris 1 -->
-                            <div class="col-span-3 mx-0.5 relative bg-yellow-100 rounded-lg overflow-hidden cursor-pointer hover:bg-yellow-200 transition-colors flex flex-col justify-between" title="Ujian Tengah Semester">
+                            <div class="col-span-3 mx-0.5 relative bg-yellow-100 dark:bg-yellow-900/50 rounded-lg overflow-hidden cursor-pointer hover:bg-yellow-200 dark:hover:bg-yellow-900/80 transition-colors flex flex-col justify-between" title="Ujian Tengah Semester">
                                 <div class="bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-0.5 text-left truncate">
                                     Ujian Tengah Semester
                                 </div>
                                 <div class="grid grid-cols-3 w-full py-1">
-                                    <div class="text-yellow-800 font-bold">2</div>
-                                    <div class="text-yellow-800 font-bold">3</div>
-                                    <div class="text-yellow-800 font-bold">4</div>
+                                    <div class="text-yellow-800 dark:text-yellow-300 font-bold">2</div>
+                                    <div class="text-yellow-800 dark:text-yellow-300 font-bold">3</div>
+                                    <div class="text-yellow-800 dark:text-yellow-300 font-bold">4</div>
                                 </div>
                             </div>
                             
                             <!-- Baris 2 -->
-                            <div class="col-span-4 mx-0.5 relative bg-yellow-100 rounded-lg overflow-hidden cursor-pointer hover:bg-yellow-200 transition-colors flex flex-col justify-between" title="Ujian Tengah Semester">
+                            <div class="col-span-4 mx-0.5 relative bg-yellow-100 dark:bg-yellow-900/50 rounded-lg overflow-hidden cursor-pointer hover:bg-yellow-200 dark:hover:bg-yellow-900/80 transition-colors flex flex-col justify-between" title="Ujian Tengah Semester">
                                 <div class="bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-0.5 text-left truncate">
                                     Ujian Tengah Semester
                                 </div>
                                 <div class="grid grid-cols-4 w-full py-1">
-                                    <div class="text-red-500 font-bold">5</div>
-                                    <div class="text-yellow-800 font-bold">6</div>
-                                    <div class="text-yellow-800 font-bold">7</div>
-                                    <div class="text-yellow-800 font-bold">8</div>
+                                    <div class="text-red-500 dark:text-red-400 font-bold">5</div>
+                                    <div class="text-yellow-800 dark:text-yellow-300 font-bold">6</div>
+                                    <div class="text-yellow-800 dark:text-yellow-300 font-bold">7</div>
+                                    <div class="text-yellow-800 dark:text-yellow-300 font-bold">8</div>
                                 </div>
                             </div>
                             
                             <!-- Event 2 -->
-                            <div class="mx-0.5 relative bg-red-100 rounded-lg overflow-hidden cursor-pointer hover:bg-red-200 transition-colors flex flex-col justify-between" title="Rapat Evaluasi Guru & Staf">
+                            <div class="mx-0.5 relative bg-red-100 dark:bg-red-900/50 rounded-lg overflow-hidden cursor-pointer hover:bg-red-200 dark:hover:bg-red-900/80 transition-colors flex flex-col justify-between" title="Rapat Evaluasi Guru & Staf">
                                 <div class="bg-red-400 text-red-900 text-[10px] font-bold px-2 py-0.5 text-left truncate">
                                     Rapat Guru
                                 </div>
                                 <div class="py-1">
-                                    <div class="text-red-800 font-bold">9</div>
+                                    <div class="text-red-800 dark:text-red-300 font-bold">9</div>
                                 </div>
                             </div>
                             
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">10</div>
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">11</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">10</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">11</div>
                             
-                            <div class="py-2 mx-0.5 rounded-lg text-red-500 font-medium hover:bg-red-50 cursor-pointer transition-colors">12</div>
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">13</div>
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">14</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-red-500 dark:text-red-400 font-medium hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer transition-colors">12</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">13</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">14</div>
                             
                             <!-- Event 3 -->
-                            <div class="mx-0.5 relative bg-green-100 rounded-lg overflow-hidden cursor-pointer hover:bg-green-200 transition-colors flex flex-col justify-between" title="Peringatan Hari Bumi (Kerja Bakti)">
+                            <div class="mx-0.5 relative bg-green-100 dark:bg-green-900/50 rounded-lg overflow-hidden cursor-pointer hover:bg-green-200 dark:hover:bg-green-900/80 transition-colors flex flex-col justify-between" title="Peringatan Hari Bumi (Kerja Bakti)">
                                 <div class="bg-green-400 text-green-900 text-[10px] font-bold px-2 py-0.5 text-left truncate">
                                     Hari Bumi
                                 </div>
                                 <div class="py-1">
-                                    <div class="text-green-800 font-bold">15</div>
+                                    <div class="text-green-800 dark:text-green-300 font-bold">15</div>
                                 </div>
                             </div>
                             
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">16</div>
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">17</div>
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">18</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">16</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">17</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">18</div>
                             
-                            <div class="py-2 mx-0.5 rounded-lg text-red-500 font-medium hover:bg-red-50 cursor-pointer transition-colors">19</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-red-500 dark:text-red-400 font-medium hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer transition-colors">19</div>
                             
                             <!-- Event 4 -->
-                            <div class="mx-0.5 relative bg-blue-100 rounded-lg overflow-hidden cursor-pointer hover:bg-blue-200 transition-colors flex flex-col justify-between" title="Seminar Persiapan Kuliah Kelas XII">
+                            <div class="mx-0.5 relative bg-blue-100 dark:bg-blue-900/50 rounded-lg overflow-hidden cursor-pointer hover:bg-blue-200 dark:hover:bg-blue-900/80 transition-colors flex flex-col justify-between" title="Seminar Persiapan Kuliah Kelas XII">
                                 <div class="bg-blue-400 text-blue-900 text-[10px] font-bold px-2 py-0.5 text-left truncate">
                                     Seminar XII
                                 </div>
                                 <div class="py-1">
-                                    <div class="text-blue-800 font-bold">20</div>
+                                    <div class="text-blue-800 dark:text-blue-300 font-bold">20</div>
                                 </div>
                             </div>
                             
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">21</div>
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">22</div>
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">23</div>
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">24</div>
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">25</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">21</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">22</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">23</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">24</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">25</div>
                             
-                            <div class="py-2 mx-0.5 rounded-lg text-red-500 font-medium hover:bg-red-50 cursor-pointer transition-colors">26</div>
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">27</div>
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">28</div>
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">29</div>
-                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors">30</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-red-500 dark:text-red-400 font-medium hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer transition-colors">26</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">27</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">28</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">29</div>
+                            <div class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors">30</div>
                         </div>
                         
-                        <div class="mt-6 pt-4 border-t border-gray-100">
+                        <div class="mt-6 pt-4 border-t border-gray-100 dark:border-slate-700">
                             <h4 class="text-xs font-bold text-gray-400 uppercase mb-3">Keterangan Label</h4>
                             <div class="flex flex-wrap gap-3">
-                                <div class="flex items-center text-xs text-gray-600"><span class="w-2 h-2 rounded-full bg-yellow-400 mr-2"></span> Akademik</div>
-                                <div class="flex items-center text-xs text-gray-600"><span class="w-2 h-2 rounded-full bg-red-500 mr-2"></span> Guru/Staf</div>
-                                <div class="flex items-center text-xs text-gray-600"><span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span> Kegiatan</div>
-                                <div class="flex items-center text-xs text-gray-600"><span class="w-2 h-2 rounded-full bg-blue-500 mr-2"></span> Seminar</div>
+                                <div class="flex items-center text-xs text-gray-600 dark:text-gray-400"><span class="w-2 h-2 rounded-full bg-yellow-400 mr-2"></span> Akademik</div>
+                                <div class="flex items-center text-xs text-gray-600 dark:text-gray-400"><span class="w-2 h-2 rounded-full bg-red-500 mr-2"></span> Guru/Staf</div>
+                                <div class="flex items-center text-xs text-gray-600 dark:text-gray-400"><span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span> Kegiatan</div>
+                                <div class="flex items-center text-xs text-gray-600 dark:text-gray-400"><span class="w-2 h-2 rounded-full bg-blue-500 mr-2"></span> Seminar</div>
                             </div>
                         </div>
                     </div>
 
                     <!-- KANAN: Daftar Agenda -->
                     <div class="lg:col-span-7 relative h-[500px] lg:h-auto">
-                        <div class="absolute inset-0 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden flex flex-col">
-                            <div class="p-5 md:p-6 border-b border-gray-100 bg-gray-50 flex items-center justify-between shrink-0">
-                                <h3 class="text-lg md:text-xl font-bold text-blue-950 flex items-center">
+                        <div class="absolute inset-0 bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col">
+                            <div class="p-5 md:p-6 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex items-center justify-between shrink-0">
+                                <h3 class="text-lg md:text-xl font-bold text-blue-950 dark:text-blue-200 flex items-center">
                                     <i data-lucide="calendar-days" class="w-5 h-5 mr-2 text-blue-600"></i> Daftar Agenda
                                 </h3>
                             </div>
                             <div class="relative flex-1 min-h-0">
-                                <div class="absolute inset-0 p-5 md:p-6 flex flex-col gap-4 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-300">
+                                <div class="absolute inset-0 p-5 md:p-6 flex flex-col gap-4 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-300 dark:hover:[&::-webkit-scrollbar-thumb]:bg-slate-500">
                                     
-                                    <div v-for="(agenda, index) in [
-                                        { date: '02-08', month: 'Apr', title: 'Ujian Tengah Semester (UTS)', time: '07:30 - Selesai', loc: 'Ruang Kelas', classes: { card: 'bg-yellow-50 border-yellow-100 hover:border-yellow-300 hover:shadow-yellow-50/50', dateBox: 'bg-yellow-400 border-yellow-200 group-hover:bg-yellow-600', dateText: 'text-yellow-800 group-hover:text-white', monthText: 'text-yellow-700 group-hover:text-yellow-100', title: 'text-yellow-900 group-hover:text-yellow-700', infoIcon: 'text-yellow-400', infoText: 'text-yellow-700' } },
-                                        { date: '09', month: 'Apr', title: 'Rapat Evaluasi Guru & Staf', time: '13:00 - 15:00', loc: 'Ruang Guru', classes: { card: 'bg-red-50 border-red-100 hover:border-red-300 hover:shadow-red-50/50', dateBox: 'bg-red-400 border-red-200 group-hover:bg-red-600', dateText: 'text-red-800 group-hover:text-white', monthText: 'text-red-700 group-hover:text-red-100', title: 'text-red-900 group-hover:text-red-700', infoIcon: 'text-red-400', infoText: 'text-red-700' } },
-                                        { date: '15', month: 'Apr', title: 'Peringatan Hari Bumi (Kerja Bakti)', time: '08:00 - 11:00', loc: 'Lingkungan Sekolah', classes: { card: 'bg-green-50 border-green-100 hover:border-green-300 hover:shadow-green-50/50', dateBox: 'bg-green-400 border-green-200 group-hover:bg-green-600', dateText: 'text-green-800 group-hover:text-white', monthText: 'text-green-700 group-hover:text-green-100', title: 'text-green-900 group-hover:text-green-700', infoIcon: 'text-green-400', infoText: 'text-green-700' } },
-                                        { date: '20', month: 'Apr', title: 'Seminar Persiapan Kuliah Kelas XII', time: '09:00 - 12:00', loc: 'Aula Utama', classes: { card: 'bg-blue-50 border-blue-100 hover:border-blue-300 hover:shadow-blue-50/50', dateBox: 'bg-blue-400 border-blue-200 group-hover:bg-blue-600', dateText: 'text-blue-800 group-hover:text-white', monthText: 'text-blue-700 group-hover:text-blue-100', title: 'text-blue-900 group-hover:text-blue-700', infoIcon: 'text-blue-400', infoText: 'text-blue-700' } },
-                                        { date: '22', month: 'Apr', title: 'Lomba Olahraga Antar Kelas', time: '08:00 - 15:00', loc: 'Lapangan Olahraga', classes: { card: 'bg-green-50 border-green-100 hover:border-green-300 hover:shadow-green-50/50', dateBox: 'bg-green-400 border-green-200 group-hover:bg-green-600', dateText: 'text-green-800 group-hover:text-white', monthText: 'text-green-700 group-hover:text-green-100', title: 'text-green-900 group-hover:text-green-700', infoIcon: 'text-green-400', infoText: 'text-green-700' } },
-                                        { date: '28', month: 'Apr', title: 'Kunjungan Industri Kelas XI', time: '07:00 - 16:00', loc: 'Kawasan Industri', classes: { card: 'bg-blue-50 border-blue-100 hover:border-blue-300 hover:shadow-blue-50/50', dateBox: 'bg-blue-400 border-blue-200 group-hover:bg-blue-600', dateText: 'text-blue-800 group-hover:text-white', monthText: 'text-blue-700 group-hover:text-blue-100', title: 'text-blue-900 group-hover:text-blue-7<PASSWORD>', infoIcon: 'text-blue-4<PASSWORD>', infoText: 'text-blue-7<PASSWORD>' } }
-                                    ]" :key="index" class="flex flex-col sm:flex-row gap-4 p-4 rounded-xl border hover:shadow-md transition-all group cursor-pointer shrink-0" :class="agenda.classes.card">
+                                    <div v-for="(agenda, index) in agendas" :key="index" class="flex flex-col sm:flex-row gap-4 p-4 rounded-xl border hover:shadow-md transition-all group cursor-pointer shrink-0" :class="themeClasses[agenda.color].card">
                                         
                                         <!-- Date Box -->
-                                        <div class="rounded-lg p-3 flex flex-row sm:flex-col items-center justify-center min-w-[80px] sm:min-w-[90px] border transition-colors gap-2 sm:gap-0" :class="agenda.classes.dateBox">
-                                            <span class="text-xl sm:text-2xl font-bold leading-none whitespace-nownowrap tracking-tighter transition-colors" :class="agenda.classes.dateText">{{ agenda.date }}</span>
-                                            <span class="text-xs font-semibold sm:mt-1 uppercase transition-colors" :class="agenda.classes.monthText">{{ agenda.month }}</span>
+                                        <div class="rounded-lg p-3 flex flex-row sm:flex-col items-center justify-center min-w-[80px] sm:min-w-[90px] border transition-colors gap-2 sm:gap-0" :class="themeClasses[agenda.color].dateBox">
+                                            <span class="text-xl sm:text-2xl font-bold leading-none whitespace-nowrap tracking-tighter transition-colors" :class="themeClasses[agenda.color].dateText">{{ agenda.date }}</span>
+                                            <span class="text-xs font-semibold sm:mt-1 uppercase transition-colors" :class="themeClasses[agenda.color].monthText">{{ agenda.month }}</span>
                                         </div>
                                         
                                         <!-- Details -->
                                         <div class="flex flex-col justify-center flex-1">
                                             <div class="flex items-start sm:items-center justify-between mb-1 gap-2">
-                                                <h4 class="font-bold transition-colors text-sm md:text-base leading-tight" :class="agenda.classes.title">{{ agenda.title }}</h4>
+                                                <h4 class="font-bold transition-colors text-sm md:text-base leading-tight" :class="themeClasses[agenda.color].title">{{ agenda.title }}</h4>
                                             </div>
-                                            <div class="flex flex-wrap items-center text-xs gap-x-4 gap-y-2 mt-2 transition-colors" :class="agenda.classes.infoText">
-                                                <span class="flex items-center"><svg class="w-3.5 h-3.5 mr-1.5" :class="agenda.classes.infoIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> {{ agenda.time }}</span>
-                                                <span class="flex items-center"><svg class="w-3.5 h-3.5 mr-1.5" :class="agenda.classes.infoIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> {{ agenda.loc }}</span>
+                                            <div class="flex flex-wrap items-center text-xs gap-x-4 gap-y-2 mt-2 transition-colors" :class="themeClasses[agenda.color].infoText">
+                                                <span class="flex items-center"><svg class="w-3.5 h-3.5 mr-1.5" :class="themeClasses[agenda.color].infoIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> {{ agenda.time }}</span>
+                                                <span class="flex items-center"><svg class="w-3.5 h-3.5 mr-1.5" :class="themeClasses[agenda.color].infoIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> {{ agenda.loc }}</span>
                                             </div>
                                         </div>
                                     </div>
         
                                 </div>
                                 <!-- Bottom Fade & Scroll Indicator -->
-                                <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent pointer-events-none z-10 flex justify-center items-end">
+                                <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white dark:from-slate-800 to-transparent pointer-events-none z-10 flex justify-center items-end">
                                     <div class="text-sm font-semibold text-gray-500 flex items-center animate-bounce pb-2">
                                         <i data-lucide="arrow-down" class="w-4 h-4 mr-1.5"></i>
                                         Scroll ke bawah
@@ -1163,12 +1190,12 @@
                                 { q: 'Bagaimana cara mendaftar secara online?', a: 'Pendaftaran dapat dilakukan dengan membuat akun di menu Pendaftaran, mengisi formulir data diri, dan mengunggah berkas persyaratan sesuai jalur yang dipilih.' },
                                 { q: 'Berapa biaya pendaftaran dan SPP bulanan?', a: 'Sebagai sekolah negeri binaan pemerintah, seluruh proses pendaftaran PPDB dan biaya pendidikan (SPP bulanan) adalah GRATIS tanpa dipungut biaya.' }
                             ]" :key="index" class="bg-gray-50 border border-gray-50 rounded-xl shadow-md">
-                                <button @click="toggleFaq(index)" class="w-full text-left px-5 md:px-6 py-4 font-semibold text-blue-950 flex justify-between items-center hover:bg-gray-100 transition-colors rounded-xl focus:outline-none">
+                                <button @click="toggleFaq(index)" class="w-full text-left px-5 md:px-6 py-4 font-semibold text-blue-950 dark:text-white flex justify-between items-center hover:bg-gray-100 dark:hover:bg-blue-900 transition-colors rounded-xl focus:outline-none">
                                     <span class="pr-4 text-sm md:text-base">{{ faq.q }}</span>
                                     <svg class="w-5 h-5 text-blue-800 transform transition-transform duration-300 flex-shrink-0" :class="{ 'rotate-180': activeFaq === index }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                 </button>
-                                <div :class="{ 'max-h-96 opacity-100 pb-4': activeFaq === index, 'max-h-0 opacity-0 overflow-hidden': activeFaq !== index }" class="transition-all duration-300 px-5 md:px-6 text-blue-900 text-sm md:text-base">
-                                    <div class="border-t border-yellow-500/50 pt-3">{{ faq.a }}</div>
+                                <div :class="{ 'max-h-96 opacity-100 pb-4': activeFaq === index, 'max-h-0 opacity-0 overflow-hidden': activeFaq !== index }" class="transition-all duration-300 px-5 md:px-6 text-blue-900 dark:text-blue-200 text-sm md:text-base">
+                                    <div class="border-t border-yellow-500/50 dark:border-yellow-400/50 pt-3">{{ faq.a }}</div>
                                 </div>
                             </div>
                         </div>
@@ -1201,30 +1228,30 @@
         <div v-show="isShareModalOpen" style="display: none;" 
              class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity" 
              @click="closeShareModal">
-            <div class="bg-white rounded-2xl shadow-2xl w-11/12 max-w-md overflow-hidden transform transition-all" @click.stop>
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-11/12 max-w-md overflow-hidden transform transition-all" @click.stop>
                 <div class="p-5 border-b border-gray-100 flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-gray-800">Bagikan Berita</h3>
-                    <button @click="closeShareModal" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">Bagikan Berita</h3>
+                    <button @click="closeShareModal" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
                 <div class="p-6">
-                    <p class="text-sm text-gray-600 mb-5 font-medium line-clamp-2">"{{ shareData.title }}"</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-5 font-medium line-clamp-2">"{{ shareData.title }}"</p>
                     <div class="flex gap-4 justify-center mb-6">
-                        <button class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center hover:bg-blue-200 transition-colors" title="Bagikan ke Facebook">
+                        <button class="w-12 h-12 rounded-full bg-blue-100 dark:bg-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center hover:bg-blue-200 dark:hover:bg-slate-600 transition-colors" title="Bagikan ke Facebook">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
                         </button>
-                        <button class="w-12 h-12 rounded-full bg-gray-100 text-gray-800 flex items-center justify-center hover:bg-gray-200 transition-colors" title="Bagikan ke X">
+                        <button class="w-12 h-12 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-gray-200 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors" title="Bagikan ke X">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                         </button>
-                        <button class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center hover:bg-green-200 transition-colors" title="Bagikan ke WhatsApp">
+                        <button class="w-12 h-12 rounded-full bg-green-100 dark:bg-slate-700 text-green-600 dark:text-green-400 flex items-center justify-center hover:bg-green-200 dark:hover:bg-slate-600 transition-colors" title="Bagikan ke WhatsApp">
                             <i data-lucide="message-circle" class="w-5 h-5"></i>
                         </button>
-                        <button class="w-12 h-12 rounded-full bg-gray-100 text-gray-700 flex items-center justify-center hover:bg-gray-200 transition-colors" title="Salin Tautan">
+                        <button class="w-12 h-12 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors" title="Salin Tautan">
                             <i data-lucide="link" class="w-5 h-5"></i>
                         </button>
                     </div>
-                    <button @click="closeShareModal" class="w-full py-2.5 rounded-xl bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors">
+                    <button @click="closeShareModal" class="w-full py-2.5 rounded-xl bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors">
                         Tutup
                     </button>
                 </div>
@@ -1318,6 +1345,26 @@
                     akademik: false
                 });
 
+                const isDarkMode = ref(false);
+
+                const setDarkMode = (isDark) => {
+                    isDarkMode.value = isDark;
+                    if (isDark) {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    }
+                    setTimeout(() => {
+                        lucide.createIcons();
+                    }, 0);
+                };
+
+                const toggleDarkMode = () => {
+                    setDarkMode(!isDarkMode.value);
+                };
+
                 const activeFaq = ref(null);
                 const toggleFaq = (index) => {
                     activeFaq.value = activeFaq.value === index ? null : index;
@@ -1355,6 +1402,22 @@
                         }
                     }
                 };
+
+                const themeClasses = {
+                    yellow: { card: 'bg-yellow-50 border-yellow-100 hover:border-yellow-300 hover:shadow-yellow-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-yellow-500/50', dateBox: 'bg-yellow-400 border-yellow-200 group-hover:bg-yellow-600 dark:bg-yellow-900/50 dark:border-yellow-700/50 dark:group-hover:bg-yellow-600', dateText: 'text-yellow-800 group-hover:text-white dark:text-yellow-400 dark:group-hover:text-white', monthText: 'text-yellow-700 group-hover:text-yellow-100 dark:text-yellow-500 dark:group-hover:text-white', title: 'text-yellow-900 group-hover:text-yellow-700 dark:text-slate-100 dark:group-hover:text-yellow-400', infoIcon: 'text-yellow-400 dark:text-yellow-600', infoText: 'text-yellow-700 dark:text-slate-400' },
+                    red: { card: 'bg-red-50 border-red-100 hover:border-red-300 hover:shadow-red-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-red-500/50', dateBox: 'bg-red-400 border-red-200 group-hover:bg-red-600 dark:bg-red-900/50 dark:border-red-700/50 dark:group-hover:bg-red-600', dateText: 'text-red-800 group-hover:text-white dark:text-red-400 dark:group-hover:text-white', monthText: 'text-red-700 group-hover:text-red-100 dark:text-red-500 dark:group-hover:text-white', title: 'text-red-900 group-hover:text-red-700 dark:text-slate-100 dark:group-hover:text-red-400', infoIcon: 'text-red-400 dark:text-red-600', infoText: 'text-red-700 dark:text-slate-400' },
+                    green: { card: 'bg-green-50 border-green-100 hover:border-green-300 hover:shadow-green-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-green-500/50', dateBox: 'bg-green-400 border-green-200 group-hover:bg-green-600 dark:bg-green-900/50 dark:border-green-700/50 dark:group-hover:bg-green-600', dateText: 'text-green-800 group-hover:text-white dark:text-green-400 dark:group-hover:text-white', monthText: 'text-green-700 group-hover:text-green-100 dark:text-green-500 dark:group-hover:text-white', title: 'text-green-900 group-hover:text-green-700 dark:text-slate-100 dark:group-hover:text-green-400', infoIcon: 'text-green-400 dark:text-green-600', infoText: 'text-green-700 dark:text-slate-400' },
+                    blue: { card: 'bg-blue-50 border-blue-100 hover:border-blue-300 hover:shadow-blue-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-blue-500/50', dateBox: 'bg-blue-400 border-blue-200 group-hover:bg-blue-600 dark:bg-blue-900/50 dark:border-blue-700/50 dark:group-hover:bg-blue-600', dateText: 'text-blue-800 group-hover:text-white dark:text-blue-400 dark:group-hover:text-white', monthText: 'text-blue-700 group-hover:text-blue-100 dark:text-blue-500 dark:group-hover:text-white', title: 'text-blue-900 group-hover:text-blue-700 dark:text-slate-100 dark:group-hover:text-blue-400', infoIcon: 'text-blue-400 dark:text-blue-600', infoText: 'text-blue-700 dark:text-slate-400' }
+                };
+
+                const agendas = [
+                    { date: '02-08', month: 'Apr', title: 'Ujian Tengah Semester (UTS)', time: '07:30 - Selesai', loc: 'Ruang Kelas', color: 'yellow' },
+                    { date: '09', month: 'Apr', title: 'Rapat Evaluasi Guru & Staf', time: '13:00 - 15:00', loc: 'Ruang Guru', color: 'red' },
+                    { date: '15', month: 'Apr', title: 'Peringatan Hari Bumi (Kerja Bakti)', time: '08:00 - 11:00', loc: 'Lingkungan Sekolah', color: 'green' },
+                    { date: '20', month: 'Apr', title: 'Seminar Persiapan Kuliah Kelas XII', time: '09:00 - 12:00', loc: 'Aula Utama', color: 'blue' },
+                    { date: '22', month: 'Apr', title: 'Lomba Olahraga Antar Kelas', time: '08:00 - 15:00', loc: 'Lapangan Olahraga', color: 'green' },
+                    { date: '28', month: 'Apr', title: 'Kunjungan Industri Kelas XI', time: '07:00 - 16:00', loc: 'Kawasan Industri', color: 'blue' }
+                ];
 
                 onMounted(() => {
                     // Initialize main Swiper
@@ -1422,6 +1485,13 @@
                         }
                     });
 
+                    // Initialize dark mode
+                    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                        setDarkMode(true);
+                    } else {
+                        setDarkMode(false);
+                    }
+
                     // Initialize Alasan Swiper (Kenapa Pilih Sekolah Ini)
                     new Swiper('.alasan-swiper', {
                         loop: true,
@@ -1462,7 +1532,11 @@
                     isShareModalOpen,
                     shareData,
                     openShareModal,
-                    closeShareModal
+                    closeShareModal,
+                    isDarkMode,
+                    toggleDarkMode,
+                    themeClasses,
+                    agendas
                 };
             }
         }).mount('#app');
