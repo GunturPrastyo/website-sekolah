@@ -734,7 +734,8 @@
                         </a>
 
                         <!-- Berita Pendukung (Bawah - 3 Kecil) -->
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
+                        <div class="relative">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 pb-8">
 
                             <!-- Card 1 -->
                             <a href="#"
@@ -817,6 +818,14 @@
                                 </div>
                             </a>
 
+                            </div>
+                            
+                            <!-- Fade Blur Overlay -->
+                            <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-blue-50/95 via-blue-50/70 to-transparent dark:from-slate-900/95 dark:via-slate-900/70 flex items-end justify-center z-10 pointer-events-none">
+                                <a href="#" class="pointer-events-auto text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 text-sm font-semibold transition-colors">
+                                    Lihat berita lainnya
+                                </a>
+                            </div>
                         </div>
                     </div>
 
