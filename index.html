@@ -195,8 +195,8 @@
                     <!-- Dark Mode Toggle -->
                     <button @click="toggleDarkMode" class="ml-2 p-2 rounded-full focus:outline-none transition-colors"
                         :class="[isNavbarScrolled ? 'text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-slate-700' : 'text-white hover:bg-white/10']">
-                        <i v-show="!isDarkMode" data-lucide="moon" class="w-5 h-5"></i>
-                        <i v-show="isDarkMode" data-lucide="sun" class="w-5 h-5"></i>
+                        <span v-show="!isDarkMode" class="flex items-center justify-center"><i data-lucide="moon" class="w-5 h-5"></i></span>
+                        <span v-show="isDarkMode" class="flex items-center justify-center"><i data-lucide="sun" class="w-5 h-5"></i></span>
                     </button>
                 </div>
 
@@ -205,8 +205,8 @@
                     <!-- Mobile Dark Mode Toggle -->
                     <button @click="toggleDarkMode" class="p-2 rounded-full focus:outline-none transition-colors"
                         :class="[isNavbarScrolled ? 'text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-slate-700' : 'text-white hover:bg-white/10']">
-                        <i v-show="!isDarkMode" data-lucide="moon" class="w-5 h-5"></i>
-                        <i v-show="isDarkMode" data-lucide="sun" class="w-5 h-5"></i>
+                        <span v-show="!isDarkMode" class="flex items-center justify-center"><i data-lucide="moon" class="w-5 h-5"></i></span>
+                        <span v-show="isDarkMode" class="flex items-center justify-center"><i data-lucide="sun" class="w-5 h-5"></i></span>
                     </button>
                     
                     <button @click="toggleMobileMenu"
