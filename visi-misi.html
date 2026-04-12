@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visi, Misi & Sambutan - SMAN 1 Nogosari</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom Font */
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-white dark:bg-slate-900 overflow-x-hidden relative w-full" id="app">
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 left-0 z-50 w-full px-6 py-4 transition-all duration-300 ease-in-out"
+        :class="{'bg-white/80 shadow-md backdrop-blur-sm dark:bg-slate-900/80 dark:border-b dark:border-slate-800': isNavbarScrolled, 'bg-transparent': !isNavbarScrolled}">
+        <div class="container flex items-center justify-between max-w-6xl mx-auto">
+            <a href="index.html" class="text-2xl font-bold"
+                :class="{'text-gray-800 dark:text-white': isNavbarScrolled, 'text-white': !isNavbarScrolled}">SMAN 1
+                Nogosari</a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden items-center space-x-2 lg:flex">
+                <a href="index.html" class="rounded-md px-3 py-2"
+                    :class="{'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400': isNavbarScrolled, 'text-white hover:bg-blue-500/10 hover:text-blue-300': !isNavbarScrolled}">Beranda</a>
+
+                <!-- Profil Dropdown -->
+                <div class="group relative">
+                    <button
+                        class="flex items-center rounded-md px-3 py-2" :class="{'text-blue-600 dark:text-blue-400 font-semibold': isNavbarScrolled, 'text-blue-300 font-semibold hover:bg-blue-500/10': !isNavbarScrolled}">
+                        <span>Profil</span>
+                        <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div
+                        class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white dark:bg-slate-800 py-2 text-gray-800 dark:text-gray-200 shadow-lg group-hover:block">
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Sejarah Sekolah</a>
+                        <a href="visi-misi.html" class="block px-4 py-2 text-sm text-blue-600 dark:text-blue-400 font-medium hover:bg-gray-100 dark:hover:bg-slate-700">Visi & Misi</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Struktur Organisasi</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Guru & Staf</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Fasilitas</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Akreditasi</a>
+                    </div>
+                </div>
+
+                <!-- Akademik Dropdown -->
+                <div class="group relative">
+                    <button
+                        class="flex items-center rounded-md px-3 py-2" :class="{'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400': isNavbarScrolled, 'text-white hover:bg-blue-500/10 hover:text-blue-300': !isNavbarScrolled}">
+                        <span>Akademik</span>
+                        <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div
+                        class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white dark:bg-slate-800 py-2 text-gray-800 dark:text-gray-200 shadow-lg group-hover:block">
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Kurikulum</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Program Jurusan</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Ekstrakurikuler</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Prestasi</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Kalender Akademik</a>
+                    </div>
+                </div>
+
+                <a href="#" class="rounded-md px-3 py-2"
+                    :class="{'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400': isNavbarScrolled, 'text-white hover:bg-blue-500/10 hover:text-blue-300': !isNavbarScrolled}">Kontak</a>
+            </div>
+
+            <div class="hidden items-center lg:flex">
+                <a href="#"
+                    class="rounded-full bg-blue-600 px-5 py-2 font-semibold text-white transition-colors hover:bg-blue-700">Pendaftaran</a>
+                <!-- Dark Mode Toggle -->
+                <button @click="toggleDarkMode" class="ml-2 p-2 rounded-full focus:outline-none transition-colors"
+                    :class="[isNavbarScrolled ? 'text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-slate-700' : 'text-white hover:bg-white/10']">
+                    <span v-show="!isDarkMode" class="flex items-center justify-center"><i data-lucide="moon" class="w-5 h-5"></i></span>
+                    <span v-show="isDarkMode" class="flex items-center justify-center"><i data-lucide="sun" class="w-5 h-5"></i></span>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="flex items-center gap-2 lg:hidden">
+                <!-- Mobile Dark Mode Toggle -->
+                <button @click="toggleDarkMode" class="p-2 rounded-full focus:outline-none transition-colors"
+                    :class="[isNavbarScrolled ? 'text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-slate-700' : 'text-white hover:bg-white/10']">
+                    <span v-show="!isDarkMode" class="flex items-center justify-center"><i data-lucide="moon" class="w-5 h-5"></i></span>
+                    <span v-show="isDarkMode" class="flex items-center justify-center"><i data-lucide="sun" class="w-5 h-5"></i></span>
+                </button>
+                
+                <button @click="toggleMobileMenu"
+                    :class="[isNavbarScrolled ? 'text-gray-800 hover:bg-gray-200 dark:text-gray-200 dark:hover:bg-slate-700' : 'text-white hover:bg-white/10']"
+                    class="p-2 rounded-md focus:outline-none transition-colors">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div :class="{ 
+                'max-h-screen opacity-100': isMobileMenuOpen, 
+                'max-h-0 opacity-0': !isMobileMenuOpen 
+            }" class="lg:hidden overflow-hidden transition-all duration-300 ease-in-out">
+            <div class="mt-4 space-y-2 rounded-xl text-left bg-white/95 backdrop-blur-md dark:bg-slate-800/95 border border-gray-100 dark:border-slate-700/50 p-5 text-gray-800 dark:text-gray-200 shadow-2xl mx-1">
+                <a href="index.html" class="block rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors">Beranda</a>
+
+                <!-- Mobile Profil Dropdown -->
+                <div>
+                    <button
+                        class="mobile-dropdown-toggle flex w-full items-center justify-between rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors">
+                        <span>Profil</span>
+                        <svg @click.stop="toggleMobileDropdown('profil')"
+                            :class="{'rotate-180': mobileDropdowns.profil}"
+                            class="h-5 w-5 transform transition-transform duration-300 ease-in-out" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div :class="{ 
+                            'max-h-screen': mobileDropdowns.profil, 
+                            'max-h-0': !mobileDropdowns.profil 
+                        }" class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4 pr-2 space-y-1">
+                        <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Sejarah Sekolah</a>
+                        <a href="visi-misi.html" class="block rounded-md px-4 py-2 text-sm text-blue-600 dark:text-blue-400 font-medium hover:bg-blue-50 dark:hover:bg-slate-700/50 transition-colors">Visi & Misi</a>
+                        <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Struktur Organisasi</a>
+                        <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Guru & Staf</a>
+                        <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Fasilitas</a>
+                        <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Akreditasi</a>
+                    </div>
+                </div>
+
+                <!-- Mobile Akademik Dropdown -->
+                <div>
+                    <button
+                        class="mobile-dropdown-toggle flex w-full items-center justify-between rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors">
+                        <span>Akademik</span>
+                        <svg @click.stop="toggleMobileDropdown('akademik')"
+                            :class="{'rotate-180': mobileDropdowns.akademik}"
+                            class="h-5 w-5 transform transition-transform duration-300 ease-in-out" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div :class="{ 
+                            'max-h-screen': mobileDropdowns.akademik, 
+                            'max-h-0': !mobileDropdowns.akademik 
+                        }" class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4 pr-2 space-y-1">
+                        <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Kurikulum</a>
+                        <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Program Jurusan</a>
+                        <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Ekstrakurikuler</a>
+                        <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Prestasi</a>
+                        <a href="#" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Kalender Akademik</a>
+                    </div>
+                </div>
+
+                <a href="#" class="block rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors">Kontak</a>
+                
+                <div class="pt-2 mt-2 border-t border-gray-100 dark:border-slate-700/50">
+                    <a href="#"
+                        class="block w-full rounded-xl bg-blue-600 px-4 py-3 text-center font-semibold text-white shadow-md shadow-blue-500/30 transition-colors hover:bg-blue-700 active:scale-[0.98]">Pendaftaran</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Banner Profil -->
+    <div class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 bg-blue-900 overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1600&auto=format&fit=crop" class="w-full h-full object-cover opacity-20 dark:opacity-10">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
+        </div>
+        <div class="container relative z-10 mx-auto px-6 text-center">
+            <span class="inline-block px-4 py-1.5 mb-4 text-xs md:text-sm font-semibold text-blue-900 bg-blue-100 rounded-full shadow-sm">Profil Sekolah</span>
+            <h1 class="text-3xl md:text-5xl font-bold text-white mb-4">Visi, Misi & Tujuan</h1>
+            <p class="text-blue-200 text-base md:text-lg max-w-2xl mx-auto">Mengenal lebih dekat arah, tujuan, dan landasan utama SMAN 1 Nogosari dalam mencetak generasi unggul penerus bangsa.</p>
+        </div>
+    </div>
+
+    <!-- Sambutan Kepala Sekolah Section -->
+    <section class="relative py-16 md:py-24 px-6 md:px-0 bg-white dark:bg-slate-900">
+        <div class="container mx-auto px-0 md:px-4 max-w-6xl">
+            <div class="flex flex-col md:flex-row items-center gap-10 md:gap-16">
+                <!-- Gambar Kepala Sekolah -->
+                <div class="w-full md:w-1/3 relative flex justify-center order-2 md:order-1 mt-8 md:mt-0">
+                    <div class="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl relative w-full max-w-sm border-4 border-white dark:border-slate-800 z-10">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Kepala Sekolah">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
+                            <h4 class="text-white font-bold text-xl">Dr. H. Budi Santoso, M.Pd</h4>
+                            <p class="text-blue-300 text-sm font-medium mt-1">Kepala SMAN 1 Nogosari</p>
+                        </div>
+                    </div>
+                    <!-- Dekorasi Background -->
+                    <div class="absolute -bottom-6 -right-6 bg-blue-500 w-32 h-32 rounded-full -z-0 blur-3xl opacity-30 dark:opacity-20"></div>
+                    <div class="absolute -top-6 -left-6 bg-cyan-400 w-32 h-32 rounded-full -z-0 blur-3xl opacity-30 dark:opacity-20"></div>
+                </div>
+                
+                <!-- Teks Sambutan -->
+                <div class="w-full md:w-2/3 order-1 md:order-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="h-1 w-10 bg-blue-600 rounded-full"></div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-blue-950 dark:text-white font-serif tracking-wide">Sambutan Kepala Sekolah</h2>
+                    </div>
+                    
+                    <div class="text-gray-700 dark:text-gray-300 space-y-5 text-base md:text-lg leading-relaxed text-justify">
+                        <p class="relative z-10 font-medium text-gray-800 dark:text-gray-200">
+                            <i data-lucide="quote" class="absolute -top-6 -left-6 w-12 h-12 text-blue-100 dark:text-slate-800 -z-10 rotate-180"></i>
+                            "Selamat datang di website resmi SMA Negeri 1 Nogosari. Kami berkomitmen untuk memberikan pendidikan berkualitas yang tidak hanya berfokus pada kecerdasan akademis, tetapi juga pembentukan karakter peserta didik yang berakhlak mulia dan berbudaya lingkungan."
+                        </p>
+                        <p>Di era digital dan globalisasi saat ini, lembaga pendidikan memiliki tanggung jawab besar. Oleh karena itu, kami terus berinovasi dalam metode pembelajaran serta melengkapi berbagai fasilitas guna memastikan anak-anak kita siap menghadapi tantangan masa depan dengan bekal ilmu dan iman yang seimbang.</p>
+                        <p>Kolaborasi yang erat antara guru, siswa, komite sekolah, dan masyarakat adalah kunci utama dari kesuksesan yang kita raih bersama. Melalui visi dan misi yang jelas, kami berharap dapat mewujudkan sekolah sebagai tempat yang menyenangkan untuk belajar dan bertumbuh.</p>
+                        <p>Terima kasih atas dukungan dan kepercayaan Bapak/Ibu sekalian terhadap sekolah kami. Mari kita bersama-sama mewujudkan generasi penerus yang cerdas, terampil, dan siap berkontribusi bagi nusa dan bangsa.</p>
+                    </div>
+                    
+                    <!-- Tanda tangan / Nama Bawah -->
+                    <div class="mt-8 pt-6 border-t border-gray-100 dark:border-slate-800 inline-block">
+                        <p class="font-bold text-blue-950 dark:text-white text-lg">Dr. H. Budi Santoso, M.Pd</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">NIP. 19750817 200003 1 004</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visi & Misi Section -->
+    <section class="relative py-16 md:py-24 px-6 md:px-0 bg-blue-50 dark:bg-slate-800/50">
+        <div class="container mx-auto px-0 md:px-4 max-w-6xl">
+            
+            <!-- Header Section -->
+            <div class="text-center mb-12 md:mb-16 relative z-10">
+                <h2 class="text-3xl md:text-4xl font-bold text-blue-950 dark:text-white mb-4">Visi & Misi Sekolah</h2>
+                <div class="w-24 h-1.5 bg-blue-600 rounded-full mx-auto"></div>
+                <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-sm md:text-base">Arah langkah dan komitmen kami dalam menyelenggarakan pendidikan yang bermutu dan berdaya saing tinggi.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
+                
+                <!-- Kotak Visi (Kiri) -->
+                <div class="lg:col-span-5">
+                    <div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-8 md:p-10 shadow-xl text-white relative overflow-hidden h-full flex flex-col justify-center transform transition-transform hover:-translate-y-1 duration-300">
+                        <!-- Pattern/Dekorasi Visi -->
+                        <div class="absolute top-0 right-0 w-48 h-48 bg-white opacity-5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/4"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 bg-blue-400 opacity-20 rounded-full blur-2xl translate-y-1/4 -translate-x-1/4"></div>
+                        
+                        <div class="relative z-10">
+                            <div class="bg-white/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm shadow-inner">
+                                <i data-lucide="eye" class="w-8 h-8 text-white"></i>
+                            </div>
+                            
+                            <h3 class="text-2xl md:text-3xl font-bold mb-5 tracking-wide">Visi</h3>
+                            <p class="text-xl md:text-2xl font-medium leading-relaxed text-blue-50">
+                                "Terwujudnya Lulusan yang Bertaqwa, Berkarakter, Cerdas, Terampil, dan Berbudaya Lingkungan serta Mampu Bersaing di Era Global."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daftar Misi (Kanan) -->
+                <div class="lg:col-span-7">
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 md:p-10 shadow-lg border border-gray-100 dark:border-slate-700 h-full">
+                        <div class="flex items-center mb-8 pb-4 border-b border-gray-100 dark:border-slate-700">
+                            <div class="bg-blue-100 dark:bg-slate-700/50 w-12 h-12 rounded-xl flex items-center justify-center mr-4">
+                                <i data-lucide="target" class="w-6 h-6 text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                            <h3 class="text-2xl md:text-3xl font-bold text-blue-950 dark:text-white">Misi</h3>
+                        </div>
+                        
+                        <ul class="space-y-6">
+                            <li class="flex items-start group">
+                                <span class="flex-shrink-0 w-10 h-10 bg-blue-50 dark:bg-slate-700 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-base mt-0.5 mr-5 shadow-sm">1</span>
+                                <p class="text-gray-700 dark:text-gray-300 text-base md:text-lg pt-1.5">Menumbuhkembangkan keimanan dan ketaqwaan melalui pembiasaan kegiatan keagamaan di lingkungan sekolah.</p>
+                            </li>
+                            <li class="flex items-start group">
+                                <span class="flex-shrink-0 w-10 h-10 bg-blue-50 dark:bg-slate-700 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-base mt-0.5 mr-5 shadow-sm">2</span>
+                                <p class="text-gray-700 dark:text-gray-300 text-base md:text-lg pt-1.5">Melaksanakan proses pembelajaran dan bimbingan secara efektif, inovatif, dan berpusat pada peserta didik.</p>
+                            </li>
+                            <li class="flex items-start group">
+                                <span class="flex-shrink-0 w-10 h-10 bg-blue-50 dark:bg-slate-700 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-base mt-0.5 mr-5 shadow-sm">3</span>
+                                <p class="text-gray-700 dark:text-gray-300 text-base md:text-lg pt-1.5">Membina peserta didik untuk mengembangkan minat, bakat, dan potensi yang dimiliki melalui kegiatan ekstrakurikuler.</p>
+                            </li>
+                            <li class="flex items-start group">
+                                <span class="flex-shrink-0 w-10 h-10 bg-blue-50 dark:bg-slate-700 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-base mt-0.5 mr-5 shadow-sm">4</span>
+                                <p class="text-gray-700 dark:text-gray-300 text-base md:text-lg pt-1.5">Mewujudkan lingkungan sekolah yang bersih, asri, aman, dan nyaman sebagai pilar utama pendukung proses belajar mengajar.</p>
+                            </li>
+                            <li class="flex items-start group">
+                                <span class="flex-shrink-0 w-10 h-10 bg-blue-50 dark:bg-slate-700 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-base mt-0.5 mr-5 shadow-sm">5</span>
+                                <p class="text-gray-700 dark:text-gray-300 text-base md:text-lg pt-1.5">Meningkatkan kemampuan pemanfaatan teknologi informasi dan komunikasi untuk siap bersaing di tingkat global.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section (Disamakan dengan index.html) -->
+    <footer class="bg-slate-800 text-slate-300 pt-16 pb-8 border-t border-slate-900 px-6 md:px-10">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 md:gap-12 mb-12">
+                
+                <!-- Col 1: Brand & About -->
+                <div class="lg:col-span-3">
+                    <a href="index.html" class="text-2xl font-bold text-white mb-6 inline-block">SMAN 1 Nogosari</a>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-6">Mencetak Generasi Unggul, Berkarakter, dan Berwawasan Global melalui pendidikan berkualitas dan fasilitas modern.</p>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+
+                <!-- Col 2: Quick Links -->
+                <div class="lg:col-span-2">
+                    <h4 class="text-white font-bold mb-6 text-lg">Tautan Cepat</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-2"></i> Profil Sekolah</a></li>
+                        <li><a href="visi-misi.html" class="hover:text-white transition-colors flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-2"></i> Visi & Misi</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-2"></i> Data Guru & Staf</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-2"></i> Prestasi Siswa</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-2"></i> Galeri Kegiatan</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Contact Info -->
+                <div class="lg:col-span-3">
+                    <h4 class="text-white font-bold mb-6 text-lg">Hubungi Kami</h4>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex items-start">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0"></i>
+                            <span class="text-slate-400">Jl. Raya Nogosari No. 123, Kec. Nogosari, Kab. Boyolali, Jawa Tengah 57378</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="phone" class="w-5 h-5 text-blue-500 mr-3 flex-shrink-0"></i>
+                            <span class="text-slate-400">(0276) 1234567</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="mail" class="w-5 h-5 text-blue-500 mr-3 flex-shrink-0"></i>
+                            <span class="text-slate-400">info@sman1nogosari.sch.id</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Maps -->
+                <div class="lg:col-span-4">
+                    <h4 class="text-white font-bold mb-6 text-lg">Lokasi Kami</h4>
+                    <div class="h-64 rounded-xl overflow-hidden bg-slate-800/50 border border-slate-700/50">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.5103639967265!2d110.79379!3d-7.4682055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMjgnMDUuNSJTIDExMMKwNDcnMzcuNiJF!5e0!3m2!1sen!2sid!4v1620000000000!5m2!1sen!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" class="opacity-80 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="pt-8 border-t border-slate-900 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+                <p>&copy; 2026 SMAN 1 Nogosari. Hak Cipta Dilindungi.</p>
+                <div class="flex gap-4">
+                    <a href="#" class="hover:text-slate-300 transition-colors">Kebijakan Privasi</a>
+                    <a href="#" class="hover:text-slate-300 transition-colors">Syarat & Ketentuan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Vue & Scripts -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script>
+        const { createApp, ref, onMounted, onBeforeUnmount, reactive } = Vue;
+
+        createApp({
+            setup() {
+                const isNavbarScrolled = ref(false);
+                const isMobileMenuOpen = ref(false);
+                const mobileDropdowns = reactive({
+                    profil: false,
+                    akademik: false
+                });
+                const isDarkMode = ref(false);
+
+                const setDarkMode = (isDark) => {
+                    isDarkMode.value = isDark;
+                    if (isDark) {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    }
+                    setTimeout(() => { lucide.createIcons(); }, 0);
+                };
+
+                const toggleDarkMode = () => {
+                    setDarkMode(!isDarkMode.value);
+                };
+
+                const handleScroll = () => {
+                    isNavbarScrolled.value = window.scrollY > 50;
+                };
+
+                const toggleMobileMenu = () => {
+                    isMobileMenuOpen.value = !isMobileMenuOpen.value;
+                    mobileDropdowns.profil = false;
+                    mobileDropdowns.akademik = false;
+                };
+
+                const toggleMobileDropdown = (dropdownName) => {
+                    mobileDropdowns[dropdownName] = !mobileDropdowns[dropdownName];
+                    for (const key in mobileDropdowns) {
+                        if (key !== dropdownName) {
+                            mobileDropdowns[key] = false;
+                        }
+                    }
+                };
+
+                onMounted(() => {
+                    lucide.createIcons();
+                    window.addEventListener('scroll', handleScroll);
+                    handleScroll();
+
+                    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                        setDarkMode(true);
+                    } else {
+                        setDarkMode(false);
+                    }
+                });
+
+                onBeforeUnmount(() => {
+                    window.removeEventListener('scroll', handleScroll);
+                });
+
+                return {
+                    isNavbarScrolled,
+                    isMobileMenuOpen,
+                    mobileDropdowns,
+                    toggleMobileMenu,
+                    toggleMobileDropdown,
+                    isDarkMode,
+                    toggleDarkMode
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>
