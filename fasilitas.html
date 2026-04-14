@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fasilitas Sekolah - SMAN 1 Nogosari</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-slate-900 overflow-x-hidden relative w-full" id="app">
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 left-0 z-50 w-full px-6 py-4 transition-all duration-300 ease-in-out"
+        :class="{'bg-white/80 shadow-md backdrop-blur-sm dark:bg-slate-900/80 dark:border-b dark:border-slate-800': isNavbarScrolled, 'bg-transparent': !isNavbarScrolled}">
+        <div class="container flex items-center justify-between max-w-6xl mx-auto">
+            <a href="index.html" class="text-2xl font-bold"
+                :class="{'text-gray-800 dark:text-white': isNavbarScrolled, 'text-white': !isNavbarScrolled}">SMAN 1
+                Nogosari</a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden items-center space-x-2 lg:flex">
+                <a href="index.html" class="rounded-md px-3 py-2"
+                    :class="{'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400': isNavbarScrolled, 'text-white hover:bg-blue-500/10 hover:text-blue-300': !isNavbarScrolled}">Beranda</a>
+
+                <!-- Profil Dropdown -->
+                <div class="group relative">
+                    <button
+                        class="flex items-center rounded-md px-3 py-2" :class="{'text-blue-600 dark:text-blue-400 font-semibold': isNavbarScrolled, 'text-blue-300 font-semibold hover:bg-blue-500/10': !isNavbarScrolled}">
+                        <span>Profil</span>
+                        <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div
+                        class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white dark:bg-slate-800 py-2 text-gray-800 dark:text-gray-200 shadow-lg group-hover:block">
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Sejarah Sekolah</a>
+                        <a href="visi-misi.html" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Visi & Misi</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Struktur Organisasi</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Guru & Staf</a>
+                        <a href="fasilitas.html" class="block px-4 py-2 text-sm text-blue-600 dark:text-blue-400 font-medium hover:bg-gray-100 dark:hover:bg-slate-700">Fasilitas</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Akreditasi</a>
+                    </div>
+                </div>
+
+                <!-- Akademik Dropdown -->
+                <div class="group relative">
+                    <button
+                        class="flex items-center rounded-md px-3 py-2" :class="{'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400': isNavbarScrolled, 'text-white hover:bg-blue-500/10 hover:text-blue-300': !isNavbarScrolled}">
+                        <span>Akademik</span>
+                        <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div
+                        class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white dark:bg-slate-800 py-2 text-gray-800 dark:text-gray-200 shadow-lg group-hover:block">
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Kurikulum</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Program Jurusan</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Ekstrakurikuler</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Prestasi</a>
+                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Kalender Akademik</a>
+                    </div>
+                </div>
+
+                <a href="#" class="rounded-md px-3 py-2"
+                    :class="{'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400': isNavbarScrolled, 'text-white hover:bg-blue-500/10 hover:text-blue-300': !isNavbarScrolled}">Kontak</a>
+            </div>
+
+            <div class="hidden items-center lg:flex">
+                <a href="#"
+                    class="rounded-full bg-blue-600 px-5 py-2 font-semibold text-white transition-colors hover:bg-blue-700">Pendaftaran</a>
+                <button @click="toggleDarkMode" class="ml-2 p-2 rounded-full focus:outline-none transition-colors"
+                    :class="[isNavbarScrolled ? 'text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-slate-700' : 'text-white hover:bg-white/10']">
+                    <span v-show="!isDarkMode"><i data-lucide="moon" class="w-5 h-5"></i></span>
+                    <span v-show="isDarkMode"><i data-lucide="sun" class="w-5 h-5"></i></span>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="flex items-center gap-2 lg:hidden">
+                <button @click="toggleDarkMode" class="p-2 rounded-full focus:outline-none transition-colors"
+                    :class="[isNavbarScrolled ? 'text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-slate-700' : 'text-white hover:bg-white/10']">
+                    <span v-show="!isDarkMode"><i data-lucide="moon" class="w-5 h-5"></i></span>
+                    <span v-show="isDarkMode"><i data-lucide="sun" class="w-5 h-5"></i></span>
+                </button>
+                <button @click="toggleMobileMenu"
+                    :class="[isNavbarScrolled ? 'text-gray-800 hover:bg-gray-200 dark:text-gray-200 dark:hover:bg-slate-700' : 'text-white hover:bg-white/10']"
+                    class="p-2 rounded-md focus:outline-none transition-colors">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <div class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-900 dark:to-slate-900 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-t dark:from-slate-900 to-transparent"></div>
+        <div class="container relative z-10 mx-auto px-6 text-center">
+            <span class="inline-block px-4 py-1.5 mb-4 text-xs md:text-sm font-semibold text-blue-900 bg-blue-100 rounded-full shadow-sm">Profil Sekolah</span>
+            <h1 class="text-3xl md:text-5xl font-bold text-white mb-4">Fasilitas Sekolah</h1>
+            <p class="text-blue-200 text-base md:text-lg max-w-3xl mx-auto">Jelajahi berbagai fasilitas modern dan lengkap yang kami sediakan untuk mendukung proses belajar mengajar yang optimal dan pengembangan potensi siswa.</p>
+        </div>
+    </div>
+
+    <!-- Main Content Section -->
+    <section class="py-16 md:py-24 px-6">
+        <div class="container mx-auto max-w-7xl">
+            <div class="flex flex-col md:flex-row gap-8 lg:gap-12">
+                
+                <!-- Left Navigation -->
+                <aside class="w-full md:w-1/4 lg:w-1/5">
+                    <div class="sticky top-28">
+                        <h3 class="text-lg font-bold text-blue-950 dark:text-white mb-4 pl-3">Kategori Fasilitas</h3>
+                        <ul class="space-y-2">
+                            <li v-for="category in facilityCategories" :key="category.id">
+                                <a href="#" @click.prevent="activeCategory = category.id"
+                                   class="flex items-center gap-3 p-3 rounded-lg transition-colors text-sm font-semibold"
+                                   :class="{
+                                       'bg-blue-600 text-white shadow': activeCategory === category.id,
+                                       'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-800': activeCategory !== category.id
+                                   }">
+                                    <i :data-lucide="category.icon" class="w-5 h-5"></i>
+                                    <span>{{ category.name }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </aside>
+
+                <!-- Right Content -->
+                <main class="w-full md:w-3/4 lg:w-4/5 bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-700">
+                    <template v-for="category in facilityCategories" :key="category.id">
+                        <div v-if="activeCategory === category.id">
+                            <div class="border-b border-gray-200 dark:border-slate-700 pb-5 mb-8">
+                                <h2 class="text-2xl md:text-3xl font-bold text-blue-950 dark:text-white">{{ category.name }}</h2>
+                                <p class="mt-2 text-gray-600 dark:text-gray-400 text-base">{{ category.description }}</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                                <div v-for="(image, index) in category.images" :key="index" 
+                                     class="relative aspect-video rounded-xl overflow-hidden group shadow-md">
+                                    <img :src="image.src" :alt="image.alt" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                                    <div class="absolute bottom-0 left-0 p-4">
+                                        <h4 class="text-white font-bold text-sm md:text-base">{{ image.alt }}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="bg-slate-800 text-slate-300 pt-16 pb-8 border-t border-slate-900 px-6 md:px-10 mt-12">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 md:gap-12 mb-12">
+                <div class="lg:col-span-3">
+                    <a href="index.html" class="text-2xl font-bold text-white mb-6 inline-block">SMAN 1 Nogosari</a>
+                </div>
+                <div class="lg:col-span-2">
+                    <h4 class="text-white font-bold mb-6 text-lg">Tautan Cepat</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Profil Sekolah</a></li>
+                        <li><a href="visi-misi.html" class="hover:text-white transition-colors">Visi & Misi</a></li>
+                        <li><a href="fasilitas.html" class="hover:text-white transition-colors">Fasilitas</a></li>
+                    </ul>
+                </div>
+                <div class="lg:col-span-3">
+                    <h4 class="text-white font-bold mb-6 text-lg">Hubungi Kami</h4>
+                </div>
+                <div class="lg:col-span-4">
+                    <h4 class="text-white font-bold mb-6 text-lg">Lokasi Kami</h4>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-slate-900 text-xs text-slate-500 text-center">
+                <p>&copy; 2026 SMAN 1 Nogosari. Hak Cipta Dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Vue & Scripts -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script>
+        const { createApp, ref, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                const isNavbarScrolled = ref(false);
+                const isDarkMode = ref(localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches));
+                const activeCategory = ref('kelas');
+
+                const facilityCategories = ref([
+                    { id: 'kelas', name: 'Ruang Kelas', icon: 'school', description: 'Ruang kelas yang nyaman dan representatif dengan pendingin ruangan, proyektor, dan papan tulis interaktif untuk menunjang kegiatan belajar mengajar yang efektif.', images: [
+                        { src: 'https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800', alt: 'Ruang Kelas Modern' },
+                        { src: 'https://images.unsplash.com/photo-1594434533439-04c3a735d359?q=80&w=800', alt: 'Siswa Belajar di Kelas' }
+                    ]},
+                    { id: 'lab', name: 'Laboratorium', icon: 'flask-conical', description: 'Laboratorium modern untuk Fisika, Kimia, Biologi, dan Komputer yang dilengkapi peralatan canggih untuk mendukung praktikum dan penelitian siswa.', images: [
+                        { src: 'https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800', alt: 'Laboratorium Sains' },
+                        { src: 'https://images.unsplash.com/photo-1581092916346-539270a41b5f?q=80&w=800', alt: 'Praktikum Kimia' },
+                        { src: 'https://images.unsplash.com/photo-1628243422323-b5039a8a4010?q=80&w=800', alt: 'Laboratorium Komputer' }
+                    ]},
+                    { id: 'perpus', name: 'Perpustakaan', icon: 'book-open', description: 'Koleksi ribuan buku, jurnal, dan referensi digital dalam suasana yang tenang dan nyaman, menjadi pusat sumber belajar bagi seluruh warga sekolah.', images: [
+                        { src: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800', alt: 'Rak Buku Perpustakaan' },
+                        { src: 'https://images.unsplash.com/photo-1531988042231-d39a9cc12a9a?q=80&w=800', alt: 'Area Baca yang Nyaman' }
+                    ]},
+                    { id: 'olahraga', name: 'Sarana Olahraga', icon: 'dribbble', description: 'Fasilitas olahraga yang lengkap mulai dari lapangan basket, voli, futsal, hingga area atletik untuk menyalurkan minat dan bakat siswa di bidang olahraga.', images: [
+                        { src: 'https://images.unsplash.com/photo-1575361204480-aadea2503aa4?q=80&w=800', alt: 'Lapangan Sepak Bola' },
+                        { src: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800', alt: 'Arena E-Sports' },
+                        { src: 'https://images.unsplash.com/photo-1560089013-7b626d116385?q=80&w=800', alt: 'Lapangan Basket Indoor' }
+                    ]},
+                    { id: 'pendukung', name: 'Fasilitas Pendukung', icon: 'layout-grid', description: 'Berbagai fasilitas lain seperti kantin sehat, mushola, aula serbaguna, dan area parkir yang luas untuk menunjang kenyamanan seluruh aktivitas sekolah.', images: [
+                        { src: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=800', alt: 'Kantin Sekolah' },
+                        { src: 'https://images.unsplash.com/photo-1584486188544-dc2e1417aff1?q=80&w=800', alt: 'Aula Serbaguna' }
+                    ]}
+                ]);
+
+                const handleScroll = () => { isNavbarScrolled.value = window.scrollY > 20; };
+
+                onMounted(() => {
+                    lucide.createIcons();
+                    window.addEventListener('scroll', handleScroll);
+                    handleScroll();
+                });
+
+                return { isNavbarScrolled, isDarkMode, activeCategory, facilityCategories };
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>
