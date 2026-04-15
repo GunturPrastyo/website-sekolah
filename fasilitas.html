@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fasilitas Sekolah - SMAN 1 Nogosari</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>    <script>
         tailwind.config = {
             darkMode: 'class',
         }
@@ -154,38 +154,38 @@
                 </aside>
 
                 <!-- Right Content -->
-                <main class="w-full md:w-3/4 lg:w-4/5 bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-700">
+                <main class="w-full md:w-3/4 lg:w-4/5 bg-white dark:bg-slate-800 p-6 sm:p-8 md:p-10 lg:p-12 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-700">
                     <template v-for="category in facilityCategories" :key="category.id">
-                        <div v-if="activeCategory === category.id">
-                            <div class="border-b border-gray-200 dark:border-slate-700 pb-5 mb-8">
-                                <h2 class="text-2xl md:text-3xl font-bold text-blue-950 dark:text-white">{{ category.name }}</h2>
-                                <p class="mt-2 text-gray-600 dark:text-gray-400 text-base">{{ category.description }}</p>
-                            </div>
-                            
-                            <div class="space-y-12">
-                                <div v-for="(item, index) in category.items" :key="index" class="flex flex-col md:flex-row gap-6 lg:gap-8 items-center" :class="{'md:flex-row-reverse': index % 2 !== 0}">
-                                    
-                                    <!-- Image -->
-                                    <div class="md:w-1/2 lg:w-5/12 flex-shrink-0">
-                                        <div class="relative aspect-video rounded-xl overflow-hidden group shadow-lg">
-                                            <img :src="item.src" :alt="item.title" class="w-full h-full object-cover" />
-                                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                                            <div class="absolute bottom-0 left-0 p-4">
-                                                <h4 class="text-white font-bold text-sm md:text-base">{{ item.title }}</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Content -->
-                                    <div class="md:w-1/2 lg:w-7/12">
-                                        <h3 class="text-xl font-bold text-blue-950 dark:text-white mb-3">{{ item.title }}</h3>
-                                        <p class="text-gray-600 dark:text-gray-400 text-base leading-relaxed">
-                                            {{ item.text }}
-                                        </p>
-                                    </div>
+                        <article v-if="activeCategory === category.id" class="prose prose-lg dark:prose-invert max-w-none">
+                            <!-- Article Header -->
+                            <div class="not-prose border-b border-gray-200 dark:border-slate-700 pb-5 mb-8">
+                                <h2 class="text-3xl md:text-4xl font-bold text-blue-950 dark:text-white !mb-3">{{ category.name }}</h2>
+                                <div class="text-sm text-gray-500 dark:text-gray-400">
+                                    <span>Oleh: Tim Redaksi Sekolah</span> | 
+                                    <time>Diperbarui 15 April 2026</time>
                                 </div>
                             </div>
-                        </div>
+
+                            <!-- Lead Paragraph -->
+                            <p class="lead text-lg text-gray-600 dark:text-gray-300">
+                                {{ category.description }}
+                            </p>
+
+                            <!-- Article Content Loop -->
+                            <div class="mt-10">
+                                <div v-for="(item, index) in category.items" :key="index" class="mb-12">
+                                    <h3>{{ item.title }}</h3>
+                                    <p>{{ item.text }}</p>
+                                    <figure class="mt-6">
+                                        <img :src="item.src" :alt="item.title" class="w-full h-auto object-cover rounded-xl shadow-lg border-4 border-white dark:border-slate-700" />
+                                        <figcaption class="text-center text-sm text-gray-500 dark:text-gray-400 mt-3 italic">
+                                            {{ item.title }}
+                                        </figcaption>
+                                    </figure>
+                                    <hr v-if="index < category.items.length - 1" class="!my-12">
+                                </div>
+                            </div>
+                        </article>
                     </template>
                 </main>
             </div>
@@ -231,29 +231,49 @@
                 const isDarkMode = ref(localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches));
                 const activeCategory = ref('kelas');
 
-                const facilityCategories = ref([
-                    { id: 'kelas', name: 'Ruang Kelas', icon: 'school', description: 'Ruang kelas yang nyaman dan representatif dengan pendingin ruangan, proyektor, dan papan tulis interaktif untuk menunjang kegiatan belajar mengajar yang efektif.', images: [
-                        { src: 'https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800', alt: 'Ruang Kelas Modern' },
-                        { src: 'https://images.unsplash.com/photo-1594434533439-04c3a735d359?q=80&w=800', alt: 'Siswa Belajar di Kelas' }
-                    ]},
-                    { id: 'lab', name: 'Laboratorium', icon: 'flask-conical', description: 'Laboratorium modern untuk Fisika, Kimia, Biologi, dan Komputer yang dilengkapi peralatan canggih untuk mendukung praktikum dan penelitian siswa.', images: [
-                        { src: 'https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800', alt: 'Laboratorium Sains' },
-                        { src: 'https://images.unsplash.com/photo-1581092916346-539270a41b5f?q=80&w=800', alt: 'Praktikum Kimia' },
-                        { src: 'https://images.unsplash.com/photo-1628243422323-b5039a8a4010?q=80&w=800', alt: 'Laboratorium Komputer' }
-                    ]},
-                    { id: 'perpus', name: 'Perpustakaan', icon: 'book-open', description: 'Koleksi ribuan buku, jurnal, dan referensi digital dalam suasana yang tenang dan nyaman, menjadi pusat sumber belajar bagi seluruh warga sekolah.', images: [
-                        { src: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800', alt: 'Rak Buku Perpustakaan' },
-                        { src: 'https://images.unsplash.com/photo-1531988042231-d39a9cc12a9a?q=80&w=800', alt: 'Area Baca yang Nyaman' }
-                    ]},
-                    { id: 'olahraga', name: 'Sarana Olahraga', icon: 'dribbble', description: 'Fasilitas olahraga yang lengkap mulai dari lapangan basket, voli, futsal, hingga area atletik untuk menyalurkan minat dan bakat siswa di bidang olahraga.', images: [
-                        { src: 'https://images.unsplash.com/photo-1575361204480-aadea2503aa4?q=80&w=800', alt: 'Lapangan Sepak Bola' },
-                        { src: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800', alt: 'Arena E-Sports' },
-                        { src: 'https://images.unsplash.com/photo-1560089013-7b626d116385?q=80&w=800', alt: 'Lapangan Basket Indoor' }
-                    ]},
-                    { id: 'pendukung', name: 'Fasilitas Pendukung', icon: 'layout-grid', description: 'Berbagai fasilitas lain seperti kantin sehat, mushola, aula serbaguna, dan area parkir yang luas untuk menunjang kenyamanan seluruh aktivitas sekolah.', images: [
-                        { src: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=800', alt: 'Kantin Sekolah' },
-                        { src: 'https://images.unsplash.com/photo-1584486188544-dc2e1417aff1?q=80&w=800', alt: 'Aula Serbaguna' }
-                    ]}
+                 const facilityCategories = ref([
+                    { 
+                        id: 'kelas', name: 'Ruang Kelas', icon: 'school', 
+                        description: 'Ruang kelas yang nyaman dan representatif dengan pendingin ruangan, proyektor, dan papan tulis interaktif untuk menunjang kegiatan belajar mengajar yang efektif.', 
+                        items: [
+                            { src: 'https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800', title: 'Ruang Kelas Modern & Nyaman', text: 'Setiap ruang kelas di SMAN 1 Nogosari dirancang untuk menciptakan lingkungan belajar yang kondusif dan modern. Dilengkapi dengan AC, proyektor LCD, dan papan tulis interaktif, siswa dapat mengikuti pelajaran dengan nyaman dan fokus. Pencahayaan yang baik dan sirkulasi udara yang memadai juga menjadi prioritas kami.' },
+                            { src: 'https://images.unsplash.com/photo-1594434533439-04c3a735d359?q=80&w=800', title: 'Suasana Belajar Interaktif', text: 'Suasana belajar yang interaktif dan berpusat pada siswa menjadi landasan metode pengajaran kami. Guru tidak hanya berperan sebagai pengajar, tetapi juga sebagai fasilitator yang mendorong siswa untuk aktif bertanya, berdiskusi, dan berkolaborasi dalam memecahkan masalah.' }
+                        ]
+                    },
+                    { 
+                        id: 'lab', name: 'Laboratorium', icon: 'flask-conical', 
+                        description: 'Laboratorium modern untuk Fisika, Kimia, Biologi, dan Komputer yang dilengkapi peralatan canggih untuk mendukung praktikum dan penelitian siswa.', 
+                        items: [
+                            { src: 'https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800', title: 'Laboratorium Sains Terpadu', text: 'Laboratorium IPA (Fisika, Kimia, Biologi) kami dilengkapi dengan peralatan modern dan bahan praktikum yang lengkap sesuai standar nasional. Di sini, siswa dapat membuktikan teori yang dipelajari di kelas melalui eksperimen langsung, mengasah keterampilan analitis dan problem-solving.' },
+                            { src: 'https://images.unsplash.com/photo-1581092916346-539270a41b5f?q=80&w=800', title: 'Praktikum dengan Standar Keselamatan Tinggi', text: 'Keselamatan adalah prioritas utama di laboratorium kami. Selama sesi praktikum, siswa diwajibkan menggunakan alat pelindung diri dan didampingi oleh guru serta laboran yang berpengalaman untuk memastikan semua prosedur berjalan dengan aman dan benar.' },
+                            { src: 'https://images.unsplash.com/photo-1628243422323-b5039a8a4010?q=80&w=800', title: 'Laboratorium Komputer Modern', text: 'Menghadapi era digital, sekolah kami menyediakan laboratorium komputer dengan puluhan unit PC berspesifikasi tinggi dan koneksi internet yang cepat. Fasilitas ini digunakan untuk pelajaran TIK, ujian berbasis komputer, serta pengembangan skill digital siswa.' }
+                        ]
+                    },
+                    { 
+                        id: 'perpus', name: 'Perpustakaan', icon: 'book-open', 
+                        description: 'Koleksi ribuan buku, jurnal, dan referensi digital dalam suasana yang tenang dan nyaman, menjadi pusat sumber belajar bagi seluruh warga sekolah.', 
+                        items: [
+                            { src: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800', title: 'Pusat Sumber Belajar dan Literasi', text: 'Perpustakaan SMAN 1 Nogosari adalah jantung pengetahuan sekolah. Dengan koleksi lebih dari 10.000 buku fiksi, non-fiksi, buku pelajaran, hingga referensi ilmiah, kami berupaya menumbuhkan minat baca dan budaya literasi di kalangan siswa.' },
+                            { src: 'https://images.unsplash.com/photo-1531988042231-d39a9cc12a9a?q=80&w=800', title: 'Area Baca yang Tenang dan Inspiratif', text: 'Selain koleksi buku yang lengkap, kami juga menyediakan area baca yang tenang, sejuk, dan nyaman. Siswa dapat memanfaatkan fasilitas ini untuk belajar mandiri, mengerjakan tugas kelompok, atau sekadar membaca buku favorit di waktu luang.' }
+                        ]
+                    },
+                    { 
+                        id: 'olahraga', name: 'Sarana Olahraga', icon: 'dribbble', 
+                        description: 'Fasilitas olahraga yang lengkap mulai dari lapangan basket, voli, futsal, hingga area atletik untuk menyalurkan minat dan bakat siswa di bidang olahraga.', 
+                        items: [
+                            { src: 'https://images.unsplash.com/photo-1575361204480-aadea2503aa4?q=80&w=800', title: 'Lapangan Sepak Bola Standar', text: 'Kami memiliki lapangan sepak bola berstandar yang terawat baik, menjadi pusat kegiatan ekstrakurikuler sepak bola dan berbagai kompetisi olahraga. Rumput yang hijau dan fasilitas pendukung yang memadai menjadikannya tempat yang ideal untuk mengasah bakat olahraga.' },
+                            { src: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800', title: 'Arena E-Sports', text: 'Mengikuti perkembangan zaman, SMAN 1 Nogosari juga menyediakan fasilitas untuk E-Sports. Ruangan ini dilengkapi dengan perangkat gaming dan koneksi internet stabil untuk mendukung siswa yang memiliki minat dan bakat di bidang olahraga elektronik yang kini semakin populer.' },
+                            { src: 'https://images.unsplash.com/photo-1560089013-7b626d116385?q=80&w=800', title: 'Lapangan Basket Indoor Multifungsi', text: 'Lapangan basket indoor kami memungkinkan siswa untuk berlatih kapan saja tanpa terpengaruh cuaca. Lantai yang berkualitas dan ring basket standar profesional mendukung kegiatan ekstrakurikuler basket dan pertandingan persahabatan antar sekolah.' }
+                        ]
+                    },
+                    { 
+                        id: 'pendukung', name: 'Fasilitas Pendukung', icon: 'layout-grid', 
+                        description: 'Berbagai fasilitas lain seperti kantin sehat, mushola, aula serbaguna, dan area parkir yang luas untuk menunjang kenyamanan seluruh aktivitas sekolah.', 
+                        items: [
+                            { src: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=800', title: 'Kantin Sehat dan Higienis', text: 'Kantin kami menyediakan berbagai pilihan makanan dan minuman yang sehat, higienis, dan terjangkau. Kami bekerja sama dengan para penjual untuk memastikan kualitas makanan selalu terjaga, memberikan energi bagi siswa untuk beraktivitas sepanjang hari.' },
+                            { src: 'https://images.unsplash.com/photo-1584486188544-dc2e1417aff1?q=80&w=800', title: 'Aula Serbaguna', text: 'Aula serbaguna yang luas menjadi pusat berbagai kegiatan sekolah, mulai dari seminar, pentas seni, acara kelulusan, hingga pertemuan dengan orang tua siswa. Dilengkapi dengan panggung, sound system, dan pendingin ruangan, aula ini dapat menampung ratusan orang.' }
+                        ]
+                    }
                 ]);
 
                 const handleScroll = () => { isNavbarScrolled.value = window.scrollY > 20; };
