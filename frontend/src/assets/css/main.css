@@ -1,6 +1,9 @@
-/* Custom Font */
-body {
-    font-family: 'Poppins', sans-serif;
+@import "tailwindcss";
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
 }
 
 /* Styling untuk Swiper agar terlihat jelas */
@@ -63,33 +66,4 @@ body {
     background-color: #ffffff !important;
     width: 24px !important;
     border-radius: 6px !important;
-}
-
-@keyframes scrollX {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(-50%);
-    }
-}
-
-.animate-scroll-x {
-    animation: scrollX 20s linear infinite;
-    width: max-content;
-}
-
-@keyframes scrollY {
-    0% {
-        transform: translateY(0);
-    }
-
-    100% {
-        transform: translateY(-50%);
-    }
-}
-
-.animate-scroll-y {
-    animation: scrollY 15s linear infinite;
 }

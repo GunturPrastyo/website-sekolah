@@ -1,0 +1,108 @@
+<template>
+    <div>
+        <!-- Hero Banner Profil -->
+        <div class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 bg-gradient-to-br from-blue-600 to-blue-800 dark:bg-blue-900 overflow-hidden">
+            <div class="absolute inset-0">
+                <div class="absolute inset-0 bg-gradient-to-t dark:from-slate-900 dark:via-slate-900/60  to-transparent"></div>
+            </div>
+            <div class="container relative z-10 mx-auto px-6 text-center">
+                <span class="inline-block px-4 py-1.5 mb-4 text-xs md:text-sm font-semibold text-blue-900 bg-blue-100 rounded-full shadow-sm">Profil Sekolah</span>
+                <h1 class="text-3xl md:text-5xl font-bold text-white mb-4">Visi, Misi & Tujuan</h1>
+                <p class="text-blue-200 text-base md:text-lg max-w-2xl mx-auto">Mengenal lebih dekat arah, tujuan, dan landasan utama SMAN 1 Nogosari dalam mencetak generasi unggul penerus bangsa.</p>
+            </div>
+        </div>
+
+        <!-- Sambutan Kepala Sekolah Section -->
+        <section class="relative py-16 md:py-24 px-6 md:px-0 bg-white dark:bg-slate-900">
+            <div class="container mx-auto px-0 md:px-4 max-w-6xl">
+                <div class="flex flex-col md:flex-row items-center gap-10 md:gap-16">
+                    <!-- Gambar Kepala Sekolah -->
+                    <div class="w-full md:w-1/3 flex justify-center order-2 md:order-1 mt-8 md:mt-0 pl-4 pb-4 md:pl-0 md:pb-0">
+                        <div class="relative w-full max-w-sm aspect-[4/5]">
+                            <div class="absolute -left-4 -bottom-4 md:-left-6 md:-bottom-6 w-full h-full bg-blue-600 dark:bg-blue-700 rounded-2xl z-0 shadow-lg"></div>
+                            <div class="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 z-10 bg-white dark:bg-slate-800">
+                                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Kepala Sekolah">
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
+                                    <h4 class="text-white font-bold text-xl">Dr. H. Budi Santoso, M.Pd</h4>
+                                    <p class="text-blue-300 text-sm font-medium mt-1">Kepala SMAN 1 Nogosari</p>
+                                </div>
+                            </div>
+                            <div class="absolute -bottom-8 -right-8 bg-blue-500 w-32 h-32 rounded-full -z-10 blur-3xl opacity-30 dark:opacity-20"></div>
+                            <div class="absolute -top-8 -left-8 bg-cyan-400 w-32 h-32 rounded-full -z-10 blur-3xl opacity-30 dark:opacity-20"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Teks Sambutan -->
+                    <div class="w-full md:w-2/3 order-1 md:order-2">
+                        <div class="flex items-center gap-3 mb-6">
+                            <h2 class="text-3xl md:text-4xl font-bold text-blue-950 dark:text-white font-serif tracking-wide">Sambutan Kepala Sekolah</h2>
+                        </div>
+                        
+                        <div class="text-gray-700 dark:text-gray-300 space-y-5 text-base md:text-lg leading-relaxed text-justify">
+                            <p class="relative z-10 font-medium text-gray-800 dark:text-gray-200">
+                                <i data-lucide="quote" class="absolute -top-6 -left-6 w-12 h-12 text-blue-100 dark:text-slate-800 -z-10 rotate-180"></i>
+                                "Selamat datang di website resmi SMA Negeri 1 Nogosari. Kami berkomitmen untuk memberikan pendidikan berkualitas yang tidak hanya berfokus pada kecerdasan akademis, tetapi juga pembentukan karakter peserta didik yang berakhlak mulia dan berbudaya lingkungan."
+                            </p>
+                            <p>Di era digital dan globalisasi saat ini, lembaga pendidikan memiliki tanggung jawab besar. Oleh karena itu, kami terus berinovasi dalam metode pembelajaran serta melengkapi berbagai fasilitas guna memastikan anak-anak kita siap menghadapi tantangan masa depan dengan bekal ilmu dan iman yang seimbang.</p>
+                            <p>Kolaborasi yang erat antara guru, siswa, komite sekolah, dan masyarakat adalah kunci utama dari kesuksesan yang kita raih bersama. Melalui visi dan misi yang jelas, kami berharap dapat mewujudkan sekolah sebagai tempat yang menyenangkan untuk belajar dan bertumbuh.</p>
+                            <p>Terima kasih atas dukungan dan kepercayaan Bapak/Ibu sekalian terhadap sekolah kami. Mari kita bersama-sama mewujudkan generasi penerus yang cerdas, terampil, dan siap berkontribusi bagi nusa dan bangsa.</p>
+                        </div>
+                        
+                        <div class="mt-8 pt-6 border-t border-gray-100 dark:border-slate-800 inline-block">
+                            <p class="font-bold text-blue-950 dark:text-white text-lg">Dr. H. Budi Santoso, M.Pd</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">NIP. 19750817 200003 1 004</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visi & Misi Section -->
+        <section class="relative w-full">
+            <div class="flex flex-col lg:flex-row w-full">
+                
+                <div class="w-full lg:w-6/12 bg-gradient-to-br from-blue-600 to-blue-800 dark:from-slate-900 dark:to-slate-900 p-10 md:p-16 lg:p-24 text-white relative overflow-hidden flex flex-col justify-center">
+                    <div class="relative z-10">
+                        <h3 class="text-3xl md:text-4xl font-bold mb-6 tracking-wide">Visi</h3>
+                        <p class="text-xl md:text-2xl font-medium leading-relaxed text-blue-50">
+                            "Terwujudnya Lulusan yang Bertaqwa, Berkarakter, Cerdas, Terampil, dan Berbudaya Lingkungan serta Mampu Bersaing di Era Global."
+                        </p>
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-7/12 bg-gray-white dark:bg-slate-900 p-10 md:p-16 lg:p-24 flex flex-col justify-center">
+                    <div class="mb-8 pb-4 border-b border-gray-200 dark:border-slate-700">
+                        <h3 class="text-3xl md:text-4xl font-bold text-blue-950 dark:text-white">Misi</h3>
+                    </div>
+                    
+                    <ul class="space-y-6">
+                        <li class="flex items-start group">
+                            <span class="flex-shrink-0 w-10 h-10 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-base mt-0.5 mr-5 shadow-sm border border-gray-100 dark:border-slate-700">1</span>
+                            <p class="text-gray-700 dark:text-gray-300 text-base md:text-lg pt-1.5">Menumbuhkembangkan keimanan dan ketaqwaan melalui pembiasaan kegiatan keagamaan di lingkungan sekolah.</p>
+                        </li>
+                        <li class="flex items-start group">
+                            <span class="flex-shrink-0 w-10 h-10 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-base mt-0.5 mr-5 shadow-sm border border-gray-100 dark:border-slate-700">2</span>
+                            <p class="text-gray-700 dark:text-gray-300 text-base md:text-lg pt-1.5">Melaksanakan proses pembelajaran dan bimbingan secara efektif, inovatif, dan berpusat pada peserta didik.</p>
+                        </li>
+                        <li class="flex items-start group">
+                            <span class="flex-shrink-0 w-10 h-10 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-base mt-0.5 mr-5 shadow-sm border border-gray-100 dark:border-slate-700">3</span>
+                            <p class="text-gray-700 dark:text-gray-300 text-base md:text-lg pt-1.5">Membina peserta didik untuk mengembangkan minat, bakat, dan potensi yang dimiliki melalui kegiatan ekstrakurikuler.</p>
+                        </li>
+                        <li class="flex items-start group">
+                            <span class="flex-shrink-0 w-10 h-10 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-base mt-0.5 mr-5 shadow-sm border border-gray-100 dark:border-slate-700">4</span>
+                            <p class="text-gray-700 dark:text-gray-300 text-base md:text-lg pt-1.5">Mewujudkan lingkungan sekolah yang bersih, asri, aman, dan nyaman sebagai pilar utama pendukung proses belajar mengajar.</p>
+                        </li>
+                        <li class="flex items-start group">
+                            <span class="flex-shrink-0 w-10 h-10 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-base mt-0.5 mr-5 shadow-sm border border-gray-100 dark:border-slate-700">5</span>
+                            <p class="text-gray-700 dark:text-gray-300 text-base md:text-lg pt-1.5">Meningkatkan kemampuan pemanfaatan teknologi informasi dan komunikasi untuk siap bersaing di tingkat global.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+</template>
+
+<script setup>
+// No additional script needed for this static page
+</script>

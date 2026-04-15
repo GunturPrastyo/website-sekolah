@@ -5,10 +5,10 @@
         <div class="absolute top-0 left-0 w-full h-full swiper-container -z-10">
             <div class="swiper-wrapper">
                 <div class="swiper-slide bg-cover bg-center"
-                    style="background-image: linear-gradient(rgba(0, 18, 32, 0.7), rgba(0, 18, 32, 0.7)), url('/src/assets/img/banner2.jpeg');">
+                    style="background-image: linear-gradient(rgba(0, 18, 32, 0.7), rgba(0, 18, 32, 0.7)), url('/assets/img/banner2.jpeg');">
                 </div>
                 <div class="swiper-slide bg-cover bg-center"
-                    style="background-image: linear-gradient(rgba(0, 18, 32, 0.7), rgba(0, 18, 32, 0.7)), url('/src/assets/img/banner1.jpg');">
+                    style="background-image: linear-gradient(rgba(0, 18, 32, 0.7), rgba(0, 18, 32, 0.7)), url('/assets/img/banner1.jpg');">
                 </div>
             </div>
             <!-- Swiper Controls -->
@@ -205,35 +205,35 @@
                         <div class="flex items-center gap-6 md:gap-8 animate-scroll-x py-2">
 
                             <!-- LOGO ITEM -->
-                            <img src="@/assets/img/ipb.png"
+                            <img src="/assets/img/ipb.png"
                                 class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
-                            <img src="@/assets/img/itb.png"
+                            <img src="/assets/img/itb.png"
                                 class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
-                            <img src="@/assets/img/ugm.png"
+                            <img src="/assets/img/ugm.png"
                                 class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
-                            <img src="@/assets/img/ui.png"
+                            <img src="/assets/img/ui.png"
                                 class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
-                            <img src="@/assets/img/undip.png"
+                            <img src="/assets/img/undip.png"
                                 class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
                             <!-- DUPLIKASI (biar infinite loop mulus) -->
-                            <img src="@/assets/img/ipb.png"
+                            <img src="/assets/img/ipb.png"
                                 class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
-                            <img src="@/assets/img/itb.png"
+                            <img src="/assets/img/itb.png"
                                 class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
-                            <img src="@/assets/img/ugm.png"
+                            <img src="/assets/img/ugm.png"
                                 class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
-                            <img src="@/assets/img/ui.png"
+                            <img src="/assets/img/ui.png"
                                 class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
-                            <img src="@/assets/img/undip.png"
+                            <img src="/assets/img/undip.png"
                                 class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
 
                         </div>
@@ -366,6 +366,7 @@
                     </div>
 
                 </div>
+            </div>
         </section>
 
         <!-- Berita & Pengumuman Section -->
@@ -537,7 +538,6 @@
                                     <i data-lucide="bell" class="w-5 h-5 mr-2 text-blue-600"></i> Pengumuman
                                 </h3>
 
-                                </span>
                             </div>
 
                             <!-- Scroll Y Container -->
@@ -964,7 +964,6 @@
 import { ref, onMounted, reactive } from 'vue';
 import Swiper from 'swiper/bundle';
 import 'swiper/swiper-bundle.css';
-import lucide from 'lucide-vue-next';
 
 const activeFaq = ref(null);
 const toggleFaq = (index) => {
@@ -1076,10 +1075,5 @@ onMounted(() => {
         }
     });
 
-    // If you are using a library like lucide-vue-next, you don't need this.
-    // But if you stick with the script, you need to call it.
-    if (window.lucide) {
-        window.lucide.createIcons();
-    }
 });
 </script>
