@@ -1,0 +1,95 @@
+/* Custom Font */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Styling untuk Swiper agar terlihat jelas */
+.swiper-pagination-bullet-active {
+    background-color: #ffffff !important;
+    width: 24px !important;
+    border-radius: 6px !important;
+}
+
+.swiper-pagination-bullet {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    transition: all 0.3s ease;
+}
+
+/* Custom styling for Jurusan Swiper pagination */
+.jurusan-pagination .swiper-pagination-bullet {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    transition: all 0.3s ease;
+}
+
+.jurusan-pagination .swiper-pagination-bullet-active {
+    background-color: #ffffff !important;
+    width: 24px !important;
+    /* Make it longer */
+    border-radius: 6px !important;
+    /* Rounded ends */
+}
+
+/* Ensure desktop grid layout for cards */
+@media (min-width: 768px) {
+    .jurusan-swiper .swiper-wrapper {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .jurusan-swiper .swiper-slide {
+        width: auto !important;
+        /* Allow grid to size slides */
+    }
+
+    /* Alasan Swiper Desktop Grid override */
+    .alasan-swiper .swiper-wrapper {
+        display: grid !important;
+        transform: none !important;
+    }
+
+    .alasan-swiper .swiper-slide {
+        width: auto !important;
+        margin-right: 0 !important;
+    }
+}
+
+/* Custom styling for Alasan Swiper pagination */
+.alasan-pagination .swiper-pagination-bullet {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    transition: all 0.3s ease;
+}
+
+.alasan-pagination .swiper-pagination-bullet-active {
+    background-color: #ffffff !important;
+    width: 24px !important;
+    border-radius: 6px !important;
+}
+
+@keyframes scrollX {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.animate-scroll-x {
+    animation: scrollX 20s linear infinite;
+    width: max-content;
+}
+
+@keyframes scrollY {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-50%);
+    }
+}
+
+.animate-scroll-y {
+    animation: scrollY 15s linear infinite;
+}
