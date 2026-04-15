@@ -1,6 +1,6 @@
 <template>
     <nav id="navbar" class="fixed top-0 left-0 z-50 w-full px-6 py-4 transition-all duration-300 ease-in-out"
-        :class="{'bg-white/80 shadow-md backdrop-blur-sm dark:bg-slate-900/80 dark:border-b dark:border-slate-800': isNavbarScrolled, 'bg-transparent': !isNavbarScrolled}">
+        :class="{'bg-white/80 shadow-md backdrop-blur-sm dark:bg-slate-900/80 dark:border-b dark:border-slate-800': isNavbarScrolled}">
         <div class="container flex items-center justify-between max-w-6xl mx-auto">
             <router-link to="/" class="text-2xl font-bold"
                 :class="{'text-gray-800 dark:text-white': isNavbarScrolled, 'text-white': !isNavbarScrolled}">SMAN 1
@@ -16,41 +16,29 @@
                     <button
                         class="flex items-center rounded-md px-3 py-2" :class="{'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400': isNavbarScrolled, 'text-white hover:bg-blue-500/10 hover:text-blue-300': !isNavbarScrolled}">
                         <span>Profil</span>
-                        <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7"></path>
-                        </svg>
+                        <i data-lucide="chevron-down" class="ml-1 h-4 w-4"></i>
                     </button>
                     <div
                         class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white dark:bg-slate-800 py-2 text-gray-800 dark:text-gray-200 shadow-lg group-hover:block">
                         <router-link to="/sejarah" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Sejarah Sekolah</router-link>
                         <router-link to="/visi-misi" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Visi & Misi</router-link>
-                        <router-link to="/struktur-organisasi" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Struktur Organisasi</router-link>
                         <router-link to="/guru-staf" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Guru & Staf</router-link>
                         <router-link to="/fasilitas" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Fasilitas</router-link>
-                        <router-link to="/akreditasi" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Akreditasi</router-link>
                     </div>
                 </div>
 
                 <!-- Akademik Dropdown -->
-                <div class="group relative">
+                 <div class="group relative">
                     <button
                         class="flex items-center rounded-md px-3 py-2" :class="{'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400': isNavbarScrolled, 'text-white hover:bg-blue-500/10 hover:text-blue-300': !isNavbarScrolled}">
                         <span>Akademik</span>
-                        <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7"></path>
-                        </svg>
+                        <i data-lucide="chevron-down" class="ml-1 h-4 w-4"></i>
                     </button>
                     <div
                         class="absolute left-0 z-10 mt-2 hidden w-48 rounded-md bg-white dark:bg-slate-800 py-2 text-gray-800 dark:text-gray-200 shadow-lg group-hover:block">
                         <router-link to="/kurikulum" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Kurikulum</router-link>
-                        <router-link to="/program-jurusan" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Program Jurusan</router-link>
                         <router-link to="/ekstrakurikuler" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Ekstrakurikuler</router-link>
                         <router-link to="/prestasi" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Prestasi</router-link>
-                        <router-link to="/kalender-akademik" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700">Kalender Akademik</router-link>
                     </div>
                 </div>
 
@@ -64,93 +52,28 @@
                 <!-- Dark Mode Toggle -->
                 <button @click="toggleDarkMode" class="ml-2 p-2 rounded-full focus:outline-none transition-colors"
                     :class="[isNavbarScrolled ? 'text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-slate-700' : 'text-white hover:bg-white/10']">
-                    <span v-show="!isDarkMode" class="flex items-center justify-center"><i data-lucide="moon" class="w-5 h-5"></i></span>
-                    <span v-show="isDarkMode" class="flex items-center justify-center"><i data-lucide="sun" class="w-5 h-5"></i></span>
+                    <i data-lucide="moon" class="w-5 h-5" v-if="!isDarkMode"></i>
+                    <i data-lucide="sun" class="w-5 h-5" v-else></i>
                 </button>
             </div>
 
             <!-- Mobile Menu Button -->
             <div class="flex items-center gap-2 lg:hidden">
-                <!-- Mobile Dark Mode Toggle -->
-                <button @click="toggleDarkMode" class="p-2 rounded-full focus:outline-none transition-colors"
-                    :class="[isNavbarScrolled ? 'text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-slate-700' : 'text-white hover:bg-white/10']">
-                    <span v-show="!isDarkMode" class="flex items-center justify-center"><i data-lucide="moon" class="w-5 h-5"></i></span>
-                    <span v-show="isDarkMode" class="flex items-center justify-center"><i data-lucide="sun" class="w-5 h-5"></i></span>
-                </button>
-                
                 <button @click="toggleMobileMenu"
                     :class="[isNavbarScrolled ? 'text-gray-800 hover:bg-gray-200 dark:text-gray-200 dark:hover:bg-slate-700' : 'text-white hover:bg-white/10']"
                     class="p-2 rounded-md focus:outline-none transition-colors">
-                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
+                    <i data-lucide="menu" class="h-6 w-6"></i>
                 </button>
             </div>
         </div>
 
         <!-- Mobile Menu -->
-        <div :class="{ 
-                'max-h-screen opacity-100': isMobileMenuOpen, 
-                'max-h-0 opacity-0': !isMobileMenuOpen 
-            }" class="lg:hidden overflow-hidden transition-all duration-300 ease-in-out">
-            <div class="mt-4 space-y-2 rounded-xl text-left bg-white/95 backdrop-blur-md dark:bg-slate-800/95 border border-gray-100 dark:border-slate-700/50 p-5 text-gray-800 dark:text-gray-200 shadow-2xl mx-1">
+        <div :class="{ 'max-h-screen opacity-100': isMobileMenuOpen, 'max-h-0 opacity-0': !isMobileMenuOpen }" 
+             class="lg:hidden overflow-hidden transition-all duration-300 ease-in-out w-full">
+            <div class="mt-4 space-y-2 rounded-xl bg-white/95 backdrop-blur-md dark:bg-slate-800/95 border border-gray-100 dark:border-slate-700/50 p-5 text-gray-800 dark:text-gray-200 shadow-2xl mx-1">
                 <router-link to="/" class="block rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors">Beranda</router-link>
-
-                <!-- Mobile Profil Dropdown -->
-                <div>
-                    <button
-                        class="mobile-dropdown-toggle flex w-full items-center justify-between rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors">
-                        <span>Profil</span>
-                        <svg @click.stop="toggleMobileDropdown('profil')"
-                            :class="{'rotate-180': mobileDropdowns.profil}"
-                            class="h-5 w-5 transform transition-transform duration-300 ease-in-out" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
-                    <div :class="{
-                            'max-h-screen': mobileDropdowns.profil, 
-                            'max-h-0': !mobileDropdowns.profil 
-                        }" class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4 pr-2 space-y-1">
-                        <router-link to="/sejarah" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Sejarah Sekolah</router-link>
-                        <router-link to="/visi-misi" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Visi & Misi</router-link>
-                        <router-link to="/struktur-organisasi" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Struktur Organisasi</router-link>
-                        <router-link to="/guru-staf" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Guru & Staf</router-link>
-                        <router-link to="/fasilitas" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Fasilitas</router-link>
-                        <router-link to="/akreditasi" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Akreditasi</router-link>
-                    </div>
-                </div>
-
-                <!-- Mobile Akademik Dropdown -->
-                <div>
-                    <button
-                        class="mobile-dropdown-toggle flex w-full items-center justify-between rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors">
-                        <span>Akademik</span>
-                        <svg @click.stop="toggleMobileDropdown('akademik')"
-                            :class="{'rotate-180': mobileDropdowns.akademik}"
-                            class="h-5 w-5 transform transition-transform duration-300 ease-in-out" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
-                    <div :class="{ 
-                            'max-h-screen': mobileDropdowns.akademik, 
-                            'max-h-0': !mobileDropdowns.akademik 
-                        }" class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4 pr-2 space-y-1">
-                        <router-link to="/kurikulum" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Kurikulum</router-link>
-                        <router-link to="/program-jurusan" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Program Jurusan</router-link>
-                        <router-link to="/ekstrakurikuler" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Ekstrakurikuler</router-link>
-                        <router-link to="/prestasi" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Prestasi</router-link>
-                        <router-link to="/kalender-akademik" class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors">Kalender Akademik</router-link>
-                    </div>
-                </div>
-
+                <router-link to="/visi-misi" class="block rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors">Visi & Misi</router-link>
                 <router-link to="/kontak" class="block rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors">Kontak</router-link>
-                
                 <div class="pt-2 mt-2 border-t border-gray-100 dark:border-slate-700/50">
                     <router-link to="/pendaftaran"
                         class="block w-full rounded-xl bg-blue-600 px-4 py-3 text-center font-semibold text-white shadow-md shadow-blue-500/30 transition-colors hover:bg-blue-700 active:scale-[0.98]">Pendaftaran</router-link>
@@ -161,36 +84,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, onBeforeUnmount } from 'vue';
-import { RouterLink } from 'vue-router';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const isNavbarScrolled = ref(false);
 const isMobileMenuOpen = ref(false);
-const mobileDropdowns = reactive({
-    profil: false,
-    akademik: false
-});
-
 const isDarkMode = ref(false);
-
-const setDarkMode = (isDark) => {
-    isDarkMode.value = isDark;
-    if (isDark) {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('color-theme', 'dark');
-    } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('color-theme', 'light');
-    }
-    // You might need to re-initialize icons if they don't update automatically
-    // setTimeout(() => {
-    //     lucide.createIcons();
-    // }, 0);
-};
-
-const toggleDarkMode = () => {
-    setDarkMode(!isDarkMode.value);
-};
 
 const handleScroll = () => {
     isNavbarScrolled.value = window.scrollY > 50;
@@ -198,17 +96,21 @@ const handleScroll = () => {
 
 const toggleMobileMenu = () => {
     isMobileMenuOpen.value = !isMobileMenuOpen.value;
-    mobileDropdowns.profil = false;
-    mobileDropdowns.akademik = false;
 };
 
-const toggleMobileDropdown = (dropdownName) => {
-    mobileDropdowns[dropdownName] = !mobileDropdowns[dropdownName];
-    for (const key in mobileDropdowns) {
-        if (key !== dropdownName) {
-            mobileDropdowns[key] = false;
-        }
+const setDarkMode = (dark) => {
+    isDarkMode.value = dark;
+    if (dark) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('color-theme', 'dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('color-theme', 'light');
     }
+};
+
+const toggleDarkMode = () => {
+    setDarkMode(!isDarkMode.value);
 };
 
 onMounted(() => {

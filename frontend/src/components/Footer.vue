@@ -20,11 +20,11 @@
                 <div class="lg:col-span-2">
                     <h4 class="text-white font-bold mb-6 text-lg">Tautan Cepat</h4>
                     <ul class="space-y-3 text-sm">
-                        <li><a href="#" class="hover:text-white transition-colors flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-2"></i> Profil Sekolah</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-2"></i> Visi & Misi</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-2"></i> Data Guru & Staf</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-2"></i> Prestasi Siswa</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-2"></i> Galeri Kegiatan</a></li>
+                        <li><router-link to="/profil" class="hover:text-white transition-colors flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-2"></i> Profil Sekolah</router-link></li>
+                        <li><router-link to="/visi-misi" class="hover:text-white transition-colors flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-2"></i> Visi & Misi</router-link></li>
+                        <li><router-link to="/guru-staf" class="hover:text-white transition-colors flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-2"></i> Data Guru & Staf</router-link></li>
+                        <li><router-link to="/prestasi" class="hover:text-white transition-colors flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-2"></i> Prestasi Siswa</router-link></li>
+                        <li><router-link to="/galeri" class="hover:text-white transition-colors flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-2"></i> Galeri Kegiatan</router-link></li>
                     </ul>
                 </div>
 
@@ -60,8 +60,8 @@
             <div class="pt-8 border-t border-slate-900 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
                 <p>&copy; 2026 SMAN 1 Nogosari. Hak Cipta Dilindungi.</p>
                 <div class="flex gap-4">
-                    <a href="#" class="hover:text-slate-300 transition-colors">Kebijakan Privasi</a>
-                    <a href="#" class="hover:text-slate-300 transition-colors">Syarat & Ketentuan</a>
+                    <router-link to="/kebijakan-privasi" class="hover:text-slate-300 transition-colors">Kebijakan Privasi</router-link>
+                    <router-link to="/syarat-ketentuan" class="hover:text-slate-300 transition-colors">Syarat & Ketentuan</router-link>
                 </div>
             </div>
         </div>
