@@ -177,7 +177,7 @@
             <!-- ALUMNI / PTN -->
             <div class="mt-8 px-0 md:px-8 lg:px-4 mb-20 md:mb-24 -mx-0 md:-mx-8 lg:-mx-0">
                 <div
-                    class="bg-gradient-to-r from-sky-700 to-blue-900 rounded-sm sm:rounded-xl border border-sky-400 shadow-xl p-3 md:p-5 flex flex-col md:flex-row items-center gap-6 overflow-hidden">
+                    class="bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-900 dark:to-blue-950 rounded-sm sm:rounded-xl shadow-xl p-3 md:p-5 flex flex-col md:flex-row items-center gap-6 overflow-hidden">
 
                     <!-- LEFT TEXT -->
                     <div class="md:w-1/2 lg:w-1/3">
@@ -195,10 +195,10 @@
 
                         <!-- GRADIENT FADE (biar smooth pinggirnya) -->
                         <div
-                            class="absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-sky-800 to-transparent z-10">
+                            class="absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-blue-600 dark:from-blue-900 to-transparent z-10">
                         </div>
                         <div
-                            class="absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-blue-900 to-transparent z-10">
+                            class="absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-blue-800 dark:from-blue-950 to-transparent z-10">
                         </div>
 
                         <!-- SCROLL WRAPPER -->
