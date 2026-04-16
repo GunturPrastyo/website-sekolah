@@ -891,7 +891,7 @@
                         <div class="w-full flex flex-col gap-4">
                             <div v-for="(faq, index) in faqs" :key="index" class="bg-gray-50 border border-gray-50 rounded-xl shadow-md">
                                 <button @click="toggleFaq(index)" class="w-full text-left px-5 md:px-6 py-4 font-semibold text-blue-950 dark:text-slate-700 flex justify-between items-center hover:bg-gray-100 dark:hover:bg-blue-900 transition-colors rounded-xl focus:outline-none">
-                                    <span class="pr-4 text-sm md:text-base">{{ faq.q }}</span>
+                                    <span class="pr-2 text-sm md:text-base">{{ faq.q }}</span>
                                     <svg class="w-5 h-5 text-blue-800 transform transition-transform duration-300 flex-shrink-0" :class="{ 'rotate-180': activeFaq === index }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                 </button>
                                 <div :class="{ 'max-h-96 opacity-100 pb-4': activeFaq === index, 'max-h-0 opacity-0 overflow-hidden': activeFaq !== index }" class="transition-all duration-300 px-5 md:px-6 text-blue-900 dark:text-blue-200 text-sm md:text-base">
