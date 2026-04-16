@@ -877,8 +877,8 @@
         </section>
 
         <!-- FAQ & CTA PPDB Section (Sejajar di Desktop) -->
-        <section class="relative py-8 md:py-12 -mx-6 md:mx-0 bg-gradient-to-br from-blue-900 to-blue-950 rounded-sm sm:rounded-xl overflow-hidden px-6 md:px-0 ">
-            <div class="container mx-auto px-0 md:px-4">
+        <section class="relative -mx-6 md:mx-0 overflow-hidden px-6 md:px-0 ">
+            <div class="container mx-auto px-4 p-8 mb-8 rounded-xl bg-gradient-to-br from-blue-900 to-blue-950">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-stretch">
                     
                     <!-- FAQ Kolom Kiri -->
