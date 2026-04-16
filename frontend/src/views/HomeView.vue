@@ -72,7 +72,7 @@
         <!-- SECTION -->
         <section class="relative  -mx-6 md:mx-0 overflow-hidden">
 
-            <div class="container mt-4 sm:mt-8 relative z-10 mx-auto px-0 lg:px-4">
+            <div class="container mt-12 sm:mt-8 relative z-10 mx-auto px-0 lg:px-4">
 
                 <!-- HEADER -->
                 <div class="mb-4 md:mb-8 px-2 md:px-0 mt-4 sm:mt-6">
@@ -277,7 +277,7 @@
 
                                 <!-- IPA -->
                                 <div
-                                    class="swiper-slide relative min-h-[220px] overflow-hidden border border-white/10 md:border-none">
+                                    class="swiper-slide relative sm:min-h-[280px] overflow-hidden border border-white/10 md:border-none">
 
 
                                     <div class="absolute inset-0">
@@ -304,7 +304,7 @@
 
                                 <!-- IPS -->
                                 <div
-                                    class="swiper-slide relative min-h-[220px] md:min-h-[280px] overflow-hidden border border-white/10 md:border-none">
+                                    class="swiper-slide relative min-h-[280px] overflow-hidden border border-white/10 md:border-none">
 
 
                                     <div class="absolute inset-0">
@@ -330,7 +330,7 @@
 
                                 <!-- BAHASA -->
                                 <div
-                                    class="swiper-slide relative min-h-[220px] overflow-hidden border border-white/10 md:border-none">
+                                    class="swiper-slide relative min-h-[280px] overflow-hidden border border-white/10 md:border-none">
 
 
                                     <div class="absolute inset-0">
@@ -348,6 +348,32 @@
                                             pariwisata.
                                         </p>
                                         <a href="#" class="mt-auto inline-flex items-center text-sm font-medium text-cyan-300 hover:text-white transition-colors w-fit">
+                                            Lihat Selengkapnya <i data-lucide="chevron-right" class="w-4 h-4 ml-1.5"></i>
+                                        </a>
+                                    </div>
+
+                                </div>
+
+
+                                <!-- INFORMATIKA -->
+                                <div
+                                    class="swiper-slide relative min-h-[280px] overflow-hidden border border-white/10 md:border-none">
+
+
+                                    <div class="absolute inset-0">
+                                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726a?q=80&w=1200&auto=format&fit=crop"
+                                            class="w-full h-full object-cover blur-md scale-110" />
+                                    </div>
+
+                                    <div class="absolute inset-0 bg-gradient-to-br from-purple-900/80 to-black/70">
+                                    </div>
+
+                                    <div class="relative z-10 p-6 text-white flex flex-col justify-start h-full">
+                                        <h3 class="text-2xl font-bold mb-2">Informatika</h3>
+                                        <p class="text-gray-200  text-sm md:text-md lg:text-lg mb-4">
+                                            Mendalami dunia koding, jaringan, dan pengembangan software untuk karir di industri digital.
+                                        </p>
+                                        <a href="#" class="mt-auto inline-flex items-center text-sm font-medium text-purple-300 hover:text-white transition-colors w-fit">
                                             Lihat Selengkapnya <i data-lucide="chevron-right" class="w-4 h-4 ml-1.5"></i>
                                         </a>
                                     </div>
@@ -1041,7 +1067,10 @@ onMounted(() => {
     // Initialize Jurusan Swiper
     new Swiper('.jurusan-swiper', {
         loop: true,
-        autoplay: { delay: 3000, disableOnInteraction: false },
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
         slidesPerView: 1,
         spaceBetween: 10,
         pagination: { el: '.jurusan-pagination', clickable: true },
@@ -1049,9 +1078,6 @@ onMounted(() => {
             768: {
                 slidesPerView: 3,
                 spaceBetween: 0,
-                allowTouchMove: false,
-                loop: false,
-                autoplay: false,
                 pagination: { enabled: false }
             }
         }
