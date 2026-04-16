@@ -36,16 +36,6 @@
 
 /* Ensure desktop grid layout for cards */
 @media (min-width: 768px) {
-    .jurusan-swiper .swiper-wrapper {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .jurusan-swiper .swiper-slide {
-        width: auto !important;
-        /* Allow grid to size slides */
-    }
-
     /* Alasan Swiper Desktop Grid override */
     .alasan-swiper .swiper-wrapper {
         display: grid !important;
@@ -68,4 +58,33 @@
     background-color: #ffffff !important;
     width: 24px !important;
     border-radius: 6px !important;
+}
+
+@keyframes scrollX {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.animate-scroll-x {
+    animation: scrollX 20s linear infinite;
+    width: max-content;
+}
+
+@keyframes scrollY {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-50%);
+    }
+}
+
+.animate-scroll-y {
+    animation: scrollY 15s linear infinite;
 }
