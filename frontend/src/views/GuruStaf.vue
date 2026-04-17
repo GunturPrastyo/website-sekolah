@@ -110,7 +110,7 @@ onMounted(() => {
     </div>
 
     <!-- Main Content Section -->
-    <section class="py-16 md:py-24 px-6">
+    <section class="py-16 md:py-24 px-6 dark:bg-slate-900">
       <div class="container mx-auto max-w-7xl">
         <div class="flex flex-col md:flex-row gap-8 lg:gap-12">
           
