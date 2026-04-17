@@ -277,7 +277,7 @@
 
                                 <!-- IPA -->
                                 <div
-                                    class="swiper-slide relative sm:min-h-[280px] overflow-hidden border border-white/10 md:border-none">
+                                    class="swiper-slide relative min-h-[280px] overflow-hidden border border-white/10 md:border-none">
 
 
                                     <div class="absolute inset-0">
