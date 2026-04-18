@@ -1,14 +1,14 @@
 <template>
   <div>
     <!-- CONTENT -->
-    <section class="relative z-20 px-0 dark:bg-slate-900">
+    <section class="relative z-20 px-0 dark:bg-slate-700">
       <div class="container max-w-full">
         <!-- MAIN -->
         <main class="w-full">
           <template v-for="category in facilityCategories" :key="category.id">
             <article
               v-if="activeCategory === category.id"
-              class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-xl border border-gray-100 dark:border-slate-700"
+              class="bg-white dark:bg-gray-800 overflow-hidden"
             >
               <!-- FEATURED IMAGE -->
               <div class="relative h-[300px] md:h-[400px] overflow-hidden">
@@ -41,9 +41,9 @@
               </div>
 
               <!-- CONTENT -->
-              <div class="p-6 md:p-10 grid md:grid-cols-3 gap-10 items-start">
+              <div class="p-6 md:p-10 grid lg:grid-cols-3 gap-10 items-start">
                 <!-- MAIN ARTICLE -->
-                <div class="md:col-span-2 space-y-6 md:space-y-8">
+                <div class="lg:col-span-2 space-y-6 md:space-y-8">
                   <!-- Header Artikel -->
                   <div class="border-b border-gray-100 dark:border-slate-700 pb-6">
                     <span
@@ -154,40 +154,133 @@
                 </div>
 
                 <!-- SIDEBAR ARTICLE -->
-                <div class="space-y-6 md:sticky md:top-28">
-                  <div class="bg-blue-50 dark:bg-slate-700/50 rounded-xl p-5">
-                    <h4 class="font-semibold text-blue-700 dark:text-blue-300 mb-3">
+                <div class="space-y-8 lg:sticky lg:top-28">
+                  <!-- Informasi Singkat -->
+                  <div
+                    class="bg-blue-50/80 dark:bg-slate-800/50 border border-blue-100 dark:border-slate-700 rounded-md p-6 shadow-sm"
+                  >
+                    <h4
+                      class="font-bold text-blue-800 dark:text-blue-300 mb-4 flex items-center gap-2"
+                    >
+                      <svg
+                        class="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        ></path>
+                      </svg>
                       Informasi Singkat
                     </h4>
 
-                    <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-2">
-                      <li>✔ Digunakan setiap hari</li>
-                      <li>✔ Mendukung pembelajaran aktif</li>
-                      <li>✔ Fasilitas modern & terawat</li>
+                    <ul class="text-sm text-gray-700 dark:text-gray-300 space-y-3">
+                      <li class="flex items-start gap-2">
+                        <svg
+                          class="w-5 h-5 text-green-500 shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          ></path>
+                        </svg>
+                        <span class="pt-0.5">Digunakan setiap hari</span>
+                      </li>
+                      <li class="flex items-start gap-2">
+                        <svg
+                          class="w-5 h-5 text-green-500 shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          ></path>
+                        </svg>
+                        <span class="pt-0.5">Mendukung pembelajaran aktif</span>
+                      </li>
+                      <li class="flex items-start gap-2">
+                        <svg
+                          class="w-5 h-5 text-green-500 shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          ></path>
+                        </svg>
+                        <span class="pt-0.5">Fasilitas modern & terawat</span>
+                      </li>
                     </ul>
                   </div>
 
-                  <div>
-                    <h4 class="font-semibold text-gray-800 dark:text-white mb-3">
+                  <!-- Fasilitas Lainnya -->
+                  <div
+                    class="bg-white dark:bg-slate-800 rounded-md p-6 shadow-sm border border-gray-100 dark:border-slate-700"
+                  >
+                    <h4
+                      class="font-bold text-gray-800 dark:text-white mb-4 pb-3 border-b border-gray-100 dark:border-slate-700"
+                    >
                       Fasilitas Lainnya
                     </h4>
 
-                    <div class="space-y-3">
+                    <div class="space-y-4 mt-2">
                       <div
                         v-for="other in facilityCategories.filter(
                           (c) => c.id !== activeCategory
                         )"
                         :key="other.id"
                         @click="activeCategory = other.id"
-                        class="cursor-pointer flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition"
+                        class="group cursor-pointer flex items-center gap-4 transition-all"
                       >
-                        <img
-                          :src="other.items[0].src"
-                          class="w-12 h-12 rounded object-cover"
-                        />
-                        <span class="text-sm text-gray-700 dark:text-gray-300">
-                          {{ other.name }}
-                        </span>
+                        <div
+                          class="overflow-hidden rounded-md w-14 h-14 md:w-16 md:h-16 shrink-0 shadow-sm"
+                        >
+                          <img
+                            :src="other.items[0].src"
+                            class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                          />
+                        </div>
+                        <div class="flex-1">
+                          <h5
+                            class="text-sm font-semibold text-gray-800 dark:text-gray-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2"
+                          >
+                            {{ other.name }}
+                          </h5>
+                        </div>
+                        <div
+                          class="w-8 h-8 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 transition-colors"
+                        >
+                          <svg
+                            class="w-4 h-4 text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M9 5l7 7-7 7"
+                            ></path>
+                          </svg>
+                        </div>
                       </div>
                     </div>
                   </div>
