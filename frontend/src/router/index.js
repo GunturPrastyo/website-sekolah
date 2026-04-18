@@ -53,6 +53,11 @@ const router = createRouter({
       path: '/prestasi',
       name: 'prestasi',
       component: () => import('../views/Prestasi.vue')
+    },
+    {
+      path: '/pendaftaran',
+      name: 'pendaftaran',
+      component: () => import('../views/Pendaftaran.vue')
     }
 
 
