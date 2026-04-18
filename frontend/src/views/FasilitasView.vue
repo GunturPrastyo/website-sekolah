@@ -119,10 +119,53 @@
                             {{ item.title }}
                           </h3>
 
-                          <div class="overflow-hidden rounded-2xl shadow-md my-4">
+                          <!-- Galeri Grid (Multi-image) -->
+                          <div
+                            v-if="item.images && item.images.length > 1"
+                            class="grid grid-cols-2 gap-2 md:gap-3 my-4"
+                          >
+                            <template
+                              v-for="(img, imgIdx) in item.images.slice(0, 4)"
+                              :key="imgIdx"
+                            >
+                              <div
+                                class="relative overflow-hidden rounded-xl shadow-md h-48 md:h-64 cursor-pointer group bg-gray-100 dark:bg-slate-800"
+                                :class="{
+                                  'col-span-2 h-56 md:h-80':
+                                    item.images.length === 3 && imgIdx === 0,
+                                }"
+                                @click="openGallery(item.images, imgIdx)"
+                              >
+                                <img
+                                  :src="img"
+                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                                />
+
+                                <!-- Overlay untuk gambar ke-4 jika lebih dari 4 gambar -->
+                                <div
+                                  v-if="imgIdx === 3 && item.images.length > 4"
+                                  class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white backdrop-blur-[2px] transition-colors group-hover:bg-black/50"
+                                >
+                                  <span class="text-2xl md:text-3xl font-bold"
+                                    >+{{ item.images.length - 4 }}</span
+                                  >
+                                  <span class="text-sm md:text-base font-medium mt-1"
+                                    >Lihat Semua</span
+                                  >
+                                </div>
+                              </div>
+                            </template>
+                          </div>
+
+                          <!-- Single Image -->
+                          <div
+                            v-else
+                            class="overflow-hidden rounded-2xl shadow-md my-4 cursor-pointer group"
+                            @click="openGallery(item.images || [item.src], 0)"
+                          >
                             <img
-                              :src="item.src"
-                              class="w-full h-64 md:h-[400px] object-cover hover:scale-105 transition duration-700"
+                              :src="item.images ? item.images[0] : item.src"
+                              class="w-full h-64 md:h-[400px] object-cover group-hover:scale-105 transition duration-700"
                             />
                           </div>
 
@@ -310,6 +353,93 @@
         </button>
       </Transition>
     </div>
+
+    <!-- Lightbox Gallery Modal -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isGalleryOpen"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm"
+        @click="closeGallery"
+      >
+        <!-- Close Button -->
+        <button
+          @click.stop="closeGallery"
+          class="absolute top-4 right-4 md:top-6 md:right-6 text-white/70 hover:text-white transition-colors z-50 p-2"
+        >
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+
+        <!-- Navigation Buttons -->
+        <button
+          v-if="currentGalleryImages.length > 1"
+          @click.stop="prevImage"
+          class="absolute left-2 md:left-10 text-white/70 hover:text-white transition-colors z-50 p-2 md:p-4 hover:bg-white/10 rounded-full"
+        >
+          <svg
+            class="w-8 h-8 md:w-10 md:h-10"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            ></path>
+          </svg>
+        </button>
+        <button
+          v-if="currentGalleryImages.length > 1"
+          @click.stop="nextImage"
+          class="absolute right-2 md:right-10 text-white/70 hover:text-white transition-colors z-50 p-2 md:p-4 hover:bg-white/10 rounded-full"
+        >
+          <svg
+            class="w-8 h-8 md:w-10 md:h-10"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            ></path>
+          </svg>
+        </button>
+
+        <!-- Image Container -->
+        <div
+          class="relative w-full max-w-5xl max-h-[90vh] px-12 md:px-24 flex flex-col items-center justify-center"
+          @click.stop
+        >
+          <img
+            :src="currentGalleryImages[currentImageIndex]"
+            class="max-w-full max-h-[85vh] object-contain rounded-md shadow-2xl transition-transform duration-300"
+          />
+          <div
+            class="absolute bottom-[-30px] md:bottom-[-40px] text-white/80 text-sm md:text-base font-medium bg-black/50 px-3 py-1 rounded-full"
+          >
+            {{ currentImageIndex + 1 }} / {{ currentGalleryImages.length }}
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -319,6 +449,38 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 const activeCategory = ref("kelas");
 const showScrollTop = ref(false);
 const showScrollBottom = ref(true);
+
+/* State Modal Gallery Lightbox */
+const isGalleryOpen = ref(false);
+const currentGalleryImages = ref([]);
+const currentImageIndex = ref(0);
+
+const openGallery = (images, index = 0) => {
+  currentGalleryImages.value = images;
+  currentImageIndex.value = index;
+  isGalleryOpen.value = true;
+  document.body.style.overflow = "hidden"; // Cegah background bisa discroll
+};
+
+const closeGallery = () => {
+  isGalleryOpen.value = false;
+  document.body.style.overflow = "";
+};
+
+const nextImage = () => {
+  currentImageIndex.value =
+    currentImageIndex.value < currentGalleryImages.value.length - 1
+      ? currentImageIndex.value + 1
+      : 0;
+};
+
+const prevImage = () => {
+  currentImageIndex.value =
+    currentImageIndex.value > 0
+      ? currentImageIndex.value - 1
+      : currentGalleryImages.value.length - 1;
+};
+/* End State Gallery */
 
 const changeCategory = (id) => {
   activeCategory.value = id;
@@ -366,9 +528,17 @@ const facilityCategories = ref([
     items: [
       {
         src: "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800",
+        images: [
+          "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800",
+          "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800",
+          "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800",
+          "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800",
+          "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800",
+          "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800",
+        ],
         title: "Ruang Kelas Modern",
         text:
-          "Setiap ruang kelas dilengkapi dengan fasilitas modern seperti proyektor, papan interaktif, dan ventilasi yang baik.",
+          "Setiap ruang kelas dilengkapi dengan fasilitas modern seperti proyektor, papan interaktif, dan ventilasi yang baik. Ruangan kami didesain khusus agar pencahayaan dari luar masuk dengan sempurna.",
       },
       {
         src: "https://images.unsplash.com/photo-1594434533439-04c3a735d359?q=80&w=800",
@@ -385,8 +555,14 @@ const facilityCategories = ref([
     items: [
       {
         src: "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800",
+        images: [
+          "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800",
+          "https://images.unsplash.com/photo-1628243422323-b5039a8a4010?q=80&w=800",
+          "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800",
+        ],
         title: "Lab Sains",
-        text: "Fasilitas lengkap untuk eksperimen fisika, kimia, dan biologi.",
+        text:
+          "Fasilitas lengkap untuk eksperimen fisika, kimia, dan biologi dengan standar keamanan tertinggi.",
       },
       {
         src: "https://images.unsplash.com/photo-1628243422323-b5039a8a4010?q=80&w=800",
