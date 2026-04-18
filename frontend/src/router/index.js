@@ -2,7 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import VisiMisi from '@/views/VisiMisi.vue'
 import Fasilitas from '@/views/FasilitasView.vue'
-import GuruStaf  from '@/views/GuruStaf.vue'
+import GuruStaf from '@/views/GuruStaf.vue'
+import Kurikulum from '@/views/KurikulumView.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +28,11 @@ const router = createRouter({
       path: '/guru-staf',
       name: 'guru-staf',
       component: GuruStaf
+    },
+    {
+      path: '/kurikulum',
+      name: 'kurikulum',
+      component: Kurikulum
     }
   ]
 })
