@@ -35,6 +35,11 @@ const router = createRouter({
       component: Kurikulum
     },
     {
+      path: '/program-jurusan',
+      name: 'program-jurusan',
+      component: () => import('../views/ProgramJurusan.vue')
+    },
+    {
       path: '/ekstrakurikuler',
       name: 'ekstrakurikuler',
       component: () => import('../views/Ekstrakurikuler.vue')

@@ -129,6 +129,12 @@
                 >Kurikulum</router-link
               >
               <router-link
+                to="/program-jurusan"
+                @click="closeDropdowns"
+                class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
+                >Program Jurusan</router-link
+              >
+              <router-link
                 to="/ekstrakurikuler"
                 @click="closeDropdowns"
                 class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
@@ -311,6 +317,12 @@
               @click="closeMobileMenu"
               class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
               >Kurikulum</router-link
+            >
+            <router-link
+              to="/program-jurusan"
+              @click="closeMobileMenu"
+              class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
+              >Program Jurusan</router-link
             >
             <router-link
               to="/ekstrakurikuler"
