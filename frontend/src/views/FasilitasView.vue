@@ -12,23 +12,28 @@
             >
               <!-- FEATURED IMAGE -->
               <div class="relative h-64 md:h-80">
-                <img :src="category.items[0].src" class="w-full h-full object-cover" />
+                <img
+                  :src="category.items[0].src"
+                  class="w-full h-full object-cover bg-blur"
+                />
                 <div
-                  class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"
+                  class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"
                 ></div>
 
-                <div class="absolute bottom-6 left-6 right-6 text-white">
+                <div class="absolute bottom-0 left-0 w-full p-6 md:p-10 text-white">
                   <span
-                    class="inline-block px-4 py-1.5 mb-4 text-xs font-semibold text-blue-700 bg-white/90 rounded-full shadow"
+                    class="inline-block px-3 py-1.5 mb-3 md:mb-4 text-xs font-semibold text-blue-800 bg-white/95 backdrop-blur-sm rounded-full shadow-sm"
                   >
                     Profil Sekolah
                   </span>
 
-                  <h1 class="text-3xl md:text-5xl font-bold text-white mb-4">
+                  <h1
+                    class="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3"
+                  >
                     Fasilitas Sekolah
                   </h1>
 
-                  <p class="text-blue-100 max-w-2xl mx-auto">
+                  <p class="text-blue-100 text-sm md:text-base max-w-2xl leading-relaxed">
                     Jelajahi berbagai fasilitas modern yang mendukung pengalaman belajar
                     siswa secara optimal.
                   </p>
