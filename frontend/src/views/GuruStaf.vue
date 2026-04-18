@@ -31,6 +31,20 @@ const matchesSearch = (staff) => {
   return staff.name.toLowerCase().includes(searchQuery.value.toLowerCase());
 };
 
+const isModalOpen = ref(false);
+const selectedStaff = ref(null);
+
+const openModal = (staff) => {
+  selectedStaff.value = staff;
+  isModalOpen.value = true;
+  document.body.style.overflow = "hidden"; // Cegah scroll background
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+  document.body.style.overflow = "";
+};
+
 // Contoh data dummy lengkap dengan atribut 'category'
 const staffList = ref([
   {
@@ -40,6 +54,9 @@ const staffList = ref([
     category: "pimpinan",
     image:
       "https://ui-avatars.com/api/?name=Budi+Santoso&background=0D8ABC&color=fff&size=256",
+    nip: "19750817 200003 1 004",
+    bio:
+      "Berpengalaman lebih dari 15 tahun dalam manajemen pendidikan dan memimpin sekolah menuju akreditasi A dengan program-program inovatif.",
   },
   {
     id: 2,
@@ -281,7 +298,8 @@ onMounted(() => {
                         class="w-full sm:w-64"
                       >
                         <div
-                          class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full mt-8"
+                          class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full mt-8 cursor-pointer"
+                          @click="openModal(staff)"
                         >
                           <div
                             class="absolute top-0 left-0 w-full h-20 bg-blue-50 dark:bg-slate-700/50 z-0"
@@ -315,6 +333,7 @@ onMounted(() => {
                               class="mt-5 pt-4 border-t border-gray-50 dark:border-slate-700/50 flex justify-center gap-3 opacity-80 group-hover:opacity-100 transition-opacity"
                             >
                               <button
+                                @click.stop
                                 class="w-8 h-8 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-100 transition-colors"
                                 title="Email"
                               >
@@ -333,6 +352,7 @@ onMounted(() => {
                                 </svg>
                               </button>
                               <button
+                                @click.stop
                                 class="w-8 h-8 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-100 transition-colors"
                                 title="LinkedIn"
                               >
@@ -373,7 +393,8 @@ onMounted(() => {
                       <div
                         v-for="staff in guruList"
                         :key="staff.id"
-                        class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full mt-8"
+                        class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full mt-8 cursor-pointer"
+                        @click="openModal(staff)"
                       >
                         <div
                           class="absolute top-0 left-0 w-full h-20 bg-blue-50 dark:bg-slate-700/50 z-0"
@@ -404,6 +425,7 @@ onMounted(() => {
                             class="mt-5 pt-4 border-t border-gray-50 dark:border-slate-700/50 flex justify-center gap-3 opacity-80 group-hover:opacity-100 transition-opacity"
                           >
                             <button
+                              @click.stop
                               class="w-8 h-8 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-100 transition-colors"
                               title="Email"
                             >
@@ -422,6 +444,7 @@ onMounted(() => {
                               </svg>
                             </button>
                             <button
+                              @click.stop
                               class="w-8 h-8 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-100 transition-colors"
                               title="LinkedIn"
                             >
@@ -461,7 +484,8 @@ onMounted(() => {
                       <div
                         v-for="staff in stafList"
                         :key="staff.id"
-                        class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full mt-8"
+                        class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full mt-8 cursor-pointer"
+                        @click="openModal(staff)"
                       >
                         <div
                           class="absolute top-0 left-0 w-full h-20 bg-blue-50 dark:bg-slate-700/50 z-0"
@@ -492,6 +516,7 @@ onMounted(() => {
                             class="mt-5 pt-4 border-t border-gray-50 dark:border-slate-700/50 flex justify-center gap-3 opacity-80 group-hover:opacity-100 transition-opacity"
                           >
                             <button
+                              @click.stop
                               class="w-8 h-8 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-100 transition-colors"
                               title="Email"
                             >
@@ -510,6 +535,7 @@ onMounted(() => {
                               </svg>
                             </button>
                             <button
+                              @click.stop
                               class="w-8 h-8 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-100 transition-colors"
                               title="LinkedIn"
                             >
@@ -587,7 +613,8 @@ onMounted(() => {
                       <div
                         v-for="staff in filteredStaff"
                         :key="staff.id"
-                        class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full mt-8"
+                        class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full mt-8 cursor-pointer"
+                        @click="openModal(staff)"
                       >
                         <div
                           class="absolute top-0 left-0 w-full h-20 bg-blue-50 dark:bg-slate-700/50 z-0"
@@ -618,6 +645,7 @@ onMounted(() => {
                             class="mt-5 pt-4 border-t border-gray-50 dark:border-slate-700/50 flex justify-center gap-3 opacity-80 group-hover:opacity-100 transition-opacity"
                           >
                             <button
+                              @click.stop
                               class="w-8 h-8 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-100 transition-colors"
                               title="Email"
                             >
@@ -636,6 +664,7 @@ onMounted(() => {
                               </svg>
                             </button>
                             <button
+                              @click.stop
                               class="w-8 h-8 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-100 transition-colors"
                               title="LinkedIn"
                             >
@@ -691,5 +720,179 @@ onMounted(() => {
         </div>
       </div>
     </section>
+
+    <!-- Modal Profil Staff -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isModalOpen"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+        @click="closeModal"
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all"
+          @click.stop
+        >
+          <!-- Modal Header w/ Background -->
+          <div
+            class="relative h-32 bg-gradient-to-r from-blue-600 to-blue-800 dark:from-slate-700 dark:to-slate-900"
+          >
+            <button
+              @click="closeModal"
+              class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-black/20 text-white hover:bg-black/40 transition-colors z-10 focus:outline-none"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Profile Info -->
+          <div class="px-8 pb-8 relative">
+            <!-- Avatar -->
+            <div
+              class="absolute -top-36 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full border-4 border-white dark:border-slate-800 overflow-hidden bg-white shadow-lg"
+            >
+              <img :src="selectedStaff?.image" class="w-full h-full object-cover" />
+            </div>
+
+            <div class="mt-20 text-center">
+              <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
+                {{ selectedStaff?.name }}
+              </h3>
+              <p class="text-blue-600 dark:text-blue-400 font-medium mt-1">
+                {{ selectedStaff?.role }}
+              </p>
+
+              <div class="mt-5 flex justify-center gap-4">
+                <button
+                  class="w-10 h-10 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 hover:bg-blue-100 transition-colors focus:outline-none"
+                  title="Email"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    ></path>
+                  </svg>
+                </button>
+                <button
+                  class="w-10 h-10 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 hover:bg-blue-100 transition-colors focus:outline-none"
+                  title="LinkedIn"
+                >
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div
+                class="mt-6 pt-6 border-t border-gray-100 dark:border-slate-700 text-left"
+              >
+                <h4
+                  class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4"
+                >
+                  Informasi Detail
+                </h4>
+                <div class="space-y-4">
+                  <div class="flex items-start gap-3">
+                    <svg
+                      class="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5 shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
+                      ></path>
+                    </svg>
+                    <div>
+                      <p class="text-sm font-medium text-gray-900 dark:text-white">
+                        NIP / NUPTK
+                      </p>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">
+                        {{ selectedStaff?.nip || "-" }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-3">
+                    <svg
+                      class="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5 shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                      ></path>
+                    </svg>
+                    <div>
+                      <p class="text-sm font-medium text-gray-900 dark:text-white">
+                        Unit Kerja
+                      </p>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">
+                        SMAN 1 Nogosari
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-3">
+                    <svg
+                      class="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5 shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>
+                    <div>
+                      <p class="text-sm font-medium text-gray-900 dark:text-white">
+                        Bio Singkat
+                      </p>
+                      <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                        {{
+                          selectedStaff?.bio ||
+                          "Berdedikasi tinggi dalam mendidik dan membimbing karakter siswa di lingkungan sekolah menuju generasi unggul."
+                        }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
