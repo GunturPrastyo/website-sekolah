@@ -15,6 +15,11 @@ const router = createRouter({
       component: HomeView
     },
     {
+      path: '/sejarah',
+      name: 'sejarah',
+      component: () => import('../views/Sejarah.vue')
+    },
+    {
       path: '/visi-misi',
       name: 'visi-misi',
       component: VisiMisi
