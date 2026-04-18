@@ -246,7 +246,7 @@
                           (c) => c.id !== activeCategory
                         )"
                         :key="other.id"
-                        @click="activeCategory = other.id"
+                        @click="changeCategory(other.id)"
                         class="group cursor-pointer flex items-center gap-4 transition-all"
                       >
                         <div
@@ -291,13 +291,115 @@
         </main>
       </div>
     </section>
+
+    <!-- Tombol Scroll Navigation (Floating) -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+      <Transition
+        enter-active-class="transition-all duration-300"
+        enter-from-class="opacity-0 translate-y-5"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition-all duration-300"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 translate-y-5"
+      >
+        <button
+          v-show="showScrollTop"
+          @click="scrollToTop"
+          class="w-10 h-10 md:w-12 md:h-12 bg-blue-600/90 hover:bg-blue-700 text-white rounded-full shadow-lg backdrop-blur-sm flex items-center justify-center transition-all hover:-translate-y-1 focus:outline-none"
+          title="Scroll ke Atas"
+        >
+          <svg
+            class="w-5 h-5 md:w-6 md:h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 15l7-7 7 7"
+            ></path>
+          </svg>
+        </button>
+      </Transition>
+
+      <Transition
+        enter-active-class="transition-all duration-300"
+        enter-from-class="opacity-0 -translate-y-5"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition-all duration-300"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 -translate-y-5"
+      >
+        <button
+          v-show="showScrollBottom"
+          @click="scrollToBottom"
+          class="w-10 h-10 md:w-12 md:h-12 bg-blue-600/90 hover:bg-blue-700 text-white rounded-full shadow-lg backdrop-blur-sm flex items-center justify-center transition-all hover:translate-y-1 focus:outline-none"
+          title="Scroll ke Bawah"
+        >
+          <svg
+            class="w-5 h-5 md:w-6 md:h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            ></path>
+          </svg>
+        </button>
+      </Transition>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 
 const activeCategory = ref("kelas");
+const showScrollTop = ref(false);
+const showScrollBottom = ref(true);
+
+const changeCategory = (id) => {
+  activeCategory.value = id;
+  // Otomatis scroll ke atas jika di mobile / tablet (lebar layar < 1024px)
+  if (window.innerWidth < 1024) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+};
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+const scrollToBottom = () => {
+  window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
+};
+
+const handleScroll = () => {
+  const scrollY = window.scrollY;
+  const innerHeight = window.innerHeight;
+  const scrollHeight = document.documentElement.scrollHeight;
+
+  // Munculkan tombol scroll atas jika sudah scroll ke bawah lebih dari 300px
+  showScrollTop.value = scrollY > 300;
+
+  // Sembunyikan tombol scroll bawah jika sudah mencapai bagian paling bawah (toleransi 50px)
+  showScrollBottom.value = scrollY + innerHeight < scrollHeight - 50;
+};
+
+onMounted(() => {
+  window.addEventListener("scroll", handleScroll);
+  handleScroll(); // inisialisasi awal
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("scroll", handleScroll);
+});
 
 const facilityCategories = ref([
   {
