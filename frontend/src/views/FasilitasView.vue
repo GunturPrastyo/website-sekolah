@@ -11,10 +11,10 @@
               class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-2xl border border-gray-100 dark:border-slate-700"
             >
               <!-- FEATURED IMAGE -->
-              <div class="relative h-64 md:h-80">
+              <div class="relative h-[300px] md:h-[400px] overflow-hidden">
                 <img
                   :src="category.items[0].src"
-                  class="w-full h-full object-cover blur-sm"
+                  class="absolute inset-0 w-full h-full object-cover blur-sm scale-110"
                 />
                 <div
                   class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"
