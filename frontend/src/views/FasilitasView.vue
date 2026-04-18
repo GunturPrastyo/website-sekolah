@@ -43,47 +43,113 @@
               <!-- CONTENT -->
               <div class="p-6 md:p-10 grid md:grid-cols-3 gap-10 items-start">
                 <!-- MAIN ARTICLE -->
-                <div class="md:col-span-2 space-y-6">
-                  <span class="text-xs bg-white/20 px-3 py-1 rounded-full backdrop-blur">
-                    Fasilitas Sekolah
-                  </span>
-                  <h2 class="text-2xl md:text-4xl font-bold mt-3">
-                    {{ category.name }}
-                  </h2>
-                  <div class="text-sm text-gray-500 dark:text-gray-400">
-                    Oleh Tim Redaksi • 15 April 2026
+                <div class="md:col-span-2 space-y-6 md:space-y-8">
+                  <!-- Header Artikel -->
+                  <div class="border-b border-gray-100 dark:border-slate-700 pb-6">
+                    <span
+                      class="inline-block text-xs font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 px-3 py-1 rounded-full mb-4"
+                    >
+                      Fasilitas Sekolah
+                    </span>
+                    <h2
+                      class="text-2xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4"
+                    >
+                      {{ category.name }}
+                    </h2>
+                    <div
+                      class="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400"
+                    >
+                      <div
+                        class="w-10 h-10 rounded-full bg-blue-100 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold text-lg"
+                      >
+                        R
+                      </div>
+                      <div>
+                        <div class="font-medium text-gray-800 dark:text-gray-200">
+                          Tim Redaksi SMAN 1
+                        </div>
+                        <div>15 April 2026 • 5 min read</div>
+                      </div>
+                    </div>
                   </div>
 
-                  <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                    {{ category.description }}
-                  </p>
-
-                  <blockquote
-                    class="border-l-4 border-blue-600 pl-4 italic text-gray-600 dark:text-gray-300"
-                  >
-                    “Fasilitas yang baik bukan hanya pelengkap, tetapi fondasi utama dalam
-                    menciptakan pengalaman belajar yang maksimal.”
-                  </blockquote>
-
-                  <div
-                    v-for="(item, index) in category.items"
-                    :key="index"
-                    class="space-y-4 pt-6"
-                  >
-                    <h3 class="text-xl font-semibold text-gray-800 dark:text-white">
-                      {{ item.title }}
-                    </h3>
-
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                      {{ item.text }}
+                  <!-- Konten Pengantar -->
+                  <div class="space-y-6">
+                    <p
+                      class="text-xl font-medium text-gray-800 dark:text-gray-200 leading-relaxed"
+                    >
+                      {{ category.description }}
                     </p>
 
-                    <div class="overflow-hidden rounded-xl">
-                      <img
-                        :src="item.src"
-                        class="w-full h-64 object-cover hover:scale-105 transition duration-500"
-                      />
+                    <blockquote
+                      class="border-l-4 border-blue-500 bg-blue-50 dark:bg-slate-800/50 p-6 rounded-r-xl italic text-gray-700 dark:text-gray-300 shadow-sm"
+                    >
+                      “Fasilitas yang baik bukan hanya pelengkap, tetapi fondasi utama
+                      dalam menciptakan pengalaman belajar yang maksimal bagi setiap siswa
+                      yang menimba ilmu di sekolah kami.”
+                    </blockquote>
+                  </div>
+
+                  <!-- List Fasilitas -->
+                  <div class="space-y-12 pt-4">
+                    <div
+                      v-for="(item, index) in category.items"
+                      :key="index"
+                      class="space-y-4"
+                    >
+                      <h3
+                        class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-3"
+                      >
+                        <span
+                          class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-sm shadow-md"
+                          >{{ index + 1 }}</span
+                        >
+                        {{ item.title }}
+                      </h3>
+
+                      <div class="overflow-hidden rounded-2xl shadow-md my-4">
+                        <img
+                          :src="item.src"
+                          class="w-full h-64 md:h-[400px] object-cover hover:scale-105 transition duration-700"
+                        />
+                      </div>
+
+                      <p
+                        class="text-gray-600 dark:text-gray-300 leading-relaxed text-justify text-lg"
+                      >
+                        {{ item.text }} Kami memastikan bahwa setiap detail dari sarana
+                        ini dirawat dengan baik dan selalu diperbarui mengikuti standar
+                        pendidikan terkini agar siswa dapat memanfaatkannya secara
+                        maksimal.
+                      </p>
                     </div>
+                  </div>
+
+                  <!-- Tambahan Teks Dummy (Scroll Tester) -->
+                  <div
+                    class="pt-8 border-t border-gray-100 dark:border-slate-700 mt-8 space-y-4"
+                  >
+                    <h3 class="text-2xl font-bold text-gray-800 dark:text-white">
+                      Komitmen Perawatan Fasilitas
+                    </h3>
+                    <p
+                      class="text-gray-600 dark:text-gray-300 leading-relaxed text-justify text-lg"
+                    >
+                      Selain menyediakan sarana yang lengkap, pihak sekolah juga memiliki
+                      jadwal perawatan rutin yang melibatkan staf kebersihan, teknisi, dan
+                      partisipasi aktif dari para siswa. Hal ini bertujuan untuk
+                      menanamkan rasa tanggung jawab dan kepemilikan terhadap fasilitas
+                      bersama.
+                    </p>
+                    <p
+                      class="text-gray-600 dark:text-gray-300 leading-relaxed text-justify text-lg"
+                    >
+                      Kami percaya bahwa lingkungan yang bersih, aman, dan berteknologi
+                      tinggi akan sangat berdampak pada prestasi akademik maupun
+                      non-akademik siswa. Ke depannya, sekolah akan terus berupaya
+                      menjalin kerja sama dengan berbagai pihak untuk peningkatan
+                      infrastruktur agar relevan dengan tuntutan zaman.
+                    </p>
                   </div>
                 </div>
 
