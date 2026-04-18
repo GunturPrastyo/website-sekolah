@@ -1,14 +1,14 @@
 <template>
   <div>
     <!-- CONTENT -->
-    <section class="relative z-20 px-0 pb-16 md:pb-24 dark:bg-slate-900">
+    <section class="relative z-20 px-0 dark:bg-slate-900">
       <div class="container max-w-full">
         <!-- MAIN -->
         <main class="w-full">
           <template v-for="category in facilityCategories" :key="category.id">
             <article
               v-if="activeCategory === category.id"
-              class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-2xl border border-gray-100 dark:border-slate-700"
+              class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-xl border border-gray-100 dark:border-slate-700"
             >
               <!-- FEATURED IMAGE -->
               <div class="relative h-[300px] md:h-[400px] overflow-hidden">
@@ -41,7 +41,7 @@
               </div>
 
               <!-- CONTENT -->
-              <div class="p-6 md:p-10 grid md:grid-cols-3 gap-10">
+              <div class="p-6 md:p-10 grid md:grid-cols-3 gap-10 items-start">
                 <!-- MAIN ARTICLE -->
                 <div class="md:col-span-2 space-y-6">
                   <span class="text-xs bg-white/20 px-3 py-1 rounded-full backdrop-blur">
@@ -88,7 +88,7 @@
                 </div>
 
                 <!-- SIDEBAR ARTICLE -->
-                <div class="space-y-6">
+                <div class="space-y-6 md:sticky md:top-28">
                   <div class="bg-blue-50 dark:bg-slate-700/50 rounded-xl p-5">
                     <h4 class="font-semibold text-blue-700 dark:text-blue-300 mb-3">
                       Informasi Singkat
