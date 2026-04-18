@@ -212,16 +212,20 @@
                     <div class="space-y-8 lg:sticky lg:top-28">
                       <!-- Fasilitas Lainnya -->
                       <div
-                        class="relative bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col"
+                        class="relative bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col"
                       >
-                        <h4
-                          class="font-bold text-gray-800 dark:text-white mb-4 pb-3 border-b border-gray-100 dark:border-slate-700 shrink-0"
-                        >
-                          Fasilitas Lainnya
-                        </h4>
-
                         <div
-                          class="space-y-3 mt-2 max-h-[380px] overflow-y-auto pr-2 pb-6 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-300 dark:hover:[&::-webkit-scrollbar-thumb]:bg-slate-500"
+                          class="border-sky-600 dark:border-slate-600 shrink-0 border-l-6 pl-3 rounded-sm"
+                        >
+                          <h4 class="font-bold text-gray-800 dark:text-white">
+                            Fasilitas Lainnya
+                          </h4>
+                          <p class="text-sm text-gray-500 dark:text-gray-400">
+                            Jelajahi berbagai sarana dan prasarana lain yang tersedia.
+                          </p>
+                        </div>
+                        <div
+                          class="space-y-3 mt-6 max-h-[550px] overflow-y-auto pr-2 pb-6 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-300 dark:hover:[&::-webkit-scrollbar-thumb]:bg-slate-500"
                         >
                           <div
                             v-for="other in facilityCategories.filter(
