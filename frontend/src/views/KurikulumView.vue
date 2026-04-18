@@ -195,14 +195,14 @@ onMounted(() => {
   <div>
     <!-- Hero Banner -->
     <div
-      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-indigo-600 via-blue-700 to-blue-900 dark:from-slate-900 dark:to-slate-950 overflow-hidden"
+      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-sky-500 to-blue-700 dark:from-slate-900 dark:to-slate-950 overflow-hidden"
     >
       <!-- Background glow elements -->
       <div
-        class="absolute -top-32 -left-32 w-96 h-96 bg-blue-400/20 blur-3xl rounded-full"
+        class="absolute -top-32 -left-32 w-96 h-96 bg-sky-300/30 blur-3xl rounded-full"
       ></div>
       <div
-        class="absolute bottom-0 right-0 w-80 h-80 bg-cyan-400/20 blur-3xl rounded-full"
+        class="absolute bottom-0 right-0 w-80 h-80 bg-blue-400/30 blur-3xl rounded-full"
       ></div>
 
       <div class="container relative z-10 mx-auto px-6 text-center">
@@ -360,7 +360,7 @@ onMounted(() => {
 
     <!-- Interactive Syllabus Area (Full Width to Footer) -->
     <section
-      class="w-full bg-gradient-to-br from-indigo-600 via-blue-700 to-blue-900 dark:from-slate-900 dark:to-slate-950 py-16 md:py-24 px-6 border-t border-indigo-500/30 dark:border-slate-800"
+      class="w-full bg-gradient-to-br from-sky-500 to-blue-700 dark:from-slate-900 dark:to-slate-950 py-16 md:py-24 px-6 border-t border-sky-400/30 dark:border-slate-800"
     >
       <div
         class="container mx-auto max-w-6xl flex flex-col lg:flex-row gap-8 lg:gap-12 items-start"
@@ -376,7 +376,7 @@ onMounted(() => {
               class="w-full text-left p-5 rounded-2xl transition-all duration-300 border-2"
               :class="
                 activeGrade === grade.id
-                  ? 'bg-white border-white text-indigo-700 shadow-xl shadow-black/10 dark:bg-slate-800 dark:border-slate-700 dark:text-white'
+                  ? 'bg-white border-white text-blue-600 shadow-xl shadow-black/10 dark:bg-slate-800 dark:border-slate-700 dark:text-white'
                   : 'bg-white/10 backdrop-blur-sm border-white/10 hover:bg-white/20 hover:border-white/30 text-blue-50 dark:bg-slate-800/50 dark:hover:bg-slate-800 dark:border-slate-700/50 dark:text-gray-300 shadow-sm'
               "
             >
