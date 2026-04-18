@@ -25,6 +25,12 @@ const categories = ref([
 
 const activeCategory = ref("semua");
 
+const searchQuery = ref("");
+const matchesSearch = (staff) => {
+  if (!searchQuery.value) return true;
+  return staff.name.toLowerCase().includes(searchQuery.value.toLowerCase());
+};
+
 // Contoh data dummy lengkap dengan atribut 'category'
 const staffList = ref([
   {
@@ -95,21 +101,27 @@ const staffList = ref([
 
 // Computed properties untuk mode "Struktur Organisasi"
 const pimpinanList = computed(() =>
-  staffList.value.filter((s) => s.category === "pimpinan")
+  staffList.value.filter((s) => s.category === "pimpinan" && matchesSearch(s))
 );
 const guruList = computed(() =>
-  staffList.value.filter((s) =>
-    ["informatika", "matematika", "olahraga", "bahasa_inggris"].includes(s.category)
+  staffList.value.filter(
+    (s) =>
+      ["informatika", "matematika", "olahraga", "bahasa_inggris"].includes(s.category) &&
+      matchesSearch(s)
   )
 );
 const stafList = computed(() =>
-  staffList.value.filter((s) => ["pustakawan", "tata_usaha"].includes(s.category))
+  staffList.value.filter(
+    (s) => ["pustakawan", "tata_usaha"].includes(s.category) && matchesSearch(s)
+  )
 );
 
 // Computed property untuk mode filter kategori biasa
 const filteredStaff = computed(() => {
   if (activeCategory.value === "semua") return []; // Jika "semua", kita tangani secara terpisah di template
-  return staffList.value.filter((s) => s.category === activeCategory.value);
+  return staffList.value.filter(
+    (s) => s.category === activeCategory.value && matchesSearch(s)
+  );
 });
 
 const activeCategoryName = computed(() => {
@@ -209,6 +221,31 @@ onMounted(() => {
 
           <!-- Content -->
           <main id="staff-content" class="w-full md:w-2/3 lg:w-3/4">
+            <!-- Search Bar -->
+            <div
+              class="mb-8 flex items-center bg-white dark:bg-slate-800 p-3 px-5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all"
+            >
+              <svg
+                class="w-5 h-5 text-gray-400 mr-3 shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                ></path>
+              </svg>
+              <input
+                v-model="searchQuery"
+                type="text"
+                placeholder="Cari nama guru atau staf..."
+                class="w-full bg-transparent border-none focus:outline-none text-gray-800 dark:text-gray-200 placeholder-gray-400"
+              />
+            </div>
+
             <Transition
               mode="out-in"
               enter-active-class="transition-all duration-500 ease-out"
@@ -491,6 +528,43 @@ onMounted(() => {
                       </div>
                     </div>
                   </div>
+
+                  <!-- Jika Data Kosong di Kategori 'Semua' -->
+                  <div
+                    v-if="
+                      pimpinanList.length === 0 &&
+                      guruList.length === 0 &&
+                      stafList.length === 0
+                    "
+                    class="py-12 text-center bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700"
+                  >
+                    <div
+                      class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-50 dark:bg-slate-700 mb-4 text-gray-400"
+                    >
+                      <svg
+                        class="w-8 h-8"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+                      Data tidak ditemukan
+                    </h3>
+                    <p class="text-gray-500 dark:text-gray-400 mt-1" v-if="searchQuery">
+                      Tidak ada staf dengan nama "{{ searchQuery }}".
+                    </p>
+                    <p class="text-gray-500 dark:text-gray-400 mt-1" v-else>
+                      Belum ada data anggota.
+                    </p>
+                  </div>
                 </template>
 
                 <!-- Tampilan Spesifik per Kategori (Selain 'Semua') -->
@@ -602,7 +676,10 @@ onMounted(() => {
                       <h3 class="text-lg font-bold text-gray-900 dark:text-white">
                         Data tidak ditemukan
                       </h3>
-                      <p class="text-gray-500 dark:text-gray-400 mt-1">
+                      <p class="text-gray-500 dark:text-gray-400 mt-1" v-if="searchQuery">
+                        Tidak ada staf dengan nama "{{ searchQuery }}" di kategori ini.
+                      </p>
+                      <p class="text-gray-500 dark:text-gray-400 mt-1" v-else>
                         Belum ada data anggota untuk kategori ini.
                       </p>
                     </div>
