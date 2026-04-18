@@ -14,7 +14,7 @@
               <div class="relative h-64 md:h-80">
                 <img
                   :src="category.items[0].src"
-                  class="w-full h-full object-cover bg-blur"
+                  class="w-full h-full object-cover blur-sm"
                 />
                 <div
                   class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"
