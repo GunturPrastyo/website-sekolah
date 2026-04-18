@@ -1,0 +1,318 @@
+<script setup>
+import { ref, computed, onMounted, onUpdated, nextTick } from "vue";
+import { createIcons } from "lucide";
+
+const activeFilter = ref("semua");
+
+const filters = [
+  { id: "semua", name: "Semua Tingkat" },
+  { id: "internasional", name: "Internasional" },
+  { id: "nasional", name: "Nasional" },
+  { id: "provinsi", name: "Provinsi" },
+  { id: "kabupaten", name: "Kabupaten/Kota" },
+];
+
+// Data Dummy Prestasi
+const prestasiList = ref([
+  {
+    id: 1,
+    title: "Olimpiade Sains Nasional (OSN) Matematika",
+    winner: "Budi Santoso",
+    rank: 1,
+    level: "nasional",
+    year: 2025,
+    type: "Akademik",
+    image: "https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800",
+  },
+  {
+    id: 2,
+    title: "Lomba Inovasi Robotika Pelajar Internasional",
+    winner: "Tim RoboTech SMAN 1",
+    rank: 2,
+    level: "internasional",
+    year: 2025,
+    type: "Non-Akademik",
+    image: "https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?q=80&w=800",
+  },
+  {
+    id: 3,
+    title: "Kejuaraan Pencak Silat Tingkat Pelajar",
+    winner: "Andi Darmawan",
+    rank: 1,
+    level: "provinsi",
+    year: 2024,
+    type: "Non-Akademik",
+    image: "https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=800",
+  },
+  {
+    id: 4,
+    title: "Lomba Debat Bahasa Inggris Nasional",
+    winner: "Siti Aminah & Tim",
+    rank: 3,
+    level: "nasional",
+    year: 2024,
+    type: "Akademik",
+    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800",
+  },
+  {
+    id: 5,
+    title: "Festival Tari Tradisional Daerah",
+    winner: "Ekskul Tari Kinasih",
+    rank: 1,
+    level: "kabupaten",
+    year: 2024,
+    type: "Non-Akademik",
+    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800",
+  },
+  {
+    id: 6,
+    title: "Lomba Karya Tulis Ilmiah (LKIR) Nasional",
+    winner: "Dina & Risa",
+    rank: 2,
+    level: "nasional",
+    year: 2023,
+    type: "Akademik",
+    image: "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800",
+  },
+]);
+
+const filteredPrestasi = computed(() => {
+  if (activeFilter.value === "semua") return prestasiList.value;
+  return prestasiList.value.filter((p) => p.level === activeFilter.value);
+});
+
+// Fungsi untuk menentukan warna dan badge berdasarkan ranking juara
+const getRankStyle = (rank) => {
+  switch (rank) {
+    case 1:
+      return {
+        badge:
+          "bg-gradient-to-r from-yellow-400 to-yellow-600 text-white shadow-yellow-500/50",
+        text: "Juara 1 (Emas)",
+        icon: "medal",
+        border: "border-yellow-400",
+      };
+    case 2:
+      return {
+        badge: "bg-gradient-to-r from-gray-300 to-gray-500 text-white shadow-gray-500/50",
+        text: "Juara 2 (Perak)",
+        icon: "medal",
+        border: "border-gray-400",
+      };
+    case 3:
+      return {
+        badge:
+          "bg-gradient-to-r from-amber-600 to-orange-700 text-white shadow-orange-500/50",
+        text: "Juara 3 (Perunggu)",
+        icon: "medal",
+        border: "border-orange-500",
+      };
+    default:
+      return {
+        badge: "bg-gradient-to-r from-blue-400 to-blue-600 text-white shadow-blue-500/50",
+        text: "Finalis / Penghargaan",
+        icon: "award",
+        border: "border-blue-400",
+      };
+  }
+};
+
+onMounted(() => {
+  createIcons();
+});
+
+// Re-render icon lucide setiap kali filter berpindah (DOM berubah)
+onUpdated(() => {
+  nextTick(() => {
+    createIcons();
+  });
+});
+</script>
+
+<template>
+  <div>
+    <!-- Hero Banner dengan Nuansa Kemenangan (Emas & Gelap) -->
+    <div
+      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 overflow-hidden"
+    >
+      <!-- Background glow & Ornaments -->
+      <div
+        class="absolute -top-32 -left-32 w-96 h-96 bg-yellow-500/10 blur-[100px] rounded-full pointer-events-none"
+      ></div>
+      <div
+        class="absolute bottom-0 right-0 w-80 h-80 bg-blue-500/20 blur-[100px] rounded-full pointer-events-none"
+      ></div>
+
+      <!-- Ikon Piala Raksasa Blur di Belakang -->
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] text-yellow-500 pointer-events-none"
+      >
+        <i data-lucide="trophy" class="w-[400px] h-[400px]"></i>
+      </div>
+
+      <div class="container relative z-10 mx-auto px-6 text-center">
+        <div
+          class="inline-flex items-center justify-center px-4 py-1.5 mb-5 text-xs md:text-sm font-bold text-yellow-900 bg-gradient-to-r from-yellow-300 to-yellow-500 rounded-full shadow-lg shadow-yellow-500/20 uppercase tracking-widest"
+        >
+          <i data-lucide="star" class="w-4 h-4 mr-1.5 fill-yellow-900"></i> Hall of Fame
+        </div>
+        <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
+          Prestasi & Penghargaan
+        </h1>
+        <p class="text-gray-300 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+          Dedikasi, kerja keras, dan semangat pantang menyerah siswa-siswi kami yang
+          berhasil menorehkan tinta emas di berbagai ajang perlombaan bergengsi.
+        </p>
+      </div>
+    </div>
+
+    <!-- Main Content Section -->
+    <section class="pt-12 pb-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
+      <div class="container mx-auto max-w-6xl">
+        <!-- Filter Tabs -->
+        <div class="flex flex-wrap justify-center gap-3 mb-12">
+          <button
+            v-for="filter in filters"
+            :key="filter.id"
+            @click="activeFilter = filter.id"
+            class="px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 focus:outline-none"
+            :class="
+              activeFilter === filter.id
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
+                : 'bg-white text-gray-600 dark:bg-slate-800 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
+            "
+          >
+            {{ filter.name }}
+          </button>
+        </div>
+
+        <!-- Daftar Prestasi dengan Efek Papan Penghargaan -->
+        <TransitionGroup
+          name="list"
+          tag="div"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative"
+        >
+          <div
+            v-for="prestasi in filteredPrestasi"
+            :key="prestasi.id"
+            class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full cursor-default transform hover:-translate-y-2"
+          >
+            <!-- Gambar Sertifikat / Lomba -->
+            <div
+              class="relative h-48 overflow-hidden shrink-0 border-b-[6px]"
+              :class="getRankStyle(prestasi.rank).border"
+            >
+              <img
+                :src="prestasi.image"
+                :alt="prestasi.title"
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"
+              ></div>
+
+              <!-- Lencana Juara Pojok Atas Kanan -->
+              <div
+                class="absolute top-4 right-4 flex flex-col items-center justify-center w-14 h-16 rounded-b-full shadow-lg z-10"
+                :class="getRankStyle(prestasi.rank).badge"
+              >
+                <i
+                  :data-lucide="getRankStyle(prestasi.rank).icon"
+                  class="w-6 h-6 mt-1 mb-0.5"
+                  :class="prestasi.rank === 1 ? 'fill-yellow-100' : ''"
+                ></i>
+                <span class="text-[10px] font-black uppercase">{{
+                  prestasi.rank === 1 ? "1st" : prestasi.rank === 2 ? "2nd" : "3rd"
+                }}</span>
+              </div>
+
+              <!-- Kategori Tag -->
+              <div
+                class="absolute bottom-3 left-4 px-2.5 py-1 bg-black/50 backdrop-blur-md text-white text-[10px] font-semibold rounded uppercase tracking-wider"
+              >
+                Tingkat <span class="text-yellow-400">{{ prestasi.level }}</span>
+              </div>
+            </div>
+
+            <!-- Konten Kartu Prestasi -->
+            <div
+              class="p-6 flex flex-col flex-1 relative bg-white dark:bg-slate-800 z-10"
+            >
+              <div
+                class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-3 font-semibold"
+              >
+                <span class="bg-gray-100 dark:bg-slate-700 px-2 py-1 rounded">{{
+                  prestasi.type
+                }}</span>
+                <span class="flex items-center"
+                  ><i data-lucide="calendar" class="w-3.5 h-3.5 mr-1"></i>
+                  {{ prestasi.year }}</span
+                >
+              </div>
+
+              <h3
+                class="text-lg font-bold text-gray-900 dark:text-white mb-2 leading-snug"
+              >
+                {{ prestasi.title }}
+              </h3>
+
+              <div
+                class="mt-auto pt-5 border-t border-gray-100 dark:border-slate-700 flex items-center gap-3"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-blue-100 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0"
+                >
+                  <i data-lucide="user" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                    Peraih Penghargaan
+                  </p>
+                  <p
+                    class="text-sm font-bold text-gray-900 dark:text-white leading-tight"
+                  >
+                    {{ prestasi.winner }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </TransitionGroup>
+
+        <!-- Empty State -->
+        <div
+          v-if="filteredPrestasi.length === 0"
+          class="py-20 text-center bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm mt-4"
+        >
+          <div
+            class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700 mb-4 text-gray-400"
+          >
+            <i data-lucide="award" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+            Belum Ada Prestasi
+          </h3>
+          <p class="text-gray-500 dark:text-gray-400 mt-1">
+            Belum ada data prestasi yang tercatat untuk kategori tingkat ini.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>
+
+<style scoped>
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: scale(0.9) translateY(30px);
+}
+.list-leave-active {
+  position: absolute;
+}
+</style>

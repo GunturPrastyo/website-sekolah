@@ -33,7 +33,19 @@ const router = createRouter({
       path: '/kurikulum',
       name: 'kurikulum',
       component: Kurikulum
+    },
+    {
+      path: '/ekstrakurikuler',
+      name: 'ekstrakurikuler',
+      component: () => import('../views/Ekstrakurikuler.vue')
+    },
+    {
+      path: '/prestasi',
+      name: 'prestasi',
+      component: () => import('../views/Prestasi.vue')
     }
+
+
   ]
 })
 
