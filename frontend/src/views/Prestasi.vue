@@ -4,6 +4,8 @@ import { createIcons } from "lucide";
 
 const activeFilter = ref("semua");
 
+const searchQuery = ref("");
+
 const filters = [
   { id: "semua", name: "Semua Tingkat" },
   { id: "internasional", name: "Internasional" },
@@ -77,9 +79,55 @@ const prestasiList = ref([
 ]);
 
 const filteredPrestasi = computed(() => {
-  if (activeFilter.value === "semua") return prestasiList.value;
-  return prestasiList.value.filter((p) => p.level === activeFilter.value);
+  let filtered = prestasiList.value;
+
+  if (activeFilter.value !== "semua") {
+    filtered = filtered.filter((p) => p.level === activeFilter.value);
+  }
+
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.toLowerCase();
+    filtered = filtered.filter(
+      (p) =>
+        p.title.toLowerCase().includes(query) || p.winner.toLowerCase().includes(query)
+    );
+  }
+
+  return filtered;
 });
+
+// Hitung jumlah prestasi berdasarkan tingkat
+const counts = computed(() => ({
+  internasional: prestasiList.value.filter((p) => p.level === "internasional").length,
+  nasional: prestasiList.value.filter((p) => p.level === "nasional").length,
+  provinsi: prestasiList.value.filter((p) => p.level === "provinsi").length,
+  kabupaten: prestasiList.value.filter((p) => p.level === "kabupaten").length,
+}));
+
+const animatedCounts = ref({
+  internasional: 0,
+  nasional: 0,
+  provinsi: 0,
+  kabupaten: 0,
+});
+
+const animateValue = (key, target, duration = 2000) => {
+  if (target === 0) return;
+  let startTimestamp = null;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    // Efek easing (easeOutQuart) agar perlahan melambat di akhir
+    const easeProgress = 1 - Math.pow(1 - progress, 4);
+    animatedCounts.value[key] = Math.floor(easeProgress * target);
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    } else {
+      animatedCounts.value[key] = target;
+    }
+  };
+  window.requestAnimationFrame(step);
+};
 
 // Fungsi untuk menentukan warna dan badge berdasarkan ranking juara
 const getRankStyle = (rank) => {
@@ -119,6 +167,10 @@ const getRankStyle = (rank) => {
 
 onMounted(() => {
   createIcons();
+  animateValue("internasional", counts.value.internasional);
+  animateValue("nasional", counts.value.nasional);
+  animateValue("provinsi", counts.value.provinsi);
+  animateValue("kabupaten", counts.value.kabupaten);
 });
 
 // Re-render icon lucide setiap kali filter berpindah (DOM berubah)
@@ -167,23 +219,121 @@ onUpdated(() => {
     </div>
 
     <!-- Main Content Section -->
-    <section class="pt-12 pb-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
+    <section class="pb-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
       <div class="container mx-auto max-w-6xl">
-        <!-- Filter Tabs -->
-        <div class="flex flex-wrap justify-center gap-3 mb-12">
-          <button
-            v-for="filter in filters"
-            :key="filter.id"
-            @click="activeFilter = filter.id"
-            class="px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 focus:outline-none"
-            :class="
-              activeFilter === filter.id
-                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
-                : 'bg-white text-gray-600 dark:bg-slate-800 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
-            "
+        <!-- Statistik Prestasi (Angka Berjalan) -->
+        <div
+          class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10 -mt-12 md:-mt-16 relative z-20"
+        >
+          <!-- Internasional -->
+          <div
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-transform hover:-translate-y-1"
           >
-            {{ filter.name }}
-          </button>
+            <div
+              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3 md:mb-4"
+            >
+              <i data-lucide="globe-2" class="w-5 h-5 md:w-6 md:h-6"></i>
+            </div>
+            <p class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-1">
+              {{ animatedCounts.internasional }}
+            </p>
+            <h4
+              class="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-semibold uppercase tracking-wider text-center"
+            >
+              Internasional
+            </h4>
+          </div>
+
+          <!-- Nasional -->
+          <div
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-transform hover:-translate-y-1"
+          >
+            <div
+              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-red-50 dark:bg-slate-700 flex items-center justify-center text-red-600 dark:text-red-400 mb-3 md:mb-4"
+            >
+              <i data-lucide="flag" class="w-5 h-5 md:w-6 md:h-6"></i>
+            </div>
+            <p class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-1">
+              {{ animatedCounts.nasional }}
+            </p>
+            <h4
+              class="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-semibold uppercase tracking-wider text-center"
+            >
+              Nasional
+            </h4>
+          </div>
+
+          <!-- Provinsi -->
+          <div
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-transform hover:-translate-y-1"
+          >
+            <div
+              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-green-50 dark:bg-slate-700 flex items-center justify-center text-green-600 dark:text-green-400 mb-3 md:mb-4"
+            >
+              <i data-lucide="map" class="w-5 h-5 md:w-6 md:h-6"></i>
+            </div>
+            <p class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-1">
+              {{ animatedCounts.provinsi }}
+            </p>
+            <h4
+              class="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-semibold uppercase tracking-wider text-center"
+            >
+              Provinsi
+            </h4>
+          </div>
+
+          <!-- Kabupaten -->
+          <div
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-transform hover:-translate-y-1"
+          >
+            <div
+              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-amber-50 dark:bg-slate-700 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-3 md:mb-4"
+            >
+              <i data-lucide="building-2" class="w-5 h-5 md:w-6 md:h-6"></i>
+            </div>
+            <p class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-1">
+              {{ animatedCounts.kabupaten }}
+            </p>
+            <h4
+              class="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-semibold uppercase tracking-wider text-center"
+            >
+              Kabupaten
+            </h4>
+          </div>
+        </div>
+
+        <!-- Search Bar & Filter Tabs -->
+        <div class="flex flex-col lg:flex-row justify-between items-center gap-6 mb-12">
+          <!-- Search Bar -->
+          <div class="relative w-full lg:w-[400px] shrink-0">
+            <i
+              data-lucide="search"
+              class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+            ></i>
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Cari nama siswa atau perlombaan..."
+              class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm"
+            />
+          </div>
+
+          <!-- Filter Tabs -->
+          <div class="flex flex-wrap justify-center lg:justify-end gap-2.5">
+            <button
+              v-for="filter in filters"
+              :key="filter.id"
+              @click="activeFilter = filter.id"
+              class="px-4 md:px-5 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-semibold transition-all duration-300 focus:outline-none"
+              :class="
+                activeFilter === filter.id
+                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
+                  : 'bg-white text-gray-600 dark:bg-slate-800 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
+              "
+            >
+              {{ filter.name }}
+            </button>
+          </div>
         </div>
 
         <!-- Daftar Prestasi dengan Efek Papan Penghargaan -->
@@ -289,11 +439,10 @@ onUpdated(() => {
           >
             <i data-lucide="award" class="w-8 h-8"></i>
           </div>
-          <h3 class="text-lg font-bold text-gray-900 dark:text-white">
-            Belum Ada Prestasi
-          </h3>
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white">Tidak Ditemukan</h3>
           <p class="text-gray-500 dark:text-gray-400 mt-1">
-            Belum ada data prestasi yang tercatat untuk kategori tingkat ini.
+            Data prestasi yang Anda cari tidak ditemukan. Coba kata kunci atau filter
+            lain.
           </p>
         </div>
       </div>
