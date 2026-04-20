@@ -34,6 +34,9 @@ const form = ref({
   pilihanJurusan: "",
 });
 
+const regNumber = ref("");
+const registrationDate = ref("");
+
 const nextStep = () => {
   if (currentStep.value < totalSteps) {
     currentStep.value++;
@@ -55,6 +58,7 @@ const submitForm = () => {
     isSubmitting.value = false;
     isSubmitted.value = true;
     showToast.value = true;
+    regNumber.value = "PPDB-" + (Math.floor(Math.random() * 90000) + 10000);
     scrollToForm();
 
     // Sembunyikan toast otomatis setelah 4 detik
@@ -69,6 +73,21 @@ const scrollToForm = () => {
   if (formEl) {
     window.scrollTo({ top: formEl.offsetTop - 100, behavior: "smooth" });
   }
+};
+
+const printBukti = () => {
+  registrationDate.value = new Date().toLocaleDateString("id-ID", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  nextTick(() => {
+    window.print();
+  });
 };
 
 onMounted(() => {
@@ -86,32 +105,179 @@ onUpdated(() => {
 
 <template>
   <div>
-    <!-- Hero Banner -->
-    <div
-      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-700 via-blue-800 to-slate-900 overflow-hidden"
-    >
-      <!-- Background glow -->
+    <div class="print:hidden">
+      <!-- Hero Banner -->
       <div
-        class="absolute -top-32 -left-32 w-96 h-96 bg-blue-500/20 blur-3xl rounded-full"
-      ></div>
-      <div
-        class="absolute bottom-0 right-0 w-80 h-80 bg-sky-500/20 blur-3xl rounded-full"
-      ></div>
+        class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 overflow-hidden"
+      >
+        <!-- Background glow -->
+        <div
+          class="absolute -top-32 -left-32 w-96 h-96 bg-blue-500/20 blur-3xl rounded-full"
+        ></div>
+        <div
+          class="absolute bottom-0 right-0 w-80 h-80 bg-sky-500/20 blur-3xl rounded-full"
+        ></div>
 
-      <div class="container relative z-10 mx-auto px-6 text-center">
-        <span
-          class="inline-block px-4 py-1.5 mb-5 text-xs md:text-sm font-semibold text-blue-900 bg-yellow-400 rounded-full shadow-sm"
-        >
-          TAHUN AJARAN 2026/2027
-        </span>
-        <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
-          Penerimaan Peserta Didik Baru
-        </h1>
-        <p class="text-blue-100 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-          Bergabunglah bersama SMAN 1 Nogosari. Isi formulir pendaftaran di bawah ini
-          dengan data yang valid dan benar.
-        </p>
+        <div class="container relative z-10 mx-auto px-6 text-center">
+          <span
+            class="inline-block px-4 py-1.5 mb-5 text-xs md:text-sm font-bold text-blue-900 bg-yellow-400 rounded-full shadow-sm tracking-wide"
+          >
+            TAHUN AJARAN 2026/2027
+          </span>
+          <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
+            Penerimaan Peserta Didik Baru
+          </h1>
+          <p class="text-blue-100 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+            Bergabunglah bersama SMAN 1 Nogosari. Pelajari informasi pendaftaran dan isi
+            formulir di bawah ini dengan data yang valid.
+          </p>
+        </div>
       </div>
+
+      <!-- Informasi & Syarat Pendaftaran -->
+      <section
+        class="py-12 md:py-16 px-6 bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700"
+      >
+        <div class="container mx-auto max-w-5xl">
+          <div class="text-center mb-10">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+              Informasi & Persyaratan
+            </h2>
+            <p class="text-gray-600 dark:text-gray-400 mt-2">
+              Pastikan Anda membaca ketentuan berikut sebelum mengisi formulir.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+            <!-- Syarat Utama -->
+            <div
+              class="bg-blue-50/50 dark:bg-slate-700/30 p-6 md:p-8 rounded-2xl border border-blue-100 dark:border-slate-700"
+            >
+              <h3
+                class="text-xl font-bold text-blue-900 dark:text-white mb-5 flex items-center"
+              >
+                <i data-lucide="file-check-2" class="w-6 h-6 mr-2 text-blue-600"></i>
+                Syarat Pendaftaran
+              </h3>
+              <ul class="space-y-4">
+                <li class="flex items-start">
+                  <i
+                    data-lucide="check-circle"
+                    class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5"
+                  ></i>
+                  <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"
+                    >Lulusan SMP/MTs sederajat tahun 2024, 2025, atau 2026.</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <i
+                    data-lucide="check-circle"
+                    class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5"
+                  ></i>
+                  <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"
+                    >Memiliki Nomor Induk Siswa Nasional (NISN) yang valid.</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <i
+                    data-lucide="check-circle"
+                    class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5"
+                  ></i>
+                  <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"
+                    >Menyiapkan berkas digital (Scan KK, Akta Kelahiran, dan
+                    Ijazah/SKL).</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <i
+                    data-lucide="check-circle"
+                    class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5"
+                  ></i>
+                  <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"
+                    >Pas foto terbaru ukuran 3x4 berwarna (pakaian seragam asal).</span
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <!-- Alur Pendaftaran -->
+            <div
+              class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
+            >
+              <h3
+                class="text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center"
+              >
+                <i data-lucide="git-merge" class="w-6 h-6 mr-2 text-blue-600"></i> Alur
+                Pendaftaran
+              </h3>
+              <div
+                class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-blue-200 before:via-blue-200 dark:before:via-slate-600 before:to-transparent"
+              >
+                <div class="relative flex items-center gap-4">
+                  <div
+                    class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border-2 border-blue-500 flex items-center justify-center text-blue-600 font-bold shrink-0 z-10"
+                  >
+                    1
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-gray-900 dark:text-white text-sm">
+                      Isi Formulir Online
+                    </h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      Lengkapi data diri, asal sekolah, dan jurusan di bawah ini.
+                    </p>
+                  </div>
+                </div>
+                <div class="relative flex items-center gap-4">
+                  <div
+                    class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border-2 border-blue-500 flex items-center justify-center text-blue-600 font-bold shrink-0 z-10"
+                  >
+                    2
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-gray-900 dark:text-white text-sm">
+                      Cetak Bukti Daftar
+                    </h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      Setelah submit, simpan dan cetak bukti pendaftaran otomatis.
+                    </p>
+                  </div>
+                </div>
+                <div class="relative flex items-center gap-4">
+                  <div
+                    class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border-2 border-blue-500 flex items-center justify-center text-blue-600 font-bold shrink-0 z-10"
+                  >
+                    3
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-gray-900 dark:text-white text-sm">
+                      Verifikasi Berkas
+                    </h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      Bawa dokumen fisik ke sekolah sesuai jadwal yang tertera.
+                    </p>
+                  </div>
+                </div>
+                <div class="relative flex items-center gap-4">
+                  <div
+                    class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border-2 border-gray-300 dark:border-slate-600 flex items-center justify-center text-gray-400 font-bold shrink-0 z-10"
+                  >
+                    4
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-gray-400 dark:text-gray-500 text-sm">
+                      Pengumuman
+                    </h4>
+                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                      Hasil kelulusan akan diinformasikan di portal resmi.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
     <!-- Main Content Section -->
@@ -138,10 +304,11 @@ onUpdated(() => {
             >
               Terima kasih <strong>{{ form.namaLengkap || "Calon Siswa" }}</strong
               >, data pendaftaran Anda telah kami terima. Silakan cetak bukti pendaftaran
-              dan perhatikan jadwal seleksi selanjutnya.
+              di bawah ini dan bawa saat melakukan verifikasi berkas di sekolah.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
               <button
+                @click="printBukti"
                 class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors flex items-center justify-center"
               >
                 <i data-lucide="printer" class="w-5 h-5 mr-2"></i> Cetak Bukti Daftar
@@ -638,7 +805,7 @@ onUpdated(() => {
       </div>
     </section>
 
-    <!-- Toast Notification Overlay -->
+    <!-- Toast Notification -->
     <Transition
       enter-active-class="transition duration-300 ease-out transform"
       enter-from-class="opacity-0 translate-y-[-2rem]"
@@ -674,6 +841,118 @@ onUpdated(() => {
         </button>
       </div>
     </Transition>
+
+    <!-- AREA KHUSUS CETAK BUKTI PENDAFTARAN -->
+    <!-- Div ini hanya akan terlihat ketika pengguna menekan CTRL+P atau tombol Cetak -->
+    <div
+      class="hidden print:block fixed inset-0 w-full h-full bg-white z-[99999] text-black px-10 py-12"
+    >
+      <div
+        class="max-w-4xl mx-auto border-[3px] border-gray-900 p-10 rounded-xl relative"
+      >
+        <!-- Header Kop Surat -->
+        <div
+          class="flex items-center justify-center border-b-4 border-gray-900 pb-6 mb-8 gap-6"
+        >
+          <!-- Placeholder Logo -->
+          <div
+            class="w-20 h-20 bg-gray-200 border-2 border-gray-800 rounded-full flex items-center justify-center font-bold text-xs text-gray-500"
+          >
+            LOGO
+          </div>
+          <div class="text-center">
+            <h1 class="text-2xl font-black uppercase tracking-wider">
+              Pemerintah Provinsi Jawa Tengah
+            </h1>
+            <h2 class="text-3xl font-black uppercase tracking-widest mt-1">
+              SMA Negeri 1 Nogosari
+            </h2>
+            <p class="text-sm font-medium mt-2">
+              Jl. Raya Nogosari No. 123, Kab. Boyolali, Jawa Tengah 57378
+            </p>
+          </div>
+        </div>
+
+        <div class="text-center mb-8">
+          <h3
+            class="text-xl font-bold bg-gray-200 inline-block px-6 py-2 border-2 border-gray-900 uppercase"
+          >
+            Tanda Bukti Pendaftaran PPDB
+          </h3>
+        </div>
+
+        <!-- Meta Info -->
+        <div
+          class="flex justify-between items-start mb-8 text-sm font-bold bg-gray-100 p-4 border-2 border-gray-900"
+        >
+          <div>
+            <p class="text-gray-600 uppercase text-xs mb-1">Waktu Pendaftaran</p>
+            <p>{{ registrationDate }}</p>
+          </div>
+          <div class="text-right">
+            <p class="text-gray-600 uppercase text-xs mb-1">Nomor Registrasi</p>
+            <p class="text-2xl tracking-widest">{{ regNumber }}</p>
+          </div>
+        </div>
+
+        <!-- Table Data Siswa -->
+        <table
+          class="w-full text-left border-collapse border-2 border-gray-900 text-sm mb-12"
+        >
+          <tbody>
+            <tr class="border-b border-gray-900">
+              <td class="py-4 px-6 border-r border-gray-900 font-bold w-1/3 bg-gray-50">
+                NISN
+              </td>
+              <td class="py-4 px-6 font-bold text-lg">{{ form.nisn }}</td>
+            </tr>
+            <tr class="border-b border-gray-900">
+              <td class="py-4 px-6 border-r border-gray-900 font-bold bg-gray-50">
+                Nama Lengkap Siswa
+              </td>
+              <td class="py-4 px-6 font-bold text-lg">{{ form.namaLengkap }}</td>
+            </tr>
+            <tr class="border-b border-gray-900">
+              <td class="py-4 px-6 border-r border-gray-900 font-bold bg-gray-50">
+                Asal Sekolah
+              </td>
+              <td class="py-4 px-6 uppercase">
+                {{ form.asalSekolah }} (Lulus: {{ form.tahunLulus }})
+              </td>
+            </tr>
+            <tr class="border-b border-gray-900">
+              <td class="py-4 px-6 border-r border-gray-900 font-bold bg-gray-50">
+                Jalur Pendaftaran
+              </td>
+              <td class="py-4 px-6 font-black uppercase text-blue-800">
+                {{ form.jalurPendaftaran }}
+              </td>
+            </tr>
+            <tr>
+              <td class="py-4 px-6 border-r border-gray-900 font-bold bg-gray-50">
+                Pilihan Jurusan/Peminatan
+              </td>
+              <td class="py-4 px-6 font-black uppercase text-blue-800">
+                {{ form.pilihanJurusan }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Catatan Footer -->
+        <div
+          class="text-xs text-gray-800 text-center border-t-2 border-gray-900 pt-6 font-medium"
+        >
+          <p>
+            Kertas ini merupakan bukti sah pendaftaran online Anda. Harap dibawa saat
+            melakukan verifikasi dokumen fisik di sekolah.
+          </p>
+          <p class="mt-1 italic">
+            Dicetak secara otomatis oleh Sistem PPDB SMAN 1 Nogosari.
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
