@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, nextTick, onUpdated, reactive } from "vue";
+import { ref, computed, onMounted, nextTick, onUpdated, reactive, watch } from "vue";
 import { createIcons, icons } from "lucide";
 import ShareModal from "@/components/ShareModal.vue";
 
@@ -112,6 +112,17 @@ const getCategoryCount = (categoryId) => {
   return newsList.value.filter((news) => news.category === categoryId).length;
 };
 
+const isLoading = ref(false);
+let searchTimeout = null;
+
+watch([searchQuery, activeCategory], () => {
+  isLoading.value = true;
+  if (searchTimeout) clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    isLoading.value = false;
+  }, 800); // Tampilkan loading selama 800ms
+});
+
 const isShareModalOpen = ref(false);
 const shareData = reactive({ title: "" });
 
@@ -151,7 +162,8 @@ onUpdated(() => {
 
       <div class="container relative z-10 mx-auto px-6 text-center">
         <span
-          class="inline-block px-4 py-1.5 mb-5 text-xs md:text-sm font-semibold text-indigo-900 bg-white/90 rounded-full shadow-sm backdrop-blur"
+          class="inline-block px-5 py-1.5 mb-5 text-lg md:text-xl font-bold text-indigo-900 bg-white/90 rounded-full shadow-sm backdrop-blur"
+          style="font-family: 'Dancing Script', cursive"
         >
           Informasi Publik
         </span>
@@ -170,122 +182,158 @@ onUpdated(() => {
       <div class="container mx-auto max-w-7xl flex flex-col lg:flex-row gap-10">
         <!-- KIRI: Daftar Berita -->
         <div class="w-full lg:w-2/3">
-          <!-- Grid Berita dengan Animasi -->
-          <TransitionGroup
-            name="news-list"
-            tag="div"
-            class="grid grid-cols-1 md:grid-cols-2 gap-8 relative"
-          >
-            <article
-              v-for="news in filteredNews"
-              :key="news.id"
-              class="group relative bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full transform hover:-translate-y-1"
-            >
-              <!-- Image Container -->
-              <div class="relative h-56 overflow-hidden shrink-0">
-                <img
-                  :src="news.image"
-                  :alt="news.title"
-                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80"
-                ></div>
-
-                <!-- Category Badge -->
-                <div
-                  class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-indigo-700 text-xs font-bold rounded-md uppercase tracking-wider shadow-sm"
-                >
-                  {{ categories.find((c) => c.id === news.category)?.name }}
-                </div>
-              </div>
-
-              <!-- Content -->
-              <div class="p-6 flex flex-col flex-1 relative bg-white dark:bg-slate-800">
-                <!-- Meta Info -->
-                <div
-                  class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 gap-4 font-medium"
-                >
-                  <span class="flex items-center">
-                    <i
-                      data-lucide="calendar"
-                      class="w-3.5 h-3.5 mr-1.5 text-indigo-500"
-                    ></i>
-                    {{ news.date }}
-                  </span>
-                  <span class="flex items-center">
-                    <i data-lucide="user" class="w-3.5 h-3.5 mr-1.5 text-indigo-500"></i>
-                    {{ news.author }}
-                  </span>
-                  <span class="flex items-center">
-                    <i data-lucide="eye" class="w-3.5 h-3.5 mr-1.5 text-indigo-500"></i>
-                    {{ news.views }}
-                  </span>
-                </div>
-
-                <h3
-                  class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight"
-                >
-                  <a href="#" class="focus:outline-none">
-                    <span class="absolute inset-0"></span>
-                    {{ news.title }}
-                  </a>
-                </h3>
-
-                <p
-                  class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3 mb-6"
-                >
-                  {{ news.excerpt }}
-                </p>
-
-                <div class="mt-auto flex items-center justify-between">
-                  <div
-                    class="flex items-center text-sm font-bold text-indigo-600 dark:text-indigo-400 group-hover:underline"
-                  >
-                    Baca Selengkapnya
-                    <i
-                      data-lucide="chevron-right"
-                      class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform"
-                    ></i>
-                  </div>
-                  <button
-                    @click.prevent.stop="openShareModal(news.title)"
-                    class="text-gray-400 hover:text-indigo-600 dark:text-gray-500 dark:hover:text-indigo-400 transition-colors focus:outline-none relative z-10"
-                    title="Bagikan Berita"
-                  >
-                    <i data-lucide="share" class="w-5 h-5"></i>
-                  </button>
-                </div>
-              </div>
-            </article>
-          </TransitionGroup>
-
-          <!-- Empty State -->
-          <div
-            v-if="filteredNews.length === 0"
-            class="py-20 text-center bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm"
-          >
+          <!-- Skeleton Loading -->
+          <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div
-              class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700 mb-4 text-gray-400"
+              v-for="i in 4"
+              :key="'skeleton-' + i"
+              class="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col h-full animate-pulse"
             >
-              <i data-lucide="search-x" class="w-8 h-8"></i>
+              <div
+                class="h-56 bg-gray-200 dark:bg-slate-700 w-full shrink-0 rounded-t-lg"
+              ></div>
+              <div class="p-6 flex flex-col flex-1">
+                <div class="flex gap-4 mb-4">
+                  <div class="h-3 w-16 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                  <div class="h-3 w-20 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                </div>
+                <div class="h-5 w-full bg-gray-200 dark:bg-slate-700 rounded mb-2"></div>
+                <div class="h-5 w-3/4 bg-gray-200 dark:bg-slate-700 rounded mb-5"></div>
+                <div class="space-y-2 mb-6">
+                  <div class="h-3 w-full bg-gray-200 dark:bg-slate-700 rounded"></div>
+                  <div class="h-3 w-full bg-gray-200 dark:bg-slate-700 rounded"></div>
+                  <div class="h-3 w-4/5 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                </div>
+                <div class="mt-auto flex justify-between items-center">
+                  <div class="h-4 w-32 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                  <div class="h-6 w-6 bg-gray-200 dark:bg-slate-700 rounded-full"></div>
+                </div>
+              </div>
             </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white">
-              Berita Tidak Ditemukan
-            </h3>
-            <p class="text-gray-500 dark:text-gray-400 mt-1">
-              Tidak ada artikel yang cocok dengan pencarian atau kategori ini.
-            </p>
-            <button
-              @click="
-                searchQuery = '';
-                activeCategory = 'semua';
-              "
-              class="mt-4 px-5 py-2 bg-indigo-50 text-indigo-600 dark:bg-slate-700 dark:text-indigo-400 rounded-full text-sm font-semibold hover:bg-indigo-100 transition-colors"
-            >
-              Reset Pencarian
-            </button>
           </div>
+
+          <template v-else>
+            <!-- Grid Berita dengan Animasi -->
+            <TransitionGroup
+              v-if="filteredNews.length > 0"
+              name="news-list"
+              tag="div"
+              class="grid grid-cols-1 md:grid-cols-2 gap-8 relative"
+            >
+              <article
+                v-for="news in filteredNews"
+                :key="news.id"
+                class="group relative bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full transform hover:-translate-y-1"
+              >
+                <!-- Image Container -->
+                <div class="relative h-56 overflow-hidden shrink-0">
+                  <img
+                    :src="news.image"
+                    :alt="news.title"
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80"
+                  ></div>
+
+                  <!-- Category Badge -->
+                  <div
+                    class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-indigo-700 text-xs font-bold rounded-md uppercase tracking-wider shadow-sm"
+                  >
+                    {{ categories.find((c) => c.id === news.category)?.name }}
+                  </div>
+                </div>
+
+                <!-- Content -->
+                <div class="p-6 flex flex-col flex-1 relative bg-white dark:bg-slate-800">
+                  <!-- Meta Info -->
+                  <div
+                    class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 gap-4 font-medium"
+                  >
+                    <span class="flex items-center">
+                      <i
+                        data-lucide="calendar"
+                        class="w-3.5 h-3.5 mr-1.5 text-indigo-500"
+                      ></i>
+                      {{ news.date }}
+                    </span>
+                    <span class="flex items-center">
+                      <i
+                        data-lucide="user"
+                        class="w-3.5 h-3.5 mr-1.5 text-indigo-500"
+                      ></i>
+                      {{ news.author }}
+                    </span>
+                    <span class="flex items-center">
+                      <i data-lucide="eye" class="w-3.5 h-3.5 mr-1.5 text-indigo-500"></i>
+                      {{ news.views }}
+                    </span>
+                  </div>
+
+                  <h3
+                    class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight"
+                  >
+                    <a href="#" class="focus:outline-none">
+                      <span class="absolute inset-0"></span>
+                      {{ news.title }}
+                    </a>
+                  </h3>
+
+                  <p
+                    class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3 mb-6"
+                  >
+                    {{ news.excerpt }}
+                  </p>
+
+                  <div class="mt-auto flex items-center justify-between">
+                    <div
+                      class="flex items-center text-sm font-bold text-indigo-600 dark:text-indigo-400 group-hover:underline"
+                    >
+                      Baca Selengkapnya
+                      <i
+                        data-lucide="chevron-right"
+                        class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform"
+                      ></i>
+                    </div>
+                    <button
+                      @click.prevent.stop="openShareModal(news.title)"
+                      class="text-gray-400 hover:text-indigo-600 dark:text-gray-500 dark:hover:text-indigo-400 transition-colors focus:outline-none relative z-10"
+                      title="Bagikan Berita"
+                    >
+                      <i data-lucide="share" class="w-5 h-5"></i>
+                    </button>
+                  </div>
+                </div>
+              </article>
+            </TransitionGroup>
+
+            <!-- Empty State -->
+            <div
+              v-else
+              class="py-20 text-center bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm"
+            >
+              <div
+                class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700 mb-4 text-gray-400"
+              >
+                <i data-lucide="search-x" class="w-8 h-8"></i>
+              </div>
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+                Berita Tidak Ditemukan
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400 mt-1">
+                Tidak ada artikel yang cocok dengan pencarian atau kategori ini.
+              </p>
+              <button
+                @click="
+                  searchQuery = '';
+                  activeCategory = 'semua';
+                "
+                class="mt-4 px-5 py-2 bg-indigo-50 text-indigo-600 dark:bg-slate-700 dark:text-indigo-400 rounded-full text-sm font-semibold hover:bg-indigo-100 transition-colors"
+              >
+                Reset Pencarian
+              </button>
+            </div>
+          </template>
         </div>
 
         <!-- KANAN: Sidebar -->
@@ -401,6 +449,8 @@ onUpdated(() => {
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap");
+
 .news-list-move,
 .news-list-enter-active,
 .news-list-leave-active {
