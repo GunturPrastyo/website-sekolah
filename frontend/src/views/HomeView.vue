@@ -854,7 +854,10 @@
         <!-- Header Section -->
         <div class="mb-8 md:mb-10">
           <div class="relative block">
-            <h2 class="text-xl md:text-4xl font-bold text-white mb-4 sm:mb-2">
+            <h2
+              class="text-2xl md:text-4xl font-normal text-white mb-4 sm:mb-2 tracking-wide"
+              style="font-family: 'Dancing Script', cursive"
+            >
               Video Profil & Galeri
             </h2>
             <p class="text-blue-200 text-sm md:text-base max-w-2xl">
@@ -1807,3 +1810,7 @@ onMounted(() => {
   });
 });
 </script>
+
+<style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap");
+</style>
