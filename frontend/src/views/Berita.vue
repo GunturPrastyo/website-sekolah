@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed, onMounted, nextTick, onUpdated } from "vue";
+import { ref, computed, onMounted, nextTick, onUpdated, reactive } from "vue";
 import { createIcons, icons } from "lucide";
+import ShareModal from "@/components/ShareModal.vue";
 
 const activeCategory = ref("semua");
 
@@ -103,8 +104,25 @@ const filteredNews = computed(() => {
 });
 
 const popularNews = computed(() => {
-  return [...newsList.value].sort((a, b) => b.views - a.views).slice(0, 4);
+  return [...newsList.value].sort((a, b) => b.views - a.views).slice(0, 5);
 });
+
+const getCategoryCount = (categoryId) => {
+  if (categoryId === "semua") return newsList.value.length;
+  return newsList.value.filter((news) => news.category === categoryId).length;
+};
+
+const isShareModalOpen = ref(false);
+const shareData = reactive({ title: "" });
+
+const openShareModal = (title) => {
+  shareData.title = title;
+  isShareModalOpen.value = true;
+};
+
+const closeShareModal = () => {
+  isShareModalOpen.value = false;
+};
 
 onMounted(() => {
   createIcons({ icons });
@@ -161,7 +179,7 @@ onUpdated(() => {
             <article
               v-for="news in filteredNews"
               :key="news.id"
-              class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full transform hover:-translate-y-1"
+              class="group relative bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full transform hover:-translate-y-1"
             >
               <!-- Image Container -->
               <div class="relative h-56 overflow-hidden shrink-0">
@@ -220,14 +238,23 @@ onUpdated(() => {
                   {{ news.excerpt }}
                 </p>
 
-                <div
-                  class="mt-auto flex items-center text-sm font-bold text-indigo-600 dark:text-indigo-400 group-hover:underline"
-                >
-                  Baca Selengkapnya
-                  <i
-                    data-lucide="arrow-right"
-                    class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform"
-                  ></i>
+                <div class="mt-auto flex items-center justify-between">
+                  <div
+                    class="flex items-center text-sm font-bold text-indigo-600 dark:text-indigo-400 group-hover:underline"
+                  >
+                    Baca Selengkapnya
+                    <i
+                      data-lucide="chevron-right"
+                      class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform"
+                    ></i>
+                  </div>
+                  <button
+                    @click.prevent.stop="openShareModal(news.title)"
+                    class="text-gray-400 hover:text-indigo-600 dark:text-gray-500 dark:hover:text-indigo-400 transition-colors focus:outline-none relative z-10"
+                    title="Bagikan Berita"
+                  >
+                    <i data-lucide="share" class="w-5 h-5"></i>
+                  </button>
                 </div>
               </div>
             </article>
@@ -265,7 +292,7 @@ onUpdated(() => {
         <aside class="w-full lg:w-1/3 space-y-8">
           <!-- Search & Category Widget -->
           <div
-            class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700"
+            class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
           >
             <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
               Cari & Filter
@@ -302,13 +329,16 @@ onUpdated(() => {
                 "
               >
                 {{ cat.name }}
+                <span class="ml-1 text-[11px] font-bold opacity-70">
+                  ({{ getCategoryCount(cat.id) }})
+                </span>
               </button>
             </div>
           </div>
 
           <!-- Berita Populer Widget -->
           <div
-            class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700"
+            class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
           >
             <h3
               class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3"
@@ -318,15 +348,23 @@ onUpdated(() => {
             <div class="space-y-5">
               <a
                 href="#"
-                v-for="news in popularNews"
-                :key="'recent-' + news.id"
+                v-for="(news, index) in popularNews"
+                :key="'popular-' + news.id"
                 class="flex items-start gap-4 group"
               >
-                <div class="w-20 h-20 shrink-0 rounded-xl overflow-hidden shadow-sm">
+                <div
+                  class="w-20 h-20 shrink-0 rounded-xl overflow-hidden shadow-sm relative"
+                >
                   <img
                     :src="news.image"
                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
+                  <!-- Badge Peringkat -->
+                  <div
+                    class="absolute top-0 left-0 bg-indigo-600 text-white w-6 h-6 flex items-center justify-center text-xs font-bold rounded-br-lg shadow-sm z-10"
+                  >
+                    {{ index + 1 }}
+                  </div>
                 </div>
                 <div class="flex flex-col justify-center flex-1">
                   <h4
@@ -347,6 +385,13 @@ onUpdated(() => {
         </aside>
       </div>
     </section>
+
+    <!-- Share Modal Component -->
+    <ShareModal
+      :is-open="isShareModalOpen"
+      :title="shareData.title"
+      @close="closeShareModal"
+    />
   </div>
 </template>
 
