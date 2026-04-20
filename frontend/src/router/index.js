@@ -58,6 +58,16 @@ const router = createRouter({
       path: '/pendaftaran',
       name: 'pendaftaran',
       component: () => import('../views/Pendaftaran.vue')
+    },
+    {
+      path: '/berita',
+      name: 'berita',
+      component: () => import('../views/Berita.vue')
+    },
+    {
+      path: '/galeri',
+      name: 'galeri',
+      component: () => import('../views/Galeri.vue')
     }
 
 
