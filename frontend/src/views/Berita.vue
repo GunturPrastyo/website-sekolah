@@ -20,6 +20,7 @@ const newsList = ref([
     date: "24 Nov 2025",
     author: "Tim Redaksi",
     image: "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800",
+    views: 1250,
     excerpt:
       "Seluruh siswa dan staf pengajar berpartisipasi dalam rangkaian acara yang dimeriahkan dengan berbagai penampilan pentas seni dan penghargaan bagi guru berprestasi.",
   },
@@ -30,6 +31,7 @@ const newsList = ref([
     date: "10 Jan 2026",
     author: "Humas",
     image: "https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800",
+    views: 3420,
     excerpt:
       "Prestasi membanggakan kembali ditorehkan oleh siswa-siswi kita di kancah nasional dalam bidang sains terapan, mengalahkan ratusan peserta dari sekolah lain.",
   },
@@ -40,6 +42,7 @@ const newsList = ref([
     date: "01 Des 2025",
     author: "Kurikulum",
     image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=800",
+    views: 890,
     excerpt:
       "Diberitahukan kepada seluruh siswa bahwa Ujian Akhir Semester (UAS) Ganjil akan dilaksanakan secara serentak mulai tanggal 10 hingga 18 Desember 2025.",
   },
@@ -50,6 +53,7 @@ const newsList = ref([
     date: "05 Feb 2026",
     author: "Sarpras",
     image: "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800",
+    views: 2105,
     excerpt:
       "Fasilitas lab baru telah dilengkapi dengan 40 unit komputer berspesifikasi tinggi untuk mendukung pembelajaran informatika dan simulasi ujian digital.",
   },
@@ -60,6 +64,7 @@ const newsList = ref([
     date: "20 Mar 2026",
     author: "Kesiswaan",
     image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800",
+    views: 1560,
     excerpt:
       "Kegiatan rutin tahunan ini diikuti oleh seluruh siswa kelas X guna mengenal lebih dekat peninggalan sejarah bangsa dan memupuk rasa nasionalisme.",
   },
@@ -70,6 +75,7 @@ const newsList = ref([
     date: "15 Apr 2026",
     author: "Panitia PPDB",
     image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800",
+    views: 4120,
     excerpt:
       "SMAN 1 Nogosari resmi membuka pendaftaran PPDB tahun ajaran baru khusus untuk jalur prestasi akademik maupun non-akademik. Simak persyaratannya di sini.",
   },
@@ -94,6 +100,10 @@ const filteredNews = computed(() => {
   }
 
   return filtered;
+});
+
+const popularNews = computed(() => {
+  return [...newsList.value].sort((a, b) => b.views - a.views).slice(0, 4);
 });
 
 onMounted(() => {
@@ -189,6 +199,10 @@ onUpdated(() => {
                     <i data-lucide="user" class="w-3.5 h-3.5 mr-1.5 text-indigo-500"></i>
                     {{ news.author }}
                   </span>
+                  <span class="flex items-center">
+                    <i data-lucide="eye" class="w-3.5 h-3.5 mr-1.5 text-indigo-500"></i>
+                    {{ news.views }}
+                  </span>
                 </div>
 
                 <h3
@@ -249,14 +263,16 @@ onUpdated(() => {
 
         <!-- KANAN: Sidebar -->
         <aside class="w-full lg:w-1/3 space-y-8">
-          <!-- Search Bar Widget -->
+          <!-- Search & Category Widget -->
           <div
             class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700"
           >
             <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
-              Pencarian
+              Cari & Filter
             </h3>
-            <div class="relative">
+
+            <!-- Search Bar -->
+            <div class="relative mb-6">
               <i
                 data-lucide="search"
                 class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
@@ -268,54 +284,41 @@ onUpdated(() => {
                 class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all shadow-sm"
               />
             </div>
+
+            <!-- Kategori -->
+            <h4 class="text-sm font-bold text-gray-900 dark:text-white mb-3">
+              Kategori Berita
+            </h4>
+            <div class="flex flex-wrap gap-2.5">
+              <button
+                v-for="cat in categories"
+                :key="cat.id"
+                @click="activeCategory = cat.id"
+                class="px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-300 focus:outline-none border"
+                :class="
+                  activeCategory === cat.id
+                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-500/30'
+                    : 'bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-indigo-300 hover:text-indigo-600 dark:hover:text-indigo-400'
+                "
+              >
+                {{ cat.name }}
+              </button>
+            </div>
           </div>
 
-          <!-- Kategori Widget -->
-          <div
-            class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700"
-          >
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Kategori</h3>
-            <ul class="space-y-2">
-              <li v-for="cat in categories" :key="cat.id">
-                <button
-                  @click="activeCategory = cat.id"
-                  class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl transition-all duration-300 focus:outline-none"
-                  :class="
-                    activeCategory === cat.id
-                      ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-bold border border-indigo-100 dark:border-indigo-800/50'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 border border-transparent'
-                  "
-                >
-                  <span>{{ cat.name }}</span>
-                  <div
-                    class="w-6 h-6 rounded-full flex items-center justify-center transition-colors"
-                    :class="
-                      activeCategory === cat.id
-                        ? 'bg-indigo-200 dark:bg-indigo-800 text-indigo-700 dark:text-indigo-300'
-                        : 'bg-gray-100 dark:bg-slate-700 text-gray-400'
-                    "
-                  >
-                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                  </div>
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Berita Populer / Terbaru Widget -->
+          <!-- Berita Populer Widget -->
           <div
             class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700"
           >
             <h3
               class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3"
             >
-              Berita Terbaru
+              Berita Populer
             </h3>
             <div class="space-y-5">
-              <!-- Mengambil 4 berita pertama sebagai contoh "Terbaru" -->
               <a
                 href="#"
-                v-for="news in newsList.slice(0, 4)"
+                v-for="news in popularNews"
                 :key="'recent-' + news.id"
                 class="flex items-start gap-4 group"
               >
@@ -334,7 +337,8 @@ onUpdated(() => {
                   <span
                     class="text-xs font-medium text-gray-500 dark:text-gray-400 flex items-center"
                   >
-                    <i data-lucide="calendar" class="w-3 h-3 mr-1.5"></i> {{ news.date }}
+                    <i data-lucide="eye" class="w-3 h-3 mr-1.5"></i> {{ news.views }} kali
+                    dibaca
                   </span>
                 </div>
               </a>
