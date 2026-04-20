@@ -353,7 +353,7 @@ onUpdated(() => {
                 class="flex items-start gap-4 group"
               >
                 <div
-                  class="w-20 h-20 shrink-0 rounded-xl overflow-hidden shadow-sm relative"
+                  class="w-24 h-24 shrink-0 rounded-lg overflow-hidden shadow-sm relative"
                 >
                   <img
                     :src="news.image"
@@ -366,17 +366,22 @@ onUpdated(() => {
                     {{ index + 1 }}
                   </div>
                 </div>
-                <div class="flex flex-col justify-center flex-1">
+                <div class="flex flex-col justify-start flex-1 py-0.5">
                   <h4
-                    class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors mb-1.5"
+                    class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors mb-1"
                   >
                     {{ news.title }}
                   </h4>
-                  <span
-                    class="text-xs font-medium text-gray-500 dark:text-gray-400 flex items-center"
+                  <p
+                    class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-2 leading-relaxed"
                   >
-                    <i data-lucide="eye" class="w-3 h-3 mr-1.5"></i> {{ news.views }} kali
-                    dibaca
+                    {{ news.excerpt }}
+                  </p>
+                  <span
+                    class="text-[11px] font-medium text-gray-400 dark:text-gray-500 flex items-center mt-auto"
+                  >
+                    <i data-lucide="eye" class="w-3.5 h-3.5 mr-1"></i>
+                    {{ news.views }} kali dibaca
                   </span>
                 </div>
               </a>
