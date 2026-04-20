@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
-import { createIcons } from "lucide";
+import { createIcons, icons } from "lucide";
 
 const timeline = ref([
   {
@@ -49,7 +49,7 @@ const timeline = ref([
 
 onMounted(() => {
   nextTick(() => {
-    createIcons();
+    createIcons({ icons });
   });
 });
 </script>

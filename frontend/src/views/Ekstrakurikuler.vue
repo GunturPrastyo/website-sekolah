@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from "vue";
-import { createIcons } from "lucide";
+import { createIcons, icons } from "lucide";
 
 const activeCategory = ref("semua");
 
@@ -94,7 +94,7 @@ const filteredEkskul = computed(() => {
 
 onMounted(() => {
   nextTick(() => {
-    createIcons();
+    createIcons({ icons });
   });
 });
 </script>

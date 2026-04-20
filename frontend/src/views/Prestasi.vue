@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, onUpdated, nextTick } from "vue";
-import { createIcons } from "lucide";
+import { createIcons, icons } from "lucide";
 
 const activeFilter = ref("semua");
 
@@ -166,7 +166,7 @@ const getRankStyle = (rank) => {
 };
 
 onMounted(() => {
-  createIcons();
+  createIcons({ icons });
   animateValue("internasional", counts.value.internasional);
   animateValue("nasional", counts.value.nasional);
   animateValue("provinsi", counts.value.provinsi);
@@ -176,7 +176,7 @@ onMounted(() => {
 // Re-render icon lucide setiap kali filter berpindah (DOM berubah)
 onUpdated(() => {
   nextTick(() => {
-    createIcons();
+    createIcons({ icons });
   });
 });
 </script>
