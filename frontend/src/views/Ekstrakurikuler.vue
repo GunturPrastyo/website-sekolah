@@ -1,16 +1,16 @@
 <script setup>
-import { ref, computed, onMounted, nextTick } from "vue";
+import { ref, computed, onMounted, onUpdated, nextTick } from "vue";
 import { createIcons, icons } from "lucide";
 import PageHeader from "@/components/PageHeader.vue";
 
 const activeCategory = ref("semua");
 
 const categories = [
-  { id: "semua", name: "Semua Kategori" },
-  { id: "olahraga", name: "Olahraga" },
-  { id: "seni", name: "Seni & Budaya" },
-  { id: "akademik", name: "Akademik & Sains" },
-  { id: "kepemimpinan", name: "Kepemimpinan" },
+  { id: "semua", name: "Semua Kategori", icon: "layout-grid" },
+  { id: "olahraga", name: "Olahraga", icon: "activity" },
+  { id: "seni", name: "Seni & Budaya", icon: "palette" },
+  { id: "akademik", name: "Akademik & Sains", icon: "flask-conical" },
+  { id: "kepemimpinan", name: "Kepemimpinan", icon: "users" },
 ];
 
 const ekskulList = ref([
@@ -112,71 +112,104 @@ onMounted(() => {
     <section class="pt-12 pb-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
       <div class="container mx-auto max-w-6xl">
         <!-- Filter Tabs -->
-        <div class="flex flex-wrap justify-center gap-3 mb-12">
+        <div class="flex flex-wrap justify-center gap-4 mb-16">
           <button
             v-for="cat in categories"
             :key="cat.id"
             @click="activeCategory = cat.id"
-            class="px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 focus:outline-none"
+            class="flex items-center gap-2.5 px-6 py-3 rounded-2xl font-bold text-sm transition-all duration-300 border-2 focus:outline-none"
             :class="
               activeCategory === cat.id
-                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
-                : 'bg-white text-gray-600 dark:bg-slate-800 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
+                ? 'bg-blue-600 border-blue-600 text-white shadow-xl shadow-blue-500/30 -translate-y-1'
+                : 'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:border-blue-300 hover:text-blue-600 dark:hover:border-slate-600 dark:hover:text-blue-400 hover:-translate-y-1 hover:shadow-lg'
             "
           >
+            <i
+              :data-lucide="cat.icon"
+              class="w-4 h-4"
+              :class="
+                activeCategory === cat.id
+                  ? 'text-white'
+                  : 'text-gray-400 group-hover:text-blue-500'
+              "
+            ></i>
             {{ cat.name }}
           </button>
         </div>
 
-        <!-- Grid Galeri Ekskul (Dengan Animasi Transisi) -->
+        <!-- Grid Poster Ekskul (Antimainstream Concept) -->
         <TransitionGroup
           name="gallery"
           tag="div"
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 relative"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 relative w-full"
         >
           <div
             v-for="ekskul in filteredEkskul"
             :key="ekskul.id"
-            class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full cursor-pointer"
+            class="group relative bg-slate-900 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 aspect-[3/4] cursor-pointer transform hover:-translate-y-2 border border-gray-200 dark:border-slate-700"
           >
-            <!-- Image Area -->
-            <div class="relative h-56 overflow-hidden shrink-0">
-              <img
-                :src="ekskul.image"
-                :alt="ekskul.name"
-                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-              />
-              <div
-                class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"
-              ></div>
+            <!-- Full Background Image -->
+            <img
+              :src="ekskul.image"
+              :alt="ekskul.name"
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-95 group-hover:opacity-100"
+            />
 
-              <!-- Badge Kategori -->
+            <!-- Gradient Overlay (Darkens on hover) -->
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/30 to-transparent transition-all duration-500 group-hover:via-slate-900/70 group-hover:from-slate-900"
+            ></div>
+
+            <!-- Floating Category Badge -->
+            <div class="absolute top-5 right-5">
               <div
-                class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-blue-700 text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm"
+                class="px-3.5 py-1.5 backdrop-blur-md bg-white/20 border border-white/30 rounded-full flex items-center gap-1.5 text-white text-[10px] font-bold uppercase tracking-wider shadow-lg"
               >
+                <i
+                  :data-lucide="categories.find((c) => c.id === ekskul.category)?.icon"
+                  class="w-3 h-3"
+                ></i>
                 {{ categories.find((c) => c.id === ekskul.category)?.name }}
               </div>
             </div>
 
-            <!-- Content Area -->
+            <!-- Content Area (Slides up smoothly) -->
             <div
-              class="p-6 flex flex-col flex-1 relative -mt-6 bg-white dark:bg-slate-800 rounded-t-2xl z-10 transition-transform duration-300 group-hover:-translate-y-2"
+              class="absolute bottom-0 left-0 w-full p-6 md:p-8 transition-all duration-500 ease-out z-20 rounded-t-3xl group-hover:bg-slate-900/50 group-hover:backdrop-blur-md"
             >
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+              <h3
+                class="text-2xl font-extrabold text-white mb-2 leading-tight tracking-wide drop-shadow-md"
+              >
                 {{ ekskul.name }}
               </h3>
 
               <div
-                class="flex items-center text-xs text-blue-600 dark:text-blue-400 mb-4 font-semibold bg-blue-50 dark:bg-slate-700 w-fit px-3 py-1.5 rounded-lg border border-blue-100 dark:border-slate-600"
+                class="flex items-center text-blue-300 text-xs font-bold uppercase tracking-wider mb-2"
               >
-                <i data-lucide="clock" class="w-3.5 h-3.5 mr-2"></i> {{ ekskul.schedule }}
+                <i data-lucide="clock" class="w-3.5 h-3.5 mr-1.5"></i>
+                {{ ekskul.schedule }}
               </div>
 
-              <p
-                class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3 mb-6"
+              <!-- Hidden Expandable Content -->
+              <div
+                class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-[300px] group-hover:opacity-100"
               >
-                {{ ekskul.desc }}
-              </p>
+                <div class="pt-4 mt-4 border-t border-white/20">
+                  <p class="text-gray-200 text-sm leading-relaxed mb-5 line-clamp-3">
+                    {{ ekskul.desc }}
+                  </p>
+
+                  <button
+                    class="inline-flex items-center text-xs font-bold text-white uppercase tracking-widest hover:text-blue-300 transition-colors focus:outline-none"
+                  >
+                    Jelajahi Klub
+                    <i
+                      data-lucide="arrow-right"
+                      class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform"
+                    ></i>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </TransitionGroup>
@@ -184,7 +217,7 @@ onMounted(() => {
         <!-- Empty State -->
         <div
           v-if="filteredEkskul.length === 0"
-          class="py-20 text-center bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm mt-4"
+          class="col-span-full py-20 text-center bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-3xl border-2 border-dashed border-gray-200 dark:border-slate-700 shadow-sm mt-4"
         >
           <div
             class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700 mb-4 text-gray-400"
@@ -212,7 +245,7 @@ onMounted(() => {
 .gallery-enter-from,
 .gallery-leave-to {
   opacity: 0;
-  transform: scale(0.9) translateY(30px);
+  transform: scale(0.95) translateY(20px);
 }
 .gallery-leave-active {
   position: absolute;
