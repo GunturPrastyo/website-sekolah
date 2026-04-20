@@ -75,9 +75,25 @@ const newsList = ref([
   },
 ]);
 
+const searchQuery = ref("");
+
 const filteredNews = computed(() => {
-  if (activeCategory.value === "semua") return newsList.value;
-  return newsList.value.filter((news) => news.category === activeCategory.value);
+  let filtered = newsList.value;
+
+  if (activeCategory.value !== "semua") {
+    filtered = filtered.filter((news) => news.category === activeCategory.value);
+  }
+
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.trim().toLowerCase();
+    filtered = filtered.filter(
+      (news) =>
+        news.title.toLowerCase().includes(query) ||
+        news.excerpt.toLowerCase().includes(query)
+    );
+  }
+
+  return filtered;
 });
 
 onMounted(() => {
@@ -123,107 +139,208 @@ onUpdated(() => {
 
     <!-- News Section -->
     <section class="py-16 md:py-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
-      <div class="container mx-auto max-w-6xl">
-        
-        <!-- Filter Tabs -->
-        <div class="flex flex-wrap justify-center gap-3 mb-12">
-          <button
-            v-for="cat in categories"
-            :key="cat.id"
-            @click="activeCategory = cat.id"
-            class="px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 focus:outline-none"
-            :class="
-              activeCategory === cat.id
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/30'
-                : 'bg-white text-gray-600 dark:bg-slate-800 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-indigo-300 hover:text-indigo-600 dark:hover:text-indigo-400'
-            "
+      <div class="container mx-auto max-w-7xl flex flex-col lg:flex-row gap-10">
+        <!-- KIRI: Daftar Berita -->
+        <div class="w-full lg:w-2/3">
+          <!-- Grid Berita dengan Animasi -->
+          <TransitionGroup
+            name="news-list"
+            tag="div"
+            class="grid grid-cols-1 md:grid-cols-2 gap-8 relative"
           >
-            {{ cat.name }}
-          </button>
-        </div>
+            <article
+              v-for="news in filteredNews"
+              :key="news.id"
+              class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full transform hover:-translate-y-1"
+            >
+              <!-- Image Container -->
+              <div class="relative h-56 overflow-hidden shrink-0">
+                <img
+                  :src="news.image"
+                  :alt="news.title"
+                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80"
+                ></div>
 
-        <!-- Grid Berita dengan Animasi -->
-        <TransitionGroup
-          name="news-list"
-          tag="div"
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative"
-        >
-          <article
-            v-for="news in filteredNews"
-            :key="news.id"
-            class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full transform hover:-translate-y-1"
-          >
-            <!-- Image Container -->
-            <div class="relative h-56 overflow-hidden shrink-0">
-              <img
-                :src="news.image"
-                :alt="news.title"
-                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-              />
-              <div
-                class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80"
-              ></div>
-              
-              <!-- Category Badge -->
-              <div
-                class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-indigo-700 text-xs font-bold rounded-md uppercase tracking-wider shadow-sm"
-              >
-                {{ categories.find((c) => c.id === news.category)?.name }}
-              </div>
-            </div>
-
-            <!-- Content -->
-            <div class="p-6 flex flex-col flex-1 relative bg-white dark:bg-slate-800">
-              <!-- Meta Info -->
-              <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 gap-4 font-medium">
-                <span class="flex items-center">
-                  <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1.5 text-indigo-500"></i>
-                  {{ news.date }}
-                </span>
-                <span class="flex items-center">
-                  <i data-lucide="user" class="w-3.5 h-3.5 mr-1.5 text-indigo-500"></i>
-                  {{ news.author }}
-                </span>
+                <!-- Category Badge -->
+                <div
+                  class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-indigo-700 text-xs font-bold rounded-md uppercase tracking-wider shadow-sm"
+                >
+                  {{ categories.find((c) => c.id === news.category)?.name }}
+                </div>
               </div>
 
-              <h3
-                class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight"
-              >
-                <a href="#" class="focus:outline-none">
-                  <span class="absolute inset-0"></span>
-                  {{ news.title }}
-                </a>
-              </h3>
+              <!-- Content -->
+              <div class="p-6 flex flex-col flex-1 relative bg-white dark:bg-slate-800">
+                <!-- Meta Info -->
+                <div
+                  class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 gap-4 font-medium"
+                >
+                  <span class="flex items-center">
+                    <i
+                      data-lucide="calendar"
+                      class="w-3.5 h-3.5 mr-1.5 text-indigo-500"
+                    ></i>
+                    {{ news.date }}
+                  </span>
+                  <span class="flex items-center">
+                    <i data-lucide="user" class="w-3.5 h-3.5 mr-1.5 text-indigo-500"></i>
+                    {{ news.author }}
+                  </span>
+                </div>
 
-              <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3 mb-6">
-                {{ news.excerpt }}
-              </p>
-              
-              <div class="mt-auto flex items-center text-sm font-bold text-indigo-600 dark:text-indigo-400 group-hover:underline">
-                Baca Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                <h3
+                  class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight"
+                >
+                  <a href="#" class="focus:outline-none">
+                    <span class="absolute inset-0"></span>
+                    {{ news.title }}
+                  </a>
+                </h3>
+
+                <p
+                  class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3 mb-6"
+                >
+                  {{ news.excerpt }}
+                </p>
+
+                <div
+                  class="mt-auto flex items-center text-sm font-bold text-indigo-600 dark:text-indigo-400 group-hover:underline"
+                >
+                  Baca Selengkapnya
+                  <i
+                    data-lucide="arrow-right"
+                    class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform"
+                  ></i>
+                </div>
               </div>
-            </div>
-          </article>
-        </TransitionGroup>
+            </article>
+          </TransitionGroup>
 
-        <!-- Empty State -->
-        <div
-          v-if="filteredNews.length === 0"
-          class="py-20 text-center bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm mt-4"
-        >
+          <!-- Empty State -->
           <div
-            class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700 mb-4 text-gray-400"
+            v-if="filteredNews.length === 0"
+            class="py-20 text-center bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm"
           >
-            <i data-lucide="newspaper" class="w-8 h-8"></i>
+            <div
+              class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700 mb-4 text-gray-400"
+            >
+              <i data-lucide="search-x" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+              Berita Tidak Ditemukan
+            </h3>
+            <p class="text-gray-500 dark:text-gray-400 mt-1">
+              Tidak ada artikel yang cocok dengan pencarian atau kategori ini.
+            </p>
+            <button
+              @click="
+                searchQuery = '';
+                activeCategory = 'semua';
+              "
+              class="mt-4 px-5 py-2 bg-indigo-50 text-indigo-600 dark:bg-slate-700 dark:text-indigo-400 rounded-full text-sm font-semibold hover:bg-indigo-100 transition-colors"
+            >
+              Reset Pencarian
+            </button>
           </div>
-          <h3 class="text-lg font-bold text-gray-900 dark:text-white">
-            Belum Ada Berita
-          </h3>
-          <p class="text-gray-500 dark:text-gray-400 mt-1">
-            Belum ada artikel atau pengumuman untuk kategori ini.
-          </p>
         </div>
 
+        <!-- KANAN: Sidebar -->
+        <aside class="w-full lg:w-1/3 space-y-8">
+          <!-- Search Bar Widget -->
+          <div
+            class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700"
+          >
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
+              Pencarian
+            </h3>
+            <div class="relative">
+              <i
+                data-lucide="search"
+                class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+              ></i>
+              <input
+                v-model="searchQuery"
+                type="text"
+                placeholder="Cari judul atau isi berita..."
+                class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all shadow-sm"
+              />
+            </div>
+          </div>
+
+          <!-- Kategori Widget -->
+          <div
+            class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700"
+          >
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Kategori</h3>
+            <ul class="space-y-2">
+              <li v-for="cat in categories" :key="cat.id">
+                <button
+                  @click="activeCategory = cat.id"
+                  class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl transition-all duration-300 focus:outline-none"
+                  :class="
+                    activeCategory === cat.id
+                      ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-bold border border-indigo-100 dark:border-indigo-800/50'
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 border border-transparent'
+                  "
+                >
+                  <span>{{ cat.name }}</span>
+                  <div
+                    class="w-6 h-6 rounded-full flex items-center justify-center transition-colors"
+                    :class="
+                      activeCategory === cat.id
+                        ? 'bg-indigo-200 dark:bg-indigo-800 text-indigo-700 dark:text-indigo-300'
+                        : 'bg-gray-100 dark:bg-slate-700 text-gray-400'
+                    "
+                  >
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                  </div>
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Berita Populer / Terbaru Widget -->
+          <div
+            class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700"
+          >
+            <h3
+              class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3"
+            >
+              Berita Terbaru
+            </h3>
+            <div class="space-y-5">
+              <!-- Mengambil 4 berita pertama sebagai contoh "Terbaru" -->
+              <a
+                href="#"
+                v-for="news in newsList.slice(0, 4)"
+                :key="'recent-' + news.id"
+                class="flex items-start gap-4 group"
+              >
+                <div class="w-20 h-20 shrink-0 rounded-xl overflow-hidden shadow-sm">
+                  <img
+                    :src="news.image"
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <div class="flex flex-col justify-center flex-1">
+                  <h4
+                    class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors mb-1.5"
+                  >
+                    {{ news.title }}
+                  </h4>
+                  <span
+                    class="text-xs font-medium text-gray-500 dark:text-gray-400 flex items-center"
+                  >
+                    <i data-lucide="calendar" class="w-3 h-3 mr-1.5"></i> {{ news.date }}
+                  </span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </aside>
       </div>
     </section>
   </div>
