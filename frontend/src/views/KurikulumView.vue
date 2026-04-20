@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from "vue";
-import { createIcons } from "lucide";
+import { createIcons, icons } from "lucide";
 import PageHeader from "@/components/PageHeader.vue";
 
 const activeGrade = ref("10");
@@ -188,6 +188,7 @@ const currentSyllabus = computed(() => {
 onMounted(() => {
   nextTick(() => {
     createIcons();
+    createIcons({ icons });
   });
 });
 </script>

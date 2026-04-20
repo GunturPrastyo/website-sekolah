@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from "vue";
-import { createIcons } from "lucide";
+import { createIcons, icons } from "lucide";
 import PageHeader from "@/components/PageHeader.vue";
 
 const changeCategory = (id) => {
@@ -148,7 +148,7 @@ const activeCategoryName = computed(() => {
 
 onMounted(() => {
   nextTick(() => {
-    createIcons();
+    createIcons({ icons });
   });
 });
 </script>

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, onUpdated, nextTick } from "vue";
-import { createIcons } from "lucide";
+import { createIcons, icons } from "lucide";
 
 const currentStep = ref(1);
 const totalSteps = 4;
@@ -38,6 +38,12 @@ const regNumber = ref("");
 const registrationDate = ref("");
 
 const nextStep = () => {
+  // Validasi step saat ini sebelum bisa ke step selanjutnya
+  const formEl = document.getElementById("pendaftaran-form");
+  if (formEl && !formEl.reportValidity()) {
+    return;
+  }
+
   if (currentStep.value < totalSteps) {
     currentStep.value++;
     scrollToForm();
@@ -92,13 +98,13 @@ const printBukti = () => {
 
 onMounted(() => {
   nextTick(() => {
-    createIcons();
+    createIcons({ icons });
   });
 });
 
 onUpdated(() => {
   nextTick(() => {
-    createIcons();
+    createIcons({ icons });
   });
 });
 </script>
@@ -382,9 +388,9 @@ onUpdated(() => {
             </div>
 
             <div class="p-6 md:p-10">
-              <form @submit.prevent="submitForm">
+              <form id="pendaftaran-form" @submit.prevent="submitForm">
                 <!-- STEP 1: DATA DIRI -->
-                <div v-show="currentStep === 1" class="space-y-6 animate-fade-in">
+                <div v-if="currentStep === 1" class="space-y-6 animate-fade-in">
                   <h3
                     class="text-xl font-bold text-gray-900 dark:text-white border-l-4 border-blue-600 pl-3 mb-6"
                   >
@@ -470,7 +476,7 @@ onUpdated(() => {
                 </div>
 
                 <!-- STEP 2: DATA ORANG TUA -->
-                <div v-show="currentStep === 2" class="space-y-6 animate-fade-in">
+                <div v-if="currentStep === 2" class="space-y-6 animate-fade-in">
                   <h3
                     class="text-xl font-bold text-gray-900 dark:text-white border-l-4 border-blue-600 pl-3 mb-6"
                   >
@@ -548,7 +554,7 @@ onUpdated(() => {
                 </div>
 
                 <!-- STEP 3: DATA SEKOLAH ASAL -->
-                <div v-show="currentStep === 3" class="space-y-6 animate-fade-in">
+                <div v-if="currentStep === 3" class="space-y-6 animate-fade-in">
                   <h3
                     class="text-xl font-bold text-gray-900 dark:text-white border-l-4 border-blue-600 pl-3 mb-6"
                   >
@@ -586,7 +592,7 @@ onUpdated(() => {
                 </div>
 
                 <!-- STEP 4: PILIHAN JURUSAN & JALUR -->
-                <div v-show="currentStep === 4" class="space-y-6 animate-fade-in">
+                <div v-if="currentStep === 4" class="space-y-6 animate-fade-in">
                   <h3
                     class="text-xl font-bold text-gray-900 dark:text-white border-l-4 border-blue-600 pl-3 mb-6"
                   >
