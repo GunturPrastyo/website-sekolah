@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, nextTick, onUpdated, reactive, watch } from "vue";
 import { createIcons, icons } from "lucide";
 import ShareModal from "@/components/ShareModal.vue";
+import PageHeader from "@/components/PageHeader.vue";
 
 const activeCategory = ref("semua");
 
@@ -148,34 +149,11 @@ onUpdated(() => {
 
 <template>
   <div>
-    <!-- Hero Banner -->
-    <div
-      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 overflow-hidden"
-    >
-      <!-- Background glow elements -->
-      <div
-        class="absolute -top-32 -left-32 w-96 h-96 bg-white/10 blur-3xl rounded-full"
-      ></div>
-      <div
-        class="absolute bottom-0 right-0 w-80 h-80 bg-blue-400/20 blur-3xl rounded-full"
-      ></div>
-
-      <div class="container relative z-10 mx-auto px-6 text-center">
-        <span
-          class="inline-block px-5 py-1.5 mb-5 text-lg md:text-xl font-bold text-indigo-900 bg-white/90 rounded-full shadow-sm backdrop-blur"
-          style="font-family: 'Dancing Script', cursive"
-        >
-          Informasi Publik
-        </span>
-        <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
-          Berita & Artikel Sekolah
-        </h1>
-        <p class="text-indigo-100 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-          Ikuti terus perkembangan, kegiatan, prestasi, dan pengumuman terbaru seputar
-          lingkungan SMA Negeri 1 Nogosari.
-        </p>
-      </div>
-    </div>
+    <PageHeader
+      badge="Informasi Publik"
+      title="Berita & Artikel Sekolah"
+      description="Ikuti terus perkembangan, kegiatan, prestasi, dan pengumuman terbaru seputar lingkungan SMA Negeri 1 Nogosari."
+    />
 
     <!-- News Section -->
     <section class="py-16 md:py-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
@@ -449,8 +427,6 @@ onUpdated(() => {
 </template>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap");
-
 .news-list-move,
 .news-list-enter-active,
 .news-list-leave-active {

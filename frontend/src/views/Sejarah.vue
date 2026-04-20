@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
 import { createIcons, icons } from "lucide";
+import PageHeader from "@/components/PageHeader.vue";
 
 const timeline = ref([
   {
@@ -56,35 +57,22 @@ onMounted(() => {
 
 <template>
   <div>
-    <!-- Hero Banner -->
-    <div
-      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 overflow-hidden"
-    >
-      <div class="absolute -top-32 -left-32 w-96 h-96 bg-blue-500/20 blur-3xl rounded-full"></div>
-      <div class="absolute bottom-0 right-0 w-80 h-80 bg-sky-500/20 blur-3xl rounded-full"></div>
-
-      <div class="container relative z-10 mx-auto px-6 text-center">
-        <span
-          class="inline-block px-4 py-1.5 mb-5 text-xs md:text-sm font-semibold text-blue-900 bg-white/90 rounded-full shadow-sm backdrop-blur"
-        >
-          Profil Sekolah
-        </span>
-        <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
-          Sejarah & Perjalanan
-        </h1>
-        <p class="text-blue-100 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-          Dari awal yang sederhana hingga menjadi institusi pendidikan unggulan. Mari menyusuri jejak langkah perjuangan dan prestasi SMAN 1 Nogosari dari masa ke masa.
-        </p>
-      </div>
-    </div>
+    <PageHeader
+      badge="Profil Sekolah"
+      title="Sejarah & Perjalanan"
+      description="Dari awal yang sederhana hingga menjadi institusi pendidikan unggulan. Mari menyusuri jejak langkah perjuangan dan prestasi SMAN 1 Nogosari dari masa ke masa."
+    />
 
     <!-- Timeline Section -->
-    <section class="py-16 md:py-24 bg-gray-50 dark:bg-slate-900 min-h-screen relative overflow-hidden">
+    <section
+      class="py-16 md:py-24 bg-gray-50 dark:bg-slate-900 min-h-screen relative overflow-hidden"
+    >
       <div class="container mx-auto px-6 max-w-5xl">
-        
         <div class="relative wrap overflow-hidden p-2 md:p-10 h-full">
           <!-- Garis Tengah Timeline -->
-          <div class="absolute z-0 w-1 bg-blue-200 dark:bg-slate-700 h-full left-8 md:left-1/2 transform md:-translate-x-1/2 rounded-full"></div>
+          <div
+            class="absolute z-0 w-1 bg-blue-200 dark:bg-slate-700 h-full left-8 md:left-1/2 transform md:-translate-x-1/2 rounded-full"
+          ></div>
 
           <!-- Looping Data Lini Masa -->
           <div
@@ -112,16 +100,32 @@ onMounted(() => {
                 class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative"
               >
                 <!-- Segitiga panah ke garis (opsional, disembunyikan di mobile agar lebih rapi) -->
-                <div class="hidden md:block absolute top-6 w-4 h-4 bg-white dark:bg-slate-800 border-t border-r border-gray-100 dark:border-slate-700 transform rotate-45"
-                     :class="index % 2 === 0 ? '-right-2' : '-left-2 border-b border-l border-t-0 border-r-0'"></div>
-                
-                <span class="inline-block px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 font-bold text-sm rounded-lg mb-3 shadow-sm">{{ item.year }}</span>
-                <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2 leading-tight">{{ item.title }}</h3>
-                <p class="text-gray-600 dark:text-gray-400 text-sm md:text-base leading-relaxed text-justify">{{ item.description }}</p>
+                <div
+                  class="hidden md:block absolute top-6 w-4 h-4 bg-white dark:bg-slate-800 border-t border-r border-gray-100 dark:border-slate-700 transform rotate-45"
+                  :class="
+                    index % 2 === 0
+                      ? '-right-2'
+                      : '-left-2 border-b border-l border-t-0 border-r-0'
+                  "
+                ></div>
+
+                <span
+                  class="inline-block px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 font-bold text-sm rounded-lg mb-3 shadow-sm"
+                  >{{ item.year }}</span
+                >
+                <h3
+                  class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2 leading-tight"
+                >
+                  {{ item.title }}
+                </h3>
+                <p
+                  class="text-gray-600 dark:text-gray-400 text-sm md:text-base leading-relaxed text-justify"
+                >
+                  {{ item.description }}
+                </p>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </section>

@@ -32,7 +32,8 @@
 
                     <div class="absolute bottom-0 left-0 w-full p-6 md:p-10 text-white">
                       <span
-                        class="inline-block px-3 py-1.5 mb-3 md:mb-4 text-xs font-semibold text-blue-800 bg-white/95 backdrop-blur-sm rounded-full shadow-sm"
+                        class="inline-block px-5 py-1.5 mb-3 md:mb-4 text-lg md:text-xl font-bold text-blue-900 bg-white/95 backdrop-blur-sm rounded-full shadow-sm"
+                        style="font-family: 'Dancing Script', cursive"
                       >
                         Profil Sekolah
                       </span>

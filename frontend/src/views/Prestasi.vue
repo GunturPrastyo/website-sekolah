@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, onUpdated, nextTick } from "vue";
 import { createIcons, icons } from "lucide";
+import PageHeader from "@/components/PageHeader.vue";
 
 const activeFilter = ref("semua");
 
@@ -183,40 +184,19 @@ onUpdated(() => {
 
 <template>
   <div>
-    <!-- Hero Banner dengan Nuansa Kemenangan (Emas & Gelap) -->
-    <div
-      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 overflow-hidden"
+    <PageHeader
+      badge="Hall of Fame"
+      title="Prestasi & Penghargaan"
+      description="Dedikasi, kerja keras, dan semangat pantang menyerah siswa-siswi kami yang berhasil menorehkan tinta emas di berbagai ajang perlombaan bergengsi."
     >
-      <!-- Background glow & Ornaments -->
-      <div
-        class="absolute -top-32 -left-32 w-96 h-96 bg-yellow-500/10 blur-[100px] rounded-full pointer-events-none"
-      ></div>
-      <div
-        class="absolute bottom-0 right-0 w-80 h-80 bg-blue-500/20 blur-[100px] rounded-full pointer-events-none"
-      ></div>
-
-      <!-- Ikon Piala Raksasa Blur di Belakang -->
-      <div
-        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] text-yellow-500 pointer-events-none"
-      >
-        <i data-lucide="trophy" class="w-[400px] h-[400px]"></i>
-      </div>
-
-      <div class="container relative z-10 mx-auto px-6 text-center">
+      <template #bg-ornament>
         <div
-          class="inline-flex items-center justify-center px-4 py-1.5 mb-5 text-xs md:text-sm font-bold text-yellow-900 bg-gradient-to-r from-yellow-300 to-yellow-500 rounded-full shadow-lg shadow-yellow-500/20 uppercase tracking-widest"
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] text-yellow-500 pointer-events-none"
         >
-          <i data-lucide="star" class="w-4 h-4 mr-1.5 fill-yellow-900"></i> Hall of Fame
+          <i data-lucide="trophy" class="w-[400px] h-[400px]"></i>
         </div>
-        <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
-          Prestasi & Penghargaan
-        </h1>
-        <p class="text-gray-300 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-          Dedikasi, kerja keras, dan semangat pantang menyerah siswa-siswi kami yang
-          berhasil menorehkan tinta emas di berbagai ajang perlombaan bergengsi.
-        </p>
-      </div>
-    </div>
+      </template>
+    </PageHeader>
 
     <!-- Main Content Section -->
     <section class="pb-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">

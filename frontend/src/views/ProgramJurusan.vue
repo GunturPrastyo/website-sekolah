@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
 import { createIcons, icons } from "lucide";
+import PageHeader from "@/components/PageHeader.vue";
 
 const programs = ref([
   {
@@ -105,34 +106,11 @@ onMounted(() => {
 
 <template>
   <div>
-    <!-- Hero Banner -->
-    <div
-      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 overflow-hidden"
-    >
-      <!-- Background glow elements -->
-      <div
-        class="absolute -top-32 -left-32 w-96 h-96 bg-blue-500/20 blur-3xl rounded-full"
-      ></div>
-      <div
-        class="absolute bottom-0 right-0 w-80 h-80 bg-purple-500/20 blur-3xl rounded-full"
-      ></div>
-
-      <div class="container relative z-10 mx-auto px-6 text-center">
-        <span
-          class="inline-block px-4 py-1.5 mb-5 text-xs md:text-sm font-semibold text-blue-900 bg-white/90 rounded-full shadow-sm backdrop-blur"
-        >
-          Akademik
-        </span>
-        <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
-          Program Jurusan Unggulan
-        </h1>
-        <p class="text-blue-100 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-          Temukan minat, bakat, dan potensi terbaikmu melalui berbagai pilihan peminatan
-          yang dirancang khusus untuk mempersiapkan masa depanmu di dunia perkuliahan
-          maupun industri.
-        </p>
-      </div>
-    </div>
+    <PageHeader
+      badge="Akademik"
+      title="Program Jurusan Unggulan"
+      description="Temukan minat, bakat, dan potensi terbaikmu melalui berbagai pilihan peminatan yang dirancang khusus untuk mempersiapkan masa depanmu di dunia perkuliahan maupun industri."
+    />
 
     <!-- Program Details Section -->
     <section class="py-16 md:py-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">

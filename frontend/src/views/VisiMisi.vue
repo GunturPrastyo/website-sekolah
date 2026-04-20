@@ -1,28 +1,10 @@
 <template>
   <div>
-    <!-- Hero Banner Profil -->
-    <div
-      class="relative pt-28 pb-16 md:pt-32 md:pb-20 lg:pt-40 lg:pb-28 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 dark:bg-slate-900 overflow-hidden"
-    >
-      <div class="absolute inset-0">
-        <div
-          class="absolute inset-0 bg-gradient-to-t dark:from-slate-900 dark:via-slate-900/60 to-transparent"
-        ></div>
-      </div>
-      <div class="container relative z-10 mx-auto px-6 text-center">
-        <span
-          class="inline-block px-4 py-1.5 mb-4 text-xs md:text-sm font-semibold text-blue-900 bg-blue-100 rounded-full shadow-sm"
-          >Profil Sekolah</span
-        >
-        <h1 class="text-3xl md:text-5xl font-bold text-white mb-4">
-          Visi, Misi & Tujuan
-        </h1>
-        <p class="text-blue-200 text-base md:text-lg max-w-2xl mx-auto">
-          Mengenal lebih dekat arah, tujuan, dan landasan utama SMAN 1 Nogosari dalam
-          mencetak generasi unggul penerus bangsa.
-        </p>
-      </div>
-    </div>
+    <PageHeader
+      badge="Profil Sekolah"
+      title="Visi, Misi & Tujuan"
+      description="Mengenal lebih dekat arah, tujuan, dan landasan utama SMAN 1 Nogosari dalam mencetak generasi unggul penerus bangsa."
+    />
 
     <!-- Sambutan Kepala Sekolah Section -->
     <section class="relative py-12 md:py-24 px-6 md:px-0 bg-white dark:bg-slate-900">
@@ -221,5 +203,5 @@
 </template>
 
 <script setup>
-// No additional script needed for this static page
+import PageHeader from "@/components/PageHeader.vue";
 </script>

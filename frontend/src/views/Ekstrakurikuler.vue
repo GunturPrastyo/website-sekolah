@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from "vue";
 import { createIcons, icons } from "lucide";
+import PageHeader from "@/components/PageHeader.vue";
 
 const activeCategory = ref("semua");
 
@@ -101,32 +102,11 @@ onMounted(() => {
 
 <template>
   <div>
-    <!-- Hero Banner -->
-    <div
-      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 dark:from-slate-900 dark:to-slate-950 overflow-hidden"
-    >
-      <div
-        class="absolute -top-32 -left-32 w-96 h-96 bg-sky-300/30 blur-3xl rounded-full"
-      ></div>
-      <div
-        class="absolute bottom-0 right-0 w-80 h-80 bg-blue-400/30 blur-3xl rounded-full"
-      ></div>
-
-      <div class="container relative z-10 mx-auto px-6 text-center">
-        <span
-          class="inline-block px-4 py-1.5 mb-5 text-xs md:text-sm font-semibold text-blue-800 bg-white/90 rounded-full shadow-sm backdrop-blur"
-        >
-          Akademik
-        </span>
-        <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
-          Ekstrakurikuler & Klub Siswa
-        </h1>
-        <p class="text-blue-100 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-          Kembangkan bakat, minat, dan potensimu di luar jam pelajaran melalui berbagai
-          pilihan kegiatan ekstrakurikuler yang seru dan inspiratif.
-        </p>
-      </div>
-    </div>
+    <PageHeader
+      badge="Akademik"
+      title="Ekstrakurikuler & Klub Siswa"
+      description="Kembangkan bakat, minat, dan potensimu di luar jam pelajaran melalui berbagai pilihan kegiatan ekstrakurikuler yang seru dan inspiratif."
+    />
 
     <!-- Gallery Section -->
     <section class="pt-12 pb-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
