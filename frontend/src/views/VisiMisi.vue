@@ -2,7 +2,7 @@
   <div>
     <!-- Hero Banner Profil -->
     <div
-      class="relative pt-28 pb-16 md:pt-32 md:pb-20 lg:pt-40 lg:pb-28 bg-gradient-to-br from-blue-600 to-blue-800 dark:bg-blue-900 overflow-hidden"
+      class="relative pt-28 pb-16 md:pt-32 md:pb-20 lg:pt-40 lg:pb-28 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 dark:bg-slate-900 overflow-hidden"
     >
       <div class="absolute inset-0">
         <div
@@ -124,7 +124,7 @@
     <section class="relative w-full">
       <div class="flex flex-col lg:flex-row w-full">
         <div
-          class="w-full lg:w-6/12 bg-gradient-to-br from-blue-600 to-blue-800 dark:from-slate-900 dark:to-slate-900 p-8 sm:p-10 md:p-16 lg:p-24 text-white relative overflow-hidden flex flex-col justify-center"
+          class="w-full lg:w-6/12 bg-gradient-to-br from-blue-900 to-blue-950 dark:from-slate-900 dark:to-slate-900 p-8 sm:p-10 md:p-16 lg:p-24 text-white relative overflow-hidden flex flex-col justify-center"
         >
           <div class="relative z-10">
             <h3

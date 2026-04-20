@@ -103,7 +103,7 @@ onMounted(() => {
   <div>
     <!-- Hero Banner -->
     <div
-      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-sky-500 to-blue-700 dark:from-slate-900 dark:to-slate-950 overflow-hidden"
+      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 dark:from-slate-900 dark:to-slate-950 overflow-hidden"
     >
       <div
         class="absolute -top-32 -left-32 w-96 h-96 bg-sky-300/30 blur-3xl rounded-full"

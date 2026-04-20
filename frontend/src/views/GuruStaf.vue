@@ -156,7 +156,7 @@ onMounted(() => {
   <div>
     <!-- Hero Banner -->
     <div
-      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 dark:from-slate-900 dark:to-slate-950 overflow-hidden"
+      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 dark:from-slate-900 dark:to-slate-950 overflow-hidden"
     >
       <!-- Glow effect -->
       <div
@@ -741,7 +741,7 @@ onMounted(() => {
         >
           <!-- Modal Header w/ Background -->
           <div
-            class="relative h-32 bg-gradient-to-r from-blue-600 to-blue-800 dark:from-slate-700 dark:to-slate-900"
+            class="relative h-32 bg-gradient-to-r from-blue-900 to-blue-950 dark:from-slate-700 dark:to-slate-900"
           >
             <button
               @click="closeModal"

@@ -185,7 +185,7 @@ onUpdated(() => {
   <div>
     <!-- Hero Banner dengan Nuansa Kemenangan (Emas & Gelap) -->
     <div
-      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 overflow-hidden"
+      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 overflow-hidden"
     >
       <!-- Background glow & Ornaments -->
       <div

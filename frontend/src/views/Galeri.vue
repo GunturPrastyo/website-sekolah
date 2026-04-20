@@ -107,27 +107,25 @@ onUpdated(() => {
   <div>
     <!-- Hero Banner -->
     <div
-      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-fuchsia-600 via-purple-700 to-slate-900 overflow-hidden"
+      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 overflow-hidden"
     >
       <div
-        class="absolute -top-32 -left-32 w-96 h-96 bg-fuchsia-400/20 blur-3xl rounded-full"
+        class="absolute -top-32 -left-32 w-96 h-96 bg-blue-500/20 blur-3xl rounded-full"
       ></div>
       <div
-        class="absolute bottom-0 right-0 w-80 h-80 bg-purple-400/20 blur-3xl rounded-full"
+        class="absolute bottom-0 right-0 w-80 h-80 bg-blue-600/20 blur-3xl rounded-full"
       ></div>
 
       <div class="container relative z-10 mx-auto px-6 text-center">
         <span
-          class="inline-block px-4 py-1.5 mb-5 text-xs md:text-sm font-semibold text-fuchsia-900 bg-white/90 rounded-full shadow-sm backdrop-blur"
+          class="inline-block px-4 py-1.5 mb-5 text-xs md:text-sm font-semibold text-blue-900 bg-white/90 rounded-full shadow-sm backdrop-blur"
         >
           Koleksi Visual
         </span>
         <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
           Galeri Kegiatan
         </h1>
-        <p
-          class="text-fuchsia-100 text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
-        >
+        <p class="text-blue-100 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
           Merekam jejak langkah, fasilitas, dan berbagai momen tak terlupakan di
           lingkungan SMAN 1 Nogosari.
         </p>
@@ -146,8 +144,8 @@ onUpdated(() => {
             class="px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 focus:outline-none"
             :class="
               activeCategory === cat.id
-                ? 'bg-purple-600 text-white shadow-md shadow-purple-500/30'
-                : 'bg-white text-gray-600 dark:bg-slate-800 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-purple-300 hover:text-purple-600 dark:hover:text-purple-400'
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
+                : 'bg-white text-gray-600 dark:bg-slate-800 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
             "
           >
             {{ cat.name }}
@@ -187,7 +185,7 @@ onUpdated(() => {
                 {{ item.title }}
               </h4>
               <span
-                class="text-purple-200 text-xs font-semibold uppercase tracking-wider mt-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100"
+                class="text-blue-200 text-xs font-semibold uppercase tracking-wider mt-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100"
               >
                 {{ categories.find((c) => c.id === item.category)?.name }}
               </span>

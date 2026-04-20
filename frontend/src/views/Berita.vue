@@ -150,7 +150,7 @@ onUpdated(() => {
   <div>
     <!-- Hero Banner -->
     <div
-      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-indigo-600 via-blue-700 to-slate-900 overflow-hidden"
+      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 overflow-hidden"
     >
       <!-- Background glow elements -->
       <div

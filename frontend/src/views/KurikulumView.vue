@@ -195,7 +195,7 @@ onMounted(() => {
   <div>
     <!-- Hero Banner -->
     <div
-      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-sky-500 to-blue-700 dark:from-slate-900 dark:to-slate-950 overflow-hidden"
+      class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 dark:from-slate-900 dark:to-slate-950 overflow-hidden"
     >
       <!-- Background glow elements -->
       <div
@@ -360,7 +360,7 @@ onMounted(() => {
 
     <!-- Interactive Syllabus Area (Full Width to Footer) -->
     <section
-      class="w-full bg-gradient-to-br from-sky-500 to-blue-700 dark:from-slate-900 dark:to-slate-950 py-16 md:py-24 px-6 border-t border-sky-400/30 dark:border-slate-800"
+      class="w-full bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 dark:from-slate-900 dark:to-slate-950 py-16 md:py-24 px-6 border-t border-blue-800/30 dark:border-slate-800"
     >
       <div
         class="container mx-auto max-w-6xl flex flex-col lg:flex-row gap-8 lg:gap-12 items-start"
