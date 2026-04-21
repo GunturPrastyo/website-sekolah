@@ -392,14 +392,20 @@ onBeforeUnmount(() => {
     </section>
 
     <section
-      class="relative bg-gray-50 dark:bg-slate-900 pb-0 sm:pb-16 md:pb-24 px-0 sm:px-6"
+      class="relative bg-gradient-to-br from-blue-600 to-blue-800 py-16 md:py-24 px-6 overflow-hidden"
     >
-      <div class="w-full sm:container sm:mx-auto sm:max-w-6xl relative z-10">
-        <div
-          class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-none sm:rounded-xl pt-10 pb-12 px-6 sm:p-8 md:p-12 shadow-none sm:shadow-md flex flex-col lg:flex-row items-center gap-10"
-        >
+      <!-- Dekorasi Background Layer -->
+      <div
+        class="absolute top-0 right-0 w-72 h-72 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"
+      ></div>
+      <div
+        class="absolute bottom-0 left-0 w-72 h-72 bg-blue-400/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"
+      ></div>
+
+      <div class="container mx-auto max-w-6xl relative z-10">
+        <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
           <!-- Teks CTA & Ajakan -->
-          <div class="w-full lg:w-1/2 text-white text-center lg:text-left pt-2 sm:pt-0">
+          <div class="w-full lg:w-1/2 text-white text-center lg:text-left">
             <span
               class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-bold uppercase tracking-wider mb-4 border border-white/30"
             >
