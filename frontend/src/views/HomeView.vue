@@ -857,7 +857,9 @@
 
       <div class="container relative z-10 mx-auto">
         <!-- Header Section -->
-        <div class="mb-8">
+        <div
+          class="mb-8 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out"
+        >
           <div class="relative block">
             <h2
               class="text-2xl md:text-4xl font-normal text-white mb-4 sm:mb-2 tracking-wide"
@@ -876,7 +878,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 items-stretch">
           <!-- KIRI: Video Profil Utama -->
           <div
-            class="lg:col-span-2 relative group rounded-2xl overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full block cursor-pointer"
+            class="lg:col-span-2 relative group rounded-2xl overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full block cursor-pointer fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
           >
             <img
               src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop"
@@ -918,7 +920,7 @@
 
           <!-- KANAN: Grid Galeri 2x2 -->
           <div
-            class="lg:col-span-1 grid grid-cols-2 gap-4 h-[300px] sm:h-[400px] md:h-[450px]"
+            class="lg:col-span-1 grid grid-cols-2 gap-4 h-[300px] sm:h-[400px] md:h-[450px] fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out"
           >
             <!-- Foto 1 -->
             <a
@@ -1504,7 +1506,7 @@
               <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
                   href="#"
-                  class="px-6 py-3.5 bg-yellow-400 text-blue-950 font-bold rounded-xl shadow-lg hover:bg-yellow-300 hover:-translate-y-1 transition-all text-sm md:text-base"
+                  class="px-6 py-3.5 bg-yellow-400 text-blue-950 font-bold rounded-xl shadow-lg hover:bg-yellow-300 hover:scale-105 transition-all text-sm md:text-base animate-float"
                   >Daftar Sekarang</a
                 >
                 <a
@@ -1836,4 +1838,20 @@ onMounted(() => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap");
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+.animate-float:hover {
+  animation-play-state: paused;
+}
 </style>
