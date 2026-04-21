@@ -221,7 +221,7 @@ onBeforeUnmount(() => {
               ></i>
               <select
                 v-model="activeDay"
-                class="w-full pl-12 pr-10 py-4 rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm appearance-none cursor-pointer"
+                class="w-full pl-12 pr-10 py-4 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm appearance-none cursor-pointer"
               >
                 <option v-for="day in days" :key="day.id" :value="day.id">
                   {{ day.name }}
@@ -244,14 +244,14 @@ onBeforeUnmount(() => {
                 v-model="searchQuery"
                 type="text"
                 placeholder="Cari nama ekstrakurikuler..."
-                class="w-full pl-12 pr-5 py-4 rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm"
+                class="w-full pl-12 pr-5 py-4 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm"
               />
             </div>
           </div>
 
           <!-- Bottom Row: Filter Card (Kategori) -->
           <div
-            class="w-full bg-white dark:bg-slate-800 p-5 lg:p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col gap-4"
+            class="w-full bg-white dark:bg-slate-800 p-5 lg:p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col gap-4"
           >
             <h4 class="text-sm font-bold text-gray-900 dark:text-white flex items-center">
               <i
@@ -265,7 +265,7 @@ onBeforeUnmount(() => {
                 v-for="cat in categories"
                 :key="cat.id"
                 @click="activeCategory = cat.id"
-                class="px-3.5 md:px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 focus:outline-none flex items-center border"
+                class="px-3.5 md:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-300 focus:outline-none flex items-center border"
                 :class="
                   activeCategory === cat.id
                     ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
@@ -286,7 +286,7 @@ onBeforeUnmount(() => {
         <TransitionGroup
           name="gallery"
           tag="div"
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10 md:gap-x-8 md:gap-y-12 relative w-full mt-4"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 lg:gap-16 relative w-full mt-8"
         >
           <div
             v-for="ekskul in filteredEkskul"
@@ -294,17 +294,14 @@ onBeforeUnmount(() => {
             class="relative group cursor-pointer"
             @click="openModal(ekskul)"
           >
-            <!-- Dekorasi Card Menumpuk -->
+            <!-- Dekorasi Card Belakang (Offset Kanan Bawah) -->
             <div
-              class="absolute inset-0 bg-blue-200/60 dark:bg-slate-800/80 rounded-3xl transform translate-y-3.5 scale-[0.88] transition-all duration-500 group-hover:translate-y-5 z-0 border border-white/50 dark:border-slate-700"
-            ></div>
-            <div
-              class="absolute inset-0 bg-blue-100/80 dark:bg-slate-700/90 rounded-3xl transform translate-y-1.5 scale-[0.94] transition-all duration-500 group-hover:translate-y-2.5 z-0 border border-white/50 dark:border-slate-700"
+              class="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-slate-700 dark:to-slate-800 rounded-lg transform translate-x-3 translate-y-3 transition-all duration-500 group-hover:translate-x-4 group-hover:translate-y-4 z-0"
             ></div>
 
             <!-- Main Card -->
             <div
-              class="relative z-10 bg-slate-900 rounded-3xl overflow-hidden shadow-lg group-hover:shadow-2xl transition-all duration-500 aspect-[3/4] transform group-hover:-translate-y-1 border border-gray-200 dark:border-slate-700 h-full w-full"
+              class="relative z-10 bg-slate-900 rounded-lg overflow-hidden shadow-lg group-hover:shadow-2xl transition-all duration-500 aspect-[3/4] transform group-hover:-translate-y-1 group-hover:-translate-x-1 border border-gray-200 dark:border-slate-700 h-full w-full"
             >
               <!-- Full Background Image -->
               <img
@@ -333,7 +330,7 @@ onBeforeUnmount(() => {
 
               <!-- Content Area (Slides up smoothly) -->
               <div
-                class="absolute bottom-0 left-0 w-full p-6 md:p-8 transition-all duration-500 ease-out z-20 rounded-t-3xl group-hover:bg-slate-900/50 group-hover:backdrop-blur-md"
+                class="absolute bottom-0 left-0 w-full p-6 md:p-8 transition-all duration-500 ease-out z-20 group-hover:bg-slate-900/60 group-hover:backdrop-blur-md"
               >
                 <h3
                   class="text-2xl font-extrabold text-white mb-2 leading-tight tracking-wide drop-shadow-md"
@@ -399,7 +396,7 @@ onBeforeUnmount(() => {
     >
       <div class="w-full sm:container sm:mx-auto sm:max-w-6xl relative z-10">
         <div
-          class="bg-gradient-to-br from-indigo-600 to-blue-800 rounded-none sm:rounded-xl pt-10 pb-12 px-6 sm:p-8 md:p-12 shadow-none sm:shadow-md flex flex-col lg:flex-row items-center gap-10"
+          class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-none sm:rounded-xl pt-10 pb-12 px-6 sm:p-8 md:p-12 shadow-none sm:shadow-md flex flex-col lg:flex-row items-center gap-10"
         >
           <!-- Teks CTA & Ajakan -->
           <div class="w-full lg:w-1/2 text-white text-center lg:text-left pt-2 sm:pt-0">
@@ -412,7 +409,7 @@ onBeforeUnmount(() => {
               Punya Ide Ekstrakurikuler Baru?
             </h2>
             <p
-              class="text-indigo-100 text-sm md:text-base leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0"
+              class="text-blue-100 text-sm md:text-base leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0"
             >
               SMAN 1 Nogosari sangat mendukung kreativitas dan kepemimpinan siswa. Jika
               kamu memiliki minat pada bidang tertentu yang belum ada wadahnya, kamu bisa
@@ -433,14 +430,14 @@ onBeforeUnmount(() => {
               >
                 <i
                   data-lucide="clipboard-list"
-                  class="w-5 h-5 mr-2 text-indigo-600 dark:text-indigo-400"
+                  class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400"
                 ></i>
                 Syarat Pengajuan Klub
               </h3>
               <ul class="space-y-4">
                 <li class="flex items-start group">
                   <div
-                    class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-indigo-600 group-hover:text-white"
+                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-blue-600 group-hover:text-white"
                   >
                     1
                   </div>
@@ -453,7 +450,7 @@ onBeforeUnmount(() => {
                 </li>
                 <li class="flex items-start group">
                   <div
-                    class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-indigo-600 group-hover:text-white"
+                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-blue-600 group-hover:text-white"
                   >
                     2
                   </div>
@@ -466,7 +463,7 @@ onBeforeUnmount(() => {
                 </li>
                 <li class="flex items-start group">
                   <div
-                    class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-indigo-600 group-hover:text-white"
+                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-blue-600 group-hover:text-white"
                   >
                     3
                   </div>
@@ -479,7 +476,7 @@ onBeforeUnmount(() => {
                 </li>
                 <li class="flex items-start group">
                   <div
-                    class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-indigo-600 group-hover:text-white"
+                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-blue-600 group-hover:text-white"
                   >
                     4
                   </div>
