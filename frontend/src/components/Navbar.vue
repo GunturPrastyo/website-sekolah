@@ -260,14 +260,28 @@
               ? 'text-gray-800 hover:bg-gray-200 dark:text-gray-200 dark:hover:bg-slate-700'
               : 'text-white hover:bg-white/10',
           ]"
-          class="p-2 rounded-md focus:outline-none transition-colors"
+          class="w-10 h-10 flex items-center justify-center rounded-md focus:outline-none transition-all active:scale-90 relative overflow-hidden"
         >
-          <span v-show="isMobileMenuOpen" class="flex items-center justify-center"
-            ><i data-lucide="x" class="h-6 w-6"></i
-          ></span>
-          <span v-show="!isMobileMenuOpen" class="flex items-center justify-center"
-            ><i data-lucide="menu" class="h-6 w-6"></i
-          ></span>
+          <span
+            class="absolute transition-all duration-500 ease-in-out flex items-center justify-center"
+            :class="
+              isMobileMenuOpen
+                ? 'rotate-90 scale-0 opacity-0'
+                : 'rotate-0 scale-100 opacity-100'
+            "
+          >
+            <i data-lucide="menu" class="h-6 w-6"></i>
+          </span>
+          <span
+            class="absolute transition-all duration-500 ease-in-out flex items-center justify-center"
+            :class="
+              isMobileMenuOpen
+                ? 'rotate-0 scale-100 opacity-100'
+                : '-rotate-90 scale-0 opacity-0'
+            "
+          >
+            <i data-lucide="x" class="h-6 w-6"></i>
+          </span>
         </button>
       </div>
     </div>
@@ -461,6 +475,12 @@ const handleScroll = () => {
   isNavbarScrolled.value = window.scrollY > 50;
 };
 
+const handleResize = () => {
+  if (window.innerWidth >= 1024 && isMobileMenuOpen.value) {
+    isMobileMenuOpen.value = false;
+  }
+};
+
 const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value;
 };
@@ -515,6 +535,7 @@ const toggleDarkMode = () => {
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
   document.addEventListener("click", handleClickOutside);
+  window.addEventListener("resize", handleResize);
   handleScroll();
 
   if (
@@ -531,5 +552,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener("scroll", handleScroll);
   document.removeEventListener("click", handleClickOutside);
+  window.removeEventListener("resize", handleResize);
 });
 </script>
