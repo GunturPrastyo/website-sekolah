@@ -34,8 +34,15 @@ const ekskulList = ref([
     schedule: "Jumat, 15.00 - 17.00",
     desc:
       "Membentuk karakter disiplin, mandiri, tangguh, dan berjiwa kepemimpinan melalui kegiatan kepramukaan.",
+    story:
+      "Pramuka SMAN 1 Nogosari bukan sekadar ekstrakurikuler biasa. Di sini, kami adalah keluarga yang saling mendukung dan tumbuh bersama. Melalui berbagai kegiatan menantang seperti kemah bakti, penjelajahan alam, hingga pelatihan survival, setiap anggota diajak untuk keluar dari zona nyaman. Kami percaya bahwa kepemimpinan sejati lahir dari kedisiplinan dan empati terhadap sesama dan lingkungan sekitar. Mari bergabung dan ukir cerita petualanganmu bersama kami!",
     pembina: "Bapak Rudi Hermawan, S.Pd",
     members: 124,
+    socials: {
+      ig: "@pramuka_sman1",
+      yt: "Pramuka SMAN 1",
+      email: "pramuka@sman1nogosari.sch.id",
+    },
   },
   {
     id: 2,
@@ -45,8 +52,11 @@ const ekskulList = ref([
     schedule: "Selasa & Kamis, 15.30 - 17.00",
     desc:
       "Melatih kedisiplinan baris-berbaris dan memupuk rasa nasionalisme serta patriotisme cinta tanah air.",
+    story:
+      "Tegap, disiplin, dan berwibawa. Paskibra adalah tempat bagi mereka yang memiliki jiwa nasionalisme tinggi dan semangat pantang menyerah. Kami tidak hanya belajar baris-berbaris, namun juga ditempa untuk menjadi individu yang memiliki integritas dan loyalitas tinggi terhadap nusa dan bangsa. Setiap derap langkah kami adalah wujud kebanggaan, dan mengibarkan Sang Saka Merah Putih adalah kehormatan terbesar kami.",
     pembina: "Ibu Siti Aminah, M.Pd",
     members: 45,
+    socials: { ig: "@paskibra_sman1", yt: "Paskibra SMAN 1" },
   },
   {
     id: 3,
@@ -56,8 +66,11 @@ const ekskulList = ref([
     schedule: "Senin & Rabu, 15.30 - 17.30",
     desc:
       "Mengembangkan bakat olahraga bola basket, melatih kerjasama tim, dan menjaga kebugaran fisik.",
+    story:
+      "Di lapangan ini, keringat dan kerja keras diubah menjadi prestasi gemilang. Klub Basket kami berfokus pada pengembangan fundamental fisik, ketangkasan, serta yang paling utama: kerja sama tim. Menang atau kalah adalah hal biasa, namun komitmen untuk selalu memberikan yang terbaik di setiap pertandingan adalah prinsip kami. Bergabunglah, asah bakatmu, dan bersiaplah menjadi bintang lapangan!",
     pembina: "Bapak Dwi Saputra, S.Or",
     members: 32,
+    socials: { ig: "@basket_sman1", yt: "Basket SMAN 1" },
   },
   {
     id: 4,
@@ -67,8 +80,11 @@ const ekskulList = ref([
     schedule: "Selasa & Jumat, 15.30 - 17.30",
     desc:
       "Bina prestasi futsal tingkat pelajar dengan latihan rutin dan persiapan partisipasi berbagai turnamen.",
+    story:
+      "Giring bola, susun strategi, dan cetak gol! Tim futsal SMAN 1 Nogosari adalah salah satu tim yang paling disegani di kancah pelajar tingkat daerah. Kami percaya bahwa kehebatan individu tidak akan bisa mengalahkan kekompakan sebuah tim. Dengan porsi latihan fisik dan taktik yang seimbang, kami selalu bersiap untuk menjuarai berbagai turnamen. Jadilah bagian dari skuad juara kami!",
     pembina: "Bapak Dwi Saputra, S.Or",
     members: 40,
+    socials: { ig: "@futsal_sman1" },
   },
   {
     id: 5,
@@ -78,8 +94,11 @@ const ekskulList = ref([
     schedule: "Rabu, 15.00 - 17.00",
     desc:
       "Melestarikan warisan budaya nusantara melalui seni gerak tari tradisional dari berbagai daerah.",
+    story:
+      "Setiap gerakan adalah harmoni, setiap irama adalah cerita. Kami mengajak para siswa untuk menyelami keindahan warisan budaya nusantara melalui seni tari. Ekstrakurikuler Tari Tradisional bukan hanya tentang menghafal gerakan, melainkan tentang mengekspresikan jiwa dan menghidupkan kembali tradisi leluhur agar tidak lekang oleh zaman. Mari menari dan lestarikan budaya Indonesia dengan bangga.",
     pembina: "Ibu Maya Indah, S.Sn",
     members: 28,
+    socials: { ig: "@tari_sman1", yt: "Tari SMAN 1" },
   },
   {
     id: 6,
@@ -89,8 +108,11 @@ const ekskulList = ref([
     schedule: "Kamis, 15.00 - 17.00",
     desc:
       "Mengembangkan bakat tarik suara dan merajut harmonisasi vokal yang indah dalam bentuk paduan suara.",
+    story:
+      "Menyatukan berbagai warna suara menjadi satu harmoni yang menggetarkan jiwa. Di paduan suara ini, kami belajar teknik vokal, pernapasan, dan kekompakan dalam melantunkan berbagai genre lagu. Dari panggung sekolah hingga kompetisi paduan suara tingkat nasional, suara kami telah menyentuh banyak hati. Jika kamu memiliki passion bernyanyi, di sinilah tempat suaramu akan benar-benar bersinar.",
     pembina: "Bapak Ahmad Fauzi, S.Sn",
     members: 35,
+    socials: { ig: "@padus_sman1", yt: "Padus SMAN 1" },
   },
   {
     id: 7,
@@ -100,8 +122,11 @@ const ekskulList = ref([
     schedule: "Senin, 15.00 - 16.30",
     desc:
       "Wadah bagi siswa untuk melakukan penelitian, observasi, bereksperimen, dan penulisan karya ilmiah.",
+    story:
+      "Rasa ingin tahu adalah awal dari sebuah penemuan besar yang mengubah dunia. KIR SMAN 1 menjadi laboratorium ide bagi para siswa yang gemar meneliti, berinovasi, dan mencari solusi atas berbagai permasalahan di sekitar kita. Di sini, hipotesis diuji dan kreativitas diasah tanpa batas. Bersama kami, temukan jawaban dari rasa penasaranmu dan ciptakan karya ilmiah yang bermanfaat bagi masyarakat!",
     pembina: "Ibu Rina Rahmawati, S.E",
     members: 25,
+    socials: { ig: "@kir_sman1", email: "kir@sman1nogosari.sch.id" },
   },
   {
     id: 8,
@@ -111,8 +136,11 @@ const ekskulList = ref([
     schedule: "Rabu, 15.00 - 16.30",
     desc:
       "Meningkatkan kemampuan berbahasa Inggris dengan asik melalui debat, pidato, dan percakapan interaktif.",
+    story:
+      "Let's speak up and conquer the world! English Club adalah wadah yang asik, interaktif, dan bebas tekanan untuk melatih kepercayaan diri dalam berbahasa Inggris. Melalui simulasi debat, pidato (speech), hingga permainan peran (roleplay), kami membuktikan bahwa belajar bahasa asing itu sangat menyenangkan. Jangan biarkan kendala bahasa menghentikan mimpimu, come join us and let's grow together!",
     pembina: "Bapak Rudi Hermawan, S.Pd",
     members: 42,
+    socials: { ig: "@englishclub_sman1", yt: "English Club SMAN 1" },
   },
 ]);
 
@@ -370,84 +398,72 @@ onMounted(() => {
         @click="closeModal"
       >
         <div
-          class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col md:flex-row relative z-10 transform transition-all duration-300 scale-100"
+          class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col relative z-10 transform transition-all duration-300 scale-100"
           @click.stop
         >
           <!-- Close button -->
           <button
             @click="closeModal"
-            class="absolute top-4 right-4 z-20 w-10 h-10 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/40 text-white backdrop-blur-md transition-colors focus:outline-none"
+            class="absolute top-4 right-4 z-30 w-10 h-10 flex items-center justify-center rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-md transition-colors focus:outline-none"
           >
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
 
-          <!-- Left Image (Desktop & Mobile) -->
-          <div class="w-full md:w-2/5 h-64 md:h-auto relative shrink-0">
-            <img :src="selectedEkskul?.image" class="w-full h-full object-cover" />
-
-            <!-- Mobile Title Overlay -->
-            <div
-              class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent flex flex-col justify-end p-6 md:hidden"
-            >
-              <div
-                class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-full mb-2 w-fit border border-white/30"
-              >
-                <i
-                  :data-lucide="
-                    categories.find((c) => c.id === selectedEkskul?.category)?.icon
-                  "
-                  class="w-3 h-3"
-                ></i>
-                {{ categories.find((c) => c.id === selectedEkskul?.category)?.name }}
-              </div>
-              <h3 class="text-3xl font-extrabold text-white">
-                {{ selectedEkskul?.name }}
-              </h3>
-            </div>
-          </div>
-
-          <!-- Right Content Area -->
+          <!-- Wrapper Scrollable Area -->
           <div
-            class="w-full md:w-3/5 p-6 md:p-8 lg:p-10 flex flex-col overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full"
+            class="overflow-y-auto w-full h-full flex flex-col [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-300 dark:hover:[&::-webkit-scrollbar-thumb]:bg-slate-500"
           >
-            <!-- Desktop Title -->
-            <div class="hidden md:block mb-6">
+            <!-- Hero Cover Area -->
+            <div class="relative w-full h-64 sm:h-80 shrink-0">
+              <img :src="selectedEkskul?.image" class="w-full h-full object-cover" />
               <div
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider mb-3 border border-blue-100 dark:border-blue-800"
+                class="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/40 to-transparent"
+              ></div>
+
+              <div
+                class="absolute bottom-0 left-0 w-full p-6 md:p-10 flex flex-col justify-end"
               >
-                <i
-                  :data-lucide="
-                    categories.find((c) => c.id === selectedEkskul?.category)?.icon
-                  "
-                  class="w-3.5 h-3.5"
-                ></i>
-                {{ categories.find((c) => c.id === selectedEkskul?.category)?.name }}
+                <div
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-500/20 backdrop-blur-md border border-blue-300/30 text-blue-100 text-xs font-bold uppercase tracking-wider mb-3 w-fit"
+                >
+                  <i
+                    :data-lucide="
+                      categories.find((c) => c.id === selectedEkskul?.category)?.icon
+                    "
+                    class="w-3.5 h-3.5"
+                  ></i>
+                  {{ categories.find((c) => c.id === selectedEkskul?.category)?.name }}
+                </div>
+                <h3
+                  class="text-3xl lg:text-4xl font-extrabold text-white leading-tight drop-shadow-lg"
+                >
+                  {{ selectedEkskul?.name }}
+                </h3>
               </div>
-              <h3
-                class="text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight"
-              >
-                {{ selectedEkskul?.name }}
-              </h3>
             </div>
 
-            <!-- Desc & Meta Details -->
-            <div class="space-y-6">
-              <p
-                class="text-gray-600 dark:text-gray-300 leading-relaxed text-base lg:text-lg"
-              >
-                {{ selectedEkskul?.desc }}
-              </p>
+            <!-- Article Content Area -->
+            <div class="p-6 md:p-10 flex flex-col flex-1 bg-white dark:bg-slate-800">
+              <!-- Story Text dengan Gaya Drop Cap (Huruf awal besar) -->
+              <div class="mb-10">
+                <p
+                  class="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed text-justify first-letter:text-6xl first-letter:font-black first-letter:text-blue-600 dark:first-letter:text-blue-400 first-letter:float-left first-letter:mr-4 first-letter:mt-1 first-letter:leading-none"
+                >
+                  {{ selectedEkskul?.story }}
+                </p>
+              </div>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Quick Info Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
                 <div
-                  class="bg-gray-50 dark:bg-slate-700/50 p-4 rounded-2xl border border-gray-100 dark:border-slate-600"
+                  class="bg-gray-50 dark:bg-slate-700/50 p-4 lg:p-5 rounded-2xl border border-gray-100 dark:border-slate-600 transition-colors hover:border-blue-200 dark:hover:border-blue-800"
                 >
                   <span
-                    class="text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider"
+                    class="text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider block mb-1.5"
                     >Jadwal Latihan</span
                   >
                   <div
-                    class="font-bold text-gray-900 dark:text-white mt-1.5 flex items-center text-sm lg:text-base"
+                    class="font-bold text-gray-900 dark:text-white flex items-center text-sm"
                   >
                     <i
                       data-lucide="calendar-clock"
@@ -457,28 +473,28 @@ onMounted(() => {
                   </div>
                 </div>
                 <div
-                  class="bg-gray-50 dark:bg-slate-700/50 p-4 rounded-2xl border border-gray-100 dark:border-slate-600"
+                  class="bg-gray-50 dark:bg-slate-700/50 p-4 lg:p-5 rounded-2xl border border-gray-100 dark:border-slate-600 transition-colors hover:border-blue-200 dark:hover:border-blue-800"
                 >
                   <span
-                    class="text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider"
+                    class="text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider block mb-1.5"
                     >Pembina Ekskul</span
                   >
                   <div
-                    class="font-bold text-gray-900 dark:text-white mt-1.5 flex items-center text-sm lg:text-base"
+                    class="font-bold text-gray-900 dark:text-white flex items-center text-sm"
                   >
                     <i data-lucide="user" class="w-4 h-4 mr-2 text-blue-500 shrink-0"></i>
                     {{ selectedEkskul?.pembina }}
                   </div>
                 </div>
                 <div
-                  class="bg-gray-50 dark:bg-slate-700/50 p-4 rounded-2xl border border-gray-100 dark:border-slate-600 sm:col-span-2"
+                  class="bg-gray-50 dark:bg-slate-700/50 p-4 lg:p-5 rounded-2xl border border-gray-100 dark:border-slate-600 transition-colors hover:border-blue-200 dark:hover:border-blue-800"
                 >
                   <span
-                    class="text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider"
+                    class="text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider block mb-1.5"
                     >Anggota Aktif</span
                   >
                   <div
-                    class="font-bold text-gray-900 dark:text-white mt-1.5 flex items-center text-sm lg:text-base"
+                    class="font-bold text-gray-900 dark:text-white flex items-center text-sm"
                   >
                     <i
                       data-lucide="users"
@@ -488,24 +504,59 @@ onMounted(() => {
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Modal Footer Buttons -->
-            <div
-              class="mt-8 pt-6 border-t border-gray-100 dark:border-slate-700 flex flex-wrap justify-end gap-3 mt-auto shrink-0"
-            >
-              <button
-                @click="closeModal"
-                class="px-5 py-2.5 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 dark:text-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 transition-colors focus:outline-none"
+              <!-- Social Media Info -->
+              <div class="border-t border-gray-100 dark:border-slate-700 pt-6 mt-auto">
+                <h4
+                  class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 flex items-center"
+                >
+                  <i data-lucide="link" class="w-4 h-4 mr-2"></i> Terhubung dengan Kami
+                </h4>
+                <div class="flex flex-wrap gap-3">
+                  <a
+                    v-if="selectedEkskul?.socials?.ig"
+                    href="#"
+                    class="px-4 py-2 rounded-full bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 font-semibold text-sm flex items-center hover:bg-pink-100 dark:hover:bg-pink-900/40 transition-colors"
+                  >
+                    <i data-lucide="instagram" class="w-4 h-4 mr-2"></i>
+                    {{ selectedEkskul.socials.ig }}
+                  </a>
+                  <a
+                    v-if="selectedEkskul?.socials?.yt"
+                    href="#"
+                    class="px-4 py-2 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-semibold text-sm flex items-center hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
+                  >
+                    <i data-lucide="youtube" class="w-4 h-4 mr-2"></i>
+                    {{ selectedEkskul.socials.yt }}
+                  </a>
+                  <a
+                    v-if="selectedEkskul?.socials?.email"
+                    href="#"
+                    class="px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold text-sm flex items-center hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
+                  >
+                    <i data-lucide="mail" class="w-4 h-4 mr-2"></i>
+                    {{ selectedEkskul.socials.email }}
+                  </a>
+                </div>
+              </div>
+
+              <!-- Modal Footer Buttons -->
+              <div
+                class="mt-8 flex flex-wrap justify-end gap-3 pt-6 border-t border-gray-100 dark:border-slate-700"
               >
-                Tutup
-              </button>
-              <router-link
-                to="/pendaftaran"
-                class="px-5 py-2.5 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors flex items-center shadow-md shadow-blue-500/30 focus:outline-none"
-              >
-                Daftar Ekskul <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
-              </router-link>
+                <button
+                  @click="closeModal"
+                  class="px-5 py-2.5 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 dark:text-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 transition-colors focus:outline-none"
+                >
+                  Tutup
+                </button>
+                <router-link
+                  to="/pendaftaran"
+                  class="px-5 py-2.5 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors flex items-center shadow-md shadow-blue-500/30 focus:outline-none"
+                >
+                  Daftar Ekskul <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                </router-link>
+              </div>
             </div>
           </div>
         </div>
