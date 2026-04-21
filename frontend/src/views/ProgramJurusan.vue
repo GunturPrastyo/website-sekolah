@@ -15,6 +15,7 @@ const programs = ref([
     borderClass: "border-blue-200 dark:border-blue-800",
     decorationClass: "bg-blue-600 dark:bg-blue-500",
     image: "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800",
+    pattern: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=1200",
     description:
       "Program peminatan IPA berfokus pada ilmu-ilmu eksakta dan alam. Siswa akan diajak untuk berpikir logis, analitis, dan sistematis dalam memecahkan berbagai fenomena alam dan teknologi.",
     subjects: [
@@ -41,6 +42,7 @@ const programs = ref([
     borderClass: "border-blue-200 dark:border-blue-800",
     decorationClass: "bg-blue-600 dark:bg-blue-500",
     image: "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=800",
+    pattern: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1200",
     description:
       "Peminatan IPS membekali siswa dengan pemahaman mendalam tentang dinamika sosial, ekonomi, dan sejarah. Program ini sangat cocok bagi siswa yang memiliki minat pada hubungan antar manusia dan kebijakan publik.",
     subjects: ["Ekonomi & Akuntansi", "Sosiologi", "Geografi", "Sejarah Peminatan"],
@@ -62,6 +64,7 @@ const programs = ref([
     borderClass: "border-blue-200 dark:border-blue-800",
     decorationClass: "bg-blue-600 dark:bg-blue-500",
     image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800",
+    pattern: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=1200",
     description:
       "Program Bahasa diperuntukkan bagi siswa yang mencintai literatur, komunikasi, dan linguistik. Siswa akan mempelajari keindahan bahasa dari berbagai negara serta kebudayaan yang mengiringinya.",
     subjects: [
@@ -88,6 +91,7 @@ const programs = ref([
     borderClass: "border-blue-200 dark:border-blue-800",
     decorationClass: "bg-blue-600 dark:bg-blue-500",
     image: "https://images.unsplash.com/photo-1550745165-9bc0b252726a?q=80&w=800",
+    pattern: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200",
     description:
       "Merupakan program unggulan baru yang merespon tantangan era Revolusi Industri 4.0. Mempelajari logika komputasional, pemrograman, dan desain perangkat lunak secara intensif.",
     subjects: [
@@ -144,15 +148,24 @@ onMounted(() => {
     />
 
     <!-- Program Details Section -->
-    <div class="min-h-screen flex flex-col">
+    <div
+      class="min-h-screen flex flex-col bg-white dark:bg-slate-900 transition-colors duration-700"
+    >
       <!-- Render Tiap Jurusan dengan Selang-seling (Alternate Layout & Background) -->
       <section
         v-for="(program, index) in programs"
         :key="program.id"
-        class="py-16 md:py-24 px-6 transition-colors duration-300"
+        class="relative py-16 md:py-24 px-6 transition-colors duration-700 ease-in-out overflow-hidden"
         :class="index % 2 === 0 ? 'bg-white dark:bg-slate-900' : program.sectionBgClass"
       >
-        <div class="container mx-auto max-w-6xl">
+        <!-- Parallax Background Overlay (Hanya untuk Section Gelap) -->
+        <div
+          v-if="index % 2 !== 0"
+          class="absolute inset-0 z-0 opacity-10 md:opacity-20 bg-fixed bg-cover bg-center mix-blend-overlay transition-opacity duration-700"
+          :style="{ backgroundImage: `url(${program.pattern})` }"
+        ></div>
+
+        <div class="container relative z-10 mx-auto max-w-6xl">
           <div
             class="flex flex-col lg:flex-row gap-10 lg:gap-16 items-center"
             :class="{ 'lg:flex-row-reverse': index % 2 !== 0 }"
@@ -163,11 +176,11 @@ onMounted(() => {
               :class="index % 2 === 0 ? '-translate-x-10' : 'translate-x-10'"
             >
               <div
-                class="absolute inset-0 translate-x-3 translate-y-3 md:translate-x-4 md:translate-y-4 rounded-xl shadow-lg transition-transform duration-500 group-hover:translate-x-5 group-hover:translate-y-5 md:group-hover:translate-x-6 md:group-hover:translate-y-6"
+                class="absolute inset-0 translate-x-3 translate-y-3 md:translate-x-4 md:translate-y-4 rounded-xl shadow-lg transition-all duration-700 ease-in-out group-hover:translate-x-5 group-hover:translate-y-5 md:group-hover:translate-x-6 md:group-hover:translate-y-6"
                 :class="program.decorationClass"
               ></div>
               <div
-                class="relative rounded-xl overflow-hidden shadow-2xl aspect-video md:aspect-[4/3] border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-800 z-10"
+                class="relative rounded-xl overflow-hidden shadow-2xl aspect-video md:aspect-[4/3] border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-800 z-10 transition-colors duration-700 ease-in-out"
               >
                 <img
                   :src="program.image"
@@ -231,12 +244,12 @@ onMounted(() => {
                     <li
                       v-for="(subject, idx) in program.subjects"
                       :key="idx"
-                      class="flex items-start text-sm"
-                      :class="
+                      class="flex items-start text-sm transition-colors duration-700 ease-in-out"
+                      :class="[
                         index % 2 === 0
                           ? 'text-slate-600 dark:text-slate-400'
-                          : 'text-white/80 dark:text-slate-300'
-                      "
+                          : 'text-white/80 dark:text-slate-300',
+                      ]"
                     >
                       <i
                         data-lucide="check-circle-2"
@@ -266,12 +279,12 @@ onMounted(() => {
                     <li
                       v-for="(career, idx) in program.careers"
                       :key="idx"
-                      class="flex items-start text-sm"
-                      :class="
+                      class="flex items-start text-sm transition-colors duration-700 ease-in-out"
+                      :class="[
                         index % 2 === 0
                           ? 'text-slate-600 dark:text-slate-400'
-                          : 'text-white/80 dark:text-slate-300'
-                      "
+                          : 'text-white/80 dark:text-slate-300',
+                      ]"
                     >
                       <i
                         data-lucide="check-circle-2"
