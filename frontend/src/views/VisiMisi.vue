@@ -7,8 +7,17 @@
     />
 
     <!-- Sambutan Kepala Sekolah Section -->
-    <section class="relative py-12 md:py-24 px-6 md:px-0 bg-white dark:bg-slate-900">
-      <div class="container mx-auto px-0 md:px-4 max-w-6xl">
+    <section
+      class="relative py-12 md:py-24 px-6 md:px-0 bg-fixed bg-center bg-cover overflow-hidden"
+      style="
+        background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1600&auto=format&fit=crop');
+      "
+    >
+      <!-- Parallax Overlay -->
+      <div
+        class="absolute inset-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-[2px] transition-colors duration-500"
+      ></div>
+      <div class="container relative z-10 mx-auto px-0 md:px-4 max-w-6xl">
         <div class="flex flex-col md:flex-row items-center gap-8 md:gap-16">
           <!-- Gambar Kepala Sekolah -->
           <div
@@ -48,7 +57,8 @@
           <div class="w-full md:w-2/3 order-1 md:order-2 mt-4 md:mt-0">
             <div class="flex items-center gap-3 mb-6">
               <h2
-                class="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-950 dark:text-white font-serif tracking-wide"
+                class="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-900 dark:text-blue-400 tracking-wide"
+                style="font-family: 'Dancing Script', cursive"
               >
                 Sambutan Kepala Sekolah
               </h2>
@@ -103,11 +113,20 @@
     </section>
 
     <!-- Visi & Misi Section -->
-    <section class="relative w-full">
+    <section
+      class="relative w-full bg-fixed bg-center bg-cover"
+      style="
+        background-image: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1600&auto=format&fit=crop');
+      "
+    >
       <div class="flex flex-col lg:flex-row w-full">
         <div
-          class="w-full lg:w-6/12 bg-gradient-to-br from-blue-900 to-blue-950 dark:from-slate-900 dark:to-slate-900 p-8 sm:p-10 md:p-16 lg:p-24 text-white relative overflow-hidden flex flex-col justify-center"
+          class="w-full lg:w-5/12 p-8 sm:p-10 md:p-16 lg:p-24 text-white relative overflow-hidden flex flex-col justify-center"
         >
+          <!-- Parallax Overlay Visi -->
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-blue-900/90 to-blue-950/90 dark:from-slate-900/95 dark:to-slate-950/95 backdrop-blur-[2px]"
+          ></div>
           <div class="relative z-10">
             <h3
               class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 md:mb-6 tracking-wide"
@@ -124,9 +143,15 @@
         </div>
 
         <div
-          class="w-full lg:w-7/12 bg-white dark:bg-slate-900 p-8 sm:p-10 md:p-16 lg:p-24 flex flex-col justify-center"
+          class="w-full lg:w-7/12 relative p-8 sm:p-10 md:p-16 lg:p-24 flex flex-col justify-center"
         >
-          <div class="mb-6 md:mb-8 pb-4 border-b border-gray-200 dark:border-slate-700">
+          <!-- Parallax Overlay Misi -->
+          <div
+            class="absolute inset-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-[2px]"
+          ></div>
+          <div
+            class="relative z-10 mb-6 md:mb-8 pb-4 border-b border-gray-200 dark:border-slate-700"
+          >
             <h3
               class="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-950 dark:text-white"
             >
@@ -134,7 +159,7 @@
             </h3>
           </div>
 
-          <ul class="space-y-4 md:space-y-6">
+          <ul class="relative z-10 space-y-4 md:space-y-6">
             <li class="flex items-start group">
               <span
                 class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-gray-100 dark:border-slate-700"
@@ -205,3 +230,7 @@
 <script setup>
 import PageHeader from "@/components/PageHeader.vue";
 </script>
+
+<style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap");
+</style>
