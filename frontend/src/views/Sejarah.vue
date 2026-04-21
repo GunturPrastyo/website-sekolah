@@ -65,9 +65,17 @@ onMounted(() => {
 
     <!-- Timeline Section -->
     <section
-      class="py-16 md:py-24 bg-gray-50 dark:bg-slate-900 min-h-screen relative overflow-hidden"
+      class="py-16 md:py-24 min-h-screen relative overflow-hidden bg-fixed bg-center bg-cover"
+      style="
+        background-image: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1600&auto=format&fit=crop');
+      "
     >
-      <div class="container mx-auto px-6 max-w-5xl">
+      <!-- Parallax Overlay -->
+      <div
+        class="absolute inset-0 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-[2px] transition-colors duration-500"
+      ></div>
+
+      <div class="container relative z-10 mx-auto px-6 max-w-5xl">
         <div class="relative wrap overflow-hidden p-2 md:p-10 h-full">
           <!-- Garis Tengah Timeline -->
           <div

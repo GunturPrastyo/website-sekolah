@@ -311,16 +311,13 @@
       <div class="container relative z-10 mx-auto">
         <!-- HEADER -->
         <div
-          class="relative overflow-hidden shadow-2xl min-h-[240px] sm:min-h-[450px] flex items-center md:rounded-2xl"
+          class="relative overflow-hidden shadow-2xl min-h-[240px] sm:min-h-[450px] flex items-center md:rounded-2xl bg-fixed bg-center bg-cover"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop');
+          "
         >
-          <div class="absolute inset-0">
-            <img
-              src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop"
-              class="w-full h-full object-cover scale-110 blur-sm"
-            />
-          </div>
           <div
-            class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40"
+            class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40 backdrop-blur-[2px]"
           ></div>
           <div class="relative z-10 -mt-12 pl-4 pr-4 md:px-14 max-w-2xl text-white">
             <h2 class="text-xl md:text-5xl font-bold mb-2 md:mb-4">
@@ -848,11 +845,17 @@
 
     <!-- Video Profil & Galeri Section -->
     <section
-      class="relative py-8 md:py-12 mt-12 md:mt-16 -mx-6 md:mx-0 bg-blue-950 overflow-hidden px-6 md:px-10 mb-12 md:rounded-2xl shadow-xl"
+      class="relative py-8 md:py-6 mt-12 md:mt-16 -mx-6 md:mx-0 bg-blue-950 overflow-hidden px-6 md:px-10 mb-12 md:rounded-2xl shadow-xl bg-fixed bg-center bg-cover"
+      style="
+        background-image: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop');
+      "
     >
-      <div class="container mx-auto">
+      <!-- Overlay Parallax -->
+      <div class="absolute inset-0 bg-blue-950/85 dark:bg-slate-900/90"></div>
+
+      <div class="container relative z-10 mx-auto">
         <!-- Header Section -->
-        <div class="mb-8 md:mb-10">
+        <div class="mb-8">
           <div class="relative block">
             <h2
               class="text-2xl md:text-4xl font-normal text-white mb-4 sm:mb-2 tracking-wide"
