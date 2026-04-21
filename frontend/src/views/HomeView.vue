@@ -27,15 +27,22 @@
 
     <!-- Hero Content -->
     <div class="z-20 p-5">
-      <h1 class="text-2xl sm:text-4xl font-bold md:text-6xl">SMA Negeri 1 Nogosari</h1>
-      <p class="mt-4 text-md sm:text-lg opacity-90 md:text-xl -mt-2 text-center">
+      <h1 class="text-2xl sm:text-4xl font-bold md:text-6xl">
+        {{ displayedTitle }}<span class="animate-pulse font-light text-white/70">|</span>
+      </h1>
+      <p class="mt-4 text-md sm:text-lg opacity-90 md:text-xl -mt-2 text-center"></p>
+      <p
+        class="mt-4 text-md sm:text-lg md:text-xl -mt-2 text-center transition-all duration-1000 ease-out"
+        :class="showSubtitle ? 'opacity-90 translate-y-0' : 'opacity-0 translate-y-5'"
+      >
         <span class="inline-flex items-center justify-center">
           <i data-lucide="quote" class="w-5 h-5 mr-2 hidden sm:block"></i>
           Mencetak Generasi Unggul, Berkarakter, dan Berwawasan Global
         </span>
       </p>
       <div
-        class="w-11/12 sm:w-full max-w-96 sm:max-w-2xl mx-auto mt-12 overflow-hidden bg-white/15 backdrop-blur-sm rounded-lg shadow-lg border border-white/20"
+        class="w-11/12 sm:w-full max-w-96 sm:max-w-2xl mx-auto mt-12 overflow-hidden bg-white/15 backdrop-blur-sm rounded-lg shadow-lg border border-white/20 transition-all duration-1000 delay-500 ease-out"
+        :class="showSubtitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
       >
         <div class="p-4 stats-swiper">
           <div class="swiper-wrapper text-lg sm:text-2xl">
@@ -860,9 +867,9 @@
         <div
           class="mb-8 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out"
         >
-          <div class="relative block">
+          <div class="relative block mt-4">
             <h2
-              class="text-2xl md:text-4xl font-normal text-white mb-4 sm:mb-2 tracking-wide"
+              class="text-2xl md:text-4xl font-bold text-white mb-4 sm:mb-2 tracking-wide"
               style="font-family: 'Dancing Script', cursive"
             >
               Video Profil & Galeri
@@ -1608,6 +1615,10 @@ import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.css";
 import ShareModal from "@/components/ShareModal.vue";
 
+const displayedTitle = ref("");
+const fullTitle = "SMA Negeri 1 Nogosari";
+const showSubtitle = ref(false);
+
 const activeFaq = ref(null);
 const toggleFaq = (index) => {
   activeFaq.value = activeFaq.value === index ? null : index;
@@ -1747,6 +1758,18 @@ const faqs = [
 ];
 
 onMounted(() => {
+  // Animasi Typing Text
+  let i = 0;
+  const typeWriter = setInterval(() => {
+    if (i < fullTitle.length) {
+      displayedTitle.value += fullTitle.charAt(i);
+      i++;
+    } else {
+      clearInterval(typeWriter);
+      showSubtitle.value = true;
+    }
+  }, 120); // Kecepatan mengetik 120ms per huruf
+
   // Intersection Observer untuk animasi fade-up pada saat scroll
   const observer = new IntersectionObserver(
     (entries) => {

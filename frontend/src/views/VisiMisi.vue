@@ -25,7 +25,7 @@
           >
             <div class="relative w-full max-w-sm aspect-[4/5]">
               <div
-                class="absolute -left-4 -bottom-4 md:-left-6 md:-bottom-6 w-full h-full bg-blue-600 dark:bg-blue-700 rounded-2xl z-0 shadow-lg"
+                class="absolute -left-4 -bottom-4 md:-left-6 md:-bottom-6 w-full h-full bg-blue-600 dark:bg-blue-950 rounded-2xl z-0 shadow-lg"
               ></div>
               <div
                 class="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 z-10 bg-white dark:bg-slate-800"
@@ -57,7 +57,7 @@
           <div class="w-full md:w-2/3 order-1 md:order-2 mt-4 md:mt-0">
             <div class="flex items-center gap-3 mb-6">
               <h2
-                class="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-900 dark:text-blue-400 tracking-wide"
+                class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white racking-wide"
                 style="font-family: 'Dancing Script', cursive"
               >
                 Sambutan Kepala Sekolah
@@ -121,7 +121,7 @@
     >
       <div class="flex flex-col lg:flex-row w-full">
         <div
-          class="w-full lg:w-5/12 p-8 sm:p-10 md:p-16 lg:p-24 text-white relative overflow-hidden flex flex-col justify-center"
+          class="w-full lg:w-6/12 p-8 sm:p-10 md:p-16 lg:p-24 text-white relative overflow-hidden flex flex-col justify-center"
         >
           <!-- Parallax Overlay Visi -->
           <div
