@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onUpdated, nextTick } from "vue";
+import { ref, computed, onMounted, onUpdated, nextTick, watch } from "vue";
 import { createIcons, icons } from "lucide";
 import PageHeader from "@/components/PageHeader.vue";
 
@@ -22,6 +22,8 @@ const ekskulList = ref([
     schedule: "Jumat, 15.00 - 17.00",
     desc:
       "Membentuk karakter disiplin, mandiri, tangguh, dan berjiwa kepemimpinan melalui kegiatan kepramukaan.",
+    pembina: "Bapak Rudi Hermawan, S.Pd",
+    members: 124,
   },
   {
     id: 2,
@@ -31,6 +33,8 @@ const ekskulList = ref([
     schedule: "Selasa & Kamis, 15.30 - 17.00",
     desc:
       "Melatih kedisiplinan baris-berbaris dan memupuk rasa nasionalisme serta patriotisme cinta tanah air.",
+    pembina: "Ibu Siti Aminah, M.Pd",
+    members: 45,
   },
   {
     id: 3,
@@ -40,6 +44,8 @@ const ekskulList = ref([
     schedule: "Senin & Rabu, 15.30 - 17.30",
     desc:
       "Mengembangkan bakat olahraga bola basket, melatih kerjasama tim, dan menjaga kebugaran fisik.",
+    pembina: "Bapak Dwi Saputra, S.Or",
+    members: 32,
   },
   {
     id: 4,
@@ -49,6 +55,8 @@ const ekskulList = ref([
     schedule: "Selasa & Jumat, 15.30 - 17.30",
     desc:
       "Bina prestasi futsal tingkat pelajar dengan latihan rutin dan persiapan partisipasi berbagai turnamen.",
+    pembina: "Bapak Dwi Saputra, S.Or",
+    members: 40,
   },
   {
     id: 5,
@@ -58,6 +66,8 @@ const ekskulList = ref([
     schedule: "Rabu, 15.00 - 17.00",
     desc:
       "Melestarikan warisan budaya nusantara melalui seni gerak tari tradisional dari berbagai daerah.",
+    pembina: "Ibu Maya Indah, S.Sn",
+    members: 28,
   },
   {
     id: 6,
@@ -67,6 +77,8 @@ const ekskulList = ref([
     schedule: "Kamis, 15.00 - 17.00",
     desc:
       "Mengembangkan bakat tarik suara dan merajut harmonisasi vokal yang indah dalam bentuk paduan suara.",
+    pembina: "Bapak Ahmad Fauzi, S.Sn",
+    members: 35,
   },
   {
     id: 7,
@@ -76,6 +88,8 @@ const ekskulList = ref([
     schedule: "Senin, 15.00 - 16.30",
     desc:
       "Wadah bagi siswa untuk melakukan penelitian, observasi, bereksperimen, dan penulisan karya ilmiah.",
+    pembina: "Ibu Rina Rahmawati, S.E",
+    members: 25,
   },
   {
     id: 8,
@@ -85,12 +99,40 @@ const ekskulList = ref([
     schedule: "Rabu, 15.00 - 16.30",
     desc:
       "Meningkatkan kemampuan berbahasa Inggris dengan asik melalui debat, pidato, dan percakapan interaktif.",
+    pembina: "Bapak Rudi Hermawan, S.Pd",
+    members: 42,
   },
 ]);
 
 const filteredEkskul = computed(() => {
   if (activeCategory.value === "semua") return ekskulList.value;
   return ekskulList.value.filter((ekskul) => ekskul.category === activeCategory.value);
+});
+
+const getCategoryCount = (categoryId) => {
+  if (categoryId === "semua") return ekskulList.value.length;
+  return ekskulList.value.filter((ekskul) => ekskul.category === categoryId).length;
+};
+
+const isModalOpen = ref(false);
+const selectedEkskul = ref(null);
+
+const openModal = (ekskul) => {
+  selectedEkskul.value = ekskul;
+  isModalOpen.value = true;
+  document.body.style.overflow = "hidden"; // Mencegah background di-scroll
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+  document.body.style.overflow = ""; // Kembalikan scroll
+};
+
+// Render ulang ikon lucide saat modal terbuka
+watch(isModalOpen, (newVal) => {
+  if (newVal) {
+    nextTick(() => createIcons({ icons }));
+  }
 });
 
 onMounted(() => {
@@ -111,29 +153,56 @@ onMounted(() => {
     <!-- Gallery Section -->
     <section class="pt-12 pb-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
       <div class="container mx-auto max-w-6xl">
-        <!-- Filter Tabs -->
-        <div class="flex flex-wrap justify-center gap-4 mb-16">
+        <!-- Filter Category Cards -->
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 mb-16 w-full"
+        >
           <button
             v-for="cat in categories"
             :key="cat.id"
             @click="activeCategory = cat.id"
-            class="flex items-center gap-2.5 px-6 py-3 rounded-2xl font-bold text-sm transition-all duration-300 border-2 focus:outline-none"
+            class="group relative bg-white dark:bg-slate-800 rounded-3xl p-6 flex flex-col items-center justify-center gap-3 border-2 transition-all duration-500 focus:outline-none hover:-translate-y-2 hover:shadow-xl"
             :class="
               activeCategory === cat.id
-                ? 'bg-blue-600 border-blue-600 text-white shadow-xl shadow-blue-500/30 -translate-y-1'
-                : 'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:border-blue-300 hover:text-blue-600 dark:hover:border-slate-600 dark:hover:text-blue-400 hover:-translate-y-1 hover:shadow-lg'
+                ? 'border-blue-600 shadow-lg shadow-blue-500/20 bg-blue-50/50 dark:bg-blue-900/20'
+                : 'border-gray-100 dark:border-slate-700 hover:border-blue-300 dark:hover:border-slate-600'
             "
           >
-            <i
-              :data-lucide="cat.icon"
-              class="w-4 h-4"
+            <!-- Icon -->
+            <div
+              class="w-16 h-16 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110 mb-1 shrink-0"
               :class="
                 activeCategory === cat.id
-                  ? 'text-white'
-                  : 'text-gray-400 group-hover:text-blue-500'
+                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
+                  : 'bg-gray-50 dark:bg-slate-700 text-gray-400 group-hover:bg-blue-100 group-hover:text-blue-600 dark:group-hover:bg-slate-600 dark:group-hover:text-blue-400'
               "
-            ></i>
-            {{ cat.name }}
+            >
+              <i :data-lucide="cat.icon" class="w-8 h-8"></i>
+            </div>
+
+            <!-- Title -->
+            <span
+              class="font-extrabold text-lg text-center transition-colors"
+              :class="
+                activeCategory === cat.id
+                  ? 'text-blue-700 dark:text-blue-400'
+                  : 'text-gray-700 dark:text-gray-200'
+              "
+            >
+              {{ cat.name }}
+            </span>
+
+            <!-- Badge Count -->
+            <div
+              class="px-4 py-1.5 text-xs font-bold uppercase tracking-widest rounded-full transition-colors border"
+              :class="
+                activeCategory === cat.id
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white dark:bg-slate-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-slate-600 group-hover:border-blue-200 group-hover:text-blue-600 dark:group-hover:text-blue-400'
+              "
+            >
+              {{ getCategoryCount(cat.id) }} Klub
+            </div>
           </button>
         </div>
 
@@ -146,6 +215,7 @@ onMounted(() => {
           <div
             v-for="ekskul in filteredEkskul"
             :key="ekskul.id"
+            @click="openModal(ekskul)"
             class="group relative bg-slate-900 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 aspect-[3/4] cursor-pointer transform hover:-translate-y-2 border border-gray-200 dark:border-slate-700"
           >
             <!-- Full Background Image -->
@@ -233,6 +303,163 @@ onMounted(() => {
         </div>
       </div>
     </section>
+
+    <!-- Modal Detail Ekskul -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isModalOpen"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 sm:p-6"
+        @click="closeModal"
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col md:flex-row relative z-10 transform transition-all duration-300 scale-100"
+          @click.stop
+        >
+          <!-- Close button -->
+          <button
+            @click="closeModal"
+            class="absolute top-4 right-4 z-20 w-10 h-10 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/40 text-white backdrop-blur-md transition-colors focus:outline-none"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+
+          <!-- Left Image (Desktop & Mobile) -->
+          <div class="w-full md:w-2/5 h-64 md:h-auto relative shrink-0">
+            <img :src="selectedEkskul?.image" class="w-full h-full object-cover" />
+
+            <!-- Mobile Title Overlay -->
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent flex flex-col justify-end p-6 md:hidden"
+            >
+              <div
+                class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-full mb-2 w-fit border border-white/30"
+              >
+                <i
+                  :data-lucide="
+                    categories.find((c) => c.id === selectedEkskul?.category)?.icon
+                  "
+                  class="w-3 h-3"
+                ></i>
+                {{ categories.find((c) => c.id === selectedEkskul?.category)?.name }}
+              </div>
+              <h3 class="text-3xl font-extrabold text-white">
+                {{ selectedEkskul?.name }}
+              </h3>
+            </div>
+          </div>
+
+          <!-- Right Content Area -->
+          <div
+            class="w-full md:w-3/5 p-6 md:p-8 lg:p-10 flex flex-col overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full"
+          >
+            <!-- Desktop Title -->
+            <div class="hidden md:block mb-6">
+              <div
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider mb-3 border border-blue-100 dark:border-blue-800"
+              >
+                <i
+                  :data-lucide="
+                    categories.find((c) => c.id === selectedEkskul?.category)?.icon
+                  "
+                  class="w-3.5 h-3.5"
+                ></i>
+                {{ categories.find((c) => c.id === selectedEkskul?.category)?.name }}
+              </div>
+              <h3
+                class="text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight"
+              >
+                {{ selectedEkskul?.name }}
+              </h3>
+            </div>
+
+            <!-- Desc & Meta Details -->
+            <div class="space-y-6">
+              <p
+                class="text-gray-600 dark:text-gray-300 leading-relaxed text-base lg:text-lg"
+              >
+                {{ selectedEkskul?.desc }}
+              </p>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div
+                  class="bg-gray-50 dark:bg-slate-700/50 p-4 rounded-2xl border border-gray-100 dark:border-slate-600"
+                >
+                  <span
+                    class="text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider"
+                    >Jadwal Latihan</span
+                  >
+                  <div
+                    class="font-bold text-gray-900 dark:text-white mt-1.5 flex items-center text-sm lg:text-base"
+                  >
+                    <i
+                      data-lucide="calendar-clock"
+                      class="w-4 h-4 mr-2 text-blue-500 shrink-0"
+                    ></i>
+                    {{ selectedEkskul?.schedule }}
+                  </div>
+                </div>
+                <div
+                  class="bg-gray-50 dark:bg-slate-700/50 p-4 rounded-2xl border border-gray-100 dark:border-slate-600"
+                >
+                  <span
+                    class="text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider"
+                    >Pembina Ekskul</span
+                  >
+                  <div
+                    class="font-bold text-gray-900 dark:text-white mt-1.5 flex items-center text-sm lg:text-base"
+                  >
+                    <i data-lucide="user" class="w-4 h-4 mr-2 text-blue-500 shrink-0"></i>
+                    {{ selectedEkskul?.pembina }}
+                  </div>
+                </div>
+                <div
+                  class="bg-gray-50 dark:bg-slate-700/50 p-4 rounded-2xl border border-gray-100 dark:border-slate-600 sm:col-span-2"
+                >
+                  <span
+                    class="text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider"
+                    >Anggota Aktif</span
+                  >
+                  <div
+                    class="font-bold text-gray-900 dark:text-white mt-1.5 flex items-center text-sm lg:text-base"
+                  >
+                    <i
+                      data-lucide="users"
+                      class="w-4 h-4 mr-2 text-blue-500 shrink-0"
+                    ></i>
+                    {{ selectedEkskul?.members }} Siswa terdaftar
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Footer Buttons -->
+            <div
+              class="mt-8 pt-6 border-t border-gray-100 dark:border-slate-700 flex flex-wrap justify-end gap-3 mt-auto shrink-0"
+            >
+              <button
+                @click="closeModal"
+                class="px-5 py-2.5 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 dark:text-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 transition-colors focus:outline-none"
+              >
+                Tutup
+              </button>
+              <router-link
+                to="/pendaftaran"
+                class="px-5 py-2.5 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors flex items-center shadow-md shadow-blue-500/30 focus:outline-none"
+              >
+                Daftar Ekskul <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+              </router-link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
