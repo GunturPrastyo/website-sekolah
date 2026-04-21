@@ -435,7 +435,7 @@ onBeforeUnmount(() => {
     </section>
 
     <section
-      class="relative bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-600/20 dark:to-blue-800/20 py-16 px-6 overflow-hidden"
+      class="relative bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-900 dark:to-blue-950 py-16 px-6 overflow-hidden"
     >
       <!-- Dekorasi Background Layer -->
       <div
@@ -452,9 +452,10 @@ onBeforeUnmount(() => {
             class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out w-full lg:w-1/2 text-white text-center lg:text-left"
           >
             <span
-              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-bold uppercase tracking-wider mb-4 border border-white/30"
+              class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm md:text-md font-bold mb-4 border border-white/30"
+              style="font-family: 'Dancing Script', cursive"
             >
-              <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i> Inisiatif Siswa
+              <i data-lucide="lightbulb" class="w-4 h-4"></i> Inisiatif Siswa
             </span>
             <h2 class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">
               Punya Ide Ekstrakurikuler Baru?
@@ -558,6 +559,8 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap");
+
 .gallery-move,
 .gallery-enter-active,
 .gallery-leave-active {
