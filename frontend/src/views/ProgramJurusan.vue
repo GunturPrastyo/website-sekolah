@@ -10,6 +10,7 @@ const programs = ref([
     badge: "Sains & Teknologi",
     color: "blue",
     bgClass: "bg-blue-50 dark:bg-blue-900/20",
+    sectionBgClass: "bg-blue-900 dark:bg-blue-950",
     textClass: "text-blue-600 dark:text-blue-400",
     borderClass: "border-blue-200 dark:border-blue-800",
     decorationClass: "bg-blue-600 dark:bg-blue-500",
@@ -33,11 +34,12 @@ const programs = ref([
     id: "ips",
     title: "Ilmu Pengetahuan Sosial (IPS)",
     badge: "Sosial & Humaniora",
-    color: "sky",
-    bgClass: "bg-sky-50 dark:bg-sky-900/20",
-    textClass: "text-sky-600 dark:text-sky-400",
-    borderClass: "border-sky-200 dark:border-sky-800",
-    decorationClass: "bg-sky-600 dark:bg-sky-500",
+    color: "blue",
+    bgClass: "bg-blue-50 dark:bg-blue-900/20",
+    sectionBgClass: "bg-blue-900 dark:bg-blue-950",
+    textClass: "text-blue-600 dark:text-blue-400",
+    borderClass: "border-blue-200 dark:border-blue-800",
+    decorationClass: "bg-blue-600 dark:bg-blue-500",
     image: "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=800",
     description:
       "Peminatan IPS membekali siswa dengan pemahaman mendalam tentang dinamika sosial, ekonomi, dan sejarah. Program ini sangat cocok bagi siswa yang memiliki minat pada hubungan antar manusia dan kebijakan publik.",
@@ -53,11 +55,12 @@ const programs = ref([
     id: "bahasa",
     title: "Bahasa dan Budaya",
     badge: "Sastra & Komunikasi",
-    color: "cyan",
-    bgClass: "bg-cyan-50 dark:bg-cyan-900/20",
-    textClass: "text-cyan-600 dark:text-cyan-400",
-    borderClass: "border-cyan-200 dark:border-cyan-800",
-    decorationClass: "bg-cyan-600 dark:bg-cyan-500",
+    color: "blue",
+    bgClass: "bg-blue-50 dark:bg-blue-900/20",
+    sectionBgClass: "bg-blue-900 dark:bg-blue-950",
+    textClass: "text-blue-600 dark:text-blue-400",
+    borderClass: "border-blue-200 dark:border-blue-800",
+    decorationClass: "bg-blue-600 dark:bg-blue-500",
     image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800",
     description:
       "Program Bahasa diperuntukkan bagi siswa yang mencintai literatur, komunikasi, dan linguistik. Siswa akan mempelajari keindahan bahasa dari berbagai negara serta kebudayaan yang mengiringinya.",
@@ -78,11 +81,12 @@ const programs = ref([
     id: "informatika",
     title: "Informatika & Komputer",
     badge: "Teknologi Digital",
-    color: "purple",
-    bgClass: "bg-purple-50 dark:bg-purple-900/20",
-    textClass: "text-purple-600 dark:text-purple-400",
-    borderClass: "border-purple-200 dark:border-purple-800",
-    decorationClass: "bg-purple-600 dark:bg-purple-500",
+    color: "blue",
+    bgClass: "bg-blue-50 dark:bg-blue-900/20",
+    sectionBgClass: "bg-blue-900 dark:bg-blue-950",
+    textClass: "text-blue-600 dark:text-blue-400",
+    borderClass: "border-blue-200 dark:border-blue-800",
+    decorationClass: "bg-blue-600 dark:bg-blue-500",
     image: "https://images.unsplash.com/photo-1550745165-9bc0b252726a?q=80&w=800",
     description:
       "Merupakan program unggulan baru yang merespon tantangan era Revolusi Industri 4.0. Mempelajari logika komputasional, pemrograman, dan desain perangkat lunak secara intensif.",
@@ -117,109 +121,144 @@ onMounted(() => {
     />
 
     <!-- Program Details Section -->
-    <section class="py-16 md:py-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
-      <div class="container mx-auto max-w-6xl space-y-20 md:space-y-32">
-        <!-- Render Tiap Jurusan dengan Selang-seling (Alternate Layout) -->
-        <div
-          v-for="(program, index) in programs"
-          :key="program.id"
-          class="flex flex-col lg:flex-row gap-10 lg:gap-16 items-center"
-          :class="{ 'lg:flex-row-reverse': index % 2 !== 0 }"
-        >
-          <!-- Kolom Gambar -->
-          <div class="w-full lg:w-1/2 relative group">
-            <div
-              class="absolute inset-0 translate-x-3 translate-y-3 md:translate-x-4 md:translate-y-4 rounded-xl shadow-lg transition-transform duration-500 group-hover:translate-x-5 group-hover:translate-y-5 md:group-hover:translate-x-6 md:group-hover:translate-y-6"
-              :class="program.decorationClass"
-            ></div>
-            <div
-              class="relative rounded-xl overflow-hidden shadow-2xl aspect-video md:aspect-[4/3] border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-800 z-10"
-            >
-              <img
-                :src="program.image"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                :alt="'Jurusan ' + program.title"
-              />
-            </div>
-          </div>
-
-          <!-- Kolom Deskripsi -->
-          <div class="w-full lg:w-1/2 space-y-6">
-            <div
-              class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold shadow-sm border"
-              :class="[program.bgClass, program.textClass, program.borderClass]"
-            >
-              <i data-lucide="graduation-cap" class="w-3.5 h-3.5 mr-1.5"></i>
-              {{ program.badge }}
-            </div>
-            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
-              {{ program.title }}
-            </h2>
-            <p
-              class="text-slate-600 dark:text-slate-400 text-base md:text-lg leading-relaxed text-justify"
-            >
-              {{ program.description }}
-            </p>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4">
-              <!-- Fokus Pembelajaran -->
-              <div>
-                <h4
-                  class="font-bold text-slate-900 dark:text-white mb-3 flex items-center"
-                >
-                  <i
-                    data-lucide="book-open"
-                    class="w-5 h-5 mr-2"
-                    :class="program.textClass"
-                  ></i>
-                  Fokus Pembelajaran
-                </h4>
-                <ul class="space-y-2.5">
-                  <li
-                    v-for="(subject, idx) in program.subjects"
-                    :key="idx"
-                    class="flex items-start text-slate-600 dark:text-slate-400 text-sm"
-                  >
-                    <i
-                      data-lucide="check-circle-2"
-                      class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                      :class="program.textClass"
-                    ></i
-                    ><span>{{ subject }}</span>
-                  </li>
-                </ul>
+    <div class="min-h-screen flex flex-col">
+      <!-- Render Tiap Jurusan dengan Selang-seling (Alternate Layout & Background) -->
+      <section
+        v-for="(program, index) in programs"
+        :key="program.id"
+        class="py-16 md:py-24 px-6 transition-colors duration-300"
+        :class="index % 2 === 0 ? 'bg-white dark:bg-slate-900' : program.sectionBgClass"
+      >
+        <div class="container mx-auto max-w-6xl">
+          <div
+            class="flex flex-col lg:flex-row gap-10 lg:gap-16 items-center"
+            :class="{ 'lg:flex-row-reverse': index % 2 !== 0 }"
+          >
+            <!-- Kolom Gambar -->
+            <div class="w-full lg:w-1/2 relative group">
+              <div
+                class="absolute inset-0 translate-x-3 translate-y-3 md:translate-x-4 md:translate-y-4 rounded-xl shadow-lg transition-transform duration-500 group-hover:translate-x-5 group-hover:translate-y-5 md:group-hover:translate-x-6 md:group-hover:translate-y-6"
+                :class="program.decorationClass"
+              ></div>
+              <div
+                class="relative rounded-xl overflow-hidden shadow-2xl aspect-video md:aspect-[4/3] border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-800 z-10"
+              >
+                <img
+                  :src="program.image"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  :alt="'Jurusan ' + program.title"
+                />
               </div>
-              <!-- Prospek Karir -->
-              <div>
-                <h4
-                  class="font-bold text-slate-900 dark:text-white mb-3 flex items-center"
-                >
-                  <i
-                    data-lucide="briefcase"
-                    class="w-5 h-5 mr-2"
-                    :class="program.textClass"
-                  ></i>
-                  Prospek Karir
-                </h4>
-                <ul class="space-y-2.5">
-                  <li
-                    v-for="(career, idx) in program.careers"
-                    :key="idx"
-                    class="flex items-start text-slate-600 dark:text-slate-400 text-sm"
+            </div>
+
+            <!-- Kolom Deskripsi -->
+            <div class="w-full lg:w-1/2 space-y-6">
+              <div
+                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold shadow-sm border backdrop-blur-sm"
+                :class="[
+                  index % 2 === 0 ? program.bgClass : 'bg-white/10 dark:bg-black/20',
+                  index % 2 === 0 ? program.textClass : 'text-white',
+                  index % 2 === 0
+                    ? program.borderClass
+                    : 'border-white/20 dark:border-white/10',
+                ]"
+              >
+                <i data-lucide="graduation-cap" class="w-3.5 h-3.5 mr-1.5"></i>
+                {{ program.badge }}
+              </div>
+              <h2
+                class="text-3xl md:text-4xl font-bold"
+                :class="index % 2 === 0 ? 'text-slate-900 dark:text-white' : 'text-white'"
+              >
+                {{ program.title }}
+              </h2>
+              <p
+                class="text-base md:text-lg leading-relaxed text-justify"
+                :class="
+                  index % 2 === 0
+                    ? 'text-slate-600 dark:text-slate-400'
+                    : 'text-white/80 dark:text-slate-300'
+                "
+              >
+                {{ program.description }}
+              </p>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4">
+                <!-- Fokus Pembelajaran -->
+                <div>
+                  <h4
+                    class="font-bold mb-3 flex items-center"
+                    :class="
+                      index % 2 === 0 ? 'text-slate-900 dark:text-white' : 'text-white'
+                    "
                   >
                     <i
-                      data-lucide="check-circle-2"
-                      class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                      :class="program.textClass"
-                    ></i
-                    ><span>{{ career }}</span>
-                  </li>
-                </ul>
+                      data-lucide="book-open"
+                      class="w-5 h-5 mr-2"
+                      :class="index % 2 === 0 ? program.textClass : 'text-white/90'"
+                    ></i>
+                    Fokus Pembelajaran
+                  </h4>
+                  <ul class="space-y-2.5">
+                    <li
+                      v-for="(subject, idx) in program.subjects"
+                      :key="idx"
+                      class="flex items-start text-sm"
+                      :class="
+                        index % 2 === 0
+                          ? 'text-slate-600 dark:text-slate-400'
+                          : 'text-white/80 dark:text-slate-300'
+                      "
+                    >
+                      <i
+                        data-lucide="check-circle-2"
+                        class="w-4 h-4 mr-2 mt-0.5 shrink-0"
+                        :class="index % 2 === 0 ? program.textClass : 'text-white/90'"
+                      ></i
+                      ><span>{{ subject }}</span>
+                    </li>
+                  </ul>
+                </div>
+                <!-- Prospek Karir -->
+                <div>
+                  <h4
+                    class="font-bold mb-3 flex items-center"
+                    :class="
+                      index % 2 === 0 ? 'text-slate-900 dark:text-white' : 'text-white'
+                    "
+                  >
+                    <i
+                      data-lucide="briefcase"
+                      class="w-5 h-5 mr-2"
+                      :class="index % 2 === 0 ? program.textClass : 'text-white/90'"
+                    ></i>
+                    Prospek Karir
+                  </h4>
+                  <ul class="space-y-2.5">
+                    <li
+                      v-for="(career, idx) in program.careers"
+                      :key="idx"
+                      class="flex items-start text-sm"
+                      :class="
+                        index % 2 === 0
+                          ? 'text-slate-600 dark:text-slate-400'
+                          : 'text-white/80 dark:text-slate-300'
+                      "
+                    >
+                      <i
+                        data-lucide="check-circle-2"
+                        class="w-4 h-4 mr-2 mt-0.5 shrink-0"
+                        :class="index % 2 === 0 ? program.textClass : 'text-white/90'"
+                      ></i
+                      ><span>{{ career }}</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   </div>
 </template>
