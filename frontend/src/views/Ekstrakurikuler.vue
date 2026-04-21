@@ -207,7 +207,7 @@ onBeforeUnmount(() => {
     />
 
     <!-- Gallery Section -->
-    <section class="pt-12 pb-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
+    <section class="pt-12 pb-18 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
       <div class="container mx-auto max-w-6xl">
         <!-- Search Bar, Filter Hari, & Filter Card -->
         <div class="flex flex-col gap-6 mb-12">
@@ -379,6 +379,105 @@ onBeforeUnmount(() => {
           </p>
         </div>
       </div>
+
+      <div class="container mx-auto max-w-6xl relative z-10 mt-16">
+        <div
+          class="bg-gradient-to-br from-indigo-600 to-blue-800 rounded-xl p-8 md:p-12 shadow-lg flex flex-col lg:flex-row items-center gap-10"
+        >
+          <!-- Teks CTA & Ajakan -->
+          <div class="w-full lg:w-1/2 text-white text-center lg:text-left">
+            <span
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-bold uppercase tracking-wider mb-4 border border-white/30"
+            >
+              <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i> Inisiatif Siswa
+            </span>
+            <h2 class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">
+              Punya Ide Ekstrakurikuler Baru?
+            </h2>
+            <p
+              class="text-indigo-100 text-sm md:text-base leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0"
+            >
+              SMAN 1 Nogosari sangat mendukung kreativitas dan kepemimpinan siswa. Jika
+              kamu memiliki minat pada bidang tertentu yang belum ada wadahnya, kamu bisa
+              mengajukan pembentukan klub baru!
+            </p>
+            <button
+              class="inline-flex items-center justify-center px-6 py-3 bg-yellow-400 text-blue-900 font-bold rounded-xl shadow-lg hover:bg-yellow-300 hover:-translate-y-1 transition-all text-sm md:text-base focus:outline-none"
+            >
+              Unduh Panduan Proposal <i data-lucide="download" class="w-4 h-4 ml-2"></i>
+            </button>
+          </div>
+
+          <!-- Box Syarat & Ketentuan -->
+          <div class="w-full lg:w-1/2">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 md:p-8 shadow-xl">
+              <h3
+                class="text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center border-b border-gray-100 dark:border-slate-800 pb-4"
+              >
+                <i
+                  data-lucide="clipboard-list"
+                  class="w-5 h-5 mr-2 text-indigo-600 dark:text-indigo-400"
+                ></i>
+                Syarat Pengajuan Klub
+              </h3>
+              <ul class="space-y-4">
+                <li class="flex items-start group">
+                  <div
+                    class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-indigo-600 group-hover:text-white"
+                  >
+                    1
+                  </div>
+                  <p
+                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed"
+                  >
+                    Mengumpulkan minimal <strong>10 orang siswa</strong> yang berkomitmen
+                    menjadi anggota pertama.
+                  </p>
+                </li>
+                <li class="flex items-start group">
+                  <div
+                    class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-indigo-600 group-hover:text-white"
+                  >
+                    2
+                  </div>
+                  <p
+                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed"
+                  >
+                    Mendapat persetujuan dari minimal
+                    <strong>1 orang guru pembina</strong> pendamping.
+                  </p>
+                </li>
+                <li class="flex items-start group">
+                  <div
+                    class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-indigo-600 group-hover:text-white"
+                  >
+                    3
+                  </div>
+                  <p
+                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed"
+                  >
+                    Menyusun proposal yang berisi visi, misi, dan rencana program kerja
+                    selama 1 semester.
+                  </p>
+                </li>
+                <li class="flex items-start group">
+                  <div
+                    class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-indigo-600 group-hover:text-white"
+                  >
+                    4
+                  </div>
+                  <p
+                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed"
+                  >
+                    Mempresentasikan proposal di hadapan
+                    <strong>Waka Kesiswaan & Pengurus OSIS</strong>.
+                  </p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Modal Detail Ekskul -->
@@ -397,11 +496,13 @@ onBeforeUnmount(() => {
 .gallery-leave-active {
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .gallery-enter-from,
 .gallery-leave-to {
   opacity: 0;
   transform: scale(0.95) translateY(20px);
 }
+
 .gallery-leave-active {
   position: absolute;
 }
