@@ -165,38 +165,54 @@ onMounted(() => {
     <!-- Gallery Section -->
     <section class="pt-12 pb-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
       <div class="container mx-auto max-w-6xl">
-        <!-- Search Bar & Filter Tabs -->
-        <div class="flex flex-col lg:flex-row justify-between items-center gap-6 mb-12">
+        <!-- Search Bar & Filter Card -->
+        <div class="flex flex-col lg:flex-row items-center gap-4 md:gap-6 mb-12">
           <!-- Search Bar -->
-          <div class="relative w-full lg:w-[350px] shrink-0">
+          <div class="relative w-full lg:w-[320px] xl:w-[350px] shrink-0">
             <i
               data-lucide="search"
-              class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+              class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
             ></i>
             <input
               v-model="searchQuery"
               type="text"
               placeholder="Cari nama ekstrakurikuler..."
-              class="w-full pl-11 pr-4 py-2.5 rounded-full border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm"
+              class="w-full pl-12 pr-5 py-4 lg:py-4 rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm"
             />
           </div>
 
-          <!-- Filter Tabs -->
-          <div class="flex flex-wrap justify-center lg:justify-end gap-3">
-            <button
-              v-for="cat in categories"
-              :key="cat.id"
-              @click="activeCategory = cat.id"
-              class="px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 focus:outline-none flex items-center gap-2.5"
-              :class="
-                activeCategory === cat.id
-                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
-                  : 'bg-white text-gray-600 dark:bg-slate-800 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
-              "
+          <!-- Filter Card -->
+          <div
+            class="flex-1 w-full bg-white dark:bg-slate-800 p-4 lg:p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center gap-4"
+          >
+            <h4
+              class="text-sm font-bold text-gray-900 dark:text-white whitespace-nowrap shrink-0 flex items-center sm:pl-2"
             >
-              <i :data-lucide="cat.icon" class="w-4 h-4"></i>
-              {{ cat.name }}
-            </button>
+              <i
+                data-lucide="filter"
+                class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
+              ></i>
+              Kategori
+            </h4>
+            <div class="flex flex-wrap items-center gap-2 md:gap-2.5">
+              <button
+                v-for="cat in categories"
+                :key="cat.id"
+                @click="activeCategory = cat.id"
+                class="px-3.5 md:px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 focus:outline-none flex items-center border"
+                :class="
+                  activeCategory === cat.id
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
+                    : 'bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
+                "
+              >
+                <i :data-lucide="cat.icon" class="w-3.5 h-3.5 mr-1.5 hidden sm:block"></i>
+                {{ cat.name }}
+                <span class="ml-1 text-[11px] font-bold opacity-70">
+                  ({{ getCategoryCount(cat.id) }})
+                </span>
+              </button>
+            </div>
           </div>
         </div>
 
