@@ -104,9 +104,21 @@ const ekskulList = ref([
   },
 ]);
 
+const searchQuery = ref("");
+
 const filteredEkskul = computed(() => {
-  if (activeCategory.value === "semua") return ekskulList.value;
-  return ekskulList.value.filter((ekskul) => ekskul.category === activeCategory.value);
+  let filtered = ekskulList.value;
+
+  if (activeCategory.value !== "semua") {
+    filtered = filtered.filter((ekskul) => ekskul.category === activeCategory.value);
+  }
+
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.trim().toLowerCase();
+    filtered = filtered.filter((ekskul) => ekskul.name.toLowerCase().includes(query));
+  }
+
+  return filtered;
 });
 
 const getCategoryCount = (categoryId) => {
@@ -153,57 +165,39 @@ onMounted(() => {
     <!-- Gallery Section -->
     <section class="pt-12 pb-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
       <div class="container mx-auto max-w-6xl">
-        <!-- Filter Category Cards -->
-        <div
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 mb-16 w-full"
-        >
-          <button
-            v-for="cat in categories"
-            :key="cat.id"
-            @click="activeCategory = cat.id"
-            class="group relative bg-white dark:bg-slate-800 rounded-3xl p-6 flex flex-col items-center justify-center gap-3 border-2 transition-all duration-500 focus:outline-none hover:-translate-y-2 hover:shadow-xl"
-            :class="
-              activeCategory === cat.id
-                ? 'border-blue-600 shadow-lg shadow-blue-500/20 bg-blue-50/50 dark:bg-blue-900/20'
-                : 'border-gray-100 dark:border-slate-700 hover:border-blue-300 dark:hover:border-slate-600'
-            "
-          >
-            <!-- Icon -->
-            <div
-              class="w-16 h-16 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110 mb-1 shrink-0"
+        <!-- Search Bar & Filter Tabs -->
+        <div class="flex flex-col lg:flex-row justify-between items-center gap-6 mb-12">
+          <!-- Search Bar -->
+          <div class="relative w-full lg:w-[350px] shrink-0">
+            <i
+              data-lucide="search"
+              class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+            ></i>
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Cari nama ekstrakurikuler..."
+              class="w-full pl-11 pr-4 py-2.5 rounded-full border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm"
+            />
+          </div>
+
+          <!-- Filter Tabs -->
+          <div class="flex flex-wrap justify-center lg:justify-end gap-3">
+            <button
+              v-for="cat in categories"
+              :key="cat.id"
+              @click="activeCategory = cat.id"
+              class="px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 focus:outline-none flex items-center gap-2.5"
               :class="
                 activeCategory === cat.id
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
-                  : 'bg-gray-50 dark:bg-slate-700 text-gray-400 group-hover:bg-blue-100 group-hover:text-blue-600 dark:group-hover:bg-slate-600 dark:group-hover:text-blue-400'
+                  : 'bg-white text-gray-600 dark:bg-slate-800 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
               "
             >
-              <i :data-lucide="cat.icon" class="w-8 h-8"></i>
-            </div>
-
-            <!-- Title -->
-            <span
-              class="font-extrabold text-lg text-center transition-colors"
-              :class="
-                activeCategory === cat.id
-                  ? 'text-blue-700 dark:text-blue-400'
-                  : 'text-gray-700 dark:text-gray-200'
-              "
-            >
+              <i :data-lucide="cat.icon" class="w-4 h-4"></i>
               {{ cat.name }}
-            </span>
-
-            <!-- Badge Count -->
-            <div
-              class="px-4 py-1.5 text-xs font-bold uppercase tracking-widest rounded-full transition-colors border"
-              :class="
-                activeCategory === cat.id
-                  ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-white dark:bg-slate-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-slate-600 group-hover:border-blue-200 group-hover:text-blue-600 dark:group-hover:text-blue-400'
-              "
-            >
-              {{ getCategoryCount(cat.id) }} Klub
-            </div>
-          </button>
+            </button>
+          </div>
         </div>
 
         <!-- Grid Poster Ekskul (Antimainstream Concept) -->
@@ -294,10 +288,11 @@ onMounted(() => {
           >
             <i data-lucide="inbox" class="w-8 h-8"></i>
           </div>
-          <h3 class="text-lg font-bold text-gray-900 dark:text-white">
-            Klub Belum Tersedia
-          </h3>
-          <p class="text-gray-500 dark:text-gray-400 mt-1">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white">Tidak Ditemukan</h3>
+          <p class="text-gray-500 dark:text-gray-400 mt-1" v-if="searchQuery">
+            Tidak ada ekstrakurikuler dengan nama "{{ searchQuery }}".
+          </p>
+          <p class="text-gray-500 dark:text-gray-400 mt-1" v-else>
             Belum ada data ekstrakurikuler yang didaftarkan untuk kategori ini.
           </p>
         </div>

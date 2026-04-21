@@ -66,34 +66,28 @@
 
             <div
               class="text-gray-700 dark:text-gray-300 space-y-4 md:space-y-5 text-sm sm:text-base md:text-lg leading-relaxed text-justify"
+              ref="textContainerRef"
             >
-              <p class="relative z-10 font-medium text-gray-800 dark:text-gray-200">
+              <p
+                v-for="(paragraph, pIdx) in sambutanParagraphs"
+                :key="pIdx"
+                :class="{
+                  'relative z-10 font-medium text-gray-800 dark:text-gray-200':
+                    pIdx === 0,
+                }"
+              >
                 <i
+                  v-if="pIdx === 0"
                   data-lucide="quote"
                   class="absolute -top-4 -left-4 md:-top-6 md:-left-6 w-8 h-8 md:w-12 md:h-12 text-blue-100 dark:text-slate-800 -z-10 rotate-180"
                 ></i>
-                "Selamat datang di website resmi SMA Negeri 1 Nogosari. Kami berkomitmen
-                untuk memberikan pendidikan berkualitas yang tidak hanya berfokus pada
-                kecerdasan akademis, tetapi juga pembentukan karakter peserta didik yang
-                berakhlak mulia dan berbudaya lingkungan."
-              </p>
-              <p>
-                Di era digital dan globalisasi saat ini, lembaga pendidikan memiliki
-                tanggung jawab besar. Oleh karena itu, kami terus berinovasi dalam metode
-                pembelajaran serta melengkapi berbagai fasilitas guna memastikan anak-anak
-                kita siap menghadapi tantangan masa depan dengan bekal ilmu dan iman yang
-                seimbang.
-              </p>
-              <p>
-                Kolaborasi yang erat antara guru, siswa, komite sekolah, dan masyarakat
-                adalah kunci utama dari kesuksesan yang kita raih bersama. Melalui visi
-                dan misi yang jelas, kami berharap dapat mewujudkan sekolah sebagai tempat
-                yang menyenangkan untuk belajar dan bertumbuh.
-              </p>
-              <p>
-                Terima kasih atas dukungan dan kepercayaan Bapak/Ibu sekalian terhadap
-                sekolah kami. Mari kita bersama-sama mewujudkan generasi penerus yang
-                cerdas, terampil, dan siap berkontribusi bagi nusa dan bangsa.
+                <span
+                  v-for="(sentence, sIdx) in splitSentences(paragraph)"
+                  :key="sIdx"
+                  class="fade-sentence opacity-0 transition-opacity duration-1000 ease-in-out"
+                >
+                  {{ sentence }}
+                </span>
               </p>
             </div>
 
@@ -228,7 +222,51 @@
 </template>
 
 <script setup>
+import { ref, onMounted, nextTick } from "vue";
+import { createIcons, icons } from "lucide";
 import PageHeader from "@/components/PageHeader.vue";
+
+const textContainerRef = ref(null);
+
+const sambutanParagraphs = [
+  '"Selamat datang di website resmi SMA Negeri 1 Nogosari. Kami berkomitmen untuk memberikan pendidikan berkualitas yang tidak hanya berfokus pada kecerdasan akademis, tetapi juga pembentukan karakter peserta didik yang berakhlak mulia dan berbudaya lingkungan."',
+  "Di era digital dan globalisasi saat ini, lembaga pendidikan memiliki tanggung jawab besar. Oleh karena itu, kami terus berinovasi dalam metode pembelajaran serta melengkapi berbagai fasilitas guna memastikan anak-anak kita siap menghadapi tantangan masa depan dengan bekal ilmu dan iman yang seimbang.",
+  "Kolaborasi yang erat antara guru, siswa, komite sekolah, dan masyarakat adalah kunci utama dari kesuksesan yang kita raih bersama. Melalui visi dan misi yang jelas, kami berharap dapat mewujudkan sekolah sebagai tempat yang menyenangkan untuk belajar dan bertumbuh.",
+  "Terima kasih atas dukungan dan kepercayaan Bapak/Ibu sekalian terhadap sekolah kami. Mari kita bersama-sama mewujudkan generasi penerus yang cerdas, terampil, dan siap berkontribusi bagi nusa dan bangsa.",
+];
+
+const splitSentences = (text) => {
+  // Memecah teks per kalimat (termasuk tanda baca dan kutip) dan mempertahankan spasi
+  return text.match(/[^.!?]+[.!?]+["']?\s*/g) || [text];
+};
+
+onMounted(() => {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const sentences = entry.target.querySelectorAll(".fade-sentence");
+          sentences.forEach((el, idx) => {
+            setTimeout(() => {
+              el.classList.add("opacity-100");
+              el.classList.remove("opacity-0");
+            }, idx * 400); // jeda 400ms per kalimat agar mulus dibaca
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 } // Efek dijalankan saat 15% blok teks terlihat di layar
+  );
+
+  if (textContainerRef.value) {
+    observer.observe(textContainerRef.value);
+  }
+
+  nextTick(() => {
+    createIcons({ icons });
+  });
+});
 </script>
 
 <style scoped>
