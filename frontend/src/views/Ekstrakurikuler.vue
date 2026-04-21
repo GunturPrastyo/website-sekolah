@@ -286,74 +286,87 @@ onBeforeUnmount(() => {
         <TransitionGroup
           name="gallery"
           tag="div"
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 relative w-full"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10 md:gap-x-8 md:gap-y-12 relative w-full mt-4"
         >
           <div
             v-for="ekskul in filteredEkskul"
             :key="ekskul.id"
+            class="relative group cursor-pointer"
             @click="openModal(ekskul)"
-            class="group relative bg-slate-900 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 aspect-[3/4] cursor-pointer transform hover:-translate-y-2 border border-gray-200 dark:border-slate-700"
           >
-            <!-- Full Background Image -->
-            <img
-              :src="ekskul.image"
-              :alt="ekskul.name"
-              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-95 group-hover:opacity-100"
-            />
-
-            <!-- Gradient Overlay (Darkens on hover) -->
+            <!-- Dekorasi Card Menumpuk -->
             <div
-              class="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/30 to-transparent transition-all duration-500 group-hover:via-slate-900/70 group-hover:from-slate-900"
+              class="absolute inset-0 bg-blue-200/60 dark:bg-slate-800/80 rounded-3xl transform translate-y-3.5 scale-[0.88] transition-all duration-500 group-hover:translate-y-5 z-0 border border-white/50 dark:border-slate-700"
+            ></div>
+            <div
+              class="absolute inset-0 bg-blue-100/80 dark:bg-slate-700/90 rounded-3xl transform translate-y-1.5 scale-[0.94] transition-all duration-500 group-hover:translate-y-2.5 z-0 border border-white/50 dark:border-slate-700"
             ></div>
 
-            <!-- Floating Category Badge -->
-            <div class="absolute top-5 right-5">
-              <div
-                class="px-3.5 py-1.5 backdrop-blur-md bg-white/20 border border-white/30 rounded-full flex items-center gap-1.5 text-white text-[10px] font-bold uppercase tracking-wider shadow-lg"
-              >
-                <i
-                  :data-lucide="categories.find((c) => c.id === ekskul.category)?.icon"
-                  class="w-3 h-3"
-                ></i>
-                {{ categories.find((c) => c.id === ekskul.category)?.name }}
-              </div>
-            </div>
-
-            <!-- Content Area (Slides up smoothly) -->
+            <!-- Main Card -->
             <div
-              class="absolute bottom-0 left-0 w-full p-6 md:p-8 transition-all duration-500 ease-out z-20 rounded-t-3xl group-hover:bg-slate-900/50 group-hover:backdrop-blur-md"
+              class="relative z-10 bg-slate-900 rounded-3xl overflow-hidden shadow-lg group-hover:shadow-2xl transition-all duration-500 aspect-[3/4] transform group-hover:-translate-y-1 border border-gray-200 dark:border-slate-700 h-full w-full"
             >
-              <h3
-                class="text-2xl font-extrabold text-white mb-2 leading-tight tracking-wide drop-shadow-md"
-              >
-                {{ ekskul.name }}
-              </h3>
+              <!-- Full Background Image -->
+              <img
+                :src="ekskul.image"
+                :alt="ekskul.name"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-95 group-hover:opacity-100"
+              />
 
+              <!-- Gradient Overlay (Darkens on hover) -->
               <div
-                class="flex items-center text-blue-300 text-xs font-bold uppercase tracking-wider mb-2"
-              >
-                <i data-lucide="clock" class="w-3.5 h-3.5 mr-1.5"></i>
-                {{ ekskul.schedule }}
+                class="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/30 to-transparent transition-all duration-500 group-hover:via-slate-900/70 group-hover:from-slate-900"
+              ></div>
+
+              <!-- Floating Category Badge -->
+              <div class="absolute top-5 right-5">
+                <div
+                  class="px-3.5 py-1.5 backdrop-blur-md bg-white/20 border border-white/30 rounded-full flex items-center gap-1.5 text-white text-[10px] font-bold uppercase tracking-wider shadow-lg"
+                >
+                  <i
+                    :data-lucide="categories.find((c) => c.id === ekskul.category)?.icon"
+                    class="w-3 h-3"
+                  ></i>
+                  {{ categories.find((c) => c.id === ekskul.category)?.name }}
+                </div>
               </div>
 
-              <!-- Hidden Expandable Content -->
+              <!-- Content Area (Slides up smoothly) -->
               <div
-                class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-[300px] group-hover:opacity-100"
+                class="absolute bottom-0 left-0 w-full p-6 md:p-8 transition-all duration-500 ease-out z-20 rounded-t-3xl group-hover:bg-slate-900/50 group-hover:backdrop-blur-md"
               >
-                <div class="pt-4 mt-4 border-t border-white/20">
-                  <p class="text-gray-200 text-sm leading-relaxed mb-5 line-clamp-3">
-                    {{ ekskul.desc }}
-                  </p>
+                <h3
+                  class="text-2xl font-extrabold text-white mb-2 leading-tight tracking-wide drop-shadow-md"
+                >
+                  {{ ekskul.name }}
+                </h3>
 
-                  <button
-                    class="inline-flex items-center text-xs font-bold text-white uppercase tracking-widest hover:text-blue-300 transition-colors focus:outline-none"
-                  >
-                    Jelajahi Klub
-                    <i
-                      data-lucide="arrow-right"
-                      class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform"
-                    ></i>
-                  </button>
+                <div
+                  class="flex items-center text-blue-300 text-xs font-bold uppercase tracking-wider mb-2"
+                >
+                  <i data-lucide="clock" class="w-3.5 h-3.5 mr-1.5"></i>
+                  {{ ekskul.schedule }}
+                </div>
+
+                <!-- Hidden Expandable Content -->
+                <div
+                  class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-[300px] group-hover:opacity-100"
+                >
+                  <div class="pt-4 mt-4 border-t border-white/20">
+                    <p class="text-gray-200 text-sm leading-relaxed mb-5 line-clamp-3">
+                      {{ ekskul.desc }}
+                    </p>
+
+                    <button
+                      class="inline-flex items-center text-xs font-bold text-white uppercase tracking-widest hover:text-blue-300 transition-colors focus:outline-none"
+                    >
+                      Jelajahi Klub
+                      <i
+                        data-lucide="arrow-right"
+                        class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform"
+                      ></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -379,13 +392,17 @@ onBeforeUnmount(() => {
           </p>
         </div>
       </div>
+    </section>
 
-      <div class="container mx-auto max-w-6xl relative z-10 mt-16">
+    <section
+      class="relative bg-gray-50 dark:bg-slate-900 pb-0 sm:pb-16 md:pb-24 px-0 sm:px-6"
+    >
+      <div class="w-full sm:container sm:mx-auto sm:max-w-6xl relative z-10">
         <div
-          class="bg-gradient-to-br from-indigo-600 to-blue-800 rounded-xl p-8 md:p-12 shadow-lg flex flex-col lg:flex-row items-center gap-10"
+          class="bg-gradient-to-br from-indigo-600 to-blue-800 rounded-none sm:rounded-xl pt-10 pb-12 px-6 sm:p-8 md:p-12 shadow-none sm:shadow-md flex flex-col lg:flex-row items-center gap-10"
         >
           <!-- Teks CTA & Ajakan -->
-          <div class="w-full lg:w-1/2 text-white text-center lg:text-left">
+          <div class="w-full lg:w-1/2 text-white text-center lg:text-left pt-2 sm:pt-0">
             <span
               class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-bold uppercase tracking-wider mb-4 border border-white/30"
             >
@@ -410,7 +427,7 @@ onBeforeUnmount(() => {
 
           <!-- Box Syarat & Ketentuan -->
           <div class="w-full lg:w-1/2">
-            <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 md:p-8 shadow-xl">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-8 shadow-xl">
               <h3
                 class="text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center border-b border-gray-100 dark:border-slate-800 pb-4"
               >
