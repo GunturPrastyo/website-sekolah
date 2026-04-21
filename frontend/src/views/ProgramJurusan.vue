@@ -129,7 +129,7 @@ onMounted(() => {
           <!-- Kolom Gambar -->
           <div class="w-full lg:w-1/2 relative group">
             <div
-              class="absolute inset-0 translate-x-3 translate-y-3 md:translate-x-4 md:translate-y-4 rounded-xl shadow-lg"
+              class="absolute inset-0 translate-x-3 translate-y-3 md:translate-x-4 md:translate-y-4 rounded-xl shadow-lg transition-transform duration-500 group-hover:translate-x-5 group-hover:translate-y-5 md:group-hover:translate-x-6 md:group-hover:translate-y-6"
               :class="program.decorationClass"
             ></div>
             <div
