@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, nextTick, onBeforeUnmount } from "vue";
+import { ref, computed, onMounted, nextTick, onBeforeUnmount, watch } from "vue";
 import { createIcons, icons } from "lucide";
 import PageHeader from "@/components/PageHeader.vue";
 import EkskulModal from "@/components/EkskulModal.vue";
@@ -187,13 +187,46 @@ const closeModal = () => {
   document.body.style.overflow = ""; // Kembalikan scroll
 };
 
+let observer;
+
 onMounted(() => {
+  // Intersection Observer untuk animasi fade-up
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("opacity-100", "translate-y-0");
+          entry.target.classList.remove("opacity-0", "translate-y-10");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1 } // Terpicu saat 10% elemen terlihat di layar
+  );
+
   nextTick(() => {
     createIcons({ icons });
+    document.querySelectorAll(".fade-on-scroll").forEach((el) => {
+      observer.observe(el);
+    });
+  });
+});
+
+// Pantau perubahan filter agar kartu yang baru dirender tetap ikut dianismasi
+watch(filteredEkskul, () => {
+  nextTick(() => {
+    if (observer) {
+      document.querySelectorAll(".fade-on-scroll").forEach((el) => {
+        if (el.classList.contains("opacity-0")) {
+          observer.observe(el);
+        }
+      });
+    }
   });
 });
 
 onBeforeUnmount(() => {
+  if (observer) observer.disconnect();
   document.body.style.overflow = ""; // Pastikan scroll kembali normal saat komponen dihancurkan (pindah halaman)
 });
 </script>
@@ -207,8 +240,18 @@ onBeforeUnmount(() => {
     />
 
     <!-- Gallery Section -->
-    <section class="pt-12 pb-18 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
-      <div class="container mx-auto max-w-6xl">
+    <section
+      class="relative pt-12 pb-18 px-6 min-h-screen bg-fixed bg-center bg-cover overflow-hidden"
+      style="
+        background-image: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1600&auto=format&fit=crop');
+      "
+    >
+      <!-- Parallax Overlay -->
+      <div
+        class="absolute inset-0 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-[2px] transition-colors duration-500"
+      ></div>
+
+      <div class="container relative z-10 mx-auto max-w-6xl">
         <!-- Search Bar, Filter Hari, & Filter Card -->
         <div class="flex flex-col gap-6 mb-12">
           <!-- Top Row: Day Dropdown + Search Bar -->
@@ -291,7 +334,7 @@ onBeforeUnmount(() => {
           <div
             v-for="ekskul in filteredEkskul"
             :key="ekskul.id"
-            class="relative group cursor-pointer"
+            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out relative group cursor-pointer"
             @click="openModal(ekskul)"
           >
             <!-- Dekorasi Card Belakang (Offset Kanan Bawah) -->
@@ -373,7 +416,7 @@ onBeforeUnmount(() => {
         <!-- Empty State -->
         <div
           v-if="filteredEkskul.length === 0"
-          class="col-span-full py-20 text-center bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-3xl border-2 border-dashed border-gray-200 dark:border-slate-700 shadow-sm mt-4"
+          class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out col-span-full py-20 text-center bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-3xl border-2 border-dashed border-gray-200 dark:border-slate-700 shadow-sm mt-4"
         >
           <div
             class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700 mb-4 text-gray-400"
@@ -392,7 +435,7 @@ onBeforeUnmount(() => {
     </section>
 
     <section
-      class="relative bg-gradient-to-br from-blue-600 to-blue-800 py-16 md:py-24 px-6 overflow-hidden"
+      class="relative bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-600/20 dark:to-blue-800/20 py-16 px-6 overflow-hidden"
     >
       <!-- Dekorasi Background Layer -->
       <div
@@ -405,7 +448,9 @@ onBeforeUnmount(() => {
       <div class="container mx-auto max-w-6xl relative z-10">
         <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
           <!-- Teks CTA & Ajakan -->
-          <div class="w-full lg:w-1/2 text-white text-center lg:text-left">
+          <div
+            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out w-full lg:w-1/2 text-white text-center lg:text-left"
+          >
             <span
               class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-bold uppercase tracking-wider mb-4 border border-white/30"
             >
@@ -429,8 +474,10 @@ onBeforeUnmount(() => {
           </div>
 
           <!-- Box Syarat & Ketentuan -->
-          <div class="w-full lg:w-1/2">
-            <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-8 shadow-xl">
+          <div
+            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out w-full lg:w-1/2"
+          >
+            <div class="bg-white dark:bg-slate-900 rounded-xl p-6 sm:p-8 shadow-xl">
               <h3
                 class="text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center border-b border-gray-100 dark:border-slate-800 pb-4"
               >
