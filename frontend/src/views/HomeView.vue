@@ -519,7 +519,7 @@
             <!-- Berita Utama (Atas - 1 Besar) -->
             <a
               href="#"
-              class="group relative rounded-2xl overflow-hidden shadow-lg h-[280px] sm:h-[350px] md:h-[400px] w-full block"
+              class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out group relative rounded-2xl overflow-hidden shadow-lg h-[280px] sm:h-[350px] md:h-[400px] w-full block"
             >
               <img
                 src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&auto=format&fit=crop"
@@ -568,7 +568,7 @@
                 <!-- Card 1 -->
                 <a
                   href="#"
-                  class="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-slate-700 flex flex-col h-full"
+                  class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full"
                 >
                   <div class="h-40 overflow-hidden relative">
                     <img
@@ -616,7 +616,7 @@
                 <!-- Card 2 -->
                 <a
                   href="#"
-                  class="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-slate-700 flex flex-col h-full"
+                  class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full"
                 >
                   <div class="h-40 overflow-hidden relative">
                     <img
@@ -664,7 +664,7 @@
                 <!-- Card 3 -->
                 <a
                   href="#"
-                  class="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-slate-700 flex flex-col h-full"
+                  class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full"
                 >
                   <div class="h-40 overflow-hidden relative">
                     <img
@@ -725,7 +725,9 @@
           </div>
 
           <!-- KANAN: Bagian Pengumuman (Auto Scroll-Y) -->
-          <div class="lg:col-span-1 relative h-[500px] lg:h-auto">
+          <div
+            class="lg:col-span-1 relative h-[500px] lg:h-auto fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
+          >
             <div
               class="absolute inset-0 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col overflow-hidden"
             >
@@ -1743,6 +1745,24 @@ const faqs = [
 ];
 
 onMounted(() => {
+  // Intersection Observer untuk animasi fade-up pada saat scroll
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("opacity-100", "translate-y-0");
+          entry.target.classList.remove("opacity-0", "translate-y-10");
+          observer.unobserve(entry.target); // Animasi hanya berjalan 1x
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+
+  document.querySelectorAll(".fade-on-scroll").forEach((el) => {
+    observer.observe(el);
+  });
+
   // Initialize main Swiper
   new Swiper(".swiper-container", {
     loop: true,
