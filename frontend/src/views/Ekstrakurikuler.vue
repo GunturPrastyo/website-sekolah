@@ -13,6 +13,18 @@ const categories = [
   { id: "kepemimpinan", name: "Kepemimpinan", icon: "users" },
 ];
 
+const activeDay = ref("semua");
+
+const days = [
+  { id: "semua", name: "Semua Hari" },
+  { id: "senin", name: "Senin" },
+  { id: "selasa", name: "Selasa" },
+  { id: "rabu", name: "Rabu" },
+  { id: "kamis", name: "Kamis" },
+  { id: "jumat", name: "Jumat" },
+  { id: "sabtu", name: "Sabtu" },
+];
+
 const ekskulList = ref([
   {
     id: 1,
@@ -113,6 +125,12 @@ const filteredEkskul = computed(() => {
     filtered = filtered.filter((ekskul) => ekskul.category === activeCategory.value);
   }
 
+  if (activeDay.value !== "semua") {
+    filtered = filtered.filter((ekskul) =>
+      ekskul.schedule.toLowerCase().includes(activeDay.value.toLowerCase())
+    );
+  }
+
   if (searchQuery.value.trim()) {
     const query = searchQuery.value.trim().toLowerCase();
     filtered = filtered.filter((ekskul) => ekskul.name.toLowerCase().includes(query));
@@ -165,34 +183,56 @@ onMounted(() => {
     <!-- Gallery Section -->
     <section class="pt-12 pb-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
       <div class="container mx-auto max-w-6xl">
-        <!-- Search Bar & Filter Card -->
-        <div class="flex flex-col lg:flex-row items-center gap-4 md:gap-6 mb-12">
-          <!-- Search Bar -->
-          <div class="relative w-full lg:w-[320px] xl:w-[350px] shrink-0">
-            <i
-              data-lucide="search"
-              class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-            ></i>
-            <input
-              v-model="searchQuery"
-              type="text"
-              placeholder="Cari nama ekstrakurikuler..."
-              class="w-full pl-12 pr-5 py-4 lg:py-4 rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm"
-            />
+        <!-- Search Bar, Filter Hari, & Filter Card -->
+        <div class="flex flex-col gap-6 mb-12">
+          <!-- Top Row: Day Dropdown + Search Bar -->
+          <div class="flex flex-col sm:flex-row items-center gap-4 w-full">
+            <!-- Dropdown Hari -->
+            <div class="relative w-full sm:w-48 shrink-0">
+              <i
+                data-lucide="calendar-days"
+                class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+              ></i>
+              <select
+                v-model="activeDay"
+                class="w-full pl-12 pr-10 py-4 rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm appearance-none cursor-pointer"
+              >
+                <option v-for="day in days" :key="day.id" :value="day.id">
+                  {{ day.name }}
+                </option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-5 flex items-center pointer-events-none"
+              >
+                <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
+              </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="relative w-full lg:w-[350px] shrink-0">
+              <i
+                data-lucide="search"
+                class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+              ></i>
+              <input
+                v-model="searchQuery"
+                type="text"
+                placeholder="Cari nama ekstrakurikuler..."
+                class="w-full pl-12 pr-5 py-4 rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm"
+              />
+            </div>
           </div>
 
-          <!-- Filter Card -->
+          <!-- Bottom Row: Filter Card (Kategori) -->
           <div
-            class="flex-1 w-full bg-white dark:bg-slate-800 p-4 lg:p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center gap-4"
+            class="w-full bg-white dark:bg-slate-800 p-5 lg:p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col gap-4"
           >
-            <h4
-              class="text-sm font-bold text-gray-900 dark:text-white whitespace-nowrap shrink-0 flex items-center sm:pl-2"
-            >
+            <h4 class="text-sm font-bold text-gray-900 dark:text-white flex items-center">
               <i
                 data-lucide="filter"
                 class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
               ></i>
-              Kategori
+              Kategori:
             </h4>
             <div class="flex flex-wrap items-center gap-2 md:gap-2.5">
               <button
