@@ -108,6 +108,29 @@ const programs = ref([
 onMounted(() => {
   nextTick(() => {
     createIcons({ icons });
+
+    // Intersection Observer untuk efek animasi fade-up pada saat scroll
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("opacity-100", "translate-y-0", "translate-x-0");
+            entry.target.classList.remove(
+              "opacity-0",
+              "translate-y-10",
+              "-translate-x-10",
+              "translate-x-10"
+            );
+            observer.unobserve(entry.target); // Hentikan observasi agar animasi hanya berjalan 1x
+          }
+        });
+      },
+      { threshold: 0.1 } // Animasi terpicu saat 10% elemen terlihat di layar
+    );
+
+    document.querySelectorAll(".fade-on-scroll").forEach((el) => {
+      observer.observe(el);
+    });
   });
 });
 </script>
@@ -135,7 +158,10 @@ onMounted(() => {
             :class="{ 'lg:flex-row-reverse': index % 2 !== 0 }"
           >
             <!-- Kolom Gambar -->
-            <div class="w-full lg:w-1/2 relative group">
+            <div
+              class="w-full lg:w-1/2 relative group fade-on-scroll opacity-0 transition-all duration-700 ease-out"
+              :class="index % 2 === 0 ? '-translate-x-10' : 'translate-x-10'"
+            >
               <div
                 class="absolute inset-0 translate-x-3 translate-y-3 md:translate-x-4 md:translate-y-4 rounded-xl shadow-lg transition-transform duration-500 group-hover:translate-x-5 group-hover:translate-y-5 md:group-hover:translate-x-6 md:group-hover:translate-y-6"
                 :class="program.decorationClass"
@@ -154,7 +180,7 @@ onMounted(() => {
             <!-- Kolom Deskripsi -->
             <div class="w-full lg:w-1/2 space-y-6">
               <div
-                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold shadow-sm border backdrop-blur-sm"
+                class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold shadow-sm border backdrop-blur-sm"
                 :class="[
                   index % 2 === 0 ? program.bgClass : 'bg-white/10 dark:bg-black/20',
                   index % 2 === 0 ? program.textClass : 'text-white',
@@ -167,13 +193,13 @@ onMounted(() => {
                 {{ program.badge }}
               </div>
               <h2
-                class="text-3xl md:text-4xl font-bold"
+                class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out text-3xl md:text-4xl font-bold"
                 :class="index % 2 === 0 ? 'text-slate-900 dark:text-white' : 'text-white'"
               >
                 {{ program.title }}
               </h2>
               <p
-                class="text-base md:text-lg leading-relaxed text-justify"
+                class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out text-base md:text-lg leading-relaxed text-justify"
                 :class="
                   index % 2 === 0
                     ? 'text-slate-600 dark:text-slate-400'
@@ -183,7 +209,9 @@ onMounted(() => {
                 {{ program.description }}
               </p>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4">
+              <div
+                class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4"
+              >
                 <!-- Fokus Pembelajaran -->
                 <div>
                   <h4
