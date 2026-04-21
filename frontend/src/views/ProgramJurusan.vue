@@ -12,6 +12,7 @@ const programs = ref([
     bgClass: "bg-blue-50 dark:bg-blue-900/20",
     textClass: "text-blue-600 dark:text-blue-400",
     borderClass: "border-blue-200 dark:border-blue-800",
+    decorationClass: "bg-blue-600 dark:bg-blue-500",
     image: "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800",
     description:
       "Program peminatan IPA berfokus pada ilmu-ilmu eksakta dan alam. Siswa akan diajak untuk berpikir logis, analitis, dan sistematis dalam memecahkan berbagai fenomena alam dan teknologi.",
@@ -36,6 +37,7 @@ const programs = ref([
     bgClass: "bg-sky-50 dark:bg-sky-900/20",
     textClass: "text-sky-600 dark:text-sky-400",
     borderClass: "border-sky-200 dark:border-sky-800",
+    decorationClass: "bg-sky-600 dark:bg-sky-500",
     image: "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=800",
     description:
       "Peminatan IPS membekali siswa dengan pemahaman mendalam tentang dinamika sosial, ekonomi, dan sejarah. Program ini sangat cocok bagi siswa yang memiliki minat pada hubungan antar manusia dan kebijakan publik.",
@@ -55,6 +57,7 @@ const programs = ref([
     bgClass: "bg-cyan-50 dark:bg-cyan-900/20",
     textClass: "text-cyan-600 dark:text-cyan-400",
     borderClass: "border-cyan-200 dark:border-cyan-800",
+    decorationClass: "bg-cyan-600 dark:bg-cyan-500",
     image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800",
     description:
       "Program Bahasa diperuntukkan bagi siswa yang mencintai literatur, komunikasi, dan linguistik. Siswa akan mempelajari keindahan bahasa dari berbagai negara serta kebudayaan yang mengiringinya.",
@@ -79,6 +82,7 @@ const programs = ref([
     bgClass: "bg-purple-50 dark:bg-purple-900/20",
     textClass: "text-purple-600 dark:text-purple-400",
     borderClass: "border-purple-200 dark:border-purple-800",
+    decorationClass: "bg-purple-600 dark:bg-purple-500",
     image: "https://images.unsplash.com/photo-1550745165-9bc0b252726a?q=80&w=800",
     description:
       "Merupakan program unggulan baru yang merespon tantangan era Revolusi Industri 4.0. Mempelajari logika komputasional, pemrograman, dan desain perangkat lunak secara intensif.",
@@ -125,11 +129,11 @@ onMounted(() => {
           <!-- Kolom Gambar -->
           <div class="w-full lg:w-1/2 relative group">
             <div
-              class="absolute inset-0 translate-x-3 translate-y-3 md:translate-x-4 md:translate-y-4 rounded-3xl"
-              :class="program.bgClass"
+              class="absolute inset-0 translate-x-3 translate-y-3 md:translate-x-4 md:translate-y-4 rounded-xl shadow-lg"
+              :class="program.decorationClass"
             ></div>
             <div
-              class="relative rounded-3xl overflow-hidden shadow-xl aspect-video md:aspect-[4/3] border-2 dark:border-slate-800 bg-white dark:bg-slate-800 z-10"
+              class="relative rounded-xl overflow-hidden shadow-2xl aspect-video md:aspect-[4/3] border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-800 z-10"
             >
               <img
                 :src="program.image"
