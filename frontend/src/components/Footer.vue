@@ -65,36 +65,50 @@
           </div>
 
           <!-- Statistik Pengunjung -->
-          <div class="mt-8 pt-6 border-t border-slate-700/50">
+          <div class="mt-8 pt-6 border-t border-slate-700/50" ref="footerRef">
             <p
               class="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-3"
             >
               Statistik Pengunjung
             </p>
-            <div
-              class="grid grid-cols-2 gap-y-4 gap-x-2 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-3"
-            >
-              <div class="flex flex-col">
-                <span class="text-xl font-light text-slate-200">124</span>
-                <span class="text-[10px] text-slate-500 mt-0.5 tracking-wider"
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-y-4 gap-x-2">
+              <div class="flex flex-col overflow-hidden">
+                <span
+                  class="text-lg xl:text-xl font-light text-slate-200 tracking-tight"
+                  >{{ formatNumber(stats.hari) }}</span
+                >
+                <span
+                  class="text-[9px] xl:text-[10px] text-slate-500 mt-0.5 tracking-wider truncate"
                   >HARI INI</span
                 >
               </div>
-              <div class="flex flex-col">
-                <span class="text-xl font-light text-slate-200">1.250</span>
-                <span class="text-[10px] text-slate-500 mt-0.5 tracking-wider"
+              <div class="flex flex-col overflow-hidden">
+                <span
+                  class="text-lg xl:text-xl font-light text-slate-200 tracking-tight"
+                  >{{ formatNumber(stats.bulan) }}</span
+                >
+                <span
+                  class="text-[9px] xl:text-[10px] text-slate-500 mt-0.5 tracking-wider truncate"
                   >BULAN INI</span
                 >
               </div>
-              <div class="flex flex-col">
-                <span class="text-xl font-light text-slate-200">14.320</span>
-                <span class="text-[10px] text-slate-500 mt-0.5 tracking-wider"
+              <div class="flex flex-col overflow-hidden">
+                <span
+                  class="text-lg xl:text-xl font-light text-slate-200 tracking-tight"
+                  >{{ formatNumber(stats.tahun) }}</span
+                >
+                <span
+                  class="text-[9px] xl:text-[10px] text-slate-500 mt-0.5 tracking-wider truncate"
                   >TAHUN INI</span
                 >
               </div>
-              <div class="flex flex-col">
-                <span class="text-xl font-light text-slate-200">258.940</span>
-                <span class="text-[10px] text-slate-500 mt-0.5 tracking-wider"
+              <div class="flex flex-col overflow-hidden">
+                <span
+                  class="text-lg xl:text-xl font-light text-slate-200 tracking-tight"
+                  >{{ formatNumber(stats.total) }}</span
+                >
+                <span
+                  class="text-[9px] xl:text-[10px] text-slate-500 mt-0.5 tracking-wider truncate"
                   >TOTAL</span
                 >
               </div>
@@ -216,5 +230,63 @@
 </template>
 
 <script setup>
-// No script needed for this static component
+import { ref, onMounted } from "vue";
+
+const footerRef = ref(null);
+
+const stats = ref({
+  hari: 0,
+  bulan: 0,
+  tahun: 0,
+  total: 0,
+});
+
+const targetStats = {
+  hari: 124,
+  bulan: 1250,
+  tahun: 14320,
+  total: 258940,
+};
+
+const animateValue = (key, target, duration = 2000) => {
+  if (target === 0) return;
+  let startTimestamp = null;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    const easeProgress = 1 - Math.pow(1 - progress, 4); // Efek Ease-Out agar melambat di akhir
+    stats.value[key] = Math.floor(easeProgress * target);
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    } else {
+      stats.value[key] = target;
+    }
+  };
+  window.requestAnimationFrame(step);
+};
+
+const formatNumber = (num) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
+onMounted(() => {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animateValue("hari", targetStats.hari);
+          animateValue("bulan", targetStats.bulan);
+          animateValue("tahun", targetStats.tahun);
+          animateValue("total", targetStats.total);
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+
+  if (footerRef.value) {
+    observer.observe(footerRef.value);
+  }
+});
 </script>
