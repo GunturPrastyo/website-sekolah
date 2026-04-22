@@ -455,7 +455,11 @@ onBeforeUnmount(() => {
               class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm md:text-md font-bold mb-4 border border-white/30"
               style="font-family: 'Dancing Script', cursive"
             >
-              <i data-lucide="lightbulb" class="w-4 h-4"></i> Inisiatif Siswa
+              <i
+                data-lucide="lightbulb"
+                class="w-4 h-4 text-yellow-300 animate-pulse"
+              ></i>
+              Inisiatif Siswa
             </span>
             <h2 class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">
               Punya Ide Ekstrakurikuler Baru?
