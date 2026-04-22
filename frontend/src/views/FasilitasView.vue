@@ -33,7 +33,7 @@
                     <div class="absolute bottom-0 left-0 w-full p-6 md:p-10 text-white">
                       <span
                         class="inline-block px-5 py-1.5 mb-3 md:mb-4 text-lg md:text-xl font-bold text-blue-900 bg-white/95 backdrop-blur-sm rounded-full shadow-sm"
-                        style="font-family: 'Dancing Script', cursive"
+                        style="font-family: 'Kalam', cursive"
                       >
                         Profil Sekolah
                       </span>
@@ -59,11 +59,6 @@
                     <div class="lg:col-span-2 space-y-6 md:space-y-8">
                       <!-- Header Artikel -->
                       <div class="border-b border-gray-100 dark:border-slate-700 pb-6">
-                        <span
-                          class="inline-block text-xs font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 px-3 py-1 rounded-full mb-4"
-                        >
-                          Fasilitas Sekolah
-                        </span>
                         <h2
                           class="text-2xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4"
                         >

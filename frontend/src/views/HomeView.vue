@@ -105,7 +105,7 @@
         <div class="mb-4 md:mb-8 px-2 md:px-0 mt-4 sm:mt-6">
           <div class="relative block">
             <h2
-              class="text-xl md:text-4xl font-bold text-blue-950 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-2"
+              class="text-xl md:text-3xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-2"
             >
               Kenapa Pilih Sekolah Ini?
             </h2>
@@ -495,7 +495,7 @@
         >
           <div class="relative block">
             <h2
-              class="text-xl md:text-4xl font-bold text-blue-950 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
+              class="text-xl md:text-3xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
             >
               Berita & Pengumuman
             </h2>
@@ -539,7 +539,7 @@
               <div class="absolute bottom-0 left-0 p-5 md:p-8 w-full">
                 <span
                   class="inline-block px-3 py-1 mb-3 text-xs font-semibold text-white bg-blue-600 rounded-full"
-                  >Kegiatan Utama</span
+                  >Kegiatan</span
                 >
                 <h3
                   class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors"
@@ -870,7 +870,7 @@
           <div class="relative block mt-4">
             <h2
               class="text-2xl md:text-4xl font-bold text-white mb-4 sm:mb-2 tracking-wide"
-              style="font-family: 'Dancing Script', cursive"
+              style="font-family: 'Kalam', cursive"
             >
               Video Profil & Galeri
             </h2>
@@ -1024,13 +1024,15 @@
     </section>
 
     <!-- Agenda Sekolah Section -->
-    <section class="relative py-0 md:py-4 -mx-6 md:mx-0 px-6 md:px-0 mb-12">
+    <section
+      class="relative py-8 md:py-6 mt-12 md:mt-16 -mx-6 md:mx-0 bg-white dark:bg-slate-800 overflow-hidden px-6 md:px-2 mb-12 md:rounded-2xl shadow-xl"
+    >
       <div class="container mx-auto px-0 md:px-4">
         <!-- Header Section -->
         <div class="mb-6 md:mb-10">
           <div class="relative block">
             <h2
-              class="text-xl md:text-4xl font-bold text-blue-950 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
+              class="text-xl md:text-3xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
             >
               Agenda Sekolah
             </h2>
@@ -1047,7 +1049,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-stretch">
           <!-- KIRI: Kalender -->
           <div
-            class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-700 p-5 md:p-6 flex flex-col"
+            class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-100 dark:border-slate-700 p-5 md:p-6 flex flex-col"
           >
             <div class="flex items-center justify-between mb-6">
               <button
@@ -1312,15 +1314,18 @@
           <!-- KANAN: Daftar Agenda -->
           <div class="lg:col-span-7 relative h-[500px] lg:h-auto">
             <div
-              class="absolute inset-0 bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col"
+              class="absolute inset-0 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col"
             >
               <div
                 class="p-5 md:p-6 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex items-center justify-between shrink-0"
               >
                 <h3
-                  class="text-lg md:text-xl font-bold text-blue-950 dark:text-blue-200 flex items-center"
+                  class="text-lg md:text-xl font-bold text-slate-800 dark:text-slate-200 flex items-center"
                 >
-                  <i data-lucide="calendar-days" class="w-5 h-5 mr-2 text-blue-600"></i>
+                  <i
+                    data-lucide="calendar-days"
+                    class="w-5 h-5 mr-2 text-slate-600 dark:text-slate-200"
+                  ></i>
                   Daftar Agenda
                 </h3>
               </div>
