@@ -4,8 +4,24 @@ import { createIcons, icons } from "lucide";
 import PageHeader from "@/components/PageHeader.vue";
 
 const activeFilter = ref("semua");
+const activeType = ref("semua");
+const activeYear = ref("semua");
 
 const searchQuery = ref("");
+
+const types = [
+  { id: "semua", name: "Semua Bidang" },
+  { id: "Akademik", name: "Akademik" },
+  { id: "Non-Akademik", name: "Non-Akademik" },
+];
+
+const years = [
+  { id: "semua", name: "Semua Tahun" },
+  { id: 2026, name: "2026" },
+  { id: 2025, name: "2025" },
+  { id: 2024, name: "2024" },
+  { id: 2023, name: "2023" },
+];
 
 const filters = [
   { id: "semua", name: "Semua Tingkat" },
@@ -26,6 +42,7 @@ const prestasiList = ref([
     year: 2025,
     type: "Akademik",
     image: "https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800",
+    newsLink: "/berita",
   },
   {
     id: 2,
@@ -36,6 +53,7 @@ const prestasiList = ref([
     year: 2025,
     type: "Non-Akademik",
     image: "https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?q=80&w=800",
+    newsLink: "/berita",
   },
   {
     id: 3,
@@ -76,6 +94,7 @@ const prestasiList = ref([
     year: 2023,
     type: "Akademik",
     image: "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800",
+    newsLink: "/berita",
   },
 ]);
 
@@ -86,6 +105,14 @@ const filteredPrestasi = computed(() => {
     filtered = filtered.filter((p) => p.level === activeFilter.value);
   }
 
+  if (activeType.value !== "semua") {
+    filtered = filtered.filter((p) => p.type === activeType.value);
+  }
+
+  if (activeYear.value !== "semua") {
+    filtered = filtered.filter((p) => p.year === activeYear.value);
+  }
+
   if (searchQuery.value.trim()) {
     const query = searchQuery.value.toLowerCase();
     filtered = filtered.filter(
@@ -93,6 +120,11 @@ const filteredPrestasi = computed(() => {
         p.title.toLowerCase().includes(query) || p.winner.toLowerCase().includes(query)
     );
   }
+
+  // Sorting Bawaan (Selalu yang Terbaru di atas)
+  filtered = [...filtered].sort((a, b) => {
+    return b.year - a.year;
+  });
 
   return filtered;
 });
@@ -282,37 +314,91 @@ onUpdated(() => {
           </div>
         </div>
 
-        <!-- Search Bar & Filter Tabs -->
-        <div class="flex flex-col lg:flex-row justify-between items-center gap-6 mb-12">
-          <!-- Search Bar -->
-          <div class="relative w-full lg:w-[400px] shrink-0">
-            <i
-              data-lucide="search"
-              class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-            ></i>
-            <input
-              v-model="searchQuery"
-              type="text"
-              placeholder="Cari nama siswa atau perlombaan..."
-              class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm"
-            />
+        <!-- Search Bar, Filter Selects, & Filter Tabs -->
+        <div class="flex flex-col gap-5 md:gap-6 mb-12 relative z-20">
+          <!-- Top Row: Selects and Search -->
+          <div class="flex flex-col md:flex-row items-center gap-4 w-full">
+            <!-- Filter Bidang -->
+            <div class="relative w-full md:w-48 shrink-0">
+              <i
+                data-lucide="book-open"
+                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+              ></i>
+              <select
+                v-model="activeType"
+                class="w-full pl-10 pr-10 py-3.5 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm appearance-none cursor-pointer"
+              >
+                <option v-for="t in types" :key="t.id" :value="t.id">{{ t.name }}</option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-4 flex items-center pointer-events-none"
+              >
+                <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
+              </div>
+            </div>
+
+            <!-- Filter Tahun -->
+            <div class="relative w-full md:w-52 shrink-0">
+              <i
+                data-lucide="calendar"
+                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+              ></i>
+              <select
+                v-model="activeYear"
+                class="w-full pl-10 pr-10 py-3.5 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm appearance-none cursor-pointer"
+              >
+                <option v-for="y in years" :key="y.id" :value="y.id">{{ y.name }}</option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-4 flex items-center pointer-events-none"
+              >
+                <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
+              </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="relative w-full md:flex-1 shrink-0">
+              <i
+                data-lucide="search"
+                class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+              ></i>
+              <input
+                v-model="searchQuery"
+                type="text"
+                placeholder="Cari nama siswa atau judul perlombaan..."
+                class="w-full pl-11 pr-4 py-3.5 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm"
+              />
+            </div>
           </div>
 
-          <!-- Filter Tabs -->
-          <div class="flex flex-wrap justify-center lg:justify-end gap-2.5">
-            <button
-              v-for="filter in filters"
-              :key="filter.id"
-              @click="activeFilter = filter.id"
-              class="px-4 md:px-5 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-semibold transition-all duration-300 focus:outline-none"
-              :class="
-                activeFilter === filter.id
-                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
-                  : 'bg-white text-gray-600 dark:bg-slate-800 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
-              "
+          <!-- Bottom Row: Filter Tabs (Tingkat) -->
+          <div
+            class="w-full bg-white dark:bg-slate-800 p-4 lg:p-5 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center gap-4"
+          >
+            <h4
+              class="text-sm font-bold text-gray-900 dark:text-white whitespace-nowrap shrink-0 flex items-center sm:pl-2"
             >
-              {{ filter.name }}
-            </button>
+              <i
+                data-lucide="filter"
+                class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
+              ></i>
+              Tingkat Lomba:
+            </h4>
+            <div class="flex flex-wrap items-center gap-2 md:gap-2.5">
+              <button
+                v-for="filter in filters"
+                :key="filter.id"
+                @click="activeFilter = filter.id"
+                class="px-3.5 md:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-300 focus:outline-none flex items-center border"
+                :class="
+                  activeFilter === filter.id
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
+                    : 'bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
+                "
+              >
+                {{ filter.name }}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -385,6 +471,16 @@ onUpdated(() => {
               >
                 {{ prestasi.title }}
               </h3>
+
+              <!-- Tautan Berita Terkait (Opsional) -->
+              <router-link
+                v-if="prestasi.newsLink"
+                :to="prestasi.newsLink"
+                class="inline-flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors mb-4 w-fit"
+              >
+                Baca Liputan Berita
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 ml-1"></i>
+              </router-link>
 
               <div
                 class="mt-auto pt-5 border-t border-gray-100 dark:border-slate-700 flex items-center gap-3"
