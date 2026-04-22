@@ -428,6 +428,22 @@ onBeforeUnmount(() => {
                   class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-[300px] group-hover:opacity-100"
                 >
                   <div class="pt-4 mt-4 border-t border-white/20">
+                    <!-- Ekstra Info: Members & Pembina -->
+                    <div class="flex flex-wrap items-center gap-2 mb-3">
+                      <span
+                        class="inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-blue-100 bg-blue-900/60 border border-blue-400/30 px-2.5 py-1 rounded backdrop-blur-md shadow-sm"
+                      >
+                        <i data-lucide="users" class="w-3 h-3 mr-1.5"></i>
+                        {{ ekskul.members }} Anggota
+                      </span>
+                      <span
+                        class="inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-emerald-100 bg-emerald-900/60 border border-emerald-400/30 px-2.5 py-1 rounded backdrop-blur-md shadow-sm"
+                      >
+                        <i data-lucide="user" class="w-3 h-3 mr-1.5"></i>
+                        {{ ekskul.pembina.split(",")[0] }}
+                      </span>
+                    </div>
+
                     <p class="text-gray-200 text-sm leading-relaxed mb-5 line-clamp-3">
                       {{ ekskul.desc }}
                     </p>
@@ -479,12 +495,15 @@ onBeforeUnmount(() => {
         <!-- Load More Button -->
         <div
           v-if="hasMoreItems"
-          class="flex justify-center items-center mt-14 relative z-10 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
+          class="flex justify-center items-center mt-14 relative z-10 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out w-full"
         >
+          <div
+            class="h-px bg-gray-200 dark:bg-slate-700 flex-grow max-w-[80px] md:max-w-[150px]"
+          ></div>
           <button
             @click="loadMore"
             :disabled="isLoading"
-            class="inline-flex items-center text-sm md:text-base font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors group focus:outline-none disabled:opacity-70 disabled:cursor-not-allowed"
+            class="mx-5 inline-flex items-center text-sm md:text-base font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors group focus:outline-none disabled:opacity-70 disabled:cursor-not-allowed"
           >
             <span v-if="!isLoading" class="flex items-center">
               Muat Lebih Banyak
@@ -517,6 +536,9 @@ onBeforeUnmount(() => {
               Memuat...
             </span>
           </button>
+          <div
+            class="h-px bg-gray-200 dark:bg-slate-700 flex-grow max-w-[80px] md:max-w-[150px]"
+          ></div>
         </div>
 
         <!-- Empty State -->
@@ -598,54 +620,59 @@ onBeforeUnmount(() => {
                 ></i>
                 Syarat Pengajuan Klub
               </h3>
-              <ul class="space-y-4">
-                <li class="flex items-start group">
+              <ul class="space-y-5 relative">
+                <!-- Garis Vertikal Timeline -->
+                <div
+                  class="absolute left-[15px] top-4 bottom-4 w-[2px] bg-blue-100 dark:bg-slate-700 z-0"
+                ></div>
+
+                <li class="flex items-start group relative z-10">
                   <div
-                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-blue-600 group-hover:text-white"
+                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-900 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
                   >
                     1
                   </div>
                   <p
-                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed"
+                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed pt-1"
                   >
                     Mengumpulkan minimal <strong>10 orang siswa</strong> yang berkomitmen
                     menjadi anggota pertama.
                   </p>
                 </li>
-                <li class="flex items-start group">
+                <li class="flex items-start group relative z-10">
                   <div
-                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-blue-600 group-hover:text-white"
+                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-900 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
                   >
                     2
                   </div>
                   <p
-                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed"
+                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed pt-1"
                   >
                     Mendapat persetujuan dari minimal
                     <strong>1 orang guru pembina</strong> pendamping.
                   </p>
                 </li>
-                <li class="flex items-start group">
+                <li class="flex items-start group relative z-10">
                   <div
-                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-blue-600 group-hover:text-white"
+                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-900 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
                   >
                     3
                   </div>
                   <p
-                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed"
+                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed pt-1"
                   >
                     Menyusun proposal yang berisi visi, misi, dan rencana program kerja
                     selama 1 semester.
                   </p>
                 </li>
-                <li class="flex items-start group">
+                <li class="flex items-start group relative z-10">
                   <div
-                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 mr-3 transition-colors group-hover:bg-blue-600 group-hover:text-white"
+                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-900 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
                   >
                     4
                   </div>
                   <p
-                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed"
+                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed pt-1"
                   >
                     Mempresentasikan proposal di hadapan
                     <strong>Waka Kesiswaan & Pengurus OSIS</strong>.
