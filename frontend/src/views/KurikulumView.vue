@@ -352,8 +352,11 @@ onMounted(() => {
         class="container relative z-10 mx-auto max-w-6xl flex flex-col lg:flex-row gap-8 lg:gap-12 items-start"
       >
         <!-- Sidebar Tabs (Tingkat Kelas) -->
-        <div class="w-full lg:w-1/3 lg:sticky lg:top-28 space-y-4">
-          <h3 class="text-xl font-bold text-white px-2">Pilih Jenjang Kelas</h3>
+        <div class="w-full lg:w-1/3">
+          <div class="flex items-center gap-4 mb-6">
+            <h2 class="text-xl md:text-2xl font-bold text-white">Jenjang Kelas</h2>
+            <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
+          </div>
           <div class="flex flex-col gap-3">
             <button
               v-for="grade in grades"
@@ -409,10 +412,10 @@ onMounted(() => {
               <div
                 v-for="(category, idx) in currentSyllabus"
                 :key="idx"
-                class="space-y-4"
+                class="mb-8 last:mb-0"
               >
                 <!-- Category Header -->
-                <div class="flex items-center gap-4 mb-2">
+                <div class="flex items-center gap-4 mb-6">
                   <h2 class="text-xl md:text-2xl font-bold text-white">
                     {{ category.category }}
                   </h2>
@@ -420,84 +423,91 @@ onMounted(() => {
                 </div>
 
                 <!-- Subject Accordions -->
-                <div
-                  v-for="subject in category.subjects"
-                  :key="subject.id"
-                  class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-transparent dark:border-slate-700 overflow-hidden transition-all"
-                  :class="
-                    expandedSubject === subject.id
-                      ? 'ring-4 ring-white/30 dark:ring-blue-500/40 shadow-xl'
-                      : 'hover:border-white/50 hover:shadow-xl'
-                  "
-                >
-                  <!-- Accordion Header (Clickable) -->
-                  <button
-                    @click="toggleSubject(subject.id)"
-                    class="w-full p-5 md:p-6 flex items-start sm:items-center justify-between gap-4 focus:outline-none"
-                  >
-                    <div class="flex items-start sm:items-center gap-4 text-left">
-                      <div
-                        class="w-12 h-12 shrink-0 rounded-xl flex items-center justify-center"
-                        :class="subject.bg + ' ' + subject.color"
-                      >
-                        <i :data-lucide="subject.icon" class="w-6 h-6"></i>
-                      </div>
-                      <div>
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">
-                          {{ subject.name }}
-                        </h3>
-                        <p
-                          class="text-sm text-gray-500 dark:text-gray-400 line-clamp-1 sm:line-clamp-none pr-4"
-                        >
-                          {{ subject.desc }}
-                        </p>
-                      </div>
-                    </div>
-                    <div
-                      class="shrink-0 w-8 h-8 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center text-gray-400 transition-transform duration-300"
-                      :class="
-                        expandedSubject === subject.id
-                          ? 'rotate-180 bg-blue-50 text-blue-600 dark:bg-slate-600 dark:text-blue-400'
-                          : ''
-                      "
-                    >
-                      <i data-lucide="chevron-down" class="w-5 h-5"></i>
-                    </div>
-                  </button>
-
-                  <!-- Accordion Body -->
+                <div class="flex flex-col gap-4">
                   <div
-                    class="transition-all duration-500 ease-in-out overflow-hidden"
+                    v-for="subject in category.subjects"
+                    :key="subject.id"
+                    class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-transparent dark:border-slate-700 overflow-hidden transition-all"
                     :class="
                       expandedSubject === subject.id
-                        ? 'max-h-[800px] opacity-100'
-                        : 'max-h-0 opacity-0'
+                        ? 'ring-4 ring-white/30 dark:ring-blue-500/40 shadow-xl'
+                        : 'hover:border-white/50 hover:shadow-xl'
                     "
                   >
-                    <div
-                      class="p-6 pt-0 border-t border-gray-50 dark:border-slate-700/50 bg-gray-50/50 dark:bg-slate-800/50 mt-2"
+                    <!-- Accordion Header (Clickable) -->
+                    <button
+                      @click="toggleSubject(subject.id)"
+                      class="w-full p-5 md:p-6 flex items-start sm:items-center justify-between gap-4 focus:outline-none"
                     >
-                      <h4
-                        class="text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider flex items-center mt-4"
-                      >
-                        <i data-lucide="bookmark" class="w-4 h-4 mr-2 text-blue-500"></i>
-                        Topik Pembelajaran
-                      </h4>
-
-                      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div class="flex items-start sm:items-center gap-4 text-left">
                         <div
-                          v-for="(topic, tIdx) in subject.topics"
-                          :key="tIdx"
-                          class="flex items-start gap-3 bg-white dark:bg-slate-700 p-3.5 rounded-xl border border-gray-100 dark:border-slate-600/50 shadow-sm"
+                          class="w-12 h-12 shrink-0 rounded-xl flex items-center justify-center"
+                          :class="subject.bg + ' ' + subject.color"
+                        >
+                          <i :data-lucide="subject.icon" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                          <h3
+                            class="text-lg font-bold text-gray-900 dark:text-white mb-1"
+                          >
+                            {{ subject.name }}
+                          </h3>
+                          <p
+                            class="text-sm text-gray-500 dark:text-gray-400 line-clamp-1 sm:line-clamp-none pr-4"
+                          >
+                            {{ subject.desc }}
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        class="shrink-0 w-8 h-8 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center text-gray-400 transition-transform duration-300"
+                        :class="
+                          expandedSubject === subject.id
+                            ? 'rotate-180 bg-blue-50 text-blue-600 dark:bg-slate-600 dark:text-blue-400'
+                            : ''
+                        "
+                      >
+                        <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                      </div>
+                    </button>
+
+                    <!-- Accordion Body -->
+                    <div
+                      class="transition-all duration-500 ease-in-out overflow-hidden"
+                      :class="
+                        expandedSubject === subject.id
+                          ? 'max-h-[800px] opacity-100'
+                          : 'max-h-0 opacity-0'
+                      "
+                    >
+                      <div
+                        class="p-6 pt-0 border-t border-gray-50 dark:border-slate-700/50 bg-gray-50/50 dark:bg-slate-800/50 mt-2"
+                      >
+                        <h4
+                          class="text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider flex items-center mt-4"
                         >
                           <i
-                            data-lucide="check-circle"
-                            class="w-5 h-5 text-green-500 shrink-0 mt-0.5"
+                            data-lucide="bookmark"
+                            class="w-4 h-4 mr-2 text-blue-500"
                           ></i>
-                          <span
-                            class="text-sm font-medium text-gray-700 dark:text-gray-200 leading-snug"
-                            >{{ topic }}</span
+                          Topik Pembelajaran
+                        </h4>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div
+                            v-for="(topic, tIdx) in subject.topics"
+                            :key="tIdx"
+                            class="flex items-start gap-3 bg-white dark:bg-slate-700 p-3.5 rounded-xl border border-gray-100 dark:border-slate-600/50 shadow-sm"
                           >
+                            <i
+                              data-lucide="check-circle"
+                              class="w-5 h-5 text-green-500 shrink-0 mt-0.5"
+                            ></i>
+                            <span
+                              class="text-sm font-medium text-gray-700 dark:text-gray-200 leading-snug"
+                              >{{ topic }}</span
+                            >
+                          </div>
                         </div>
                       </div>
                     </div>
