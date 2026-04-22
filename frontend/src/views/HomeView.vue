@@ -46,49 +46,17 @@
       >
         <div class="p-4 stats-swiper">
           <div class="swiper-wrapper text-lg sm:text-2xl">
-            <div class="text-center swiper-slide">
-              <h3 class="font-bold text-white">A</h3>
-              <p class="mt-1 text-xs font-semibold uppercase text-white/80">Akreditasi</p>
-            </div>
-            <div class="text-center swiper-slide">
-              <h3 class="font-bold text-white">1100+</h3>
+            <div
+              v-for="(stat, index) in statsArray"
+              :key="index"
+              class="text-center swiper-slide"
+            >
+              <h3 class="font-bold text-white">
+                {{ stat.prefix }}{{ stat.value }}{{ stat.suffix }}
+              </h3>
               <p class="mt-1 text-xs font-semibold uppercase text-white/80">
-                Jumlah Siswa
+                {{ stat.label }}
               </p>
-            </div>
-            <div class="text-center swiper-slide">
-              <h3 class="font-bold text-white">75</h3>
-              <p class="mt-1 text-xs font-semibold uppercase text-white/80">
-                Tenaga Pendidik
-              </p>
-            </div>
-            <div class="text-center swiper-slide">
-              <h3 class="font-bold text-white">20+</h3>
-              <p class="mt-1 text-xs font-semibold uppercase text-white/80">
-                Ekstrakurikuler
-              </p>
-            </div>
-            <div class="text-center swiper-slide">
-              <h3 class="font-bold text-white">32</h3>
-              <p class="mt-1 text-xs font-semibold uppercase text-white/80">
-                Ruang Kelas
-              </p>
-            </div>
-            <div class="text-center swiper-slide">
-              <h3 class="font-bold text-white">5</h3>
-              <p class="mt-1 text-xs font-semibold uppercase text-white/80">
-                Laboratorium
-              </p>
-            </div>
-            <div class="text-center swiper-slide">
-              <h3 class="font-bold text-white">10k+</h3>
-              <p class="mt-1 text-xs font-semibold uppercase text-white/80">
-                Koleksi Buku
-              </p>
-            </div>
-            <div class="text-center swiper-slide">
-              <h3 class="font-bold text-white">50+</h3>
-              <p class="mt-1 text-xs font-semibold uppercase text-white/80">Prestasi</p>
             </div>
           </div>
         </div>
@@ -854,7 +822,7 @@
 
     <!-- Video Profil & Galeri Section -->
     <section
-      class="relative py-8 md:py-6 mt-12 md:mt-16 -mx-6 md:mx-0 bg-blue-950 overflow-hidden px-6 md:px-10 mb-12 md:rounded-2xl shadow-xl bg-fixed bg-center bg-cover"
+      class="relative py-8 md:py-6 mt-12 md:mt-16 -mx-6 md:mx-0 bg-blue-950 overflow-hidden px-6 md:px-10 mb-12 md:rounded-xl shadow-xl bg-fixed bg-center bg-cover"
       style="
         background-image: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop');
       "
@@ -1025,7 +993,7 @@
 
     <!-- Agenda Sekolah Section -->
     <section
-      class="relative py-8 md:py-6 mt-12 md:mt-16 -mx-6 md:mx-0 bg-white dark:bg-slate-800 overflow-hidden px-6 md:px-2 mb-12 md:rounded-2xl shadow-xl"
+      class="relative py-8 md:py-6 mt-12 md:mt-16 -mx-6 md:mx-0 bg-white dark:bg-slate-800 overflow-hidden px-6 md:px-2 mb-12 md:rounded-xl shadow-xl"
     >
       <div class="container mx-auto px-0 md:px-4">
         <!-- Header Section -->
@@ -1429,9 +1397,17 @@
     <!-- FAQ & CTA PPDB Section (Sejajar di Desktop) -->
     <section class="relative -mx-6 md:mx-0 overflow-hidden">
       <div
-        class="container mx-auto p-8 mb-8 px-6 md:px-4 md:mx-0 rounded-sm sm:rounded-xl bg-gradient-to-br from-blue-900 to-blue-950"
+        class="container relative mx-auto p-8 mb-8 px-6 md:px-4 md:mx-0 rounded-sm sm:rounded-xl bg-fixed bg-center bg-cover overflow-hidden shadow-xl"
+        style="
+          background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200');
+        "
       >
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-stretch">
+        <!-- Overlay Parallax -->
+        <div class="absolute inset-0 bg-blue-950/85"></div>
+
+        <div
+          class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-stretch"
+        >
           <!-- FAQ Kolom Kiri -->
           <div class="flex flex-col justify-center p-0 sm:p-4">
             <div class="mb-8 md:mb-10 text-center lg:text-left">
@@ -1439,7 +1415,7 @@
                 Pertanyaan Seputar PPDB
               </h2>
               <p
-                class="text-blue-200 font-medium text-sm md:text-base max-w-2xl mx-auto lg:mx-0"
+                class="text-white font-medium text-sm md:text-base max-w-2xl mx-auto lg:mx-0"
               >
                 Jawaban atas beberapa pertanyaan yang paling sering ditanyakan oleh calon
                 siswa dan orang tua.
@@ -1641,6 +1617,76 @@ const closeShareModal = () => {
   isShareModalOpen.value = false;
 };
 
+// --- Data Animasi Statistik Header ---
+const statsArray = ref([
+  {
+    value: "A",
+    target: "A",
+    label: "Akreditasi",
+    prefix: "",
+    suffix: "",
+    isNumber: false,
+  },
+  {
+    value: 0,
+    target: 1100,
+    label: "Jumlah Siswa",
+    prefix: "",
+    suffix: "+",
+    isNumber: true,
+  },
+  {
+    value: 0,
+    target: 75,
+    label: "Tenaga Pendidik",
+    prefix: "",
+    suffix: "",
+    isNumber: true,
+  },
+  {
+    value: 0,
+    target: 20,
+    label: "Ekstrakurikuler",
+    prefix: "",
+    suffix: "+",
+    isNumber: true,
+  },
+  { value: 0, target: 32, label: "Ruang Kelas", prefix: "", suffix: "", isNumber: true },
+  { value: 0, target: 5, label: "Laboratorium", prefix: "", suffix: "", isNumber: true },
+  {
+    value: 0,
+    target: 10,
+    label: "Koleksi Buku",
+    prefix: "",
+    suffix: "k+",
+    isNumber: true,
+  },
+  { value: 0, target: 50, label: "Prestasi", prefix: "", suffix: "+", isNumber: true },
+]);
+
+const animateStats = () => {
+  const duration = 2000;
+  let startTimestamp = null;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    const easeProgress = 1 - Math.pow(1 - progress, 4); // Efek ease-out
+
+    statsArray.value.forEach((stat) => {
+      if (stat.isNumber) stat.value = Math.floor(easeProgress * stat.target);
+    });
+
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    } else {
+      statsArray.value.forEach((stat) => {
+        if (stat.isNumber) stat.value = stat.target;
+      });
+    }
+  };
+  window.requestAnimationFrame(step);
+};
+
 const themeClasses = {
   yellow: {
     card:
@@ -1772,6 +1818,11 @@ onMounted(() => {
     } else {
       clearInterval(typeWriter);
       showSubtitle.value = true;
+
+      // Jalankan animasi angka bersamaan saat kotak statistik melayang naik
+      setTimeout(() => {
+        animateStats();
+      }, 500);
     }
   }, 120); // Kecepatan mengetik 120ms per huruf
 
