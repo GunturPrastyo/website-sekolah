@@ -571,7 +571,7 @@
 
             <!-- Berita Pendukung (Bawah - 3 Kecil) -->
             <div class="relative">
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 pb-8">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 pb-8 lg:pb-0">
                 <!-- Card 1 -->
                 <a
                   href="#"
@@ -733,7 +733,7 @@
 
           <!-- KANAN: Bagian Pengumuman (Auto Scroll-Y) -->
           <div
-            class="lg:col-span-1 relative h-[500px] lg:h-auto fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
+            class="lg:col-span-1 relative h-[480px] lg:h-auto fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
           >
             <div
               class="absolute inset-0 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col overflow-hidden"
@@ -1049,7 +1049,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-stretch">
           <!-- KIRI: Kalender -->
           <div
-            class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-100 dark:border-slate-700 p-5 md:p-6 flex flex-col"
+            class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 p-5 md:p-6 flex flex-col"
           >
             <div class="flex items-center justify-between mb-6">
               <button
@@ -1110,7 +1110,7 @@
               <!-- Event Gantt Chart UTS (2-8) -->
               <!-- Baris 1 -->
               <div
-                class="col-span-3 mx-0.5 relative bg-yellow-100 rounded-lg overflow-hidden cursor-pointer hover:bg-yellow-200 transition-colors flex flex-col justify-between"
+                class="col-span-3 mx-0.5 relative bg-yellow-100 rounded-md overflow-hidden cursor-pointer hover:bg-yellow-200 transition-colors flex flex-col justify-between"
                 title="Ujian Tengah Semester"
               >
                 <div
@@ -1127,7 +1127,7 @@
 
               <!-- Baris 2 -->
               <div
-                class="col-span-4 mx-0.5 relative bg-yellow-100 rounded-lg overflow-hidden cursor-pointer hover:bg-yellow-200 transition-colors flex flex-col justify-between"
+                class="col-span-4 mx-0.5 relative bg-yellow-100 rounded-md overflow-hidden cursor-pointer hover:bg-yellow-200 transition-colors flex flex-col justify-between"
                 title="Ujian Tengah Semester"
               >
                 <div
@@ -1145,7 +1145,7 @@
 
               <!-- Event 2 -->
               <div
-                class="mx-0.5 relative bg-red-100 rounded-lg overflow-hidden cursor-pointer hover:bg-red-200 transition-colors flex flex-col justify-between"
+                class="mx-0.5 relative bg-red-100 rounded-md overflow-hidden cursor-pointer hover:bg-red-200 transition-colors flex flex-col justify-between"
                 title="Rapat Evaluasi Guru & Staf"
               >
                 <div
@@ -1187,7 +1187,7 @@
 
               <!-- Event 3 -->
               <div
-                class="mx-0.5 relative bg-green-100 rounded-lg overflow-hidden cursor-pointer hover:bg-green-200 transition-colors flex flex-col justify-between"
+                class="mx-0.5 relative bg-green-100 rounded-md overflow-hidden cursor-pointer hover:bg-green-200 transition-colors flex flex-col justify-between"
                 title="Peringatan Hari Bumi (Kerja Bakti)"
               >
                 <div
@@ -1224,7 +1224,7 @@
 
               <!-- Event 4 -->
               <div
-                class="mx-0.5 relative bg-blue-100 rounded-lg overflow-hidden cursor-pointer hover:bg-blue-200 transition-colors flex flex-col justify-between"
+                class="mx-0.5 relative bg-blue-100 rounded-md overflow-hidden cursor-pointer hover:bg-blue-200 transition-colors flex flex-col justify-between"
                 title="Seminar Persiapan Kuliah Kelas XII"
               >
                 <div
@@ -1314,7 +1314,7 @@
           <!-- KANAN: Daftar Agenda -->
           <div class="lg:col-span-7 relative h-[500px] lg:h-auto">
             <div
-              class="absolute inset-0 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col"
+              class="absolute inset-0 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col"
             >
               <div
                 class="p-5 md:p-6 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex items-center justify-between shrink-0"
