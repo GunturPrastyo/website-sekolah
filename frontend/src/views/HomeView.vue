@@ -1296,16 +1296,16 @@
               </h4>
               <div class="flex flex-wrap gap-3">
                 <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                  <span class="w-2 h-2 rounded-full bg-yellow-400 mr-2"></span> Akademik
+                  <span class="w-3 h-3 rounded-sm bg-yellow-400 mr-2"></span> Akademik
                 </div>
                 <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                  <span class="w-2 h-2 rounded-full bg-red-500 mr-2"></span> Guru/Staf
+                  <span class="w-3 h-3 rounded-sm bg-red-500 mr-2"></span> Guru/Staf
                 </div>
                 <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                  <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span> Kegiatan
+                  <span class="w-3 h-3 rounded-sm bg-green-500 mr-2"></span> Kegiatan
                 </div>
                 <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                  <span class="w-2 h-2 rounded-full bg-blue-500 mr-2"></span> Seminar
+                  <span class="w-3 h-3 rounded-sm bg-blue-500 mr-2"></span> Seminar
                 </div>
               </div>
             </div>
