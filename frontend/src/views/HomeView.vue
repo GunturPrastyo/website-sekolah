@@ -95,17 +95,17 @@
               class="swiper-slide md:!w-auto relative rounded-lg sm:rounded-xl overflow-hidden shadow-lg group flex flex-col min-h-[220px] md:min-h-0 md:col-span-2 md:row-span-2"
             >
               <img
-                src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=1200&auto=format&fit=crop"
+                src="/assets/img/fasilitas.jpg"
                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
 
               <div
-                class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
+                class="absolute bottom-0 left-0 w-full h-3/5 sm:h-2/3 bg-gradient-to-t from-blue-900/95 via-blue-900/50 to-transparent backdrop-blur-[3px] transition-all duration-500 group-hover:h-3/4"
               ></div>
 
               <!-- GLASS EFFECT -->
               <div
-                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-end h-full backdrop-blur-[2px]"
+                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-end h-full"
               >
                 <h3 class="text-lg md:text-2xl font-semibold mb-1 md:mb-2">
                   Fasilitas Lengkap
@@ -128,16 +128,16 @@
               class="swiper-slide md:!w-auto relative rounded-lg sm:rounded-xl overflow-hidden shadow-lg group flex flex-col min-h-[220px] md:min-h-0 md:col-span-2"
             >
               <img
-                src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&auto=format&fit=crop"
+                src="/assets/img/pengajar.jpg"
                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
 
               <div
-                class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
+                class="absolute bottom-0 left-0 w-full h-2/3 bg-gradient-to-t from-blue-900/95 via-blue-900/50 to-transparent backdrop-blur-[3px] transition-all duration-500 group-hover:h-3/4"
               ></div>
 
               <div
-                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-end h-full backdrop-blur-[2px]"
+                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-end h-full"
               >
                 <h3 class="text-lg md:text-2xl font-semibold mb-1 md:mb-2">
                   Guru Berpengalaman
@@ -165,11 +165,11 @@
               />
 
               <div
-                class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
+                class="absolute bottom-0 left-0 w-full h-2/3 bg-gradient-to-t from-blue-900/95 via-blue-900/50 to-transparent backdrop-blur-[3px] transition-all duration-500 group-hover:h-3/4"
               ></div>
 
               <div
-                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-end h-full backdrop-blur-[2px]"
+                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-end h-full"
               >
                 <h3 class="text-lg md:text-2xl font-semibold mb-1 md:mb-2">
                   Prestasi Siswa
