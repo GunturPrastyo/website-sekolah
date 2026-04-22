@@ -396,7 +396,8 @@ onBeforeUnmount(() => {
               <!-- Floating Category Badge -->
               <div class="absolute top-5 right-5">
                 <div
-                  class="px-3.5 py-1.5 backdrop-blur-md bg-white/20 border border-white/30 rounded-full flex items-center gap-1.5 text-white text-[10px] font-bold uppercase tracking-wider shadow-lg"
+                  class="px-3.5 py-1.5 backdrop-blur-md bg-white/20 border border-white/30 rounded-full flex items-center gap-1.5 text-white text-[12px] font-bold capitalize tracking-wide shadow-lg"
+                  style="font-family: 'Kalam', cursive"
                 >
                   <i
                     :data-lucide="categories.find((c) => c.id === ekskul.category)?.icon"
@@ -581,7 +582,7 @@ onBeforeUnmount(() => {
           >
             <span
               class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm md:text-md font-bold mb-4 border border-white/30"
-              style="font-family: 'Dancing Script', cursive"
+              style="font-family: 'Kalam', cursive"
             >
               <i
                 data-lucide="lightbulb"
@@ -616,7 +617,7 @@ onBeforeUnmount(() => {
               >
                 <i
                   data-lucide="clipboard-list"
-                  class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400"
+                  class="w-5 h-5 mr-2 text-slate-600 dark:text-slate-400"
                 ></i>
                 Syarat Pengajuan Klub
               </h3>
@@ -696,6 +697,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap");
 
 .gallery-move,
