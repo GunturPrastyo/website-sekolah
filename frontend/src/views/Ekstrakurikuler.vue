@@ -168,6 +168,40 @@ const filteredEkskul = computed(() => {
   return filtered;
 });
 
+// --- Fitur Load More ---
+const itemsPerPage = 6;
+const itemsToShow = ref(itemsPerPage);
+
+// Reset jumlah item ke awal setiap kali filter atau pencarian berubah
+watch([activeCategory, activeDay, searchQuery], () => {
+  itemsToShow.value = itemsPerPage;
+});
+
+const paginatedEkskul = computed(() => {
+  return filteredEkskul.value.slice(0, itemsToShow.value);
+});
+
+const hasMoreItems = computed(() => {
+  return itemsToShow.value < filteredEkskul.value.length;
+});
+
+const isLoading = ref(false);
+
+// Hitung berapa banyak skeleton yang perlu ditampilkan (maks 6 atau sisa item yang belum di-load)
+const skeletonCount = computed(() => {
+  if (!isLoading.value) return 0;
+  return Math.min(itemsPerPage, filteredEkskul.value.length - itemsToShow.value);
+});
+
+const loadMore = () => {
+  isLoading.value = true;
+  setTimeout(() => {
+    itemsToShow.value += itemsPerPage;
+    isLoading.value = false;
+  }, 800); // Simulasi delay 800ms
+};
+// ------------------------
+
 const getCategoryCount = (categoryId) => {
   if (categoryId === "semua") return ekskulList.value.length;
   return ekskulList.value.filter((ekskul) => ekskul.category === categoryId).length;
@@ -212,9 +246,10 @@ onMounted(() => {
   });
 });
 
-// Pantau perubahan filter agar kartu yang baru dirender tetap ikut dianismasi
-watch(filteredEkskul, () => {
+// Pantau perubahan halaman/data agar kartu yang baru dirender tetap ikut dianismasi dan render icon terbaru
+watch(paginatedEkskul, () => {
   nextTick(() => {
+    createIcons({ icons });
     if (observer) {
       document.querySelectorAll(".fade-on-scroll").forEach((el) => {
         if (el.classList.contains("opacity-0")) {
@@ -332,7 +367,7 @@ onBeforeUnmount(() => {
           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 lg:gap-16 relative w-full mt-8"
         >
           <div
-            v-for="ekskul in filteredEkskul"
+            v-for="ekskul in paginatedEkskul"
             :key="ekskul.id"
             class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out relative group cursor-pointer"
             @click="openModal(ekskul)"
@@ -411,7 +446,78 @@ onBeforeUnmount(() => {
               </div>
             </div>
           </div>
+
+          <!-- Skeleton Loading -->
+          <template v-if="isLoading">
+            <div
+              v-for="n in skeletonCount"
+              :key="'skeleton-' + n"
+              class="relative w-full transition-all duration-500 ease-out"
+            >
+              <!-- Dekorasi Card Belakang -->
+              <div
+                class="absolute inset-0 bg-gray-200 dark:bg-slate-700 rounded-lg transform translate-x-3 translate-y-3 z-0 animate-pulse"
+              ></div>
+              <!-- Main Card Skeleton -->
+              <div
+                class="relative z-10 bg-gray-100 dark:bg-slate-800 rounded-lg overflow-hidden shadow-lg aspect-[3/4] border border-gray-200 dark:border-slate-700 h-full w-full animate-pulse"
+              >
+                <!-- Dummy Badge Kategori -->
+                <div class="absolute top-5 right-5">
+                  <div class="w-24 h-6 bg-gray-300 dark:bg-slate-600 rounded-full"></div>
+                </div>
+                <!-- Dummy Judul & Teks -->
+                <div class="absolute bottom-0 left-0 w-full p-6 md:p-8">
+                  <div class="w-3/4 h-8 bg-gray-300 dark:bg-slate-600 rounded mb-3"></div>
+                  <div class="w-1/2 h-4 bg-gray-300 dark:bg-slate-600 rounded"></div>
+                </div>
+              </div>
+            </div>
+          </template>
         </TransitionGroup>
+
+        <!-- Load More Button -->
+        <div
+          v-if="hasMoreItems"
+          class="flex justify-center items-center mt-14 relative z-10 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
+        >
+          <button
+            @click="loadMore"
+            :disabled="isLoading"
+            class="inline-flex items-center text-sm md:text-base font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors group focus:outline-none disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            <span v-if="!isLoading" class="flex items-center">
+              Muat Lebih Banyak
+              <i
+                data-lucide="chevron-down"
+                class="w-4 h-4 ml-1.5 transform group-hover:translate-y-1 transition-transform"
+              ></i>
+            </span>
+            <span v-else class="flex items-center">
+              <svg
+                class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-600 dark:text-blue-400"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Memuat...
+            </span>
+          </button>
+        </div>
 
         <!-- Empty State -->
         <div
