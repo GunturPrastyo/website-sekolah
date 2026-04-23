@@ -197,7 +197,7 @@
       <!-- ALUMNI / PTN -->
       <div class="mt-8 px-0 md:px-8 lg:px-4 mb-20 md:mb-24 -mx-0 md:-mx-8 lg:-mx-0">
         <div
-          class="relative bg-fixed bg-center bg-cover rounded-sm sm:rounded-xl shadow-xl p-3 md:p-5 flex flex-col md:flex-row items-center gap-6 overflow-hidden"
+          class="relative bg-fixed bg-center bg-cover rounded-sm sm:rounded-xl shadow-xl p-3 md:p-2 flex flex-col md:flex-row items-center gap-6 overflow-hidden"
           style="
             background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200');
           "
@@ -206,7 +206,7 @@
           <div class="absolute inset-0 bg-blue-950/85"></div>
 
           <!-- LEFT TEXT -->
-          <div class="relative z-10 md:w-1/2 lg:w-1/3">
+          <div class="relative z-10 md:w-1/2 lg:w-1/3 mx-6">
             <h3 class="text-lg md:text-2xl font-bold text-white mb-2">
               Alumni Diterima di PTN Favorit
             </h3>
@@ -214,19 +214,6 @@
               Lulusan kami telah berhasil melanjutkan pendidikan ke berbagai perguruan
               tinggi ternama di Indonesia.
             </p>
-            <div
-              class="mt-5 inline-flex items-center gap-2 text-xs font-medium text-blue-200 bg-blue-900/60 px-3 py-1.5 rounded-full border border-blue-500/30 shadow-inner"
-            >
-              <span class="relative flex h-3 w-3 items-center justify-center">
-                <span
-                  class="animate-ping absolute inline-flex h-full w-full rounded-full border border-sky-300 opacity-75"
-                ></span>
-                <span
-                  class="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"
-                ></span>
-              </span>
-              Arahkan kursor ke titik peta
-            </div>
           </div>
 
           <!-- RIGHT MAP VISUALIZATION -->
