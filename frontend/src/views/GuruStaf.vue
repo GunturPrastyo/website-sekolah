@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, nextTick } from "vue";
+import { ref, computed, onMounted, nextTick, watch } from "vue";
 import { createIcons, icons } from "lucide";
 import PageHeader from "@/components/PageHeader.vue";
 
@@ -117,29 +117,77 @@ const staffList = ref([
   },
 ]);
 
-// Computed properties untuk mode "Struktur Organisasi"
-const pimpinanList = computed(() =>
+// Fitur Pagination & Loading
+const itemsPerPage = 6;
+const itemsToShow = ref(itemsPerPage);
+const isFetching = ref(true);
+const isLoadingMore = ref(false);
+
+const fetchData = () => {
+  isFetching.value = true;
+  setTimeout(() => {
+    isFetching.value = false;
+    nextTick(() => {
+      createIcons({ icons });
+    });
+  }, 800); // Simulasi delay memuat data 800ms
+};
+
+watch([activeCategory, searchQuery], () => {
+  itemsToShow.value = itemsPerPage;
+  fetchData();
+});
+
+const loadMore = () => {
+  isLoadingMore.value = true;
+  setTimeout(() => {
+    itemsToShow.value += itemsPerPage;
+    isLoadingMore.value = false;
+    nextTick(() => {
+      createIcons({ icons });
+    });
+  }, 800);
+};
+
+// Base Computed properties
+const basePimpinanList = computed(() =>
   staffList.value.filter((s) => s.category === "pimpinan" && matchesSearch(s))
 );
-const guruList = computed(() =>
+const baseGuruList = computed(() =>
   staffList.value.filter(
     (s) =>
       ["informatika", "matematika", "olahraga", "bahasa_inggris"].includes(s.category) &&
       matchesSearch(s)
   )
 );
-const stafList = computed(() =>
+const baseStafList = computed(() =>
   staffList.value.filter(
     (s) => ["pustakawan", "tata_usaha"].includes(s.category) && matchesSearch(s)
   )
 );
 
-// Computed property untuk mode filter kategori biasa
-const filteredStaff = computed(() => {
+const baseFilteredStaff = computed(() => {
   if (activeCategory.value === "semua") return []; // Jika "semua", kita tangani secara terpisah di template
   return staffList.value.filter(
     (s) => s.category === activeCategory.value && matchesSearch(s)
   );
+});
+
+// Paginated Computed properties
+const pimpinanList = computed(() => basePimpinanList.value.slice(0, itemsToShow.value));
+const guruList = computed(() => baseGuruList.value.slice(0, itemsToShow.value));
+const stafList = computed(() => baseStafList.value.slice(0, itemsToShow.value));
+const filteredStaff = computed(() => baseFilteredStaff.value.slice(0, itemsToShow.value));
+
+const hasMoreItems = computed(() => {
+  if (activeCategory.value === "semua") {
+    return (
+      pimpinanList.value.length < basePimpinanList.value.length ||
+      guruList.value.length < baseGuruList.value.length ||
+      stafList.value.length < baseStafList.value.length
+    );
+  }
+  return filteredStaff.value.length < baseFilteredStaff.value.length;
 });
 
 const activeCategoryName = computed(() => {
@@ -147,9 +195,7 @@ const activeCategoryName = computed(() => {
 });
 
 onMounted(() => {
-  nextTick(() => {
-    createIcons({ icons });
-  });
+  fetchData();
 });
 </script>
 
@@ -168,7 +214,7 @@ onMounted(() => {
           <!-- Sidebar -->
           <aside class="w-full md:w-1/3 lg:w-1/4">
             <div
-              class="md:sticky md:top-28 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700"
+              class="md:sticky md:top-28 bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
             >
               <h3
                 class="text-lg font-bold text-slate-800 dark:text-white mb-5 pb-3 border-b border-gray-100 dark:border-slate-700"
@@ -181,7 +227,7 @@ onMounted(() => {
                   <a
                     href="#"
                     @click.prevent="changeCategory(category.id)"
-                    class="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 border border-transparent group"
+                    class="flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 border border-transparent group"
                     :class="{
                       'bg-blue-50 text-blue-700 border-blue-200 shadow-sm dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800/50':
                         activeCategory === category.id,
@@ -235,7 +281,7 @@ onMounted(() => {
                 v-model="searchQuery"
                 type="text"
                 placeholder="Cari nama guru atau staf..."
-                class="block w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white placeholder-gray-400 focus:outline-none"
+                class="block w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white placeholder-gray-400 focus:outline-none"
               />
             </div>
 
@@ -248,7 +294,46 @@ onMounted(() => {
               leave-from-class="opacity-100 translate-y-0 sm:scale-100"
               leave-to-class="opacity-0 -translate-y-4 sm:scale-95"
             >
-              <div :key="activeCategory" class="space-y-10">
+              <!-- SKELETON LOADER -->
+              <div
+                v-if="isFetching"
+                key="loader"
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              >
+                <div
+                  v-for="i in 6"
+                  :key="`skel-${i}`"
+                  class="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-[320px] relative animate-pulse"
+                >
+                  <div
+                    class="p-6 flex flex-col items-center text-center flex-1 relative z-10 mt-2"
+                  >
+                    <div
+                      class="w-24 h-24 rounded-full bg-gray-200 dark:bg-slate-700 mb-5"
+                    ></div>
+                    <div
+                      class="h-5 w-3/4 bg-gray-200 dark:bg-slate-700 rounded-full mb-3"
+                    ></div>
+                    <div
+                      class="h-4 w-1/2 bg-gray-200 dark:bg-slate-700 rounded-full mb-6"
+                    ></div>
+                    <div
+                      class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-6"
+                    ></div>
+                    <div class="flex gap-3 mt-auto">
+                      <div
+                        class="w-9 h-9 rounded-full bg-gray-200 dark:bg-slate-700"
+                      ></div>
+                      <div
+                        class="w-9 h-9 rounded-full bg-gray-200 dark:bg-slate-700"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- REAL DATA -->
+              <div v-else :key="activeCategory" class="space-y-10">
                 <!-- Tampilan 'Semua' (Struktur Organisasi) -->
                 <template v-if="activeCategory === 'semua'">
                   <!-- Pimpinan -->
@@ -265,12 +350,9 @@ onMounted(() => {
                       <div
                         v-for="staff in pimpinanList"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full cursor-pointer relative transform hover:-translate-y-2"
+                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full cursor-pointer relative transform hover:-translate-y-2"
                         @click="openModal(staff)"
                       >
-                        <div
-                          class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-900/20 dark:to-slate-800 rounded-bl-full -z-10 transition-transform duration-500 group-hover:scale-125"
-                        ></div>
                         <div
                           class="p-6 flex flex-col items-center text-center flex-1 relative z-10 mt-2"
                         >
@@ -353,12 +435,9 @@ onMounted(() => {
                       <div
                         v-for="staff in guruList"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full cursor-pointer relative transform hover:-translate-y-2"
+                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full cursor-pointer relative transform hover:-translate-y-2"
                         @click="openModal(staff)"
                       >
-                        <div
-                          class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-900/20 dark:to-slate-800 rounded-bl-full -z-10 transition-transform duration-500 group-hover:scale-125"
-                        ></div>
                         <div
                           class="p-6 flex flex-col items-center text-center flex-1 relative z-10 mt-2"
                         >
@@ -441,12 +520,9 @@ onMounted(() => {
                       <div
                         v-for="staff in stafList"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full cursor-pointer relative transform hover:-translate-y-2"
+                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full cursor-pointer relative transform hover:-translate-y-2"
                         @click="openModal(staff)"
                       >
-                        <div
-                          class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-900/20 dark:to-slate-800 rounded-bl-full -z-10 transition-transform duration-500 group-hover:scale-125"
-                        ></div>
                         <div
                           class="p-6 flex flex-col items-center text-center flex-1 relative z-10 mt-2"
                         >
@@ -522,7 +598,7 @@ onMounted(() => {
                       guruList.length === 0 &&
                       stafList.length === 0
                     "
-                    class="py-16 flex flex-col items-center justify-center text-center bg-white dark:bg-slate-800 rounded-3xl border border-dashed border-gray-200 dark:border-slate-700"
+                    class="py-16 flex flex-col items-center justify-center text-center bg-white dark:bg-slate-800 rounded-lg border border-dashed border-gray-200 dark:border-slate-700"
                   >
                     <div
                       class="w-16 h-16 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center text-gray-400 mb-4"
@@ -568,12 +644,9 @@ onMounted(() => {
                       <div
                         v-for="staff in filteredStaff"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full cursor-pointer relative transform hover:-translate-y-2"
+                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full cursor-pointer relative transform hover:-translate-y-2"
                         @click="openModal(staff)"
                       >
-                        <div
-                          class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-900/20 dark:to-slate-800 rounded-bl-full -z-10 transition-transform duration-500 group-hover:scale-125"
-                        ></div>
                         <div
                           class="p-6 flex flex-col items-center text-center flex-1 relative z-10 mt-2"
                         >
@@ -644,7 +717,7 @@ onMounted(() => {
                     <!-- Jika Data Kosong -->
                     <div
                       v-if="filteredStaff.length === 0"
-                      class="py-16 flex flex-col items-center justify-center text-center bg-white dark:bg-slate-800 rounded-3xl border border-dashed border-gray-200 dark:border-slate-700"
+                      class="py-16 flex flex-col items-center justify-center text-center bg-white dark:bg-slate-800 rounded-lg border border-dashed border-gray-200 dark:border-slate-700"
                     >
                       <div
                         class="w-16 h-16 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center text-gray-400 mb-4"
@@ -675,6 +748,64 @@ onMounted(() => {
                     </div>
                   </div>
                 </template>
+
+                <!-- Load More Button -->
+                <div
+                  v-if="hasMoreItems"
+                  class="flex justify-center items-center mt-12 pb-8 w-full"
+                >
+                  <div
+                    class="h-px bg-gray-200 dark:bg-slate-700 flex-grow max-w-[100px] md:max-w-[150px]"
+                  ></div>
+                  <button
+                    @click="loadMore"
+                    :disabled="isLoadingMore"
+                    class="mx-5 inline-flex items-center text-sm md:text-base font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors group focus:outline-none disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    <span v-if="!isLoadingMore" class="flex items-center">
+                      Muat Lebih Banyak
+                      <svg
+                        class="w-4 h-4 ml-1.5 transform group-hover:translate-y-1 transition-transform"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 9l-7 7-7-7"
+                        ></path>
+                      </svg>
+                    </span>
+                    <span v-else class="flex items-center">
+                      <svg
+                        class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-600 dark:text-blue-400"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          class="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          stroke-width="4"
+                        ></circle>
+                        <path
+                          class="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Memuat...
+                    </span>
+                  </button>
+                  <div
+                    class="h-px bg-gray-200 dark:bg-slate-700 flex-grow max-w-[100px] md:max-w-[150px]"
+                  ></div>
+                </div>
               </div>
             </Transition>
           </main>
@@ -697,7 +828,7 @@ onMounted(() => {
         @click="closeModal"
       >
         <div
-          class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all border border-white/20 dark:border-slate-700"
+          class="bg-white dark:bg-slate-800 rounded-lg shadow-2xl w-full max-w-md overflow-hidden transform transition-all border border-white/20 dark:border-slate-700"
           @click.stop
         >
           <!-- Modal Header w/ Background -->
@@ -727,7 +858,7 @@ onMounted(() => {
           <div class="px-8 pb-8 relative">
             <!-- Avatar -->
             <div
-              class="absolute -top-16 left-8 w-28 h-28 rounded-2xl border-4 border-white dark:border-slate-800 overflow-hidden bg-white shadow-lg rotate-3 hover:rotate-0 transition-transform duration-300"
+              class="absolute -top-16 left-8 w-28 h-28 rounded-lg border-4 border-white dark:border-slate-800 overflow-hidden bg-white shadow-lg rotate-3 hover:rotate-0 transition-transform duration-300"
             >
               <img :src="selectedStaff?.image" class="w-full h-full object-cover" />
             </div>
