@@ -32,20 +32,6 @@ const matchesSearch = (staff) => {
   return staff.name.toLowerCase().includes(searchQuery.value.toLowerCase());
 };
 
-const isModalOpen = ref(false);
-const selectedStaff = ref(null);
-
-const openModal = (staff) => {
-  selectedStaff.value = staff;
-  isModalOpen.value = true;
-  document.body.style.overflow = "hidden"; // Cegah scroll background
-};
-
-const closeModal = () => {
-  isModalOpen.value = false;
-  document.body.style.overflow = "";
-};
-
 // Contoh data dummy lengkap dengan atribut 'category'
 const staffList = ref([
   {
@@ -305,11 +291,12 @@ onMounted(() => {
                   :key="`skel-${i}`"
                   class="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-[320px] relative animate-pulse"
                 >
+                  <div class="h-24 bg-gray-200 dark:bg-slate-700 w-full"></div>
                   <div
-                    class="p-6 flex flex-col items-center text-center flex-1 relative z-10 mt-2"
+                    class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
                   >
                     <div
-                      class="w-24 h-24 rounded-full bg-gray-200 dark:bg-slate-700 mb-5"
+                      class="w-24 h-24 rounded-full bg-gray-300 dark:bg-slate-600 -mt-12 mb-4 border-4 border-white dark:border-slate-800"
                     ></div>
                     <div
                       class="h-5 w-3/4 bg-gray-200 dark:bg-slate-700 rounded-full mb-3"
@@ -318,9 +305,9 @@ onMounted(() => {
                       class="h-4 w-1/2 bg-gray-200 dark:bg-slate-700 rounded-full mb-6"
                     ></div>
                     <div
-                      class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-6"
+                      class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-6 mt-auto"
                     ></div>
-                    <div class="flex gap-3 mt-auto">
+                    <div class="flex gap-3">
                       <div
                         class="w-9 h-9 rounded-full bg-gray-200 dark:bg-slate-700"
                       ></div>
@@ -350,19 +337,25 @@ onMounted(() => {
                       <div
                         v-for="staff in pimpinanList"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full cursor-pointer relative transform hover:-translate-y-2"
-                        @click="openModal(staff)"
+                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2"
                       >
                         <div
-                          class="p-6 flex flex-col items-center text-center flex-1 relative z-10 mt-2"
+                          class="h-24 bg-gradient-to-r from-blue-600 to-blue-800 relative overflow-hidden"
                         >
-                          <div class="relative mb-5">
+                          <div
+                            class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 blur-xl"
+                          ></div>
+                        </div>
+                        <div
+                          class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
+                        >
+                          <div class="relative -mt-12 mb-4">
                             <div
-                              class="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-blue-600 to-sky-400 shadow-lg group-hover:rotate-6 transition-transform duration-500"
+                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-105 transition-transform duration-500"
                             >
                               <img
                                 :src="staff.image"
-                                class="w-full h-full object-cover rounded-full border-4 border-white dark:border-slate-800"
+                                class="w-full h-full object-cover rounded-full border-2 border-gray-100 dark:border-slate-700"
                               />
                             </div>
                           </div>
@@ -373,16 +366,18 @@ onMounted(() => {
                             {{ staff.name }}
                           </h3>
                           <p
-                            class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-5"
+                            class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-1"
                           >
                             {{ staff.role }}
                           </p>
+                          <p class="text-xs text-gray-500 dark:text-gray-400 mb-5">
+                            NIP. {{ staff.nip || "-" }}
+                          </p>
                           <div
-                            class="w-10 h-1 bg-gray-100 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors"
+                            class="w-10 h-1 bg-gray-100 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
                           ></div>
-                          <div class="flex gap-3 mt-auto">
+                          <div class="flex gap-3">
                             <button
-                              @click.stop
                               class="w-9 h-9 rounded-full bg-gray-50 hover:bg-blue-50 dark:bg-slate-700 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
                               title="Email"
                             >
@@ -435,19 +430,25 @@ onMounted(() => {
                       <div
                         v-for="staff in guruList"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full cursor-pointer relative transform hover:-translate-y-2"
-                        @click="openModal(staff)"
+                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2"
                       >
                         <div
-                          class="p-6 flex flex-col items-center text-center flex-1 relative z-10 mt-2"
+                          class="h-24 bg-gradient-to-r from-blue-600 to-blue-800 relative overflow-hidden"
                         >
-                          <div class="relative mb-5">
+                          <div
+                            class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 blur-xl"
+                          ></div>
+                        </div>
+                        <div
+                          class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
+                        >
+                          <div class="relative -mt-12 mb-4">
                             <div
-                              class="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-blue-600 to-sky-400 shadow-lg group-hover:rotate-6 transition-transform duration-500"
+                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-105 transition-transform duration-500"
                             >
                               <img
                                 :src="staff.image"
-                                class="w-full h-full object-cover rounded-full border-4 border-white dark:border-slate-800"
+                                class="w-full h-full object-cover rounded-full border-2 border-gray-100 dark:border-slate-700"
                               />
                             </div>
                           </div>
@@ -458,16 +459,18 @@ onMounted(() => {
                             {{ staff.name }}
                           </h3>
                           <p
-                            class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-5"
+                            class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-1"
                           >
                             {{ staff.role }}
                           </p>
+                          <p class="text-xs text-gray-500 dark:text-gray-400 mb-5">
+                            NIP. {{ staff.nip || "-" }}
+                          </p>
                           <div
-                            class="w-10 h-1 bg-gray-100 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors"
+                            class="w-10 h-1 bg-gray-100 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
                           ></div>
-                          <div class="flex gap-3 mt-auto">
+                          <div class="flex gap-3">
                             <button
-                              @click.stop
                               class="w-9 h-9 rounded-full bg-gray-50 hover:bg-blue-50 dark:bg-slate-700 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
                               title="Email"
                             >
@@ -520,19 +523,25 @@ onMounted(() => {
                       <div
                         v-for="staff in stafList"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full cursor-pointer relative transform hover:-translate-y-2"
-                        @click="openModal(staff)"
+                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2"
                       >
                         <div
-                          class="p-6 flex flex-col items-center text-center flex-1 relative z-10 mt-2"
+                          class="h-24 bg-gradient-to-r from-blue-600 to-blue-800 relative overflow-hidden"
                         >
-                          <div class="relative mb-5">
+                          <div
+                            class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 blur-xl"
+                          ></div>
+                        </div>
+                        <div
+                          class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
+                        >
+                          <div class="relative -mt-12 mb-4">
                             <div
-                              class="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-blue-600 to-sky-400 shadow-lg group-hover:rotate-6 transition-transform duration-500"
+                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-105 transition-transform duration-500"
                             >
                               <img
                                 :src="staff.image"
-                                class="w-full h-full object-cover rounded-full border-4 border-white dark:border-slate-800"
+                                class="w-full h-full object-cover rounded-full border-2 border-gray-100 dark:border-slate-700"
                               />
                             </div>
                           </div>
@@ -543,16 +552,18 @@ onMounted(() => {
                             {{ staff.name }}
                           </h3>
                           <p
-                            class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-5"
+                            class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-1"
                           >
                             {{ staff.role }}
                           </p>
+                          <p class="text-xs text-gray-500 dark:text-gray-400 mb-5">
+                            NIP. {{ staff.nip || "-" }}
+                          </p>
                           <div
-                            class="w-10 h-1 bg-gray-100 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors"
+                            class="w-10 h-1 bg-gray-100 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
                           ></div>
-                          <div class="flex gap-3 mt-auto">
+                          <div class="flex gap-3">
                             <button
-                              @click.stop
                               class="w-9 h-9 rounded-full bg-gray-50 hover:bg-blue-50 dark:bg-slate-700 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
                               title="Email"
                             >
@@ -644,19 +655,25 @@ onMounted(() => {
                       <div
                         v-for="staff in filteredStaff"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full cursor-pointer relative transform hover:-translate-y-2"
-                        @click="openModal(staff)"
+                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2"
                       >
                         <div
-                          class="p-6 flex flex-col items-center text-center flex-1 relative z-10 mt-2"
+                          class="h-24 bg-gradient-to-r from-blue-600 to-blue-800 relative overflow-hidden"
                         >
-                          <div class="relative mb-5">
+                          <div
+                            class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 blur-xl"
+                          ></div>
+                        </div>
+                        <div
+                          class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
+                        >
+                          <div class="relative -mt-12 mb-4">
                             <div
-                              class="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-blue-600 to-sky-400 shadow-lg group-hover:rotate-6 transition-transform duration-500"
+                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-105 transition-transform duration-500"
                             >
                               <img
                                 :src="staff.image"
-                                class="w-full h-full object-cover rounded-full border-4 border-white dark:border-slate-800"
+                                class="w-full h-full object-cover rounded-full border-2 border-gray-100 dark:border-slate-700"
                               />
                             </div>
                           </div>
@@ -667,16 +684,18 @@ onMounted(() => {
                             {{ staff.name }}
                           </h3>
                           <p
-                            class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-5"
+                            class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-1"
                           >
                             {{ staff.role }}
                           </p>
+                          <p class="text-xs text-gray-500 dark:text-gray-400 mb-5">
+                            NIP. {{ staff.nip || "-" }}
+                          </p>
                           <div
-                            class="w-10 h-1 bg-gray-100 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors"
+                            class="w-10 h-1 bg-gray-100 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
                           ></div>
-                          <div class="flex gap-3 mt-auto">
+                          <div class="flex gap-3">
                             <button
-                              @click.stop
                               class="w-9 h-9 rounded-full bg-gray-50 hover:bg-blue-50 dark:bg-slate-700 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
                               title="Email"
                             >
@@ -812,168 +831,5 @@ onMounted(() => {
         </div>
       </div>
     </section>
-
-    <!-- Modal Profil Staff -->
-    <Transition
-      enter-active-class="transition-opacity duration-300"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition-opacity duration-300"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div
-        v-if="isModalOpen"
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4"
-        @click="closeModal"
-      >
-        <div
-          class="bg-white dark:bg-slate-800 rounded-lg shadow-2xl w-full max-w-md overflow-hidden transform transition-all border border-white/20 dark:border-slate-700"
-          @click.stop
-        >
-          <!-- Modal Header w/ Background -->
-          <div class="relative h-32 bg-blue-600 overflow-hidden">
-            <div
-              class="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-white/10 blur-2xl"
-            ></div>
-            <div
-              class="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-black/10 blur-2xl"
-            ></div>
-            <button
-              @click="closeModal"
-              class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-black/10 text-white hover:bg-black/30 backdrop-blur-sm transition-all z-10 focus:outline-none"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path>
-              </svg>
-            </button>
-          </div>
-
-          <!-- Profile Info -->
-          <div class="px-8 pb-8 relative">
-            <!-- Avatar -->
-            <div
-              class="absolute -top-16 left-8 w-28 h-28 rounded-lg border-4 border-white dark:border-slate-800 overflow-hidden bg-white shadow-lg rotate-3 hover:rotate-0 transition-transform duration-300"
-            >
-              <img :src="selectedStaff?.image" class="w-full h-full object-cover" />
-            </div>
-
-            <div class="mt-14">
-              <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
-                {{ selectedStaff?.name }}
-              </h3>
-              <p class="text-blue-600 dark:text-blue-400 font-medium mt-1">
-                {{ selectedStaff?.role }}
-              </p>
-
-              <div class="mt-6 pt-6 border-t border-gray-100 dark:border-slate-700/50">
-                <h4
-                  class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4"
-                >
-                  Informasi Detail
-                </h4>
-                <div class="space-y-4">
-                  <div class="flex gap-4">
-                    <div
-                      class="w-10 h-10 rounded-full bg-blue-50 dark:bg-slate-700/50 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0"
-                    >
-                      <svg
-                        class="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
-                        ></path>
-                      </svg>
-                    </div>
-                    <div>
-                      <p
-                        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-0.5"
-                      >
-                        NIP / NUPTK
-                      </p>
-                      <p class="text-sm font-medium text-gray-900 dark:text-white">
-                        {{ selectedStaff?.nip || "-" }}
-                      </p>
-                    </div>
-                  </div>
-                  <div class="flex gap-4">
-                    <div
-                      class="w-10 h-10 rounded-full bg-blue-50 dark:bg-slate-700/50 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0"
-                    >
-                      <svg
-                        class="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                        ></path>
-                      </svg>
-                    </div>
-                    <div>
-                      <p
-                        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-0.5"
-                      >
-                        Unit Kerja
-                      </p>
-                      <p class="text-sm font-medium text-gray-900 dark:text-white">
-                        SMAN 1 Nogosari
-                      </p>
-                    </div>
-                  </div>
-                  <div class="flex gap-4">
-                    <div
-                      class="w-10 h-10 rounded-full bg-blue-50 dark:bg-slate-700/50 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0"
-                    >
-                      <svg
-                        class="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <div>
-                      <p
-                        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-0.5"
-                      >
-                        Bio Singkat
-                      </p>
-                      <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                        {{
-                          selectedStaff?.bio ||
-                          "Berdedikasi tinggi dalam mendidik dan membimbing karakter siswa di lingkungan sekolah menuju generasi unggul."
-                        }}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Transition>
   </div>
 </template>
