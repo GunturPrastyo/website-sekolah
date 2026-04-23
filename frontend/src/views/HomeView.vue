@@ -221,12 +221,15 @@
             class="relative z-10 md:w-2/3 w-full flex items-center justify-center min-h-[220px] md:min-h-[280px] mt-0"
           >
             <!-- Container Map Indonesia (Dibuat lebih pipih/lebar) -->
-            <div class="relative w-full max-w-4xl" style="aspect-ratio: 3.5 / 1">
+            <div
+              class="relative w-full max-w-4xl group/map transition-transform duration-700 ease-out hover:scale-105"
+              style="aspect-ratio: 3.5 / 1"
+            >
               <!-- Base Map (Peta Indonesia) menggunakan tag img agar bebas blokir CORS -->
               <img
                 src="/assets/img/indonesia.svg"
                 alt="Peta Persebaran Alumni"
-                class="absolute inset-0 w-full h-full object-fill pointer-events-none opacity-70 dark:opacity-40"
+                class="absolute inset-0 w-full h-full object-fill pointer-events-none opacity-70 dark:opacity-40 transition-opacity duration-700 group-hover/map:opacity-100 dark:group-hover/map:opacity-70"
                 style="
                   filter: invert(56%) sepia(61%) saturate(3000%) hue-rotate(175deg)
                     brightness(101%) contrast(101%)
@@ -293,7 +296,7 @@
       <div class="container relative z-10 mx-auto">
         <!-- HEADER -->
         <div
-          class="relative overflow-hidden shadow-2xl min-h-[240px] sm:min-h-[450px] flex items-center md:rounded-2xl bg-fixed bg-center bg-cover"
+          class="relative overflow-hidden shadow-2xl min-h-[240px] sm:min-h-[450px] flex items-center md:rounded-lg bg-fixed bg-center bg-cover"
           style="
             background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop');
           "
