@@ -301,7 +301,7 @@ onMounted(() => {
                     class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
                   >
                     <div
-                      class="w-24 h-24 rounded-full bg-gray-300 dark:bg-slate-600 -mt-12 mb-4 border-4 border-white dark:border-slate-800"
+                      class="w-28 h-28 rounded-full bg-gray-300 dark:bg-slate-600 -mt-14 mb-4 border-4 border-white dark:border-slate-800"
                     ></div>
                     <div
                       class="h-5 w-3/4 bg-gray-200 dark:bg-slate-700 rounded-full mb-3"
@@ -350,17 +350,13 @@ onMounted(() => {
                       >
                         <div
                           class="h-24 relative overflow-hidden bg-gradient-to-r from-blue-700 to-blue-900 dark:from-slate-700 dark:to-slate-800"
-                        >
-                          <div
-                            class="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:12px_12px]"
-                          ></div>
-                        </div>
+                        ></div>
                         <div
                           class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
                         >
-                          <div class="relative -mt-12 mb-4">
+                          <div class="relative -mt-14 mb-4">
                             <div
-                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
+                              class="w-28 h-28 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
                             >
                               <img
                                 :src="staff.image"
@@ -464,17 +460,13 @@ onMounted(() => {
                       >
                         <div
                           class="h-24 relative overflow-hidden bg-gradient-to-r from-blue-700 to-blue-900 dark:from-slate-700 dark:to-slate-800"
-                        >
-                          <div
-                            class="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:12px_12px]"
-                          ></div>
-                        </div>
+                        ></div>
                         <div
                           class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
                         >
-                          <div class="relative -mt-12 mb-4">
+                          <div class="relative -mt-14 mb-4">
                             <div
-                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
+                              class="w-28 h-28 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
                             >
                               <img
                                 :src="staff.image"
@@ -578,17 +570,13 @@ onMounted(() => {
                       >
                         <div
                           class="h-24 relative overflow-hidden bg-gradient-to-r from-blue-700 to-blue-900 dark:from-slate-700 dark:to-slate-800"
-                        >
-                          <div
-                            class="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:12px_12px]"
-                          ></div>
-                        </div>
+                        ></div>
                         <div
                           class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
                         >
-                          <div class="relative -mt-12 mb-4">
+                          <div class="relative -mt-14 mb-4">
                             <div
-                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
+                              class="w-28 h-28 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
                             >
                               <img
                                 :src="staff.image"
@@ -731,17 +719,13 @@ onMounted(() => {
                       >
                         <div
                           class="h-24 relative overflow-hidden bg-gradient-to-r from-blue-700 to-blue-900 dark:from-slate-700 dark:to-slate-800"
-                        >
-                          <div
-                            class="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:12px_12px]"
-                          ></div>
-                        </div>
+                        ></div>
                         <div
                           class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
                         >
-                          <div class="relative -mt-12 mb-4">
+                          <div class="relative -mt-14 mb-4">
                             <div
-                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
+                              class="w-28 h-28 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
                             >
                               <img
                                 :src="staff.image"
