@@ -197,7 +197,7 @@
       <!-- ALUMNI / PTN -->
       <div class="mt-8 px-0 md:px-8 lg:px-4 mb-20 md:mb-24 -mx-0 md:-mx-8 lg:-mx-0">
         <div
-          class="relative bg-fixed bg-center bg-cover rounded-sm sm:rounded-xl shadow-xl p-3 md:p-2 flex flex-col md:flex-row items-center gap-6 overflow-hidden"
+          class="relative bg-fixed bg-center bg-cover rounded-sm sm:rounded-xl shadow-xl p-3 md:p-2 flex flex-col md:flex-row items-center gap-0 md:gap-6 overflow-hidden"
           style="
             background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200');
           "
@@ -206,7 +206,7 @@
           <div class="absolute inset-0 bg-blue-950/85"></div>
 
           <!-- LEFT TEXT -->
-          <div class="relative z-10 md:w-1/2 lg:w-1/3 mx-6">
+          <div class="relative z-10 md:w-1/2 lg:w-1/3 mx-6 mt-4 md:mt-0">
             <h3 class="text-lg md:text-2xl font-bold text-white mb-2">
               Alumni Diterima di PTN Favorit
             </h3>
@@ -218,7 +218,7 @@
 
           <!-- RIGHT MAP VISUALIZATION -->
           <div
-            class="relative z-10 md:w-2/3 w-full flex items-center justify-center min-h-[220px] md:min-h-[280px] mt-6 md:mt-0"
+            class="relative z-10 md:w-2/3 w-full flex items-center justify-center min-h-[220px] md:min-h-[280px] mt-0"
           >
             <!-- Container Map Indonesia (Dibuat lebih pipih/lebar) -->
             <div class="relative w-full max-w-4xl" style="aspect-ratio: 3.5 / 1">
