@@ -96,16 +96,16 @@
             >
               <img
                 src="/assets/img/fasilitas.jpg"
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                class="absolute inset-0 w-full h-full object-cover blur-[2px] scale-110 transition-transform duration-500 group-hover:scale-125"
               />
 
               <div
-                class="absolute bottom-0 left-0 w-full h-3/5 sm:h-2/3 bg-gradient-to-t from-blue-900/95 via-blue-900/50 to-transparent backdrop-blur-[3px] transition-all duration-500 group-hover:h-3/4"
+                class="absolute bottom-0 left-0 w-full h-4/5 sm:h-3/4 bg-gradient-to-t from-blue-950/95 via-blue-950/70 to-transparent backdrop-blur-[3px] transition-all duration-500 group-hover:h-full"
               ></div>
 
               <!-- GLASS EFFECT -->
               <div
-                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-end h-full"
+                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-start md:justify-end h-full"
               >
                 <h3 class="text-lg md:text-2xl font-semibold mb-1 md:mb-2">
                   Fasilitas Lengkap
@@ -116,7 +116,7 @@
                 </p>
                 <a
                   href="#"
-                  class="mt-2 text-xs md:text-sm font-medium text-blue-400 inline-flex items-center"
+                  class="mt-2 text-xs md:text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center"
                 >
                   Lihat Selengkapnya <span class="ml-1">&gt;</span>
                 </a>
@@ -129,15 +129,15 @@
             >
               <img
                 src="/assets/img/pengajar.jpg"
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                class="absolute inset-0 w-full h-full object-cover blur-[2px] scale-110 transition-transform duration-500 group-hover:scale-125"
               />
 
               <div
-                class="absolute bottom-0 left-0 w-full h-2/3 bg-gradient-to-t from-blue-900/95 via-blue-900/50 to-transparent backdrop-blur-[3px] transition-all duration-500 group-hover:h-3/4"
+                class="absolute bottom-0 left-0 w-full h-4/5 sm:h-3/4 bg-gradient-to-t from-blue-950/95 via-blue-950/70 to-transparent backdrop-blur-[3px] transition-all duration-500 group-hover:h-full"
               ></div>
 
               <div
-                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-end h-full"
+                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-start md:justify-end h-full"
               >
                 <h3 class="text-lg md:text-2xl font-semibold mb-1 md:mb-2">
                   Guru Berpengalaman
@@ -148,7 +148,7 @@
                 </p>
                 <a
                   href="#"
-                  class="mt-2 text-xs md:text-sm font-medium text-blue-400 inline-flex items-center"
+                  class="mt-2 text-xs md:text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center"
                 >
                   Lihat Selengkapnya <span class="ml-1">&gt;</span>
                 </a>
@@ -160,16 +160,16 @@
               class="swiper-slide md:!w-auto relative rounded-lg md:rounded-xl overflow-hidden shadow-lg group flex flex-col min-h-[220px] md:min-h-0 md:col-span-2"
             >
               <img
-                src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=1200&auto=format&fit=crop"
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                src="/assets/img/prestasi.jpg"
+                class="absolute inset-0 w-full h-full object-cover blur-[2px] scale-110 transition-transform duration-500 group-hover:scale-125"
               />
 
               <div
-                class="absolute bottom-0 left-0 w-full h-2/3 bg-gradient-to-t from-blue-900/95 via-blue-900/50 to-transparent backdrop-blur-[3px] transition-all duration-500 group-hover:h-3/4"
+                class="absolute bottom-0 left-0 w-full h-4/5 sm:h-3/4 bg-gradient-to-t from-blue-950/95 via-blue-950/70 to-transparent backdrop-blur-[3px] transition-all duration-500 group-hover:h-full"
               ></div>
 
               <div
-                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-end h-full"
+                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-start md:justify-end h-full"
               >
                 <h3 class="text-lg md:text-2xl font-semibold mb-1 md:mb-2">
                   Prestasi Siswa
@@ -179,7 +179,7 @@
                 </p>
                 <a
                   href="#"
-                  class="mt-2 text-xs md:text-sm font-medium text-blue-400 inline-flex items-center"
+                  class="mt-2 text-xs md:text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center"
                 >
                   Lihat Selengkapnya <span class="ml-1">&gt;</span>
                 </a>
@@ -197,10 +197,16 @@
       <!-- ALUMNI / PTN -->
       <div class="mt-8 px-0 md:px-8 lg:px-4 mb-20 md:mb-24 -mx-0 md:-mx-8 lg:-mx-0">
         <div
-          class="bg-gradient-to-br from-blue-900 to-blue-950 rounded-sm sm:rounded-xl shadow-xl p-3 md:p-5 flex flex-col md:flex-row items-center gap-6 overflow-hidden"
+          class="relative bg-fixed bg-center bg-cover rounded-sm sm:rounded-xl shadow-xl p-3 md:p-5 flex flex-col md:flex-row items-center gap-6 overflow-hidden"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200');
+          "
         >
+          <!-- Overlay Parallax -->
+          <div class="absolute inset-0 bg-blue-950/85"></div>
+
           <!-- LEFT TEXT -->
-          <div class="md:w-1/2 lg:w-1/3">
+          <div class="relative z-10 md:w-1/2 lg:w-1/3">
             <h3 class="text-lg md:text-2xl font-bold text-white mb-2">
               Alumni Diterima di PTN Favorit
             </h3>
@@ -211,10 +217,10 @@
           </div>
 
           <!-- RIGHT LOGO SCROLL -->
-          <div class="md:w-2/3 w-full overflow-hidden relative">
+          <div class="relative z-10 md:w-2/3 w-full overflow-hidden">
             <!-- GRADIENT FADE (biar smooth pinggirnya) -->
             <div
-              class="absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-blue-900 to-transparent z-10"
+              class="absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-blue-950 to-transparent z-10"
             ></div>
             <div
               class="absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-blue-950 to-transparent z-10"
