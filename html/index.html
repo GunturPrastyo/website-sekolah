@@ -511,52 +511,43 @@
                         </p>
                     </div>
 
-                    <!-- RIGHT LOGO SCROLL -->
-                    <div class="md:w-2/3 w-full  overflow-hidden relative">
+                    <!-- RIGHT MAP VISUALIZATION -->
+                    <div class="relative z-10 md:w-2/3 w-full flex items-center justify-center min-h-[220px] md:min-h-[280px] mt-6 md:mt-0">
 
-                        <!-- GRADIENT FADE (biar smooth pinggirnya) -->
-                        <div
-                            class="absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-sky-800 to-transparent z-10">
-                        </div>
-                        <div
-                            class="absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-blue-900 to-transparent z-10">
-                        </div>
+                        <!-- Container Map Indonesia -->
+                        <div class="relative w-full max-w-3xl" style="aspect-ratio: 2.66 / 1;">
+                            
+                            <!-- Base Map (Peta Indonesia) -->
+                            <img 
+                                src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Indonesia_blank_map.svg" 
+                                alt="Peta Persebaran Alumni"
+                                class="absolute inset-0 w-full h-full object-fill pointer-events-none opacity-70 dark:opacity-40"
+                                style="filter: invert(56%) sepia(61%) saturate(3000%) hue-rotate(175deg) brightness(101%) contrast(101%) drop-shadow(0px 0px 8px rgba(56, 189, 248, 0.4));"
+                            />
 
-                        <!-- SCROLL WRAPPER -->
-                        <div class="flex items-center gap-6 md:gap-8 animate-scroll-x py-2">
+                            <!-- Markers Alumni -->
+                            <div v-for="ptn in ptnData" :key="ptn.id"
+                                 class="absolute flex justify-center items-center group cursor-pointer hover:z-50"
+                                 :style="{ top: ptn.top, left: ptn.left, zIndex: 10 }">
+                                
+                                <!-- Pulse Effect -->
+                                <span class="absolute w-4 h-4 bg-yellow-400 rounded-full animate-ping opacity-75"></span>
+                                <!-- Dot Core -->
+                                <span class="relative w-2.5 h-2.5 md:w-3 md:h-3 bg-yellow-400 rounded-full shadow-[0_0_8px_rgba(250,204,21,0.9)] border border-white dark:border-blue-900"></span>
 
-                            <!-- LOGO ITEM -->
-                            <img src="img/ipb.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
+                                <!-- Tooltip Detail PTN -->
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-48 md:w-52 bg-white dark:bg-slate-800 rounded-xl p-3 shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-20 translate-y-2 group-hover:translate-y-0 scale-95 group-hover:scale-100 origin-bottom border border-gray-100 dark:border-slate-700">
+                                    <!-- Segitiga Pointer Bawah -->
+                                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 border-8 border-transparent border-t-white dark:border-t-slate-800 drop-shadow-md"></div>
 
-                            <img src="img/itb.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <img src="img/ugm.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <img src="img/ui.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <img src="img/undip.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <!-- DUPLIKASI (biar infinite loop mulus) -->
-                            <img src="img/ipb.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <img src="img/itb.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <img src="img/ugm.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <img src="img/ui.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
-                            <img src="img/undip.png"
-                                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform" />
-
+                                    <div class="flex items-center gap-3 border-b border-gray-100 dark:border-slate-700 pb-2 mb-2">
+                                        <img :src="ptn.logo" class="w-8 h-8 object-contain bg-white rounded p-1 shadow-sm shrink-0" />
+                                        <h4 class="font-bold text-xs text-gray-900 dark:text-white leading-tight">{{ ptn.name }}</h4>
+                                    </div>
+                                    <p class="text-[11px] text-gray-500 dark:text-gray-400">Total Alumni: <span class="font-bold text-blue-600 dark:text-blue-400 text-xs">{{ ptn.alumni }} Siswa</span></p>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -1445,6 +1436,15 @@
                     { date: '28', month: 'Apr', title: 'Kunjungan Industri Kelas XI', time: '07:00 - 16:00', loc: 'Kawasan Industri', color: 'blue' }
                 ];
 
+                // Data Koordinat PTN di Peta Indonesia
+                const ptnData = ref([
+                    { id: 1, name: "Universitas Indonesia", alumni: 45, top: "73.5%", left: "27.0%", logo: "img/ui.png" },
+                    { id: 2, name: "Institut Pertanian Bogor", alumni: 38, top: "75.5%", left: "27.5%", logo: "img/ipb.png" },
+                    { id: 3, name: "Institut Teknologi Bandung", alumni: 32, top: "76.5%", left: "29.0%", logo: "img/itb.png" },
+                    { id: 4, name: "Universitas Diponegoro", alumni: 42, top: "76.5%", left: "33.0%", logo: "img/undip.png" },
+                    { id: 5, name: "Universitas Gadjah Mada", alumni: 50, top: "79.0%", left: "32.5%", logo: "img/ugm.png" },
+                ]);
+
                 onMounted(() => {
                     // Initialize main Swiper
                     new Swiper('.swiper-container', {
@@ -1566,7 +1566,8 @@
                     isDarkMode,
                     toggleDarkMode,
                     themeClasses,
-                    agendas
+                    agendas,
+                    ptnData
                 };
             }
         }).mount('#app');

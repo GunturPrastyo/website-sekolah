@@ -214,71 +214,85 @@
               Lulusan kami telah berhasil melanjutkan pendidikan ke berbagai perguruan
               tinggi ternama di Indonesia.
             </p>
+            <div
+              class="mt-5 inline-flex items-center gap-2 text-xs font-medium text-blue-200 bg-blue-900/60 px-3 py-1.5 rounded-full border border-blue-500/30 shadow-inner"
+            >
+              <span class="relative flex h-3 w-3 items-center justify-center">
+                <span
+                  class="animate-ping absolute inline-flex h-full w-full rounded-full border border-sky-300 opacity-75"
+                ></span>
+                <span
+                  class="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"
+                ></span>
+              </span>
+              Arahkan kursor ke titik peta
+            </div>
           </div>
 
-          <!-- RIGHT LOGO SCROLL -->
-          <div class="relative z-10 md:w-2/3 w-full overflow-hidden">
-            <!-- GRADIENT FADE (biar smooth pinggirnya) -->
-            <div
-              class="absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-blue-950 to-transparent z-10"
-            ></div>
-            <div
-              class="absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-blue-950 to-transparent z-10"
-            ></div>
-
-            <!-- SCROLL WRAPPER -->
-            <div class="flex items-center gap-6 md:gap-8 animate-scroll-x py-2">
-              <!-- LOGO ITEM -->
+          <!-- RIGHT MAP VISUALIZATION -->
+          <div
+            class="relative z-10 md:w-2/3 w-full flex items-center justify-center min-h-[220px] md:min-h-[280px] mt-6 md:mt-0"
+          >
+            <!-- Container Map Indonesia (Dibuat lebih pipih/lebar) -->
+            <div class="relative w-full max-w-4xl" style="aspect-ratio: 3.5 / 1">
+              <!-- Base Map (Peta Indonesia) menggunakan tag img agar bebas blokir CORS -->
               <img
-                src="/assets/img/ipb.png"
-                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform"
+                src="/assets/img/indonesia.svg"
+                alt="Peta Persebaran Alumni"
+                class="absolute inset-0 w-full h-full object-fill pointer-events-none opacity-70 dark:opacity-40"
+                style="
+                  filter: invert(56%) sepia(61%) saturate(3000%) hue-rotate(175deg)
+                    brightness(101%) contrast(101%)
+                    drop-shadow(0px 0px 8px rgba(56, 189, 248, 0.4));
+                "
               />
 
-              <img
-                src="/assets/img/itb.png"
-                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform"
-              />
+              <!-- Markers Alumni -->
+              <div
+                v-for="ptn in ptnData"
+                :key="ptn.id"
+                class="absolute flex justify-center items-center group cursor-pointer hover:z-50"
+                :style="{ top: ptn.top, left: ptn.left, zIndex: 10 }"
+              >
+                <!-- Elegant Pulse Effect -->
+                <span
+                  class="absolute w-4 h-4 md:w-5 md:h-5 rounded-full border border-sky-300 opacity-75 animate-ping group-hover:border-white transition-colors"
+                ></span>
+                <!-- Dot Core -->
+                <span
+                  class="relative w-1.5 h-1.5 md:w-2 md:h-2 bg-white rounded-full shadow-[0_0_6px_rgba(255,255,255,0.9)] group-hover:scale-150 transition-transform duration-300"
+                ></span>
 
-              <img
-                src="/assets/img/ugm.png"
-                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform"
-              />
+                <!-- Tooltip Detail PTN -->
+                <div
+                  class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-48 md:w-52 bg-white dark:bg-slate-800 rounded-xl p-3 shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-20 translate-y-2 group-hover:translate-y-0 scale-95 group-hover:scale-100 origin-bottom border border-gray-100 dark:border-slate-700"
+                >
+                  <!-- Segitiga Pointer Bawah -->
+                  <div
+                    class="absolute -bottom-2 left-1/2 -translate-x-1/2 border-8 border-transparent border-t-white dark:border-t-slate-800 drop-shadow-md"
+                  ></div>
 
-              <img
-                src="/assets/img/ui.png"
-                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform"
-              />
-
-              <img
-                src="/assets/img/undip.png"
-                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform"
-              />
-
-              <!-- DUPLIKASI (biar infinite loop mulus) -->
-              <img
-                src="/assets/img/ipb.png"
-                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform"
-              />
-
-              <img
-                src="/assets/img/itb.png"
-                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform"
-              />
-
-              <img
-                src="/assets/img/ugm.png"
-                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform"
-              />
-
-              <img
-                src="/assets/img/ui.png"
-                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform"
-              />
-
-              <img
-                src="/assets/img/undip.png"
-                class="h-12 md:h-16 w-auto flex-shrink-0 object-contain bg-white dark:bg-slate-200 rounded-lg p-2 shadow-sm hover:scale-105 transition-transform"
-              />
+                  <div
+                    class="flex items-center gap-3 border-b border-gray-100 dark:border-slate-700 pb-2 mb-2"
+                  >
+                    <img
+                      :src="ptn.logo"
+                      class="w-8 h-8 object-contain bg-white rounded p-1 shadow-sm shrink-0"
+                    />
+                    <h4
+                      class="font-bold text-xs text-gray-900 dark:text-white leading-tight"
+                    >
+                      {{ ptn.name }}
+                    </h4>
+                  </div>
+                  <p class="text-[11px] text-gray-500 dark:text-gray-400">
+                    Total Alumni:
+                    <span class="font-bold text-blue-600 dark:text-blue-400 text-xs"
+                      >{{ ptn.alumni }} Siswa</span
+                    >
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1813,6 +1827,50 @@ const faqs = [
       "Sebagai sekolah negeri binaan pemerintah, seluruh proses pendaftaran PPDB dan biaya pendidikan (SPP bulanan) adalah GRATIS tanpa dipungut biaya.",
   },
 ];
+
+// Data Koordinat PTN di Peta Indonesia
+const ptnData = ref([
+  {
+    id: 1,
+    name: "Universitas Indonesia",
+    alumni: 45,
+    top: "73.5%",
+    left: "27.0%",
+    logo: "/assets/img/ui.png",
+  },
+  {
+    id: 2,
+    name: "Institut Pertanian Bogor",
+    alumni: 38,
+    top: "75.5%",
+    left: "27.5%",
+    logo: "/assets/img/ipb.png",
+  },
+  {
+    id: 3,
+    name: "Institut Teknologi Bandung",
+    alumni: 32,
+    top: "76.5%",
+    left: "29.0%",
+    logo: "/assets/img/itb.png",
+  },
+  {
+    id: 4,
+    name: "Universitas Diponegoro",
+    alumni: 42,
+    top: "76.5%",
+    left: "33.0%",
+    logo: "/assets/img/undip.png",
+  },
+  {
+    id: 5,
+    name: "Universitas Gadjah Mada",
+    alumni: 50,
+    top: "79.0%",
+    left: "32.5%",
+    logo: "/assets/img/ugm.png",
+  },
+]);
 
 onMounted(() => {
   // Animasi Typing Text
