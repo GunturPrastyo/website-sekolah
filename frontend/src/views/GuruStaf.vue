@@ -159,6 +159,11 @@ const baseFilteredStaff = computed(() => {
   );
 });
 
+const getCategoryCount = (categoryId) => {
+  if (categoryId === "semua") return staffList.value.length;
+  return staffList.value.filter((s) => s.category === categoryId).length;
+};
+
 // Paginated Computed properties
 const pimpinanList = computed(() => basePimpinanList.value.slice(0, itemsToShow.value));
 const guruList = computed(() => baseGuruList.value.slice(0, itemsToShow.value));
@@ -196,79 +201,79 @@ onMounted(() => {
     <!-- Main Content -->
     <section class="py-16 md:py-24 px-6 bg-gray-50 dark:bg-slate-900">
       <div class="container mx-auto max-w-7xl">
-        <div class="flex flex-col md:flex-row gap-10">
-          <!-- Sidebar -->
-          <aside class="w-full md:w-1/3 lg:w-1/4">
-            <div
-              class="md:sticky md:top-28 bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
-            >
-              <h3
-                class="text-lg font-bold text-slate-800 dark:text-white mb-5 pb-3 border-b border-gray-100 dark:border-slate-700"
-              >
-                Kategori
-              </h3>
-
-              <ul class="space-y-1.5">
-                <li v-for="category in categories" :key="category.id">
-                  <a
-                    href="#"
-                    @click.prevent="changeCategory(category.id)"
-                    class="flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 border border-transparent group"
-                    :class="{
-                      'bg-blue-50 text-blue-700 border-blue-200 shadow-sm dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800/50':
-                        activeCategory === category.id,
-                      'text-gray-600 dark:text-gray-400 hover:bg-gray-50 hover:text-gray-900 dark:hover:bg-slate-700/50 dark:hover:text-white':
-                        activeCategory !== category.id,
-                    }"
-                  >
-                    <span>{{ category.name }}</span>
-                    <svg
-                      v-if="activeCategory === category.id"
-                      class="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M5 13l4 4L19 7"
-                      ></path>
-                    </svg>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </aside>
-
+        <div class="flex flex-col w-full">
           <!-- Content -->
-          <main id="staff-content" class="w-full md:w-2/3 lg:w-3/4">
-            <!-- Search Bar -->
-            <div class="relative mb-10 group">
-              <div
-                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
-              >
-                <svg
-                  class="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+          <main id="staff-content" class="w-full">
+            <!-- Search Bar & Filter Group -->
+            <div class="flex flex-col gap-6 mb-12">
+              <!-- Search Bar -->
+              <div class="relative w-full lg:w-1/2 group">
+                <div
+                  class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  ></path>
-                </svg>
+                  <svg
+                    class="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    ></path>
+                  </svg>
+                </div>
+                <input
+                  v-model="searchQuery"
+                  type="text"
+                  placeholder="Cari nama guru atau staf..."
+                  class="block w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white placeholder-gray-400 focus:outline-none"
+                />
               </div>
-              <input
-                v-model="searchQuery"
-                type="text"
-                placeholder="Cari nama guru atau staf..."
-                class="block w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white placeholder-gray-400 focus:outline-none"
-              />
+
+              <!-- Category Filter Card -->
+              <div
+                class="w-full bg-white dark:bg-slate-800 p-5 lg:p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col gap-4"
+              >
+                <h4
+                  class="text-sm font-bold text-gray-900 dark:text-white flex items-center"
+                >
+                  <svg
+                    class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                    ></path>
+                  </svg>
+                  Kategori:
+                </h4>
+                <div class="flex flex-wrap items-center gap-2 md:gap-2.5">
+                  <button
+                    v-for="category in categories"
+                    :key="category.id"
+                    @click="changeCategory(category.id)"
+                    class="px-3.5 md:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-300 focus:outline-none flex items-center border"
+                    :class="
+                      activeCategory === category.id
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
+                        : 'bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
+                    "
+                  >
+                    {{ category.name }}
+                    <span class="ml-1 text-[11px] font-bold opacity-70">
+                      ({{ getCategoryCount(category.id) }})
+                    </span>
+                  </button>
+                </div>
+              </div>
             </div>
 
             <Transition
@@ -335,15 +340,19 @@ onMounted(() => {
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                       <div
-                        v-for="staff in pimpinanList"
+                        v-for="(staff, index) in pimpinanList"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2"
+                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
+                        :style="{
+                          animationDelay: `${index * 100}ms`,
+                          animationFillMode: 'both',
+                        }"
                       >
                         <div
-                          class="h-24 bg-gradient-to-r from-blue-600 to-blue-800 relative overflow-hidden"
+                          class="h-24 relative overflow-hidden bg-gradient-to-r from-blue-700 to-blue-900 dark:from-slate-700 dark:to-slate-800"
                         >
                           <div
-                            class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 blur-xl"
+                            class="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:12px_12px]"
                           ></div>
                         </div>
                         <div
@@ -351,7 +360,7 @@ onMounted(() => {
                         >
                           <div class="relative -mt-12 mb-4">
                             <div
-                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-105 transition-transform duration-500"
+                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
                             >
                               <img
                                 :src="staff.image"
@@ -365,12 +374,29 @@ onMounted(() => {
                           >
                             {{ staff.name }}
                           </h3>
+                          <div class="mb-3">
+                            <span
+                              class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[11px] font-bold tracking-wide"
+                            >
+                              {{ staff.role }}
+                            </span>
+                          </div>
                           <p
-                            class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-1"
+                            class="text-xs text-gray-500 dark:text-gray-400 mb-5 flex items-center justify-center gap-1.5"
                           >
-                            {{ staff.role }}
-                          </p>
-                          <p class="text-xs text-gray-500 dark:text-gray-400 mb-5">
+                            <svg
+                              class="w-3.5 h-3.5 opacity-70"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
+                              ></path>
+                            </svg>
                             NIP. {{ staff.nip || "-" }}
                           </p>
                           <div
@@ -428,15 +454,19 @@ onMounted(() => {
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                       <div
-                        v-for="staff in guruList"
+                        v-for="(staff, index) in guruList"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2"
+                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
+                        :style="{
+                          animationDelay: `${index * 100}ms`,
+                          animationFillMode: 'both',
+                        }"
                       >
                         <div
-                          class="h-24 bg-gradient-to-r from-blue-600 to-blue-800 relative overflow-hidden"
+                          class="h-24 relative overflow-hidden bg-gradient-to-r from-blue-700 to-blue-900 dark:from-slate-700 dark:to-slate-800"
                         >
                           <div
-                            class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 blur-xl"
+                            class="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:12px_12px]"
                           ></div>
                         </div>
                         <div
@@ -444,7 +474,7 @@ onMounted(() => {
                         >
                           <div class="relative -mt-12 mb-4">
                             <div
-                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-105 transition-transform duration-500"
+                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
                             >
                               <img
                                 :src="staff.image"
@@ -458,12 +488,29 @@ onMounted(() => {
                           >
                             {{ staff.name }}
                           </h3>
+                          <div class="mb-3">
+                            <span
+                              class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[11px] font-bold tracking-wide"
+                            >
+                              {{ staff.role }}
+                            </span>
+                          </div>
                           <p
-                            class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-1"
+                            class="text-xs text-gray-500 dark:text-gray-400 mb-5 flex items-center justify-center gap-1.5"
                           >
-                            {{ staff.role }}
-                          </p>
-                          <p class="text-xs text-gray-500 dark:text-gray-400 mb-5">
+                            <svg
+                              class="w-3.5 h-3.5 opacity-70"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
+                              ></path>
+                            </svg>
                             NIP. {{ staff.nip || "-" }}
                           </p>
                           <div
@@ -521,15 +568,19 @@ onMounted(() => {
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                       <div
-                        v-for="staff in stafList"
+                        v-for="(staff, index) in stafList"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2"
+                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
+                        :style="{
+                          animationDelay: `${index * 100}ms`,
+                          animationFillMode: 'both',
+                        }"
                       >
                         <div
-                          class="h-24 bg-gradient-to-r from-blue-600 to-blue-800 relative overflow-hidden"
+                          class="h-24 relative overflow-hidden bg-gradient-to-r from-blue-700 to-blue-900 dark:from-slate-700 dark:to-slate-800"
                         >
                           <div
-                            class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 blur-xl"
+                            class="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:12px_12px]"
                           ></div>
                         </div>
                         <div
@@ -537,7 +588,7 @@ onMounted(() => {
                         >
                           <div class="relative -mt-12 mb-4">
                             <div
-                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-105 transition-transform duration-500"
+                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
                             >
                               <img
                                 :src="staff.image"
@@ -551,12 +602,29 @@ onMounted(() => {
                           >
                             {{ staff.name }}
                           </h3>
+                          <div class="mb-3">
+                            <span
+                              class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[11px] font-bold tracking-wide"
+                            >
+                              {{ staff.role }}
+                            </span>
+                          </div>
                           <p
-                            class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-1"
+                            class="text-xs text-gray-500 dark:text-gray-400 mb-5 flex items-center justify-center gap-1.5"
                           >
-                            {{ staff.role }}
-                          </p>
-                          <p class="text-xs text-gray-500 dark:text-gray-400 mb-5">
+                            <svg
+                              class="w-3.5 h-3.5 opacity-70"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
+                              ></path>
+                            </svg>
                             NIP. {{ staff.nip || "-" }}
                           </p>
                           <div
@@ -653,15 +721,19 @@ onMounted(() => {
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                       <div
-                        v-for="staff in filteredStaff"
+                        v-for="(staff, index) in filteredStaff"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2"
+                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
+                        :style="{
+                          animationDelay: `${index * 100}ms`,
+                          animationFillMode: 'both',
+                        }"
                       >
                         <div
-                          class="h-24 bg-gradient-to-r from-blue-600 to-blue-800 relative overflow-hidden"
+                          class="h-24 relative overflow-hidden bg-gradient-to-r from-blue-700 to-blue-900 dark:from-slate-700 dark:to-slate-800"
                         >
                           <div
-                            class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 blur-xl"
+                            class="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:12px_12px]"
                           ></div>
                         </div>
                         <div
@@ -669,7 +741,7 @@ onMounted(() => {
                         >
                           <div class="relative -mt-12 mb-4">
                             <div
-                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-105 transition-transform duration-500"
+                              class="w-24 h-24 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
                             >
                               <img
                                 :src="staff.image"
@@ -683,12 +755,29 @@ onMounted(() => {
                           >
                             {{ staff.name }}
                           </h3>
+                          <div class="mb-3">
+                            <span
+                              class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[11px] font-bold tracking-wide"
+                            >
+                              {{ staff.role }}
+                            </span>
+                          </div>
                           <p
-                            class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-1"
+                            class="text-xs text-gray-500 dark:text-gray-400 mb-5 flex items-center justify-center gap-1.5"
                           >
-                            {{ staff.role }}
-                          </p>
-                          <p class="text-xs text-gray-500 dark:text-gray-400 mb-5">
+                            <svg
+                              class="w-3.5 h-3.5 opacity-70"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
+                              ></path>
+                            </svg>
                             NIP. {{ staff.nip || "-" }}
                           </p>
                           <div
@@ -833,3 +922,19 @@ onMounted(() => {
     </section>
   </div>
 </template>
+
+<style scoped>
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+</style>
