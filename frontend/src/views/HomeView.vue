@@ -92,15 +92,12 @@
           >
             <!-- FASILITAS (2x2 Desktop) -->
             <div
-              class="swiper-slide md:!w-auto relative rounded-lg overflow-hidden border border-gray-100 dark:border-slate-800 shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500"
+              class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500"
+              style="background-image: url('/assets/img/fasilitas.jpg')"
             >
-              <img
-                src="/assets/img/fasilitas.jpg"
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-              />
-
+              <!-- Overlay Parallax -->
               <div
-                class="absolute inset-0 bg-blue-900/40 backdrop-blur-sm group-hover:bg-blue-900/60 transition-all duration-500"
+                class="absolute inset-0 bg-blue-950/85 group-hover:bg-blue-900/80 transition-all duration-500"
               ></div>
 
               <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
@@ -142,15 +139,12 @@
 
             <!-- GURU -->
             <div
-              class="swiper-slide md:!w-auto relative rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
+              class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
+              style="background-image: url('/assets/img/pengajar.jpg')"
             >
-              <img
-                src="/assets/img/pengajar.jpg"
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-              />
-
+              <!-- Overlay Parallax -->
               <div
-                class="absolute inset-0 bg-blue-900/40 backdrop-blur-sm group-hover:bg-blue-900/60 transition-all duration-500"
+                class="absolute inset-0 bg-blue-950/85 group-hover:bg-blue-900/80 transition-all duration-500"
               ></div>
 
               <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
@@ -191,15 +185,12 @@
 
             <!-- PRESTASI -->
             <div
-              class="swiper-slide md:!w-auto relative rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
+              class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
+              style="background-image: url('/assets/img/prestasi.jpg')"
             >
-              <img
-                src="/assets/img/prestasi.jpg"
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-              />
-
+              <!-- Overlay Parallax -->
               <div
-                class="absolute inset-0 bg-blue-900/40 backdrop-blur-sm group-hover:bg-blue-900/60 transition-all duration-500"
+                class="absolute inset-0 bg-blue-950/85 group-hover:bg-blue-900/80 transition-all duration-500"
               ></div>
 
               <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
