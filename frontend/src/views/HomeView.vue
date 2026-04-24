@@ -96,11 +96,11 @@
             >
               <img
                 src="/assets/img/fasilitas.jpg"
-                class="absolute inset-0 w-full h-full object-cover scale-110 transition-transform duration-500 group-hover:scale-125"
+                class="absolute inset-0 w-full h-full object-cover blur-[2px] scale-110 transition-transform duration-500 group-hover:scale-125"
               />
 
               <div
-                class="absolute bottom-0 left-0 w-full h-full fading-blur-blue transition-all duration-500"
+                class="absolute bottom-0 left-0 w-full h-4/5 sm:h-3/4 bg-gradient-to-t from-blue-950/95 via-blue-950/70 to-transparent backdrop-blur-[3px] transition-all duration-500 group-hover:h-full"
               ></div>
 
               <!-- GLASS EFFECT -->
