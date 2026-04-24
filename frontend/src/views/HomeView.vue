@@ -356,8 +356,9 @@
             background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop');
           "
         >
+          <!-- Overlay Parallax -->
           <div
-            class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40 backdrop-blur-[2px]"
+            class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-900/80 to-slate-800/50 backdrop-blur-[2px]"
           ></div>
           <div class="relative z-10 -mt-12 pl-4 pr-4 md:px-14 max-w-2xl text-white">
             <h2 class="text-xl md:text-5xl font-bold mb-2 md:mb-4">
@@ -377,17 +378,14 @@
               <div class="swiper-wrapper">
                 <!-- IPA -->
                 <div
-                  class="swiper-slide relative min-h-[280px] overflow-hidden border border-white/10 md:border-none"
+                  class="swiper-slide relative bg-fixed bg-center bg-cover min-h-[280px] overflow-hidden border border-white/10 md:border-none group transition-shadow duration-500 hover:shadow-2xl"
+                  style="
+                    background-image: url('https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=1200&auto=format&fit=crop');
+                  "
                 >
-                  <div class="absolute inset-0">
-                    <img
-                      src="https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=1200&auto=format&fit=crop"
-                      class="w-full h-full object-cover blur-md scale-110"
-                    />
-                  </div>
-
+                  <!-- Overlay Parallax -->
                   <div
-                    class="absolute inset-0 bg-gradient-to-br from-blue-900/80 to-black/70"
+                    class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/80 to-blue-900/40 group-hover:via-slate-800/70 group-hover:to-blue-800/40 transition-all duration-500"
                   ></div>
 
                   <!-- TEXT DI ATAS -->
@@ -401,7 +399,7 @@
                     </p>
                     <router-link
                       to="/program-jurusan"
-                      class="mt-auto inline-flex items-center text-sm font-medium text-blue-300 hover:text-white transition-colors w-fit"
+                      class="mt-auto inline-flex items-center text-sm font-bold text-blue-400 group-hover:text-blue-300 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i data-lucide="chevron-right" class="w-4 h-4 ml-1.5"></i>
@@ -411,17 +409,14 @@
 
                 <!-- IPS -->
                 <div
-                  class="swiper-slide relative min-h-[280px] overflow-hidden border border-white/10 md:border-none"
+                  class="swiper-slide relative bg-fixed bg-center bg-cover min-h-[280px] overflow-hidden border border-white/10 md:border-none group transition-shadow duration-500 hover:shadow-2xl"
+                  style="
+                    background-image: url('https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=1200&auto=format&fit=crop');
+                  "
                 >
-                  <div class="absolute inset-0">
-                    <img
-                      src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=1200&auto=format&fit=crop"
-                      class="w-full h-full object-cover blur-md scale-110"
-                    />
-                  </div>
-
+                  <!-- Overlay Parallax -->
                   <div
-                    class="absolute inset-0 bg-gradient-to-br from-sky-900/80 to-black/70"
+                    class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/80 to-sky-900/40 group-hover:via-slate-800/70 group-hover:to-sky-800/40 transition-all duration-500"
                   ></div>
 
                   <div
@@ -434,7 +429,7 @@
                     </p>
                     <router-link
                       to="/program-jurusan"
-                      class="mt-auto inline-flex items-center text-sm font-medium text-sky-300 hover:text-white transition-colors w-fit"
+                      class="mt-auto inline-flex items-center text-sm font-bold text-sky-400 group-hover:text-sky-300 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i data-lucide="chevron-right" class="w-4 h-4 ml-1.5"></i>
@@ -444,17 +439,14 @@
 
                 <!-- BAHASA -->
                 <div
-                  class="swiper-slide relative min-h-[280px] overflow-hidden border border-white/10 md:border-none"
+                  class="swiper-slide relative bg-fixed bg-center bg-cover min-h-[280px] overflow-hidden border border-white/10 md:border-none group transition-shadow duration-500 hover:shadow-2xl"
+                  style="
+                    background-image: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1200&auto=format&fit=crop');
+                  "
                 >
-                  <div class="absolute inset-0">
-                    <img
-                      src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1200&auto=format&fit=crop"
-                      class="w-full h-full object-cover blur-md scale-110"
-                    />
-                  </div>
-
+                  <!-- Overlay Parallax -->
                   <div
-                    class="absolute inset-0 bg-gradient-to-br from-cyan-900/80 to-black/70"
+                    class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/80 to-cyan-900/40 group-hover:via-slate-800/70 group-hover:to-cyan-800/40 transition-all duration-500"
                   ></div>
 
                   <div
@@ -467,7 +459,7 @@
                     </p>
                     <router-link
                       to="/program-jurusan"
-                      class="mt-auto inline-flex items-center text-sm font-medium text-cyan-300 hover:text-white transition-colors w-fit"
+                      class="mt-auto inline-flex items-center text-sm font-bold text-cyan-400 group-hover:text-cyan-300 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i data-lucide="chevron-right" class="w-4 h-4 ml-1.5"></i>
@@ -477,17 +469,14 @@
 
                 <!-- INFORMATIKA -->
                 <div
-                  class="swiper-slide relative min-h-[280px] overflow-hidden border border-white/10 md:border-none"
+                  class="swiper-slide relative bg-fixed bg-center bg-cover min-h-[280px] overflow-hidden border border-white/10 md:border-none group transition-shadow duration-500 hover:shadow-2xl"
+                  style="
+                    background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726a?q=80&w=1200&auto=format&fit=crop');
+                  "
                 >
-                  <div class="absolute inset-0">
-                    <img
-                      src="https://images.unsplash.com/photo-1550745165-9bc0b252726a?q=80&w=1200&auto=format&fit=crop"
-                      class="w-full h-full object-cover blur-md scale-110"
-                    />
-                  </div>
-
+                  <!-- Overlay Parallax -->
                   <div
-                    class="absolute inset-0 bg-gradient-to-br from-purple-900/80 to-black/70"
+                    class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/80 to-purple-900/40 group-hover:via-slate-800/70 group-hover:to-purple-800/40 transition-all duration-500"
                   ></div>
 
                   <div
@@ -500,7 +489,7 @@
                     </p>
                     <router-link
                       to="/program-jurusan"
-                      class="mt-auto inline-flex items-center text-sm font-medium text-purple-300 hover:text-white transition-colors w-fit"
+                      class="mt-auto inline-flex items-center text-sm font-bold text-purple-400 group-hover:text-purple-300 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i data-lucide="chevron-right" class="w-4 h-4 ml-1.5"></i>
