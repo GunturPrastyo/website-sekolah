@@ -92,97 +92,205 @@
           >
             <!-- FASILITAS (2x2 Desktop) -->
             <div
-              class="swiper-slide md:!w-auto relative rounded-lg sm:rounded-xl overflow-hidden shadow-lg group flex flex-col min-h-[220px] md:min-h-0 md:col-span-2 md:row-span-2"
+              class="swiper-slide md:!w-auto relative rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500"
             >
               <img
                 src="/assets/img/fasilitas.jpg"
-                class="absolute inset-0 w-full h-full object-cover blur-[2px] scale-110 transition-transform duration-500 group-hover:scale-125"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
               />
 
               <div
-                class="absolute bottom-0 left-0 w-full h-4/5 sm:h-3/4 bg-gradient-to-t from-blue-950/95 via-blue-950/70 to-transparent backdrop-blur-[3px] transition-all duration-500 group-hover:h-full"
+                class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500"
               ></div>
 
-              <!-- GLASS EFFECT -->
-              <div
-                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-start md:justify-end h-full"
-              >
-                <h3 class="text-lg md:text-2xl font-semibold mb-1 md:mb-2">
-                  Fasilitas Lengkap
-                </h3>
-                <p class="text-gray-200 text-xs md:text-sm leading-relaxed line-clamp-3">
-                  Didukung dengan lab modern, ruang kelas nyaman, dan sarana belajar yang
-                  menunjang.
-                </p>
-                <router-link
-                  to="/fasilitas"
-                  class="mt-2 text-xs md:text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center"
+              <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-between">
+                <!-- Icon Glassmorphism -->
+                <div
+                  class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transform group-hover:-translate-y-1 transition-transform duration-500 shadow-sm"
                 >
-                  Lihat Selengkapnya <span class="ml-1">&gt;</span>
-                </router-link>
+                  <svg
+                    class="w-6 h-6 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1v1H9V7zm5 0h1v1h-1V7zm-5 4h1v1H9v-1zm5 0h1v1h-1v-1zm-5 4h1v1H9v-1zm5 0h1v1h-1v-1z"
+                    ></path>
+                  </svg>
+                </div>
+
+                <div class="mt-auto flex flex-col">
+                  <h3
+                    class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300"
+                  >
+                    Fasilitas Lengkap
+                  </h3>
+                  <p
+                    class="text-slate-300 text-sm md:text-base leading-relaxed mb-5 line-clamp-2 md:line-clamp-3 group-hover:text-white transition-colors duration-300"
+                  >
+                    Didukung dengan laboratorium modern, ruang kelas yang nyaman, serta
+                    sarana olahraga lengkap untuk menunjang kegiatan belajar mengajar
+                    secara optimal.
+                  </p>
+                  <router-link
+                    to="/fasilitas"
+                    class="inline-flex items-center text-sm font-bold text-blue-400 group-hover:text-blue-300 transition-colors w-fit"
+                  >
+                    Jelajahi Fasilitas
+                    <svg
+                      class="w-4 h-4 ml-1.5 transform group-hover:translate-x-1.5 transition-transform duration-300"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                      ></path>
+                    </svg>
+                  </router-link>
+                </div>
               </div>
             </div>
 
             <!-- GURU -->
             <div
-              class="swiper-slide md:!w-auto relative rounded-lg sm:rounded-xl overflow-hidden shadow-lg group flex flex-col min-h-[220px] md:min-h-0 md:col-span-2"
+              class="swiper-slide md:!w-auto relative rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 shadow-lg hover:shadow-2xl group flex flex-col min-h-[240px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
             >
               <img
                 src="/assets/img/pengajar.jpg"
-                class="absolute inset-0 w-full h-full object-cover blur-[2px] scale-110 transition-transform duration-500 group-hover:scale-125"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
               />
 
               <div
-                class="absolute bottom-0 left-0 w-full h-4/5 sm:h-3/4 bg-gradient-to-t from-blue-950/95 via-blue-950/70 to-transparent backdrop-blur-[3px] transition-all duration-500 group-hover:h-full"
+                class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500"
               ></div>
 
-              <div
-                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-start md:justify-end h-full"
-              >
-                <h3 class="text-lg md:text-2xl font-semibold mb-1 md:mb-2">
-                  Guru Berpengalaman
-                </h3>
-                <p class="text-gray-200 text-xs md:text-sm leading-relaxed line-clamp-3">
-                  Tenaga pengajar profesional yang siap membimbing siswa mencapai prestasi
-                  terbaik.
-                </p>
-                <router-link
-                  to="/guru"
-                  class="mt-2 text-xs md:text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center"
+              <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-between">
+                <!-- Icon Glassmorphism -->
+                <div
+                  class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transform group-hover:-translate-y-1 transition-transform duration-500 shadow-sm"
                 >
-                  Lihat Selengkapnya <span class="ml-1">&gt;</span>
-                </router-link>
+                  <svg
+                    class="w-6 h-6 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                    ></path>
+                  </svg>
+                </div>
+
+                <div class="mt-auto flex flex-col">
+                  <h3
+                    class="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300"
+                  >
+                    Guru Berpengalaman
+                  </h3>
+                  <p
+                    class="text-slate-300 text-sm leading-relaxed mb-4 line-clamp-2 group-hover:text-white transition-colors duration-300"
+                  >
+                    Tenaga pendidik profesional yang siap membimbing serta mendampingi
+                    siswa mencapai potensi terbaiknya.
+                  </p>
+                  <router-link
+                    to="/guru"
+                    class="inline-flex items-center text-sm font-bold text-blue-400 group-hover:text-blue-300 transition-colors w-fit"
+                  >
+                    Profil Pendidik
+                    <svg
+                      class="w-4 h-4 ml-1.5 transform group-hover:translate-x-1.5 transition-transform duration-300"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                      ></path>
+                    </svg>
+                  </router-link>
+                </div>
               </div>
             </div>
 
             <!-- PRESTASI -->
             <div
-              class="swiper-slide md:!w-auto relative rounded-lg md:rounded-xl overflow-hidden shadow-lg group flex flex-col min-h-[220px] md:min-h-0 md:col-span-2"
+              class="swiper-slide md:!w-auto relative rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 shadow-lg hover:shadow-2xl group flex flex-col min-h-[240px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
             >
               <img
                 src="/assets/img/prestasi.jpg"
-                class="absolute inset-0 w-full h-full object-cover blur-[2px] scale-110 transition-transform duration-500 group-hover:scale-125"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
               />
 
               <div
-                class="absolute bottom-0 left-0 w-full h-4/5 sm:h-3/4 bg-gradient-to-t from-blue-950/95 via-blue-950/70 to-transparent backdrop-blur-[3px] transition-all duration-500 group-hover:h-full"
+                class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500"
               ></div>
 
-              <div
-                class="relative z-10 p-4 md:p-6 text-white flex flex-col justify-start md:justify-end h-full"
-              >
-                <h3 class="text-lg md:text-2xl font-semibold mb-1 md:mb-2">
-                  Prestasi Siswa
-                </h3>
-                <p class="text-gray-200 text-xs md:text-sm leading-relaxed line-clamp-3">
-                  Berbagai pencapaian di tingkat lokal hingga nasional.
-                </p>
-                <router-link
-                  to="/prestasi"
-                  class="mt-2 text-xs md:text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center"
+              <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-between">
+                <!-- Icon Glassmorphism -->
+                <div
+                  class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transform group-hover:-translate-y-1 transition-transform duration-500 shadow-sm"
                 >
-                  Lihat Selengkapnya <span class="ml-1">&gt;</span>
-                </router-link>
+                  <svg
+                    class="w-6 h-6 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="8" r="7"></circle>
+                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                  </svg>
+                </div>
+
+                <div class="mt-auto flex flex-col">
+                  <h3
+                    class="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300"
+                  >
+                    Prestasi Siswa
+                  </h3>
+                  <p
+                    class="text-slate-300 text-sm leading-relaxed mb-4 line-clamp-2 group-hover:text-white transition-colors duration-300"
+                  >
+                    Berbagai pencapaian membanggakan di tingkat regional hingga nasional
+                    yang diraih oleh siswa-siswi berbakat.
+                  </p>
+                  <router-link
+                    to="/prestasi"
+                    class="inline-flex items-center text-sm font-bold text-blue-400 group-hover:text-blue-300 transition-colors w-fit"
+                  >
+                    Daftar Prestasi
+                    <svg
+                      class="w-4 h-4 ml-1.5 transform group-hover:translate-x-1.5 transition-transform duration-300"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                      ></path>
+                    </svg>
+                  </router-link>
+                </div>
               </div>
             </div>
           </div>
