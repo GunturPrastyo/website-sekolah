@@ -30,6 +30,8 @@ watch(
     // nextTick memastikan DOM sudah diperbarui sebelum menjalankan createIcons
     nextTick(() => {
       initLucideIcons();
+      // Menggulir halaman ke atas dengan animasi yang mulus setiap kali pindah halaman
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
   },
   { immediate: true, deep: true }
