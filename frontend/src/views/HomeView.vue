@@ -96,11 +96,11 @@
             >
               <img
                 src="/assets/img/fasilitas.jpg"
-                class="absolute inset-0 w-full h-full object-cover blur-[2px] scale-110 transition-transform duration-500 group-hover:scale-125"
+                class="absolute inset-0 w-full h-full object-cover scale-110 transition-transform duration-500 group-hover:scale-125"
               />
 
               <div
-                class="absolute bottom-0 left-0 w-full h-4/5 sm:h-3/4 bg-gradient-to-t from-blue-950/95 via-blue-950/70 to-transparent backdrop-blur-[3px] transition-all duration-500 group-hover:h-full"
+                class="absolute bottom-0 left-0 w-full h-full fading-blur-blue transition-all duration-500"
               ></div>
 
               <!-- GLASS EFFECT -->
@@ -114,12 +114,12 @@
                   Didukung dengan lab modern, ruang kelas nyaman, dan sarana belajar yang
                   menunjang.
                 </p>
-                <a
-                  href="#"
+                <router-link
+                  to="/fasilitas"
                   class="mt-2 text-xs md:text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center"
                 >
                   Lihat Selengkapnya <span class="ml-1">&gt;</span>
-                </a>
+                </router-link>
               </div>
             </div>
 
@@ -146,12 +146,12 @@
                   Tenaga pengajar profesional yang siap membimbing siswa mencapai prestasi
                   terbaik.
                 </p>
-                <a
-                  href="#"
+                <router-link
+                  to="/guru"
                   class="mt-2 text-xs md:text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center"
                 >
                   Lihat Selengkapnya <span class="ml-1">&gt;</span>
-                </a>
+                </router-link>
               </div>
             </div>
 
@@ -177,12 +177,12 @@
                 <p class="text-gray-200 text-xs md:text-sm leading-relaxed line-clamp-3">
                   Berbagai pencapaian di tingkat lokal hingga nasional.
                 </p>
-                <a
-                  href="#"
+                <router-link
+                  to="/prestasi"
                   class="mt-2 text-xs md:text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center"
                 >
                   Lihat Selengkapnya <span class="ml-1">&gt;</span>
-                </a>
+                </router-link>
               </div>
             </div>
           </div>
@@ -344,13 +344,13 @@
                       Fokus pada sains seperti fisika, kimia, dan biologi untuk membuka
                       peluang di bidang teknologi.
                     </p>
-                    <a
-                      href="#"
+                    <router-link
+                      to="/program-jurusan"
                       class="mt-auto inline-flex items-center text-sm font-medium text-blue-300 hover:text-white transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i data-lucide="chevron-right" class="w-4 h-4 ml-1.5"></i>
-                    </a>
+                    </router-link>
                   </div>
                 </div>
 
@@ -377,13 +377,13 @@
                       Mempelajari ekonomi, sejarah, dan geografi untuk memahami masyarakat
                       dan dunia.
                     </p>
-                    <a
-                      href="#"
+                    <router-link
+                      to="/program-jurusan"
                       class="mt-auto inline-flex items-center text-sm font-medium text-sky-300 hover:text-white transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i data-lucide="chevron-right" class="w-4 h-4 ml-1.5"></i>
-                    </a>
+                    </router-link>
                   </div>
                 </div>
 
@@ -410,13 +410,13 @@
                       Mendalami bahasa dan budaya untuk peluang di bidang komunikasi dan
                       pariwisata.
                     </p>
-                    <a
-                      href="#"
+                    <router-link
+                      to="/program-jurusan"
                       class="mt-auto inline-flex items-center text-sm font-medium text-cyan-300 hover:text-white transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i data-lucide="chevron-right" class="w-4 h-4 ml-1.5"></i>
-                    </a>
+                    </router-link>
                   </div>
                 </div>
 
@@ -443,13 +443,13 @@
                       Mendalami dunia koding, jaringan, dan pengembangan software untuk
                       karir di industri digital.
                     </p>
-                    <a
-                      href="#"
+                    <router-link
+                      to="/program-jurusan"
                       class="mt-auto inline-flex items-center text-sm font-medium text-purple-300 hover:text-white transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i data-lucide="chevron-right" class="w-4 h-4 ml-1.5"></i>
-                    </a>
+                    </router-link>
                   </div>
                 </div>
               </div>
@@ -1502,10 +1502,10 @@
                 Daftarkan dirimu dan raih masa depan gemilang bersama kami!
               </p>
               <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a
-                  href="#"
+                <router-link
+                  to="/pendaftaran"
                   class="px-6 py-3.5 bg-yellow-400 text-blue-950 font-bold rounded-xl shadow-lg hover:bg-yellow-300 hover:scale-105 transition-all text-sm md:text-base animate-float"
-                  >Daftar Sekarang</a
+                  >Daftar Sekarang</router-link
                 >
                 <a
                   href="#"
