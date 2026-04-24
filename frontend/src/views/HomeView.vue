@@ -103,26 +103,7 @@
                 class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500"
               ></div>
 
-              <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-between">
-                <!-- Icon Glassmorphism -->
-                <div
-                  class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transform group-hover:-translate-y-1 transition-transform duration-500 shadow-sm"
-                >
-                  <svg
-                    class="w-6 h-6 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1v1H9V7zm5 0h1v1h-1V7zm-5 4h1v1H9v-1zm5 0h1v1h-1v-1zm-5 4h1v1H9v-1zm5 0h1v1h-1v-1z"
-                    ></path>
-                  </svg>
-                </div>
-
+              <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
                 <div class="mt-auto flex flex-col">
                   <h3
                     class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300"
@@ -151,7 +132,7 @@
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                        d="M9 5l7 7-7 7"
                       ></path>
                     </svg>
                   </router-link>
@@ -172,26 +153,7 @@
                 class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500"
               ></div>
 
-              <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-between">
-                <!-- Icon Glassmorphism -->
-                <div
-                  class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transform group-hover:-translate-y-1 transition-transform duration-500 shadow-sm"
-                >
-                  <svg
-                    class="w-6 h-6 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                    ></path>
-                  </svg>
-                </div>
-
+              <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
                 <div class="mt-auto flex flex-col">
                   <h3
                     class="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300"
@@ -219,7 +181,7 @@
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                        d="M9 5l7 7-7 7"
                       ></path>
                     </svg>
                   </router-link>
@@ -240,25 +202,7 @@
                 class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500"
               ></div>
 
-              <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-between">
-                <!-- Icon Glassmorphism -->
-                <div
-                  class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transform group-hover:-translate-y-1 transition-transform duration-500 shadow-sm"
-                >
-                  <svg
-                    class="w-6 h-6 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <circle cx="12" cy="8" r="7"></circle>
-                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                  </svg>
-                </div>
-
+              <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
                 <div class="mt-auto flex flex-col">
                   <h3
                     class="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300"
@@ -286,7 +230,7 @@
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                        d="M9 5l7 7-7 7"
                       ></path>
                     </svg>
                   </router-link>
