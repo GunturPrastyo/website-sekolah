@@ -97,7 +97,7 @@
             >
               <!-- Overlay Parallax -->
               <div
-                class="absolute inset-0 bg-blue-950/85 group-hover:bg-blue-900/80 transition-all duration-500"
+                class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/80 to-slate-800/40 group-hover:via-slate-800/70 group-hover:to-slate-700/40 transition-all duration-500"
               ></div>
 
               <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
@@ -144,7 +144,7 @@
             >
               <!-- Overlay Parallax -->
               <div
-                class="absolute inset-0 bg-blue-950/85 group-hover:bg-blue-900/80 transition-all duration-500"
+                class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/80 to-slate-800/40 group-hover:via-slate-800/70 group-hover:to-slate-700/40 transition-all duration-500"
               ></div>
 
               <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
@@ -190,7 +190,7 @@
             >
               <!-- Overlay Parallax -->
               <div
-                class="absolute inset-0 bg-blue-950/85 group-hover:bg-blue-900/80 transition-all duration-500"
+                class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/80 to-slate-800/40 group-hover:via-slate-800/70 group-hover:to-slate-700/40 transition-all duration-500"
               ></div>
 
               <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
@@ -246,7 +246,9 @@
           "
         >
           <!-- Overlay Parallax -->
-          <div class="absolute inset-0 bg-blue-950/85"></div>
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-slate-950/90 via-blue-950/80 to-slate-900/90 backdrop-blur-[2px]"
+          ></div>
 
           <!-- LEFT TEXT -->
           <div class="relative z-10 md:w-1/2 lg:w-1/3 mx-6 mt-4 md:mt-0">
@@ -534,7 +536,7 @@
               class="flex flex-col md:flex-row md:justify-between md:items-end ml-0 sm:ml-4 gap-4"
             >
               <p
-                class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base max-w-2xl md:pb-4"
+                class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base max-w-2xl"
               >
                 Ikuti terus perkembangan informasi terbaru seputar kegiatan, prestasi, dan
                 agenda penting di lingkungan sekolah kami.
