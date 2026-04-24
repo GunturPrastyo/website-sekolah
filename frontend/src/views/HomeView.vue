@@ -241,7 +241,7 @@
               <div
                 v-for="ptn in ptnData"
                 :key="ptn.id"
-                class="absolute flex justify-center items-center group cursor-pointer hover:z-50"
+                class="absolute flex justify-center items-center group cursor-pointer hover:z-50 w-8 h-8 md:w-10 md:h-10 -translate-x-1/2 -translate-y-1/2"
                 :style="{ top: ptn.top, left: ptn.left, zIndex: 10 }"
               >
                 <!-- Elegant Pulse Effect -->
@@ -255,7 +255,7 @@
 
                 <!-- Tooltip Detail PTN -->
                 <div
-                  class="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-56 md:w-60 bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none z-20 translate-y-4 group-hover:translate-y-0 scale-90 group-hover:scale-100 origin-bottom border border-gray-100 dark:border-slate-700"
+                  class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 w-56 md:w-60 bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none z-20 translate-y-4 group-hover:translate-y-0 scale-90 group-hover:scale-100 origin-bottom border border-gray-100 dark:border-slate-700"
                 >
                   <!-- Chat Bubble Tail -->
                   <div
@@ -1834,40 +1834,40 @@ const ptnData = ref([
     id: 1,
     name: "Universitas Indonesia",
     alumni: 45,
-    top: "73.5%",
-    left: "27.0%",
+    top: "72%",
+    left: "28%",
     logo: "/assets/img/ui.png",
   },
   {
     id: 2,
     name: "Institut Pertanian Bogor",
     alumni: 38,
-    top: "75.5%",
-    left: "27.5%",
+    top: "76%",
+    left: "30%",
     logo: "/assets/img/ipb.png",
   },
   {
     id: 3,
     name: "Institut Teknologi Bandung",
     alumni: 32,
-    top: "76.5%",
-    left: "29.0%",
+    top: "79%",
+    left: "33%",
     logo: "/assets/img/itb.png",
   },
   {
     id: 4,
     name: "Universitas Diponegoro",
     alumni: 42,
-    top: "76.5%",
-    left: "33.0%",
+    top: "76%",
+    left: "38%",
     logo: "/assets/img/undip.png",
   },
   {
     id: 5,
     name: "Universitas Gadjah Mada",
     alumni: 50,
-    top: "79.0%",
-    left: "32.5%",
+    top: "81%",
+    left: "40%",
     logo: "/assets/img/ugm.png",
   },
 ]);
