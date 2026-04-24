@@ -92,7 +92,7 @@
           >
             <!-- FASILITAS (2x2 Desktop) -->
             <div
-              class="swiper-slide md:!w-auto relative rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500"
+              class="swiper-slide md:!w-auto relative rounded-lg overflow-hidden border border-gray-100 dark:border-slate-800 shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500"
             >
               <img
                 src="/assets/img/fasilitas.jpg"
@@ -100,7 +100,7 @@
               />
 
               <div
-                class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                class="absolute inset-0 bg-blue-900/40 backdrop-blur-sm group-hover:bg-blue-900/60 transition-all duration-500"
               ></div>
 
               <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
@@ -142,7 +142,7 @@
 
             <!-- GURU -->
             <div
-              class="swiper-slide md:!w-auto relative rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 shadow-lg hover:shadow-2xl group flex flex-col min-h-[240px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
+              class="swiper-slide md:!w-auto relative rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
             >
               <img
                 src="/assets/img/pengajar.jpg"
@@ -150,7 +150,7 @@
               />
 
               <div
-                class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                class="absolute inset-0 bg-blue-900/40 backdrop-blur-sm group-hover:bg-blue-900/60 transition-all duration-500"
               ></div>
 
               <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
@@ -191,7 +191,7 @@
 
             <!-- PRESTASI -->
             <div
-              class="swiper-slide md:!w-auto relative rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 shadow-lg hover:shadow-2xl group flex flex-col min-h-[240px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
+              class="swiper-slide md:!w-auto relative rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
             >
               <img
                 src="/assets/img/prestasi.jpg"
@@ -199,7 +199,7 @@
               />
 
               <div
-                class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                class="absolute inset-0 bg-blue-900/40 backdrop-blur-sm group-hover:bg-blue-900/60 transition-all duration-500"
               ></div>
 
               <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
