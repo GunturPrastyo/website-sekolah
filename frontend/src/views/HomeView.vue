@@ -255,32 +255,42 @@
 
                 <!-- Tooltip Detail PTN -->
                 <div
-                  class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-48 md:w-52 bg-white dark:bg-slate-800 rounded-xl p-3 shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-20 translate-y-2 group-hover:translate-y-0 scale-95 group-hover:scale-100 origin-bottom border border-gray-100 dark:border-slate-700"
+                  class="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-56 md:w-60 bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none z-20 translate-y-4 group-hover:translate-y-0 scale-90 group-hover:scale-100 origin-bottom border border-gray-100 dark:border-slate-700"
                 >
-                  <!-- Segitiga Pointer Bawah -->
+                  <!-- Chat Bubble Tail -->
                   <div
-                    class="absolute -bottom-2 left-1/2 -translate-x-1/2 border-8 border-transparent border-t-white dark:border-t-slate-800 drop-shadow-md"
+                    class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-slate-800 rotate-45 border-b border-r border-gray-100 dark:border-slate-700 rounded-sm"
                   ></div>
 
-                  <div
-                    class="flex items-center gap-3 border-b border-gray-100 dark:border-slate-700 pb-2 mb-2"
-                  >
-                    <img
-                      :src="ptn.logo"
-                      class="w-8 h-8 object-contain bg-white rounded p-1 shadow-sm shrink-0"
-                    />
-                    <h4
-                      class="font-bold text-xs text-gray-900 dark:text-white leading-tight"
+                  <div class="flex flex-col relative z-10">
+                    <div class="flex items-center gap-3 mb-3">
+                      <div
+                        class="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 border border-gray-100 dark:border-slate-600 p-1.5 shrink-0 flex items-center justify-center shadow-inner"
+                      >
+                        <img :src="ptn.logo" class="w-full h-full object-contain" />
+                      </div>
+                      <div class="flex flex-col text-left">
+                        <h4
+                          class="font-bold text-sm text-gray-900 dark:text-white leading-tight line-clamp-2"
+                        >
+                          {{ ptn.name }}
+                        </h4>
+                      </div>
+                    </div>
+                    <div
+                      class="bg-blue-50 dark:bg-blue-900/30 rounded-lg py-2 px-3 flex justify-between items-center border border-blue-100 dark:border-blue-800/50"
                     >
-                      {{ ptn.name }}
-                    </h4>
+                      <span
+                        class="text-[11px] font-medium text-blue-600 dark:text-blue-300"
+                        >Total Alumni</span
+                      >
+                      <span
+                        class="font-bold text-blue-700 dark:text-blue-400 text-xs bg-white dark:bg-slate-800 border border-blue-100/50 dark:border-slate-700 px-2 py-0.5 rounded shadow-sm"
+                      >
+                        {{ ptn.alumni }} Siswa
+                      </span>
+                    </div>
                   </div>
-                  <p class="text-[11px] text-gray-500 dark:text-gray-400">
-                    Total Alumni:
-                    <span class="font-bold text-blue-600 dark:text-blue-400 text-xs"
-                      >{{ ptn.alumni }} Siswa</span
-                    >
-                  </p>
                 </div>
               </div>
             </div>
