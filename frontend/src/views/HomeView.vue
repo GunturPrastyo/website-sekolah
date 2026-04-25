@@ -374,33 +374,39 @@
         <div class="relative z-20 mt-[-80px] md:mt-[-100px]">
           <!-- dibuat 80% dari header -->
           <div class="max-w-[90%] mx-auto md:max-w-[95%]">
-            <div class="swiper jurusan-swiper !pb-10 !pt-2 px-2 md:px-0">
-              <div class="swiper-wrapper">
+            <div class="swiper jurusan-swiper rounded-2xl overflow-hidden shadow-xl">
+              <div class="swiper-wrapper items-stretch">
                 <!-- IPA -->
                 <div
-                  class="swiper-slide relative bg-white dark:bg-slate-800 rounded-2xl min-h-[280px] overflow-hidden border border-gray-100 dark:border-slate-700 shadow-lg group transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                  class="swiper-slide !h-auto relative min-h-[280px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
                 >
+                  <div class="absolute inset-0">
+                    <img
+                      src="https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800"
+                      class="w-full h-full object-cover scale-110 blur-sm group-hover:blur-none transition-all duration-500"
+                    />
+                  </div>
+                  <div
+                    class="absolute inset-0 bg-gradient-to-br from-blue-900/90 to-slate-900/80 group-hover:from-blue-800/80 transition-colors duration-500"
+                  ></div>
+
                   <!-- TEXT DI ATAS -->
                   <div
-                    class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full"
+                    class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full text-white"
                   >
                     <div
-                      class="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300"
+                      class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
                       <i data-lucide="flask-conical" class="w-7 h-7"></i>
                     </div>
-                    <h3 class="text-2xl font-bold mb-3 text-slate-900 dark:text-white">
-                      IPA
-                    </h3>
-                    <p
-                      class="text-slate-600 dark:text-slate-300 text-sm md:text-base mb-6 leading-relaxed"
-                    >
+                    <h3 class="text-2xl font-bold mb-3 text-white">IPA</h3>
+                    <p class="text-blue-100 text-sm md:text-base mb-6 leading-relaxed">
                       Fokus pada sains seperti fisika, kimia, dan biologi untuk membuka
                       peluang di bidang teknologi.
                     </p>
                     <router-link
                       to="/program-jurusan"
-                      class="mt-auto inline-flex items-center text-sm font-bold text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors w-fit"
+                      class="mt-auto inline-flex items-center text-sm font-bold text-white group-hover:text-blue-200 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i
@@ -413,28 +419,34 @@
 
                 <!-- IPS -->
                 <div
-                  class="swiper-slide relative bg-white dark:bg-slate-800 rounded-2xl min-h-[280px] overflow-hidden border border-gray-100 dark:border-slate-700 shadow-lg group transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                  class="swiper-slide !h-auto relative min-h-[280px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
                 >
+                  <div class="absolute inset-0">
+                    <img
+                      src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=800"
+                      class="w-full h-full object-cover scale-110 blur-sm group-hover:blur-none transition-all duration-500"
+                    />
+                  </div>
                   <div
-                    class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full"
+                    class="absolute inset-0 bg-gradient-to-br from-sky-900/90 to-slate-900/80 group-hover:from-sky-800/80 transition-colors duration-500"
+                  ></div>
+
+                  <div
+                    class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full text-white"
                   >
                     <div
-                      class="w-14 h-14 rounded-2xl bg-sky-50 dark:bg-sky-900/30 flex items-center justify-center text-sky-600 dark:text-sky-400 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300"
+                      class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
                       <i data-lucide="globe-2" class="w-7 h-7"></i>
                     </div>
-                    <h3 class="text-2xl font-bold mb-3 text-slate-900 dark:text-white">
-                      IPS
-                    </h3>
-                    <p
-                      class="text-slate-600 dark:text-slate-300 text-sm md:text-base mb-6 leading-relaxed"
-                    >
+                    <h3 class="text-2xl font-bold mb-3 text-white">IPS</h3>
+                    <p class="text-sky-100 text-sm md:text-base mb-6 leading-relaxed">
                       Mempelajari ekonomi, sejarah, dan geografi untuk memahami masyarakat
                       dan dunia.
                     </p>
                     <router-link
                       to="/program-jurusan"
-                      class="mt-auto inline-flex items-center text-sm font-bold text-sky-600 dark:text-sky-400 group-hover:text-sky-700 dark:group-hover:text-sky-300 transition-colors w-fit"
+                      class="mt-auto inline-flex items-center text-sm font-bold text-white group-hover:text-sky-200 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i
@@ -447,28 +459,34 @@
 
                 <!-- BAHASA -->
                 <div
-                  class="swiper-slide relative bg-white dark:bg-slate-800 rounded-2xl min-h-[280px] overflow-hidden border border-gray-100 dark:border-slate-700 shadow-lg group transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                  class="swiper-slide !h-auto relative min-h-[280px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
                 >
+                  <div class="absolute inset-0">
+                    <img
+                      src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800"
+                      class="w-full h-full object-cover scale-110 blur-sm group-hover:blur-none transition-all duration-500"
+                    />
+                  </div>
                   <div
-                    class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full"
+                    class="absolute inset-0 bg-gradient-to-br from-cyan-900/90 to-slate-900/80 group-hover:from-cyan-800/80 transition-colors duration-500"
+                  ></div>
+
+                  <div
+                    class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full text-white"
                   >
                     <div
-                      class="w-14 h-14 rounded-2xl bg-cyan-50 dark:bg-cyan-900/30 flex items-center justify-center text-cyan-600 dark:text-cyan-400 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300"
+                      class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
                       <i data-lucide="languages" class="w-7 h-7"></i>
                     </div>
-                    <h3 class="text-2xl font-bold mb-3 text-slate-900 dark:text-white">
-                      Bahasa
-                    </h3>
-                    <p
-                      class="text-slate-600 dark:text-slate-300 text-sm md:text-base mb-6 leading-relaxed"
-                    >
+                    <h3 class="text-2xl font-bold mb-3 text-white">Bahasa</h3>
+                    <p class="text-cyan-100 text-sm md:text-base mb-6 leading-relaxed">
                       Mendalami bahasa dan budaya untuk peluang di bidang komunikasi dan
                       pariwisata.
                     </p>
                     <router-link
                       to="/program-jurusan"
-                      class="mt-auto inline-flex items-center text-sm font-bold text-cyan-600 dark:text-cyan-400 group-hover:text-cyan-700 dark:group-hover:text-cyan-300 transition-colors w-fit"
+                      class="mt-auto inline-flex items-center text-sm font-bold text-white group-hover:text-cyan-200 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i
@@ -481,28 +499,34 @@
 
                 <!-- INFORMATIKA -->
                 <div
-                  class="swiper-slide relative bg-white dark:bg-slate-800 rounded-2xl min-h-[280px] overflow-hidden border border-gray-100 dark:border-slate-700 shadow-lg group transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                  class="swiper-slide !h-auto relative min-h-[280px] overflow-hidden group cursor-pointer"
                 >
+                  <div class="absolute inset-0">
+                    <img
+                      src="https://images.unsplash.com/photo-1550745165-9bc0b252726a?q=80&w=800"
+                      class="w-full h-full object-cover scale-110 blur-sm group-hover:blur-none transition-all duration-500"
+                    />
+                  </div>
                   <div
-                    class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full"
+                    class="absolute inset-0 bg-gradient-to-br from-purple-900/90 to-slate-900/80 group-hover:from-purple-800/80 transition-colors duration-500"
+                  ></div>
+
+                  <div
+                    class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full text-white"
                   >
                     <div
-                      class="w-14 h-14 rounded-2xl bg-purple-50 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300"
+                      class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
                       <i data-lucide="monitor" class="w-7 h-7"></i>
                     </div>
-                    <h3 class="text-2xl font-bold mb-3 text-slate-900 dark:text-white">
-                      Informatika
-                    </h3>
-                    <p
-                      class="text-slate-600 dark:text-slate-300 text-sm md:text-base mb-6 leading-relaxed"
-                    >
+                    <h3 class="text-2xl font-bold mb-3 text-white">Informatika</h3>
+                    <p class="text-purple-100 text-sm md:text-base mb-6 leading-relaxed">
                       Mendalami dunia koding, jaringan, dan pengembangan software untuk
                       karir di industri digital.
                     </p>
                     <router-link
                       to="/program-jurusan"
-                      class="mt-auto inline-flex items-center text-sm font-bold text-purple-600 dark:text-purple-400 group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors w-fit"
+                      class="mt-auto inline-flex items-center text-sm font-bold text-white group-hover:text-purple-200 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i
@@ -1998,12 +2022,15 @@ onMounted(() => {
       disableOnInteraction: false,
     },
     slidesPerView: 1,
-    spaceBetween: 10,
+    spaceBetween: 0,
     pagination: { el: ".jurusan-pagination", clickable: true },
     breakpoints: {
       768: {
-        slidesPerView: 3,
-        spaceBetween: 24,
+        slidesPerView: 4,
+        spaceBetween: 0,
+        allowTouchMove: false,
+        loop: false,
+        autoplay: false,
         pagination: { enabled: false },
       },
     },
