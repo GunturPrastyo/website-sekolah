@@ -1492,7 +1492,7 @@
     <!-- FAQ & CTA PPDB Section (Sejajar di Desktop) -->
     <section class="relative -mx-6 md:mx-0 overflow-hidden">
       <div
-        class="container relative mx-auto p-8 mb-8 px-6 md:px-4 md:mx-0 rounded-sm sm:rounded-xl bg-fixed bg-center bg-cover overflow-hidden shadow-xl"
+        class="w-full max-w-7xl relative mx-auto p-8 mb-8 px-6 md:px-8 rounded-sm sm:rounded-xl bg-fixed bg-center bg-cover overflow-hidden shadow-xl"
         style="
           background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200');
         "
