@@ -253,11 +253,11 @@
           <!-- LEFT TEXT -->
           <div class="relative z-10 md:w-1/2 lg:w-1/3 mx-6 mt-4 md:mt-0">
             <h3 class="text-lg md:text-2xl font-bold text-white mb-2">
-              Alumni Diterima di PTN Favorit
+              Persebaran Alumni Kami
             </h3>
             <p class="text-sm md:text-base text-sky-50 leading-relaxed">
               Lulusan kami telah berhasil melanjutkan pendidikan ke berbagai perguruan
-              tinggi ternama di Indonesia.
+              tinggi ternama serta sukses berkarir di dunia industri dan profesional.
             </p>
           </div>
 
@@ -273,7 +273,7 @@
               <!-- Base Map (Peta Indonesia) menggunakan tag img agar bebas blokir CORS -->
               <img
                 src="/assets/img/indonesia.svg"
-                alt="Peta Persebaran Alumni"
+                alt="Ilustrasi Persebaran Alumni"
                 class="absolute inset-0 w-full h-full object-fill pointer-events-none opacity-70 dark:opacity-40 transition-opacity duration-700 group-hover/map:opacity-100 dark:group-hover/map:opacity-70"
                 style="
                   filter: invert(56%) sepia(61%) saturate(3000%) hue-rotate(175deg)
@@ -284,10 +284,10 @@
 
               <!-- Markers Alumni -->
               <div
-                v-for="ptn in ptnData"
-                :key="ptn.id"
+                v-for="loc in alumniLocations"
+                :key="loc.id"
                 class="absolute flex justify-center items-center group cursor-pointer hover:z-50 w-8 h-8 md:w-10 md:h-10 -translate-x-1/2 -translate-y-1/2"
-                :style="{ top: ptn.top, left: ptn.left, zIndex: 10 }"
+                :style="{ top: loc.top, left: loc.left, zIndex: 10 }"
               >
                 <!-- Elegant Pulse Effect -->
                 <span
@@ -312,13 +312,13 @@
                       <div
                         class="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 border border-gray-100 dark:border-slate-600 p-1.5 shrink-0 flex items-center justify-center shadow-inner"
                       >
-                        <img :src="ptn.logo" class="w-full h-full object-contain" />
+                        <img :src="loc.logo" class="w-full h-full object-contain" />
                       </div>
                       <div class="flex flex-col text-left">
                         <h4
                           class="font-bold text-sm text-gray-900 dark:text-white leading-tight line-clamp-2"
                         >
-                          {{ ptn.name }}
+                          {{ loc.name }}
                         </h4>
                       </div>
                     </div>
@@ -332,7 +332,7 @@
                       <span
                         class="font-bold text-blue-700 dark:text-blue-400 text-xs bg-white dark:bg-slate-800 border border-blue-100/50 dark:border-slate-700 px-2 py-0.5 rounded shadow-sm"
                       >
-                        {{ ptn.alumni }} Siswa
+                        {{ loc.alumni }} Orang
                       </span>
                     </div>
                   </div>
@@ -1902,8 +1902,8 @@ const faqs = [
   },
 ];
 
-// Data Koordinat PTN di Peta Indonesia
-const ptnData = ref([
+// Data Koordinat Persebaran Alumni di Peta Indonesia (Pendidikan & Karir)
+const alumniLocations = ref([
   {
     id: 1,
     name: "Universitas Indonesia",
@@ -1930,11 +1930,11 @@ const ptnData = ref([
   },
   {
     id: 4,
-    name: "Universitas Diponegoro",
-    alumni: 42,
-    top: "76%",
-    left: "38%",
-    logo: "/assets/img/undip.png",
+    name: "Kawasan Industri & Manufaktur",
+    alumni: 125,
+    top: "74%",
+    left: "31%",
+    logo: "https://img.icons8.com/color/96/factory.png",
   },
   {
     id: 5,
@@ -1943,6 +1943,22 @@ const ptnData = ref([
     top: "81%",
     left: "40%",
     logo: "/assets/img/ugm.png",
+  },
+  {
+    id: 6,
+    name: "BUMN & Instansi Pemerintah",
+    alumni: 85,
+    top: "70%",
+    left: "27%",
+    logo: "https://img.icons8.com/color/96/city-buildings.png",
+  },
+  {
+    id: 7,
+    name: "Perusahaan Tech & Startup",
+    alumni: 64,
+    top: "78%",
+    left: "26%",
+    logo: "https://img.icons8.com/color/96/laptop--v1.png",
   },
 ]);
 
