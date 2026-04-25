@@ -2041,6 +2041,10 @@ onMounted(() => {
     pagination: { el: ".jurusan-pagination", clickable: true },
     breakpoints: {
       768: {
+        slidesPerView: 2,
+        spaceBetween: 0,
+      },
+      1024: {
         slidesPerView: 3,
         spaceBetween: 0,
       },
