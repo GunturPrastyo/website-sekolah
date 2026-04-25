@@ -632,7 +632,9 @@
 
             <!-- Berita Pendukung (Bawah - 3 Kecil) -->
             <div class="relative">
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 pb-8 lg:pb-0">
+              <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pb-8 lg:pb-0"
+              >
                 <!-- Card 1 -->
                 <a
                   href="#"
@@ -732,7 +734,7 @@
                 <!-- Card 3 -->
                 <a
                   href="#"
-                  class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full"
+                  class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full sm:hidden lg:flex"
                 >
                   <div class="h-40 overflow-hidden relative">
                     <img
