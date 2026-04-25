@@ -251,11 +251,11 @@
           ></div>
 
           <!-- LEFT TEXT -->
-          <div class="relative z-10 md:w-1/2 lg:w-1/3 mx-6 mt-4 md:mt-0">
-            <h3 class="text-lg md:text-2xl font-bold text-white mb-2">
+          <div class="relative z-10 md:w-2/5 lg:w-1/3 mx-6 mt-4 md:mt-0">
+            <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-white mb-2">
               Persebaran Alumni Kami
             </h3>
-            <p class="text-sm md:text-base text-sky-50 leading-relaxed">
+            <p class="text-sm lg:text-base text-sky-50 leading-relaxed">
               Lulusan kami telah berhasil melanjutkan pendidikan ke berbagai perguruan
               tinggi ternama serta sukses berkarir di dunia industri dan profesional.
             </p>
@@ -263,12 +263,11 @@
 
           <!-- RIGHT MAP VISUALIZATION -->
           <div
-            class="relative z-10 md:w-2/3 w-full flex items-center justify-center min-h-[220px] md:min-h-[280px] mt-0"
+            class="relative z-10 md:w-3/5 lg:w-2/3 w-full flex items-center justify-center min-h-[220px] md:min-h-[280px] mt-0"
           >
             <!-- Container Map Indonesia (Dibuat lebih pipih/lebar) -->
             <div
-              class="relative w-full max-w-4xl group/map transition-transform duration-700 ease-out hover:scale-105"
-              style="aspect-ratio: 3.5 / 1"
+              class="relative w-full max-w-4xl group/map transition-transform duration-700 ease-out hover:scale-105 aspect-[2.5/1] md:aspect-[2/1] lg:aspect-[3.5/1]"
             >
               <!-- Base Map (Peta Indonesia) menggunakan tag img agar bebas blokir CORS -->
               <img
