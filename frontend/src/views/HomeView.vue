@@ -395,18 +395,18 @@
                     class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full text-white"
                   >
                     <div
-                      class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
+                      class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
                       <i data-lucide="flask-conical" class="w-7 h-7"></i>
                     </div>
-                    <h3 class="text-2xl font-bold mb-3 text-white">IPA</h3>
-                    <p class="text-blue-100 text-sm md:text-base mb-6 leading-relaxed">
+                    <h3 class="text-2xl font-bold mb-2 text-white">IPA</h3>
+                    <p class="text-blue-100 text-sm md:text-base mb-4 leading-relaxed">
                       Fokus pada sains seperti fisika, kimia, dan biologi untuk membuka
                       peluang di bidang teknologi.
                     </p>
                     <router-link
                       to="/program-jurusan"
-                      class="mt-auto inline-flex items-center text-sm font-bold text-white group-hover:text-blue-200 transition-colors w-fit"
+                      class="mt-2 inline-flex items-center text-sm font-bold text-white group-hover:text-blue-200 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i
@@ -435,18 +435,18 @@
                     class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full text-white"
                   >
                     <div
-                      class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
+                      class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
                       <i data-lucide="globe-2" class="w-7 h-7"></i>
                     </div>
-                    <h3 class="text-2xl font-bold mb-3 text-white">IPS</h3>
-                    <p class="text-sky-100 text-sm md:text-base mb-6 leading-relaxed">
+                    <h3 class="text-2xl font-bold mb-2 text-white">IPS</h3>
+                    <p class="text-sky-100 text-sm md:text-base mb-4 leading-relaxed">
                       Mempelajari ekonomi, sejarah, dan geografi untuk memahami masyarakat
                       dan dunia.
                     </p>
                     <router-link
                       to="/program-jurusan"
-                      class="mt-auto inline-flex items-center text-sm font-bold text-white group-hover:text-sky-200 transition-colors w-fit"
+                      class="mt-2 inline-flex items-center text-sm font-bold text-white group-hover:text-sky-200 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i
@@ -475,18 +475,18 @@
                     class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full text-white"
                   >
                     <div
-                      class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
+                      class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
                       <i data-lucide="languages" class="w-7 h-7"></i>
                     </div>
-                    <h3 class="text-2xl font-bold mb-3 text-white">Bahasa</h3>
-                    <p class="text-cyan-100 text-sm md:text-base mb-6 leading-relaxed">
+                    <h3 class="text-2xl font-bold mb-2 text-white">Bahasa</h3>
+                    <p class="text-cyan-100 text-sm md:text-base mb-4 leading-relaxed">
                       Mendalami bahasa dan budaya untuk peluang di bidang komunikasi dan
                       pariwisata.
                     </p>
                     <router-link
                       to="/program-jurusan"
-                      class="mt-auto inline-flex items-center text-sm font-bold text-white group-hover:text-cyan-200 transition-colors w-fit"
+                      class="mt-2 inline-flex items-center text-sm font-bold text-white group-hover:text-cyan-200 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i
@@ -515,18 +515,18 @@
                     class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full text-white"
                   >
                     <div
-                      class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
+                      class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
                       <i data-lucide="monitor" class="w-7 h-7"></i>
                     </div>
-                    <h3 class="text-2xl font-bold mb-3 text-white">Informatika</h3>
-                    <p class="text-purple-100 text-sm md:text-base mb-6 leading-relaxed">
+                    <h3 class="text-2xl font-bold mb-2 text-white">Informatika</h3>
+                    <p class="text-purple-100 text-sm md:text-base mb-4 leading-relaxed">
                       Mendalami dunia koding, jaringan, dan pengembangan software untuk
                       karir di industri digital.
                     </p>
                     <router-link
                       to="/program-jurusan"
-                      class="mt-auto inline-flex items-center text-sm font-bold text-white group-hover:text-purple-200 transition-colors w-fit"
+                      class="mt-2 inline-flex items-center text-sm font-bold text-white group-hover:text-purple-200 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
                       <i
@@ -538,9 +538,9 @@
                 </div>
               </div>
 
-              <!-- Jurusan Pagination (Mobile Only) -->
+              <!-- Jurusan Pagination -->
               <div
-                class="jurusan-pagination absolute bottom-4 left-0 z-30 flex w-full justify-center md:hidden"
+                class="jurusan-pagination absolute bottom-4 left-0 z-30 flex w-full justify-center"
               ></div>
             </div>
           </div>
@@ -2026,12 +2026,8 @@ onMounted(() => {
     pagination: { el: ".jurusan-pagination", clickable: true },
     breakpoints: {
       768: {
-        slidesPerView: 4,
+        slidesPerView: 3,
         spaceBetween: 0,
-        allowTouchMove: false,
-        loop: false,
-        autoplay: false,
-        pagination: { enabled: false },
       },
     },
   });
