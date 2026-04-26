@@ -349,7 +349,7 @@
     <section
       class="relative -my-12 -mx-6 md:-mx-6 lg:-mx-0 bg-blue-50 dark:bg-slate-900 overflow-hidden px-0 md:px-6 mb-12 md:mb-16"
     >
-      <div class="container relative z-10 mx-auto">
+      <div class="w-full max-w-full container relative z-10 mx-auto">
         <!-- HEADER -->
         <div
           class="relative overflow-hidden shadow-2xl min-h-[240px] sm:min-h-[450px] flex items-center md:rounded-lg bg-fixed bg-center bg-cover"
@@ -550,8 +550,10 @@
     </section>
 
     <!-- Berita & Pengumuman Section -->
-    <section class="relative py-0 -mx-6 md:mx-0 overflow-hidden px-6 md:px-0">
-      <div class="container mx-auto px-0 md:px-4">
+    <section
+      class="relative py-8 rounded-xl -mx-6 md:mx-0 overflow-hidden px-6 md:px-0 bg-white dark:bg-slate-800"
+    >
+      <div class="w-full max-w-full container mx-auto px-0 md:px-4">
         <!-- Header Section -->
         <div
           class="mb-4 md:mb-10 border-b border-slate-200 dark:border-slate-700 pb-4 md:pb-0"
