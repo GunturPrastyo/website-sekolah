@@ -347,7 +347,7 @@
 
     <!-- Jurusan Section -->
     <section
-      class="relative -my-12 -mx-6 md:-mx-6 lg:-mx-0 bg-blue-50 dark:bg-slate-900 overflow-hidden px-0 md:px-6 mb-12 md:mb-16"
+      class="relative -my-12 -mx-6 md:-mx-6 lg:-mx-0 bg-blue-50 dark:bg-slate-900 overflow-hidden px-0 md:px-6 mb-10 md:mb-12"
     >
       <div class="w-full max-w-full container relative z-10 mx-auto">
         <!-- HEADER -->
@@ -551,7 +551,7 @@
 
     <!-- Berita & Pengumuman Section -->
     <section
-      class="relative py-8 rounded-xl -mx-6 md:mx-0 overflow-hidden px-6 md:px-0 bg-white dark:bg-slate-800"
+      class="relative py-8 rounded-lg -mx-6 md:mx-0 overflow-hidden px-6 md:px-0 bg-white dark:bg-slate-800 shadow-lg"
     >
       <div class="w-full max-w-full container mx-auto px-0 md:px-4">
         <!-- Header Section -->
@@ -585,7 +585,9 @@
         </div>
 
         <!-- Main Grid Layout -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+        <div
+          class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-0 lg:gap-8 items-stretch"
+        >
           <!-- KIRI: Bagian Kegiatan & Berita (Grid 1 Atas, 3 Bawah) -->
           <div class="lg:col-span-2 flex flex-col gap-6">
             <!-- Berita Utama (Atas - 1 Besar) -->
