@@ -360,7 +360,7 @@ onUpdated(() => {
                 >
                   <!-- Solid Color Header -->
                   <div
-                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-500 dark:bg-blue-600 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
+                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-600 dark:bg-blue-800 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
                   >
                     <div
                       class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-sm border border-white/30"
@@ -393,7 +393,7 @@ onUpdated(() => {
                 >
                   <!-- Solid Color Header -->
                   <div
-                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-500 dark:bg-blue-600 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
+                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-600 dark:bg-blue-800 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
                   >
                     <div
                       class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-sm border border-white/30"
@@ -403,7 +403,7 @@ onUpdated(() => {
                   </div>
                   <div class="relative z-10 px-6 md:px-8 pb-8 flex-1 flex flex-col -mt-8">
                     <div
-                      class="w-12 h-12 bg-yellow-50 dark:bg-slate-700/80 text-yellow-600 dark:text-yellow-400 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-yellow-100 dark:border-slate-600"
+                      class="w-12 h-12 bg-blue-50 dark:bg-slate-700/80 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-blue-100 dark:border-slate-600"
                     >
                       <i data-lucide="award" class="w-6 h-6"></i>
                     </div>
@@ -425,7 +425,7 @@ onUpdated(() => {
                 >
                   <!-- Solid Color Header -->
                   <div
-                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-500 dark:bg-blue-600 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
+                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-600 dark:bg-blue-800 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
                   >
                     <div
                       class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-sm border border-white/30"
@@ -435,7 +435,7 @@ onUpdated(() => {
                   </div>
                   <div class="relative z-10 px-6 md:px-8 pb-8 flex-1 flex flex-col -mt-8">
                     <div
-                      class="w-12 h-12 bg-green-50 dark:bg-slate-700/80 text-green-600 dark:text-green-400 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-green-100 dark:border-slate-600"
+                      class="w-12 h-12 bg-blue-50 dark:bg-slate-700/80 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-blue-100 dark:border-slate-600"
                     >
                       <i data-lucide="heart-handshake" class="w-6 h-6"></i>
                     </div>
@@ -457,7 +457,7 @@ onUpdated(() => {
                 >
                   <!-- Solid Color Header -->
                   <div
-                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-500 dark:bg-blue-600 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
+                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-600 dark:bg-blue-800 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
                   >
                     <div
                       class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-sm border border-white/30"
@@ -467,7 +467,7 @@ onUpdated(() => {
                   </div>
                   <div class="relative z-10 px-6 md:px-8 pb-8 flex-1 flex flex-col -mt-8">
                     <div
-                      class="w-12 h-12 bg-purple-50 dark:bg-slate-700/80 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-purple-100 dark:border-slate-600"
+                      class="w-12 h-12 bg-blue-50 dark:bg-slate-700/80 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-blue-100 dark:border-slate-600"
                     >
                       <i data-lucide="briefcase" class="w-6 h-6"></i>
                     </div>
@@ -494,9 +494,9 @@ onUpdated(() => {
     <!-- Main Content Section -->
     <section
       id="form-area"
-      class="py-12 md:py-20 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen"
+      class="py-12 md:py-20 px-6 bg-gray-50 dark:bg-slate-800 min-h-screen"
     >
-      <div class="container mx-auto max-w-4xl">
+      <div class="container mx-auto max-w-6xl">
         <!-- Form Header -->
         <div class="text-center mb-10">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -511,7 +511,7 @@ onUpdated(() => {
         </div>
 
         <div
-          class="bg-white dark:bg-slate-800 rounded-3xl shadow-xl border border-gray-100 dark:border-slate-700 overflow-hidden"
+          class="bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-gray-100 dark:border-slate-700 overflow-hidden"
         >
           <!-- Sukses State -->
           <div v-if="isSubmitted" class="p-10 md:p-16 text-center">
