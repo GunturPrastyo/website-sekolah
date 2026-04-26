@@ -573,13 +573,13 @@
                 Ikuti terus perkembangan informasi terbaru seputar kegiatan, prestasi, dan
                 agenda penting di lingkungan sekolah kami.
               </p>
-              <a
-                href="#"
+              <router-link
+                to="/berita"
                 class="hidden md:inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-semibold transition-colors shrink-0 md:pb-4 md:-mb-px border-b-2 border-transparent hover:border-blue-600 dark:hover:border-blue-400"
               >
                 Lihat berita lainnya
                 <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
-              </a>
+              </router-link>
             </div>
           </div>
         </div>
@@ -591,8 +591,8 @@
           <!-- KIRI: Bagian Kegiatan & Berita (Grid 1 Atas, 3 Bawah) -->
           <div class="lg:col-span-2 flex flex-col gap-6">
             <!-- Berita Utama (Atas - 1 Besar) -->
-            <a
-              href="#"
+            <router-link
+              to="/berita"
               class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out group relative rounded-2xl overflow-hidden shadow-lg h-[280px] sm:h-[350px] md:h-[400px] w-full block"
             >
               <img
@@ -634,7 +634,7 @@
                   </button>
                 </div>
               </div>
-            </a>
+            </router-link>
 
             <!-- Berita Pendukung (Bawah - 3 Kecil) -->
             <div class="relative">
@@ -642,8 +642,8 @@
                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pb-8 lg:pb-0"
               >
                 <!-- Card 1 -->
-                <a
-                  href="#"
+                <router-link
+                  to="/berita"
                   class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full"
                 >
                   <div class="h-40 overflow-hidden relative">
@@ -687,11 +687,11 @@
                       </button>
                     </div>
                   </div>
-                </a>
+                </router-link>
 
                 <!-- Card 2 -->
-                <a
-                  href="#"
+                <router-link
+                  to="/berita"
                   class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full"
                 >
                   <div class="h-40 overflow-hidden relative">
@@ -735,11 +735,11 @@
                       </button>
                     </div>
                   </div>
-                </a>
+                </router-link>
 
                 <!-- Card 3 -->
-                <a
-                  href="#"
+                <router-link
+                  to="/berita"
                   class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full sm:hidden lg:flex"
                 >
                   <div class="h-40 overflow-hidden relative">
@@ -783,19 +783,19 @@
                       </button>
                     </div>
                   </div>
-                </a>
+                </router-link>
               </div>
 
               <!-- Fade Blur Overlay -->
               <div
                 class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-blue-50/95 via-blue-50/70 to-transparent dark:from-slate-900/95 dark:via-slate-900/70 flex items-end justify-center z-10 pointer-events-none md:hidden"
               >
-                <a
-                  href="#"
+                <router-link
+                  to="/berita"
                   class="pointer-events-auto text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 text-sm font-semibold transition-colors"
                 >
                   Lihat berita lainnya
-                </a>
+                </router-link>
               </div>
             </div>
           </div>
@@ -839,8 +839,8 @@
                   <template v-for="i in 2" :key="i">
                     <div class="flex flex-col">
                       <!-- Item Pengumuman -->
-                      <a
-                        href="#"
+                      <router-link
+                        to="/berita"
                         class="p-5 border-b border-blue-50 dark:border-slate-700/50 hover:bg-blue-100/50 dark:hover:bg-slate-700 transition-colors flex items-start"
                         v-for="(item, index) in [
                           {
@@ -898,7 +898,7 @@
                             {{ item.desc }}
                           </p>
                         </div>
-                      </a>
+                      </router-link>
                     </div>
                   </template>
                 </div>
@@ -908,12 +908,12 @@
               <div
                 class="p-4 bg-white dark:bg-slate-800 z-20 border-t border-white dark:border-slate-800 text-center shadow-md"
               >
-                <a
-                  href="#"
+                <router-link
+                  to="/berita"
                   class="text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors inline-flex items-center"
                 >
                   Lihat Semua Pengumuman
-                </a>
+                </router-link>
               </div>
             </div>
           </div>
@@ -999,8 +999,8 @@
             class="lg:col-span-1 grid grid-cols-2 gap-4 h-[300px] sm:h-[400px] md:h-[450px] fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out"
           >
             <!-- Foto 1 -->
-            <a
-              href="#"
+            <router-link
+              to="/galeri"
               class="group relative rounded-xl overflow-hidden shadow-sm h-full block"
             >
               <img
@@ -1018,11 +1018,11 @@
                   Ekstrakurikuler
                 </h4>
               </div>
-            </a>
+            </router-link>
 
             <!-- Foto 2 -->
-            <a
-              href="#"
+            <router-link
+              to="/galeri"
               class="group relative rounded-xl overflow-hidden shadow-sm h-full block"
             >
               <img
@@ -1040,11 +1040,11 @@
                   HUT Sekolah
                 </h4>
               </div>
-            </a>
+            </router-link>
 
             <!-- Foto 3 -->
-            <a
-              href="#"
+            <router-link
+              to="/galeri"
               class="group relative rounded-xl overflow-hidden shadow-sm h-full block"
             >
               <img
@@ -1062,11 +1062,11 @@
                   Pentas Seni
                 </h4>
               </div>
-            </a>
+            </router-link>
 
             <!-- Foto 4 (Lihat Semua) -->
-            <a
-              href="#"
+            <router-link
+              to="/galeri"
               class="group relative rounded-xl overflow-hidden shadow-sm h-full block"
             >
               <img
@@ -1086,7 +1086,7 @@
                   <span class="text-white text-sm font-semibold">Lihat Galeri</span>
                 </div>
               </div>
-            </a>
+            </router-link>
           </div>
         </div>
       </div>
