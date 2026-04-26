@@ -200,7 +200,7 @@ onUpdated(() => {
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             <!-- Syarat Utama -->
             <div
-              class="bg-blue-50/50 dark:bg-slate-700/30 p-6 md:p-8 rounded-2xl border border-blue-100 dark:border-slate-700"
+              class="bg-blue-50/20 dark:bg-slate-700/30 p-6 md:p-8 rounded-xl border border-gray-300 dark:border-slate-700 shadow-lg"
             >
               <h3
                 class="text-xl font-bold text-blue-900 dark:text-white mb-5 flex items-center"
@@ -254,7 +254,7 @@ onUpdated(() => {
 
             <!-- Alur Pendaftaran -->
             <div
-              class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
+              class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-xl border border-gray-300 dark:border-slate-700 shadow-lg"
             >
               <h3
                 class="text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center"
@@ -360,17 +360,17 @@ onUpdated(() => {
                 >
                   <!-- Solid Color Header -->
                   <div
-                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-600 dark:bg-blue-800 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
+                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-600 dark:bg-blue-800 transition-colors duration-500 group-hover:bg-blue-700 dark:group-hover:bg-blue-600"
                   >
                     <div
-                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-sm border border-white/30"
+                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-yellow-400 text-blue-950 text-xs font-bold rounded-full shadow-sm border border-yellow-300"
                     >
                       Kuota 50%
                     </div>
                   </div>
                   <div class="relative z-10 px-6 md:px-8 pb-8 flex-1 flex flex-col -mt-8">
                     <div
-                      class="w-12 h-12 bg-blue-50 dark:bg-slate-700/80 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-blue-100 dark:border-slate-600"
+                      class="w-12 h-12 bg-yellow-400 dark:bg-yellow-500 text-blue-950 rounded-2xl flex items-center justify-center mb-4 shadow-md border border-yellow-300 dark:border-yellow-400 group-hover:scale-110 transition-transform"
                     >
                       <i data-lucide="map" class="w-6 h-6"></i>
                     </div>
@@ -393,17 +393,17 @@ onUpdated(() => {
                 >
                   <!-- Solid Color Header -->
                   <div
-                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-600 dark:bg-blue-800 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
+                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-600 dark:bg-blue-800 transition-colors duration-500 group-hover:bg-blue-700 dark:group-hover:bg-blue-600"
                   >
                     <div
-                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-sm border border-white/30"
+                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-yellow-400 text-blue-950 text-xs font-bold rounded-full shadow-sm border border-yellow-300"
                     >
                       Kuota 30%
                     </div>
                   </div>
                   <div class="relative z-10 px-6 md:px-8 pb-8 flex-1 flex flex-col -mt-8">
                     <div
-                      class="w-12 h-12 bg-blue-50 dark:bg-slate-700/80 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-blue-100 dark:border-slate-600"
+                      class="w-12 h-12 bg-yellow-400 dark:bg-yellow-500 text-blue-950 rounded-2xl flex items-center justify-center mb-4 shadow-md border border-yellow-300 dark:border-yellow-400 group-hover:scale-110 transition-transform"
                     >
                       <i data-lucide="award" class="w-6 h-6"></i>
                     </div>
@@ -425,17 +425,17 @@ onUpdated(() => {
                 >
                   <!-- Solid Color Header -->
                   <div
-                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-600 dark:bg-blue-800 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
+                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-600 dark:bg-blue-800 transition-colors duration-500 group-hover:bg-blue-700 dark:group-hover:bg-blue-600"
                   >
                     <div
-                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-sm border border-white/30"
+                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-yellow-400 text-blue-950 text-xs font-bold rounded-full shadow-sm border border-yellow-300"
                     >
                       Kuota 15%
                     </div>
                   </div>
                   <div class="relative z-10 px-6 md:px-8 pb-8 flex-1 flex flex-col -mt-8">
                     <div
-                      class="w-12 h-12 bg-blue-50 dark:bg-slate-700/80 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-blue-100 dark:border-slate-600"
+                      class="w-12 h-12 bg-yellow-400 dark:bg-yellow-500 text-blue-950 rounded-2xl flex items-center justify-center mb-4 shadow-md border border-yellow-300 dark:border-yellow-400 group-hover:scale-110 transition-transform"
                     >
                       <i data-lucide="heart-handshake" class="w-6 h-6"></i>
                     </div>
@@ -457,17 +457,17 @@ onUpdated(() => {
                 >
                   <!-- Solid Color Header -->
                   <div
-                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-600 dark:bg-blue-800 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
+                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-600 dark:bg-blue-800 transition-colors duration-500 group-hover:bg-blue-700 dark:group-hover:bg-blue-600"
                   >
                     <div
-                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-sm border border-white/30"
+                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-yellow-400 text-blue-950 text-xs font-bold rounded-full shadow-sm border border-yellow-300"
                     >
                       Kuota 5%
                     </div>
                   </div>
                   <div class="relative z-10 px-6 md:px-8 pb-8 flex-1 flex flex-col -mt-8">
                     <div
-                      class="w-12 h-12 bg-blue-50 dark:bg-slate-700/80 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-blue-100 dark:border-slate-600"
+                      class="w-12 h-12 bg-yellow-400 dark:bg-yellow-500 text-blue-950 rounded-2xl flex items-center justify-center mb-4 shadow-md border border-yellow-300 dark:border-yellow-400 group-hover:scale-110 transition-transform"
                     >
                       <i data-lucide="briefcase" class="w-6 h-6"></i>
                     </div>
