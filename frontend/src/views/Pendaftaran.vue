@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, onUpdated, nextTick } from "vue";
 import { createIcons, icons } from "lucide";
+import Swiper from "swiper/bundle";
+import "swiper/swiper-bundle.css";
 
 const currentStep = ref(1);
 const totalSteps = 4;
@@ -81,7 +83,7 @@ const scrollToForm = () => {
   }
 };
 
-const printBukti = () => {
+const printBukti = async () => {
   registrationDate.value = new Date().toLocaleDateString("id-ID", {
     weekday: "long",
     year: "numeric",
@@ -91,14 +93,63 @@ const printBukti = () => {
     minute: "2-digit",
   });
 
-  nextTick(() => {
+  await nextTick();
+
+  try {
+    // Import html2pdf secara dinamis
+    const html2pdf = (await import("html2pdf.js")).default;
+    const element = document.getElementById("pdf-content");
+
+    // Tampilkan elemen sementara untuk dirender oleh canvas
+    element.classList.remove("hidden");
+    element.style.display = "block";
+
+    const opt = {
+      margin: 0.5,
+      filename: `Bukti_Pendaftaran_${regNumber.value}.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+    };
+
+    await html2pdf().set(opt).from(element).save();
+
+    // Sembunyikan kembali
+    element.style.display = "";
+    element.classList.add("hidden");
+  } catch (error) {
+    console.error("html2pdf.js belum terinstall atau gagal memproses PDF:", error);
+    alert(
+      "Sedang mengalihkan ke mode cetak standar. Untuk mengaktifkan mode unduh PDF, pastikan module html2pdf.js terinstall (npm install html2pdf.js)."
+    );
     window.print();
-  });
+  }
 };
 
 onMounted(() => {
   nextTick(() => {
     createIcons({ icons });
+
+    // Inisialisasi Swiper untuk Jalur Pendaftaran
+    new Swiper(".jalur-swiper", {
+      loop: true,
+      autoplay: {
+        delay: 3500,
+        disableOnInteraction: false,
+      },
+      slidesPerView: 1,
+      spaceBetween: 20,
+      pagination: {
+        el: ".jalur-pagination",
+        clickable: true,
+      },
+      breakpoints: {
+        640: { slidesPerView: 2, spaceBetween: 24 },
+        // Menampilkan 3 kartu di desktop agar ukurannya lebih lebar
+        // dibandingkan saat dijejer 4 sekaligus
+        1024: { slidesPerView: 3, spaceBetween: 30 },
+      },
+    });
   });
 });
 
@@ -162,7 +213,10 @@ onUpdated(() => {
               <h3
                 class="text-xl font-bold text-blue-900 dark:text-white mb-5 flex items-center"
               >
-                <i data-lucide="file-check-2" class="w-6 h-6 mr-2 text-blue-600"></i>
+                <i
+                  data-lucide="file-check-2"
+                  class="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400"
+                ></i>
                 Syarat Pendaftaran
               </h3>
               <ul class="space-y-4">
@@ -213,15 +267,18 @@ onUpdated(() => {
               <h3
                 class="text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center"
               >
-                <i data-lucide="git-merge" class="w-6 h-6 mr-2 text-blue-600"></i> Alur
-                Pendaftaran
+                <i
+                  data-lucide="git-merge"
+                  class="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400"
+                ></i>
+                Alur Pendaftaran
               </h3>
               <div
                 class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-blue-200 before:via-blue-200 dark:before:via-slate-600 before:to-transparent"
               >
                 <div class="relative flex items-center gap-4">
                   <div
-                    class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border-2 border-blue-500 flex items-center justify-center text-blue-600 font-bold shrink-0 z-10"
+                    class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border-2 border-blue-500 dark:border-blue-400 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold shrink-0 z-10"
                   >
                     1
                   </div>
@@ -236,7 +293,7 @@ onUpdated(() => {
                 </div>
                 <div class="relative flex items-center gap-4">
                   <div
-                    class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border-2 border-blue-500 flex items-center justify-center text-blue-600 font-bold shrink-0 z-10"
+                    class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border-2 border-blue-500 dark:border-blue-400 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold shrink-0 z-10"
                   >
                     2
                   </div>
@@ -251,7 +308,7 @@ onUpdated(() => {
                 </div>
                 <div class="relative flex items-center gap-4">
                   <div
-                    class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border-2 border-blue-500 flex items-center justify-center text-blue-600 font-bold shrink-0 z-10"
+                    class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border-2 border-blue-500 dark:border-blue-400 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold shrink-0 z-10"
                   >
                     3
                   </div>
@@ -284,6 +341,197 @@ onUpdated(() => {
           </div>
         </div>
       </section>
+
+      <!-- Jalur Pendaftaran Section -->
+      <section
+        class="py-8 md:py-16 px-6 bg-gradient-to-br from-blue-900 to-blue-950 dark:from-slate-800 dark:to-slate-900 relative overflow-hidden border-b border-blue-900 dark:border-slate-950"
+      >
+        <!-- Decorative Background Elements -->
+        <div
+          class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none"
+        >
+          <div
+            class="absolute -top-24 -right-24 w-96 h-96 bg-white/10 dark:bg-white/5 rounded-full blur-3xl"
+          ></div>
+          <div
+            class="absolute bottom-0 left-10 w-72 h-72 bg-blue-400/20 dark:bg-blue-500/10 rounded-full blur-2xl"
+          ></div>
+        </div>
+
+        <div class="container mx-auto max-w-6xl relative z-10">
+          <div class="text-center mb-12 md:mb-16">
+            <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">
+              Jalur Pendaftaran PPDB
+            </h2>
+            <p
+              class="text-blue-100 dark:text-gray-300 max-w-2xl mx-auto text-sm md:text-base"
+            >
+              Sistem Penerimaan Peserta Didik Baru terbagi menjadi 4 jalur utama. Pastikan
+              Anda memilih jalur yang paling sesuai dengan kondisi dan kualifikasi.
+            </p>
+          </div>
+
+          <div class="swiper jalur-swiper !pb-14">
+            <div class="swiper-wrapper items-stretch">
+              <!-- Card Zonasi -->
+              <div class="swiper-slide !h-auto">
+                <div
+                  class="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl relative group transform hover:-translate-y-2 transition-all duration-500 h-full flex flex-col overflow-hidden border border-gray-100 dark:border-slate-700/60"
+                >
+                  <!-- Image Header -->
+                  <div class="h-44 sm:h-52 overflow-hidden relative shrink-0">
+                    <img
+                      src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop"
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                      alt="Jalur Zonasi"
+                    />
+                    <!-- Soft Gradient Overlay -->
+                    <div
+                      class="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-800 via-transparent to-transparent opacity-100"
+                    ></div>
+                    <!-- Floating Badge -->
+                    <div
+                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md text-blue-600 dark:text-blue-400 text-xs font-bold rounded-full shadow-sm border border-blue-50/50 dark:border-slate-700"
+                    >
+                      Kuota 50%
+                    </div>
+                  </div>
+                  <div class="relative z-10 px-6 md:px-8 pb-8 flex-1 flex flex-col -mt-8">
+                    <div
+                      class="w-12 h-12 bg-blue-50 dark:bg-slate-700/80 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-blue-100 dark:border-slate-600"
+                    >
+                      <i data-lucide="map" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                      Jalur Zonasi
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                      Diperuntukkan bagi calon peserta didik yang berdomisili di dalam
+                      wilayah zonasi yang telah ditetapkan berdasarkan jarak titik
+                      koordinat terdekat dari sekolah.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card Prestasi -->
+              <div class="swiper-slide !h-auto">
+                <div
+                  class="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl relative group transform hover:-translate-y-2 transition-all duration-500 h-full flex flex-col overflow-hidden border border-gray-100 dark:border-slate-700/60"
+                >
+                  <div class="h-44 sm:h-52 overflow-hidden relative shrink-0">
+                    <img
+                      src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop"
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                      alt="Jalur Prestasi"
+                    />
+                    <div
+                      class="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-800 via-transparent to-transparent opacity-100"
+                    ></div>
+                    <div
+                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md text-yellow-600 dark:text-yellow-500 text-xs font-bold rounded-full shadow-sm border border-yellow-50/50 dark:border-slate-700"
+                    >
+                      Kuota 30%
+                    </div>
+                  </div>
+                  <div class="relative z-10 px-6 md:px-8 pb-8 flex-1 flex flex-col -mt-8">
+                    <div
+                      class="w-12 h-12 bg-yellow-50 dark:bg-slate-700/80 text-yellow-600 dark:text-yellow-400 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-yellow-100 dark:border-slate-600"
+                    >
+                      <i data-lucide="award" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                      Jalur Prestasi
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                      Penerimaan berdasarkan akumulasi nilai rapor semester 1-5 atau
+                      sertifikat prestasi kejuaraan akademik maupun non-akademik.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card Afirmasi -->
+              <div class="swiper-slide !h-auto">
+                <div
+                  class="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl relative group transform hover:-translate-y-2 transition-all duration-500 h-full flex flex-col overflow-hidden border border-gray-100 dark:border-slate-700/60"
+                >
+                  <div class="h-44 sm:h-52 overflow-hidden relative shrink-0">
+                    <img
+                      src="https://images.unsplash.com/photo-1529390079861-591de354faf5?q=80&w=800&auto=format&fit=crop"
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                      alt="Jalur Afirmasi"
+                    />
+                    <div
+                      class="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-800 via-transparent to-transparent opacity-100"
+                    ></div>
+                    <div
+                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md text-green-600 dark:text-green-400 text-xs font-bold rounded-full shadow-sm border border-green-50/50 dark:border-slate-700"
+                    >
+                      Kuota 15%
+                    </div>
+                  </div>
+                  <div class="relative z-10 px-6 md:px-8 pb-8 flex-1 flex flex-col -mt-8">
+                    <div
+                      class="w-12 h-12 bg-green-50 dark:bg-slate-700/80 text-green-600 dark:text-green-400 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-green-100 dark:border-slate-600"
+                    >
+                      <i data-lucide="heart-handshake" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                      Jalur Afirmasi
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                      Khusus ditujukan bagi calon peserta didik dari keluarga ekonomi
+                      tidak mampu (dibuktikan dengan KIP/PKH) dan penyandang disabilitas.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card Pindah Tugas -->
+              <div class="swiper-slide !h-auto">
+                <div
+                  class="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl relative group transform hover:-translate-y-2 transition-all duration-500 h-full flex flex-col overflow-hidden border border-gray-100 dark:border-slate-700/60"
+                >
+                  <div class="h-44 sm:h-52 overflow-hidden relative shrink-0">
+                    <img
+                      src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop"
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                      alt="Pindah Tugas"
+                    />
+                    <div
+                      class="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-800 via-transparent to-transparent opacity-100"
+                    ></div>
+                    <div
+                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md text-purple-600 dark:text-purple-400 text-xs font-bold rounded-full shadow-sm border border-purple-50/50 dark:border-slate-700"
+                    >
+                      Kuota 5%
+                    </div>
+                  </div>
+                  <div class="relative z-10 px-6 md:px-8 pb-8 flex-1 flex flex-col -mt-8">
+                    <div
+                      class="w-12 h-12 bg-purple-50 dark:bg-slate-700/80 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-purple-100 dark:border-slate-600"
+                    >
+                      <i data-lucide="briefcase" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                      Pindah Tugas
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                      Diperuntukkan bagi peserta didik yang mengikuti kepindahan tugas
+                      orang tua/wali dari instansi, atau anak kandung dari guru.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Pagination -->
+            <div
+              class="jalur-pagination absolute bottom-0 left-0 w-full flex justify-center z-20"
+            ></div>
+          </div>
+        </div>
+      </section>
     </div>
 
     <!-- Main Content Section -->
@@ -292,6 +540,19 @@ onUpdated(() => {
       class="py-12 md:py-20 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen"
     >
       <div class="container mx-auto max-w-4xl">
+        <!-- Form Header -->
+        <div class="text-center mb-10">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            Formulir Pendaftaran
+          </h2>
+          <p
+            class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-sm md:text-base"
+          >
+            Silakan lengkapi data diri, informasi orang tua, riwayat sekolah, dan pilihan
+            jurusan Anda pada formulir di bawah ini dengan benar dan valid.
+          </p>
+        </div>
+
         <div
           class="bg-white dark:bg-slate-800 rounded-3xl shadow-xl border border-gray-100 dark:border-slate-700 overflow-hidden"
         >
@@ -851,7 +1112,8 @@ onUpdated(() => {
     <!-- AREA KHUSUS CETAK BUKTI PENDAFTARAN -->
     <!-- Div ini hanya akan terlihat ketika pengguna menekan CTRL+P atau tombol Cetak -->
     <div
-      class="hidden print:block fixed inset-0 w-full h-full bg-white z-[99999] text-black px-10 py-12"
+      id="pdf-content"
+      class="hidden print:block bg-white text-black p-8 md:p-12 z-[99999]"
     >
       <div
         class="max-w-4xl mx-auto border-[3px] border-gray-900 p-10 rounded-xl relative"
@@ -976,5 +1238,16 @@ onUpdated(() => {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Custom styles for Jalur Swiper pagination */
+:deep(.jalur-pagination .swiper-pagination-bullet) {
+  background-color: rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
+}
+:deep(.jalur-pagination .swiper-pagination-bullet-active) {
+  background-color: #ffffff;
+  width: 24px;
+  border-radius: 6px;
 }
 </style>
