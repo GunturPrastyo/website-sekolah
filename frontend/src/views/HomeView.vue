@@ -68,7 +68,9 @@
   <main class="px-6 bg-blue-50 dark:bg-slate-900">
     <!-- SECTION -->
     <section class="relative -mx-6 md:mx-0 overflow-hidden">
-      <div class="container mt-12 sm:mt-8 relative z-10 mx-auto px-0 lg:px-4">
+      <div
+        class="w-full max-w-full container mt-12 sm:mt-8 relative z-10 mx-auto px-0 lg:px-4"
+      >
         <!-- HEADER -->
         <div class="mb-4 md:mb-8 px-2 md:px-0 mt-4 sm:mt-6">
           <div class="relative block">
