@@ -141,7 +141,7 @@
 
             <!-- GURU -->
             <div
-              class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
+              class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
               style="background-image: url('/assets/img/pengajar.jpg')"
             >
               <!-- Overlay Parallax -->
@@ -187,7 +187,7 @@
 
             <!-- PRESTASI -->
             <div
-              class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
+              class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
               style="background-image: url('/assets/img/prestasi.jpg')"
             >
               <!-- Overlay Parallax -->
@@ -253,7 +253,7 @@
           ></div>
 
           <!-- LEFT TEXT -->
-          <div class="relative z-10 md:w-2/5 lg:w-1/3 mx-6 mt-4 md:mt-0">
+          <div class="relative z-10 md:w-2/5 lg:w-1/3 mx-0 sm:mx-6 mt-4 md:mt-0">
             <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-white mb-2">
               Persebaran Alumni Kami
             </h3>
@@ -347,7 +347,7 @@
 
     <!-- Jurusan Section -->
     <section
-      class="relative -my-12 -mx-6 md:-mx-6 lg:-mx-0 bg-blue-50 dark:bg-slate-900 overflow-hidden px-0 md:px-6 mb-10 md:mb-12"
+      class="relative -my-12 -mx-6 md:-mx-6 lg:-mx-0 bg-blue-50 dark:bg-slate-900 overflow-hidden px-0 md:px-6 mb-10 md:mb-16"
     >
       <div class="w-full max-w-full container relative z-10 mx-auto">
         <!-- HEADER -->
