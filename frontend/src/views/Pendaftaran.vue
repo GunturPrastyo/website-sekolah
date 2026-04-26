@@ -165,16 +165,8 @@ onUpdated(() => {
     <div class="print:hidden">
       <!-- Hero Banner -->
       <div
-        class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 overflow-hidden"
+        class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-blue-950 dark:bg-slate-900 overflow-hidden"
       >
-        <!-- Background glow -->
-        <div
-          class="absolute -top-32 -left-32 w-96 h-96 bg-blue-500/20 blur-3xl rounded-full"
-        ></div>
-        <div
-          class="absolute bottom-0 right-0 w-80 h-80 bg-sky-500/20 blur-3xl rounded-full"
-        ></div>
-
         <div class="container relative z-10 mx-auto px-6 text-center">
           <span
             class="inline-block px-4 py-1.5 mb-5 text-xs md:text-sm font-bold text-blue-900 bg-yellow-400 rounded-full shadow-sm tracking-wide"
@@ -344,20 +336,8 @@ onUpdated(() => {
 
       <!-- Jalur Pendaftaran Section -->
       <section
-        class="py-8 md:py-16 px-6 bg-gradient-to-br from-blue-900 to-blue-950 dark:from-slate-800 dark:to-slate-900 relative overflow-hidden border-b border-blue-900 dark:border-slate-950"
+        class="py-8 md:py-16 px-6 bg-blue-950 dark:bg-slate-900 relative overflow-hidden border-b border-blue-900 dark:border-slate-800"
       >
-        <!-- Decorative Background Elements -->
-        <div
-          class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none"
-        >
-          <div
-            class="absolute -top-24 -right-24 w-96 h-96 bg-white/10 dark:bg-white/5 rounded-full blur-3xl"
-          ></div>
-          <div
-            class="absolute bottom-0 left-10 w-72 h-72 bg-blue-400/20 dark:bg-blue-500/10 rounded-full blur-2xl"
-          ></div>
-        </div>
-
         <div class="container mx-auto max-w-6xl relative z-10">
           <div class="text-center mb-12 md:mb-16">
             <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">
@@ -378,20 +358,12 @@ onUpdated(() => {
                 <div
                   class="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl relative group transform hover:-translate-y-2 transition-all duration-500 h-full flex flex-col overflow-hidden border border-gray-100 dark:border-slate-700/60"
                 >
-                  <!-- Image Header -->
-                  <div class="h-44 sm:h-52 overflow-hidden relative shrink-0">
-                    <img
-                      src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop"
-                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                      alt="Jalur Zonasi"
-                    />
-                    <!-- Soft Gradient Overlay -->
+                  <!-- Solid Color Header -->
+                  <div
+                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-500 dark:bg-blue-600 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
+                  >
                     <div
-                      class="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-800 via-transparent to-transparent opacity-100"
-                    ></div>
-                    <!-- Floating Badge -->
-                    <div
-                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md text-blue-600 dark:text-blue-400 text-xs font-bold rounded-full shadow-sm border border-blue-50/50 dark:border-slate-700"
+                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-sm border border-white/30"
                     >
                       Kuota 50%
                     </div>
@@ -419,17 +391,12 @@ onUpdated(() => {
                 <div
                   class="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl relative group transform hover:-translate-y-2 transition-all duration-500 h-full flex flex-col overflow-hidden border border-gray-100 dark:border-slate-700/60"
                 >
-                  <div class="h-44 sm:h-52 overflow-hidden relative shrink-0">
-                    <img
-                      src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop"
-                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                      alt="Jalur Prestasi"
-                    />
+                  <!-- Solid Color Header -->
+                  <div
+                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-500 dark:bg-blue-600 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
+                  >
                     <div
-                      class="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-800 via-transparent to-transparent opacity-100"
-                    ></div>
-                    <div
-                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md text-yellow-600 dark:text-yellow-500 text-xs font-bold rounded-full shadow-sm border border-yellow-50/50 dark:border-slate-700"
+                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-sm border border-white/30"
                     >
                       Kuota 30%
                     </div>
@@ -456,17 +423,12 @@ onUpdated(() => {
                 <div
                   class="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl relative group transform hover:-translate-y-2 transition-all duration-500 h-full flex flex-col overflow-hidden border border-gray-100 dark:border-slate-700/60"
                 >
-                  <div class="h-44 sm:h-52 overflow-hidden relative shrink-0">
-                    <img
-                      src="https://images.unsplash.com/photo-1529390079861-591de354faf5?q=80&w=800&auto=format&fit=crop"
-                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                      alt="Jalur Afirmasi"
-                    />
+                  <!-- Solid Color Header -->
+                  <div
+                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-500 dark:bg-blue-600 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
+                  >
                     <div
-                      class="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-800 via-transparent to-transparent opacity-100"
-                    ></div>
-                    <div
-                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md text-green-600 dark:text-green-400 text-xs font-bold rounded-full shadow-sm border border-green-50/50 dark:border-slate-700"
+                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-sm border border-white/30"
                     >
                       Kuota 15%
                     </div>
@@ -493,17 +455,12 @@ onUpdated(() => {
                 <div
                   class="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl relative group transform hover:-translate-y-2 transition-all duration-500 h-full flex flex-col overflow-hidden border border-gray-100 dark:border-slate-700/60"
                 >
-                  <div class="h-44 sm:h-52 overflow-hidden relative shrink-0">
-                    <img
-                      src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop"
-                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                      alt="Pindah Tugas"
-                    />
+                  <!-- Solid Color Header -->
+                  <div
+                    class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-500 dark:bg-blue-600 transition-colors duration-500 group-hover:bg-blue-600 dark:group-hover:bg-blue-500"
+                  >
                     <div
-                      class="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-800 via-transparent to-transparent opacity-100"
-                    ></div>
-                    <div
-                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md text-purple-600 dark:text-purple-400 text-xs font-bold rounded-full shadow-sm border border-purple-50/50 dark:border-slate-700"
+                      class="absolute top-5 left-5 px-3.5 py-1.5 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-sm border border-white/30"
                     >
                       Kuota 5%
                     </div>
