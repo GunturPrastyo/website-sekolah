@@ -216,7 +216,7 @@ onUpdated(() => {
 
                   <!-- Category Badge -->
                   <div
-                    class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-indigo-700 text-xs font-bold rounded-md uppercase tracking-wider shadow-sm"
+                    class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-blue-700 text-xs font-bold rounded-md uppercase tracking-wider shadow-sm"
                   >
                     {{ categories.find((c) => c.id === news.category)?.name }}
                   </div>
@@ -231,25 +231,22 @@ onUpdated(() => {
                     <span class="flex items-center">
                       <i
                         data-lucide="calendar"
-                        class="w-3.5 h-3.5 mr-1.5 text-indigo-500"
+                        class="w-3.5 h-3.5 mr-1.5 text-blue-500"
                       ></i>
                       {{ news.date }}
                     </span>
                     <span class="flex items-center">
-                      <i
-                        data-lucide="user"
-                        class="w-3.5 h-3.5 mr-1.5 text-indigo-500"
-                      ></i>
+                      <i data-lucide="user" class="w-3.5 h-3.5 mr-1.5 text-blue-500"></i>
                       {{ news.author }}
                     </span>
                     <span class="flex items-center">
-                      <i data-lucide="eye" class="w-3.5 h-3.5 mr-1.5 text-indigo-500"></i>
+                      <i data-lucide="eye" class="w-3.5 h-3.5 mr-1.5 text-blue-500"></i>
                       {{ news.views }}
                     </span>
                   </div>
 
                   <h3
-                    class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight"
+                    class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight"
                   >
                     <a href="#" class="focus:outline-none">
                       <span class="absolute inset-0"></span>
@@ -265,7 +262,7 @@ onUpdated(() => {
 
                   <div class="mt-auto flex items-center justify-between">
                     <div
-                      class="flex items-center text-sm font-bold text-indigo-600 dark:text-indigo-400 group-hover:underline"
+                      class="flex items-center text-sm font-bold text-blue-600 dark:text-blue-400 group-hover:underline"
                     >
                       Baca Selengkapnya
                       <i
@@ -275,7 +272,7 @@ onUpdated(() => {
                     </div>
                     <button
                       @click.prevent.stop="openShareModal(news.title)"
-                      class="text-gray-400 hover:text-indigo-600 dark:text-gray-500 dark:hover:text-indigo-400 transition-colors focus:outline-none relative z-10"
+                      class="text-gray-400 hover:text-blue-600 dark:text-gray-500 dark:hover:text-blue-400 transition-colors focus:outline-none relative z-10"
                       title="Bagikan Berita"
                     >
                       <i data-lucide="share" class="w-5 h-5"></i>
@@ -306,7 +303,7 @@ onUpdated(() => {
                   searchQuery = '';
                   activeCategory = 'semua';
                 "
-                class="mt-4 px-5 py-2 bg-indigo-50 text-indigo-600 dark:bg-slate-700 dark:text-indigo-400 rounded-full text-sm font-semibold hover:bg-indigo-100 transition-colors"
+                class="mt-4 px-5 py-2 bg-blue-50 text-blue-600 dark:bg-slate-700 dark:text-blue-400 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors"
               >
                 Reset Pencarian
               </button>
@@ -334,7 +331,7 @@ onUpdated(() => {
                 v-model="searchQuery"
                 type="text"
                 placeholder="Cari judul atau isi berita..."
-                class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm"
               />
             </div>
 
@@ -350,8 +347,8 @@ onUpdated(() => {
                 class="px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-300 focus:outline-none border"
                 :class="
                   activeCategory === cat.id
-                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-500/30'
-                    : 'bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-indigo-300 hover:text-indigo-600 dark:hover:text-indigo-400'
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
+                    : 'bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
                 "
               >
                 {{ cat.name }}
@@ -387,14 +384,14 @@ onUpdated(() => {
                   />
                   <!-- Badge Peringkat -->
                   <div
-                    class="absolute top-0 left-0 bg-indigo-600 text-white w-6 h-6 flex items-center justify-center text-xs font-bold rounded-br-lg shadow-sm z-10"
+                    class="absolute top-0 left-0 bg-blue-600 text-white w-6 h-6 flex items-center justify-center text-xs font-bold rounded-br-lg shadow-sm z-10"
                   >
                     {{ index + 1 }}
                   </div>
                 </div>
                 <div class="flex flex-col justify-start flex-1 py-0.5">
                   <h4
-                    class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors mb-1"
+                    class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1"
                   >
                     {{ news.title }}
                   </h4>
