@@ -355,7 +355,7 @@ onUpdated(() => {
                 Jalur Pendaftaran PPDB
               </h2>
               <p
-                class="text-blue-100 dark:text-gray-300 text-base md:text-lg leading-relaxed mb-8"
+                class="text-blue-100 dark:text-gray-300 text-base md:text-lg leading-relaxed"
               >
                 Sistem Penerimaan Peserta Didik Baru terbagi menjadi 4 jalur utama.
                 Pastikan Anda memilih jalur yang paling sesuai dengan kondisi dan
@@ -364,7 +364,7 @@ onUpdated(() => {
 
               <!-- Decorative Element on Desktop -->
               <div
-                class="hidden lg:flex items-center gap-3 text-yellow-400 font-semibold"
+                class="hidden lg:flex items-center gap-3 text-yellow-400 font-semibold mt-8"
               >
                 <div
                   class="w-10 h-10 rounded-full border-2 border-yellow-400 flex items-center justify-center animate-bounce"
