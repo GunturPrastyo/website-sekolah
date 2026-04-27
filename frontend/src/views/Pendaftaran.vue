@@ -349,9 +349,7 @@ onUpdated(() => {
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             <!-- Left: Teks Deskripsi -->
             <div class="lg:col-span-5 text-center lg:text-left">
-              <h2
-                class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight"
-              >
+              <h2 class="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
                 Jalur Pendaftaran PPDB
               </h2>
               <p
