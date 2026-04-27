@@ -3,6 +3,7 @@ import { ref, computed, onMounted, nextTick, onUpdated, reactive, watch } from "
 import { createIcons, icons } from "lucide";
 import ShareModal from "@/components/ShareModal.vue";
 import PageHeader from "@/components/PageHeader.vue";
+import Breadcrumb from "@/components/Breadcrumb.vue";
 
 const activeCategory = ref("semua");
 
@@ -156,7 +157,14 @@ onUpdated(() => {
     />
 
     <!-- News Section -->
-    <section class="py-16 md:py-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
+    <section class="py-16 md:py-12 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
+      <!-- Breadcrumb -->
+      <div class="container mx-auto max-w-7xl mb-8 md:mb-10">
+        <Breadcrumb
+          :items="[{ name: 'Beranda', link: '/', icon: 'home' }, { name: 'Berita' }]"
+        />
+      </div>
+
       <div class="container mx-auto max-w-7xl flex flex-col lg:flex-row gap-10">
         <!-- KIRI: Daftar Berita -->
         <div class="w-full lg:w-2/3">
@@ -248,10 +256,10 @@ onUpdated(() => {
                   <h3
                     class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight"
                   >
-                    <a href="#" class="focus:outline-none">
+                    <router-link to="/artikel" class="focus:outline-none">
                       <span class="absolute inset-0"></span>
                       {{ news.title }}
-                    </a>
+                    </router-link>
                   </h3>
 
                   <p
@@ -261,7 +269,8 @@ onUpdated(() => {
                   </p>
 
                   <div class="mt-auto flex items-center justify-between">
-                    <div
+                    <router-link 
+                      to="/artikel"
                       class="flex items-center text-sm font-bold text-blue-600 dark:text-blue-400 group-hover:underline"
                     >
                       Baca Selengkapnya
@@ -269,7 +278,7 @@ onUpdated(() => {
                         data-lucide="chevron-right"
                         class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform"
                       ></i>
-                    </div>
+                    </router-link>
                     <button
                       @click.prevent.stop="openShareModal(news.title)"
                       class="text-gray-400 hover:text-blue-600 dark:text-gray-500 dark:hover:text-blue-400 transition-colors focus:outline-none relative z-10"
@@ -369,8 +378,8 @@ onUpdated(() => {
               Berita Populer
             </h3>
             <div class="space-y-5">
-              <a
-                href="#"
+              <router-link
+                to="/artikel"
                 v-for="(news, index) in popularNews"
                 :key="'popular-' + news.id"
                 class="flex items-start gap-4 group"
@@ -407,7 +416,7 @@ onUpdated(() => {
                     {{ news.views }} kali dibaca
                   </span>
                 </div>
-              </a>
+              </router-link>
             </div>
           </div>
         </aside>

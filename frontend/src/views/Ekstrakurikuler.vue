@@ -276,14 +276,14 @@ onBeforeUnmount(() => {
 
     <!-- Gallery Section -->
     <section
-      class="relative pt-12 pb-18 px-6 min-h-screen bg-fixed bg-center bg-cover overflow-hidden"
-      style="
-        background-image: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1600&auto=format&fit=crop');
-      "
+      class="relative pt-12 pb-20 px-6 min-h-screen bg-gradient-to-b from-blue-50/50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden"
     >
-      <!-- Parallax Overlay -->
+      <!-- Elemen Dekorasi Latar Belakang (Blob Cahaya) -->
       <div
-        class="absolute inset-0 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-[2px] transition-colors duration-500"
+        class="absolute top-0 right-0 w-96 h-96 bg-blue-400/10 dark:bg-blue-600/10 rounded-full blur-3xl -translate-y-1/4 translate-x-1/4 pointer-events-none"
+      ></div>
+      <div
+        class="absolute bottom-20 left-0 w-80 h-80 bg-cyan-400/10 dark:bg-cyan-600/10 rounded-full blur-3xl translate-y-1/4 -translate-x-1/4 pointer-events-none"
       ></div>
 
       <div class="container relative z-10 mx-auto max-w-6xl">
@@ -611,9 +611,11 @@ onBeforeUnmount(() => {
           <div
             class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out w-full lg:w-1/2"
           >
-            <div class="bg-white dark:bg-slate-900 rounded-xl p-6 sm:p-8 shadow-xl">
+            <div
+              class="bg-white dark:bg-slate-800 rounded-xl p-6 sm:p-8 shadow-xl border border-transparent dark:border-slate-700"
+            >
               <h3
-                class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center border-b border-gray-100 dark:border-slate-800 pb-4"
+                class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center border-b border-gray-100 dark:border-slate-700 pb-4"
               >
                 <i
                   data-lucide="clipboard-list"
@@ -624,12 +626,12 @@ onBeforeUnmount(() => {
               <ul class="space-y-5 relative">
                 <!-- Garis Vertikal Timeline -->
                 <div
-                  class="absolute left-[15px] top-4 bottom-4 w-[2px] bg-blue-100 dark:bg-slate-700 z-0"
+                  class="absolute left-[15px] top-4 bottom-4 w-[2px] bg-blue-100 dark:bg-slate-600 z-0"
                 ></div>
 
                 <li class="flex items-start group relative z-10">
                   <div
-                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-900 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
+                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-800 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
                   >
                     1
                   </div>
@@ -642,7 +644,7 @@ onBeforeUnmount(() => {
                 </li>
                 <li class="flex items-start group relative z-10">
                   <div
-                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-900 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
+                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-800 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
                   >
                     2
                   </div>
@@ -655,7 +657,7 @@ onBeforeUnmount(() => {
                 </li>
                 <li class="flex items-start group relative z-10">
                   <div
-                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-900 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
+                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-800 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
                   >
                     3
                   </div>
@@ -668,7 +670,7 @@ onBeforeUnmount(() => {
                 </li>
                 <li class="flex items-start group relative z-10">
                   <div
-                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-900 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
+                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-800 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
                   >
                     4
                   </div>

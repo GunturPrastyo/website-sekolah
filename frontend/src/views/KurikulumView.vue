@@ -515,14 +515,11 @@ onMounted(() => {
 
     <!-- Interactive Syllabus Area (Full Width to Footer) -->
     <section
-      class="relative w-full py-16 md:py-24 px-6 border-t border-blue-800/30 dark:border-slate-800 bg-fixed bg-center bg-cover overflow-hidden"
-      style="
-        background-image: url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=1600&auto=format&fit=crop');
-      "
+      class="relative w-full py-16 md:py-24 px-6 border-t border-blue-800/30 dark:border-slate-800 bg-center bg-cover overflow-hidden"
     >
-      <!-- Parallax Overlay -->
+      <!-- Background Overlay -->
       <div
-        class="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-blue-950/90 to-slate-900/90 dark:from-slate-900/95 dark:to-slate-950/95 backdrop-blur-[2px]"
+        class="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900/90 dark:from-slate-900/95 dark:to-slate-950/95 backdrop-blur-[2px]"
       ></div>
 
       <div
