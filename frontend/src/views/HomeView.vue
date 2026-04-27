@@ -2008,6 +2008,8 @@ onMounted(() => {
   // Initialize main Swiper
   new Swiper(".swiper-container", {
     loop: true,
+    loopAdditionalSlides: 2,
+    speed: 1000,
     autoplay: {
       delay: 5000,
       disableOnInteraction: false,
@@ -2025,6 +2027,8 @@ onMounted(() => {
   // Initialize Stats Swiper
   new Swiper(".stats-swiper", {
     loop: true,
+    loopAdditionalSlides: 4,
+    speed: 800,
     autoplay: {
       delay: 2500,
       disableOnInteraction: false,
@@ -2040,6 +2044,8 @@ onMounted(() => {
   // Initialize Jurusan Swiper
   new Swiper(".jurusan-swiper", {
     loop: true,
+    loopAdditionalSlides: 4,
+    speed: 800,
     autoplay: {
       delay: 3000,
       disableOnInteraction: false,
@@ -2062,6 +2068,8 @@ onMounted(() => {
   // Initialize Alasan Swiper
   new Swiper(".alasan-swiper", {
     loop: true,
+    loopAdditionalSlides: 4,
+    speed: 800,
     slidesPerView: 1,
     spaceBetween: 0,
     autoplay: { delay: 3500, disableOnInteraction: false },

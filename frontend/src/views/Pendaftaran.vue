@@ -134,6 +134,8 @@ onMounted(() => {
     new Swiper(".jalur-swiper", {
       direction: "horizontal", // default slider horizontal untuk versi Mobile
       loop: true,
+      loopAdditionalSlides: 4,
+      speed: 800,
       autoplay: {
         delay: 3500,
         disableOnInteraction: false,
