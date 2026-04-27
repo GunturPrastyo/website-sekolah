@@ -40,6 +40,50 @@ const popularNews = [
   },
 ];
 
+const relatedArticles = [
+  {
+    id: 5,
+    title: "Kunjungan Edukasi Sejarah ke Museum Nasional Jakarta",
+    date: "20 Mar 2026",
+    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600",
+    category: "Kegiatan",
+  },
+  {
+    id: 6,
+    title: "Pendaftaran Peserta Didik Baru (PPDB) Jalur Prestasi Dibuka",
+    date: "15 Apr 2026",
+    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=600",
+    category: "Pengumuman",
+  },
+];
+
+const otherAuthors = [
+  {
+    id: 1,
+    name: "Bapak Ahmad Fauzi",
+    role: "Guru Bahasa Indonesia",
+    initials: "AF",
+    color: "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400",
+    articles: 12,
+  },
+  {
+    id: 2,
+    name: "Ibu Siti Aminah",
+    role: "Pembina OSIS",
+    initials: "SA",
+    color: "bg-purple-100 text-purple-600 dark:bg-purple-900/40 dark:text-purple-400",
+    articles: 8,
+  },
+  {
+    id: 3,
+    name: "Rizky Pratama",
+    role: "Ketua Ekskul Jurnalistik",
+    initials: "RP",
+    color: "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400",
+    articles: 24,
+  },
+];
+
 onMounted(() => {
   createIcons({ icons });
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -227,6 +271,141 @@ onUpdated(() => {
               >#KegiatanSiswa</a
             >
           </div>
+
+          <!-- Artikel Terkait -->
+          <div class="p-6 md:p-10 border-b border-gray-100 dark:border-slate-700">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">
+              Artikel Terkait
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <router-link
+                to="/artikel"
+                v-for="article in relatedArticles"
+                :key="article.id"
+                class="group flex flex-col bg-gray-50 dark:bg-slate-700/30 rounded-xl overflow-hidden border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all"
+              >
+                <div class="h-40 overflow-hidden relative shrink-0">
+                  <img
+                    :src="article.image"
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div
+                    class="absolute top-3 left-3 bg-blue-600/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm"
+                  >
+                    {{ article.category }}
+                  </div>
+                </div>
+                <div class="p-4 flex flex-col justify-between flex-1">
+                  <h4
+                    class="text-sm font-bold text-gray-900 dark:text-white leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-3"
+                  >
+                    {{ article.title }}
+                  </h4>
+                  <div
+                    class="text-[11px] text-gray-500 dark:text-gray-400 flex items-center mt-auto"
+                  >
+                    <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1.5"></i>
+                    {{ article.date }}
+                  </div>
+                </div>
+              </router-link>
+            </div>
+          </div>
+
+          <!-- Area Komentar -->
+          <div class="p-6 md:p-10 bg-gray-50/50 dark:bg-slate-800/50">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">
+              Tinggalkan Komentar
+            </h3>
+
+            <!-- Form Komentar Statis -->
+            <form @submit.prevent class="space-y-4 mb-10">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Nama Lengkap <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    placeholder="Nama Anda"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Email <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    type="email"
+                    class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    placeholder="alamat@email.com"
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Komentar <span class="text-red-500">*</span></label
+                >
+                <textarea
+                  rows="4"
+                  class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  placeholder="Tulis komentar Anda di sini..."
+                  required
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md transition-colors flex items-center"
+              >
+                Kirim Komentar <i data-lucide="send" class="w-4 h-4 ml-2"></i>
+              </button>
+            </form>
+
+            <!-- Daftar Komentar (Dummy) -->
+            <div class="space-y-6">
+              <h4
+                class="text-lg font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-slate-700 pb-3"
+              >
+                1 Komentar
+              </h4>
+
+              <div class="flex gap-4">
+                <div
+                  class="w-10 h-10 rounded-full bg-blue-100 dark:bg-slate-700 flex items-center justify-center shrink-0"
+                >
+                  <i
+                    data-lucide="user"
+                    class="w-5 h-5 text-blue-600 dark:text-gray-400"
+                  ></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-bold text-gray-900 dark:text-white text-sm"
+                      >Alumni Sukses 2010</span
+                    >
+                    <span class="text-xs text-gray-500 dark:text-gray-400"
+                      >25 November 2025</span
+                    >
+                  </div>
+                  <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                    Acara yang sangat luar biasa! Bangga menjadi bagian dari keluarga
+                    besar SMAN 1 Nogosari. Semoga guru-guru selalu diberikan kesehatan dan
+                    terus menginspirasi.
+                  </p>
+                  <button
+                    class="text-xs font-semibold text-blue-600 dark:text-blue-400 mt-2 hover:underline"
+                  >
+                    Balas
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </main>
 
         <!-- KANAN: Sidebar -->
@@ -251,6 +430,34 @@ onUpdated(() => {
             >
               Lihat Artikel Lainnya
             </button>
+
+            <!-- Penulis Lainnya -->
+            <div
+              class="mt-6 pt-5 border-t border-gray-100 dark:border-slate-700 text-left"
+            >
+              <h4
+                class="text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center"
+              >
+                <i data-lucide="users" class="w-4 h-4 mr-1.5 text-gray-400"></i> Penulis
+                Lainnya
+              </h4>
+              <div class="flex flex-wrap gap-2">
+                <a
+                  href="#"
+                  v-for="author in otherAuthors"
+                  :key="author.id"
+                  class="inline-flex items-center px-3 py-1.5 bg-gray-50 hover:bg-gray-100 dark:bg-slate-700/50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-medium transition-colors border border-gray-200 dark:border-slate-600 group"
+                >
+                  {{ author.name }}
+                  <span
+                    class="ml-1.5 inline-flex items-center gap-1 px-1.5 py-0.5 bg-gray-200 group-hover:bg-blue-100 dark:bg-slate-600 dark:group-hover:bg-blue-900/40 text-gray-600 group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-400 rounded-md text-[10px] font-bold transition-colors"
+                  >
+                    <i data-lucide="file-text" class="w-3 h-3"></i>
+                    {{ author.articles }}
+                  </span>
+                </a>
+              </div>
+            </div>
           </div>
 
           <!-- Berita Populer Widget -->

@@ -457,13 +457,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, reactive } from "vue";
+import { ref, onMounted, onBeforeUnmount, reactive, watch } from "vue";
+import { useRoute } from "vue-router";
 
 const navRef = ref(null);
 const isNavbarScrolled = ref(false);
 const isMobileMenuOpen = ref(false);
 const isDarkMode = ref(false);
 const activeDropdown = ref(null);
+
+const route = useRoute();
 
 const mobileDropdowns = reactive({
   profil: false,
@@ -472,7 +475,8 @@ const mobileDropdowns = reactive({
 });
 
 const handleScroll = () => {
-  isNavbarScrolled.value = window.scrollY > 50;
+  const forceSolid = route.path.startsWith("/artikel");
+  isNavbarScrolled.value = window.scrollY > 50 || forceSolid;
 };
 
 const handleResize = () => {
@@ -531,6 +535,13 @@ const setDarkMode = (dark) => {
 const toggleDarkMode = () => {
   setDarkMode(!isDarkMode.value);
 };
+
+watch(
+  () => route.path,
+  () => {
+    handleScroll();
+  }
+);
 
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
