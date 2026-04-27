@@ -135,9 +135,9 @@ onMounted(() => {
       direction: "horizontal", // default slider horizontal untuk versi Mobile
       loop: true,
       loopAdditionalSlides: 4,
-      speed: 800,
+      speed: 4000,
       autoplay: {
-        delay: 3500,
+        delay: 0,
         disableOnInteraction: false,
       },
       slidesPerView: 1.2,
@@ -345,7 +345,7 @@ onUpdated(() => {
 
       <!-- Jalur Pendaftaran Section -->
       <section
-        class="py-12 md:py-20 px-6 bg-blue-950 dark:bg-slate-900 relative overflow-hidden border-b border-blue-900 dark:border-slate-800"
+        class="py-12 md:py-8 px-6 bg-blue-950 dark:bg-slate-900 relative overflow-hidden border-b border-blue-900 dark:border-slate-800"
       >
         <div class="container mx-auto max-w-6xl relative z-10">
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
@@ -552,7 +552,7 @@ onUpdated(() => {
     <!-- Main Content Section -->
     <section
       id="form-area"
-      class="py-12 md:py-20 px-6 bg-gray-50 dark:bg-slate-800 min-h-screen"
+      class="py-12 md:py-16 lg:py-20 px-6 bg-gray-50 dark:bg-slate-800"
     >
       <div class="container mx-auto max-w-6xl">
         <!-- Form Header -->
@@ -1254,6 +1254,11 @@ onUpdated(() => {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Mengatur transisi animasi menjadi linear tanpa henti (efek ticker) */
+:deep(.jalur-swiper .swiper-wrapper) {
+  transition-timing-function: linear !important;
 }
 
 /* Custom styles for Swiper Mask & Fade */
