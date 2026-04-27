@@ -233,7 +233,7 @@ onBeforeUnmount(() => {
                     class="w-full lg:w-7/12 flex flex-col justify-center p-5 md:p-6 lg:p-8"
                   >
                     <h3
-                      class="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-2 leading-tight group-hover/card:text-blue-600 dark:group-hover/card:text-blue-400 transition-colors"
+                      class="text-lg md:text-xl font-bold text-blue-950 dark:text-white mb-2 leading-tight group-hover/card:text-blue-600 dark:group-hover/card:text-blue-400 transition-colors"
                     >
                       {{ item.title }}
                     </h3>

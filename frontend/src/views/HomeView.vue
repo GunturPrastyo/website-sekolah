@@ -75,7 +75,7 @@
         <div class="mb-4 md:mb-8 px-2 md:px-0 mt-4 sm:mt-6">
           <div class="relative block">
             <h2
-              class="text-xl md:text-3xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-2"
+              class="text-xl md:text-3xl font-bold text-blue-950 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-2"
             >
               Kenapa Pilih Sekolah Ini?
             </h2>
@@ -560,7 +560,7 @@
         >
           <div class="relative block">
             <h2
-              class="text-xl md:text-3xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
+              class="text-xl md:text-3xl font-bold text-blue-950 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
             >
               Berita & Pengumuman
             </h2>
@@ -658,7 +658,7 @@
                       >Prestasi</span
                     >
                     <h4
-                      class="font-bold text-gray-800 dark:text-slate-100 text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 min-h-[40px]"
+                      class="font-bold text-blue-950 dark:text-slate-100 text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 min-h-[40px]"
                     >
                       Siswa SMAN 1 Meraih Juara 1 Olimpiade Sains Tingkat Nasional
                     </h4>
@@ -1101,7 +1101,7 @@
         <div class="mb-6 md:mb-10">
           <div class="relative block">
             <h2
-              class="text-xl md:text-3xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
+              class="text-xl md:text-3xl font-bold text-blue-950 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
             >
               Agenda Sekolah
             </h2>
@@ -1389,7 +1389,7 @@
                 class="p-5 md:p-6 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex items-center justify-between shrink-0"
               >
                 <h3
-                  class="text-lg md:text-xl font-bold text-slate-800 dark:text-slate-200 flex items-center"
+                  class="text-lg md:text-xl font-bold text-blue-950 dark:text-slate-200 flex items-center"
                 >
                   <i
                     data-lucide="calendar-days"

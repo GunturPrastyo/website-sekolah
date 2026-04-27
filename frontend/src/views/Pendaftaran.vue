@@ -198,7 +198,7 @@ onUpdated(() => {
       >
         <div class="container mx-auto max-w-5xl">
           <div class="text-center mb-10">
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+            <h2 class="text-2xl md:text-3xl font-bold text-blue-950 dark:text-white">
               Informasi & Persyaratan
             </h2>
             <p class="text-gray-600 dark:text-gray-400 mt-2">
@@ -212,7 +212,7 @@ onUpdated(() => {
               class="bg-blue-50/20 dark:bg-slate-700/30 p-6 md:p-8 rounded-xl border border-gray-300 dark:border-slate-700 shadow-lg"
             >
               <h3
-                class="text-xl font-bold text-blue-900 dark:text-white mb-5 flex items-center"
+                class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
               >
                 <i
                   data-lucide="file-check-2"
@@ -266,7 +266,7 @@ onUpdated(() => {
               class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-xl border border-gray-300 dark:border-slate-700 shadow-lg"
             >
               <h3
-                class="text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center"
+                class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
               >
                 <i
                   data-lucide="git-merge"
@@ -284,7 +284,7 @@ onUpdated(() => {
                     1
                   </div>
                   <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white text-sm">
+                    <h4 class="font-bold text-blue-950 dark:text-white text-sm">
                       Isi Formulir Online
                     </h4>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -299,7 +299,7 @@ onUpdated(() => {
                     2
                   </div>
                   <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white text-sm">
+                    <h4 class="font-bold text-blue-950 dark:text-white text-sm">
                       Cetak Bukti Daftar
                     </h4>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -314,7 +314,7 @@ onUpdated(() => {
                     3
                   </div>
                   <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white text-sm">
+                    <h4 class="font-bold text-blue-950 dark:text-white text-sm">
                       Verifikasi Berkas
                     </h4>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -407,7 +407,7 @@ onUpdated(() => {
                             <i data-lucide="map" class="w-6 h-6"></i>
                           </div>
                           <h3
-                            class="text-xl font-bold text-gray-900 dark:text-white mb-3"
+                            class="text-xl font-bold text-blue-950 dark:text-white mb-3"
                           >
                             Jalur Zonasi
                           </h3>
@@ -446,7 +446,7 @@ onUpdated(() => {
                             <i data-lucide="award" class="w-6 h-6"></i>
                           </div>
                           <h3
-                            class="text-xl font-bold text-gray-900 dark:text-white mb-3"
+                            class="text-xl font-bold text-blue-950 dark:text-white mb-3"
                           >
                             Jalur Prestasi
                           </h3>
@@ -484,7 +484,7 @@ onUpdated(() => {
                             <i data-lucide="heart-handshake" class="w-6 h-6"></i>
                           </div>
                           <h3
-                            class="text-xl font-bold text-gray-900 dark:text-white mb-3"
+                            class="text-xl font-bold text-blue-950 dark:text-white mb-3"
                           >
                             Jalur Afirmasi
                           </h3>
@@ -523,7 +523,7 @@ onUpdated(() => {
                             <i data-lucide="briefcase" class="w-6 h-6"></i>
                           </div>
                           <h3
-                            class="text-xl font-bold text-gray-900 dark:text-white mb-3"
+                            class="text-xl font-bold text-blue-950 dark:text-white mb-3"
                           >
                             Pindah Tugas
                           </h3>
@@ -557,7 +557,7 @@ onUpdated(() => {
       <div class="container mx-auto max-w-6xl">
         <!-- Form Header -->
         <div class="text-center mb-10">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 class="text-3xl md:text-4xl font-bold text-blue-950 dark:text-white mb-4">
             Formulir Pendaftaran
           </h2>
           <p
@@ -578,7 +578,7 @@ onUpdated(() => {
             >
               <i data-lucide="check-circle" class="w-12 h-12"></i>
             </div>
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 class="text-2xl md:text-3xl font-bold text-blue-950 dark:text-white mb-4">
               Pendaftaran Berhasil!
             </h2>
             <p
@@ -668,7 +668,7 @@ onUpdated(() => {
                 <!-- STEP 1: DATA DIRI -->
                 <div v-if="currentStep === 1" class="space-y-6 animate-fade-in">
                   <h3
-                    class="text-xl font-bold text-gray-900 dark:text-white border-l-4 border-blue-600 pl-3 mb-6"
+                    class="text-xl font-bold text-blue-950 dark:text-white border-l-4 border-blue-600 pl-3 mb-6"
                   >
                     Identitas Calon Siswa
                   </h3>
@@ -754,7 +754,7 @@ onUpdated(() => {
                 <!-- STEP 2: DATA ORANG TUA -->
                 <div v-if="currentStep === 2" class="space-y-6 animate-fade-in">
                   <h3
-                    class="text-xl font-bold text-gray-900 dark:text-white border-l-4 border-blue-600 pl-3 mb-6"
+                    class="text-xl font-bold text-blue-950 dark:text-white border-l-4 border-blue-600 pl-3 mb-6"
                   >
                     Data Orang Tua / Wali
                   </h3>
@@ -832,7 +832,7 @@ onUpdated(() => {
                 <!-- STEP 3: DATA SEKOLAH ASAL -->
                 <div v-if="currentStep === 3" class="space-y-6 animate-fade-in">
                   <h3
-                    class="text-xl font-bold text-gray-900 dark:text-white border-l-4 border-blue-600 pl-3 mb-6"
+                    class="text-xl font-bold text-blue-950 dark:text-white border-l-4 border-blue-600 pl-3 mb-6"
                   >
                     Riwayat Pendidikan Sebelumnya
                   </h3>
@@ -870,7 +870,7 @@ onUpdated(() => {
                 <!-- STEP 4: PILIHAN JURUSAN & JALUR -->
                 <div v-if="currentStep === 4" class="space-y-6 animate-fade-in">
                   <h3
-                    class="text-xl font-bold text-gray-900 dark:text-white border-l-4 border-blue-600 pl-3 mb-6"
+                    class="text-xl font-bold text-blue-950 dark:text-white border-l-4 border-blue-600 pl-3 mb-6"
                   >
                     Pilihan Jalur & Peminatan
                   </h3>
@@ -878,7 +878,7 @@ onUpdated(() => {
                   <div class="space-y-8">
                     <!-- Jalur Pendaftaran Radio Cards -->
                     <div class="space-y-3">
-                      <label class="text-sm font-bold text-gray-900 dark:text-white"
+                      <label class="text-sm font-bold text-blue-950 dark:text-white"
                         >Jalur Pendaftaran <span class="text-red-500">*</span></label
                       >
                       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -900,7 +900,7 @@ onUpdated(() => {
                           <div class="flex w-full items-center justify-between">
                             <div class="flex items-center">
                               <div class="text-sm">
-                                <p class="font-bold text-gray-900 dark:text-white">
+                                <p class="font-bold text-blue-950 dark:text-white">
                                   Zonasi
                                 </p>
                                 <p class="text-gray-500 dark:text-gray-400 mt-1">
@@ -933,7 +933,7 @@ onUpdated(() => {
                           <div class="flex w-full items-center justify-between">
                             <div class="flex items-center">
                               <div class="text-sm">
-                                <p class="font-bold text-gray-900 dark:text-white">
+                                <p class="font-bold text-blue-950 dark:text-white">
                                   Prestasi
                                 </p>
                                 <p class="text-gray-500 dark:text-gray-400 mt-1">
@@ -953,7 +953,7 @@ onUpdated(() => {
 
                     <!-- Pilihan Jurusan Radio Cards -->
                     <div class="space-y-3">
-                      <label class="text-sm font-bold text-gray-900 dark:text-white"
+                      <label class="text-sm font-bold text-blue-950 dark:text-white"
                         >Peminatan Jurusan <span class="text-red-500">*</span></label
                       >
                       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -978,7 +978,7 @@ onUpdated(() => {
                             >
                               <i data-lucide="flask-conical" class="h-5 w-5"></i>
                             </div>
-                            <p class="font-bold text-gray-900 dark:text-white">IPA</p>
+                            <p class="font-bold text-blue-950 dark:text-white">IPA</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                               Ilmu Pengetahuan Alam
                             </p>
@@ -1005,7 +1005,7 @@ onUpdated(() => {
                             >
                               <i data-lucide="globe-2" class="h-5 w-5"></i>
                             </div>
-                            <p class="font-bold text-gray-900 dark:text-white">IPS</p>
+                            <p class="font-bold text-blue-950 dark:text-white">IPS</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                               Ilmu Pengetahuan Sosial
                             </p>
@@ -1032,7 +1032,7 @@ onUpdated(() => {
                             >
                               <i data-lucide="languages" class="h-5 w-5"></i>
                             </div>
-                            <p class="font-bold text-gray-900 dark:text-white">Bahasa</p>
+                            <p class="font-bold text-blue-950 dark:text-white">Bahasa</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                               Sastra & Budaya
                             </p>
@@ -1107,7 +1107,7 @@ onUpdated(() => {
           <i data-lucide="check-circle" class="w-6 h-6"></i>
         </div>
         <div class="ml-3 text-sm font-normal">
-          <span class="mb-1 text-sm font-bold text-gray-900 dark:text-white block"
+          <span class="mb-1 text-sm font-bold text-blue-950 dark:text-white block"
             >Pendaftaran Berhasil!</span
           >
           <div class="text-xs text-gray-600 dark:text-gray-400">

@@ -331,7 +331,7 @@ onBeforeUnmount(() => {
           <div
             class="w-full bg-white dark:bg-slate-800 p-5 lg:p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col gap-4"
           >
-            <h4 class="text-sm font-bold text-gray-900 dark:text-white flex items-center">
+            <h4 class="text-sm font-bold text-blue-950 dark:text-white flex items-center">
               <i
                 data-lucide="filter"
                 class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
@@ -552,7 +552,7 @@ onBeforeUnmount(() => {
           >
             <i data-lucide="inbox" class="w-8 h-8"></i>
           </div>
-          <h3 class="text-lg font-bold text-gray-900 dark:text-white">Tidak Ditemukan</h3>
+          <h3 class="text-lg font-bold text-blue-950 dark:text-white">Tidak Ditemukan</h3>
           <p class="text-gray-500 dark:text-gray-400 mt-1" v-if="searchQuery">
             Tidak ada ekstrakurikuler dengan nama "{{ searchQuery }}".
           </p>
@@ -613,7 +613,7 @@ onBeforeUnmount(() => {
           >
             <div class="bg-white dark:bg-slate-900 rounded-xl p-6 sm:p-8 shadow-xl">
               <h3
-                class="text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center border-b border-gray-100 dark:border-slate-800 pb-4"
+                class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center border-b border-gray-100 dark:border-slate-800 pb-4"
               >
                 <i
                   data-lucide="clipboard-list"

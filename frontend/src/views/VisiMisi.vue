@@ -57,7 +57,7 @@
           <div class="w-full md:w-2/3 order-1 md:order-2 mt-4 md:mt-0">
             <div class="flex items-center gap-3 mb-6">
               <h2
-                class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white racking-wide"
+                class="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-950 dark:text-white tracking-wide"
                 style="font-family: 'Dancing Script', cursive"
               >
                 Sambutan Kepala Sekolah
