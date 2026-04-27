@@ -84,7 +84,7 @@
                       <!-- Konten Pengantar -->
                       <div class="space-y-6">
                         <p
-                          class="text-xl font-medium text-gray-800 dark:text-gray-200 leading-relaxed"
+                          class="text-xl font-medium text-gray-800 dark:text-gray-200 leading-relaxed first-letter:text-6xl md:first-letter:text-7xl first-letter:font-bold first-letter:font-serif first-letter:text-blue-600 dark:first-letter:text-blue-400 first-letter:mr-3 first-letter:float-left first-letter:leading-none"
                         >
                           {{ category.description }}
                         </p>
