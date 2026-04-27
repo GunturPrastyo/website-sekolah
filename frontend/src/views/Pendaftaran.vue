@@ -557,7 +557,7 @@ onUpdated(() => {
       <div class="container mx-auto max-w-6xl">
         <!-- Form Header -->
         <div class="text-center mb-10">
-          <h2 class="text-3xl md:text-4xl font-bold text-blue-950 dark:text-white mb-4">
+          <h2 class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white mb-4">
             Formulir Pendaftaran
           </h2>
           <p
@@ -608,7 +608,7 @@ onUpdated(() => {
           <div v-else>
             <!-- Progress Bar Indicator -->
             <div
-              class="bg-gray-50 dark:bg-slate-800/50 border-b border-gray-100 dark:border-slate-700 p-6 md:p-8"
+              class="bg-slate-50 dark:bg-slate-900 border-b border-gray-100 dark:border-slate-700 p-6 md:p-8"
             >
               <div class="flex items-center justify-between relative">
                 <div

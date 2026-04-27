@@ -159,7 +159,7 @@ onBeforeUnmount(() => {
           >
             <!-- Garis Animasi Menjalar (Foreground) -->
             <div
-              class="absolute top-0 left-0 w-full bg-green-500 dark:bg-green-400 shadow-[0_0_12px_rgba(34,197,94,0.8)] rounded-full transition-all duration-200 ease-out"
+              class="absolute top-0 left-0 w-full bg-blue-600 dark:bg-blue-500 rounded-full transition-all duration-200 ease-out"
               :style="{ height: lineHeight }"
             ></div>
           </div>
@@ -183,7 +183,7 @@ onBeforeUnmount(() => {
               class="absolute left-8 md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-white dark:border-slate-800 shadow-lg z-20 group-hover:scale-110 transition-all duration-500"
               :class="
                 currentProgress >= index / timeline.length
-                  ? 'bg-green-500 dark:bg-green-400 text-white shadow-[0_0_15px_rgba(34,197,94,0.8)]'
+                  ? 'bg-blue-600 dark:bg-blue-500 text-white shadow-md'
                   : 'bg-gray-200 dark:bg-slate-700 text-gray-500 dark:text-gray-400'
               "
             >
