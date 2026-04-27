@@ -349,7 +349,7 @@ onMounted(() => {
                         }"
                       >
                         <div
-                          class="h-24 relative overflow-hidden bg-gradient-to-r from-blue-700 to-blue-900 dark:from-slate-700 dark:to-slate-800"
+                          class="h-24 relative overflow-hidden bg-blue-600 dark:bg-slate-700"
                         ></div>
                         <div
                           class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
@@ -459,7 +459,7 @@ onMounted(() => {
                         }"
                       >
                         <div
-                          class="h-24 relative overflow-hidden bg-gradient-to-r from-blue-700 to-blue-900 dark:from-slate-700 dark:to-slate-800"
+                          class="h-24 relative overflow-hidden bg-blue-600 dark:bg-slate-700"
                         ></div>
                         <div
                           class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
@@ -569,7 +569,7 @@ onMounted(() => {
                         }"
                       >
                         <div
-                          class="h-24 relative overflow-hidden bg-gradient-to-r from-blue-700 to-blue-900 dark:from-slate-700 dark:to-slate-800"
+                          class="h-24 relative overflow-hidden bg-blue-600 dark:bg-slate-700"
                         ></div>
                         <div
                           class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
@@ -718,7 +718,7 @@ onMounted(() => {
                         }"
                       >
                         <div
-                          class="h-24 relative overflow-hidden bg-gradient-to-r from-blue-700 to-blue-900 dark:from-slate-700 dark:to-slate-800"
+                          class="h-24 relative overflow-hidden bg-blue-600 dark:bg-slate-700"
                         ></div>
                         <div
                           class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
