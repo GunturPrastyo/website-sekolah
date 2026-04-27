@@ -141,6 +141,10 @@ onMounted(() => {
       slidesPerView: 1.2,
       centeredSlides: true,
       spaceBetween: 20,
+      mousewheel: {
+        forceToAxis: true, // Menghindari halaman tertahan saat scroll beda sumbu
+      },
+      grabCursor: true,
       pagination: {
         el: ".jalur-pagination",
         clickable: true,
