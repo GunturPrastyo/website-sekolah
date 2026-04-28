@@ -6,10 +6,34 @@ import PageHeader from "@/components/PageHeader.vue";
 const activeCategory = ref("semua");
 
 const categories = [
-  { id: "semua", name: "Semua Foto" },
-  { id: "fasilitas", name: "Fasilitas" },
-  { id: "kegiatan", name: "Kegiatan" },
-  { id: "ekskul", name: "Ekstrakurikuler" },
+  {
+    id: "semua",
+    name: "Semua Foto",
+    count: 124,
+    image:
+      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800&auto=format&fit=crop",
+  },
+  {
+    id: "fasilitas",
+    name: "Fasilitas",
+    count: 42,
+    image:
+      "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800&auto=format&fit=crop",
+  },
+  {
+    id: "kegiatan",
+    name: "Kegiatan",
+    count: 56,
+    image:
+      "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800&auto=format&fit=crop",
+  },
+  {
+    id: "ekskul",
+    name: "Ekstrakurikuler",
+    count: 26,
+    image:
+      "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=800&auto=format&fit=crop",
+  },
 ];
 
 // Data Dummy Galeri
@@ -18,55 +42,64 @@ const galleryList = ref([
     id: 1,
     title: "Gedung Utama Sekolah",
     category: "fasilitas",
-    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1200",
+    image:
+      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800&h=1000&fit=crop",
   },
   {
     id: 2,
     title: "Upacara Bendera HUT RI",
     category: "kegiatan",
-    image: "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200",
+    image:
+      "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&h=800&fit=crop",
   },
   {
     id: 3,
     title: "Praktikum Laboratorium Kimia",
     category: "fasilitas",
-    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=1200",
+    image:
+      "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&h=1200&fit=crop",
   },
   {
     id: 4,
     title: "Pertandingan Bola Basket",
     category: "ekskul",
-    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1200",
+    image:
+      "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1000&h=1000&fit=crop",
   },
   {
     id: 5,
     title: "Perpustakaan Digital",
     category: "fasilitas",
-    image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1200",
+    image:
+      "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800&h=1100&fit=crop",
   },
   {
     id: 6,
     title: "Pentas Seni Tradisional",
     category: "kegiatan",
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200",
+    image:
+      "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&h=700&fit=crop",
   },
   {
     id: 7,
     title: "Klub Robotika",
     category: "ekskul",
-    image: "https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?q=80&w=1200",
+    image:
+      "https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?q=80&w=900&h=1200&fit=crop",
   },
   {
     id: 8,
     title: "Ruang Kelas Modern",
     category: "fasilitas",
-    image: "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=1200",
+    image:
+      "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=1200&h=900&fit=crop",
   },
   {
     id: 9,
     title: "Kegiatan Pramuka Kemah Bakti",
     category: "ekskul",
-    image: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=1200",
+    image:
+      "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800&h=800&fit=crop",
   },
 ]);
 
@@ -114,61 +147,103 @@ onUpdated(() => {
 
     <!-- Gallery Section -->
     <section class="py-16 md:py-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
-      <div class="container mx-auto max-w-6xl">
-        <!-- Filter Tabs -->
-        <div class="flex flex-wrap justify-center gap-3 mb-12">
-          <button
+      <div class="container mx-auto max-w-7xl">
+        <!-- Category Cards Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          <div
             v-for="cat in categories"
             :key="cat.id"
             @click="activeCategory = cat.id"
-            class="px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 focus:outline-none"
-            :class="
+            class="relative rounded-2xl overflow-hidden h-28 md:h-36 cursor-pointer group shadow-sm hover:shadow-md transition-all duration-300 border-2"
+            :class="[
               activeCategory === cat.id
-                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
-                : 'bg-white text-gray-600 dark:bg-slate-800 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
-            "
+                ? 'border-blue-500 ring-4 ring-blue-500/20 dark:ring-blue-500/30'
+                : 'border-transparent',
+            ]"
           >
-            {{ cat.name }}
-          </button>
+            <img
+              :src="cat.image"
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            <div
+              class="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-colors duration-300"
+            ></div>
+            <div
+              class="absolute inset-0 flex flex-col items-center justify-center text-white p-4 text-center"
+            >
+              <span class="font-bold text-base md:text-lg drop-shadow-md">{{
+                cat.name
+              }}</span>
+              <span
+                class="text-[10px] md:text-xs font-medium opacity-90 mt-1 bg-white/20 px-2 py-0.5 rounded-full backdrop-blur-sm"
+                >{{ cat.count }} Foto</span
+              >
+            </div>
+          </div>
         </div>
 
-        <!-- Photo Grid (Masonry-like layout using columns) -->
+        <!-- Photo Grid (True Masonry using CSS Columns) -->
         <TransitionGroup
           name="gallery"
           tag="div"
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 relative"
+          class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 w-full"
         >
           <div
             v-for="item in filteredGallery"
             :key="item.id"
             @click="openModal(item)"
-            class="group relative overflow-hidden rounded-2xl cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-200 dark:bg-slate-800 aspect-square md:aspect-[4/3]"
+            class="group relative overflow-hidden rounded-2xl cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-200 dark:bg-slate-800 block break-inside-avoid mb-6"
           >
             <img
               :src="item.image"
               :alt="item.title"
-              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              class="w-full h-auto block transition-transform duration-700 group-hover:scale-105"
             />
 
-            <!-- Hover Overlay -->
+            <!-- Dark Overlay on Hover -->
             <div
-              class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4"
+              class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            ></div>
+
+            <!-- Top Right Actions (Stock Photo Style) -->
+            <div
+              class="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0 z-20"
             >
-              <div
-                class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-3 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300"
+              <button
+                @click.stop
+                class="w-9 h-9 rounded-lg bg-white/90 hover:bg-white text-gray-700 hover:text-red-500 flex items-center justify-center shadow-sm transition-colors"
+                title="Suka"
               >
-                <i data-lucide="zoom-in" class="w-6 h-6 text-white"></i>
-              </div>
+                <i data-lucide="heart" class="w-4 h-4"></i>
+              </button>
+              <button
+                @click.stop
+                class="w-9 h-9 rounded-lg bg-white/90 hover:bg-white text-gray-700 hover:text-blue-600 flex items-center justify-center shadow-sm transition-colors"
+                title="Unduh"
+              >
+                <i data-lucide="download" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <!-- Bottom Left Text -->
+            <div
+              class="absolute bottom-0 left-0 p-5 w-full z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
+            >
               <h4
-                class="text-white font-bold text-center text-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75"
+                class="text-white font-bold text-sm md:text-base leading-snug drop-shadow-md mb-2"
               >
                 {{ item.title }}
               </h4>
-              <span
-                class="text-blue-200 text-xs font-semibold uppercase tracking-wider mt-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100"
-              >
-                {{ categories.find((c) => c.id === item.category)?.name }}
-              </span>
+              <div class="flex items-center gap-2">
+                <div
+                  class="w-6 h-6 rounded-full bg-blue-600 border border-white/50 flex items-center justify-center text-white text-[10px] font-bold shadow-sm"
+                >
+                  SM
+                </div>
+                <span class="text-gray-300 text-xs font-medium tracking-wide">{{
+                  categories.find((c) => c.id === item.category)?.name
+                }}</span>
+              </div>
             </div>
           </div>
         </TransitionGroup>
@@ -242,7 +317,7 @@ onUpdated(() => {
 .gallery-enter-from,
 .gallery-leave-to {
   opacity: 0;
-  transform: scale(0.9) translateY(30px);
+  transform: scale(0.95) translateY(20px);
 }
 .gallery-leave-active {
   position: absolute;
