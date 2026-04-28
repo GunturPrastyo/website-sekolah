@@ -202,7 +202,7 @@ onMounted(() => {
     <section class="pt-0 pb-0 md:py-16 md:px-6 bg-gray-50 dark:bg-slate-900">
       <div class="container mx-auto max-w-7xl">
         <div
-          class="bg-white dark:bg-slate-800 md:rounded-3xl shadow-sm md:shadow-xl border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-10 lg:p-12 flex flex-col w-full"
+          class="bg-white dark:bg-slate-800 md:rounded-lg shadow-sm md:shadow-md border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-10 lg:p-12 flex flex-col w-full"
         >
           <!-- Content -->
           <main id="staff-content" class="w-full">

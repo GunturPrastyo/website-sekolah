@@ -276,7 +276,7 @@ onBeforeUnmount(() => {
 
     <!-- Gallery Section -->
     <section
-      class="relative pt-0 md:pt-12 pb-12 md:px-6 min-h-screen bg-gradient-to-b from-blue-50/50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden"
+      class="relative pt-0 md:pt-12 pb-0 md:pb-12 md:px-6 min-h-screen bg-gradient-to-b from-blue-50/50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden"
     >
       <!-- Elemen Dekorasi Latar Belakang (Blob Cahaya) -->
       <div
@@ -285,7 +285,7 @@ onBeforeUnmount(() => {
 
       <div class="container relative z-10 mx-auto max-w-full">
         <div
-          class="bg-white dark:bg-slate-800 md:rounded-3xl shadow-sm md:shadow-xl border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-10 lg:p-12 flex flex-col w-full"
+          class="bg-white dark:bg-slate-800 md:rounded-lg shadow-sm md:shadow-md border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-10 lg:p-12 flex flex-col w-full"
         >
           <!-- Search Bar, Filter Hari, & Filter Card -->
           <div class="flex flex-col gap-6 mb-4">
@@ -313,7 +313,7 @@ onBeforeUnmount(() => {
               </div>
 
               <!-- Search Bar -->
-              <div class="relative w-full lg:w-[350px] shrink-0">
+              <div class="relative w-full sm:flex-1 lg:flex-none lg:w-[350px]">
                 <i
                   data-lucide="search"
                   class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
@@ -369,12 +369,12 @@ onBeforeUnmount(() => {
           <TransitionGroup
             name="gallery"
             tag="div"
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 lg:gap-16 relative w-full mt-8"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-12 lg:gap-16 relative w-full mt-8"
           >
             <div
               v-for="ekskul in paginatedEkskul"
               :key="ekskul.id"
-              class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out relative group cursor-pointer"
+              class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out relative group cursor-pointer max-w-[280px] sm:max-w-none mx-auto w-full"
               @click="openModal(ekskul)"
             >
               <!-- Dekorasi Card Belakang (Offset Kanan Bawah) -->
@@ -476,7 +476,7 @@ onBeforeUnmount(() => {
               <div
                 v-for="n in skeletonCount"
                 :key="'skeleton-' + n"
-                class="relative w-full transition-all duration-500 ease-out"
+                class="relative transition-all duration-500 ease-out max-w-[280px] sm:max-w-none mx-auto w-full"
               >
                 <!-- Dekorasi Card Belakang -->
                 <div
@@ -580,7 +580,7 @@ onBeforeUnmount(() => {
     <section class="relative bg-white dark:bg-slate-950 pb-0 md:pb-20 md:px-6 overflow-hidden">
       <div class="container mx-auto max-w-full relative z-10">
         <div
-          class="bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-900 dark:to-blue-950 md:rounded-3xl shadow-md md:shadow-xl border-y md:border border-blue-500/30 dark:border-slate-700 p-6 md:p-10 lg:p-12 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 relative overflow-hidden w-full"
+          class="bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-900 dark:to-blue-950 md:rounded-lg shadow-sm md:shadow-md border-y md:border border-blue-500/30 dark:border-slate-700 p-6 md:p-10 lg:p-12 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 relative overflow-hidden w-full"
         >
           <!-- Teks CTA & Ajakan -->
           <div
