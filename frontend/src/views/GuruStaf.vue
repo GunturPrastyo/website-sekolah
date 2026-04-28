@@ -200,7 +200,7 @@ onMounted(() => {
 
     <!-- Main Content -->
     <section class="pt-0 pb-0 md:py-16 md:px-6 bg-gray-50 dark:bg-slate-900">
-      <div class="container mx-auto max-w-7xl">
+      <div class="container mx-auto max-w-8xl">
         <div
           class="bg-white dark:bg-slate-800 md:rounded-lg shadow-sm md:shadow-md border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-10 lg:p-12 flex flex-col w-full"
         >
@@ -231,13 +231,13 @@ onMounted(() => {
                   v-model="searchQuery"
                   type="text"
                   placeholder="Cari nama guru atau staf..."
-                  class="block w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-sm shadow-inner focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white placeholder-gray-400 focus:outline-none"
+                  class="block w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-lg text-sm shadow-inner focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white placeholder-gray-400 focus:outline-none"
                 />
               </div>
 
               <!-- Category Filter Card -->
               <div
-                class="w-full bg-gray-50 dark:bg-slate-900/50 p-5 lg:p-6 rounded-xl shadow-inner border border-gray-200 dark:border-slate-700 flex flex-col gap-4"
+                class="w-full bg-gray-50 dark:bg-slate-900/50 p-5 lg:p-6 rounded-lg shadow-inner border border-gray-200 dark:border-slate-700 flex flex-col gap-4"
               >
                 <h4
                   class="text-sm font-bold text-gray-900 dark:text-white flex items-center"
@@ -296,7 +296,7 @@ onMounted(() => {
                 <div
                   v-for="i in 6"
                   :key="`skel-${i}`"
-                  class="bg-gray-50 dark:bg-slate-700/30 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-[320px] relative animate-pulse"
+                  class="bg-gray-50 dark:bg-slate-700/30 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-[320px] relative animate-pulse"
                 >
                   <div class="h-24 bg-gray-200 dark:bg-slate-700 w-full"></div>
                   <div
@@ -344,7 +344,7 @@ onMounted(() => {
                       <div
                         v-for="(staff, index) in pimpinanList"
                         :key="staff.id"
-                        class="group bg-gray-50 dark:bg-slate-700/30 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
+                        class="group bg-gray-50 dark:bg-slate-700/30 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
                         :style="{
                           animationDelay: `${index * 100}ms`,
                           animationFillMode: 'both',
@@ -454,7 +454,7 @@ onMounted(() => {
                       <div
                         v-for="(staff, index) in guruList"
                         :key="staff.id"
-                        class="group bg-gray-50 dark:bg-slate-700/30 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
+                        class="group bg-gray-50 dark:bg-slate-700/30 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
                         :style="{
                           animationDelay: `${index * 100}ms`,
                           animationFillMode: 'both',
@@ -564,7 +564,7 @@ onMounted(() => {
                       <div
                         v-for="(staff, index) in stafList"
                         :key="staff.id"
-                        class="group bg-gray-50 dark:bg-slate-700/30 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
+                        class="group bg-gray-50 dark:bg-slate-700/30 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
                         :style="{
                           animationDelay: `${index * 100}ms`,
                           animationFillMode: 'both',
@@ -667,7 +667,7 @@ onMounted(() => {
                       guruList.length === 0 &&
                       stafList.length === 0
                     "
-                    class="py-16 flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-slate-900/50 rounded-2xl border-2 border-dashed border-gray-200 dark:border-slate-700"
+                    class="py-16 flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-slate-900/50 rounded-lg border-2 border-dashed border-gray-200 dark:border-slate-700"
                   >
                     <div
                       class="w-16 h-16 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-gray-400 mb-4 shadow-sm"
@@ -713,7 +713,7 @@ onMounted(() => {
                       <div
                         v-for="(staff, index) in filteredStaff"
                         :key="staff.id"
-                        class="group bg-gray-50 dark:bg-slate-700/30 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
+                        class="group bg-gray-50 dark:bg-slate-700/30 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
                         :style="{
                           animationDelay: `${index * 100}ms`,
                           animationFillMode: 'both',
@@ -811,7 +811,7 @@ onMounted(() => {
                     <!-- Jika Data Kosong -->
                     <div
                       v-if="filteredStaff.length === 0"
-                      class="py-16 flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-slate-900/50 rounded-2xl border-2 border-dashed border-gray-200 dark:border-slate-700"
+                      class="py-16 flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-slate-900/50 rounded-lg border-2 border-dashed border-gray-200 dark:border-slate-700"
                     >
                       <div
                         class="w-16 h-16 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-gray-400 mb-4 shadow-sm"

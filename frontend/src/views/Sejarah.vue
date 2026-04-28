@@ -92,14 +92,14 @@ onMounted(() => {
             "opacity-100",
             "translate-y-0",
             "scale-100",
-            "md:translate-x-0"
+            "lg:translate-x-0"
           );
           entry.target.classList.remove(
             "opacity-0",
             "translate-y-10",
             "scale-95",
-            "md:-translate-x-20",
-            "md:translate-x-20"
+            "lg:-translate-x-20",
+            "lg:translate-x-20"
           );
 
           // Animasi fade-in berurutan untuk setiap kalimat di dalam card
@@ -141,7 +141,7 @@ onBeforeUnmount(() => {
 
     <!-- Timeline Section -->
     <section
-      class="py-16 md:py-24 min-h-screen relative overflow-hidden bg-fixed bg-center bg-cover"
+      class="py-12 md:py-24 min-h-screen relative overflow-hidden bg-fixed bg-center bg-cover"
       style="
         background-image: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1600&auto=format&fit=crop');
       "
@@ -151,11 +151,11 @@ onBeforeUnmount(() => {
         class="absolute inset-0 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-[2px] transition-colors duration-500"
       ></div>
 
-      <div class="container relative z-10 mx-auto px-6 max-w-7xl">
-        <div class="relative wrap overflow-hidden p-2 md:p-10 h-full" ref="timelineRef">
+      <div class="container relative z-10 mx-auto px-0 lg:px-6 w-full max-w-full">
+        <div class="relative wrap overflow-hidden py-10 lg:p-10 h-full" ref="timelineRef">
           <!-- Garis Tengah Timeline (Latar Belakang) -->
           <div
-            class="absolute z-0 w-1 bg-gray-200 dark:bg-slate-700 h-full left-8 md:left-1/2 transform md:-translate-x-1/2 rounded-full"
+            class="absolute z-0 w-1 bg-gray-200 dark:bg-slate-700 h-full left-6 sm:left-8 lg:left-1/2 transform -translate-x-1/2 rounded-full"
           >
             <!-- Garis Animasi Menjalar (Foreground) -->
             <div
@@ -171,16 +171,16 @@ onBeforeUnmount(() => {
             class="fade-on-scroll opacity-0 translate-y-10 scale-95 transition-all duration-1000 ease-out relative z-10 flex items-center w-full mb-12 last:mb-0 group"
             :class="
               index % 2 === 0
-                ? 'md:flex-row-reverse md:-translate-x-20'
-                : 'md:flex-row md:translate-x-20'
+                ? 'lg:flex-row-reverse lg:-translate-x-20'
+                : 'lg:flex-row lg:translate-x-20'
             "
           >
             <!-- Ruang Kosong untuk Penyeimbang Grid Desktop -->
-            <div class="hidden md:block md:w-1/2"></div>
+            <div class="hidden lg:block lg:w-1/2"></div>
 
             <!-- Ikon Lingkaran Timeline -->
             <div
-              class="absolute left-8 md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-white dark:border-slate-800 shadow-lg z-20 group-hover:scale-110 transition-all duration-500"
+              class="absolute left-6 sm:left-8 lg:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-white dark:border-slate-800 shadow-lg z-20 group-hover:scale-110 transition-all duration-500"
               :class="
                 currentProgress >= index / timeline.length
                   ? 'bg-blue-600 dark:bg-blue-500 text-white shadow-md'
@@ -192,14 +192,14 @@ onBeforeUnmount(() => {
 
             <!-- Kartu Konten -->
             <div
-              class="ml-20 md:ml-0 w-full md:w-1/2"
-              :class="index % 2 === 0 ? 'md:pr-12 lg:pr-16' : 'md:pl-12 lg:pl-16'"
+              class="ml-16 sm:ml-20 lg:ml-0 flex-1 lg:flex-none lg:w-1/2"
+              :class="index % 2 === 0 ? 'lg:pr-12 xl:pr-16' : 'lg:pl-12 xl:pl-16'"
             >
               <div
                 class="group/card relative hover:-translate-y-1.5 transition-transform duration-400"
               >
                 <div
-                  class="hidden md:block absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 transform rotate-45 z-20"
+                  class="hidden lg:block absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 transform rotate-45 z-20"
                   :class="
                     index % 2 === 0
                       ? '-right-2 border-t border-r'
@@ -208,7 +208,7 @@ onBeforeUnmount(() => {
                 ></div>
 
                 <div
-                  class="relative z-10 flex flex-col items-stretch bg-white dark:bg-slate-800 rounded-2xl shadow-md group-hover/card:shadow-2xl border border-gray-100 dark:border-slate-700 overflow-hidden transition-shadow duration-400"
+                  class="relative z-10 flex flex-col items-stretch bg-white dark:bg-slate-800 rounded-l-2xl lg:rounded-2xl shadow-md group-hover/card:shadow-2xl border-y border-l lg:border border-gray-100 dark:border-slate-700 overflow-hidden transition-shadow duration-400"
                   :class="index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'"
                 >
                   <!-- Gambar Dokumentasi Timeline -->

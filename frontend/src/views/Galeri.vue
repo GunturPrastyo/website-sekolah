@@ -184,7 +184,7 @@ onUpdated(() => {
 
     <!-- Gallery Section -->
     <section class="py-8 md:py-12 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
-      <div class="container mx-auto max-w-7xl">
+      <div class="container mx-auto max-w-full">
         <!-- Video Profil Section -->
         <div
           class="mb-6 relative rounded-xl overflow-hidden shadow-xl aspect-video md:aspect-[21/9] group cursor-pointer w-full block"
