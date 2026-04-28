@@ -193,11 +193,6 @@ onUpdated(() => {
                 >
                   <i data-lucide="share-2" class="w-5 h-5"></i>
                 </button>
-                <button
-                  class="p-2 rounded-full bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-red-50 hover:text-red-500 dark:hover:text-red-400 transition-colors"
-                >
-                  <i data-lucide="bookmark" class="w-5 h-5"></i>
-                </button>
               </div>
             </div>
           </div>
@@ -303,101 +298,6 @@ onUpdated(() => {
               class="px-3 py-1 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 text-xs font-semibold rounded hover:bg-blue-100 hover:text-blue-600 transition-colors"
               >#KegiatanSiswa</a
             >
-          </div>
-
-          <!-- Area Komentar -->
-          <div class="p-6 md:p-10 bg-gray-50/50 dark:bg-slate-800/50">
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">
-              Tinggalkan Komentar
-            </h3>
-
-            <!-- Form Komentar Statis -->
-            <form @submit.prevent class="space-y-4 mb-10">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >Nama Lengkap <span class="text-red-500">*</span></label
-                  >
-                  <input
-                    type="text"
-                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                    placeholder="Nama Anda"
-                    required
-                  />
-                </div>
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >Email <span class="text-red-500">*</span></label
-                  >
-                  <input
-                    type="email"
-                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                    placeholder="alamat@email.com"
-                    required
-                  />
-                </div>
-              </div>
-              <div>
-                <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >Komentar <span class="text-red-500">*</span></label
-                >
-                <textarea
-                  rows="4"
-                  class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                  placeholder="Tulis komentar Anda di sini..."
-                  required
-                ></textarea>
-              </div>
-              <button
-                type="submit"
-                class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-colors flex items-center"
-              >
-                Kirim Komentar <i data-lucide="send" class="w-4 h-4 ml-2"></i>
-              </button>
-            </form>
-
-            <!-- Daftar Komentar (Dummy) -->
-            <div class="space-y-6">
-              <h4
-                class="text-lg font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-slate-700 pb-3"
-              >
-                1 Komentar
-              </h4>
-
-              <div class="flex gap-4">
-                <div
-                  class="w-10 h-10 rounded-full bg-blue-100 dark:bg-slate-700 flex items-center justify-center shrink-0"
-                >
-                  <i
-                    data-lucide="user"
-                    class="w-5 h-5 text-blue-600 dark:text-gray-400"
-                  ></i>
-                </div>
-                <div>
-                  <div class="flex items-center gap-2 mb-1">
-                    <span class="font-bold text-gray-900 dark:text-white text-sm"
-                      >Alumni Sukses 2010</span
-                    >
-                    <span class="text-xs text-gray-500 dark:text-gray-400"
-                      >25 November 2025</span
-                    >
-                  </div>
-                  <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-                    Acara yang sangat luar biasa! Bangga menjadi bagian dari keluarga
-                    besar SMAN 1 Nogosari. Semoga guru-guru selalu diberikan kesehatan dan
-                    terus menginspirasi.
-                  </p>
-                  <button
-                    class="text-xs font-semibold text-blue-600 dark:text-blue-400 mt-2 hover:underline"
-                  >
-                    Balas
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </main>
 

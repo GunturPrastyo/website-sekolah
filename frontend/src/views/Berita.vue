@@ -247,10 +247,6 @@ onUpdated(() => {
                       <i data-lucide="user" class="w-3.5 h-3.5 mr-1.5 text-blue-500"></i>
                       {{ news.author }}
                     </span>
-                    <span class="flex items-center">
-                      <i data-lucide="eye" class="w-3.5 h-3.5 mr-1.5 text-blue-500"></i>
-                      {{ news.views }}
-                    </span>
                   </div>
 
                   <h3
@@ -269,7 +265,7 @@ onUpdated(() => {
                   </p>
 
                   <div class="mt-auto flex items-center justify-between">
-                    <router-link 
+                    <router-link
                       to="/artikel"
                       class="flex items-center text-sm font-bold text-blue-600 dark:text-blue-400 group-hover:underline"
                     >
@@ -279,13 +275,12 @@ onUpdated(() => {
                         class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform"
                       ></i>
                     </router-link>
-                    <button
-                      @click.prevent.stop="openShareModal(news.title)"
-                      class="text-gray-400 hover:text-blue-600 dark:text-gray-500 dark:hover:text-blue-400 transition-colors focus:outline-none relative z-10"
-                      title="Bagikan Berita"
+                    <span
+                      class="flex items-center text-xs font-medium text-gray-500 dark:text-gray-400"
                     >
-                      <i data-lucide="share" class="w-5 h-5"></i>
-                    </button>
+                      <i data-lucide="eye" class="w-4 h-4 mr-1.5 text-blue-500"></i>
+                      {{ news.views }}
+                    </span>
                   </div>
                 </div>
               </article>
@@ -326,7 +321,10 @@ onUpdated(() => {
           <div
             class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
           >
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
+            <h3
+              class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center"
+            >
+              <i data-lucide="sliders-horizontal" class="w-5 h-5 mr-2 text-blue-500"></i>
               Cari & Filter
             </h3>
 
@@ -340,7 +338,7 @@ onUpdated(() => {
                 v-model="searchQuery"
                 type="text"
                 placeholder="Cari judul atau isi berita..."
-              class="w-full pl-11 pr-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm"
+                class="w-full pl-11 pr-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm"
               />
             </div>
 
@@ -353,7 +351,7 @@ onUpdated(() => {
                 v-for="cat in categories"
                 :key="cat.id"
                 @click="activeCategory = cat.id"
-              class="px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 focus:outline-none border"
+                class="px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 focus:outline-none border"
                 :class="
                   activeCategory === cat.id
                     ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
@@ -373,9 +371,10 @@ onUpdated(() => {
             class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
           >
             <h3
-              class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3"
+              class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
             >
-              Berita Populer
+              <i data-lucide="trending-up" class="w-5 h-5 mr-2 text-blue-500"></i>
+              Terpopuler
             </h3>
             <div class="space-y-5">
               <router-link
