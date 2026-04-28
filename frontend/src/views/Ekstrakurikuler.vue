@@ -276,7 +276,7 @@ onBeforeUnmount(() => {
 
     <!-- Gallery Section -->
     <section
-      class="relative pt-12 pb-12 px-6 min-h-screen bg-gradient-to-b from-blue-50/50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden"
+      class="relative pt-0 md:pt-12 pb-12 md:px-6 min-h-screen bg-gradient-to-b from-blue-50/50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden"
     >
       <!-- Elemen Dekorasi Latar Belakang (Blob Cahaya) -->
       <div
@@ -285,7 +285,7 @@ onBeforeUnmount(() => {
 
       <div class="container relative z-10 mx-auto max-w-full">
         <div
-          class="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-100 dark:border-slate-700 p-6 md:p-10 lg:p-12 flex flex-col w-full"
+          class="bg-white dark:bg-slate-800 md:rounded-3xl shadow-sm md:shadow-xl border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-10 lg:p-12 flex flex-col w-full"
         >
           <!-- Search Bar, Filter Hari, & Filter Card -->
           <div class="flex flex-col gap-6 mb-4">
@@ -577,10 +577,10 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
-    <section class="relative bg-white dark:bg-slate-950 pb-12 px-6 overflow-hidden">
+    <section class="relative bg-white dark:bg-slate-950 pb-0 md:pb-20 md:px-6 overflow-hidden">
       <div class="container mx-auto max-w-full relative z-10">
         <div
-          class="bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-900 dark:to-blue-950 rounded-lg shadow-md border border-blue-500/30 dark:border-slate-700 p-6 md:p-10 lg:p-12 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 relative overflow-hidden w-full"
+          class="bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-900 dark:to-blue-950 md:rounded-3xl shadow-md md:shadow-xl border-y md:border border-blue-500/30 dark:border-slate-700 p-6 md:p-10 lg:p-12 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 relative overflow-hidden w-full"
         >
           <!-- Teks CTA & Ajakan -->
           <div
