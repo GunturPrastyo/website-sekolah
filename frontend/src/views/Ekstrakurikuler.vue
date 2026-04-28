@@ -612,31 +612,31 @@ onBeforeUnmount(() => {
             class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out w-full lg:w-1/2"
           >
             <div
-              class="bg-white dark:bg-slate-800 rounded-xl p-6 sm:p-8 shadow-xl border border-transparent dark:border-slate-700"
+              class="bg-blue-50 dark:bg-slate-800 rounded-xl p-6 sm:p-8 shadow-xl border-t-4 border-t-yellow-400 dark:border-t-yellow-500 border border-transparent dark:border-slate-700"
             >
               <h3
-                class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center border-b border-gray-100 dark:border-slate-700 pb-4"
+                class="text-xl font-bold text-blue-900 dark:text-white mb-5 flex items-center border-b border-blue-200 dark:border-slate-700 pb-4"
               >
                 <i
                   data-lucide="clipboard-list"
-                  class="w-5 h-5 mr-2 text-slate-600 dark:text-slate-400"
+                  class="w-5 h-5 mr-2 text-yellow-500 dark:text-yellow-400"
                 ></i>
                 Syarat Pengajuan Klub
               </h3>
               <ul class="space-y-5 relative">
                 <!-- Garis Vertikal Timeline -->
                 <div
-                  class="absolute left-[15px] top-4 bottom-4 w-[2px] bg-blue-100 dark:bg-slate-600 z-0"
+                  class="absolute left-[15px] top-4 bottom-4 w-[2px] bg-yellow-300 dark:bg-slate-600 z-0"
                 ></div>
 
                 <li class="flex items-start group relative z-10">
                   <div
-                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-800 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
+                    class="w-8 h-8 rounded-full bg-yellow-400 dark:bg-yellow-500 text-blue-900 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-blue-50 dark:border-slate-800 transition-colors group-hover:bg-blue-600 group-hover:text-yellow-400 dark:group-hover:text-white shadow-sm"
                   >
                     1
                   </div>
                   <p
-                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed pt-1"
+                    class="text-blue-950 dark:text-gray-300 text-sm md:text-base leading-relaxed pt-1"
                   >
                     Mengumpulkan minimal <strong>10 orang siswa</strong> yang berkomitmen
                     menjadi anggota pertama.
@@ -644,12 +644,12 @@ onBeforeUnmount(() => {
                 </li>
                 <li class="flex items-start group relative z-10">
                   <div
-                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-800 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
+                    class="w-8 h-8 rounded-full bg-yellow-400 dark:bg-yellow-500 text-blue-900 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-blue-50 dark:border-slate-800 transition-colors group-hover:bg-blue-600 group-hover:text-yellow-400 dark:group-hover:text-white shadow-sm"
                   >
                     2
                   </div>
                   <p
-                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed pt-1"
+                    class="text-blue-950 dark:text-gray-300 text-sm md:text-base leading-relaxed pt-1"
                   >
                     Mendapat persetujuan dari minimal
                     <strong>1 orang guru pembina</strong> pendamping.
@@ -657,12 +657,12 @@ onBeforeUnmount(() => {
                 </li>
                 <li class="flex items-start group relative z-10">
                   <div
-                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-800 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
+                    class="w-8 h-8 rounded-full bg-yellow-400 dark:bg-yellow-500 text-blue-900 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-blue-50 dark:border-slate-800 transition-colors group-hover:bg-blue-600 group-hover:text-yellow-400 dark:group-hover:text-white shadow-sm"
                   >
                     3
                   </div>
                   <p
-                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed pt-1"
+                    class="text-blue-950 dark:text-gray-300 text-sm md:text-base leading-relaxed pt-1"
                   >
                     Menyusun proposal yang berisi visi, misi, dan rencana program kerja
                     selama 1 semester.
@@ -670,12 +670,12 @@ onBeforeUnmount(() => {
                 </li>
                 <li class="flex items-start group relative z-10">
                   <div
-                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-white dark:border-slate-800 transition-colors group-hover:bg-blue-600 group-hover:text-white shadow-sm"
+                    class="w-8 h-8 rounded-full bg-yellow-400 dark:bg-yellow-500 text-blue-900 flex items-center justify-center font-bold text-sm shrink-0 mr-4 border-4 border-blue-50 dark:border-slate-800 transition-colors group-hover:bg-blue-600 group-hover:text-yellow-400 dark:group-hover:text-white shadow-sm"
                   >
                     4
                   </div>
                   <p
-                    class="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed pt-1"
+                    class="text-blue-950 dark:text-gray-300 text-sm md:text-base leading-relaxed pt-1"
                   >
                     Mempresentasikan proposal di hadapan
                     <strong>Waka Kesiswaan & Pengurus OSIS</strong>.

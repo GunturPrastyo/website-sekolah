@@ -152,9 +152,9 @@ onUpdated(() => {
         />
       </div>
 
-      <div class="container mx-auto max-w-7xl flex flex-col lg:flex-row gap-10">
+      <div class="container mx-auto max-w-7xl flex flex-col lg:flex-row gap-8 lg:gap-10">
         <!-- KIRI: Daftar Berita -->
-        <div class="w-full lg:w-2/3">
+        <div class="w-full lg:w-2/3 order-2 lg:order-1">
           <!-- Skeleton Loading -->
           <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div
@@ -303,10 +303,10 @@ onUpdated(() => {
         </div>
 
         <!-- KANAN: Sidebar -->
-        <aside class="w-full lg:w-1/3 space-y-8">
+        <aside class="contents lg:block w-full lg:w-1/3 order-1 lg:order-2">
           <!-- Search & Category Widget -->
           <div
-            class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
+            class="w-full order-1 lg:order-none mb-0 lg:mb-8 bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
           >
             <h3
               class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center"
@@ -355,7 +355,7 @@ onUpdated(() => {
 
           <!-- Berita Populer Widget -->
           <div
-            class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
+            class="w-full order-3 lg:order-none bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
           >
             <h3
               class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
