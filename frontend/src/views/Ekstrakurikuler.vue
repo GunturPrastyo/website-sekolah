@@ -374,17 +374,17 @@ onBeforeUnmount(() => {
             <div
               v-for="ekskul in paginatedEkskul"
               :key="ekskul.id"
-              class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out relative group cursor-pointer max-w-[280px] sm:max-w-none mx-auto w-full"
+              class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out relative group cursor-pointer max-w-[300px] sm:max-w-none mx-auto w-full"
               @click="openModal(ekskul)"
             >
               <!-- Dekorasi Card Belakang (Offset Kanan Bawah) -->
               <div
-                class="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-slate-700 dark:to-slate-800 rounded-2xl transform translate-x-3 translate-y-3 transition-all duration-500 group-hover:translate-x-4 group-hover:translate-y-4 z-0"
+                class="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-slate-700 dark:to-slate-800 rounded-xl transform translate-x-3 translate-y-3 transition-all duration-500 group-hover:translate-x-4 group-hover:translate-y-4 z-0"
               ></div>
 
               <!-- Main Card -->
               <div
-                class="relative z-10 bg-slate-900 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-2xl transition-all duration-500 aspect-[3/4] transform group-hover:-translate-y-1 group-hover:-translate-x-1 border border-gray-200 dark:border-slate-700 h-full w-full"
+                class="relative z-10 bg-slate-900 rounded-xl overflow-hidden shadow-lg group-hover:shadow-2xl transition-all duration-500 aspect-[3/4] transform group-hover:-translate-y-1 group-hover:-translate-x-1 border border-gray-200 dark:border-slate-700 h-full w-full"
               >
                 <!-- Full Background Image -->
                 <img
@@ -476,15 +476,15 @@ onBeforeUnmount(() => {
               <div
                 v-for="n in skeletonCount"
                 :key="'skeleton-' + n"
-                class="relative transition-all duration-500 ease-out max-w-[280px] sm:max-w-none mx-auto w-full"
+                class="relative transition-all duration-500 ease-out max-w-[300px] sm:max-w-none mx-auto w-full"
               >
                 <!-- Dekorasi Card Belakang -->
                 <div
-                  class="absolute inset-0 bg-gray-200 dark:bg-slate-700 rounded-2xl transform translate-x-3 translate-y-3 z-0 animate-pulse"
+                  class="absolute inset-0 bg-gray-200 dark:bg-slate-700 rounded-xl transform translate-x-3 translate-y-3 z-0 animate-pulse"
                 ></div>
                 <!-- Main Card Skeleton -->
                 <div
-                  class="relative z-10 bg-gray-100 dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg aspect-[3/4] border border-gray-200 dark:border-slate-700 h-full w-full animate-pulse"
+                  class="relative z-10 bg-gray-100 dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg aspect-[3/4] border border-gray-200 dark:border-slate-700 h-full w-full animate-pulse"
                 >
                   <!-- Dummy Badge Kategori -->
                   <div class="absolute top-5 right-5">
@@ -577,7 +577,9 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
-    <section class="relative bg-white dark:bg-slate-950 pb-0 md:pb-20 md:px-6 overflow-hidden">
+    <section
+      class="relative bg-white dark:bg-slate-950 pb-0 md:pb-20 md:px-6 overflow-hidden"
+    >
       <div class="container mx-auto max-w-full relative z-10">
         <div
           class="bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-900 dark:to-blue-950 md:rounded-lg shadow-sm md:shadow-md border-y md:border border-blue-500/30 dark:border-slate-700 p-6 md:p-10 lg:p-12 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 relative overflow-hidden w-full"
