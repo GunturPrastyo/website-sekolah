@@ -23,6 +23,9 @@ const popularNews = [
     date: "10 Jan 2026",
     image: "https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800",
     views: 3420,
+    category: "Prestasi",
+    description:
+      "Prestasi membanggakan kembali ditorehkan oleh siswa-siswi kita di kancah nasional dalam bidang sains terapan.",
   },
   {
     id: 3,
@@ -30,6 +33,9 @@ const popularNews = [
     date: "01 Des 2025",
     image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=800",
     views: 890,
+    category: "Akademik",
+    description:
+      "Diberitahukan kepada seluruh siswa bahwa Ujian Akhir Semester (UAS) Ganjil akan dilaksanakan secara serentak.",
   },
   {
     id: 4,
@@ -37,6 +43,9 @@ const popularNews = [
     date: "05 Feb 2026",
     image: "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800",
     views: 2105,
+    category: "Fasilitas",
+    description:
+      "Fasilitas lab baru telah dilengkapi dengan 40 unit komputer berspesifikasi tinggi untuk mendukung pembelajaran.",
   },
 ];
 
@@ -47,6 +56,9 @@ const relatedArticles = [
     date: "20 Mar 2026",
     image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600",
     category: "Kegiatan",
+    description:
+      "Kegiatan rutin tahunan ini diikuti oleh seluruh siswa kelas X guna mengenal lebih dekat peninggalan sejarah bangsa.",
+    views: 1560,
   },
   {
     id: 6,
@@ -54,6 +66,19 @@ const relatedArticles = [
     date: "15 Apr 2026",
     image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=600",
     category: "Pengumuman",
+    description:
+      "SMAN 1 Nogosari resmi membuka pendaftaran PPDB tahun ajaran baru khusus untuk jalur prestasi akademik maupun non-akademik.",
+    views: 4120,
+  },
+  {
+    id: 7,
+    title: "Siswa SMAN 1 Meraih Juara 1 Olimpiade Sains",
+    date: "10 Jan 2026",
+    image: "https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800",
+    category: "Prestasi",
+    description:
+      "Prestasi membanggakan kembali ditorehkan oleh siswa-siswi kita di kancah nasional dalam bidang sains terapan.",
+    views: 3420,
   },
 ];
 
@@ -84,6 +109,14 @@ const otherAuthors = [
   },
 ];
 
+const categoryStyles = {
+  Kegiatan: "bg-blue-600 text-white",
+  Pengumuman: "bg-red-600 text-white",
+  Prestasi: "bg-amber-600 text-white",
+  Akademik: "bg-green-600 text-white",
+  Fasilitas: "bg-purple-600 text-white",
+};
+
 onMounted(() => {
   createIcons({ icons });
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -113,7 +146,7 @@ onUpdated(() => {
       <div class="flex flex-col lg:flex-row gap-10">
         <!-- KIRI: Konten Utama Artikel -->
         <main
-          class="w-full lg:w-2/3 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden"
+          class="w-full lg:w-2/3 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden"
         >
           <!-- Header Artikel -->
           <div class="p-6 md:p-10 border-b border-gray-100 dark:border-slate-700">
@@ -206,7 +239,7 @@ onUpdated(() => {
             </p>
 
             <blockquote
-              class="border-l-4 border-blue-500 bg-blue-50 dark:bg-slate-700/50 p-6 rounded-r-xl italic text-gray-800 dark:text-gray-200 my-8 shadow-sm"
+              class="border-l-4 border-blue-500 bg-blue-50 dark:bg-slate-700/50 p-6 rounded-r-lg italic text-gray-800 dark:text-gray-200 my-8 shadow-sm"
             >
               "Seorang guru itu bukan sekadar mentransfer ilmu, tetapi juga menanamkan
               karakter dan nilai kehidupan yang akan terus membekas di hati anak-anak kita
@@ -229,12 +262,12 @@ onUpdated(() => {
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-8">
               <img
                 src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=600"
-                class="rounded-xl w-full h-48 object-cover shadow-sm"
+                class="rounded-lg w-full h-48 object-cover shadow-sm"
                 alt="Pentas Seni"
               />
               <img
                 src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600"
-                class="rounded-xl w-full h-48 object-cover shadow-sm"
+                class="rounded-lg w-full h-48 object-cover shadow-sm"
                 alt="Penampilan Siswa"
               />
               <p class="col-span-full text-center text-xs text-gray-500 italic mt-2">
@@ -272,46 +305,6 @@ onUpdated(() => {
             >
           </div>
 
-          <!-- Artikel Terkait -->
-          <div class="p-6 md:p-10 border-b border-gray-100 dark:border-slate-700">
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">
-              Artikel Terkait
-            </h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <router-link
-                to="/artikel"
-                v-for="article in relatedArticles"
-                :key="article.id"
-                class="group flex flex-col bg-gray-50 dark:bg-slate-700/30 rounded-xl overflow-hidden border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all"
-              >
-                <div class="h-40 overflow-hidden relative shrink-0">
-                  <img
-                    :src="article.image"
-                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div
-                    class="absolute top-3 left-3 bg-blue-600/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm"
-                  >
-                    {{ article.category }}
-                  </div>
-                </div>
-                <div class="p-4 flex flex-col justify-between flex-1">
-                  <h4
-                    class="text-sm font-bold text-gray-900 dark:text-white leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-3"
-                  >
-                    {{ article.title }}
-                  </h4>
-                  <div
-                    class="text-[11px] text-gray-500 dark:text-gray-400 flex items-center mt-auto"
-                  >
-                    <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1.5"></i>
-                    {{ article.date }}
-                  </div>
-                </div>
-              </router-link>
-            </div>
-          </div>
-
           <!-- Area Komentar -->
           <div class="p-6 md:p-10 bg-gray-50/50 dark:bg-slate-800/50">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">
@@ -328,7 +321,7 @@ onUpdated(() => {
                   >
                   <input
                     type="text"
-                    class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                     placeholder="Nama Anda"
                     required
                   />
@@ -340,7 +333,7 @@ onUpdated(() => {
                   >
                   <input
                     type="email"
-                    class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                     placeholder="alamat@email.com"
                     required
                   />
@@ -353,14 +346,14 @@ onUpdated(() => {
                 >
                 <textarea
                   rows="4"
-                  class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                   placeholder="Tulis komentar Anda di sini..."
                   required
                 ></textarea>
               </div>
               <button
                 type="submit"
-                class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md transition-colors flex items-center"
+                class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-colors flex items-center"
               >
                 Kirim Komentar <i data-lucide="send" class="w-4 h-4 ml-2"></i>
               </button>
@@ -412,7 +405,7 @@ onUpdated(() => {
         <aside class="w-full lg:w-1/3 space-y-8">
           <!-- Author Profile Widget -->
           <div
-            class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 text-center"
+            class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 text-center"
           >
             <div
               class="w-20 h-20 mx-auto rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-2xl mb-4 border-4 border-white shadow-sm"
@@ -460,12 +453,71 @@ onUpdated(() => {
             </div>
           </div>
 
-          <!-- Berita Populer Widget -->
+          <!-- Artikel Terkait Widget -->
           <div
-            class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700"
+            class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
           >
             <h3
-              class="text-lg font-bold text-gray-900 dark:text-white mb-5 flex items-center"
+              class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
+            >
+              <i data-lucide="link" class="w-5 h-5 mr-2 text-blue-500"></i>
+              Artikel Terkait
+            </h3>
+            <div class="space-y-5">
+              <router-link
+                to="/artikel"
+                v-for="article in relatedArticles"
+                :key="article.id"
+                class="flex items-start gap-4 group"
+              >
+                <div
+                  class="w-20 h-20 shrink-0 rounded-lg overflow-hidden shadow-sm relative"
+                >
+                  <img
+                    :src="article.image"
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div
+                    :class="categoryStyles[article.category] || 'bg-gray-600 text-white'"
+                    class="absolute top-0 left-0 px-2 py-0.5 flex items-center justify-center text-[10px] font-bold rounded-br-lg shadow-sm z-10"
+                  >
+                    {{ article.category }}
+                  </div>
+                </div>
+                <div class="flex flex-col justify-start flex-1 py-0.5">
+                  <h4
+                    class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1"
+                  >
+                    {{ article.title }}
+                  </h4>
+                  <p
+                    class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-2 leading-relaxed"
+                  >
+                    {{ article.description }}
+                  </p>
+                  <div
+                    class="flex items-center justify-between text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-auto"
+                  >
+                    <span class="flex items-center">
+                      <i data-lucide="calendar" class="w-3 h-3 mr-1"></i>
+                      {{ article.date }}
+                    </span>
+                    <span class="flex items-center">
+                      <i data-lucide="eye" class="w-3 h-3 mr-1"></i>
+                      {{ article.views }}
+                    </span>
+                  </div>
+                </div>
+              </router-link>
+            </div>
+          </div>
+
+          <!-- Berita Populer Widget -->
+          <div
+            class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
+          >
+            <h3
+              class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
             >
               <i data-lucide="trending-up" class="w-5 h-5 mr-2 text-blue-500"></i>
               Terpopuler
@@ -485,21 +537,35 @@ onUpdated(() => {
                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div
-                    class="absolute top-0 left-0 bg-blue-600 text-white w-5 h-5 flex items-center justify-center text-[10px] font-bold rounded-br-lg shadow-sm z-10"
+                    :class="categoryStyles[news.category] || 'bg-gray-600 text-white'"
+                    class="absolute top-0 left-0 px-2 py-0.5 flex items-center justify-center text-[10px] font-bold rounded-br-lg shadow-sm z-10"
                   >
-                    {{ index + 1 }}
+                    {{ news.category }}
                   </div>
                 </div>
-                <div class="flex flex-col justify-center flex-1 py-0.5">
+                <div class="flex flex-col justify-start flex-1 py-0.5">
                   <h4
                     class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1"
                   >
                     {{ news.title }}
                   </h4>
-                  <span class="text-[10px] font-medium text-gray-400 flex items-center">
-                    <i data-lucide="calendar" class="w-3 h-3 mr-1"></i>
-                    {{ news.date }}
-                  </span>
+                  <p
+                    class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-2 leading-relaxed"
+                  >
+                    {{ news.description }}
+                  </p>
+                  <div
+                    class="flex items-center justify-between text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-auto"
+                  >
+                    <span class="flex items-center">
+                      <i data-lucide="calendar" class="w-3 h-3 mr-1"></i>
+                      {{ news.date }}
+                    </span>
+                    <span class="flex items-center">
+                      <i data-lucide="eye" class="w-3 h-3 mr-1"></i>
+                      {{ news.views }}
+                    </span>
+                  </div>
                 </div>
               </router-link>
             </div>

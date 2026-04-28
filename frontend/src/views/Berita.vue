@@ -294,7 +294,7 @@ onUpdated(() => {
             <!-- Empty State -->
             <div
               v-else
-              class="py-20 text-center bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm"
+              class="py-20 text-center bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm"
             >
               <div
                 class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700 mb-4 text-gray-400"
@@ -312,7 +312,7 @@ onUpdated(() => {
                   searchQuery = '';
                   activeCategory = 'semua';
                 "
-                class="mt-4 px-5 py-2 bg-blue-50 text-blue-600 dark:bg-slate-700 dark:text-blue-400 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors"
+                class="mt-4 px-5 py-2 bg-blue-50 text-blue-600 dark:bg-slate-700 dark:text-blue-400 rounded-lg text-sm font-semibold hover:bg-blue-100 transition-colors"
               >
                 Reset Pencarian
               </button>
@@ -340,7 +340,7 @@ onUpdated(() => {
                 v-model="searchQuery"
                 type="text"
                 placeholder="Cari judul atau isi berita..."
-                class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm"
+              class="w-full pl-11 pr-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm"
               />
             </div>
 
@@ -353,7 +353,7 @@ onUpdated(() => {
                 v-for="cat in categories"
                 :key="cat.id"
                 @click="activeCategory = cat.id"
-                class="px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-300 focus:outline-none border"
+              class="px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 focus:outline-none border"
                 :class="
                   activeCategory === cat.id
                     ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
