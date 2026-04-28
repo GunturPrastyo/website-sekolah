@@ -183,11 +183,11 @@ onUpdated(() => {
     />
 
     <!-- Gallery Section -->
-    <section class="py-16 md:py-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
+    <section class="py-8 md:py-12 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
       <div class="container mx-auto max-w-7xl">
         <!-- Video Profil Section -->
         <div
-          class="mb-12 relative rounded-2xl overflow-hidden shadow-xl aspect-video md:aspect-[21/9] group cursor-pointer w-full block"
+          class="mb-6 relative rounded-xl overflow-hidden shadow-xl aspect-video md:aspect-[21/9] group cursor-pointer w-full block"
         >
           <img
             src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop"
@@ -228,7 +228,7 @@ onUpdated(() => {
             v-for="cat in categories"
             :key="cat.id"
             @click="activeCategory = cat.id"
-            class="flex-grow basis-[140px] sm:basis-[180px] lg:basis-[200px] max-w-full relative rounded-2xl overflow-hidden h-28 md:h-36 cursor-pointer group shadow-sm hover:shadow-md transition-all duration-300 border-2"
+            class="flex-grow basis-[140px] sm:basis-[180px] lg:basis-[200px] max-w-full relative rounded-xl overflow-hidden h-28 md:h-36 cursor-pointer group shadow-sm hover:shadow-md transition-all duration-300 border-2"
             :class="[
               activeCategory === cat.id
                 ? 'border-blue-500 ring-4 ring-blue-500/20 dark:ring-blue-500/30'
@@ -258,13 +258,16 @@ onUpdated(() => {
 
         <!-- Tabs & Heading Gallery -->
         <div
-          class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 border-b border-gray-200 dark:border-slate-700 pb-4"
+          class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 border-b border-gray-200 dark:border-slate-700 pb-4"
         >
           <h3
-            class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center tracking-wide"
+            class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white flex items-center tracking-wide"
             style="font-family: 'Kalam', cursive"
           >
-            <i data-lucide="image" class="w-7 h-7 mr-2 text-blue-500"></i>
+            <i
+              data-lucide="image"
+              class="w-7 h-7 mr-2 text-slate-800 dark:text-white"
+            ></i>
             Koleksi Galeri
           </h3>
           <div
@@ -275,7 +278,7 @@ onUpdated(() => {
               class="px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-300"
               :class="
                 activeTab === 'terbaru'
-                  ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm'
+                  ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
                   : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
               "
             >
@@ -286,7 +289,7 @@ onUpdated(() => {
               class="px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-300"
               :class="
                 activeTab === 'terpopuler'
-                  ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm'
+                  ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
                   : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
               "
             >
@@ -305,7 +308,7 @@ onUpdated(() => {
             v-for="item in filteredGallery"
             :key="item.id"
             @click="openModal(item)"
-            class="group relative overflow-hidden rounded-2xl cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-200 dark:bg-slate-800 block break-inside-avoid mb-6"
+            class="group relative overflow-hidden rounded-xl cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-200 dark:bg-slate-800 block break-inside-avoid mb-6"
           >
             <img
               :src="item.image"
@@ -364,7 +367,7 @@ onUpdated(() => {
         <!-- Empty State -->
         <div
           v-if="filteredGallery.length === 0"
-          class="py-20 text-center bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm mt-4"
+          class="py-20 text-center bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm mt-4"
         >
           <div
             class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700 mb-4 text-gray-400"
@@ -407,7 +410,7 @@ onUpdated(() => {
             v-if="currentImage"
             :src="currentImage.image"
             :alt="currentImage.title"
-            class="w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+            class="w-full max-h-[80vh] object-contain rounded-xl shadow-2xl"
           />
           <div class="mt-4 text-center">
             <h3 class="text-xl font-bold text-white">{{ currentImage?.title }}</h3>
