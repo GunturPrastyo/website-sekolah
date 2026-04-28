@@ -276,14 +276,14 @@ onBeforeUnmount(() => {
 
     <!-- Gallery Section -->
     <section
-      class="relative pt-12 pb-20 px-6 min-h-screen bg-gradient-to-b from-blue-50/50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden"
+      class="relative pt-12 pb-12 px-6 min-h-screen bg-gradient-to-b from-blue-50/50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden"
     >
       <!-- Elemen Dekorasi Latar Belakang (Blob Cahaya) -->
       <div
         class="absolute top-0 right-0 w-96 h-96 bg-blue-400/10 dark:bg-blue-600/10 rounded-full blur-3xl -translate-y-1/4 translate-x-1/4 pointer-events-none"
       ></div>
 
-      <div class="container relative z-10 mx-auto max-w-6xl">
+      <div class="container relative z-10 mx-auto max-w-full">
         <div
           class="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-100 dark:border-slate-700 p-6 md:p-10 lg:p-12 flex flex-col w-full"
         >
@@ -577,8 +577,8 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
-    <section class="relative bg-white dark:bg-slate-950 pb-20 px-6 overflow-hidden">
-      <div class="container mx-auto max-w-6xl relative z-10">
+    <section class="relative bg-white dark:bg-slate-950 pb-12 px-6 overflow-hidden">
+      <div class="container mx-auto max-w-full relative z-10">
         <div
           class="bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-900 dark:to-blue-950 rounded-lg shadow-md border border-blue-500/30 dark:border-slate-700 p-6 md:p-10 lg:p-12 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 relative overflow-hidden w-full"
         >
