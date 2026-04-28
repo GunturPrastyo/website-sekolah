@@ -317,56 +317,80 @@ onUpdated(() => {
         <!-- Search Bar, Filter Selects, & Filter Tabs -->
         <div class="flex flex-col gap-5 md:gap-6 mb-12 relative z-20">
           <!-- Top Row: Selects and Search -->
-          <div class="flex flex-col md:flex-row items-center gap-4 w-full">
+          <div class="flex flex-row items-center gap-2.5 md:gap-4 w-full">
             <!-- Filter Bidang -->
-            <div class="relative w-full md:w-48 shrink-0">
+            <div class="relative w-12 md:w-48 shrink-0">
               <i
                 data-lucide="book-open"
-                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+                class="absolute left-1/2 md:left-4 top-1/2 -translate-x-1/2 md:translate-x-0 -translate-y-1/2 w-5 h-5 md:w-4 md:h-4 pointer-events-none transition-colors"
+                :class="
+                  activeType !== 'semua'
+                    ? 'text-blue-600 dark:text-blue-400'
+                    : 'text-gray-500 md:text-gray-400'
+                "
               ></i>
               <select
                 v-model="activeType"
-                class="w-full pl-10 pr-10 py-3.5 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm appearance-none cursor-pointer"
+                class="w-full md:pl-10 md:pr-10 py-3.5 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-transparent md:text-gray-900 dark:md:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm appearance-none cursor-pointer"
               >
-                <option v-for="t in types" :key="t.id" :value="t.id">{{ t.name }}</option>
+                <option
+                  v-for="t in types"
+                  :key="t.id"
+                  :value="t.id"
+                  class="text-gray-900 dark:text-white"
+                >
+                  {{ t.name }}
+                </option>
               </select>
               <div
-                class="absolute inset-y-0 right-4 flex items-center pointer-events-none"
+                class="absolute inset-y-0 right-4 hidden md:flex items-center pointer-events-none"
               >
                 <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
               </div>
             </div>
 
             <!-- Filter Tahun -->
-            <div class="relative w-full md:w-52 shrink-0">
+            <div class="relative w-12 md:w-52 shrink-0">
               <i
                 data-lucide="calendar"
-                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+                class="absolute left-1/2 md:left-4 top-1/2 -translate-x-1/2 md:translate-x-0 -translate-y-1/2 w-5 h-5 md:w-4 md:h-4 pointer-events-none transition-colors"
+                :class="
+                  activeYear !== 'semua'
+                    ? 'text-blue-600 dark:text-blue-400'
+                    : 'text-gray-500 md:text-gray-400'
+                "
               ></i>
               <select
                 v-model="activeYear"
-                class="w-full pl-10 pr-10 py-3.5 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm appearance-none cursor-pointer"
+                class="w-full md:pl-10 md:pr-10 py-3.5 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-transparent md:text-gray-900 dark:md:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm appearance-none cursor-pointer"
               >
-                <option v-for="y in years" :key="y.id" :value="y.id">{{ y.name }}</option>
+                <option
+                  v-for="y in years"
+                  :key="y.id"
+                  :value="y.id"
+                  class="text-gray-900 dark:text-white"
+                >
+                  {{ y.name }}
+                </option>
               </select>
               <div
-                class="absolute inset-y-0 right-4 flex items-center pointer-events-none"
+                class="absolute inset-y-0 right-4 hidden md:flex items-center pointer-events-none"
               >
                 <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
               </div>
             </div>
 
             <!-- Search Bar -->
-            <div class="relative w-full md:flex-1 shrink-0">
+            <div class="relative flex-1 shrink-0 min-w-0">
               <i
                 data-lucide="search"
-                class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                class="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400"
               ></i>
               <input
                 v-model="searchQuery"
                 type="text"
                 placeholder="Cari nama siswa atau judul perlombaan..."
-                class="w-full pl-11 pr-4 py-3.5 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm"
+                class="w-full pl-9 md:pl-11 pr-3 md:pr-4 py-3.5 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm text-ellipsis"
               />
             </div>
           </div>

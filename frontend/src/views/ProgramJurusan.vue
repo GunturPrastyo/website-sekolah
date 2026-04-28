@@ -158,10 +158,14 @@ onMounted(() => {
         class="relative py-16 md:py-24 px-6 transition-colors duration-700 ease-in-out overflow-hidden"
         :class="index % 2 === 0 ? 'bg-white dark:bg-slate-900' : program.sectionBgClass"
       >
-        <!-- Parallax Background Overlay (Hanya untuk Section Gelap) -->
+        <!-- Parallax Background Overlay -->
         <div
-          v-if="index % 2 !== 0"
-          class="absolute inset-0 z-0 opacity-10 md:opacity-20 bg-fixed bg-cover bg-center mix-blend-overlay transition-opacity duration-700"
+          class="absolute inset-0 z-0 bg-fixed bg-cover bg-center transition-opacity duration-700 pointer-events-none"
+          :class="
+            index % 2 === 0
+              ? 'opacity-5 dark:opacity-10 mix-blend-multiply dark:mix-blend-overlay'
+              : 'opacity-10 md:opacity-20 mix-blend-overlay'
+          "
           :style="{ backgroundImage: `url(${program.pattern})` }"
         ></div>
 

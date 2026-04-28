@@ -199,9 +199,11 @@ onMounted(() => {
     />
 
     <!-- Main Content -->
-    <section class="py-16 md:py-24 px-6 bg-gray-50 dark:bg-slate-900">
+    <section class="py-12 md:py-16 px-6 bg-gray-50 dark:bg-slate-900">
       <div class="container mx-auto max-w-7xl">
-        <div class="flex flex-col w-full">
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-gray-100 dark:border-slate-700 p-6 md:p-10 lg:p-12 flex flex-col w-full"
+        >
           <!-- Content -->
           <main id="staff-content" class="w-full">
             <!-- Search Bar & Filter Group -->
@@ -229,13 +231,13 @@ onMounted(() => {
                   v-model="searchQuery"
                   type="text"
                   placeholder="Cari nama guru atau staf..."
-                  class="block w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white placeholder-gray-400 focus:outline-none"
+                  class="block w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-sm shadow-inner focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white placeholder-gray-400 focus:outline-none"
                 />
               </div>
 
               <!-- Category Filter Card -->
               <div
-                class="w-full bg-white dark:bg-slate-800 p-5 lg:p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col gap-4"
+                class="w-full bg-gray-50 dark:bg-slate-900/50 p-5 lg:p-6 rounded-xl shadow-inner border border-gray-200 dark:border-slate-700 flex flex-col gap-4"
               >
                 <h4
                   class="text-sm font-bold text-gray-900 dark:text-white flex items-center"
@@ -264,7 +266,7 @@ onMounted(() => {
                     :class="
                       activeCategory === category.id
                         ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
-                        : 'bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
+                        : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400 shadow-sm'
                     "
                   >
                     {{ category.name }}
@@ -294,14 +296,14 @@ onMounted(() => {
                 <div
                   v-for="i in 6"
                   :key="`skel-${i}`"
-                  class="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-[320px] relative animate-pulse"
+                  class="bg-gray-50 dark:bg-slate-700/30 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-[320px] relative animate-pulse"
                 >
                   <div class="h-24 bg-gray-200 dark:bg-slate-700 w-full"></div>
                   <div
                     class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
                   >
                     <div
-                      class="w-28 h-28 rounded-full bg-gray-300 dark:bg-slate-600 -mt-14 mb-4 border-4 border-white dark:border-slate-800"
+                      class="w-28 h-28 rounded-full bg-gray-300 dark:bg-slate-600 -mt-14 mb-4 border-4 border-gray-50 dark:border-slate-800"
                     ></div>
                     <div
                       class="h-5 w-3/4 bg-gray-200 dark:bg-slate-700 rounded-full mb-3"
@@ -342,7 +344,7 @@ onMounted(() => {
                       <div
                         v-for="(staff, index) in pimpinanList"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
+                        class="group bg-gray-50 dark:bg-slate-700/30 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
                         :style="{
                           animationDelay: `${index * 100}ms`,
                           animationFillMode: 'both',
@@ -396,11 +398,11 @@ onMounted(() => {
                             NIP. {{ staff.nip || "-" }}
                           </p>
                           <div
-                            class="w-10 h-1 bg-gray-100 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
+                            class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
                           ></div>
                           <div class="flex gap-3">
                             <button
-                              class="w-9 h-9 rounded-full bg-gray-50 hover:bg-blue-50 dark:bg-slate-700 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
                               title="Email"
                             >
                               <svg
@@ -419,7 +421,7 @@ onMounted(() => {
                             </button>
                             <button
                               @click.stop
-                              class="w-9 h-9 rounded-full bg-gray-50 hover:bg-blue-50 dark:bg-slate-700 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
                               title="LinkedIn"
                             >
                               <svg
@@ -452,7 +454,7 @@ onMounted(() => {
                       <div
                         v-for="(staff, index) in guruList"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
+                        class="group bg-gray-50 dark:bg-slate-700/30 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
                         :style="{
                           animationDelay: `${index * 100}ms`,
                           animationFillMode: 'both',
@@ -506,11 +508,11 @@ onMounted(() => {
                             NIP. {{ staff.nip || "-" }}
                           </p>
                           <div
-                            class="w-10 h-1 bg-gray-100 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
+                            class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
                           ></div>
                           <div class="flex gap-3">
                             <button
-                              class="w-9 h-9 rounded-full bg-gray-50 hover:bg-blue-50 dark:bg-slate-700 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
                               title="Email"
                             >
                               <svg
@@ -529,7 +531,7 @@ onMounted(() => {
                             </button>
                             <button
                               @click.stop
-                              class="w-9 h-9 rounded-full bg-gray-50 hover:bg-blue-50 dark:bg-slate-700 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
                               title="LinkedIn"
                             >
                               <svg
@@ -562,7 +564,7 @@ onMounted(() => {
                       <div
                         v-for="(staff, index) in stafList"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
+                        class="group bg-gray-50 dark:bg-slate-700/30 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
                         :style="{
                           animationDelay: `${index * 100}ms`,
                           animationFillMode: 'both',
@@ -616,11 +618,11 @@ onMounted(() => {
                             NIP. {{ staff.nip || "-" }}
                           </p>
                           <div
-                            class="w-10 h-1 bg-gray-100 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
+                            class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
                           ></div>
                           <div class="flex gap-3">
                             <button
-                              class="w-9 h-9 rounded-full bg-gray-50 hover:bg-blue-50 dark:bg-slate-700 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
                               title="Email"
                             >
                               <svg
@@ -639,7 +641,7 @@ onMounted(() => {
                             </button>
                             <button
                               @click.stop
-                              class="w-9 h-9 rounded-full bg-gray-50 hover:bg-blue-50 dark:bg-slate-700 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
                               title="LinkedIn"
                             >
                               <svg
@@ -665,10 +667,10 @@ onMounted(() => {
                       guruList.length === 0 &&
                       stafList.length === 0
                     "
-                    class="py-16 flex flex-col items-center justify-center text-center bg-white dark:bg-slate-800 rounded-lg border border-dashed border-gray-200 dark:border-slate-700"
+                    class="py-16 flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-slate-900/50 rounded-2xl border-2 border-dashed border-gray-200 dark:border-slate-700"
                   >
                     <div
-                      class="w-16 h-16 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center text-gray-400 mb-4"
+                      class="w-16 h-16 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-gray-400 mb-4 shadow-sm"
                     >
                       <svg
                         class="w-8 h-8"
@@ -711,7 +713,7 @@ onMounted(() => {
                       <div
                         v-for="(staff, index) in filteredStaff"
                         :key="staff.id"
-                        class="group bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
+                        class="group bg-gray-50 dark:bg-slate-700/30 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
                         :style="{
                           animationDelay: `${index * 100}ms`,
                           animationFillMode: 'both',
@@ -765,11 +767,11 @@ onMounted(() => {
                             NIP. {{ staff.nip || "-" }}
                           </p>
                           <div
-                            class="w-10 h-1 bg-gray-100 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
+                            class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
                           ></div>
                           <div class="flex gap-3">
                             <button
-                              class="w-9 h-9 rounded-full bg-gray-50 hover:bg-blue-50 dark:bg-slate-700 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
                               title="Email"
                             >
                               <svg
@@ -788,7 +790,7 @@ onMounted(() => {
                             </button>
                             <button
                               @click.stop
-                              class="w-9 h-9 rounded-full bg-gray-50 hover:bg-blue-50 dark:bg-slate-700 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
                               title="LinkedIn"
                             >
                               <svg
@@ -809,10 +811,10 @@ onMounted(() => {
                     <!-- Jika Data Kosong -->
                     <div
                       v-if="filteredStaff.length === 0"
-                      class="py-16 flex flex-col items-center justify-center text-center bg-white dark:bg-slate-800 rounded-lg border border-dashed border-gray-200 dark:border-slate-700"
+                      class="py-16 flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-slate-900/50 rounded-2xl border-2 border-dashed border-gray-200 dark:border-slate-700"
                     >
                       <div
-                        class="w-16 h-16 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center text-gray-400 mb-4"
+                        class="w-16 h-16 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-gray-400 mb-4 shadow-sm"
                       >
                         <svg
                           class="w-8 h-8"

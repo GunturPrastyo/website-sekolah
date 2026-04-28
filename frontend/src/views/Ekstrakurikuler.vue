@@ -282,303 +282,309 @@ onBeforeUnmount(() => {
       <div
         class="absolute top-0 right-0 w-96 h-96 bg-blue-400/10 dark:bg-blue-600/10 rounded-full blur-3xl -translate-y-1/4 translate-x-1/4 pointer-events-none"
       ></div>
-      <div
-        class="absolute bottom-20 left-0 w-80 h-80 bg-cyan-400/10 dark:bg-cyan-600/10 rounded-full blur-3xl translate-y-1/4 -translate-x-1/4 pointer-events-none"
-      ></div>
 
       <div class="container relative z-10 mx-auto max-w-6xl">
-        <!-- Search Bar, Filter Hari, & Filter Card -->
-        <div class="flex flex-col gap-6 mb-12">
-          <!-- Top Row: Day Dropdown + Search Bar -->
-          <div class="flex flex-col sm:flex-row items-center gap-4 w-full">
-            <!-- Dropdown Hari -->
-            <div class="relative w-full sm:w-48 shrink-0">
-              <i
-                data-lucide="calendar-days"
-                class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
-              ></i>
-              <select
-                v-model="activeDay"
-                class="w-full pl-12 pr-10 py-4 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm appearance-none cursor-pointer"
-              >
-                <option v-for="day in days" :key="day.id" :value="day.id">
-                  {{ day.name }}
-                </option>
-              </select>
-              <div
-                class="absolute inset-y-0 right-5 flex items-center pointer-events-none"
-              >
-                <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
+        <div
+          class="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-100 dark:border-slate-700 p-6 md:p-10 lg:p-12 flex flex-col w-full"
+        >
+          <!-- Search Bar, Filter Hari, & Filter Card -->
+          <div class="flex flex-col gap-6 mb-4">
+            <!-- Top Row: Day Dropdown + Search Bar -->
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full">
+              <!-- Dropdown Hari -->
+              <div class="relative w-full sm:w-48 shrink-0">
+                <i
+                  data-lucide="calendar-days"
+                  class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+                ></i>
+                <select
+                  v-model="activeDay"
+                  class="w-full pl-12 pr-10 py-4 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-inner text-sm appearance-none cursor-pointer"
+                >
+                  <option v-for="day in days" :key="day.id" :value="day.id">
+                    {{ day.name }}
+                  </option>
+                </select>
+                <div
+                  class="absolute inset-y-0 right-5 flex items-center pointer-events-none"
+                >
+                  <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
+                </div>
+              </div>
+
+              <!-- Search Bar -->
+              <div class="relative w-full lg:w-[350px] shrink-0">
+                <i
+                  data-lucide="search"
+                  class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                ></i>
+                <input
+                  v-model="searchQuery"
+                  type="text"
+                  placeholder="Cari nama ekstrakurikuler..."
+                  class="w-full pl-12 pr-5 py-4 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-inner text-sm"
+                />
               </div>
             </div>
 
-            <!-- Search Bar -->
-            <div class="relative w-full lg:w-[350px] shrink-0">
-              <i
-                data-lucide="search"
-                class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-              ></i>
-              <input
-                v-model="searchQuery"
-                type="text"
-                placeholder="Cari nama ekstrakurikuler..."
-                class="w-full pl-12 pr-5 py-4 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm"
-              />
-            </div>
-          </div>
-
-          <!-- Bottom Row: Filter Card (Kategori) -->
-          <div
-            class="w-full bg-white dark:bg-slate-800 p-5 lg:p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col gap-4"
-          >
-            <h4 class="text-sm font-bold text-blue-950 dark:text-white flex items-center">
-              <i
-                data-lucide="filter"
-                class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
-              ></i>
-              Kategori:
-            </h4>
-            <div class="flex flex-wrap items-center gap-2 md:gap-2.5">
-              <button
-                v-for="cat in categories"
-                :key="cat.id"
-                @click="activeCategory = cat.id"
-                class="px-3.5 md:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-300 focus:outline-none flex items-center border"
-                :class="
-                  activeCategory === cat.id
-                    ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
-                    : 'bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
-                "
-              >
-                <i :data-lucide="cat.icon" class="w-3.5 h-3.5 mr-1.5 hidden sm:block"></i>
-                {{ cat.name }}
-                <span class="ml-1 text-[11px] font-bold opacity-70">
-                  ({{ getCategoryCount(cat.id) }})
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Grid Poster Ekskul (Antimainstream Concept) -->
-        <TransitionGroup
-          name="gallery"
-          tag="div"
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 lg:gap-16 relative w-full mt-8"
-        >
-          <div
-            v-for="ekskul in paginatedEkskul"
-            :key="ekskul.id"
-            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out relative group cursor-pointer"
-            @click="openModal(ekskul)"
-          >
-            <!-- Dekorasi Card Belakang (Offset Kanan Bawah) -->
+            <!-- Bottom Row: Filter Card (Kategori) -->
             <div
-              class="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-slate-700 dark:to-slate-800 rounded-lg transform translate-x-3 translate-y-3 transition-all duration-500 group-hover:translate-x-4 group-hover:translate-y-4 z-0"
-            ></div>
-
-            <!-- Main Card -->
-            <div
-              class="relative z-10 bg-slate-900 rounded-lg overflow-hidden shadow-lg group-hover:shadow-2xl transition-all duration-500 aspect-[3/4] transform group-hover:-translate-y-1 group-hover:-translate-x-1 border border-gray-200 dark:border-slate-700 h-full w-full"
+              class="w-full bg-gray-50 dark:bg-slate-900/50 p-5 lg:p-6 rounded-xl shadow-inner border border-gray-200 dark:border-slate-700 flex flex-col gap-4"
             >
-              <!-- Full Background Image -->
-              <img
-                :src="ekskul.image"
-                :alt="ekskul.name"
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-95 group-hover:opacity-100"
-              />
-
-              <!-- Gradient Overlay (Darkens on hover) -->
-              <div
-                class="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/30 to-transparent transition-all duration-500 group-hover:via-slate-900/70 group-hover:from-slate-900"
-              ></div>
-
-              <!-- Floating Category Badge -->
-              <div class="absolute top-5 right-5">
-                <div
-                  class="px-3.5 py-1.5 backdrop-blur-md bg-white/20 border border-white/30 rounded-full flex items-center gap-1.5 text-white text-[12px] font-bold capitalize tracking-wide shadow-lg"
-                  style="font-family: 'Kalam', cursive"
+              <h4
+                class="text-sm font-bold text-blue-950 dark:text-white flex items-center"
+              >
+                <i
+                  data-lucide="filter"
+                  class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
+                ></i>
+                Kategori:
+              </h4>
+              <div class="flex flex-wrap items-center gap-2 md:gap-2.5">
+                <button
+                  v-for="cat in categories"
+                  :key="cat.id"
+                  @click="activeCategory = cat.id"
+                  class="px-3.5 md:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-300 focus:outline-none flex items-center border"
+                  :class="
+                    activeCategory === cat.id
+                      ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
+                      : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400 shadow-sm'
+                  "
                 >
                   <i
-                    :data-lucide="categories.find((c) => c.id === ekskul.category)?.icon"
-                    class="w-3 h-3"
+                    :data-lucide="cat.icon"
+                    class="w-3.5 h-3.5 mr-1.5 hidden sm:block"
                   ></i>
-                  {{ categories.find((c) => c.id === ekskul.category)?.name }}
-                </div>
+                  {{ cat.name }}
+                  <span class="ml-1 text-[11px] font-bold opacity-70">
+                    ({{ getCategoryCount(cat.id) }})
+                  </span>
+                </button>
               </div>
+            </div>
+          </div>
 
-              <!-- Content Area (Slides up smoothly) -->
+          <!-- Grid Poster Ekskul (Antimainstream Concept) -->
+          <TransitionGroup
+            name="gallery"
+            tag="div"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 lg:gap-16 relative w-full mt-8"
+          >
+            <div
+              v-for="ekskul in paginatedEkskul"
+              :key="ekskul.id"
+              class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out relative group cursor-pointer"
+              @click="openModal(ekskul)"
+            >
+              <!-- Dekorasi Card Belakang (Offset Kanan Bawah) -->
               <div
-                class="absolute bottom-0 left-0 w-full p-6 md:p-8 transition-all duration-500 ease-out z-20 group-hover:bg-slate-900/60 group-hover:backdrop-blur-md"
-              >
-                <h3
-                  class="text-2xl font-extrabold text-white mb-2 leading-tight tracking-wide drop-shadow-md"
-                >
-                  {{ ekskul.name }}
-                </h3>
+                class="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-slate-700 dark:to-slate-800 rounded-2xl transform translate-x-3 translate-y-3 transition-all duration-500 group-hover:translate-x-4 group-hover:translate-y-4 z-0"
+              ></div>
 
+              <!-- Main Card -->
+              <div
+                class="relative z-10 bg-slate-900 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-2xl transition-all duration-500 aspect-[3/4] transform group-hover:-translate-y-1 group-hover:-translate-x-1 border border-gray-200 dark:border-slate-700 h-full w-full"
+              >
+                <!-- Full Background Image -->
+                <img
+                  :src="ekskul.image"
+                  :alt="ekskul.name"
+                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-95 group-hover:opacity-100"
+                />
+
+                <!-- Gradient Overlay (Darkens on hover) -->
                 <div
-                  class="flex items-center text-blue-300 text-xs font-bold uppercase tracking-wider mb-2"
-                >
-                  <i data-lucide="clock" class="w-3.5 h-3.5 mr-1.5"></i>
-                  {{ ekskul.schedule }}
+                  class="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/30 to-transparent transition-all duration-500 group-hover:via-slate-900/70 group-hover:from-slate-900"
+                ></div>
+
+                <!-- Floating Category Badge -->
+                <div class="absolute top-5 right-5">
+                  <div
+                    class="px-3.5 py-1.5 backdrop-blur-md bg-white/20 border border-white/30 rounded-full flex items-center gap-1.5 text-white text-[12px] font-bold capitalize tracking-wide shadow-lg"
+                    style="font-family: 'Kalam', cursive"
+                  >
+                    <i
+                      :data-lucide="
+                        categories.find((c) => c.id === ekskul.category)?.icon
+                      "
+                      class="w-3 h-3"
+                    ></i>
+                    {{ categories.find((c) => c.id === ekskul.category)?.name }}
+                  </div>
                 </div>
 
-                <!-- Hidden Expandable Content -->
+                <!-- Content Area (Slides up smoothly) -->
                 <div
-                  class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-[300px] group-hover:opacity-100"
+                  class="absolute bottom-0 left-0 w-full p-6 md:p-8 transition-all duration-500 ease-out z-20 group-hover:bg-slate-900/60 group-hover:backdrop-blur-md"
                 >
-                  <div class="pt-4 mt-4 border-t border-white/20">
-                    <!-- Ekstra Info: Members & Pembina -->
-                    <div class="flex flex-wrap items-center gap-2 mb-3">
-                      <span
-                        class="inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-blue-100 bg-blue-900/60 border border-blue-400/30 px-2.5 py-1 rounded backdrop-blur-md shadow-sm"
+                  <h3
+                    class="text-2xl font-extrabold text-white mb-2 leading-tight tracking-wide drop-shadow-md"
+                  >
+                    {{ ekskul.name }}
+                  </h3>
+
+                  <div
+                    class="flex items-center text-blue-300 text-xs font-bold uppercase tracking-wider mb-2"
+                  >
+                    <i data-lucide="clock" class="w-3.5 h-3.5 mr-1.5"></i>
+                    {{ ekskul.schedule }}
+                  </div>
+
+                  <!-- Hidden Expandable Content -->
+                  <div
+                    class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-[300px] group-hover:opacity-100"
+                  >
+                    <div class="pt-4 mt-4 border-t border-white/20">
+                      <!-- Ekstra Info: Members & Pembina -->
+                      <div class="flex flex-wrap items-center gap-2 mb-3">
+                        <span
+                          class="inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-blue-100 bg-blue-900/60 border border-blue-400/30 px-2.5 py-1 rounded backdrop-blur-md shadow-sm"
+                        >
+                          <i data-lucide="users" class="w-3 h-3 mr-1.5"></i>
+                          {{ ekskul.members }} Anggota
+                        </span>
+                        <span
+                          class="inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-emerald-100 bg-emerald-900/60 border border-emerald-400/30 px-2.5 py-1 rounded backdrop-blur-md shadow-sm"
+                        >
+                          <i data-lucide="user" class="w-3 h-3 mr-1.5"></i>
+                          {{ ekskul.pembina.split(",")[0] }}
+                        </span>
+                      </div>
+
+                      <p class="text-gray-200 text-sm leading-relaxed mb-5 line-clamp-3">
+                        {{ ekskul.desc }}
+                      </p>
+
+                      <button
+                        class="inline-flex items-center text-xs font-bold text-white uppercase tracking-widest hover:text-blue-300 transition-colors focus:outline-none"
                       >
-                        <i data-lucide="users" class="w-3 h-3 mr-1.5"></i>
-                        {{ ekskul.members }} Anggota
-                      </span>
-                      <span
-                        class="inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-emerald-100 bg-emerald-900/60 border border-emerald-400/30 px-2.5 py-1 rounded backdrop-blur-md shadow-sm"
-                      >
-                        <i data-lucide="user" class="w-3 h-3 mr-1.5"></i>
-                        {{ ekskul.pembina.split(",")[0] }}
-                      </span>
+                        Jelajahi Klub
+                        <i
+                          data-lucide="arrow-right"
+                          class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform"
+                        ></i>
+                      </button>
                     </div>
-
-                    <p class="text-gray-200 text-sm leading-relaxed mb-5 line-clamp-3">
-                      {{ ekskul.desc }}
-                    </p>
-
-                    <button
-                      class="inline-flex items-center text-xs font-bold text-white uppercase tracking-widest hover:text-blue-300 transition-colors focus:outline-none"
-                    >
-                      Jelajahi Klub
-                      <i
-                        data-lucide="arrow-right"
-                        class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform"
-                      ></i>
-                    </button>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Skeleton Loading -->
-          <template v-if="isLoading">
-            <div
-              v-for="n in skeletonCount"
-              :key="'skeleton-' + n"
-              class="relative w-full transition-all duration-500 ease-out"
-            >
-              <!-- Dekorasi Card Belakang -->
+            <!-- Skeleton Loading -->
+            <template v-if="isLoading">
               <div
-                class="absolute inset-0 bg-gray-200 dark:bg-slate-700 rounded-lg transform translate-x-3 translate-y-3 z-0 animate-pulse"
-              ></div>
-              <!-- Main Card Skeleton -->
-              <div
-                class="relative z-10 bg-gray-100 dark:bg-slate-800 rounded-lg overflow-hidden shadow-lg aspect-[3/4] border border-gray-200 dark:border-slate-700 h-full w-full animate-pulse"
+                v-for="n in skeletonCount"
+                :key="'skeleton-' + n"
+                class="relative w-full transition-all duration-500 ease-out"
               >
-                <!-- Dummy Badge Kategori -->
-                <div class="absolute top-5 right-5">
-                  <div class="w-24 h-6 bg-gray-300 dark:bg-slate-600 rounded-full"></div>
-                </div>
-                <!-- Dummy Judul & Teks -->
-                <div class="absolute bottom-0 left-0 w-full p-6 md:p-8">
-                  <div class="w-3/4 h-8 bg-gray-300 dark:bg-slate-600 rounded mb-3"></div>
-                  <div class="w-1/2 h-4 bg-gray-300 dark:bg-slate-600 rounded"></div>
+                <!-- Dekorasi Card Belakang -->
+                <div
+                  class="absolute inset-0 bg-gray-200 dark:bg-slate-700 rounded-2xl transform translate-x-3 translate-y-3 z-0 animate-pulse"
+                ></div>
+                <!-- Main Card Skeleton -->
+                <div
+                  class="relative z-10 bg-gray-100 dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg aspect-[3/4] border border-gray-200 dark:border-slate-700 h-full w-full animate-pulse"
+                >
+                  <!-- Dummy Badge Kategori -->
+                  <div class="absolute top-5 right-5">
+                    <div
+                      class="w-24 h-6 bg-gray-300 dark:bg-slate-600 rounded-full"
+                    ></div>
+                  </div>
+                  <!-- Dummy Judul & Teks -->
+                  <div class="absolute bottom-0 left-0 w-full p-6 md:p-8">
+                    <div
+                      class="w-3/4 h-8 bg-gray-300 dark:bg-slate-600 rounded mb-3"
+                    ></div>
+                    <div class="w-1/2 h-4 bg-gray-300 dark:bg-slate-600 rounded"></div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </template>
-        </TransitionGroup>
+            </template>
+          </TransitionGroup>
 
-        <!-- Load More Button -->
-        <div
-          v-if="hasMoreItems"
-          class="flex justify-center items-center mt-14 relative z-10 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out w-full"
-        >
+          <!-- Load More Button -->
           <div
-            class="h-px bg-gray-200 dark:bg-slate-700 flex-grow max-w-[80px] md:max-w-[150px]"
-          ></div>
-          <button
-            @click="loadMore"
-            :disabled="isLoading"
-            class="mx-5 inline-flex items-center text-sm md:text-base font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors group focus:outline-none disabled:opacity-70 disabled:cursor-not-allowed"
+            v-if="hasMoreItems"
+            class="flex justify-center items-center mt-14 relative z-10 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out w-full"
           >
-            <span v-if="!isLoading" class="flex items-center">
-              Muat Lebih Banyak
-              <i
-                data-lucide="chevron-down"
-                class="w-4 h-4 ml-1.5 transform group-hover:translate-y-1 transition-transform"
-              ></i>
-            </span>
-            <span v-else class="flex items-center">
-              <svg
-                class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-600 dark:text-blue-400"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              Memuat...
-            </span>
-          </button>
-          <div
-            class="h-px bg-gray-200 dark:bg-slate-700 flex-grow max-w-[80px] md:max-w-[150px]"
-          ></div>
-        </div>
-
-        <!-- Empty State -->
-        <div
-          v-if="filteredEkskul.length === 0"
-          class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out col-span-full py-20 text-center bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-3xl border-2 border-dashed border-gray-200 dark:border-slate-700 shadow-sm mt-4"
-        >
-          <div
-            class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700 mb-4 text-gray-400"
-          >
-            <i data-lucide="inbox" class="w-8 h-8"></i>
+            <div
+              class="h-px bg-gray-200 dark:bg-slate-700 flex-grow max-w-[80px] md:max-w-[150px]"
+            ></div>
+            <button
+              @click="loadMore"
+              :disabled="isLoading"
+              class="mx-5 inline-flex items-center text-sm md:text-base font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors group focus:outline-none disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              <span v-if="!isLoading" class="flex items-center">
+                Muat Lebih Banyak
+                <i
+                  data-lucide="chevron-down"
+                  class="w-4 h-4 ml-1.5 transform group-hover:translate-y-1 transition-transform"
+                ></i>
+              </span>
+              <span v-else class="flex items-center">
+                <svg
+                  class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-600 dark:text-blue-400"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Memuat...
+              </span>
+            </button>
+            <div
+              class="h-px bg-gray-200 dark:bg-slate-700 flex-grow max-w-[80px] md:max-w-[150px]"
+            ></div>
           </div>
-          <h3 class="text-lg font-bold text-blue-950 dark:text-white">Tidak Ditemukan</h3>
-          <p class="text-gray-500 dark:text-gray-400 mt-1" v-if="searchQuery">
-            Tidak ada ekstrakurikuler dengan nama "{{ searchQuery }}".
-          </p>
-          <p class="text-gray-500 dark:text-gray-400 mt-1" v-else>
-            Belum ada data ekstrakurikuler yang didaftarkan untuk kategori ini.
-          </p>
+
+          <!-- Empty State -->
+          <div
+            v-if="filteredEkskul.length === 0"
+            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out col-span-full py-20 text-center bg-gray-50 dark:bg-slate-900/50 backdrop-blur-sm rounded-3xl border-2 border-dashed border-gray-200 dark:border-slate-700 shadow-sm mt-4"
+          >
+            <div
+              class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white dark:bg-slate-800 mb-4 text-gray-400 shadow-sm"
+            >
+              <i data-lucide="inbox" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-lg font-bold text-blue-950 dark:text-white">
+              Tidak Ditemukan
+            </h3>
+            <p class="text-gray-500 dark:text-gray-400 mt-1" v-if="searchQuery">
+              Tidak ada ekstrakurikuler dengan nama "{{ searchQuery }}".
+            </p>
+            <p class="text-gray-500 dark:text-gray-400 mt-1" v-else>
+              Belum ada data ekstrakurikuler yang didaftarkan untuk kategori ini.
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section
-      class="relative bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-900 dark:to-blue-950 py-16 px-6 overflow-hidden"
-    >
-      <!-- Dekorasi Background Layer -->
-      <div
-        class="absolute top-0 right-0 w-72 h-72 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"
-      ></div>
-      <div
-        class="absolute bottom-0 left-0 w-72 h-72 bg-blue-400/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"
-      ></div>
-
+    <section class="relative bg-white dark:bg-slate-950 pb-20 px-6 overflow-hidden">
       <div class="container mx-auto max-w-6xl relative z-10">
-        <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+        <div
+          class="bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-900 dark:to-blue-950 rounded-lg shadow-md border border-blue-500/30 dark:border-slate-700 p-6 md:p-10 lg:p-12 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 relative overflow-hidden w-full"
+        >
           <!-- Teks CTA & Ajakan -->
           <div
-            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out w-full lg:w-1/2 text-white text-center lg:text-left"
+            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out w-full lg:w-1/2 text-white text-center lg:text-left relative z-10"
           >
             <span
               class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm md:text-md font-bold mb-4 border border-white/30"
@@ -606,7 +612,7 @@ onBeforeUnmount(() => {
 
           <!-- Box Syarat & Ketentuan -->
           <div
-            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out w-full lg:w-1/2"
+            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out w-full lg:w-1/2 relative z-10"
           >
             <div
               class="bg-yellow-400 rounded-xl p-6 sm:p-8 shadow-xl border-t-4 border-t-blue-600 border border-transparent"
