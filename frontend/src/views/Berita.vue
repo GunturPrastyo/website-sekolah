@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, nextTick, onUpdated, reactive, watch } from "vue";
 import { createIcons, icons } from "lucide";
-import ShareModal from "@/components/ShareModal.vue";
 import PageHeader from "@/components/PageHeader.vue";
 import Breadcrumb from "@/components/Breadcrumb.vue";
 
@@ -124,18 +123,6 @@ watch([searchQuery, activeCategory], () => {
     isLoading.value = false;
   }, 800); // Tampilkan loading selama 800ms
 });
-
-const isShareModalOpen = ref(false);
-const shareData = reactive({ title: "" });
-
-const openShareModal = (title) => {
-  shareData.title = title;
-  isShareModalOpen.value = true;
-};
-
-const closeShareModal = () => {
-  isShareModalOpen.value = false;
-};
 
 onMounted(() => {
   createIcons({ icons });
@@ -421,13 +408,6 @@ onUpdated(() => {
         </aside>
       </div>
     </section>
-
-    <!-- Share Modal Component -->
-    <ShareModal
-      :is-open="isShareModalOpen"
-      :title="shareData.title"
-      @close="closeShareModal"
-    />
   </div>
 </template>
 

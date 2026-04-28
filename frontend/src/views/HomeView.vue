@@ -624,14 +624,9 @@
                   <div class="flex items-center">
                     <i data-lucide="calendar" class="w-4 h-4 mr-1.5"></i> 24 November 2025
                   </div>
-                  <button
-                    @click.prevent.stop="
-                      openShareModal('Peringatan Hari Guru Nasional Berlangsung Meriah')
-                    "
-                    class="hover:text-blue-400 flex items-center transition-colors z-10 relative"
-                  >
-                    <i data-lucide="share" class="w-4 h-4 mr-1"></i> Bagikan
-                  </button>
+                  <span class="flex items-center font-medium">
+                    <i data-lucide="eye" class="w-4 h-4 mr-1.5 text-blue-400"></i> 1250
+                  </span>
                 </div>
               </div>
             </router-link>
@@ -675,16 +670,10 @@
                         <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1"></i> 10 Jan
                         2026
                       </div>
-                      <button
-                        @click.prevent.stop="
-                          openShareModal(
-                            'Siswa SMAN 1 Meraih Juara 1 Olimpiade Sains Tingkat Nasional'
-                          )
-                        "
-                        class="hover:text-blue-600 dark:hover:text-blue-400 flex items-center transition-colors z-10 relative"
-                      >
-                        <i data-lucide="share" class="w-3.5 h-3.5 mr-1"></i> Bagikan
-                      </button>
+                      <span class="flex items-center font-medium">
+                        <i data-lucide="eye" class="w-3.5 h-3.5 mr-1 text-blue-500"></i>
+                        3420
+                      </span>
                     </div>
                   </div>
                 </router-link>
@@ -723,16 +712,10 @@
                         <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1"></i> 05 Feb
                         2026
                       </div>
-                      <button
-                        @click.prevent.stop="
-                          openShareModal(
-                            'Peresmian Laboratorium Komputer Baru untuk Menunjang Digitalisasi'
-                          )
-                        "
-                        class="hover:text-blue-600 dark:hover:text-blue-400 flex items-center transition-colors z-10 relative"
-                      >
-                        <i data-lucide="share" class="w-3.5 h-3.5 mr-1"></i> Bagikan
-                      </button>
+                      <span class="flex items-center font-medium">
+                        <i data-lucide="eye" class="w-3.5 h-3.5 mr-1 text-blue-500"></i>
+                        2105
+                      </span>
                     </div>
                   </div>
                 </router-link>
@@ -771,16 +754,10 @@
                         <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1"></i> 20 Mar
                         2026
                       </div>
-                      <button
-                        @click.prevent.stop="
-                          openShareModal(
-                            'Kunjungan Edukasi Sejarah ke Museum Nasional Jakarta'
-                          )
-                        "
-                        class="hover:text-blue-600 dark:hover:text-blue-400 flex items-center transition-colors z-10 relative"
-                      >
-                        <i data-lucide="share" class="w-3.5 h-3.5 mr-1"></i> Bagikan
-                      </button>
+                      <span class="flex items-center font-medium">
+                        <i data-lucide="eye" class="w-3.5 h-3.5 mr-1 text-blue-500"></i>
+                        1560
+                      </span>
                     </div>
                   </div>
                 </router-link>
@@ -1610,84 +1587,6 @@
         </div>
       </div>
     </section>
-
-    <!-- Share Modal -->
-    <div
-      v-show="isShareModalOpen"
-      style="display: none"
-      class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity"
-      @click="closeShareModal"
-    >
-      <div
-        class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-11/12 max-w-md overflow-hidden transform transition-all"
-        @click.stop
-      >
-        <div class="p-5 border-b border-gray-100 flex justify-between items-center">
-          <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">
-            Bagikan Berita
-          </h3>
-          <button
-            @click="closeShareModal"
-            class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-          >
-            <i data-lucide="x" class="w-5 h-5"></i>
-          </button>
-        </div>
-        <div class="p-6">
-          <p
-            class="text-sm text-gray-600 dark:text-gray-300 mb-5 font-medium line-clamp-2"
-          >
-            "{{ shareData.title }}"
-          </p>
-          <div class="flex gap-4 justify-center mb-6">
-            <button
-              class="w-12 h-12 rounded-full bg-blue-100 dark:bg-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center hover:bg-blue-200 dark:hover:bg-slate-600 transition-colors"
-              title="Bagikan ke Facebook"
-            >
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
-                />
-              </svg>
-            </button>
-            <button
-              class="w-12 h-12 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-gray-200 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
-              title="Bagikan ke X"
-            >
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-                />
-              </svg>
-            </button>
-            <button
-              class="w-12 h-12 rounded-full bg-green-100 dark:bg-slate-700 text-green-600 dark:text-green-400 flex items-center justify-center hover:bg-green-200 dark:hover:bg-slate-600 transition-colors"
-              title="Bagikan ke WhatsApp"
-            >
-              <i data-lucide="message-circle" class="w-5 h-5"></i>
-            </button>
-            <button
-              class="w-12 h-12 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
-              title="Salin Tautan"
-            >
-              <i data-lucide="link" class="w-5 h-5"></i>
-            </button>
-          </div>
-          <button
-            @click="closeShareModal"
-            class="w-full py-2.5 rounded-xl bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
-          >
-            Tutup
-          </button>
-        </div>
-      </div>
-    </div>
-    <!-- Share Modal Component -->
-    <ShareModal
-      :is-open="isShareModalOpen"
-      :title="shareData.title"
-      @close="closeShareModal"
-    />
   </main>
 </template>
 
@@ -1695,7 +1594,6 @@
 import { ref, onMounted, reactive } from "vue";
 import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.css";
-import ShareModal from "@/components/ShareModal.vue";
 
 const displayedTitle = ref("");
 const fullTitle = "SMA Negeri 1 Nogosari";
@@ -1704,18 +1602,6 @@ const showSubtitle = ref(false);
 const activeFaq = ref(null);
 const toggleFaq = (index) => {
   activeFaq.value = activeFaq.value === index ? null : index;
-};
-
-const isShareModalOpen = ref(false);
-const shareData = reactive({ title: "" });
-
-const openShareModal = (title) => {
-  shareData.title = title;
-  isShareModalOpen.value = true;
-};
-
-const closeShareModal = () => {
-  isShareModalOpen.value = false;
 };
 
 // --- Data Animasi Statistik Header ---
