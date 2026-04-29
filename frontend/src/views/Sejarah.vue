@@ -157,14 +157,14 @@ onBeforeUnmount(() => {
             <div class="absolute inset-0 bg-blue-900/20 mix-blend-multiply"></div>
             <!-- Badge Overlay -->
             <div
-              class="absolute bottom-3 sm:bottom-4 lg:bottom-6 left-3 sm:left-4 lg:left-6 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl shadow-lg border border-white/40 dark:border-slate-600 hover:scale-105 transition-transform duration-300"
+              class="absolute bottom-3 md:bottom-4 left-3 md:left-4 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl shadow-lg border border-white/40 dark:border-slate-600 hover:scale-105 transition-transform duration-300"
             >
               <span
-                class="text-blue-700 dark:text-blue-400 font-extrabold text-xs sm:text-sm md:text-base flex items-center tracking-wide"
+                class="text-blue-700 dark:text-blue-400 font-extrabold text-xs md:text-sm flex items-center tracking-wide"
               >
                 <i
                   data-lucide="check-circle-2"
-                  class="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 mr-1.5 sm:mr-2"
+                  class="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5"
                 ></i>
                 Terakreditasi A <span class="hidden sm:inline ml-1">(Sangat Baik)</span>
               </span>
