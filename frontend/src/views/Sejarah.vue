@@ -337,16 +337,16 @@ onBeforeUnmount(() => {
                 ></div>
 
                 <div
-                  class="relative z-10 flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-md group-hover/card:shadow-2xl border border-gray-100 dark:border-slate-700 overflow-hidden transition-shadow duration-400 p-6 md:p-8 lg:p-10"
+                  class="relative z-10 flex flex-col bg-white dark:bg-slate-800 rounded-xl shadow-md group-hover/card:shadow-2xl border border-gray-100 dark:border-slate-700 overflow-hidden transition-shadow duration-400 p-6 md:p-8 lg:p-10"
                 >
                   <!-- Badge Tahun -->
-                  <div class="mb-4 pb-4 border-b border-gray-100 dark:border-slate-700">
-                    <span
-                      class="inline-block px-5 py-1.5 bg-blue-50 dark:bg-slate-700/50 text-blue-600 dark:text-blue-400 font-bold text-lg md:text-xl tracking-wider rounded-lg shadow-sm border border-blue-100 dark:border-slate-600"
+                  <div class="mb-5">
+                    <div
+                      class="block w-full px-5 py-1 bg-blue-600 dark:bg-blue-500 text-white font-bold text-lg tracking-wider rounded-2xl shadow-md text-left"
                       style="font-family: 'Kalam', cursive"
                     >
                       Tahun {{ item.year }}
-                    </span>
+                    </div>
                   </div>
 
                   <!-- Teks/Deskripsi -->
