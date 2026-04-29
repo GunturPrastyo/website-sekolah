@@ -135,23 +135,152 @@ onBeforeUnmount(() => {
   <div>
     <PageHeader
       badge="Profil Sekolah"
-      title="Sejarah & Perjalanan"
-      description="Dari awal yang sederhana hingga menjadi institusi pendidikan unggulan. Mari menyusuri jejak langkah perjuangan dan prestasi SMAN 1 Nogosari dari masa ke masa."
+      title="Tentang Kami & Sejarah"
+      description="Mengenal lebih dekat profil SMAN 1 Nogosari dan menyusuri jejak langkah perjuangan serta prestasi dari masa ke masa."
     />
+
+    <!-- Profil Singkat Section -->
+    <section class="pt-12 md:pt-20 pb-4 md:pb-10 bg-white dark:bg-slate-900">
+      <div class="container mx-auto max-w-6xl px-6">
+        <div
+          class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out flex flex-col lg:flex-row items-center gap-10 lg:gap-16"
+        >
+          <!-- Gambar Profil -->
+          <div
+            class="w-full lg:w-5/12 h-72 sm:h-80 lg:h-[450px] relative rounded-3xl overflow-hidden shadow-xl border border-gray-100 dark:border-slate-700"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800"
+              class="absolute inset-0 w-full h-full object-cover"
+              alt="Gedung Sekolah"
+            />
+            <div class="absolute inset-0 bg-blue-900/20 mix-blend-multiply"></div>
+            <!-- Badge Overlay -->
+            <div
+              class="absolute bottom-4 left-4 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm px-4 py-2.5 rounded-xl shadow-md border border-white/20 dark:border-slate-700"
+            >
+              <span
+                class="text-blue-700 dark:text-blue-400 font-bold text-sm flex items-center"
+              >
+                <i data-lucide="check-circle-2" class="w-4 h-4 mr-1.5"></i> Terakreditasi
+                A (Sangat Baik)
+              </span>
+            </div>
+          </div>
+
+          <!-- Info & Fakta -->
+          <div class="w-full lg:w-7/12 flex flex-col justify-center lg:py-6">
+            <span
+              class="text-lg md:text-xl font-bold text-blue-600 dark:text-blue-400 tracking-wider mb-2"
+              style="font-family: 'Kalam', cursive"
+              >Mengenal Lebih Dekat</span
+            >
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-950 dark:text-white mb-5">
+              Profil Singkat Sekolah
+            </h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed text-justify">
+              SMA Negeri 1 Nogosari adalah lembaga pendidikan menengah atas yang
+              berdedikasi tinggi dalam mencetak generasi penerus bangsa yang unggul,
+              cerdas, dan berkarakter. Berada di lingkungan yang asri, kami senantiasa
+              berupaya memberikan suasana belajar yang kondusif, didukung oleh tenaga
+              pendidik profesional dan fasilitas yang terus berkembang mengikuti zaman.
+            </p>
+
+            <!-- Grid Fakta -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div class="flex items-start group">
+                <div
+                  class="w-11 h-11 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 mr-4 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                >
+                  <i data-lucide="hash" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-gray-900 dark:text-white">NPSN</h4>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">20301234</p>
+                </div>
+              </div>
+              <div class="flex items-start group">
+                <div
+                  class="w-11 h-11 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 mr-4 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                >
+                  <i data-lucide="calendar-days" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-gray-900 dark:text-white">
+                    Tahun Berdiri
+                  </h4>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                    17 Agustus 1985
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-start group">
+                <div
+                  class="w-11 h-11 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 mr-4 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                >
+                  <i data-lucide="map-pin" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-gray-900 dark:text-white">Lokasi</h4>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                    Nogosari, Kab. Boyolali
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-start group">
+                <div
+                  class="w-11 h-11 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 mr-4 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                >
+                  <i data-lucide="award" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-gray-900 dark:text-white">Status</h4>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                    Sekolah Negeri
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Timeline Section -->
     <section
-      class="py-12 md:py-24 min-h-screen relative overflow-hidden bg-fixed bg-center bg-cover"
-      style="
-        background-image: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1600&auto=format&fit=crop');
-      "
+      class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-gray-50 dark:bg-slate-950"
     >
-      <!-- Parallax Overlay -->
-      <div
-        class="absolute inset-0 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-[2px] transition-colors duration-500"
-      ></div>
-
       <div class="container relative z-10 mx-auto px-0 lg:px-6 w-full max-w-full">
+        <!-- Bridging Title -->
+        <div
+          class="mb-12 md:mb-20 text-center fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out px-4 sm:px-6 pt-10 md:pt-16"
+        >
+          <div class="inline-flex items-center justify-center space-x-2 mb-4">
+            <span
+              class="h-px w-8 sm:w-12 bg-blue-600 dark:bg-blue-400 rounded-full"
+            ></span>
+            <span
+              class="text-blue-600 dark:text-blue-400 font-bold text-lg sm:text-xl tracking-wider"
+              style="font-family: 'Kalam', cursive"
+              >Lini Masa</span
+            >
+            <span
+              class="h-px w-8 sm:w-12 bg-blue-600 dark:bg-blue-400 rounded-full"
+            ></span>
+          </div>
+          <h2
+            class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-blue-950 dark:text-white mb-4 sm:mb-6 tracking-tight"
+          >
+            Jejak Langkah Kami
+          </h2>
+          <p
+            class="text-gray-600 dark:text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
+          >
+            Menelusuri kembali tonggak sejarah dan perjalanan panjang berdirinya institusi
+            pendidikan kami hingga menjadi seperti sekarang.
+          </p>
+        </div>
+
         <div class="relative wrap overflow-hidden py-10 lg:p-10 h-full" ref="timelineRef">
           <!-- Garis Tengah Timeline (Latar Belakang) -->
           <div
@@ -208,47 +337,35 @@ onBeforeUnmount(() => {
                 ></div>
 
                 <div
-                  class="relative z-10 flex flex-col items-stretch bg-white dark:bg-slate-800 rounded-l-2xl lg:rounded-2xl shadow-md group-hover/card:shadow-2xl border-y border-l lg:border border-gray-100 dark:border-slate-700 overflow-hidden transition-shadow duration-400"
-                  :class="index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'"
+                  class="relative z-10 flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-md group-hover/card:shadow-2xl border border-gray-100 dark:border-slate-700 overflow-hidden transition-shadow duration-400 p-6 md:p-8 lg:p-10"
                 >
-                  <!-- Gambar Dokumentasi Timeline -->
-                  <div
-                    class="relative w-full lg:w-6/12 shrink-0 h-48 lg:h-auto min-h-[200px]"
-                  >
-                    <img
-                      :src="item.image"
-                      class="absolute inset-0 w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-700"
-                      :alt="item.title"
-                    />
-                    <div class="absolute top-4 left-4">
-                      <span
-                        class="inline-block px-3 py-1.5 bg-blue-600/90 backdrop-blur-sm text-white font-bold text-xs md:text-sm rounded-lg shadow-sm border border-white/20"
-                        >{{ item.year }}</span
-                      >
-                    </div>
+                  <!-- Badge Tahun -->
+                  <div class="mb-4 pb-4 border-b border-gray-100 dark:border-slate-700">
+                    <span
+                      class="inline-block px-5 py-1.5 bg-blue-50 dark:bg-slate-700/50 text-blue-600 dark:text-blue-400 font-bold text-lg md:text-xl tracking-wider rounded-lg shadow-sm border border-blue-100 dark:border-slate-600"
+                      style="font-family: 'Kalam', cursive"
+                    >
+                      Tahun {{ item.year }}
+                    </span>
                   </div>
 
                   <!-- Teks/Deskripsi -->
-                  <div
-                    class="w-full lg:w-7/12 flex flex-col justify-center p-5 md:p-6 lg:p-8"
+                  <h3
+                    class="text-xl md:text-2xl font-bold text-blue-950 dark:text-white mb-3 leading-tight group-hover/card:text-blue-600 dark:group-hover/card:text-blue-400 transition-colors"
                   >
-                    <h3
-                      class="text-lg md:text-xl font-bold text-blue-950 dark:text-white mb-2 leading-tight group-hover/card:text-blue-600 dark:group-hover/card:text-blue-400 transition-colors"
+                    {{ item.title }}
+                  </h3>
+                  <p
+                    class="text-gray-600 dark:text-gray-400 text-sm md:text-base leading-relaxed text-justify"
+                  >
+                    <span
+                      v-for="(sentence, sIdx) in splitSentences(item.description)"
+                      :key="sIdx"
+                      class="fade-sentence opacity-0 transition-opacity duration-1000 ease-in-out"
                     >
-                      {{ item.title }}
-                    </h3>
-                    <p
-                      class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed text-justify"
-                    >
-                      <span
-                        v-for="(sentence, sIdx) in splitSentences(item.description)"
-                        :key="sIdx"
-                        class="fade-sentence opacity-0 transition-opacity duration-1000 ease-in-out"
-                      >
-                        {{ sentence }}
-                      </span>
-                    </p>
-                  </div>
+                      {{ sentence }}
+                    </span>
+                  </p>
                 </div>
               </div>
             </div>
@@ -258,3 +375,7 @@ onBeforeUnmount(() => {
     </section>
   </div>
 </template>
+
+<style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
+</style>
