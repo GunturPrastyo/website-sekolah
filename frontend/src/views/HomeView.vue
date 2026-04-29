@@ -381,14 +381,8 @@
                 <div
                   class="swiper-slide !h-auto relative min-h-[280px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
                 >
-                  <div class="absolute inset-0">
-                    <img
-                      src="https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800"
-                      class="w-full h-full object-cover scale-110 blur-sm group-hover:blur-none transition-all duration-500"
-                    />
-                  </div>
                   <div
-                    class="absolute inset-0 bg-gradient-to-br from-blue-900/90 to-slate-900/80 group-hover:from-blue-800/80 transition-colors duration-500"
+                    class="absolute inset-0 bg-gradient-to-br from-blue-900 to-slate-900 group-hover:from-blue-800 transition-colors duration-500"
                   ></div>
 
                   <!-- TEXT DI ATAS -->
@@ -422,14 +416,8 @@
                 <div
                   class="swiper-slide !h-auto relative min-h-[280px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
                 >
-                  <div class="absolute inset-0">
-                    <img
-                      src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=800"
-                      class="w-full h-full object-cover scale-110 blur-sm group-hover:blur-none transition-all duration-500"
-                    />
-                  </div>
                   <div
-                    class="absolute inset-0 bg-gradient-to-br from-sky-900/90 to-slate-900/80 group-hover:from-sky-800/80 transition-colors duration-500"
+                    class="absolute inset-0 bg-gradient-to-br from-sky-900 to-slate-900 group-hover:from-sky-800 transition-colors duration-500"
                   ></div>
 
                   <div
@@ -462,14 +450,8 @@
                 <div
                   class="swiper-slide !h-auto relative min-h-[280px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
                 >
-                  <div class="absolute inset-0">
-                    <img
-                      src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800"
-                      class="w-full h-full object-cover scale-110 blur-sm group-hover:blur-none transition-all duration-500"
-                    />
-                  </div>
                   <div
-                    class="absolute inset-0 bg-gradient-to-br from-cyan-900/90 to-slate-900/80 group-hover:from-cyan-800/80 transition-colors duration-500"
+                    class="absolute inset-0 bg-gradient-to-br from-cyan-900 to-slate-900 group-hover:from-cyan-800 transition-colors duration-500"
                   ></div>
 
                   <div
@@ -502,14 +484,8 @@
                 <div
                   class="swiper-slide !h-auto relative min-h-[280px] overflow-hidden group cursor-pointer"
                 >
-                  <div class="absolute inset-0">
-                    <img
-                      src="https://images.unsplash.com/photo-1550745165-9bc0b252726a?q=80&w=800"
-                      class="w-full h-full object-cover scale-110 blur-sm group-hover:blur-none transition-all duration-500"
-                    />
-                  </div>
                   <div
-                    class="absolute inset-0 bg-gradient-to-br from-purple-900/90 to-slate-900/80 group-hover:from-purple-800/80 transition-colors duration-500"
+                    class="absolute inset-0 bg-gradient-to-br from-purple-900 to-slate-900 group-hover:from-purple-800 transition-colors duration-500"
                   ></div>
 
                   <div
