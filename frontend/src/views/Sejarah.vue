@@ -330,10 +330,10 @@ onBeforeUnmount(() => {
                 class="group/card relative hover:-translate-y-1.5 transition-transform duration-400"
               >
                 <div
-                  class="hidden lg:block absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 transform rotate-45 z-20"
+                  class="hidden md:block absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 transform rotate-45 z-20"
                   :class="
                     index % 2 === 0
-                      ? '-right-3 border-t border-r'
+                      ? '-left-3 border-b border-l lg:left-auto lg:-right-3 lg:border-t lg:border-r lg:border-b-0 lg:border-l-0'
                       : '-left-3 border-b border-l'
                   "
                 ></div>
