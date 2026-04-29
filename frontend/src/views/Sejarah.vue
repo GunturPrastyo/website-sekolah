@@ -140,14 +140,14 @@ onBeforeUnmount(() => {
     />
 
     <!-- Profil Singkat Section -->
-    <section class="pt-12 md:pt-20 pb-4 md:pb-10 bg-white dark:bg-slate-900">
-      <div class="container mx-auto max-w-6xl px-6">
+    <section class="pt-8 md:pt-16 pb-8 md:pb-10 bg-white dark:bg-slate-900">
+      <div class="container mx-auto max-w-full px-8 sm:px-16">
         <div
           class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out flex flex-col lg:flex-row items-center gap-10 lg:gap-16"
         >
           <!-- Gambar Profil -->
           <div
-            class="w-full lg:w-5/12 h-72 sm:h-80 lg:h-[450px] relative rounded-3xl overflow-hidden shadow-xl border border-gray-100 dark:border-slate-700"
+            class="w-full lg:w-5/12 h-72 sm:h-80 lg:h-[450px] relative rounded-xl overflow-hidden shadow-xl border border-gray-100 dark:border-slate-700"
           >
             <img
               src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800"
@@ -256,7 +256,7 @@ onBeforeUnmount(() => {
       class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-blue-950 dark:bg-slate-950"
     >
       <div
-        class="container relative z-10 mx-auto px-5 sm:px-8 md:px-14 lg:px-8 w-full max-w-full"
+        class="container relative z-10 mx-auto px-5 sm:px-8 md:px-14 lg:px-16 w-full max-w-full"
       >
         <!-- Bridging Title -->
         <div
