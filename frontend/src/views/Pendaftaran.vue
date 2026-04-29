@@ -196,7 +196,7 @@ onUpdated(() => {
       <section
         class="py-12 md:py-10 px-6 bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700"
       >
-        <div class="container mx-auto max-w-5xl">
+        <div class="container mx-auto max-w-full px-0 lg:px-16">
           <div class="text-center mb-10">
             <h2 class="text-2xl md:text-3xl font-bold text-blue-950 dark:text-white">
               Informasi & Persyaratan
@@ -347,7 +347,7 @@ onUpdated(() => {
       <section
         class="py-12 md:py-8 px-6 bg-blue-950 dark:bg-slate-900 relative overflow-hidden border-b border-blue-900 dark:border-slate-800"
       >
-        <div class="container mx-auto max-w-6xl relative z-10">
+        <div class="container mx-auto max-w-full px-0 lg:px-16 relative z-10">
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             <!-- Left: Teks Deskripsi -->
             <div class="lg:col-span-5 text-center lg:text-left">
@@ -554,7 +554,7 @@ onUpdated(() => {
       id="form-area"
       class="py-12 md:py-16 lg:py-20 px-6 bg-gray-50 dark:bg-slate-800"
     >
-      <div class="container mx-auto max-w-6xl">
+      <div class="container mx-auto max-w-full px-0 lg:px-16">
         <!-- Form Header -->
         <div class="text-center mb-10">
           <h2 class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white mb-4">
