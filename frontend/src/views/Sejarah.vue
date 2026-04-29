@@ -253,7 +253,7 @@ onBeforeUnmount(() => {
 
     <!-- Timeline Section -->
     <section
-      class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-gray-50 dark:bg-slate-950"
+      class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-blue-950 dark:bg-slate-950"
     >
       <div
         class="container relative z-10 mx-auto px-5 sm:px-8 md:px-14 lg:px-8 w-full max-w-full"
@@ -263,25 +263,21 @@ onBeforeUnmount(() => {
           class="mb-10 md:mb-18 text-center fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out pt-6 md:pt-12"
         >
           <div class="inline-flex items-center justify-center space-x-2 mb-4">
+            <span class="h-px w-8 sm:w-12 bg-blue-400 rounded-full"></span>
             <span
-              class="h-px w-8 sm:w-12 bg-blue-600 dark:bg-blue-400 rounded-full"
-            ></span>
-            <span
-              class="text-blue-600 dark:text-blue-400 font-bold text-lg sm:text-xl tracking-wider"
+              class="text-blue-400 font-bold text-lg sm:text-xl tracking-wider"
               style="font-family: 'Kalam', cursive"
               >Lini Masa</span
             >
-            <span
-              class="h-px w-8 sm:w-12 bg-blue-600 dark:bg-blue-400 rounded-full"
-            ></span>
+            <span class="h-px w-8 sm:w-12 bg-blue-400 rounded-full"></span>
           </div>
           <h2
-            class="text-2xl min-[400px]:text-3xl sm:text-4xl md:text-5xl font-extrabold text-blue-950 dark:text-white mb-3 min-[400px]:mb-4 sm:mb-6 tracking-tight"
+            class="text-2xl min-[400px]:text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-3 min-[400px]:mb-4 sm:mb-6 tracking-tight"
           >
             Jejak Langkah Kami
           </h2>
           <p
-            class="text-gray-600 dark:text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
+            class="text-blue-100 dark:text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
           >
             Menelusuri kembali tonggak sejarah dan perjalanan panjang berdirinya institusi
             pendidikan kami hingga menjadi seperti sekarang.
@@ -291,11 +287,11 @@ onBeforeUnmount(() => {
         <div class="relative wrap overflow-hidden h-full" ref="timelineRef">
           <!-- Garis Tengah Timeline (Latar Belakang) -->
           <div
-            class="hidden min-[400px]:block absolute z-0 w-1 bg-gray-200 dark:bg-slate-700 h-full left-6 sm:left-8 lg:left-1/2 transform -translate-x-1/2 rounded-full"
+            class="hidden min-[400px]:block absolute z-0 w-1 bg-blue-900 dark:bg-slate-800 h-full left-6 sm:left-8 lg:left-1/2 transform -translate-x-1/2 rounded-full"
           >
             <!-- Garis Animasi Menjalar (Foreground) -->
             <div
-              class="absolute top-0 left-0 w-full bg-blue-600 dark:bg-blue-500 rounded-full transition-all duration-200 ease-out"
+              class="absolute top-0 left-0 w-full bg-blue-500 rounded-full transition-all duration-200 ease-out"
               :style="{ height: lineHeight }"
             ></div>
           </div>
@@ -316,11 +312,11 @@ onBeforeUnmount(() => {
 
             <!-- Ikon Lingkaran Timeline -->
             <div
-              class="hidden min-[400px]:flex absolute left-6 sm:left-8 lg:left-1/2 transform -translate-x-1/2 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-white dark:border-slate-800 shadow-lg z-20 group-hover:scale-110 transition-all duration-500"
+              class="hidden min-[400px]:flex absolute left-6 sm:left-8 lg:left-1/2 transform -translate-x-1/2 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-blue-950 dark:border-slate-950 shadow-lg z-20 group-hover:scale-110 transition-all duration-500"
               :class="
                 currentProgress >= index / timeline.length
-                  ? 'bg-blue-600 dark:bg-blue-500 text-white shadow-md'
-                  : 'bg-gray-200 dark:bg-slate-700 text-gray-500 dark:text-gray-400'
+                  ? 'bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]'
+                  : 'bg-blue-900 dark:bg-slate-800 text-blue-400 dark:text-gray-400'
               "
             >
               <i :data-lucide="item.icon" class="w-5 h-5 md:w-6 md:h-6"></i>
@@ -335,16 +331,14 @@ onBeforeUnmount(() => {
                 class="group/card relative hover:-translate-y-1.5 transition-transform duration-400"
               >
                 <div
-                  class="hidden md:block absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 transform rotate-45 z-20"
+                  class="hidden md:block absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-slate-800 transform rotate-45 z-20"
                   :class="
-                    index % 2 === 0
-                      ? '-left-3 border-b border-l lg:left-auto lg:-right-3 lg:border-t lg:border-r lg:border-b-0 lg:border-l-0'
-                      : '-left-3 border-b border-l'
+                    index % 2 === 0 ? '-left-3 lg:left-auto lg:-right-3' : '-left-3'
                   "
                 ></div>
 
                 <div
-                  class="relative z-10 flex flex-col bg-white dark:bg-slate-800 rounded-xl shadow-md group-hover/card:shadow-2xl border border-gray-200 dark:border-slate-700 overflow-hidden transition-shadow duration-400 p-5 min-[400px]:p-6 md:p-8 lg:p-10"
+                  class="relative z-10 flex flex-col bg-white dark:bg-slate-800 rounded-xl shadow-xl group-hover/card:shadow-2xl overflow-hidden transition-shadow duration-400 p-5 min-[400px]:p-6 md:p-8 lg:p-10"
                 >
                   <!-- Badge Tahun -->
                   <div class="mb-4 min-[400px]:mb-5">
