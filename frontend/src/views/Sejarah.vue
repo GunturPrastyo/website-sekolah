@@ -157,13 +157,16 @@ onBeforeUnmount(() => {
             <div class="absolute inset-0 bg-blue-900/20 mix-blend-multiply"></div>
             <!-- Badge Overlay -->
             <div
-              class="absolute bottom-4 left-4 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm px-4 py-2.5 rounded-2xl shadow-md border border-white/20 dark:border-slate-700"
+              class="absolute bottom-3 sm:bottom-4 lg:bottom-6 left-3 sm:left-4 lg:left-6 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl shadow-lg border border-white/40 dark:border-slate-600 hover:scale-105 transition-transform duration-300"
             >
               <span
-                class="text-blue-700 dark:text-blue-400 font-bold text-sm flex items-center"
+                class="text-blue-700 dark:text-blue-400 font-extrabold text-xs sm:text-sm md:text-base flex items-center tracking-wide"
               >
-                <i data-lucide="check-circle-2" class="w-4 h-4 mr-1.5"></i> Terakreditasi
-                A (Sangat Baik)
+                <i
+                  data-lucide="check-circle-2"
+                  class="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 mr-1.5 sm:mr-2"
+                ></i>
+                Terakreditasi A <span class="hidden sm:inline ml-1">(Sangat Baik)</span>
               </span>
             </div>
           </div>
@@ -175,7 +178,9 @@ onBeforeUnmount(() => {
               style="font-family: 'Kalam', cursive"
               >Mengenal Lebih Dekat</span
             >
-            <h2 class="text-3xl md:text-4xl font-bold text-blue-950 dark:text-white mb-5">
+            <h2
+              class="text-2xl min-[400px]:text-3xl md:text-4xl font-bold text-blue-950 dark:text-white mb-4 min-[400px]:mb-5"
+            >
               Profil Singkat Sekolah
             </h2>
             <p class="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed text-justify">
@@ -271,7 +276,7 @@ onBeforeUnmount(() => {
             ></span>
           </div>
           <h2
-            class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-blue-950 dark:text-white mb-4 sm:mb-6 tracking-tight"
+            class="text-2xl min-[400px]:text-3xl sm:text-4xl md:text-5xl font-extrabold text-blue-950 dark:text-white mb-3 min-[400px]:mb-4 sm:mb-6 tracking-tight"
           >
             Jejak Langkah Kami
           </h2>
@@ -286,7 +291,7 @@ onBeforeUnmount(() => {
         <div class="relative wrap overflow-hidden h-full" ref="timelineRef">
           <!-- Garis Tengah Timeline (Latar Belakang) -->
           <div
-            class="absolute z-0 w-1 bg-gray-200 dark:bg-slate-700 h-full left-6 sm:left-8 lg:left-1/2 transform -translate-x-1/2 rounded-full"
+            class="hidden min-[400px]:block absolute z-0 w-1 bg-gray-200 dark:bg-slate-700 h-full left-6 sm:left-8 lg:left-1/2 transform -translate-x-1/2 rounded-full"
           >
             <!-- Garis Animasi Menjalar (Foreground) -->
             <div
@@ -299,7 +304,7 @@ onBeforeUnmount(() => {
           <div
             v-for="(item, index) in timeline"
             :key="index"
-            class="fade-on-scroll opacity-0 translate-y-10 scale-95 transition-all duration-1000 ease-out relative z-10 flex items-center w-full mb-12 last:mb-0 group"
+            class="fade-on-scroll opacity-0 translate-y-10 scale-95 transition-all duration-1000 ease-out relative z-10 flex items-center w-full mb-8 min-[400px]:mb-12 last:mb-0 group"
             :class="
               index % 2 === 0
                 ? 'lg:flex-row-reverse lg:-translate-x-20'
@@ -311,7 +316,7 @@ onBeforeUnmount(() => {
 
             <!-- Ikon Lingkaran Timeline -->
             <div
-              class="absolute left-6 sm:left-8 lg:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-white dark:border-slate-800 shadow-lg z-20 group-hover:scale-110 transition-all duration-500"
+              class="hidden min-[400px]:flex absolute left-6 sm:left-8 lg:left-1/2 transform -translate-x-1/2 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-white dark:border-slate-800 shadow-lg z-20 group-hover:scale-110 transition-all duration-500"
               :class="
                 currentProgress >= index / timeline.length
                   ? 'bg-blue-600 dark:bg-blue-500 text-white shadow-md'
@@ -323,7 +328,7 @@ onBeforeUnmount(() => {
 
             <!-- Kartu Konten -->
             <div
-              class="ml-16 sm:ml-20 lg:ml-0 flex-1 lg:flex-none lg:w-1/2"
+              class="ml-0 min-[400px]:ml-16 sm:ml-20 lg:ml-0 flex-1 lg:flex-none lg:w-1/2"
               :class="index % 2 === 0 ? 'lg:pr-12 xl:pr-16' : 'lg:pl-12 xl:pl-16'"
             >
               <div
@@ -339,12 +344,12 @@ onBeforeUnmount(() => {
                 ></div>
 
                 <div
-                  class="relative z-10 flex flex-col bg-white dark:bg-slate-800 rounded-xl shadow-md group-hover/card:shadow-2xl border border-gray-200 dark:border-slate-700 overflow-hidden transition-shadow duration-400 p-6 md:p-8 lg:p-10"
+                  class="relative z-10 flex flex-col bg-white dark:bg-slate-800 rounded-xl shadow-md group-hover/card:shadow-2xl border border-gray-200 dark:border-slate-700 overflow-hidden transition-shadow duration-400 p-5 min-[400px]:p-6 md:p-8 lg:p-10"
                 >
                   <!-- Badge Tahun -->
-                  <div class="mb-5">
+                  <div class="mb-4 min-[400px]:mb-5">
                     <div
-                      class="block w-full px-5 py-1 bg-blue-600 dark:bg-blue-500 text-white font-bold text-md sm:text-lg tracking-wider rounded-2xl shadow-md text-left"
+                      class="block w-full px-4 min-[400px]:px-5 py-1 bg-blue-600 dark:bg-blue-500 text-white font-bold text-sm min-[400px]:text-md sm:text-lg tracking-wider rounded-xl min-[400px]:rounded-2xl shadow-md text-left"
                       style="font-family: 'Kalam', cursive"
                     >
                       Tahun {{ item.year }}
@@ -353,12 +358,12 @@ onBeforeUnmount(() => {
 
                   <!-- Teks/Deskripsi -->
                   <h3
-                    class="text-xl md:text-2xl font-bold text-blue-950 dark:text-white mb-3 leading-tight group-hover/card:text-blue-600 dark:group-hover/card:text-blue-400 transition-colors"
+                    class="text-lg min-[400px]:text-xl md:text-2xl font-bold text-blue-950 dark:text-white mb-2 min-[400px]:mb-3 leading-tight group-hover/card:text-blue-600 dark:group-hover/card:text-blue-400 transition-colors"
                   >
                     {{ item.title }}
                   </h3>
                   <p
-                    class="text-gray-600 dark:text-gray-400 text-sm md:text-base leading-relaxed text-justify"
+                    class="text-gray-600 dark:text-gray-400 text-xs min-[400px]:text-sm md:text-base leading-relaxed text-justify"
                   >
                     <span
                       v-for="(sentence, sIdx) in splitSentences(item.description)"
