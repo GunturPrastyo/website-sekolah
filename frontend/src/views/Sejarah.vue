@@ -140,7 +140,7 @@ onBeforeUnmount(() => {
     />
 
     <!-- Profil Singkat Section -->
-    <section class="pt-8 md:pt-16 pb-8 md:pb-10 bg-white dark:bg-slate-900">
+    <section class="pt-8 md:pt-12 pb-8 md:pb-10 bg-white dark:bg-slate-900">
       <div class="container mx-auto max-w-full px-8 sm:px-16">
         <div
           class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out flex flex-col lg:flex-row items-center gap-10 lg:gap-16"
@@ -157,10 +157,10 @@ onBeforeUnmount(() => {
             <div class="absolute inset-0 bg-blue-900/20 mix-blend-multiply"></div>
             <!-- Badge Overlay -->
             <div
-              class="absolute bottom-3 md:bottom-4 left-3 md:left-4 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl shadow-lg border border-white/40 dark:border-slate-600 hover:scale-105 transition-transform duration-300"
+              class="absolute bottom-3 md:bottom-4 left-3 md:left-4 bg-blue-600 dark:bg-blue-500 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl shadow-lg hover:scale-105 hover:bg-blue-800 dark:hover:bg-blue-700 transition-all duration-300"
             >
               <span
-                class="text-blue-700 dark:text-blue-400 font-extrabold text-xs md:text-sm flex items-center tracking-wide"
+                class="text-white font-extrabold text-xs md:text-sm flex items-center tracking-wide"
               >
                 <i
                   data-lucide="check-circle-2"
@@ -195,7 +195,7 @@ onBeforeUnmount(() => {
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div class="flex items-start group">
                 <div
-                  class="w-11 h-11 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 mr-4 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                  class="w-11 h-11 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shrink-0 mr-4 group-hover:bg-blue-800 dark:group-hover:bg-blue-700 transition-colors shadow-sm"
                 >
                   <i data-lucide="hash" class="w-5 h-5"></i>
                 </div>
@@ -206,7 +206,7 @@ onBeforeUnmount(() => {
               </div>
               <div class="flex items-start group">
                 <div
-                  class="w-11 h-11 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 mr-4 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                  class="w-11 h-11 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shrink-0 mr-4 group-hover:bg-blue-800 dark:group-hover:bg-blue-700 transition-colors shadow-sm"
                 >
                   <i data-lucide="calendar-days" class="w-5 h-5"></i>
                 </div>
@@ -221,7 +221,7 @@ onBeforeUnmount(() => {
               </div>
               <div class="flex items-start group">
                 <div
-                  class="w-11 h-11 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 mr-4 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                  class="w-11 h-11 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shrink-0 mr-4 group-hover:bg-blue-800 dark:group-hover:bg-blue-700 transition-colors shadow-sm"
                 >
                   <i data-lucide="map-pin" class="w-5 h-5"></i>
                 </div>
@@ -234,7 +234,7 @@ onBeforeUnmount(() => {
               </div>
               <div class="flex items-start group">
                 <div
-                  class="w-11 h-11 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 mr-4 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                  class="w-11 h-11 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shrink-0 mr-4 group-hover:bg-blue-800 dark:group-hover:bg-blue-700 transition-colors shadow-sm"
                 >
                   <i data-lucide="award" class="w-5 h-5"></i>
                 </div>

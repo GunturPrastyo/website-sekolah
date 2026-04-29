@@ -232,7 +232,7 @@ onUpdated(() => {
 
     <!-- Main Content Section -->
     <section class="pb-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
-      <div class="container mx-auto max-w-6xl">
+      <div class="container mx-auto max-w-full px-0 lg:px-8">
         <!-- Statistik Prestasi (Angka Berjalan) -->
         <div
           class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10 -mt-12 md:-mt-16 relative z-20"

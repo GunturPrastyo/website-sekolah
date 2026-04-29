@@ -146,13 +146,15 @@ onUpdated(() => {
     <!-- News Section -->
     <section class="py-16 md:py-12 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
       <!-- Breadcrumb -->
-      <div class="container mx-auto max-w-7xl mb-8 md:mb-10">
+      <div class="container mx-auto max-w-full px-0 lg:px-8 mb-8 md:mb-10">
         <Breadcrumb
           :items="[{ name: 'Beranda', link: '/', icon: 'home' }, { name: 'Berita' }]"
         />
       </div>
 
-      <div class="container mx-auto max-w-7xl flex flex-col lg:flex-row gap-8 lg:gap-10">
+      <div
+        class="container mx-auto max-w-full px-0 lg:px-8 flex flex-col lg:flex-row gap-8 lg:gap-10"
+      >
         <!-- KIRI: Daftar Berita -->
         <div class="w-full lg:w-2/3 order-2 lg:order-1">
           <!-- Skeleton Loading -->

@@ -184,7 +184,7 @@ onUpdated(() => {
 
     <!-- Gallery Section -->
     <section class="py-8 md:py-12 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
-      <div class="container mx-auto max-w-full">
+      <div class="container mx-auto max-w-full px-0 lg:px-8">
         <!-- Video Profil Section -->
         <div
           class="mb-6 relative rounded-xl overflow-hidden shadow-xl aspect-video md:aspect-[21/9] group cursor-pointer w-full block"
@@ -258,28 +258,25 @@ onUpdated(() => {
 
         <!-- Tabs & Heading Gallery -->
         <div
-          class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 border-b border-gray-200 dark:border-slate-700 pb-4"
+          class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 p-2 md:p-4 rounded-2xl shadow-md bg-gradient-to-br from-blue-800 to-blue-900 dark:from-blue-900 dark:to-blue-950"
         >
           <h3
-            class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white flex items-center tracking-wide"
+            class="text-md sm:text-lg font-bold text-white flex items-center tracking-wide"
             style="font-family: 'Kalam', cursive"
           >
-            <i
-              data-lucide="image"
-              class="w-7 h-7 mr-2 text-slate-800 dark:text-white"
-            ></i>
+            <i data-lucide="image" class="w-6 h-6 mr-2 text-white"></i>
             Koleksi Galeri
           </h3>
           <div
-            class="flex bg-gray-200/50 dark:bg-slate-800 p-1 rounded-xl shadow-inner border border-gray-100 dark:border-slate-700"
+            class="flex bg-white/20 dark:bg-black/20 p-1 rounded-xl shadow-inner border border-white/20"
           >
             <button
               @click="activeTab = 'terbaru'"
               class="px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-300"
               :class="
                 activeTab === 'terbaru'
-                  ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                  ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-white shadow-md'
+                  : 'text-blue-100 hover:text-white'
               "
             >
               Terbaru
@@ -289,8 +286,8 @@ onUpdated(() => {
               class="px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-300"
               :class="
                 activeTab === 'terpopuler'
-                  ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                  ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-white shadow-md'
+                  : 'text-blue-100 hover:text-white'
               "
             >
               Terpopuler
@@ -302,7 +299,7 @@ onUpdated(() => {
         <TransitionGroup
           name="gallery"
           tag="div"
-          class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 w-full"
+          class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 w-full pt-4"
         >
           <div
             v-for="item in filteredGallery"
