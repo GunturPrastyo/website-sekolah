@@ -281,7 +281,7 @@ onBeforeUnmount(() => {
           </p>
         </div>
 
-        <div class="relative wrap overflow-hidden py-10 lg:p-10 h-full" ref="timelineRef">
+        <div class="relative wrap overflow-hidden h-full" ref="timelineRef">
           <!-- Garis Tengah Timeline (Latar Belakang) -->
           <div
             class="absolute z-0 w-1 bg-gray-200 dark:bg-slate-700 h-full left-6 sm:left-8 lg:left-1/2 transform -translate-x-1/2 rounded-full"
@@ -328,16 +328,16 @@ onBeforeUnmount(() => {
                 class="group/card relative hover:-translate-y-1.5 transition-transform duration-400"
               >
                 <div
-                  class="hidden lg:block absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 transform rotate-45 z-20"
+                  class="hidden lg:block absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 transform rotate-45 z-20"
                   :class="
                     index % 2 === 0
-                      ? '-right-2 border-t border-r'
-                      : '-left-2 border-b border-l'
+                      ? '-right-3 border-t border-r'
+                      : '-left-3 border-b border-l'
                   "
                 ></div>
 
                 <div
-                  class="relative z-10 flex flex-col bg-white dark:bg-slate-800 rounded-xl shadow-md group-hover/card:shadow-2xl border border-gray-100 dark:border-slate-700 overflow-hidden transition-shadow duration-400 p-6 md:p-8 lg:p-10"
+                  class="relative z-10 flex flex-col bg-white dark:bg-slate-800 rounded-xl shadow-md group-hover/card:shadow-2xl border border-gray-200 dark:border-slate-700 overflow-hidden transition-shadow duration-400 p-6 md:p-8 lg:p-10"
                 >
                   <!-- Badge Tahun -->
                   <div class="mb-5">
