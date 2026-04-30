@@ -1348,24 +1348,35 @@
                   <div
                     v-for="(agenda, index) in agendas"
                     :key="index"
-                    class="flex flex-col sm:flex-row gap-4 p-4 rounded-xl border hover:shadow-md transition-all group cursor-pointer shrink-0"
+                    class="flex flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border hover:shadow-md transition-all group cursor-pointer shrink-0"
                     :class="themeClasses[agenda.color].card"
                   >
-                    <!-- Date Box -->
+                    <!-- Date Box (Calendar Style) -->
                     <div
-                      class="rounded-lg p-3 flex flex-row sm:flex-col items-center justify-center min-w-[80px] sm:min-w-[90px] border transition-colors gap-2 sm:gap-0"
+                      class="rounded-xl flex flex-col items-center justify-center min-w-[65px] w-[65px] sm:min-w-[95px] sm:w-[95px] border transition-all duration-300 overflow-hidden shrink-0"
                       :class="themeClasses[agenda.color].dateBox"
                     >
-                      <span
-                        class="text-xl sm:text-2xl font-bold leading-none whitespace-nowrap tracking-tighter transition-colors"
-                        :class="themeClasses[agenda.color].dateText"
-                        >{{ agenda.date }}</span
+                      <div
+                        class="w-full text-center py-1 sm:py-1.5 transition-colors"
+                        :class="themeClasses[agenda.color].monthBg"
                       >
-                      <span
-                        class="text-xs font-semibold sm:mt-1 uppercase transition-colors"
-                        :class="themeClasses[agenda.color].monthText"
-                        >{{ agenda.month }}</span
+                        <span
+                          class="text-[10px] sm:text-xs font-bold uppercase tracking-wider"
+                          :class="themeClasses[agenda.color].monthText"
+                          >{{ agenda.month }}</span
+                        >
+                      </div>
+                      <div
+                        class="w-full text-center py-1.5 sm:py-3 transition-colors"
+                        :class="themeClasses[agenda.color].dateBg"
                       >
+                        <span
+                          class="text-xl sm:text-3xl font-extrabold leading-none tracking-tight font-serif"
+                          :class="themeClasses[agenda.color].dateText"
+                          style="font-family: 'Merriweather', serif"
+                          >{{ agenda.date }}</span
+                        >
+                      </div>
                     </div>
 
                     <!-- Details -->
@@ -1381,7 +1392,7 @@
                         </h4>
                       </div>
                       <div
-                        class="flex flex-wrap items-center text-xs gap-x-4 gap-y-2 mt-2 transition-colors"
+                        class="flex flex-wrap items-center text-[11px] sm:text-xs gap-x-3 sm:gap-x-4 gap-y-1.5 sm:gap-y-2 mt-1 sm:mt-2 transition-colors"
                         :class="themeClasses[agenda.color].infoText"
                       >
                         <span class="flex items-center"
@@ -1661,9 +1672,13 @@ const themeClasses = {
   yellow: {
     card:
       "bg-yellow-50 border-yellow-100 hover:border-yellow-300 hover:shadow-yellow-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-yellow-500/50",
-    dateBox: "bg-yellow-400 border-yellow-200 group-hover:bg-yellow-600",
-    dateText: "text-yellow-800 group-hover:text-white",
-    monthText: "text-yellow-700 group-hover:text-yellow-100",
+    dateBox: "border-yellow-400 dark:border-yellow-600 border-b-4",
+    monthBg:
+      "bg-yellow-500 dark:bg-yellow-600 group-hover:bg-yellow-600 dark:group-hover:bg-yellow-500",
+    monthText: "text-white",
+    dateBg: "bg-white dark:bg-slate-800",
+    dateText:
+      "text-yellow-600 dark:text-yellow-400 group-hover:text-yellow-700 dark:group-hover:text-yellow-300",
     title:
       "text-yellow-900 group-hover:text-yellow-700 dark:text-slate-100 dark:group-hover:text-yellow-400",
     infoIcon: "text-yellow-500",
@@ -1672,9 +1687,13 @@ const themeClasses = {
   red: {
     card:
       "bg-red-50 border-red-100 hover:border-red-300 hover:shadow-red-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-red-500/50",
-    dateBox: "bg-red-400 border-red-200 group-hover:bg-red-600",
-    dateText: "text-red-800 group-hover:text-white",
-    monthText: "text-red-700 group-hover:text-red-100",
+    dateBox: "border-red-400 dark:border-red-600 border-b-4",
+    monthBg:
+      "bg-red-500 dark:bg-red-600 group-hover:bg-red-600 dark:group-hover:bg-red-500",
+    monthText: "text-white",
+    dateBg: "bg-white dark:bg-slate-800",
+    dateText:
+      "text-red-600 dark:text-red-400 group-hover:text-red-700 dark:group-hover:text-red-300",
     title:
       "text-red-900 group-hover:text-red-700 dark:text-slate-100 dark:group-hover:text-red-400",
     infoIcon: "text-red-500",
@@ -1683,9 +1702,13 @@ const themeClasses = {
   green: {
     card:
       "bg-green-50 border-green-100 hover:border-green-300 hover:shadow-green-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-green-500/50",
-    dateBox: "bg-green-400 border-green-200 group-hover:bg-green-600",
-    dateText: "text-green-800 group-hover:text-white",
-    monthText: "text-green-700 group-hover:text-green-100",
+    dateBox: "border-green-400 dark:border-green-600 border-b-4",
+    monthBg:
+      "bg-green-500 dark:bg-green-600 group-hover:bg-green-600 dark:group-hover:bg-green-500",
+    monthText: "text-white",
+    dateBg: "bg-white dark:bg-slate-800",
+    dateText:
+      "text-green-600 dark:text-green-400 group-hover:text-green-700 dark:group-hover:text-green-300",
     title:
       "text-green-900 group-hover:text-green-700 dark:text-slate-100 dark:group-hover:text-green-400",
     infoIcon: "text-green-500",
@@ -1694,9 +1717,13 @@ const themeClasses = {
   blue: {
     card:
       "bg-blue-50 border-blue-100 hover:border-blue-300 hover:shadow-blue-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-blue-500/50",
-    dateBox: "bg-blue-400 border-blue-200 group-hover:bg-blue-600",
-    dateText: "text-blue-800 group-hover:text-white",
-    monthText: "text-blue-700 group-hover:text-blue-100",
+    dateBox: "border-blue-400 dark:border-blue-600 border-b-4",
+    monthBg:
+      "bg-blue-500 dark:bg-blue-600 group-hover:bg-blue-600 dark:group-hover:bg-blue-500",
+    monthText: "text-white",
+    dateBg: "bg-white dark:bg-slate-800",
+    dateText:
+      "text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300",
     title:
       "text-blue-900 group-hover:text-blue-700 dark:text-slate-100 dark:group-hover:text-blue-400",
     infoIcon: "text-blue-500",
@@ -1954,6 +1981,7 @@ onMounted(() => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap");
 
 @keyframes float {
   0%,
