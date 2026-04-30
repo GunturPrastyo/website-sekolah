@@ -392,7 +392,7 @@
                     <div
                       class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
-                      <i data-lucide="flask-conical" class="w-7 h-7"></i>
+                      <FlaskConical class="w-7 h-7" />
                     </div>
                     <h3 class="text-2xl font-bold mb-2 text-white">IPA</h3>
                     <p class="text-blue-100 text-sm md:text-base mb-4 leading-relaxed">
@@ -404,10 +404,9 @@
                       class="mt-2 inline-flex items-center text-sm font-bold text-white group-hover:text-blue-200 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
-                      <i
-                        data-lucide="chevron-right"
+                      <ChevronRight
                         class="w-4 h-4 ml-1.5 transform group-hover:translate-x-1.5 transition-transform duration-300"
-                      ></i>
+                      />
                     </router-link>
                   </div>
                 </div>
@@ -426,7 +425,7 @@
                     <div
                       class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
-                      <i data-lucide="globe-2" class="w-7 h-7"></i>
+                      <Globe2 class="w-7 h-7" />
                     </div>
                     <h3 class="text-2xl font-bold mb-2 text-white">IPS</h3>
                     <p class="text-sky-100 text-sm md:text-base mb-4 leading-relaxed">
@@ -460,7 +459,7 @@
                     <div
                       class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
-                      <i data-lucide="languages" class="w-7 h-7"></i>
+                      <Languages class="w-7 h-7" />
                     </div>
                     <h3 class="text-2xl font-bold mb-2 text-white">Bahasa</h3>
                     <p class="text-cyan-100 text-sm md:text-base mb-4 leading-relaxed">
@@ -494,7 +493,7 @@
                     <div
                       class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
-                      <i data-lucide="monitor" class="w-7 h-7"></i>
+                      <Monitor class="w-7 h-7" />
                     </div>
                     <h3 class="text-2xl font-bold mb-2 text-white">Informatika</h3>
                     <p class="text-purple-100 text-sm md:text-base mb-4 leading-relaxed">
@@ -554,7 +553,7 @@
                 class="hidden md:inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-semibold transition-colors shrink-0 md:pb-4 md:-mb-px border-b-2 border-transparent hover:border-blue-600 dark:hover:border-blue-400"
               >
                 Lihat berita lainnya
-                <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                <ChevronRight class="w-4 h-4 ml-1" />
               </router-link>
             </div>
           </div>
@@ -598,10 +597,10 @@
                   class="mt-4 flex items-center justify-between text-gray-300 text-xs md:text-sm"
                 >
                   <div class="flex items-center">
-                    <i data-lucide="calendar" class="w-4 h-4 mr-1.5"></i> 24 November 2025
+                    <Calendar class="w-4 h-4 mr-1.5" /> 24 November 2025
                   </div>
                   <span class="flex items-center font-medium">
-                    <i data-lucide="eye" class="w-4 h-4 mr-1.5 text-blue-400"></i> 1250
+                    <Eye class="w-4 h-4 mr-1.5 text-blue-400" /> 1250
                   </span>
                 </div>
               </div>
@@ -643,11 +642,10 @@
                       class="mt-auto flex items-center justify-between text-gray-500 dark:text-slate-400 text-xs pt-3"
                     >
                       <div class="flex items-center">
-                        <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1"></i> 10 Jan
-                        2026
+                        <Calendar class="w-3.5 h-3.5 mr-1" /> 10 Jan 2026
                       </div>
                       <span class="flex items-center font-medium">
-                        <i data-lucide="eye" class="w-3.5 h-3.5 mr-1 text-blue-500"></i>
+                        <Eye class="w-4 h-4 mr-1.5 text-blue-400" />
                         3420
                       </span>
                     </div>
@@ -685,11 +683,10 @@
                       class="mt-auto flex items-center justify-between text-gray-500 dark:text-slate-400 text-xs pt-3"
                     >
                       <div class="flex items-center">
-                        <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1"></i> 05 Feb
-                        2026
+                        <Calendar class="w-3.5 h-3.5 mr-1" /> 05 Feb 2026
                       </div>
                       <span class="flex items-center font-medium">
-                        <i data-lucide="eye" class="w-3.5 h-3.5 mr-1 text-blue-500"></i>
+                        <Eye class="w-4 h-4 mr-1.5 text-blue-400" />
                         2105
                       </span>
                     </div>
@@ -727,11 +724,10 @@
                       class="mt-auto flex items-center justify-between text-gray-500 dark:text-slate-400 text-xs pt-3"
                     >
                       <div class="flex items-center">
-                        <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1"></i> 20 Mar
-                        2026
+                        <Calendar class="w-3.5 h-3.5 mr-1" /> 20 Mar 2026
                       </div>
                       <span class="flex items-center font-medium">
-                        <i data-lucide="eye" class="w-3.5 h-3.5 mr-1 text-blue-500"></i>
+                        <Eye class="w-4 h-4 mr-1.5 text-blue-400" />
                         1560
                       </span>
                     </div>
@@ -767,7 +763,7 @@
                 <h3
                   class="text-md md:text-xl font-bold text-blue-950 dark:text-blue-200 flex items-center"
                 >
-                  <i data-lucide="bell" class="w-5 h-5 mr-2 text-blue-600"></i> Pengumuman
+                  <Bell class="w-5 h-5 mr-2 text-blue-600" /> Pengumuman
                 </h3>
               </div>
 
@@ -923,7 +919,7 @@
               <div
                 class="w-16 h-16 md:w-20 md:h-20 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-sm group-hover:bg-blue-500 group-hover:scale-110 transition-all shadow-[0_0_30px_rgba(37,99,235,0.6)]"
               >
-                <i data-lucide="play" class="w-8 h-8 md:w-10 md:h-10 ml-1"></i>
+                <Play class="w-8 h-8 md:w-10 md:h-10 ml-1" />
               </div>
             </div>
 
@@ -1034,7 +1030,7 @@
                   <div
                     class="bg-white/20 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2"
                   >
-                    <i data-lucide="image" class="w-5 h-5 text-white"></i>
+                    <ImageIcon class="w-5 h-5 text-white" />
                   </div>
                   <span class="text-white text-sm font-semibold">Lihat Galeri</span>
                 </div>
@@ -1077,10 +1073,7 @@
               <button
                 class="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors focus:outline-none"
               >
-                <i
-                  data-lucide="chevron-left"
-                  class="w-5 h-5 text-gray-600 dark:text-gray-400"
-                ></i>
+                <ChevronLeft class="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </button>
               <h3 class="text-lg font-bold text-blue-950 dark:text-blue-200">
                 April 2026
@@ -1344,10 +1337,7 @@
                 <h3
                   class="text-lg md:text-xl font-bold text-blue-950 dark:text-slate-200 flex items-center"
                 >
-                  <i
-                    data-lucide="calendar-days"
-                    class="w-5 h-5 mr-2 text-slate-600 dark:text-slate-200"
-                  ></i>
+                  <CalendarDays class="w-5 h-5 mr-2 text-slate-600 dark:text-slate-200" />
                   Daftar Agenda
                 </h3>
               </div>
@@ -1437,7 +1427,7 @@
                   <div
                     class="text-sm font-semibold text-gray-500 flex items-center animate-bounce pb-2"
                   >
-                    <i data-lucide="arrow-down" class="w-4 h-4 mr-1.5"></i>
+                    <ArrowDown class="w-4 h-4 mr-1.5" />
                     Scroll ke bawah
                   </div>
                 </div>
@@ -1555,7 +1545,7 @@
                   href="#"
                   class="px-6 py-3.5 bg-gray-50/10 text-white font-semibold rounded-xl border border-white/50 hover:bg-gray-50/20 transition-all flex items-center justify-center text-sm md:text-base"
                 >
-                  <i data-lucide="download" class="w-5 h-5 mr-2"></i> Unduh Brosur
+                  <Download class="w-5 h-5 mr-2" /> Unduh Brosur
                 </a>
               </div>
             </div>
@@ -1570,6 +1560,23 @@
 import { ref, onMounted, reactive } from "vue";
 import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.css";
+import {
+  Quote,
+  FlaskConical,
+  Globe2,
+  Languages,
+  Monitor,
+  ChevronRight,
+  ChevronLeft,
+  Calendar,
+  CalendarDays,
+  Eye,
+  Bell,
+  ArrowDown,
+  Play,
+  Image as ImageIcon,
+  Download,
+} from "lucide-vue-next";
 
 const displayedTitle = ref("");
 const fullTitle = "SMA Negeri 1 Nogosari";
@@ -1870,7 +1877,6 @@ onMounted(() => {
   // Initialize main Swiper
   new Swiper(".swiper-container", {
     loop: true,
-    loopAdditionalSlides: 2,
     speed: 1000,
     autoplay: {
       delay: 5000,
@@ -1889,7 +1895,6 @@ onMounted(() => {
   // Initialize Stats Swiper
   new Swiper(".stats-swiper", {
     loop: true,
-    loopAdditionalSlides: 4,
     speed: 800,
     autoplay: {
       delay: 2500,
@@ -1906,7 +1911,6 @@ onMounted(() => {
   // Initialize Jurusan Swiper
   new Swiper(".jurusan-swiper", {
     loop: true,
-    loopAdditionalSlides: 4,
     speed: 800,
     autoplay: {
       delay: 3000,
@@ -1930,7 +1934,6 @@ onMounted(() => {
   // Initialize Alasan Swiper
   new Swiper(".alasan-swiper", {
     loop: true,
-    loopAdditionalSlides: 4,
     speed: 800,
     slidesPerView: 1,
     spaceBetween: 0,

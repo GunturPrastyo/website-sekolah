@@ -333,7 +333,7 @@ onMounted(() => {
                   activeType !== 'semua'
                     ? 'text-blue-600 dark:text-blue-400'
                     : 'text-gray-500 md:text-gray-400'
-                ]"
+                "
               />
               <select
                 v-model="activeType"
@@ -363,7 +363,7 @@ onMounted(() => {
                   activeYear !== 'semua'
                     ? 'text-blue-600 dark:text-blue-400'
                     : 'text-gray-500 md:text-gray-400'
-                ]"
+                "
               />
               <select
                 v-model="activeYear"

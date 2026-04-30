@@ -203,7 +203,7 @@ onUpdated(() => {
             <div
               class="w-16 h-16 md:w-20 md:h-20 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-sm group-hover:bg-blue-500 group-hover:scale-110 transition-all shadow-[0_0_30px_rgba(37,99,235,0.6)]"
             >
-              <i data-lucide="play" class="w-8 h-8 md:w-10 md:h-10 ml-1"></i>
+              <Play class="w-8 h-8 md:w-10 md:h-10 ml-1" />
             </div>
           </div>
 
