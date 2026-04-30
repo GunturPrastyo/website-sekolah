@@ -1,11 +1,12 @@
 <script setup>
-import { ref, computed, onMounted, nextTick } from "vue";
+import { ref, computed, onMounted, onUpdated, nextTick } from "vue";
 import { createIcons, icons } from "lucide";
 import PageHeader from "@/components/PageHeader.vue";
 
 const activeGrade = ref("10");
 const activeMajor = ref("ipa");
 const expandedSubject = ref(null);
+const searchQuery = ref("");
 
 const changeGrade = (id) => {
   activeGrade.value = id;
@@ -359,12 +360,37 @@ const curriculumData = ref({
 
 const currentSyllabus = computed(() => {
   if (!curriculumData.value[activeGrade.value]) return [];
-  return curriculumData.value[activeGrade.value][activeMajor.value] || [];
+  let syllabus = curriculumData.value[activeGrade.value][activeMajor.value] || [];
+
+  if (searchQuery.value.trim() !== "") {
+    const query = searchQuery.value.toLowerCase();
+
+    const filteredSyllabus = syllabus
+      .map((category) => {
+        const filteredSubjects = category.subjects.filter(
+          (subject) =>
+            subject.name.toLowerCase().includes(query) ||
+            subject.desc.toLowerCase().includes(query)
+        );
+        return { ...category, subjects: filteredSubjects };
+      })
+      .filter((category) => category.subjects.length > 0);
+
+    return filteredSyllabus;
+  }
+
+  return syllabus;
 });
 
 onMounted(() => {
   nextTick(() => {
     createIcons();
+    createIcons({ icons });
+  });
+});
+
+onUpdated(() => {
+  nextTick(() => {
     createIcons({ icons });
   });
 });
@@ -527,6 +553,22 @@ onMounted(() => {
       >
         <!-- Sidebar Tabs (Tingkat Kelas) -->
         <div class="w-full lg:w-1/3">
+          <!-- Search Bar -->
+          <div class="mb-10">
+            <div class="relative">
+              <i
+                data-lucide="search"
+                class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300 pointer-events-none"
+              ></i>
+              <input
+                v-model="searchQuery"
+                type="text"
+                placeholder="Cari mata pelajaran..."
+                class="w-full pl-12 pr-5 py-4 rounded-xl border-2 border-white/10 bg-white/10 backdrop-blur-sm text-white placeholder:text-blue-200/70 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition-all shadow-sm text-base"
+              />
+            </div>
+          </div>
+
           <div class="flex items-center gap-4 mb-6">
             <h2 class="text-xl md:text-2xl font-bold text-white">Jenjang Kelas</h2>
             <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
@@ -728,11 +770,22 @@ onMounted(() => {
                 <div
                   class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 dark:bg-slate-700 mb-4 text-white"
                 >
-                  <i data-lucide="book-x" class="w-8 h-8"></i>
+                  <i
+                    :data-lucide="searchQuery ? 'search-x' : 'book-x'"
+                    class="w-8 h-8"
+                  ></i>
                 </div>
-                <h3 class="text-lg font-bold text-white">Silabus Belum Tersedia</h3>
+                <h3 class="text-lg font-bold text-white">
+                  {{
+                    searchQuery ? "Pelajaran Tidak Ditemukan" : "Silabus Belum Tersedia"
+                  }}
+                </h3>
                 <p class="text-blue-100 dark:text-gray-400 mt-1">
-                  Modul kurikulum untuk kelas ini sedang dalam proses penyusunan.
+                  {{
+                    searchQuery
+                      ? `Tidak ada mata pelajaran yang cocok dengan kata kunci "${searchQuery}".`
+                      : "Modul kurikulum untuk kelas ini sedang dalam proses penyusunan."
+                  }}
                 </p>
               </div>
             </div>
