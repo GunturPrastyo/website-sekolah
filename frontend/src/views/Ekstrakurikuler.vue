@@ -1,17 +1,35 @@
 <script setup>
-import { ref, computed, onMounted, nextTick, onBeforeUnmount, watch } from "vue";
-import { createIcons, icons } from "lucide";
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
+import {
+  LayoutGrid,
+  Activity,
+  Palette,
+  FlaskConical,
+  Users,
+  CalendarDays,
+  ChevronDown,
+  Search,
+  Filter,
+  Clock,
+  User,
+  ArrowRight,
+  ChevronLeft,
+  Lightbulb,
+  Download,
+  ClipboardList,
+  Inbox,
+} from "lucide-vue-next";
 import PageHeader from "@/components/PageHeader.vue";
 import EkskulModal from "@/components/EkskulModal.vue";
 
 const activeCategory = ref("semua");
 
 const categories = [
-  { id: "semua", name: "Semua Kategori", icon: "layout-grid" },
-  { id: "olahraga", name: "Olahraga", icon: "activity" },
-  { id: "seni", name: "Seni & Budaya", icon: "palette" },
-  { id: "akademik", name: "Akademik & Sains", icon: "flask-conical" },
-  { id: "kepemimpinan", name: "Kepemimpinan", icon: "users" },
+  { id: "semua", name: "Semua Kategori", icon: LayoutGrid },
+  { id: "olahraga", name: "Olahraga", icon: Activity },
+  { id: "seni", name: "Seni & Budaya", icon: Palette },
+  { id: "akademik", name: "Akademik & Sains", icon: FlaskConical },
+  { id: "kepemimpinan", name: "Kepemimpinan", icon: Users },
 ];
 
 const activeDay = ref("semua");
@@ -238,26 +256,20 @@ onMounted(() => {
     { threshold: 0.1 } // Terpicu saat 10% elemen terlihat di layar
   );
 
-  nextTick(() => {
-    createIcons({ icons });
-    document.querySelectorAll(".fade-on-scroll").forEach((el) => {
-      observer.observe(el);
-    });
+  document.querySelectorAll(".fade-on-scroll").forEach((el) => {
+    observer.observe(el);
   });
 });
 
-// Pantau perubahan halaman/data agar kartu yang baru dirender tetap ikut dianismasi dan render icon terbaru
+// Pantau perubahan halaman/data agar kartu yang baru dirender tetap ikut dianismasi
 watch(paginatedEkskul, () => {
-  nextTick(() => {
-    createIcons({ icons });
-    if (observer) {
-      document.querySelectorAll(".fade-on-scroll").forEach((el) => {
-        if (el.classList.contains("opacity-0")) {
-          observer.observe(el);
-        }
-      });
-    }
-  });
+  if (observer) {
+    document.querySelectorAll(".fade-on-scroll").forEach((el) => {
+      if (el.classList.contains("opacity-0")) {
+        observer.observe(el);
+      }
+    });
+  }
 });
 
 onBeforeUnmount(() => {
@@ -293,10 +305,9 @@ onBeforeUnmount(() => {
             <div class="flex flex-col sm:flex-row items-center gap-4 w-full">
               <!-- Dropdown Hari -->
               <div class="relative w-full sm:w-48 shrink-0">
-                <i
-                  data-lucide="calendar-days"
+                <CalendarDays
                   class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
-                ></i>
+                />
                 <select
                   v-model="activeDay"
                   class="w-full pl-12 pr-10 py-4 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-inner text-sm appearance-none cursor-pointer"
@@ -308,16 +319,15 @@ onBeforeUnmount(() => {
                 <div
                   class="absolute inset-y-0 right-5 flex items-center pointer-events-none"
                 >
-                  <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
+                  <ChevronDown class="w-4 h-4 text-gray-400" />
                 </div>
               </div>
 
               <!-- Search Bar -->
               <div class="relative w-full sm:flex-1 lg:flex-none lg:w-[350px]">
-                <i
-                  data-lucide="search"
+                <Search
                   class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-                ></i>
+                />
                 <input
                   v-model="searchQuery"
                   type="text"
@@ -334,10 +344,7 @@ onBeforeUnmount(() => {
               <h4
                 class="text-sm font-bold text-blue-950 dark:text-white flex items-center"
               >
-                <i
-                  data-lucide="filter"
-                  class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
-                ></i>
+                <Filter class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
                 Kategori:
               </h4>
               <div class="flex flex-wrap items-center gap-2 md:gap-2.5">
@@ -352,10 +359,7 @@ onBeforeUnmount(() => {
                       : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400 shadow-sm'
                   "
                 >
-                  <i
-                    :data-lucide="cat.icon"
-                    class="w-3.5 h-3.5 mr-1.5 hidden sm:block"
-                  ></i>
+                  <component :is="cat.icon" class="w-3.5 h-3.5 mr-1.5 hidden sm:block" />
                   {{ cat.name }}
                   <span class="ml-1 text-[11px] font-bold opacity-70">
                     ({{ getCategoryCount(cat.id) }})
@@ -404,12 +408,10 @@ onBeforeUnmount(() => {
                     class="px-3.5 py-1.5 backdrop-blur-md bg-white/20 border border-white/30 rounded-full flex items-center gap-1.5 text-white text-[12px] font-bold capitalize tracking-wide shadow-lg"
                     style="font-family: 'Kalam', cursive"
                   >
-                    <i
-                      :data-lucide="
-                        categories.find((c) => c.id === ekskul.category)?.icon
-                      "
+                    <component
+                      :is="categories.find((c) => c.id === ekskul.category)?.icon"
                       class="w-3 h-3"
-                    ></i>
+                    />
                     {{ categories.find((c) => c.id === ekskul.category)?.name }}
                   </div>
                 </div>
@@ -427,7 +429,7 @@ onBeforeUnmount(() => {
                   <div
                     class="flex items-center text-blue-300 text-xs font-bold uppercase tracking-wider mb-2"
                   >
-                    <i data-lucide="clock" class="w-3.5 h-3.5 mr-1.5"></i>
+                    <Clock class="w-3.5 h-3.5 mr-1.5" />
                     {{ ekskul.schedule }}
                   </div>
 
@@ -441,13 +443,13 @@ onBeforeUnmount(() => {
                         <span
                           class="inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-blue-100 bg-blue-900/60 border border-blue-400/30 px-2.5 py-1 rounded backdrop-blur-md shadow-sm"
                         >
-                          <i data-lucide="users" class="w-3 h-3 mr-1.5"></i>
+                          <Users class="w-3 h-3 mr-1.5" />
                           {{ ekskul.members }} Anggota
                         </span>
                         <span
                           class="inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-emerald-100 bg-emerald-900/60 border border-emerald-400/30 px-2.5 py-1 rounded backdrop-blur-md shadow-sm"
                         >
-                          <i data-lucide="user" class="w-3 h-3 mr-1.5"></i>
+                          <User class="w-3 h-3 mr-1.5" />
                           {{ ekskul.pembina.split(",")[0] }}
                         </span>
                       </div>
@@ -460,10 +462,9 @@ onBeforeUnmount(() => {
                         class="inline-flex items-center text-xs font-bold text-white uppercase tracking-widest hover:text-blue-300 transition-colors focus:outline-none"
                       >
                         Jelajahi Klub
-                        <i
-                          data-lucide="arrow-right"
+                        <ArrowRight
                           class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform"
-                        ></i>
+                        />
                       </button>
                     </div>
                   </div>
@@ -519,10 +520,9 @@ onBeforeUnmount(() => {
             >
               <span v-if="!isLoading" class="flex items-center">
                 Muat Lebih Banyak
-                <i
-                  data-lucide="chevron-down"
+                <ChevronDown
                   class="w-4 h-4 ml-1.5 transform group-hover:translate-y-1 transition-transform"
-                ></i>
+                />
               </span>
               <span v-else class="flex items-center">
                 <svg
@@ -561,7 +561,7 @@ onBeforeUnmount(() => {
             <div
               class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white dark:bg-slate-800 mb-4 text-gray-400 shadow-sm"
             >
-              <i data-lucide="inbox" class="w-8 h-8"></i>
+              <Inbox class="w-8 h-8" />
             </div>
             <h3 class="text-lg font-bold text-blue-950 dark:text-white">
               Tidak Ditemukan
@@ -592,7 +592,7 @@ onBeforeUnmount(() => {
               class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm md:text-md font-bold mb-4 border border-white/30"
               style="font-family: 'Kalam', cursive"
             >
-              <i data-lucide="lightbulb" class="w-4 h-4 text-white animate-pulse"></i>
+              <Lightbulb class="w-4 h-4 text-white animate-pulse" />
               Inisiatif Siswa
             </span>
             <h2 class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">
@@ -608,7 +608,7 @@ onBeforeUnmount(() => {
             <button
               class="inline-flex items-center justify-center px-6 py-3 bg-yellow-400 text-blue-900 font-bold rounded-xl shadow-lg hover:bg-yellow-300 hover:-translate-y-1 transition-all text-sm md:text-base focus:outline-none"
             >
-              Unduh Panduan Proposal <i data-lucide="download" class="w-4 h-4 ml-2"></i>
+              Unduh Panduan Proposal <Download class="w-4 h-4 ml-2" />
             </button>
           </div>
 
@@ -622,7 +622,7 @@ onBeforeUnmount(() => {
               <h3
                 class="text-xl font-bold text-gray-900 mb-5 flex items-center border-b border-gray-900/20 pb-4"
               >
-                <i data-lucide="clipboard-list" class="w-5 h-5 mr-2 text-gray-900"></i>
+                <ClipboardList class="w-5 h-5 mr-2 text-gray-900" />
                 Syarat Pengajuan Klub
               </h3>
               <ul class="space-y-5 relative">

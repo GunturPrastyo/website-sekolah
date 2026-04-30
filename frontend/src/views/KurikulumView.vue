@@ -1,7 +1,37 @@
 <script setup>
-import { ref, computed, onMounted, onUpdated, nextTick } from "vue";
-import { createIcons, icons } from "lucide";
+import { ref, computed } from "vue";
 import PageHeader from "@/components/PageHeader.vue";
+import {
+  Book,
+  Award,
+  BookOpen,
+  Calculator,
+  Monitor,
+  FlaskConical,
+  Zap,
+  Leaf,
+  PieChart,
+  Users,
+  Languages,
+  Sigma,
+  Map as MapIcon,
+  Hourglass,
+  Globe,
+  Users2,
+  Heart,
+  Globe2,
+  UserCheck,
+  Lightbulb,
+  Palette,
+  Search,
+  SearchX,
+  BookX,
+  ChevronRight,
+  Info,
+  ChevronDown,
+  Bookmark,
+  CheckCircle,
+} from "lucide-vue-next";
 
 const activeGrade = ref("10");
 const activeMajor = ref("ipa");
@@ -42,7 +72,7 @@ const grade10Base = [
       {
         id: "10-w-1",
         name: "Pendidikan Agama dan Budi Pekerti",
-        icon: "book",
+        icon: Book,
         color: "text-green-600 dark:text-green-400",
         bg: "bg-green-100 dark:bg-green-900/30",
         desc:
@@ -57,7 +87,7 @@ const grade10Base = [
       {
         id: "10-w-2",
         name: "Pendidikan Pancasila",
-        icon: "award",
+        icon: Award,
         color: "text-red-600 dark:text-red-400",
         bg: "bg-red-100 dark:bg-red-900/30",
         desc: "Pendalaman ideologi negara dan pembentukan Profil Pelajar Pancasila.",
@@ -71,7 +101,7 @@ const grade10Base = [
       {
         id: "10-w-3",
         name: "Bahasa Indonesia",
-        icon: "book-open",
+        icon: BookOpen,
         color: "text-blue-600 dark:text-blue-400",
         bg: "bg-blue-100 dark:bg-blue-900/30",
         desc:
@@ -86,7 +116,7 @@ const grade10Base = [
       {
         id: "10-w-4",
         name: "Matematika Dasar",
-        icon: "calculator",
+        icon: Calculator,
         color: "text-purple-600 dark:text-purple-400",
         bg: "bg-purple-100 dark:bg-purple-900/30",
         desc: "Konsep dasar matematika, aljabar, dan logika komputasional dasar.",
@@ -105,7 +135,7 @@ const grade10Base = [
       {
         id: "10-p-1",
         name: "Informatika",
-        icon: "monitor",
+        icon: Monitor,
         color: "text-cyan-600 dark:text-cyan-400",
         bg: "bg-cyan-100 dark:bg-cyan-900/30",
         desc: "Pengenalan teknologi informasi, logika pemrograman, dan literasi digital.",
@@ -119,7 +149,7 @@ const grade10Base = [
       {
         id: "10-p-2",
         name: "Ilmu Pengetahuan Alam & Sosial (IPAS)",
-        icon: "flask-conical",
+        icon: FlaskConical,
         color: "text-emerald-600 dark:text-emerald-400",
         bg: "bg-emerald-100 dark:bg-emerald-900/30",
         desc: "Integrasi dasar Fisika, Kimia, Biologi, Geografi, dan Sosiologi.",
@@ -149,7 +179,7 @@ const curriculumData = ref({
           {
             id: "11-ipa-1",
             name: "Fisika Lanjutan",
-            icon: "zap",
+            icon: Zap,
             color: "text-amber-600 dark:text-amber-400",
             bg: "bg-amber-100 dark:bg-amber-900/30",
             desc: "Pendalaman mekanika, termodinamika, dan gelombang.",
@@ -163,7 +193,7 @@ const curriculumData = ref({
           {
             id: "11-ipa-2",
             name: "Biologi Terapan",
-            icon: "leaf",
+            icon: Leaf,
             color: "text-green-600 dark:text-green-400",
             bg: "bg-green-100 dark:bg-green-900/30",
             desc: "Studi anatomi, fisiologi, dan ekosistem makhluk hidup tingkat lanjut.",
@@ -184,7 +214,7 @@ const curriculumData = ref({
           {
             id: "11-ips-1",
             name: "Ekonomi Pembangunan",
-            icon: "pie-chart",
+            icon: PieChart,
             color: "text-emerald-600 dark:text-emerald-400",
             bg: "bg-emerald-100 dark:bg-emerald-900/30",
             desc: "Memahami makroekonomi, kebijakan fiskal, dan pembangunan wilayah.",
@@ -198,7 +228,7 @@ const curriculumData = ref({
           {
             id: "11-ips-2",
             name: "Sosiologi Masyarakat",
-            icon: "users",
+            icon: Users,
             color: "text-orange-600 dark:text-orange-400",
             bg: "bg-orange-100 dark:bg-orange-900/30",
             desc: "Kajian mendalam tentang struktur masyarakat dan dinamika sosial.",
@@ -219,7 +249,7 @@ const curriculumData = ref({
           {
             id: "11-bhs-1",
             name: "Sastra Indonesia Lanjutan",
-            icon: "book-open",
+            icon: BookOpen,
             color: "text-rose-600 dark:text-rose-400",
             bg: "bg-rose-100 dark:bg-rose-900/30",
             desc: "Analisis karya sastra klasik hingga modern, puisi, dan prosa.",
@@ -233,7 +263,7 @@ const curriculumData = ref({
           {
             id: "11-bhs-2",
             name: "Bahasa Asing (Jepang/Mandarin)",
-            icon: "languages",
+            icon: Languages,
             color: "text-cyan-600 dark:text-cyan-400",
             bg: "bg-cyan-100 dark:bg-cyan-900/30",
             desc: "Penguasaan dasar percakapan dan tata bahasa asing pilihan.",
@@ -256,7 +286,7 @@ const curriculumData = ref({
           {
             id: "12-ipa-1",
             name: "Matematika Peminatan",
-            icon: "sigma",
+            icon: Sigma,
             color: "text-indigo-600 dark:text-indigo-400",
             bg: "bg-indigo-100 dark:bg-indigo-900/30",
             desc: "Kalkulus lanjutan, trigonometri kompleks, dan geometri ruang.",
@@ -270,7 +300,7 @@ const curriculumData = ref({
           {
             id: "12-ipa-2",
             name: "Kimia Analisis",
-            icon: "flask-conical",
+            icon: FlaskConical,
             color: "text-pink-600 dark:text-pink-400",
             bg: "bg-pink-100 dark:bg-pink-900/30",
             desc: "Reaksi kimia organik, termokimia, dan elektrokimia.",
@@ -291,7 +321,7 @@ const curriculumData = ref({
           {
             id: "12-ips-1",
             name: "Geografi Regional",
-            icon: "map",
+            icon: MapIcon,
             color: "text-teal-600 dark:text-teal-400",
             bg: "bg-teal-100 dark:bg-teal-900/30",
             desc: "Pemetaan spasial, sistem informasi geografis, dan tata ruang.",
@@ -305,7 +335,7 @@ const curriculumData = ref({
           {
             id: "12-ips-2",
             name: "Sejarah Dunia Modern",
-            icon: "hourglass",
+            icon: Hourglass,
             color: "text-amber-700 dark:text-amber-500",
             bg: "bg-amber-100 dark:bg-amber-900/30",
             desc: "Analisis sejarah kontemporer dan dampaknya pada geopolitik.",
@@ -326,7 +356,7 @@ const curriculumData = ref({
           {
             id: "12-bhs-1",
             name: "Bahasa Inggris Lanjut (TOEFL Prep)",
-            icon: "globe",
+            icon: Globe,
             color: "text-indigo-600 dark:text-indigo-400",
             bg: "bg-indigo-100 dark:bg-indigo-900/30",
             desc:
@@ -341,7 +371,7 @@ const curriculumData = ref({
           {
             id: "12-bhs-2",
             name: "Antropologi Budaya",
-            icon: "users-2",
+            icon: Users2,
             color: "text-rose-700 dark:text-rose-500",
             bg: "bg-rose-100 dark:bg-rose-900/30",
             desc: "Kajian etnografi dan pewarisan budaya masyarakat lokal dan global.",
@@ -381,25 +411,6 @@ const currentSyllabus = computed(() => {
 
   return syllabus;
 });
-
-onMounted(() => {
-  nextTick(() => {
-    createIcons();
-    createIcons({ icons });
-  });
-});
-
-onUpdated(() => {
-  nextTick(() => {
-    createIcons({ icons });
-  });
-});
-
-const reinitIcons = () => {
-  nextTick(() => {
-    createIcons({ icons });
-  });
-};
 </script>
 
 <template>
@@ -432,7 +443,7 @@ const reinitIcons = () => {
               <div
                 class="w-12 h-12 shrink-0 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex items-center justify-center"
               >
-                <i data-lucide="heart" class="w-6 h-6"></i>
+                <Heart class="w-6 h-6" />
               </div>
               <div>
                 <h4 class="font-bold text-gray-900 dark:text-white mb-1">
@@ -452,7 +463,7 @@ const reinitIcons = () => {
               <div
                 class="w-12 h-12 shrink-0 rounded-full bg-yellow-100 dark:bg-yellow-900/40 text-yellow-600 dark:text-yellow-400 flex items-center justify-center"
               >
-                <i data-lucide="globe-2" class="w-6 h-6"></i>
+                <Globe2 class="w-6 h-6" />
               </div>
               <div>
                 <h4 class="font-bold text-gray-900 dark:text-white mb-1">
@@ -472,7 +483,7 @@ const reinitIcons = () => {
               <div
                 class="w-12 h-12 shrink-0 rounded-full bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 flex items-center justify-center"
               >
-                <i data-lucide="users" class="w-6 h-6"></i>
+                <Users class="w-6 h-6" />
               </div>
               <div>
                 <h4 class="font-bold text-gray-900 dark:text-white mb-1">
@@ -492,7 +503,7 @@ const reinitIcons = () => {
               <div
                 class="w-12 h-12 shrink-0 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center"
               >
-                <i data-lucide="user-check" class="w-6 h-6"></i>
+                <UserCheck class="w-6 h-6" />
               </div>
               <div>
                 <h4 class="font-bold text-gray-900 dark:text-white mb-1">Mandiri</h4>
@@ -510,7 +521,7 @@ const reinitIcons = () => {
               <div
                 class="w-12 h-12 shrink-0 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 flex items-center justify-center"
               >
-                <i data-lucide="lightbulb" class="w-6 h-6"></i>
+                <Lightbulb class="w-6 h-6" />
               </div>
               <div>
                 <h4 class="font-bold text-gray-900 dark:text-white mb-1">
@@ -530,7 +541,7 @@ const reinitIcons = () => {
               <div
                 class="w-12 h-12 shrink-0 rounded-full bg-pink-100 dark:bg-pink-900/40 text-pink-600 dark:text-pink-400 flex items-center justify-center"
               >
-                <i data-lucide="palette" class="w-6 h-6"></i>
+                <Palette class="w-6 h-6" />
               </div>
               <div>
                 <h4 class="font-bold text-gray-900 dark:text-white mb-1">Kreatif</h4>
@@ -562,10 +573,9 @@ const reinitIcons = () => {
           <!-- Search Bar -->
           <div class="mb-10">
             <div class="relative">
-              <i
-                data-lucide="search"
+              <Search
                 class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300 pointer-events-none"
-              ></i>
+              />
               <input
                 v-model="searchQuery"
                 type="text"
@@ -596,11 +606,10 @@ const reinitIcons = () => {
                   <h4 class="text-lg font-bold mb-1">{{ grade.name }}</h4>
                   <p class="text-sm opacity-80">{{ grade.desc }}</p>
                 </div>
-                <i
-                  data-lucide="chevron-right"
+                <ChevronRight
                   class="w-5 h-5 transition-transform"
                   :class="activeGrade === grade.id ? 'translate-x-1' : ''"
-                ></i>
+                />
               </div>
             </button>
           </div>
@@ -627,11 +636,10 @@ const reinitIcons = () => {
                   <h4 class="text-lg font-bold mb-1">{{ major.name }}</h4>
                   <p class="text-sm opacity-80">{{ major.desc }}</p>
                 </div>
-                <i
-                  data-lucide="chevron-right"
+                <ChevronRight
                   class="w-5 h-5 transition-transform"
                   :class="activeMajor === major.id ? 'translate-x-1' : ''"
-                ></i>
+                />
               </div>
             </button>
           </div>
@@ -641,7 +649,7 @@ const reinitIcons = () => {
             class="mt-10 bg-white/10 backdrop-blur-md p-5 rounded-lg border border-white/20 dark:bg-slate-800 dark:border-slate-700 shadow-sm"
           >
             <h4 class="font-bold text-white mb-2 flex items-center">
-              <i data-lucide="info" class="w-4 h-4 mr-2"></i> Info Silabus
+              <Info class="w-4 h-4 mr-2" /> Info Silabus
             </h4>
             <p class="text-sm text-blue-100 dark:text-gray-400 leading-relaxed">
               Klik pada setiap mata pelajaran di samping untuk melihat rincian topik
@@ -660,7 +668,6 @@ const reinitIcons = () => {
             leave-active-class="transition-all duration-200 ease-in"
             leave-from-class="opacity-100 translate-x-0"
             leave-to-class="opacity-0 -translate-x-4"
-            @enter="reinitIcons"
           >
             <div :key="activeGrade + '-' + activeMajor" class="space-y-8">
               <div
@@ -698,7 +705,7 @@ const reinitIcons = () => {
                           class="w-12 h-12 shrink-0 rounded-lg flex items-center justify-center"
                           :class="subject.bg + ' ' + subject.color"
                         >
-                          <i :data-lucide="subject.icon" class="w-6 h-6"></i>
+                          <component :is="subject.icon" class="w-6 h-6" />
                         </div>
                         <div>
                           <h3
@@ -721,7 +728,7 @@ const reinitIcons = () => {
                             : ''
                         "
                       >
-                        <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                        <ChevronDown class="w-5 h-5" />
                       </div>
                     </button>
 
@@ -740,10 +747,7 @@ const reinitIcons = () => {
                         <h4
                           class="text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider flex items-center mt-4"
                         >
-                          <i
-                            data-lucide="bookmark"
-                            class="w-4 h-4 mr-2 text-blue-500"
-                          ></i>
+                          <Bookmark class="w-4 h-4 mr-2 text-blue-500" />
                           Topik Pembelajaran
                         </h4>
 
@@ -753,10 +757,7 @@ const reinitIcons = () => {
                             :key="tIdx"
                             class="flex items-start gap-3 bg-white dark:bg-slate-700 p-3.5 rounded-lg border border-gray-100 dark:border-slate-600/50 shadow-sm"
                           >
-                            <i
-                              data-lucide="check-circle"
-                              class="w-5 h-5 text-green-500 shrink-0 mt-0.5"
-                            ></i>
+                            <CheckCircle class="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
                             <span
                               class="text-sm font-medium text-gray-700 dark:text-gray-200 leading-snug"
                               >{{ topic }}</span
@@ -777,11 +778,7 @@ const reinitIcons = () => {
                 <div
                   class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 dark:bg-slate-700 mb-4 text-white"
                 >
-                  <i
-                    :key="searchQuery ? 'search-x' : 'book-x'"
-                    :data-lucide="searchQuery ? 'search-x' : 'book-x'"
-                    class="w-8 h-8"
-                  ></i>
+                  <component :is="searchQuery ? SearchX : BookX" class="w-8 h-8" />
                 </div>
                 <h3 class="text-lg font-bold text-white">
                   {{

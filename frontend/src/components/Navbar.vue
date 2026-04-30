@@ -48,7 +48,7 @@
               class="ml-1 flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': activeDropdown === 'profil' }"
             >
-              <i data-lucide="chevron-down" class="h-4 w-4"></i>
+              <ChevronDown class="h-4 w-4" />
             </span>
           </button>
           <transition
@@ -107,7 +107,7 @@
               class="ml-1 flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': activeDropdown === 'akademik' }"
             >
-              <i data-lucide="chevron-down" class="h-4 w-4"></i>
+              <ChevronDown class="h-4 w-4" />
             </span>
           </button>
           <transition
@@ -166,7 +166,7 @@
               class="ml-1 flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': activeDropdown === 'informasi' }"
             >
-              <i data-lucide="chevron-down" class="h-4 w-4"></i>
+              <ChevronDown class="h-4 w-4" />
             </span>
           </button>
           <transition
@@ -225,12 +225,12 @@
               : 'text-white hover:bg-white/10',
           ]"
         >
-          <span v-show="!isDarkMode" class="flex items-center justify-center"
-            ><i data-lucide="moon" class="w-5 h-5"></i
-          ></span>
-          <span v-show="isDarkMode" class="flex items-center justify-center"
-            ><i data-lucide="sun" class="w-5 h-5"></i
-          ></span>
+          <span v-show="!isDarkMode" class="flex items-center justify-center">
+            <Moon class="w-5 h-5" />
+          </span>
+          <span v-show="isDarkMode" class="flex items-center justify-center">
+            <Sun class="w-5 h-5" />
+          </span>
         </button>
       </div>
 
@@ -246,12 +246,12 @@
               : 'text-white hover:bg-white/10',
           ]"
         >
-          <span v-show="!isDarkMode" class="flex items-center justify-center"
-            ><i data-lucide="moon" class="w-5 h-5"></i
-          ></span>
-          <span v-show="isDarkMode" class="flex items-center justify-center"
-            ><i data-lucide="sun" class="w-5 h-5"></i
-          ></span>
+          <span v-show="!isDarkMode" class="flex items-center justify-center">
+            <Moon class="w-5 h-5" />
+          </span>
+          <span v-show="isDarkMode" class="flex items-center justify-center">
+            <Sun class="w-5 h-5" />
+          </span>
         </button>
         <button
           @click="toggleMobileMenu"
@@ -270,7 +270,7 @@
                 : 'rotate-0 scale-100 opacity-100'
             "
           >
-            <i data-lucide="menu" class="h-6 w-6"></i>
+            <Menu class="h-6 w-6" />
           </span>
           <span
             class="absolute transition-all duration-500 ease-in-out flex items-center justify-center"
@@ -280,7 +280,7 @@
                 : '-rotate-90 scale-0 opacity-0'
             "
           >
-            <i data-lucide="x" class="h-6 w-6"></i>
+            <X class="h-6 w-6" />
           </span>
         </button>
       </div>
@@ -315,7 +315,7 @@
               class="flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': mobileDropdowns.profil }"
             >
-              <i data-lucide="chevron-down" class="h-5 w-5"></i>
+              <ChevronDown class="h-5 w-5" />
             </span>
           </button>
           <div
@@ -363,7 +363,7 @@
               class="flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': mobileDropdowns.akademik }"
             >
-              <i data-lucide="chevron-down" class="h-5 w-5"></i>
+              <ChevronDown class="h-5 w-5" />
             </span>
           </button>
           <div
@@ -411,7 +411,7 @@
               class="flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': mobileDropdowns.informasi }"
             >
-              <i data-lucide="chevron-down" class="h-5 w-5"></i>
+              <ChevronDown class="h-5 w-5" />
             </span>
           </button>
           <div
@@ -459,6 +459,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, reactive, watch } from "vue";
 import { useRoute } from "vue-router";
+import { ChevronDown, Moon, Sun, Menu, X } from "lucide-vue-next";
 
 const navRef = ref(null);
 const isNavbarScrolled = ref(false);

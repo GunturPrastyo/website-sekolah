@@ -1,6 +1,25 @@
 <script setup>
-import { ref, onMounted, onUpdated, nextTick } from "vue";
-import { createIcons, icons } from "lucide";
+import { ref, onMounted, nextTick } from "vue";
+import {
+  FileCheck2,
+  CheckCircle,
+  GitMerge,
+  ArrowDown,
+  Map as MapIcon,
+  Award,
+  HeartHandshake,
+  Briefcase,
+  Check,
+  CheckCircle2,
+  FlaskConical,
+  Globe2,
+  Languages,
+  ArrowRight,
+  Loader2,
+  Send,
+  Printer,
+  X,
+} from "lucide-vue-next";
 import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.css";
 
@@ -128,8 +147,6 @@ const printBukti = async () => {
 
 onMounted(() => {
   nextTick(() => {
-    createIcons({ icons });
-
     // Inisialisasi Swiper untuk Jalur Pendaftaran
     new Swiper(".jalur-swiper", {
       direction: "horizontal", // default slider horizontal untuk versi Mobile
@@ -159,12 +176,6 @@ onMounted(() => {
         },
       },
     });
-  });
-});
-
-onUpdated(() => {
-  nextTick(() => {
-    createIcons({ icons });
   });
 });
 </script>
@@ -214,46 +225,31 @@ onUpdated(() => {
               <h3
                 class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
               >
-                <i
-                  data-lucide="file-check-2"
-                  class="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400"
-                ></i>
+                <FileCheck2 class="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400" />
                 Syarat Pendaftaran
               </h3>
               <ul class="space-y-4">
                 <li class="flex items-start">
-                  <i
-                    data-lucide="check-circle"
-                    class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5"
-                  ></i>
+                  <CheckCircle class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5" />
                   <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"
                     >Lulusan SMP/MTs sederajat tahun 2024, 2025, atau 2026.</span
                   >
                 </li>
                 <li class="flex items-start">
-                  <i
-                    data-lucide="check-circle"
-                    class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5"
-                  ></i>
+                  <CheckCircle class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5" />
                   <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"
                     >Memiliki Nomor Induk Siswa Nasional (NISN) yang valid.</span
                   >
                 </li>
                 <li class="flex items-start">
-                  <i
-                    data-lucide="check-circle"
-                    class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5"
-                  ></i>
+                  <CheckCircle class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5" />
                   <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"
                     >Menyiapkan berkas digital (Scan KK, Akta Kelahiran, dan
                     Ijazah/SKL).</span
                   >
                 </li>
                 <li class="flex items-start">
-                  <i
-                    data-lucide="check-circle"
-                    class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5"
-                  ></i>
+                  <CheckCircle class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5" />
                   <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"
                     >Pas foto terbaru ukuran 3x4 berwarna (pakaian seragam asal).</span
                   >
@@ -268,10 +264,7 @@ onUpdated(() => {
               <h3
                 class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
               >
-                <i
-                  data-lucide="git-merge"
-                  class="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400"
-                ></i>
+                <GitMerge class="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400" />
                 Alur Pendaftaran
               </h3>
               <div
@@ -369,7 +362,7 @@ onUpdated(() => {
                 <div
                   class="w-10 h-10 rounded-full border-2 border-yellow-400 flex items-center justify-center animate-bounce"
                 >
-                  <i data-lucide="arrow-down" class="w-5 h-5"></i>
+                  <ArrowDown class="w-5 h-5" />
                 </div>
                 Scroll untuk melihat jalur
               </div>
@@ -404,7 +397,7 @@ onUpdated(() => {
                           <div
                             class="w-12 h-12 bg-yellow-400 dark:bg-yellow-500 text-blue-950 rounded-2xl flex items-center justify-center mb-4 shadow-md border border-yellow-300 dark:border-yellow-400 group-hover:scale-110 transition-transform"
                           >
-                            <i data-lucide="map" class="w-6 h-6"></i>
+                            <MapIcon class="w-6 h-6" />
                           </div>
                           <h3
                             class="text-xl font-bold text-blue-950 dark:text-white mb-3"
@@ -443,7 +436,7 @@ onUpdated(() => {
                           <div
                             class="w-12 h-12 bg-yellow-400 dark:bg-yellow-500 text-blue-950 rounded-2xl flex items-center justify-center mb-4 shadow-md border border-yellow-300 dark:border-yellow-400 group-hover:scale-110 transition-transform"
                           >
-                            <i data-lucide="award" class="w-6 h-6"></i>
+                            <Award class="w-6 h-6" />
                           </div>
                           <h3
                             class="text-xl font-bold text-blue-950 dark:text-white mb-3"
@@ -481,7 +474,7 @@ onUpdated(() => {
                           <div
                             class="w-12 h-12 bg-yellow-400 dark:bg-yellow-500 text-blue-950 rounded-2xl flex items-center justify-center mb-4 shadow-md border border-yellow-300 dark:border-yellow-400 group-hover:scale-110 transition-transform"
                           >
-                            <i data-lucide="heart-handshake" class="w-6 h-6"></i>
+                            <HeartHandshake class="w-6 h-6" />
                           </div>
                           <h3
                             class="text-xl font-bold text-blue-950 dark:text-white mb-3"
@@ -520,7 +513,7 @@ onUpdated(() => {
                           <div
                             class="w-12 h-12 bg-yellow-400 dark:bg-yellow-500 text-blue-950 rounded-2xl flex items-center justify-center mb-4 shadow-md border border-yellow-300 dark:border-yellow-400 group-hover:scale-110 transition-transform"
                           >
-                            <i data-lucide="briefcase" class="w-6 h-6"></i>
+                            <Briefcase class="w-6 h-6" />
                           </div>
                           <h3
                             class="text-xl font-bold text-blue-950 dark:text-white mb-3"
@@ -576,7 +569,7 @@ onUpdated(() => {
             <div
               class="w-24 h-24 bg-green-100 dark:bg-green-900/30 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6"
             >
-              <i data-lucide="check-circle" class="w-12 h-12"></i>
+              <CheckCircle class="w-12 h-12" />
             </div>
             <h2 class="text-2xl md:text-3xl font-bold text-blue-950 dark:text-white mb-4">
               Pendaftaran Berhasil!
@@ -593,7 +586,7 @@ onUpdated(() => {
                 @click="printBukti"
                 class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors flex items-center justify-center"
               >
-                <i data-lucide="printer" class="w-5 h-5 mr-2"></i> Cetak Bukti Daftar
+                <Printer class="w-5 h-5 mr-2" /> Cetak Bukti Daftar
               </button>
               <router-link
                 to="/"
@@ -638,7 +631,7 @@ onUpdated(() => {
                         : '',
                     ]"
                   >
-                    <i v-if="currentStep > step" data-lucide="check" class="w-5 h-5"></i>
+                    <Check v-if="currentStep > step" class="w-5 h-5" />
                     <span v-else>{{ step }}</span>
                   </div>
                   <span
@@ -908,11 +901,10 @@ onUpdated(() => {
                                 </p>
                               </div>
                             </div>
-                            <i
+                            <CheckCircle2
                               v-if="form.jalurPendaftaran === 'Zonasi'"
-                              data-lucide="check-circle-2"
                               class="w-6 h-6 text-blue-600"
-                            ></i>
+                            />
                           </div>
                         </label>
 
@@ -941,11 +933,10 @@ onUpdated(() => {
                                 </p>
                               </div>
                             </div>
-                            <i
+                            <CheckCircle2
                               v-if="form.jalurPendaftaran === 'Prestasi'"
-                              data-lucide="check-circle-2"
                               class="w-6 h-6 text-blue-600"
-                            ></i>
+                            />
                           </div>
                         </label>
                       </div>
@@ -976,7 +967,7 @@ onUpdated(() => {
                             <div
                               class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 mb-3"
                             >
-                              <i data-lucide="flask-conical" class="h-5 w-5"></i>
+                              <FlaskConical class="h-5 w-5" />
                             </div>
                             <p class="font-bold text-blue-950 dark:text-white">IPA</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -1003,7 +994,7 @@ onUpdated(() => {
                             <div
                               class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-sky-100 dark:bg-sky-900/30 text-sky-600 mb-3"
                             >
-                              <i data-lucide="globe-2" class="h-5 w-5"></i>
+                              <Globe2 class="h-5 w-5" />
                             </div>
                             <p class="font-bold text-blue-950 dark:text-white">IPS</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -1030,7 +1021,7 @@ onUpdated(() => {
                             <div
                               class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 mb-3"
                             >
-                              <i data-lucide="languages" class="h-5 w-5"></i>
+                              <Languages class="h-5 w-5" />
                             </div>
                             <p class="font-bold text-blue-950 dark:text-white">Bahasa</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -1062,7 +1053,7 @@ onUpdated(() => {
                     @click="nextStep"
                     class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md transition-colors flex items-center"
                   >
-                    Selanjutnya <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                    Selanjutnya <ArrowRight class="w-4 h-4 ml-2" />
                   </button>
 
                   <button
@@ -1072,11 +1063,11 @@ onUpdated(() => {
                     class="px-8 py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-md transition-colors flex items-center disabled:opacity-75 disabled:cursor-not-allowed"
                   >
                     <span v-if="isSubmitting" class="flex items-center">
-                      <i data-lucide="loader-2" class="w-5 h-5 mr-2 animate-spin"></i>
+                      <Loader2 class="w-5 h-5 mr-2 animate-spin" />
                       Mengirim...
                     </span>
                     <span v-else class="flex items-center">
-                      Kirim Pendaftaran <i data-lucide="send" class="w-4 h-4 ml-2"></i>
+                      Kirim Pendaftaran <Send class="w-4 h-4 ml-2" />
                     </span>
                   </button>
                 </div>
@@ -1104,7 +1095,7 @@ onUpdated(() => {
         <div
           class="inline-flex items-center justify-center shrink-0 w-10 h-10 text-green-600 bg-green-100 rounded-lg dark:bg-green-900/50 dark:text-green-400"
         >
-          <i data-lucide="check-circle" class="w-6 h-6"></i>
+          <CheckCircle class="w-6 h-6" />
         </div>
         <div class="ml-3 text-sm font-normal">
           <span class="mb-1 text-sm font-bold text-blue-950 dark:text-white block"
@@ -1119,7 +1110,7 @@ onUpdated(() => {
           type="button"
           class="ml-auto -mx-1.5 -my-1.5 bg-white dark:bg-slate-800 text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 inline-flex items-center justify-center h-8 w-8 transition-colors"
         >
-          <i data-lucide="x" class="w-4 h-4"></i>
+          <X class="w-4 h-4" />
         </button>
       </div>
     </Transition>

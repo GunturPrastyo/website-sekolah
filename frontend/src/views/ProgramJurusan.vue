@@ -1,6 +1,6 @@
 <script setup>
-import { ref, onMounted, nextTick } from "vue";
-import { createIcons, icons } from "lucide";
+import { ref, onMounted } from "vue";
+import { GraduationCap, BookOpen, CheckCircle2, Briefcase } from "lucide-vue-next";
 import PageHeader from "@/components/PageHeader.vue";
 
 const programs = ref([
@@ -110,31 +110,27 @@ const programs = ref([
 ]);
 
 onMounted(() => {
-  nextTick(() => {
-    createIcons({ icons });
+  // Intersection Observer untuk efek animasi fade-up pada saat scroll
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("opacity-100", "translate-y-0", "translate-x-0");
+          entry.target.classList.remove(
+            "opacity-0",
+            "translate-y-10",
+            "-translate-x-10",
+            "translate-x-10"
+          );
+          observer.unobserve(entry.target); // Hentikan observasi agar animasi hanya berjalan 1x
+        }
+      });
+    },
+    { threshold: 0.1 } // Animasi terpicu saat 10% elemen terlihat di layar
+  );
 
-    // Intersection Observer untuk efek animasi fade-up pada saat scroll
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("opacity-100", "translate-y-0", "translate-x-0");
-            entry.target.classList.remove(
-              "opacity-0",
-              "translate-y-10",
-              "-translate-x-10",
-              "translate-x-10"
-            );
-            observer.unobserve(entry.target); // Hentikan observasi agar animasi hanya berjalan 1x
-          }
-        });
-      },
-      { threshold: 0.1 } // Animasi terpicu saat 10% elemen terlihat di layar
-    );
-
-    document.querySelectorAll(".fade-on-scroll").forEach((el) => {
-      observer.observe(el);
-    });
+  document.querySelectorAll(".fade-on-scroll").forEach((el) => {
+    observer.observe(el);
   });
 });
 </script>
@@ -206,7 +202,7 @@ onMounted(() => {
                     : 'border-white/20 dark:border-white/10',
                 ]"
               >
-                <i data-lucide="graduation-cap" class="w-3.5 h-3.5 mr-1.5"></i>
+                <GraduationCap class="w-3.5 h-3.5 mr-1.5" />
                 {{ program.badge }}
               </div>
               <h2
@@ -237,11 +233,10 @@ onMounted(() => {
                       index % 2 === 0 ? 'text-slate-900 dark:text-white' : 'text-white'
                     "
                   >
-                    <i
-                      data-lucide="book-open"
+                    <BookOpen
                       class="w-5 h-5 mr-2"
                       :class="index % 2 === 0 ? program.textClass : 'text-white/90'"
-                    ></i>
+                    />
                     Fokus Pembelajaran
                   </h4>
                   <ul class="space-y-2.5">
@@ -255,12 +250,11 @@ onMounted(() => {
                           : 'text-white/80 dark:text-slate-300',
                       ]"
                     >
-                      <i
-                        data-lucide="check-circle-2"
+                      <CheckCircle2
                         class="w-4 h-4 mr-2 mt-0.5 shrink-0"
                         :class="index % 2 === 0 ? program.textClass : 'text-white/90'"
-                      ></i
-                      ><span>{{ subject }}</span>
+                      />
+                      <span>{{ subject }}</span>
                     </li>
                   </ul>
                 </div>
@@ -272,11 +266,10 @@ onMounted(() => {
                       index % 2 === 0 ? 'text-slate-900 dark:text-white' : 'text-white'
                     "
                   >
-                    <i
-                      data-lucide="briefcase"
+                    <Briefcase
                       class="w-5 h-5 mr-2"
                       :class="index % 2 === 0 ? program.textClass : 'text-white/90'"
-                    ></i>
+                    />
                     Prospek Karir
                   </h4>
                   <ul class="space-y-2.5">
@@ -290,12 +283,11 @@ onMounted(() => {
                           : 'text-white/80 dark:text-slate-300',
                       ]"
                     >
-                      <i
-                        data-lucide="check-circle-2"
+                      <CheckCircle2
                         class="w-4 h-4 mr-2 mt-0.5 shrink-0"
                         :class="index % 2 === 0 ? program.textClass : 'text-white/90'"
-                      ></i
-                      ><span>{{ career }}</span>
+                      />
+                      <span>{{ career }}</span>
                     </li>
                   </ul>
                 </div>

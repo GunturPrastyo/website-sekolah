@@ -1,6 +1,21 @@
 <script setup>
-import { ref, computed, onMounted, onUpdated, nextTick } from "vue";
-import { createIcons, icons } from "lucide";
+import { ref, computed, onMounted } from "vue";
+import {
+  Trophy,
+  Globe2,
+  Flag,
+  Map as MapIcon,
+  Building2,
+  BookOpen,
+  ChevronDown,
+  Search,
+  Calendar,
+  Filter,
+  Medal,
+  Award,
+  ArrowRight,
+  User,
+} from "lucide-vue-next";
 import PageHeader from "@/components/PageHeader.vue";
 
 const activeFilter = ref("semua");
@@ -170,14 +185,14 @@ const getRankStyle = (rank) => {
         badge:
           "bg-gradient-to-r from-yellow-400 to-yellow-600 text-white shadow-yellow-500/50",
         text: "Juara 1 (Emas)",
-        icon: "medal",
+        icon: Medal,
         border: "border-yellow-400",
       };
     case 2:
       return {
         badge: "bg-gradient-to-r from-gray-300 to-gray-500 text-white shadow-gray-500/50",
         text: "Juara 2 (Perak)",
-        icon: "medal",
+        icon: Medal,
         border: "border-gray-400",
       };
     case 3:
@@ -185,32 +200,24 @@ const getRankStyle = (rank) => {
         badge:
           "bg-gradient-to-r from-amber-600 to-orange-700 text-white shadow-orange-500/50",
         text: "Juara 3 (Perunggu)",
-        icon: "medal",
+        icon: Medal,
         border: "border-orange-500",
       };
     default:
       return {
         badge: "bg-gradient-to-r from-blue-400 to-blue-600 text-white shadow-blue-500/50",
         text: "Finalis / Penghargaan",
-        icon: "award",
+        icon: Award,
         border: "border-blue-400",
       };
   }
 };
 
 onMounted(() => {
-  createIcons({ icons });
   animateValue("internasional", counts.value.internasional);
   animateValue("nasional", counts.value.nasional);
   animateValue("provinsi", counts.value.provinsi);
   animateValue("kabupaten", counts.value.kabupaten);
-});
-
-// Re-render icon lucide setiap kali filter berpindah (DOM berubah)
-onUpdated(() => {
-  nextTick(() => {
-    createIcons({ icons });
-  });
 });
 </script>
 
@@ -225,7 +232,7 @@ onUpdated(() => {
         <div
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] text-yellow-500 pointer-events-none"
         >
-          <i data-lucide="trophy" class="w-[400px] h-[400px]"></i>
+          <Trophy class="w-[400px] h-[400px]" />
         </div>
       </template>
     </PageHeader>
@@ -244,7 +251,7 @@ onUpdated(() => {
             <div
               class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3 md:mb-4"
             >
-              <i data-lucide="globe-2" class="w-5 h-5 md:w-6 md:h-6"></i>
+              <Globe2 class="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <p class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-1">
               {{ animatedCounts.internasional }}
@@ -263,7 +270,7 @@ onUpdated(() => {
             <div
               class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-red-50 dark:bg-slate-700 flex items-center justify-center text-red-600 dark:text-red-400 mb-3 md:mb-4"
             >
-              <i data-lucide="flag" class="w-5 h-5 md:w-6 md:h-6"></i>
+              <Flag class="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <p class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-1">
               {{ animatedCounts.nasional }}
@@ -282,7 +289,7 @@ onUpdated(() => {
             <div
               class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-green-50 dark:bg-slate-700 flex items-center justify-center text-green-600 dark:text-green-400 mb-3 md:mb-4"
             >
-              <i data-lucide="map" class="w-5 h-5 md:w-6 md:h-6"></i>
+              <MapIcon class="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <p class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-1">
               {{ animatedCounts.provinsi }}
@@ -301,7 +308,7 @@ onUpdated(() => {
             <div
               class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-amber-50 dark:bg-slate-700 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-3 md:mb-4"
             >
-              <i data-lucide="building-2" class="w-5 h-5 md:w-6 md:h-6"></i>
+              <Building2 class="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <p class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-1">
               {{ animatedCounts.kabupaten }}
@@ -320,15 +327,14 @@ onUpdated(() => {
           <div class="flex flex-row items-center gap-2.5 md:gap-4 w-full">
             <!-- Filter Bidang -->
             <div class="relative w-12 md:w-48 shrink-0">
-              <i
-                data-lucide="book-open"
+              <BookOpen
                 class="absolute left-1/2 md:left-4 top-1/2 -translate-x-1/2 md:translate-x-0 -translate-y-1/2 w-5 h-5 md:w-4 md:h-4 pointer-events-none transition-colors"
                 :class="
                   activeType !== 'semua'
                     ? 'text-blue-600 dark:text-blue-400'
                     : 'text-gray-500 md:text-gray-400'
-                "
-              ></i>
+                ]"
+              />
               <select
                 v-model="activeType"
                 class="w-full md:pl-10 md:pr-10 py-3.5 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-transparent md:text-gray-900 dark:md:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm appearance-none cursor-pointer"
@@ -345,21 +351,20 @@ onUpdated(() => {
               <div
                 class="absolute inset-y-0 right-4 hidden md:flex items-center pointer-events-none"
               >
-                <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
+                <ChevronDown class="w-4 h-4 text-gray-400" />
               </div>
             </div>
 
             <!-- Filter Tahun -->
             <div class="relative w-12 md:w-52 shrink-0">
-              <i
-                data-lucide="calendar"
+              <Calendar
                 class="absolute left-1/2 md:left-4 top-1/2 -translate-x-1/2 md:translate-x-0 -translate-y-1/2 w-5 h-5 md:w-4 md:h-4 pointer-events-none transition-colors"
                 :class="
                   activeYear !== 'semua'
                     ? 'text-blue-600 dark:text-blue-400'
                     : 'text-gray-500 md:text-gray-400'
-                "
-              ></i>
+                ]"
+              />
               <select
                 v-model="activeYear"
                 class="w-full md:pl-10 md:pr-10 py-3.5 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-transparent md:text-gray-900 dark:md:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm appearance-none cursor-pointer"
@@ -376,16 +381,15 @@ onUpdated(() => {
               <div
                 class="absolute inset-y-0 right-4 hidden md:flex items-center pointer-events-none"
               >
-                <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
+                <ChevronDown class="w-4 h-4 text-gray-400" />
               </div>
             </div>
 
             <!-- Search Bar -->
             <div class="relative flex-1 shrink-0 min-w-0">
-              <i
-                data-lucide="search"
+              <Search
                 class="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400"
-              ></i>
+              />
               <input
                 v-model="searchQuery"
                 type="text"
@@ -402,10 +406,7 @@ onUpdated(() => {
             <h4
               class="text-sm font-bold text-gray-900 dark:text-white whitespace-nowrap shrink-0 flex items-center sm:pl-2"
             >
-              <i
-                data-lucide="filter"
-                class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
-              ></i>
+              <Filter class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
               Tingkat Lomba:
             </h4>
             <div class="flex flex-wrap items-center gap-2 md:gap-2.5">
@@ -456,11 +457,11 @@ onUpdated(() => {
                 class="absolute top-4 right-4 flex flex-col items-center justify-center w-14 h-16 rounded-b-full shadow-lg z-10"
                 :class="getRankStyle(prestasi.rank).badge"
               >
-                <i
-                  :data-lucide="getRankStyle(prestasi.rank).icon"
+                <component
+                  :is="getRankStyle(prestasi.rank).icon"
                   class="w-6 h-6 mt-1 mb-0.5"
                   :class="prestasi.rank === 1 ? 'fill-yellow-100' : ''"
-                ></i>
+                />
                 <span class="text-[10px] font-black uppercase">{{
                   prestasi.rank === 1 ? "1st" : prestasi.rank === 2 ? "2nd" : "3rd"
                 }}</span>
@@ -485,8 +486,7 @@ onUpdated(() => {
                   prestasi.type
                 }}</span>
                 <span class="flex items-center"
-                  ><i data-lucide="calendar" class="w-3.5 h-3.5 mr-1"></i>
-                  {{ prestasi.year }}</span
+                  ><Calendar class="w-3.5 h-3.5 mr-1" /> {{ prestasi.year }}</span
                 >
               </div>
 
@@ -503,7 +503,7 @@ onUpdated(() => {
                 class="inline-flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors mb-4 w-fit"
               >
                 Baca Liputan Berita
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5 ml-1"></i>
+                <ArrowRight class="w-3.5 h-3.5 ml-1" />
               </router-link>
 
               <div
@@ -512,7 +512,7 @@ onUpdated(() => {
                 <div
                   class="w-10 h-10 rounded-full bg-blue-100 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0"
                 >
-                  <i data-lucide="user" class="w-5 h-5"></i>
+                  <User class="w-5 h-5" />
                 </div>
                 <div>
                   <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">
@@ -537,7 +537,7 @@ onUpdated(() => {
           <div
             class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700 mb-4 text-gray-400"
           >
-            <i data-lucide="award" class="w-8 h-8"></i>
+            <Award class="w-8 h-8" />
           </div>
           <h3 class="text-lg font-bold text-gray-900 dark:text-white">Tidak Ditemukan</h3>
           <p class="text-gray-500 dark:text-gray-400 mt-1">

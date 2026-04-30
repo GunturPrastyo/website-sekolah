@@ -76,11 +76,10 @@
                     pIdx === 0,
                 }"
               >
-                <i
+                <Quote
                   v-if="pIdx === 0"
-                  data-lucide="quote"
                   class="absolute -top-4 -left-4 md:-top-6 md:-left-6 w-8 h-8 md:w-12 md:h-12 text-blue-100 dark:text-slate-800 -z-10 rotate-180"
-                ></i>
+                />
                 <span
                   v-for="(sentence, sIdx) in splitSentences(paragraph)"
                   :key="sIdx"
@@ -222,8 +221,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from "vue";
-import { createIcons, icons } from "lucide";
+import { ref, onMounted } from "vue";
+import { Quote } from "lucide-vue-next";
 import PageHeader from "@/components/PageHeader.vue";
 
 const textContainerRef = ref(null);
@@ -262,10 +261,6 @@ onMounted(() => {
   if (textContainerRef.value) {
     observer.observe(textContainerRef.value);
   }
-
-  nextTick(() => {
-    createIcons({ icons });
-  });
 });
 </script>
 

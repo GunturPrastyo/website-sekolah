@@ -1,6 +1,16 @@
 <script setup>
-import { ref, onMounted, nextTick, onUpdated } from "vue";
-import { createIcons, icons } from "lucide";
+import { ref, onMounted } from "vue";
+import {
+  Clock,
+  Share2,
+  Quote,
+  Users,
+  FileText,
+  Link,
+  TrendingUp,
+  Calendar,
+  Eye,
+} from "lucide-vue-next";
 import Breadcrumb from "@/components/Breadcrumb.vue";
 import ShareModal from "@/components/ShareModal.vue";
 
@@ -118,14 +128,7 @@ const categoryStyles = {
 };
 
 onMounted(() => {
-  createIcons({ icons });
   window.scrollTo({ top: 0, behavior: "smooth" });
-});
-
-onUpdated(() => {
-  nextTick(() => {
-    createIcons({ icons });
-  });
 });
 </script>
 
@@ -191,7 +194,7 @@ onUpdated(() => {
                   @click="openShareModal"
                   class="p-2 rounded-full bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-blue-50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
-                  <i data-lucide="share-2" class="w-5 h-5"></i>
+                  <Share2 class="w-5 h-5" />
                 </button>
               </div>
             </div>
@@ -331,8 +334,7 @@ onUpdated(() => {
               <h4
                 class="text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center"
               >
-                <i data-lucide="users" class="w-4 h-4 mr-1.5 text-gray-400"></i> Penulis
-                Lainnya
+                <Users class="w-4 h-4 mr-1.5 text-gray-400" /> Penulis Lainnya
               </h4>
               <div class="flex flex-wrap gap-2">
                 <a
@@ -345,7 +347,7 @@ onUpdated(() => {
                   <span
                     class="ml-1.5 inline-flex items-center gap-1 px-1.5 py-0.5 bg-gray-200 group-hover:bg-blue-100 dark:bg-slate-600 dark:group-hover:bg-blue-900/40 text-gray-600 group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-400 rounded-md text-[10px] font-bold transition-colors"
                   >
-                    <i data-lucide="file-text" class="w-3 h-3"></i>
+                    <FileText class="w-3 h-3" />
                     {{ author.articles }}
                   </span>
                 </a>
@@ -360,7 +362,7 @@ onUpdated(() => {
             <h3
               class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
             >
-              <i data-lucide="link" class="w-5 h-5 mr-2 text-blue-500"></i>
+              <Link class="w-5 h-5 mr-2 text-blue-500" />
               Artikel Terkait
             </h3>
             <div class="space-y-5">
@@ -399,11 +401,11 @@ onUpdated(() => {
                     class="flex items-center justify-between text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-auto"
                   >
                     <span class="flex items-center">
-                      <i data-lucide="calendar" class="w-3 h-3 mr-1"></i>
+                      <Calendar class="w-3 h-3 mr-1" />
                       {{ article.date }}
                     </span>
                     <span class="flex items-center">
-                      <i data-lucide="eye" class="w-3 h-3 mr-1"></i>
+                      <Eye class="w-3 h-3 mr-1" />
                       {{ article.views }}
                     </span>
                   </div>
@@ -419,7 +421,7 @@ onUpdated(() => {
             <h3
               class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
             >
-              <i data-lucide="trending-up" class="w-5 h-5 mr-2 text-blue-500"></i>
+              <TrendingUp class="w-5 h-5 mr-2 text-blue-500" />
               Terpopuler
             </h3>
             <div class="space-y-5">
@@ -458,11 +460,11 @@ onUpdated(() => {
                     class="flex items-center justify-between text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-auto"
                   >
                     <span class="flex items-center">
-                      <i data-lucide="calendar" class="w-3 h-3 mr-1"></i>
+                      <Calendar class="w-3 h-3 mr-1" />
                       {{ news.date }}
                     </span>
                     <span class="flex items-center">
-                      <i data-lucide="eye" class="w-3 h-3 mr-1"></i>
+                      <Eye class="w-3 h-3 mr-1" />
                       {{ news.views }}
                     </span>
                   </div>
