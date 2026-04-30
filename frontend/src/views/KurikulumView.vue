@@ -394,6 +394,12 @@ onUpdated(() => {
     createIcons({ icons });
   });
 });
+
+const reinitIcons = () => {
+  nextTick(() => {
+    createIcons({ icons });
+  });
+};
 </script>
 
 <template>
@@ -654,6 +660,7 @@ onUpdated(() => {
             leave-active-class="transition-all duration-200 ease-in"
             leave-from-class="opacity-100 translate-x-0"
             leave-to-class="opacity-0 -translate-x-4"
+            @enter="reinitIcons"
           >
             <div :key="activeGrade + '-' + activeMajor" class="space-y-8">
               <div
@@ -771,6 +778,7 @@ onUpdated(() => {
                   class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 dark:bg-slate-700 mb-4 text-white"
                 >
                   <i
+                    :key="searchQuery ? 'search-x' : 'book-x'"
                     :data-lucide="searchQuery ? 'search-x' : 'book-x'"
                     class="w-8 h-8"
                   ></i>
