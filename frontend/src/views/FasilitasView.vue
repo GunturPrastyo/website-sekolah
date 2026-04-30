@@ -66,7 +66,10 @@
               leave-from-class="opacity-100 translate-y-0"
               leave-to-class="opacity-0 -translate-y-4"
             >
-              <div :key="currentCategory.id + '-content'" class="space-y-10">
+              <div
+                :key="currentCategory.id + '-content'"
+                class="bg-white dark:bg-slate-800 p-6 md:p-8 lg:p-10 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm space-y-10"
+              >
                 <!-- Konten Pengantar -->
                 <div class="space-y-8">
                   <p
@@ -76,7 +79,7 @@
                   </p>
 
                   <blockquote
-                    class="relative border-l-4 border-blue-500 bg-gradient-to-r from-blue-50 to-transparent dark:from-slate-800/80 dark:to-transparent p-6 sm:p-8 rounded-r-2xl italic text-gray-700 dark:text-gray-300 shadow-sm overflow-hidden"
+                    class="relative border-l-4 border-blue-500 bg-gradient-to-r from-blue-50 to-transparent dark:from-slate-700/50 dark:to-transparent p-6 sm:p-8 rounded-r-2xl italic text-gray-700 dark:text-gray-300 shadow-sm overflow-hidden"
                   >
                     <div
                       class="absolute -right-4 -top-4 text-blue-100 dark:text-slate-700/50 opacity-50 transform rotate-180 pointer-events-none"
@@ -97,12 +100,14 @@
                   </blockquote>
                 </div>
 
-                <!-- List Fasilitas (Dengan Efek Fade-Up Pada Scroll) -->
-                <div class="space-y-8 pt-4">
+                <!-- List Fasilitas -->
+                <div
+                  class="space-y-12 pt-8 border-t border-gray-100 dark:border-slate-700"
+                >
                   <div
                     v-for="(item, index) in currentCategory.items"
                     :key="item.title + index"
-                    class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out space-y-5 bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-lg"
+                    class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out space-y-5"
                   >
                     <h3
                       class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3"
@@ -125,7 +130,7 @@
                         :key="imgIdx"
                       >
                         <div
-                          class="relative overflow-hidden rounded-xl shadow-sm h-48 md:h-64 cursor-pointer group bg-gray-100 dark:bg-slate-800"
+                          class="relative overflow-hidden rounded-xl shadow-sm h-48 md:h-64 cursor-pointer group bg-gray-100 dark:bg-slate-700"
                           :class="{
                             'col-span-2 h-56 md:h-80':
                               item.images.length === 3 && imgIdx === 0,
@@ -169,7 +174,7 @@
                     <!-- Single Image -->
                     <div
                       v-else
-                      class="relative overflow-hidden rounded-2xl shadow-sm my-6 cursor-pointer group bg-gray-100 dark:bg-slate-800"
+                      class="relative overflow-hidden rounded-2xl shadow-sm my-6 cursor-pointer group bg-gray-100 dark:bg-slate-700"
                       @click="openGallery(item.images || [item.src], 0)"
                     >
                       <img
