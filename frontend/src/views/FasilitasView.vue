@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- CONTENT -->
-    <section class="relative z-20 px-0 dark:bg-slate-700">
+    <section class="relative z-20 px-0 dark:bg-slate-800">
       <div class="container max-w-full">
         <!-- MAIN -->
         <main class="w-full">
@@ -21,7 +21,7 @@
                   class="bg-white dark:bg-gray-800 overflow-hidden"
                 >
                   <!-- FEATURED IMAGE -->
-                  <div class="relative h-[300px] md:h-[400px] overflow-hidden">
+                  <div class="relative h-[380px] md:h-[480px] overflow-hidden">
                     <img
                       :src="category.items[0].src"
                       class="absolute inset-0 w-full h-full object-cover blur-sm scale-110"
@@ -208,10 +208,10 @@
                     <div class="space-y-8 lg:sticky lg:top-28">
                       <!-- Fasilitas Lainnya -->
                       <div
-                        class="relative bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col"
+                        class="relative bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col"
                       >
                         <div
-                          class="border-sky-600 dark:border-slate-600 shrink-0 border-l-6 pl-3 rounded-sm"
+                          class="border-blue-600 dark:border-slate-600 shrink-0 border-l-6 pl-3 rounded-sm"
                         >
                           <h4 class="font-bold text-gray-800 dark:text-white">
                             Fasilitas Lainnya
