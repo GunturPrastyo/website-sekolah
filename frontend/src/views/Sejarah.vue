@@ -148,7 +148,7 @@ onBeforeUnmount(() => {
     />
 
     <!-- Profil Singkat Section -->
-    <section class="pt-8 md:pt-12 pb-8 md:pb-10 bg-white dark:bg-slate-900">
+    <section class="pt-8 md:pt-12 pb-8 md:pb-10 bg-white dark:bg-slate-800">
       <div class="container mx-auto max-w-full px-8 sm:px-16">
         <div
           class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out flex flex-col lg:flex-row items-center gap-10 lg:gap-16"
@@ -258,7 +258,7 @@ onBeforeUnmount(() => {
 
     <!-- Timeline Section -->
     <section
-      class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-blue-950 dark:bg-slate-950"
+      class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-blue-950 dark:bg-slate-900"
     >
       <div
         class="container relative z-10 mx-auto px-5 sm:px-8 md:px-14 lg:px-16 w-full max-w-full"

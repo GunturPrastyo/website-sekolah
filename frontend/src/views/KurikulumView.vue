@@ -574,7 +574,7 @@ const currentSyllabus = computed(() => {
           <div class="mb-10">
             <div class="relative">
               <Search
-                class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300 pointer-events-none"
+                class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300 pointer-events-none z-10"
               />
               <input
                 v-model="searchQuery"
