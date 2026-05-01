@@ -1347,10 +1347,12 @@
                     <!-- Date Box (Calendar Style) -->
                     <div
                       class="rounded-xl flex flex-col items-center justify-center min-w-[65px] w-[65px] sm:min-w-[95px] sm:w-[95px] border transition-all duration-300 overflow-hidden shrink-0"
+                      style="font-family: 'Kalam', cursive"
                       :class="themeClasses[agenda.color].dateBox"
                     >
                       <div
                         class="w-full text-center py-1 sm:py-1.5 transition-colors"
+                        style="font-family: 'Kalam', cursive"
                         :class="themeClasses[agenda.color].monthBg"
                       >
                         <span
