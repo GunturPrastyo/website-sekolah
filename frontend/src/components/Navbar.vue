@@ -48,7 +48,7 @@
               class="ml-1 flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': activeDropdown === 'profil' }"
             >
-            <PhCaretDown class="h-4 w-4" />
+              <PhCaretDown class="h-4 w-4" />
             </span>
           </button>
           <transition
@@ -87,6 +87,12 @@
                 class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
                 >Fasilitas</router-link
               >
+              <router-link
+                to="/alumni"
+                @click="closeDropdowns"
+                class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
+                >Data Alumni</router-link
+              >
             </div>
           </transition>
         </div>
@@ -107,7 +113,7 @@
               class="ml-1 flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': activeDropdown === 'akademik' }"
             >
-            <PhCaretDown class="h-4 w-4" />
+              <PhCaretDown class="h-4 w-4" />
             </span>
           </button>
           <transition
@@ -150,6 +156,59 @@
           </transition>
         </div>
 
+        <!-- Layanan / Portal Dropdown -->
+        <div class="group relative">
+          <button
+            @click.stop="toggleDropdown('layanan')"
+            class="flex items-center rounded-md px-3 py-2"
+            :class="{
+              'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400':
+                isNavbarScrolled || isMobileMenuOpen,
+              'text-white hover:bg-white/10': !isNavbarScrolled && !isMobileMenuOpen,
+            }"
+          >
+            <span>Layanan</span>
+            <span
+              class="ml-1 flex items-center transition-transform duration-300"
+              :class="{ 'rotate-180': activeDropdown === 'layanan' }"
+            >
+              <PhCaretDown class="h-4 w-4" />
+            </span>
+          </button>
+          <transition
+            enter-active-class="transition ease-out duration-200"
+            enter-from-class="transform opacity-0 scale-95"
+            enter-to-class="transform opacity-100 scale-100"
+            leave-active-class="transition ease-in duration-150"
+            leave-from-class="transform opacity-100 scale-100"
+            leave-to-class="transform opacity-0 scale-95"
+          >
+            <div
+              v-show="activeDropdown === 'layanan'"
+              class="absolute left-0 z-10 mt-2 w-48 origin-top-left rounded-md bg-white dark:bg-slate-800 py-2 text-gray-800 dark:text-gray-200 shadow-lg"
+            >
+              <a
+                href="#"
+                @click="closeDropdowns"
+                class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
+                >E-Learning / CBT</a
+              >
+              <a
+                href="#"
+                @click="closeDropdowns"
+                class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
+                >E-Rapor Siswa</a
+              >
+              <a
+                href="#"
+                @click="closeDropdowns"
+                class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
+                >E-Perpustakaan</a
+              >
+            </div>
+          </transition>
+        </div>
+
         <!-- Informasi Dropdown -->
         <div class="group relative">
           <button
@@ -166,7 +225,7 @@
               class="ml-1 flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': activeDropdown === 'informasi' }"
             >
-            <PhCaretDown class="h-4 w-4" />
+              <PhCaretDown class="h-4 w-4" />
             </span>
           </button>
           <transition
@@ -193,20 +252,15 @@
                 class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
                 >Galeri</router-link
               >
+              <router-link
+                to="/unduhan"
+                @click="closeDropdowns"
+                class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
+                >Unduhan Publik</router-link
+              >
             </div>
           </transition>
         </div>
-
-        <router-link
-          to="/kontak"
-          class="rounded-md px-3 py-2"
-          :class="{
-            'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400':
-              isNavbarScrolled || isMobileMenuOpen,
-            'text-white hover:bg-white/10': !isNavbarScrolled && !isMobileMenuOpen,
-          }"
-          >Kontak</router-link
-        >
       </div>
 
       <div class="hidden items-center lg:flex">
@@ -226,10 +280,10 @@
           ]"
         >
           <span v-show="!isDarkMode" class="flex items-center justify-center">
-          <PhMoon class="w-5 h-5" />
+            <PhMoon class="w-5 h-5" />
           </span>
           <span v-show="isDarkMode" class="flex items-center justify-center">
-          <PhSun class="w-5 h-5" />
+            <PhSun class="w-5 h-5" />
           </span>
         </button>
       </div>
@@ -247,10 +301,10 @@
           ]"
         >
           <span v-show="!isDarkMode" class="flex items-center justify-center">
-          <PhMoon class="w-5 h-5" />
+            <PhMoon class="w-5 h-5" />
           </span>
           <span v-show="isDarkMode" class="flex items-center justify-center">
-          <PhSun class="w-5 h-5" />
+            <PhSun class="w-5 h-5" />
           </span>
         </button>
         <button
@@ -270,7 +324,7 @@
                 : 'rotate-0 scale-100 opacity-100'
             "
           >
-          <PhList class="h-6 w-6" />
+            <PhList class="h-6 w-6" />
           </span>
           <span
             class="absolute transition-all duration-500 ease-in-out flex items-center justify-center"
@@ -280,7 +334,7 @@
                 : '-rotate-90 scale-0 opacity-0'
             "
           >
-          <PhX class="h-6 w-6" />
+            <PhX class="h-6 w-6" />
           </span>
         </button>
       </div>
@@ -315,7 +369,7 @@
               class="flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': mobileDropdowns.profil }"
             >
-            <PhCaretDown class="h-5 w-5" />
+              <PhCaretDown class="h-5 w-5" />
             </span>
           </button>
           <div
@@ -349,6 +403,12 @@
               class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
               >Fasilitas</router-link
             >
+            <router-link
+              to="/alumni"
+              @click="closeMobileMenu"
+              class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
+              >Data Alumni</router-link
+            >
           </div>
         </div>
 
@@ -363,7 +423,7 @@
               class="flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': mobileDropdowns.akademik }"
             >
-            <PhCaretDown class="h-5 w-5" />
+              <PhCaretDown class="h-5 w-5" />
             </span>
           </button>
           <div
@@ -400,6 +460,48 @@
           </div>
         </div>
 
+        <!-- Mobile Layanan Dropdown -->
+        <div>
+          <button
+            @click="toggleMobileDropdown('layanan')"
+            class="flex w-full items-center justify-between rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors"
+          >
+            <span>Layanan</span>
+            <span
+              class="flex items-center transition-transform duration-300"
+              :class="{ 'rotate-180': mobileDropdowns.layanan }"
+            >
+              <PhCaretDown class="h-5 w-5" />
+            </span>
+          </button>
+          <div
+            :class="{
+              'max-h-screen': mobileDropdowns.layanan,
+              'max-h-0': !mobileDropdowns.layanan,
+            }"
+            class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4 pr-2 space-y-1"
+          >
+            <a
+              href="#"
+              @click="closeMobileMenu"
+              class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
+              >E-Learning / CBT</a
+            >
+            <a
+              href="#"
+              @click="closeMobileMenu"
+              class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
+              >E-Rapor Siswa</a
+            >
+            <a
+              href="#"
+              @click="closeMobileMenu"
+              class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
+              >E-Perpustakaan</a
+            >
+          </div>
+        </div>
+
         <!-- Mobile Informasi Dropdown -->
         <div>
           <button
@@ -411,7 +513,7 @@
               class="flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': mobileDropdowns.informasi }"
             >
-            <PhCaretDown class="h-5 w-5" />
+              <PhCaretDown class="h-5 w-5" />
             </span>
           </button>
           <div
@@ -433,15 +535,14 @@
               class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
               >Galeri</router-link
             >
+            <router-link
+              to="/unduhan"
+              @click="closeMobileMenu"
+              class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
+              >Unduhan Publik</router-link
+            >
           </div>
         </div>
-
-        <router-link
-          to="/kontak"
-          @click="closeMobileMenu"
-          class="block rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors"
-          >Kontak</router-link
-        >
 
         <div class="pt-2 mt-2 border-t border-gray-100 dark:border-slate-700/50">
           <router-link
@@ -473,6 +574,7 @@ const mobileDropdowns = reactive({
   profil: false,
   akademik: false,
   informasi: false,
+  layanan: false,
 });
 
 const handleScroll = () => {
