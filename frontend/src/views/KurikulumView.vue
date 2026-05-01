@@ -2,36 +2,36 @@
 import { ref, computed } from "vue";
 import PageHeader from "@/components/PageHeader.vue";
 import {
-  Book,
-  Award,
-  BookOpen,
-  Calculator,
-  Monitor,
-  FlaskConical,
-  Zap,
-  Leaf,
-  PieChart,
-  Users,
-  Languages,
-  Sigma,
-  Map as MapIcon,
-  Hourglass,
-  Globe,
-  Users2,
-  Heart,
-  Globe2,
-  UserCheck,
-  Lightbulb,
-  Palette,
-  Search,
-  SearchX,
-  BookX,
-  ChevronRight,
-  Info,
-  ChevronDown,
-  Bookmark,
-  CheckCircle,
-} from "lucide-vue-next";
+  PhBook,
+  PhMedal,
+  PhBookOpen,
+  PhCalculator,
+  PhMonitor,
+  PhFlask,
+  PhLightning,
+  PhLeaf,
+  PhChartPieSlice,
+  PhUsers,
+  PhTranslate,
+  PhSigma,
+  PhMapTrifold,
+  PhHourglass,
+  PhGlobe,
+  PhUsersThree,
+  PhHeart,
+  PhGlobeHemisphereWest,
+  PhUserCheck,
+  PhLightbulb,
+  PhPalette,
+  PhMagnifyingGlass,
+  PhWarningCircle,
+  PhFileX,
+  PhCaretRight,
+  PhInfo,
+  PhCaretDown,
+  PhBookmark,
+  PhCheckCircle,
+} from "@phosphor-icons/vue";
 
 const activeGrade = ref("10");
 const activeMajor = ref("ipa");
@@ -72,7 +72,7 @@ const grade10Base = [
       {
         id: "10-w-1",
         name: "Pendidikan Agama dan Budi Pekerti",
-        icon: Book,
+        icon: PhBook,
         color: "text-green-600 dark:text-green-400",
         bg: "bg-green-100 dark:bg-green-900/30",
         desc:
@@ -87,7 +87,7 @@ const grade10Base = [
       {
         id: "10-w-2",
         name: "Pendidikan Pancasila",
-        icon: Award,
+        icon: PhMedal,
         color: "text-red-600 dark:text-red-400",
         bg: "bg-red-100 dark:bg-red-900/30",
         desc: "Pendalaman ideologi negara dan pembentukan Profil Pelajar Pancasila.",
@@ -101,7 +101,7 @@ const grade10Base = [
       {
         id: "10-w-3",
         name: "Bahasa Indonesia",
-        icon: BookOpen,
+        icon: PhBookOpen,
         color: "text-blue-600 dark:text-blue-400",
         bg: "bg-blue-100 dark:bg-blue-900/30",
         desc:
@@ -116,7 +116,7 @@ const grade10Base = [
       {
         id: "10-w-4",
         name: "Matematika Dasar",
-        icon: Calculator,
+        icon: PhCalculator,
         color: "text-purple-600 dark:text-purple-400",
         bg: "bg-purple-100 dark:bg-purple-900/30",
         desc: "Konsep dasar matematika, aljabar, dan logika komputasional dasar.",
@@ -135,7 +135,7 @@ const grade10Base = [
       {
         id: "10-p-1",
         name: "Informatika",
-        icon: Monitor,
+        icon: PhMonitor,
         color: "text-cyan-600 dark:text-cyan-400",
         bg: "bg-cyan-100 dark:bg-cyan-900/30",
         desc: "Pengenalan teknologi informasi, logika pemrograman, dan literasi digital.",
@@ -149,7 +149,7 @@ const grade10Base = [
       {
         id: "10-p-2",
         name: "Ilmu Pengetahuan Alam & Sosial (IPAS)",
-        icon: FlaskConical,
+        icon: PhFlask,
         color: "text-emerald-600 dark:text-emerald-400",
         bg: "bg-emerald-100 dark:bg-emerald-900/30",
         desc: "Integrasi dasar Fisika, Kimia, Biologi, Geografi, dan Sosiologi.",
@@ -179,7 +179,7 @@ const curriculumData = ref({
           {
             id: "11-ipa-1",
             name: "Fisika Lanjutan",
-            icon: Zap,
+            icon: PhLightning,
             color: "text-amber-600 dark:text-amber-400",
             bg: "bg-amber-100 dark:bg-amber-900/30",
             desc: "Pendalaman mekanika, termodinamika, dan gelombang.",
@@ -193,7 +193,7 @@ const curriculumData = ref({
           {
             id: "11-ipa-2",
             name: "Biologi Terapan",
-            icon: Leaf,
+            icon: PhLeaf,
             color: "text-green-600 dark:text-green-400",
             bg: "bg-green-100 dark:bg-green-900/30",
             desc: "Studi anatomi, fisiologi, dan ekosistem makhluk hidup tingkat lanjut.",
@@ -214,7 +214,7 @@ const curriculumData = ref({
           {
             id: "11-ips-1",
             name: "Ekonomi Pembangunan",
-            icon: PieChart,
+            icon: PhChartPieSlice,
             color: "text-emerald-600 dark:text-emerald-400",
             bg: "bg-emerald-100 dark:bg-emerald-900/30",
             desc: "Memahami makroekonomi, kebijakan fiskal, dan pembangunan wilayah.",
@@ -228,7 +228,7 @@ const curriculumData = ref({
           {
             id: "11-ips-2",
             name: "Sosiologi Masyarakat",
-            icon: Users,
+            icon: PhUsers,
             color: "text-orange-600 dark:text-orange-400",
             bg: "bg-orange-100 dark:bg-orange-900/30",
             desc: "Kajian mendalam tentang struktur masyarakat dan dinamika sosial.",
@@ -249,7 +249,7 @@ const curriculumData = ref({
           {
             id: "11-bhs-1",
             name: "Sastra Indonesia Lanjutan",
-            icon: BookOpen,
+            icon: PhBookOpen,
             color: "text-rose-600 dark:text-rose-400",
             bg: "bg-rose-100 dark:bg-rose-900/30",
             desc: "Analisis karya sastra klasik hingga modern, puisi, dan prosa.",
@@ -263,7 +263,7 @@ const curriculumData = ref({
           {
             id: "11-bhs-2",
             name: "Bahasa Asing (Jepang/Mandarin)",
-            icon: Languages,
+            icon: PhTranslate,
             color: "text-cyan-600 dark:text-cyan-400",
             bg: "bg-cyan-100 dark:bg-cyan-900/30",
             desc: "Penguasaan dasar percakapan dan tata bahasa asing pilihan.",
@@ -286,7 +286,7 @@ const curriculumData = ref({
           {
             id: "12-ipa-1",
             name: "Matematika Peminatan",
-            icon: Sigma,
+            icon: PhSigma,
             color: "text-indigo-600 dark:text-indigo-400",
             bg: "bg-indigo-100 dark:bg-indigo-900/30",
             desc: "Kalkulus lanjutan, trigonometri kompleks, dan geometri ruang.",
@@ -300,7 +300,7 @@ const curriculumData = ref({
           {
             id: "12-ipa-2",
             name: "Kimia Analisis",
-            icon: FlaskConical,
+            icon: PhFlask,
             color: "text-pink-600 dark:text-pink-400",
             bg: "bg-pink-100 dark:bg-pink-900/30",
             desc: "Reaksi kimia organik, termokimia, dan elektrokimia.",
@@ -321,7 +321,7 @@ const curriculumData = ref({
           {
             id: "12-ips-1",
             name: "Geografi Regional",
-            icon: MapIcon,
+            icon: PhMapTrifold,
             color: "text-teal-600 dark:text-teal-400",
             bg: "bg-teal-100 dark:bg-teal-900/30",
             desc: "Pemetaan spasial, sistem informasi geografis, dan tata ruang.",
@@ -335,7 +335,7 @@ const curriculumData = ref({
           {
             id: "12-ips-2",
             name: "Sejarah Dunia Modern",
-            icon: Hourglass,
+            icon: PhHourglass,
             color: "text-amber-700 dark:text-amber-500",
             bg: "bg-amber-100 dark:bg-amber-900/30",
             desc: "Analisis sejarah kontemporer dan dampaknya pada geopolitik.",
@@ -356,7 +356,7 @@ const curriculumData = ref({
           {
             id: "12-bhs-1",
             name: "Bahasa Inggris Lanjut (TOEFL Prep)",
-            icon: Globe,
+            icon: PhGlobe,
             color: "text-indigo-600 dark:text-indigo-400",
             bg: "bg-indigo-100 dark:bg-indigo-900/30",
             desc:
@@ -371,7 +371,7 @@ const curriculumData = ref({
           {
             id: "12-bhs-2",
             name: "Antropologi Budaya",
-            icon: Users2,
+            icon: PhUsersThree,
             color: "text-rose-700 dark:text-rose-500",
             bg: "bg-rose-100 dark:bg-rose-900/30",
             desc: "Kajian etnografi dan pewarisan budaya masyarakat lokal dan global.",
@@ -443,7 +443,7 @@ const currentSyllabus = computed(() => {
               <div
                 class="w-12 h-12 shrink-0 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex items-center justify-center"
               >
-                <Heart class="w-6 h-6" />
+                <PhHeart class="w-6 h-6" />
               </div>
               <div>
                 <h4 class="font-bold text-gray-900 dark:text-white mb-1">
@@ -463,7 +463,7 @@ const currentSyllabus = computed(() => {
               <div
                 class="w-12 h-12 shrink-0 rounded-full bg-yellow-100 dark:bg-yellow-900/40 text-yellow-600 dark:text-yellow-400 flex items-center justify-center"
               >
-                <Globe2 class="w-6 h-6" />
+                <PhGlobeHemisphereWest class="w-6 h-6" />
               </div>
               <div>
                 <h4 class="font-bold text-gray-900 dark:text-white mb-1">
@@ -483,7 +483,7 @@ const currentSyllabus = computed(() => {
               <div
                 class="w-12 h-12 shrink-0 rounded-full bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 flex items-center justify-center"
               >
-                <Users class="w-6 h-6" />
+                <PhUsers class="w-6 h-6" />
               </div>
               <div>
                 <h4 class="font-bold text-gray-900 dark:text-white mb-1">
@@ -503,7 +503,7 @@ const currentSyllabus = computed(() => {
               <div
                 class="w-12 h-12 shrink-0 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center"
               >
-                <UserCheck class="w-6 h-6" />
+                <PhUserCheck class="w-6 h-6" />
               </div>
               <div>
                 <h4 class="font-bold text-gray-900 dark:text-white mb-1">Mandiri</h4>
@@ -521,7 +521,7 @@ const currentSyllabus = computed(() => {
               <div
                 class="w-12 h-12 shrink-0 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 flex items-center justify-center"
               >
-                <Lightbulb class="w-6 h-6" />
+                <PhLightbulb class="w-6 h-6" />
               </div>
               <div>
                 <h4 class="font-bold text-gray-900 dark:text-white mb-1">
@@ -541,7 +541,7 @@ const currentSyllabus = computed(() => {
               <div
                 class="w-12 h-12 shrink-0 rounded-full bg-pink-100 dark:bg-pink-900/40 text-pink-600 dark:text-pink-400 flex items-center justify-center"
               >
-                <Palette class="w-6 h-6" />
+                <PhPalette class="w-6 h-6" />
               </div>
               <div>
                 <h4 class="font-bold text-gray-900 dark:text-white mb-1">Kreatif</h4>
@@ -573,7 +573,7 @@ const currentSyllabus = computed(() => {
           <!-- Search Bar -->
           <div class="mb-10">
             <div class="relative">
-              <Search
+              <PhMagnifyingGlass
                 class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300 pointer-events-none z-10"
               />
               <input
@@ -606,7 +606,7 @@ const currentSyllabus = computed(() => {
                   <h4 class="text-lg font-bold mb-1">{{ grade.name }}</h4>
                   <p class="text-sm opacity-80">{{ grade.desc }}</p>
                 </div>
-                <ChevronRight
+                <PhCaretRight
                   class="w-5 h-5 transition-transform"
                   :class="activeGrade === grade.id ? 'translate-x-1' : ''"
                 />
@@ -636,7 +636,7 @@ const currentSyllabus = computed(() => {
                   <h4 class="text-lg font-bold mb-1">{{ major.name }}</h4>
                   <p class="text-sm opacity-80">{{ major.desc }}</p>
                 </div>
-                <ChevronRight
+                <PhCaretRight
                   class="w-5 h-5 transition-transform"
                   :class="activeMajor === major.id ? 'translate-x-1' : ''"
                 />
@@ -649,7 +649,7 @@ const currentSyllabus = computed(() => {
             class="mt-10 bg-white/10 backdrop-blur-md p-5 rounded-lg border border-white/20 dark:bg-slate-800 dark:border-slate-700 shadow-sm"
           >
             <h4 class="font-bold text-white mb-2 flex items-center">
-              <Info class="w-4 h-4 mr-2" /> Info Silabus
+              <PhInfo class="w-4 h-4 mr-2" /> Info Silabus
             </h4>
             <p class="text-sm text-blue-100 dark:text-gray-400 leading-relaxed">
               Klik pada setiap mata pelajaran di samping untuk melihat rincian topik
@@ -728,7 +728,7 @@ const currentSyllabus = computed(() => {
                             : ''
                         "
                       >
-                        <ChevronDown class="w-5 h-5" />
+                        <PhCaretDown class="w-5 h-5" />
                       </div>
                     </button>
 
@@ -747,7 +747,7 @@ const currentSyllabus = computed(() => {
                         <h4
                           class="text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider flex items-center mt-4"
                         >
-                          <Bookmark class="w-4 h-4 mr-2 text-blue-500" />
+                          <PhBookmark class="w-4 h-4 mr-2 text-blue-500" />
                           Topik Pembelajaran
                         </h4>
 
@@ -757,7 +757,9 @@ const currentSyllabus = computed(() => {
                             :key="tIdx"
                             class="flex items-start gap-3 bg-white dark:bg-slate-700 p-3.5 rounded-lg border border-gray-100 dark:border-slate-600/50 shadow-sm"
                           >
-                            <CheckCircle class="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+                            <PhCheckCircle
+                              class="w-5 h-5 text-green-500 shrink-0 mt-0.5"
+                            />
                             <span
                               class="text-sm font-medium text-gray-700 dark:text-gray-200 leading-snug"
                               >{{ topic }}</span
@@ -778,7 +780,10 @@ const currentSyllabus = computed(() => {
                 <div
                   class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 dark:bg-slate-700 mb-4 text-white"
                 >
-                  <component :is="searchQuery ? SearchX : BookX" class="w-8 h-8" />
+                  <component
+                    :is="searchQuery ? PhWarningCircle : PhFileX"
+                    class="w-8 h-8"
+                  />
                 </div>
                 <h3 class="text-lg font-bold text-white">
                   {{

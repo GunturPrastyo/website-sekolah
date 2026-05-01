@@ -1,6 +1,11 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { GraduationCap, BookOpen, CheckCircle2, Briefcase } from "lucide-vue-next";
+import {
+  PhGraduationCap,
+  PhBookOpen,
+  PhCheckCircle,
+  PhBriefcase,
+} from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 
 const programs = ref([
@@ -202,7 +207,7 @@ onMounted(() => {
                     : 'border-white/20 dark:border-white/10',
                 ]"
               >
-                <GraduationCap class="w-3.5 h-3.5 mr-1.5" />
+                <PhGraduationCap class="w-3.5 h-3.5 mr-1.5" />
                 {{ program.badge }}
               </div>
               <h2
@@ -233,7 +238,7 @@ onMounted(() => {
                       index % 2 === 0 ? 'text-slate-900 dark:text-white' : 'text-white'
                     "
                   >
-                    <BookOpen
+                    <PhBookOpen
                       class="w-5 h-5 mr-2"
                       :class="index % 2 === 0 ? program.textClass : 'text-white/90'"
                     />
@@ -250,7 +255,7 @@ onMounted(() => {
                           : 'text-white/80 dark:text-slate-300',
                       ]"
                     >
-                      <CheckCircle2
+                      <PhCheckCircle
                         class="w-4 h-4 mr-2 mt-0.5 shrink-0"
                         :class="index % 2 === 0 ? program.textClass : 'text-white/90'"
                       />
@@ -266,7 +271,7 @@ onMounted(() => {
                       index % 2 === 0 ? 'text-slate-900 dark:text-white' : 'text-white'
                     "
                   >
-                    <Briefcase
+                    <PhBriefcase
                       class="w-5 h-5 mr-2"
                       :class="index % 2 === 0 ? program.textClass : 'text-white/90'"
                     />
@@ -283,7 +288,7 @@ onMounted(() => {
                           : 'text-white/80 dark:text-slate-300',
                       ]"
                     >
-                      <CheckCircle2
+                      <PhCheckCircle
                         class="w-4 h-4 mr-2 mt-0.5 shrink-0"
                         :class="index % 2 === 0 ? program.textClass : 'text-white/90'"
                       />

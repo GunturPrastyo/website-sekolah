@@ -1,16 +1,15 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import {
-  Clock,
-  Share2,
-  Quote,
-  Users,
-  FileText,
-  Link,
-  TrendingUp,
-  Calendar,
-  Eye,
-} from "lucide-vue-next";
+  PhClock,
+  PhShareNetwork,
+  PhUsers,
+  PhFileText,
+  PhLink,
+  PhTrendUp,
+  PhCalendarBlank,
+  PhEye,
+} from "@phosphor-icons/vue";
 import Breadcrumb from "@/components/Breadcrumb.vue";
 import ShareModal from "@/components/ShareModal.vue";
 
@@ -160,7 +159,7 @@ onMounted(() => {
                 Kegiatan
               </span>
               <span class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
-                <i data-lucide="clock" class="w-3.5 h-3.5 mr-1.5"></i> 3 menit baca
+                <PhClock class="w-3.5 h-3.5 mr-1.5" /> 3 menit baca
               </span>
             </div>
 
@@ -194,7 +193,7 @@ onMounted(() => {
                   @click="openShareModal"
                   class="p-2 rounded-full bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-blue-50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
-                  <Share2 class="w-5 h-5" />
+                  <PhShareNetwork class="w-5 h-5" />
                 </button>
               </div>
             </div>
@@ -334,7 +333,7 @@ onMounted(() => {
               <h4
                 class="text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center"
               >
-                <Users class="w-4 h-4 mr-1.5 text-gray-400" /> Penulis Lainnya
+                <PhUsers class="w-4 h-4 mr-1.5 text-gray-400" /> Penulis Lainnya
               </h4>
               <div class="flex flex-wrap gap-2">
                 <a
@@ -347,7 +346,7 @@ onMounted(() => {
                   <span
                     class="ml-1.5 inline-flex items-center gap-1 px-1.5 py-0.5 bg-gray-200 group-hover:bg-blue-100 dark:bg-slate-600 dark:group-hover:bg-blue-900/40 text-gray-600 group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-400 rounded-md text-[10px] font-bold transition-colors"
                   >
-                    <FileText class="w-3 h-3" />
+                    <PhFileText class="w-3 h-3" />
                     {{ author.articles }}
                   </span>
                 </a>
@@ -362,7 +361,7 @@ onMounted(() => {
             <h3
               class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
             >
-              <Link class="w-5 h-5 mr-2 text-blue-500" />
+              <PhLink class="w-5 h-5 mr-2 text-blue-500" />
               Artikel Terkait
             </h3>
             <div class="space-y-5">
@@ -401,11 +400,11 @@ onMounted(() => {
                     class="flex items-center justify-between text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-auto"
                   >
                     <span class="flex items-center">
-                      <Calendar class="w-3 h-3 mr-1" />
+                      <PhCalendarBlank class="w-3 h-3 mr-1" />
                       {{ article.date }}
                     </span>
                     <span class="flex items-center">
-                      <Eye class="w-3 h-3 mr-1" />
+                      <PhEye class="w-3 h-3 mr-1" />
                       {{ article.views }}
                     </span>
                   </div>
@@ -421,7 +420,7 @@ onMounted(() => {
             <h3
               class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
             >
-              <TrendingUp class="w-5 h-5 mr-2 text-blue-500" />
+              <PhTrendUp class="w-5 h-5 mr-2 text-blue-500" />
               Terpopuler
             </h3>
             <div class="space-y-5">
@@ -460,11 +459,11 @@ onMounted(() => {
                     class="flex items-center justify-between text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-auto"
                   >
                     <span class="flex items-center">
-                      <Calendar class="w-3 h-3 mr-1" />
+                      <PhCalendarBlank class="w-3 h-3 mr-1" />
                       {{ news.date }}
                     </span>
                     <span class="flex items-center">
-                      <Eye class="w-3 h-3 mr-1" />
+                      <PhEye class="w-3 h-3 mr-1" />
                       {{ news.views }}
                     </span>
                   </div>

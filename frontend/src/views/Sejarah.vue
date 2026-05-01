@@ -1,17 +1,17 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import {
-  Building,
-  Hammer,
-  Award,
-  Monitor,
-  Leaf,
-  Rocket,
-  CheckCircle2,
-  Hash,
-  CalendarDays,
-  MapPin,
-} from "lucide-vue-next";
+  PhBuildings,
+  PhHammer,
+  PhMedal,
+  PhMonitor,
+  PhLeaf,
+  PhRocket,
+  PhCheckCircle,
+  PhHash,
+  PhCalendar,
+  PhMapPin,
+} from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 
 const timelineRef = ref(null);
@@ -38,7 +38,7 @@ const timeline = ref([
   {
     year: "1985",
     title: "Pendirian & Peresmian SMAN 1",
-    icon: Building,
+    icon: PhBuildings,
     image: "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?q=80&w=800",
     description:
       "Sekolah ini resmi didirikan pada tanggal 17 Agustus 1985 berdasarkan SK Menteri Pendidikan. Pada awalnya, sekolah hanya memiliki 3 ruang kelas dengan 120 siswa angkatan pertama dan menumpang di gedung SMP terdekat selama proses pembangunan gedung utama berlangsung.",
@@ -46,7 +46,7 @@ const timeline = ref([
   {
     year: "1992",
     title: "Pembangunan Gedung Utama",
-    icon: Hammer,
+    icon: PhHammer,
     image: "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=800",
     description:
       "Pembangunan gedung sekolah mandiri akhirnya selesai dan diresmikan oleh Gubernur. Di tahun ini, SMAN 1 mulai menempati lokasi saat ini dengan fasilitas yang diperluas, meliputi 12 ruang kelas, ruang guru, dan lapangan olahraga serbaguna.",
@@ -54,7 +54,7 @@ const timeline = ref([
   {
     year: "2005",
     title: "Akreditasi A & Prestasi Nasional",
-    icon: Award,
+    icon: PhMedal,
     image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800",
     description:
       "Berkat dedikasi seluruh civitas akademika, SMAN 1 berhasil meraih akreditasi A (Sangat Baik). Pada tahun yang sama, tim cerdas cermat sekolah berhasil membawa pulang piala Juara 1 tingkat Nasional untuk pertama kalinya.",
@@ -62,7 +62,7 @@ const timeline = ref([
   {
     year: "2015",
     title: "Era Transformasi Digital",
-    icon: Monitor,
+    icon: PhMonitor,
     image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800",
     description:
       "Menjawab tantangan abad 21, sekolah mulai mengintegrasikan teknologi ke dalam pembelajaran. Pembangunan laboratorium komputer modern, perpustakaan digital, serta pengadaan proyektor dan Wi-Fi di seluruh area sekolah mulai direalisasikan.",
@@ -70,7 +70,7 @@ const timeline = ref([
   {
     year: "2021",
     title: "Sekolah Adiwiyata & Peduli Lingkungan",
-    icon: Leaf,
+    icon: PhLeaf,
     image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e736?q=80&w=800",
     description:
       "Berkomitmen pada lingkungan yang asri, sekolah memenangkan penghargaan Sekolah Adiwiyata tingkat Provinsi. Program bank sampah, taman hidroponik, dan ruang hijau terpadu menjadi identitas baru SMAN 1.",
@@ -78,7 +78,7 @@ const timeline = ref([
   {
     year: "2026",
     title: "Pelopor Kurikulum Merdeka",
-    icon: Rocket,
+    icon: PhRocket,
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800",
     description:
       "Hari ini, SMAN 1 Nogosari terus melesat menjadi sekolah percontohan dalam implementasi Kurikulum Merdeka. Dengan lebih dari 1100 siswa, kami terus melahirkan lulusan yang cerdas, berkarakter, dan berdaya saing global.",
@@ -170,7 +170,7 @@ onBeforeUnmount(() => {
               <span
                 class="text-white font-extrabold text-xs md:text-sm flex items-center tracking-wide"
               >
-                <CheckCircle2 class="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5" />
+            <PhCheckCircle class="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5" />
                 Terakreditasi A <span class="hidden sm:inline ml-1">(Sangat Baik)</span>
               </span>
             </div>
@@ -202,7 +202,7 @@ onBeforeUnmount(() => {
                 <div
                   class="w-11 h-11 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shrink-0 mr-4 group-hover:bg-blue-800 dark:group-hover:bg-blue-700 transition-colors shadow-sm"
                 >
-                  <Hash class="w-5 h-5" />
+              <PhHash class="w-5 h-5" />
                 </div>
                 <div>
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">NPSN</h4>
@@ -213,7 +213,7 @@ onBeforeUnmount(() => {
                 <div
                   class="w-11 h-11 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shrink-0 mr-4 group-hover:bg-blue-800 dark:group-hover:bg-blue-700 transition-colors shadow-sm"
                 >
-                  <CalendarDays class="w-5 h-5" />
+              <PhCalendar class="w-5 h-5" />
                 </div>
                 <div>
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">
@@ -228,7 +228,7 @@ onBeforeUnmount(() => {
                 <div
                   class="w-11 h-11 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shrink-0 mr-4 group-hover:bg-blue-800 dark:group-hover:bg-blue-700 transition-colors shadow-sm"
                 >
-                  <MapPin class="w-5 h-5" />
+              <PhMapPin class="w-5 h-5" />
                 </div>
                 <div>
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">Lokasi</h4>
@@ -241,7 +241,7 @@ onBeforeUnmount(() => {
                 <div
                   class="w-11 h-11 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shrink-0 mr-4 group-hover:bg-blue-800 dark:group-hover:bg-blue-700 transition-colors shadow-sm"
                 >
-                  <Award class="w-5 h-5" />
+              <PhMedal class="w-5 h-5" />
                 </div>
                 <div>
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">Status</h4>

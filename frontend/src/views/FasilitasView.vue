@@ -150,7 +150,7 @@
                               v-if="!(imgIdx === 3 && item.images.length > 4)"
                               class="w-12 h-12 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transform scale-50 group-hover:scale-100 transition-all duration-300 shadow-lg"
                             >
-                              <Maximize2 class="w-5 h-5" />
+                            <PhArrowsOut class="w-5 h-5" />
                             </div>
                           </div>
 
@@ -159,7 +159,7 @@
                             v-if="imgIdx === 3 && item.images.length > 4"
                             class="absolute inset-0 bg-blue-900/80 flex flex-col items-center justify-center text-white backdrop-blur-[2px] transition-colors group-hover:bg-blue-800"
                           >
-                            <ImageIcon class="w-8 h-8 mb-2 opacity-80" />
+                          <PhImage class="w-8 h-8 mb-2 opacity-80" />
                             <span class="text-3xl md:text-4xl font-bold"
                               >+{{ item.images.length - 4 }}</span
                             >
@@ -187,7 +187,7 @@
                         <div
                           class="w-16 h-16 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transform scale-50 group-hover:scale-100 transition-all duration-500 shadow-xl"
                         >
-                          <Maximize2 class="w-6 h-6" />
+                        <PhArrowsOut class="w-6 h-6" />
                         </div>
                       </div>
                     </div>
@@ -270,13 +270,13 @@
                     v-if="other.id === activeCategory"
                     class="mt-1.5 w-7 h-7 shrink-0 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-sm"
                   >
-                    <CheckCircle2 class="w-4 h-4" />
+                    <PhCheckCircle class="w-4 h-4" />
                   </div>
                   <div
                     v-else
                     class="mt-1.5 w-7 h-7 shrink-0 rounded-full bg-gray-100 dark:bg-slate-700 flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors"
                   >
-                    <ArrowRight
+                    <PhArrowRight
                       class="w-3.5 h-3.5 text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-transform duration-300 group-hover:translate-x-0.5"
                     />
                   </div>
@@ -304,7 +304,7 @@
           class="w-10 h-10 md:w-12 md:h-12 bg-blue-600/90 hover:bg-blue-700 text-white rounded-full shadow-lg backdrop-blur-sm flex items-center justify-center transition-all hover:-translate-y-1 focus:outline-none"
           title="Scroll ke Atas"
         >
-          <ChevronUp class="w-5 h-5 md:w-6 md:h-6" />
+          <PhCaretUp class="w-5 h-5 md:w-6 md:h-6" />
         </button>
       </Transition>
 
@@ -322,7 +322,7 @@
           class="w-10 h-10 md:w-12 md:h-12 bg-blue-600/90 hover:bg-blue-700 text-white rounded-full shadow-lg backdrop-blur-sm flex items-center justify-center transition-all hover:translate-y-1 focus:outline-none"
           title="Scroll ke Bawah"
         >
-          <ChevronDown class="w-5 h-5 md:w-6 md:h-6" />
+          <PhCaretDown class="w-5 h-5 md:w-6 md:h-6" />
         </button>
       </Transition>
     </div>
@@ -346,7 +346,7 @@
           @click.stop="closeGallery"
           class="absolute top-4 right-4 md:top-6 md:right-6 text-white/70 hover:text-white transition-colors z-50 p-2"
         >
-          <X class="w-8 h-8" />
+          <PhX class="w-8 h-8" />
         </button>
 
         <!-- Navigation Buttons -->
@@ -412,14 +412,14 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from "vue";
 import {
-  Maximize2,
-  Image as ImageIcon,
-  CheckCircle2,
-  ArrowRight,
-  ChevronUp,
-  ChevronDown,
-  X,
-} from "lucide-vue-next";
+  PhArrowsOut,
+  PhImage,
+  PhCheckCircle,
+  PhArrowRight,
+  PhCaretUp,
+  PhCaretDown,
+  PhX,
+} from "@phosphor-icons/vue";
 
 const activeCategory = ref("kelas");
 const showScrollTop = ref(false);

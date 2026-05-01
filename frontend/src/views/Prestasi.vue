@@ -1,21 +1,21 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import {
-  Trophy,
-  Globe2,
-  Flag,
-  Map as MapIcon,
-  Building2,
-  BookOpen,
-  ChevronDown,
-  Search,
-  Calendar,
-  Filter,
-  Medal,
-  Award,
-  ArrowRight,
-  User,
-} from "lucide-vue-next";
+  PhTrophy,
+  PhGlobe,
+  PhFlag,
+  PhMapPin,
+  PhBuildings,
+  PhBookOpen,
+  PhCaretDown,
+  PhMagnifyingGlass,
+  PhCalendarBlank,
+  PhFunnel,
+  PhMedal,
+  PhCertificate,
+  PhArrowRight,
+  PhUser,
+} from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 
 const activeFilter = ref("semua");
@@ -185,14 +185,14 @@ const getRankStyle = (rank) => {
         badge:
           "bg-gradient-to-r from-yellow-400 to-yellow-600 text-white shadow-yellow-500/50",
         text: "Juara 1 (Emas)",
-        icon: Medal,
+        icon: PhMedal,
         border: "border-yellow-400",
       };
     case 2:
       return {
         badge: "bg-gradient-to-r from-gray-300 to-gray-500 text-white shadow-gray-500/50",
         text: "Juara 2 (Perak)",
-        icon: Medal,
+        icon: PhMedal,
         border: "border-gray-400",
       };
     case 3:
@@ -200,14 +200,14 @@ const getRankStyle = (rank) => {
         badge:
           "bg-gradient-to-r from-amber-600 to-orange-700 text-white shadow-orange-500/50",
         text: "Juara 3 (Perunggu)",
-        icon: Medal,
+        icon: PhMedal,
         border: "border-orange-500",
       };
     default:
       return {
         badge: "bg-gradient-to-r from-blue-400 to-blue-600 text-white shadow-blue-500/50",
         text: "Finalis / Penghargaan",
-        icon: Award,
+        icon: PhCertificate,
         border: "border-blue-400",
       };
   }
@@ -232,7 +232,7 @@ onMounted(() => {
         <div
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] text-yellow-500 pointer-events-none"
         >
-          <Trophy class="w-[400px] h-[400px]" />
+        <PhTrophy class="w-[400px] h-[400px]" />
         </div>
       </template>
     </PageHeader>
@@ -251,7 +251,7 @@ onMounted(() => {
             <div
               class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3 md:mb-4"
             >
-              <Globe2 class="w-5 h-5 md:w-6 md:h-6" />
+              <PhGlobe class="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <p class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-1">
               {{ animatedCounts.internasional }}
@@ -270,7 +270,7 @@ onMounted(() => {
             <div
               class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-red-50 dark:bg-slate-700 flex items-center justify-center text-red-600 dark:text-red-400 mb-3 md:mb-4"
             >
-              <Flag class="w-5 h-5 md:w-6 md:h-6" />
+              <PhFlag class="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <p class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-1">
               {{ animatedCounts.nasional }}
@@ -289,7 +289,7 @@ onMounted(() => {
             <div
               class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-green-50 dark:bg-slate-700 flex items-center justify-center text-green-600 dark:text-green-400 mb-3 md:mb-4"
             >
-              <MapIcon class="w-5 h-5 md:w-6 md:h-6" />
+              <PhMapPin class="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <p class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-1">
               {{ animatedCounts.provinsi }}
@@ -308,7 +308,7 @@ onMounted(() => {
             <div
               class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-amber-50 dark:bg-slate-700 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-3 md:mb-4"
             >
-              <Building2 class="w-5 h-5 md:w-6 md:h-6" />
+              <PhBuildings class="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <p class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-1">
               {{ animatedCounts.kabupaten }}
@@ -327,7 +327,7 @@ onMounted(() => {
           <div class="flex flex-row items-center gap-2.5 md:gap-4 w-full">
             <!-- Filter Bidang -->
             <div class="relative w-12 md:w-48 shrink-0">
-              <BookOpen
+              <PhBookOpen
                 class="absolute left-1/2 md:left-4 top-1/2 -translate-x-1/2 md:translate-x-0 -translate-y-1/2 w-5 h-5 md:w-4 md:h-4 pointer-events-none transition-colors"
                 :class="
                   activeType !== 'semua'
@@ -351,13 +351,13 @@ onMounted(() => {
               <div
                 class="absolute inset-y-0 right-4 hidden md:flex items-center pointer-events-none"
               >
-                <ChevronDown class="w-4 h-4 text-gray-400" />
+                <PhCaretDown class="w-4 h-4 text-gray-400" />
               </div>
             </div>
 
             <!-- Filter Tahun -->
             <div class="relative w-12 md:w-52 shrink-0">
-              <Calendar
+              <PhCalendarBlank
                 class="absolute left-1/2 md:left-4 top-1/2 -translate-x-1/2 md:translate-x-0 -translate-y-1/2 w-5 h-5 md:w-4 md:h-4 pointer-events-none transition-colors"
                 :class="
                   activeYear !== 'semua'
@@ -381,13 +381,13 @@ onMounted(() => {
               <div
                 class="absolute inset-y-0 right-4 hidden md:flex items-center pointer-events-none"
               >
-                <ChevronDown class="w-4 h-4 text-gray-400" />
+                <PhCaretDown class="w-4 h-4 text-gray-400" />
               </div>
             </div>
 
             <!-- Search Bar -->
             <div class="relative flex-1 shrink-0 min-w-0">
-              <Search
+              <PhMagnifyingGlass
                 class="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400"
               />
               <input
@@ -406,7 +406,7 @@ onMounted(() => {
             <h4
               class="text-sm font-bold text-gray-900 dark:text-white whitespace-nowrap shrink-0 flex items-center sm:pl-2"
             >
-              <Filter class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
+              <PhFunnel class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
               Tingkat Lomba:
             </h4>
             <div class="flex flex-wrap items-center gap-2 md:gap-2.5">
@@ -486,7 +486,7 @@ onMounted(() => {
                   prestasi.type
                 }}</span>
                 <span class="flex items-center"
-                  ><Calendar class="w-3.5 h-3.5 mr-1" /> {{ prestasi.year }}</span
+                  ><PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> {{ prestasi.year }}</span
                 >
               </div>
 
@@ -503,7 +503,7 @@ onMounted(() => {
                 class="inline-flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors mb-4 w-fit"
               >
                 Baca Liputan Berita
-                <ArrowRight class="w-3.5 h-3.5 ml-1" />
+                <PhArrowRight class="w-3.5 h-3.5 ml-1" />
               </router-link>
 
               <div
@@ -512,7 +512,7 @@ onMounted(() => {
                 <div
                   class="w-10 h-10 rounded-full bg-blue-100 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0"
                 >
-                  <User class="w-5 h-5" />
+                  <PhUser class="w-5 h-5" />
                 </div>
                 <div>
                   <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">
@@ -537,7 +537,7 @@ onMounted(() => {
           <div
             class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700 mb-4 text-gray-400"
           >
-            <Award class="w-8 h-8" />
+            <PhCertificate class="w-8 h-8" />
           </div>
           <h3 class="text-lg font-bold text-gray-900 dark:text-white">Tidak Ditemukan</h3>
           <p class="text-gray-500 dark:text-gray-400 mt-1">

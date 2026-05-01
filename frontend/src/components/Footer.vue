@@ -124,35 +124,35 @@
               <router-link
                 to="/profil"
                 class="hover:text-white transition-colors flex items-center"
-                ><ChevronRight class="w-4 h-4 mr-2" /> Profil Sekolah</router-link
+                ><PhCaretRight class="w-4 h-4 mr-2" /> Profil Sekolah</router-link
               >
             </li>
             <li>
               <router-link
                 to="/visi-misi"
                 class="hover:text-white transition-colors flex items-center"
-                ><ChevronRight class="w-4 h-4 mr-2" /> Visi & Misi</router-link
+                ><PhCaretRight class="w-4 h-4 mr-2" /> Visi & Misi</router-link
               >
             </li>
             <li>
               <router-link
                 to="/guru-staf"
                 class="hover:text-white transition-colors flex items-center"
-                ><ChevronRight class="w-4 h-4 mr-2" /> Data Guru & Staf</router-link
+                ><PhCaretRight class="w-4 h-4 mr-2" /> Data Guru & Staf</router-link
               >
             </li>
             <li>
               <router-link
                 to="/prestasi"
                 class="hover:text-white transition-colors flex items-center"
-                ><ChevronRight class="w-4 h-4 mr-2" /> Prestasi Siswa</router-link
+                ><PhCaretRight class="w-4 h-4 mr-2" /> Prestasi Siswa</router-link
               >
             </li>
             <li>
               <router-link
                 to="/galeri"
                 class="hover:text-white transition-colors flex items-center"
-                ><ChevronRight class="w-4 h-4 mr-2" /> Galeri Kegiatan</router-link
+                ><PhCaretRight class="w-4 h-4 mr-2" /> Galeri Kegiatan</router-link
               >
             </li>
           </ul>
@@ -163,18 +163,18 @@
           <h4 class="text-white font-bold mb-6 text-lg">Hubungi Kami</h4>
           <ul class="space-y-4 text-sm">
             <li class="flex items-start">
-              <MapPin class="w-5 h-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
+              <PhMapPin class="w-5 h-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
               <span class="text-slate-400"
                 >Jl. Raya Nogosari No. 123, Kec. Nogosari, Kab. Boyolali, Jawa Tengah
                 57378</span
               >
             </li>
             <li class="flex items-center">
-              <Phone class="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />
+              <PhPhone class="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />
               <span class="text-slate-400">(0276) 1234567</span>
             </li>
             <li class="flex items-center">
-              <Mail class="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />
+              <PhEnvelope class="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />
               <span class="text-slate-400">info@sman1nogosari.sch.id</span>
             </li>
           </ul>
@@ -223,7 +223,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { ChevronRight, MapPin, Phone, Mail } from "lucide-vue-next";
+import { PhCaretRight, PhMapPin, PhPhone, PhEnvelope } from "@phosphor-icons/vue";
 
 const footerRef = ref(null);
 

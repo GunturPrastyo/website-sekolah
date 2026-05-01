@@ -48,7 +48,7 @@
               class="ml-1 flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': activeDropdown === 'profil' }"
             >
-              <ChevronDown class="h-4 w-4" />
+            <PhCaretDown class="h-4 w-4" />
             </span>
           </button>
           <transition
@@ -107,7 +107,7 @@
               class="ml-1 flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': activeDropdown === 'akademik' }"
             >
-              <ChevronDown class="h-4 w-4" />
+            <PhCaretDown class="h-4 w-4" />
             </span>
           </button>
           <transition
@@ -166,7 +166,7 @@
               class="ml-1 flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': activeDropdown === 'informasi' }"
             >
-              <ChevronDown class="h-4 w-4" />
+            <PhCaretDown class="h-4 w-4" />
             </span>
           </button>
           <transition
@@ -226,10 +226,10 @@
           ]"
         >
           <span v-show="!isDarkMode" class="flex items-center justify-center">
-            <Moon class="w-5 h-5" />
+          <PhMoon class="w-5 h-5" />
           </span>
           <span v-show="isDarkMode" class="flex items-center justify-center">
-            <Sun class="w-5 h-5" />
+          <PhSun class="w-5 h-5" />
           </span>
         </button>
       </div>
@@ -247,10 +247,10 @@
           ]"
         >
           <span v-show="!isDarkMode" class="flex items-center justify-center">
-            <Moon class="w-5 h-5" />
+          <PhMoon class="w-5 h-5" />
           </span>
           <span v-show="isDarkMode" class="flex items-center justify-center">
-            <Sun class="w-5 h-5" />
+          <PhSun class="w-5 h-5" />
           </span>
         </button>
         <button
@@ -270,7 +270,7 @@
                 : 'rotate-0 scale-100 opacity-100'
             "
           >
-            <Menu class="h-6 w-6" />
+          <PhList class="h-6 w-6" />
           </span>
           <span
             class="absolute transition-all duration-500 ease-in-out flex items-center justify-center"
@@ -280,7 +280,7 @@
                 : '-rotate-90 scale-0 opacity-0'
             "
           >
-            <X class="h-6 w-6" />
+          <PhX class="h-6 w-6" />
           </span>
         </button>
       </div>
@@ -315,7 +315,7 @@
               class="flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': mobileDropdowns.profil }"
             >
-              <ChevronDown class="h-5 w-5" />
+            <PhCaretDown class="h-5 w-5" />
             </span>
           </button>
           <div
@@ -363,7 +363,7 @@
               class="flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': mobileDropdowns.akademik }"
             >
-              <ChevronDown class="h-5 w-5" />
+            <PhCaretDown class="h-5 w-5" />
             </span>
           </button>
           <div
@@ -411,7 +411,7 @@
               class="flex items-center transition-transform duration-300"
               :class="{ 'rotate-180': mobileDropdowns.informasi }"
             >
-              <ChevronDown class="h-5 w-5" />
+            <PhCaretDown class="h-5 w-5" />
             </span>
           </button>
           <div
@@ -459,7 +459,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, reactive, watch } from "vue";
 import { useRoute } from "vue-router";
-import { ChevronDown, Moon, Sun, Menu, X } from "lucide-vue-next";
+import { PhCaretDown, PhMoon, PhSun, PhList, PhX } from "@phosphor-icons/vue";
 
 const navRef = ref(null);
 const isNavbarScrolled = ref(false);

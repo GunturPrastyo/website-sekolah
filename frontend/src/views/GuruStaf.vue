@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed, onMounted, nextTick, watch } from "vue";
-import { createIcons, icons } from "lucide";
 import PageHeader from "@/components/PageHeader.vue";
 
 const changeCategory = (id) => {
@@ -113,9 +112,6 @@ const fetchData = () => {
   isFetching.value = true;
   setTimeout(() => {
     isFetching.value = false;
-    nextTick(() => {
-      createIcons({ icons });
-    });
   }, 800); // Simulasi delay memuat data 800ms
 };
 
@@ -129,9 +125,6 @@ const loadMore = () => {
   setTimeout(() => {
     itemsToShow.value += itemsPerPage;
     isLoadingMore.value = false;
-    nextTick(() => {
-      createIcons({ icons });
-    });
   }, 800);
 };
 

@@ -1,6 +1,13 @@
 <script setup>
-import { ref, computed, onMounted, nextTick, onUpdated } from "vue";
-import { createIcons, icons } from "lucide";
+import { ref, computed } from "vue";
+import {
+  PhPlay,
+  PhImage,
+  PhHeart,
+  PhDownloadSimple,
+  PhImageBroken,
+  PhX,
+} from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 
 const activeCategory = ref("semua");
@@ -162,16 +169,6 @@ const closeModal = () => {
   }, 300); // Tunggu animasi selesai
   document.body.style.overflow = ""; // Restore scrolling
 };
-
-onMounted(() => {
-  createIcons({ icons });
-});
-
-onUpdated(() => {
-  nextTick(() => {
-    createIcons({ icons });
-  });
-});
 </script>
 
 <template>
@@ -203,7 +200,7 @@ onUpdated(() => {
             <div
               class="w-16 h-16 md:w-20 md:h-20 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-sm group-hover:bg-blue-500 group-hover:scale-110 transition-all shadow-[0_0_30px_rgba(37,99,235,0.6)]"
             >
-              <Play class="w-8 h-8 md:w-10 md:h-10 ml-1" />
+              <PhPlay class="w-8 h-8 md:w-10 md:h-10 ml-1" weight="fill" />
             </div>
           </div>
 
@@ -264,7 +261,7 @@ onUpdated(() => {
             class="text-md sm:text-lg font-bold text-white flex items-center tracking-wide"
             style="font-family: 'Kalam', cursive"
           >
-            <i data-lucide="image" class="w-6 h-6 mr-2 text-white"></i>
+            <PhImage class="w-6 h-6 mr-2 text-white" />
             Koleksi Galeri
           </h3>
           <div
@@ -327,14 +324,14 @@ onUpdated(() => {
                 class="h-9 px-3 rounded-lg bg-white/90 hover:bg-white text-gray-700 hover:text-red-500 flex items-center justify-center shadow-sm transition-colors font-semibold text-xs gap-1.5"
                 title="Suka"
               >
-                <i data-lucide="heart" class="w-4 h-4"></i> {{ item.likes }}
+                <PhHeart class="w-4 h-4" /> {{ item.likes }}
               </button>
               <button
                 @click.stop
                 class="w-9 h-9 rounded-lg bg-white/90 hover:bg-white text-gray-700 hover:text-blue-600 flex items-center justify-center shadow-sm transition-colors"
                 title="Unduh"
               >
-                <i data-lucide="download" class="w-4 h-4"></i>
+                <PhDownloadSimple class="w-4 h-4" />
               </button>
             </div>
 
@@ -369,7 +366,7 @@ onUpdated(() => {
           <div
             class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700 mb-4 text-gray-400"
           >
-            <i data-lucide="image-off" class="w-8 h-8"></i>
+            <PhImageBroken class="w-8 h-8" />
           </div>
           <h3 class="text-lg font-bold text-gray-900 dark:text-white">Tidak Ada Foto</h3>
           <p class="text-gray-500 dark:text-gray-400 mt-1">
@@ -398,7 +395,7 @@ onUpdated(() => {
           @click.stop="closeModal"
           class="absolute top-4 right-4 md:top-6 md:right-6 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors z-50 focus:outline-none"
         >
-          <i data-lucide="x" class="w-6 h-6"></i>
+          <PhX class="w-6 h-6" />
         </button>
 
         <!-- Image -->

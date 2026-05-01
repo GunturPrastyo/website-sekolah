@@ -1,6 +1,15 @@
 <script setup>
-import { ref, computed, onMounted, nextTick, onUpdated, reactive, watch } from "vue";
-import { createIcons, icons } from "lucide";
+import { ref, computed, watch } from "vue";
+import {
+  PhCalendarBlank,
+  PhUser,
+  PhCaretRight,
+  PhEye,
+  PhFileX,
+  PhFadersHorizontal,
+  PhMagnifyingGlass,
+  PhTrendUp,
+} from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 import Breadcrumb from "@/components/Breadcrumb.vue";
 
@@ -123,16 +132,6 @@ watch([searchQuery, activeCategory], () => {
     isLoading.value = false;
   }, 800); // Tampilkan loading selama 800ms
 });
-
-onMounted(() => {
-  createIcons({ icons });
-});
-
-onUpdated(() => {
-  nextTick(() => {
-    createIcons({ icons });
-  });
-});
 </script>
 
 <template>
@@ -226,14 +225,11 @@ onUpdated(() => {
                     class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 gap-4 font-medium"
                   >
                     <span class="flex items-center">
-                      <i
-                        data-lucide="calendar"
-                        class="w-3.5 h-3.5 mr-1.5 text-blue-500"
-                      ></i>
+                      <PhCalendarBlank class="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                       {{ news.date }}
                     </span>
                     <span class="flex items-center">
-                      <i data-lucide="user" class="w-3.5 h-3.5 mr-1.5 text-blue-500"></i>
+                      <PhUser class="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                       {{ news.author }}
                     </span>
                   </div>
@@ -259,15 +255,14 @@ onUpdated(() => {
                       class="flex items-center text-sm font-bold text-blue-600 dark:text-blue-400 group-hover:underline"
                     >
                       Baca Selengkapnya
-                      <i
-                        data-lucide="chevron-right"
+                      <PhCaretRight
                         class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform"
-                      ></i>
+                      />
                     </router-link>
                     <span
                       class="flex items-center text-xs font-medium text-gray-500 dark:text-gray-400"
                     >
-                      <i data-lucide="eye" class="w-4 h-4 mr-1.5 text-blue-500"></i>
+                      <PhEye class="w-4 h-4 mr-1.5 text-blue-500" />
                       {{ news.views }}
                     </span>
                   </div>
@@ -283,7 +278,7 @@ onUpdated(() => {
               <div
                 class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700 mb-4 text-gray-400"
               >
-                <i data-lucide="search-x" class="w-8 h-8"></i>
+                <PhFileX class="w-8 h-8" />
               </div>
               <h3 class="text-lg font-bold text-gray-900 dark:text-white">
                 Berita Tidak Ditemukan
@@ -313,16 +308,15 @@ onUpdated(() => {
             <h3
               class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center"
             >
-              <i data-lucide="sliders-horizontal" class="w-5 h-5 mr-2 text-blue-500"></i>
+              <PhFadersHorizontal class="w-5 h-5 mr-2 text-blue-500" />
               Cari & Filter
             </h3>
 
             <!-- Search Bar -->
             <div class="relative mb-6">
-              <i
-                data-lucide="search"
+              <PhMagnifyingGlass
                 class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-              ></i>
+              />
               <input
                 v-model="searchQuery"
                 type="text"
@@ -362,7 +356,7 @@ onUpdated(() => {
             <h3
               class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
             >
-              <i data-lucide="trending-up" class="w-5 h-5 mr-2 text-blue-500"></i>
+              <PhTrendUp class="w-5 h-5 mr-2 text-blue-500" />
               Terpopuler
             </h3>
             <div class="space-y-5">
@@ -400,7 +394,7 @@ onUpdated(() => {
                   <span
                     class="text-[11px] font-medium text-gray-400 dark:text-gray-500 flex items-center mt-auto"
                   >
-                    <i data-lucide="eye" class="w-3.5 h-3.5 mr-1"></i>
+                    <PhEye class="w-3.5 h-3.5 mr-1" />
                     {{ news.views }} kali dibaca
                   </span>
                 </div>

@@ -76,7 +76,7 @@
                     pIdx === 0,
                 }"
               >
-                <Quote
+                <PhQuotes
                   v-if="pIdx === 0"
                   class="absolute -top-4 -left-4 md:-top-6 md:-left-6 w-8 h-8 md:w-12 md:h-12 text-blue-100 dark:text-slate-800 -z-10 rotate-180"
                 />
@@ -222,7 +222,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { Quote } from "lucide-vue-next";
+import { PhQuotes } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 
 const textContainerRef = ref(null);
