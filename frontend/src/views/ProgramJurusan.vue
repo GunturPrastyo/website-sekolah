@@ -198,7 +198,8 @@ onMounted(() => {
             <!-- Kolom Deskripsi -->
             <div class="w-full lg:w-1/2 space-y-6">
               <div
-                class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold shadow-sm border backdrop-blur-sm"
+                class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold shadow-sm border backdrop-blur-sm"
+                style="font-family: 'Kalam', cursive"
                 :class="[
                   index % 2 === 0 ? program.bgClass : 'bg-white/10 dark:bg-black/20',
                   index % 2 === 0 ? program.textClass : 'text-white',

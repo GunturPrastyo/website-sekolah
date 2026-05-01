@@ -208,7 +208,8 @@ const closeModal = () => {
             class="absolute bottom-0 left-0 p-5 md:p-8 w-full bg-gradient-to-t from-blue-950/90 via-blue-950/40 to-transparent z-10"
           >
             <span
-              class="inline-block px-3 py-1 mb-3 text-xs font-semibold text-blue-900 bg-blue-100 rounded-full"
+              class="inline-block px-3 py-1 mb-3 text-sm font-semibold text-blue-900 bg-blue-100 rounded-full"
+              style="font-family: 'Kalam', cursive"
               >Video Profil</span
             >
             <h3
