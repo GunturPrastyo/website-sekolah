@@ -1,25 +1,24 @@
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
 import {
-  FileCheck2,
-  CheckCircle,
-  GitMerge,
-  ArrowDown,
-  Map as MapIcon,
-  Award,
-  HeartHandshake,
-  Briefcase,
-  Check,
-  CheckCircle2,
-  FlaskConical,
-  Globe2,
-  Languages,
-  ArrowRight,
-  Loader2,
-  Send,
-  Printer,
-  X,
-} from "lucide-vue-next";
+  PhListChecks,
+  PhCheckCircle,
+  PhGitMerge,
+  PhArrowDown,
+  PhMapPin,
+  PhMedal,
+  PhHandshake,
+  PhBriefcase,
+  PhCheck,
+  PhFlask,
+  PhGlobe,
+  PhTranslate,
+  PhArrowRight,
+  PhSpinner,
+  PhPaperPlaneRight,
+  PhPrinter,
+  PhX,
+} from "@phosphor-icons/vue";
 import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.css";
 
@@ -225,31 +224,31 @@ onMounted(() => {
               <h3
                 class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
               >
-                <FileCheck2 class="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400" />
+                <PhListChecks class="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400" />
                 Syarat Pendaftaran
               </h3>
               <ul class="space-y-4">
                 <li class="flex items-start">
-                  <CheckCircle class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5" />
+                  <PhCheckCircle class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5" />
                   <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"
                     >Lulusan SMP/MTs sederajat tahun 2024, 2025, atau 2026.</span
                   >
                 </li>
                 <li class="flex items-start">
-                  <CheckCircle class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5" />
+                  <PhCheckCircle class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5" />
                   <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"
                     >Memiliki Nomor Induk Siswa Nasional (NISN) yang valid.</span
                   >
                 </li>
                 <li class="flex items-start">
-                  <CheckCircle class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5" />
+                  <PhCheckCircle class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5" />
                   <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"
                     >Menyiapkan berkas digital (Scan KK, Akta Kelahiran, dan
                     Ijazah/SKL).</span
                   >
                 </li>
                 <li class="flex items-start">
-                  <CheckCircle class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5" />
+                  <PhCheckCircle class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5" />
                   <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"
                     >Pas foto terbaru ukuran 3x4 berwarna (pakaian seragam asal).</span
                   >
@@ -264,7 +263,7 @@ onMounted(() => {
               <h3
                 class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
               >
-                <GitMerge class="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400" />
+                <PhGitMerge class="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400" />
                 Alur Pendaftaran
               </h3>
               <div
@@ -362,7 +361,7 @@ onMounted(() => {
                 <div
                   class="w-10 h-10 rounded-full border-2 border-yellow-400 flex items-center justify-center animate-bounce"
                 >
-                  <ArrowDown class="w-5 h-5" />
+                  <PhArrowDown class="w-5 h-5" />
                 </div>
                 Scroll untuk melihat jalur
               </div>
@@ -397,7 +396,7 @@ onMounted(() => {
                           <div
                             class="w-12 h-12 bg-yellow-400 dark:bg-yellow-500 text-blue-950 rounded-2xl flex items-center justify-center mb-4 shadow-md border border-yellow-300 dark:border-yellow-400 group-hover:scale-110 transition-transform"
                           >
-                            <MapIcon class="w-6 h-6" />
+                            <PhMapPin class="w-6 h-6" />
                           </div>
                           <h3
                             class="text-xl font-bold text-blue-950 dark:text-white mb-3"
@@ -436,7 +435,7 @@ onMounted(() => {
                           <div
                             class="w-12 h-12 bg-yellow-400 dark:bg-yellow-500 text-blue-950 rounded-2xl flex items-center justify-center mb-4 shadow-md border border-yellow-300 dark:border-yellow-400 group-hover:scale-110 transition-transform"
                           >
-                            <Award class="w-6 h-6" />
+                            <PhMedal class="w-6 h-6" />
                           </div>
                           <h3
                             class="text-xl font-bold text-blue-950 dark:text-white mb-3"
@@ -474,7 +473,7 @@ onMounted(() => {
                           <div
                             class="w-12 h-12 bg-yellow-400 dark:bg-yellow-500 text-blue-950 rounded-2xl flex items-center justify-center mb-4 shadow-md border border-yellow-300 dark:border-yellow-400 group-hover:scale-110 transition-transform"
                           >
-                            <HeartHandshake class="w-6 h-6" />
+                            <PhHandshake class="w-6 h-6" />
                           </div>
                           <h3
                             class="text-xl font-bold text-blue-950 dark:text-white mb-3"
@@ -513,7 +512,7 @@ onMounted(() => {
                           <div
                             class="w-12 h-12 bg-yellow-400 dark:bg-yellow-500 text-blue-950 rounded-2xl flex items-center justify-center mb-4 shadow-md border border-yellow-300 dark:border-yellow-400 group-hover:scale-110 transition-transform"
                           >
-                            <Briefcase class="w-6 h-6" />
+                            <PhBriefcase class="w-6 h-6" />
                           </div>
                           <h3
                             class="text-xl font-bold text-blue-950 dark:text-white mb-3"
@@ -569,7 +568,7 @@ onMounted(() => {
             <div
               class="w-24 h-24 bg-green-100 dark:bg-green-900/30 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6"
             >
-              <CheckCircle class="w-12 h-12" />
+              <PhCheckCircle class="w-12 h-12" />
             </div>
             <h2 class="text-2xl md:text-3xl font-bold text-blue-950 dark:text-white mb-4">
               Pendaftaran Berhasil!
@@ -586,7 +585,7 @@ onMounted(() => {
                 @click="printBukti"
                 class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors flex items-center justify-center"
               >
-                <Printer class="w-5 h-5 mr-2" /> Cetak Bukti Daftar
+                <PhPrinter class="w-5 h-5 mr-2" /> Cetak Bukti Daftar
               </button>
               <router-link
                 to="/"
@@ -631,7 +630,7 @@ onMounted(() => {
                         : '',
                     ]"
                   >
-                    <Check v-if="currentStep > step" class="w-5 h-5" />
+                    <PhCheck v-if="currentStep > step" class="w-5 h-5" />
                     <span v-else>{{ step }}</span>
                   </div>
                   <span
@@ -901,7 +900,7 @@ onMounted(() => {
                                 </p>
                               </div>
                             </div>
-                            <CheckCircle2
+                            <PhCheckCircle
                               v-if="form.jalurPendaftaran === 'Zonasi'"
                               class="w-6 h-6 text-blue-600"
                             />
@@ -933,7 +932,7 @@ onMounted(() => {
                                 </p>
                               </div>
                             </div>
-                            <CheckCircle2
+                            <PhCheckCircle
                               v-if="form.jalurPendaftaran === 'Prestasi'"
                               class="w-6 h-6 text-blue-600"
                             />
@@ -967,7 +966,7 @@ onMounted(() => {
                             <div
                               class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 mb-3"
                             >
-                              <FlaskConical class="h-5 w-5" />
+                              <PhFlask class="h-5 w-5" />
                             </div>
                             <p class="font-bold text-blue-950 dark:text-white">IPA</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -994,7 +993,7 @@ onMounted(() => {
                             <div
                               class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-sky-100 dark:bg-sky-900/30 text-sky-600 mb-3"
                             >
-                              <Globe2 class="h-5 w-5" />
+                              <PhGlobe class="h-5 w-5" />
                             </div>
                             <p class="font-bold text-blue-950 dark:text-white">IPS</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -1021,7 +1020,7 @@ onMounted(() => {
                             <div
                               class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 mb-3"
                             >
-                              <Languages class="h-5 w-5" />
+                              <PhTranslate class="h-5 w-5" />
                             </div>
                             <p class="font-bold text-blue-950 dark:text-white">Bahasa</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -1053,7 +1052,7 @@ onMounted(() => {
                     @click="nextStep"
                     class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md transition-colors flex items-center"
                   >
-                    Selanjutnya <ArrowRight class="w-4 h-4 ml-2" />
+                    Selanjutnya <PhArrowRight class="w-4 h-4 ml-2" />
                   </button>
 
                   <button
@@ -1063,11 +1062,11 @@ onMounted(() => {
                     class="px-8 py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-md transition-colors flex items-center disabled:opacity-75 disabled:cursor-not-allowed"
                   >
                     <span v-if="isSubmitting" class="flex items-center">
-                      <Loader2 class="w-5 h-5 mr-2 animate-spin" />
+                      <PhSpinner class="w-5 h-5 mr-2 animate-spin" />
                       Mengirim...
                     </span>
                     <span v-else class="flex items-center">
-                      Kirim Pendaftaran <Send class="w-4 h-4 ml-2" />
+                      Kirim Pendaftaran <PhPaperPlaneRight class="w-4 h-4 ml-2" />
                     </span>
                   </button>
                 </div>
@@ -1095,7 +1094,7 @@ onMounted(() => {
         <div
           class="inline-flex items-center justify-center shrink-0 w-10 h-10 text-green-600 bg-green-100 rounded-lg dark:bg-green-900/50 dark:text-green-400"
         >
-          <CheckCircle class="w-6 h-6" />
+          <PhCheckCircle class="w-6 h-6" />
         </div>
         <div class="ml-3 text-sm font-normal">
           <span class="mb-1 text-sm font-bold text-blue-950 dark:text-white block"
@@ -1110,7 +1109,7 @@ onMounted(() => {
           type="button"
           class="ml-auto -mx-1.5 -my-1.5 bg-white dark:bg-slate-800 text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 inline-flex items-center justify-center h-8 w-8 transition-colors"
         >
-          <X class="w-4 h-4" />
+          <PhX class="w-4 h-4" />
         </button>
       </div>
     </Transition>

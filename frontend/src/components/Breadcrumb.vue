@@ -1,6 +1,5 @@
 <script setup>
-import { onMounted, onUpdated, nextTick } from 'vue';
-import { createIcons, icons } from 'lucide';
+import { PhHouse, PhCaretRight } from '@phosphor-icons/vue';
 
 defineProps({
   items: {
@@ -14,17 +13,6 @@ defineProps({
     // ]
   }
 });
-
-// Me-render ulang icon Lucide ketika properti / komponen diperbarui
-onMounted(() => {
-  createIcons({ icons });
-});
-
-onUpdated(() => {
-  nextTick(() => {
-    createIcons({ icons });
-  });
-});
 </script>
 
 <template>
@@ -37,17 +25,17 @@ onUpdated(() => {
         class="inline-flex items-center"
       >
         <!-- Separator (Ditampilkan setelah item pertama) -->
-        <i v-if="index > 0" data-lucide="chevron-right" class="w-4 h-4 mx-1"></i>
+        <PhCaretRight v-if="index > 0" class="w-4 h-4 mx-1" />
 
         <!-- Tampilan untuk Item Terakhir (Halaman Aktif - Bukan Tautan) -->
         <div v-if="index === items.length - 1" class="flex items-center">
-          <i v-if="item.icon" :data-lucide="item.icon" class="w-4 h-4 mr-1.5"></i>
+          <PhHouse v-if="item.icon === 'home'" class="w-4 h-4 mr-1.5" />
           <span class="text-blue-600 dark:text-blue-400 font-semibold" :class="{ 'ml-1': index > 0 }">{{ item.name }}</span>
         </div>
 
         <!-- Tampilan untuk Item Sebelumnya (Berupa Tautan) -->
         <router-link v-else :to="item.link || '#'" class="inline-flex items-center hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
-          <i v-if="item.icon" :data-lucide="item.icon" class="w-4 h-4 mr-1.5"></i>
+          <PhHouse v-if="item.icon === 'home'" class="w-4 h-4 mr-1.5" />
           {{ item.name }}
         </router-link>
       </li>

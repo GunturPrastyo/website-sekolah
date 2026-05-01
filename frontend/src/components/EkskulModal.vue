@@ -1,6 +1,15 @@
 <script setup>
-import { watch, nextTick } from "vue";
-import { createIcons, icons } from "lucide";
+import {
+  PhX,
+  PhCalendar,
+  PhUser,
+  PhUsers,
+  PhLink,
+  PhInstagramLogo,
+  PhYoutubeLogo,
+  PhEnvelope,
+  PhArrowRight,
+} from "@phosphor-icons/vue";
 
 const props = defineProps({
   isOpen: {
@@ -22,16 +31,6 @@ const emit = defineEmits(["close"]);
 const closeModal = () => {
   emit("close");
 };
-
-// Render ulang ikon lucide saat modal terbuka
-watch(
-  () => props.isOpen,
-  (newVal) => {
-    if (newVal) {
-      nextTick(() => createIcons({ icons }));
-    }
-  }
-);
 </script>
 
 <template>
@@ -57,7 +56,7 @@ watch(
           @click="closeModal"
           class="absolute top-4 right-4 z-30 w-10 h-10 flex items-center justify-center rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-md transition-colors focus:outline-none"
         >
-          <i data-lucide="x" class="w-5 h-5"></i>
+          <PhX class="w-5 h-5" />
         </button>
 
         <!-- Wrapper Scrollable Area -->
@@ -77,10 +76,10 @@ watch(
               <div
                 class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-500/20 backdrop-blur-md border border-blue-300/30 text-blue-100 text-xs font-bold uppercase tracking-wider mb-3 w-fit"
               >
-                <i
-                  :data-lucide="categories.find((c) => c.id === ekskul?.category)?.icon"
+                <component
+                  :is="categories.find((c) => c.id === ekskul?.category)?.icon"
                   class="w-3.5 h-3.5"
-                ></i>
+                />
                 {{ categories.find((c) => c.id === ekskul?.category)?.name }}
               </div>
               <h3
@@ -114,10 +113,7 @@ watch(
                 <div
                   class="font-bold text-gray-900 dark:text-white flex items-center text-sm"
                 >
-                  <i
-                    data-lucide="calendar-clock"
-                    class="w-4 h-4 mr-2 text-blue-500 shrink-0"
-                  ></i>
+                  <PhCalendar class="w-4 h-4 mr-2 text-blue-500 shrink-0" />
                   {{ ekskul?.schedule }}
                 </div>
               </div>
@@ -131,7 +127,7 @@ watch(
                 <div
                   class="font-bold text-gray-900 dark:text-white flex items-center text-sm"
                 >
-                  <i data-lucide="user" class="w-4 h-4 mr-2 text-blue-500 shrink-0"></i>
+                  <PhUser class="w-4 h-4 mr-2 text-blue-500 shrink-0" />
                   {{ ekskul?.pembina }}
                 </div>
               </div>
@@ -145,7 +141,7 @@ watch(
                 <div
                   class="font-bold text-gray-900 dark:text-white flex items-center text-sm"
                 >
-                  <i data-lucide="users" class="w-4 h-4 mr-2 text-blue-500 shrink-0"></i>
+                  <PhUsers class="w-4 h-4 mr-2 text-blue-500 shrink-0" />
                   {{ ekskul?.members }} Siswa terdaftar
                 </div>
               </div>
@@ -156,7 +152,7 @@ watch(
               <h4
                 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 flex items-center"
               >
-                <i data-lucide="link" class="w-4 h-4 mr-2"></i> Terhubung dengan Kami
+                <PhLink class="w-4 h-4 mr-2" /> Terhubung dengan Kami
               </h4>
               <div class="flex flex-wrap gap-3">
                 <a
@@ -164,7 +160,7 @@ watch(
                   href="#"
                   class="px-4 py-2 rounded-full bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 font-semibold text-sm flex items-center hover:bg-pink-100 dark:hover:bg-pink-900/40 transition-colors"
                 >
-                  <i data-lucide="instagram" class="w-4 h-4 mr-2"></i>
+                  <PhInstagramLogo class="w-4 h-4 mr-2" />
                   {{ ekskul.socials.ig }}
                 </a>
                 <a
@@ -172,7 +168,7 @@ watch(
                   href="#"
                   class="px-4 py-2 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-semibold text-sm flex items-center hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
                 >
-                  <i data-lucide="youtube" class="w-4 h-4 mr-2"></i>
+                  <PhYoutubeLogo class="w-4 h-4 mr-2" />
                   {{ ekskul.socials.yt }}
                 </a>
                 <a
@@ -180,7 +176,7 @@ watch(
                   href="#"
                   class="px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold text-sm flex items-center hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
                 >
-                  <i data-lucide="mail" class="w-4 h-4 mr-2"></i>
+                  <PhEnvelope class="w-4 h-4 mr-2" />
                   {{ ekskul.socials.email }}
                 </a>
               </div>
@@ -201,7 +197,7 @@ watch(
                 @click="closeModal"
                 class="px-5 py-2.5 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors flex items-center shadow-md shadow-blue-500/30 focus:outline-none"
               >
-                Daftar Ekskul <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                Daftar Ekskul <PhArrowRight class="w-4 h-4 ml-2" />
               </router-link>
             </div>
           </div>
