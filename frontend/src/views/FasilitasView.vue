@@ -150,7 +150,7 @@
                               v-if="!(imgIdx === 3 && item.images.length > 4)"
                               class="w-12 h-12 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transform scale-50 group-hover:scale-100 transition-all duration-300 shadow-lg"
                             >
-                            <PhArrowsOut class="w-5 h-5" />
+                              <PhArrowsOut class="w-5 h-5" />
                             </div>
                           </div>
 
@@ -159,7 +159,7 @@
                             v-if="imgIdx === 3 && item.images.length > 4"
                             class="absolute inset-0 bg-blue-900/80 flex flex-col items-center justify-center text-white backdrop-blur-[2px] transition-colors group-hover:bg-blue-800"
                           >
-                          <PhImage class="w-8 h-8 mb-2 opacity-80" />
+                            <PhImage class="w-8 h-8 mb-2 opacity-80" />
                             <span class="text-3xl md:text-4xl font-bold"
                               >+{{ item.images.length - 4 }}</span
                             >
@@ -187,7 +187,7 @@
                         <div
                           class="w-16 h-16 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transform scale-50 group-hover:scale-100 transition-all duration-500 shadow-xl"
                         >
-                        <PhArrowsOut class="w-6 h-6" />
+                          <PhArrowsOut class="w-6 h-6" />
                         </div>
                       </div>
                     </div>
@@ -264,21 +264,6 @@
                     >
                       {{ other.description }}
                     </p>
-                  </div>
-                  <!-- Active Icon / Hover Icon -->
-                  <div
-                    v-if="other.id === activeCategory"
-                    class="mt-1.5 w-7 h-7 shrink-0 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-sm"
-                  >
-                    <PhCheckCircle class="w-4 h-4" />
-                  </div>
-                  <div
-                    v-else
-                    class="mt-1.5 w-7 h-7 shrink-0 rounded-full bg-gray-100 dark:bg-slate-700 flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors"
-                  >
-                    <PhArrowRight
-                      class="w-3.5 h-3.5 text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-transform duration-300 group-hover:translate-x-0.5"
-                    />
                   </div>
                 </div>
               </div>
