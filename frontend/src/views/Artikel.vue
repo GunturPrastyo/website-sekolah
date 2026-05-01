@@ -133,8 +133,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="pt-24 pb-16 bg-gray-50 dark:bg-slate-900 min-h-screen">
-    <div class="container mx-auto max-w-7xl px-6">
+  <div class="pt-28 pb-16 bg-gray-50 dark:bg-slate-900 min-h-screen">
+    <div class="container mx-auto max-w-full px-2 lg:px-8">
       <!-- Breadcrumb -->
       <div class="mb-6 md:mb-8">
         <Breadcrumb

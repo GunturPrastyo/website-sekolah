@@ -353,9 +353,7 @@
         <!-- HEADER -->
         <div
           class="relative overflow-hidden shadow-2xl min-h-[240px] sm:min-h-[450px] flex items-center md:rounded-lg bg-fixed bg-center bg-cover"
-          style="
-            background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop');
-          "
+          style="background-image: url('assets/img/jurusan.jpg')"
         >
           <!-- Overlay Parallax -->
           <div
