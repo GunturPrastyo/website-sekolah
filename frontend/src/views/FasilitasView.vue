@@ -28,7 +28,7 @@
             <div class="absolute bottom-0 left-0 w-full p-2 md:p-14 py-8 text-white">
               <div class="container mx-auto max-w-7xl">
                 <span
-                  class="inline-block px-5 py-2 mb-4 text-sm md:text-md font-bold text-blue-950 bg-yellow-400 rounded-full shadow-lg tracking-wide uppercase"
+                  class="inline-block px-5 py-2 mb-4 text-sm md:text-md font-extrabold text-blue-950 bg-yellow-400 rounded-full shadow-lg tracking-wide uppercase"
                   style="font-family: 'Kalam', cursive"
                 >
                   Fasilitas Unggulan
