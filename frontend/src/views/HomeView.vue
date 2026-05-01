@@ -36,7 +36,7 @@
         :class="showSubtitle ? 'opacity-90 translate-y-0' : 'opacity-0 translate-y-5'"
       >
         <span class="inline-flex items-center justify-center">
-        <PhQuotes class="w-5 h-5 mr-2 hidden sm:block" />
+          <PhQuotes class="w-5 h-5 mr-2 hidden sm:block" />
           Mencetak Generasi Unggul, Berkarakter, dan Berwawasan Global
         </span>
       </p>
@@ -390,7 +390,7 @@
                     <div
                       class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
-                  <PhFlask class="w-7 h-7" />
+                      <PhFlask class="w-7 h-7" />
                     </div>
                     <h3 class="text-2xl font-bold mb-2 text-white">IPA</h3>
                     <p class="text-blue-100 text-sm md:text-base mb-4 leading-relaxed">
@@ -402,7 +402,7 @@
                       class="mt-2 inline-flex items-center text-sm font-bold text-white group-hover:text-blue-200 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
-                  <PhCaretRight
+                      <PhCaretRight
                         class="w-4 h-4 ml-1.5 transform group-hover:translate-x-1.5 transition-transform duration-300"
                       />
                     </router-link>
@@ -423,7 +423,7 @@
                     <div
                       class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
-                  <PhGlobe class="w-7 h-7" />
+                      <PhGlobe class="w-7 h-7" />
                     </div>
                     <h3 class="text-2xl font-bold mb-2 text-white">IPS</h3>
                     <p class="text-sky-100 text-sm md:text-base mb-4 leading-relaxed">
@@ -435,9 +435,9 @@
                       class="mt-2 inline-flex items-center text-sm font-bold text-white group-hover:text-sky-200 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
-                  <PhCaretRight
+                      <PhCaretRight
                         class="w-4 h-4 ml-1.5 transform group-hover:translate-x-1.5 transition-transform duration-300"
-                  />
+                      />
                     </router-link>
                   </div>
                 </div>
@@ -456,7 +456,7 @@
                     <div
                       class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
-                  <PhTranslate class="w-7 h-7" />
+                      <PhTranslate class="w-7 h-7" />
                     </div>
                     <h3 class="text-2xl font-bold mb-2 text-white">Bahasa</h3>
                     <p class="text-cyan-100 text-sm md:text-base mb-4 leading-relaxed">
@@ -468,9 +468,9 @@
                       class="mt-2 inline-flex items-center text-sm font-bold text-white group-hover:text-cyan-200 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
-                  <PhCaretRight
+                      <PhCaretRight
                         class="w-4 h-4 ml-1.5 transform group-hover:translate-x-1.5 transition-transform duration-300"
-                  />
+                      />
                     </router-link>
                   </div>
                 </div>
@@ -489,7 +489,7 @@
                     <div
                       class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
                     >
-                  <PhMonitor class="w-7 h-7" />
+                      <PhMonitor class="w-7 h-7" />
                     </div>
                     <h3 class="text-2xl font-bold mb-2 text-white">Informatika</h3>
                     <p class="text-purple-100 text-sm md:text-base mb-4 leading-relaxed">
@@ -501,9 +501,9 @@
                       class="mt-2 inline-flex items-center text-sm font-bold text-white group-hover:text-purple-200 transition-colors w-fit"
                     >
                       Lihat Selengkapnya
-                  <PhCaretRight
+                      <PhCaretRight
                         class="w-4 h-4 ml-1.5 transform group-hover:translate-x-1.5 transition-transform duration-300"
-                  />
+                      />
                     </router-link>
                   </div>
                 </div>
@@ -548,7 +548,7 @@
                 class="hidden md:inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-semibold transition-colors shrink-0 md:pb-4 md:-mb-px border-b-2 border-transparent hover:border-blue-600 dark:hover:border-blue-400"
               >
                 Lihat berita lainnya
-            <PhCaretRight class="w-4 h-4 ml-1" />
+                <PhCaretRight class="w-4 h-4 ml-1" />
               </router-link>
             </div>
           </div>
@@ -592,10 +592,10 @@
                   class="mt-4 flex items-center justify-between text-gray-300 text-xs md:text-sm"
                 >
                   <div class="flex items-center">
-                <PhCalendarBlank class="w-4 h-4 mr-1.5" /> 24 November 2025
+                    <PhCalendarBlank class="w-4 h-4 mr-1.5" /> 24 November 2025
                   </div>
                   <span class="flex items-center font-medium">
-                <PhEye class="w-4 h-4 mr-1.5 text-blue-400" /> 1250
+                    <PhEye class="w-4 h-4 mr-1.5 text-blue-400" /> 1250
                   </span>
                 </div>
               </div>
@@ -637,10 +637,10 @@
                       class="mt-auto flex items-center justify-between text-gray-500 dark:text-slate-400 text-xs pt-3"
                     >
                       <div class="flex items-center">
-                    <PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> 10 Jan 2026
+                        <PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> 10 Jan 2026
                       </div>
                       <span class="flex items-center font-medium">
-                    <PhEye class="w-4 h-4 mr-1.5 text-blue-400" />
+                        <PhEye class="w-4 h-4 mr-1.5 text-blue-400" />
                         3420
                       </span>
                     </div>
@@ -678,10 +678,10 @@
                       class="mt-auto flex items-center justify-between text-gray-500 dark:text-slate-400 text-xs pt-3"
                     >
                       <div class="flex items-center">
-                    <PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> 05 Feb 2026
+                        <PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> 05 Feb 2026
                       </div>
                       <span class="flex items-center font-medium">
-                    <PhEye class="w-4 h-4 mr-1.5 text-blue-400" />
+                        <PhEye class="w-4 h-4 mr-1.5 text-blue-400" />
                         2105
                       </span>
                     </div>
@@ -719,10 +719,10 @@
                       class="mt-auto flex items-center justify-between text-gray-500 dark:text-slate-400 text-xs pt-3"
                     >
                       <div class="flex items-center">
-                    <PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> 20 Mar 2026
+                        <PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> 20 Mar 2026
                       </div>
                       <span class="flex items-center font-medium">
-                    <PhEye class="w-4 h-4 mr-1.5 text-blue-400" />
+                        <PhEye class="w-4 h-4 mr-1.5 text-blue-400" />
                         1560
                       </span>
                     </div>
@@ -758,7 +758,7 @@
                 <h3
                   class="text-md md:text-xl font-bold text-blue-950 dark:text-blue-200 flex items-center"
                 >
-              <PhBell class="w-5 h-5 mr-2 text-blue-600" /> Pengumuman
+                  <PhBell class="w-5 h-5 mr-2 text-blue-600" /> Pengumuman
                 </h3>
               </div>
 
@@ -914,7 +914,7 @@
               <div
                 class="w-16 h-16 md:w-20 md:h-20 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-sm group-hover:bg-blue-500 group-hover:scale-110 transition-all shadow-[0_0_30px_rgba(37,99,235,0.6)]"
               >
-            <PhPlay class="w-8 h-8 md:w-10 md:h-10 ml-1" weight="fill" />
+                <PhPlay class="w-8 h-8 md:w-10 md:h-10 ml-1" weight="fill" />
               </div>
             </div>
 
@@ -923,8 +923,9 @@
               class="absolute bottom-0 left-0 p-5 md:p-8 w-full bg-gradient-to-t from-blue-950/90 via-blue-950/40 to-transparent z-10"
             >
               <span
-                class="inline-block px-3 py-1 mb-3 text-xs font-semibold text-blue-900 bg-blue-100 rounded-full"
-                >Video Terbaru</span
+                class="inline-block px-3 py-1 mb-3 text-sm font-semibold text-blue-900 bg-blue-100 rounded-full"
+                style="font-family: 'Kalam', cursive"
+                >Video Profil</span
               >
               <h3
                 class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors"
@@ -1025,7 +1026,7 @@
                   <div
                     class="bg-white/20 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2"
                   >
-                <PhImage class="w-5 h-5 text-white" />
+                    <PhImage class="w-5 h-5 text-white" />
                   </div>
                   <span class="text-white text-sm font-semibold">Lihat Galeri</span>
                 </div>
@@ -1068,7 +1069,7 @@
               <button
                 class="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors focus:outline-none"
               >
-            <PhCaretLeft class="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                <PhCaretLeft class="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </button>
               <h3 class="text-lg font-bold text-blue-950 dark:text-blue-200">
                 April 2026
@@ -1076,9 +1077,7 @@
               <button
                 class="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors focus:outline-none"
               >
-            <PhCaretRight
-                  class="w-5 h-5 text-gray-600 dark:text-gray-400"
-            />
+                <PhCaretRight class="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </button>
             </div>
 
@@ -1331,7 +1330,7 @@
                 <h3
                   class="text-lg md:text-xl font-bold text-blue-950 dark:text-slate-200 flex items-center"
                 >
-              <PhCalendar class="w-5 h-5 mr-2 text-slate-600 dark:text-slate-200" />
+                  <PhCalendar class="w-5 h-5 mr-2 text-slate-600 dark:text-slate-200" />
                   Daftar Agenda
                 </h3>
               </div>
@@ -1432,7 +1431,7 @@
                   <div
                     class="text-sm font-semibold text-gray-500 flex items-center animate-bounce pb-2"
                   >
-                <PhArrowDown class="w-4 h-4 mr-1.5" />
+                    <PhArrowDown class="w-4 h-4 mr-1.5" />
                     Scroll ke bawah
                   </div>
                 </div>
@@ -1550,7 +1549,7 @@
                   href="#"
                   class="px-6 py-3.5 bg-gray-50/10 text-white font-semibold rounded-xl border border-white/50 hover:bg-gray-50/20 transition-all flex items-center justify-center text-sm md:text-base"
                 >
-              <PhDownloadSimple class="w-5 h-5 mr-2" /> Unduh Brosur
+                  <PhDownloadSimple class="w-5 h-5 mr-2" /> Unduh Brosur
                 </a>
               </div>
             </div>
