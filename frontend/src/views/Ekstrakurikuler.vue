@@ -12,7 +12,7 @@ import {
   PhFunnel,
   PhClock,
   PhUser,
-  PhArrowRight,
+  PhArrowUpRight,
   PhCaretLeft,
   PhCaretRight,
   PhLightbulb,
@@ -445,8 +445,8 @@ onBeforeUnmount(() => {
                           class="inline-flex items-center text-xs font-bold text-white uppercase tracking-widest hover:text-blue-300 transition-colors focus:outline-none"
                         >
                           Jelajahi Klub
-                          <PhArrowRight
-                            class="w-4 h-4 ml-2 transform lg:group-hover:translate-x-1 transition-transform"
+                          <PhArrowUpRight
+                            class="w-4 h-4 ml-2 transform lg:group-hover:translate-x-1 lg:group-hover:-translate-y-1 transition-transform"
                           />
                         </button>
                       </div>
