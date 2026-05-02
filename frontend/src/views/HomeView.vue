@@ -103,7 +103,7 @@
             >
               <!-- FASILITAS (2x2 Desktop) -->
               <div
-                class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500"
+                class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500"
                 style="background-image: url('/assets/img/fasilitas.jpg')"
               >
                 <!-- Overlay Parallax -->
@@ -151,7 +151,7 @@
 
               <!-- GURU -->
               <div
-                class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
+                class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
                 style="background-image: url('/assets/img/pengajar.jpg')"
               >
                 <!-- Overlay Parallax -->
@@ -198,7 +198,7 @@
 
               <!-- PRESTASI -->
               <div
-                class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
+                class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
                 style="background-image: url('/assets/img/prestasi.jpg')"
               >
                 <!-- Overlay Parallax -->
@@ -254,7 +254,7 @@
         <!-- ALUMNI / PTN -->
         <div class="mt-8 px-0 md:px-8 lg:px-4 mb-20 md:mb-24 -mx-0 md:-mx-8 lg:-mx-0">
           <div
-            class="relative bg-fixed bg-center bg-cover rounded-sm sm:rounded-xl shadow-xl p-3 md:p-2 flex flex-col md:flex-row items-center gap-0 md:gap-6 overflow-hidden"
+            class="relative bg-fixed bg-center bg-cover sm:rounded-xl shadow-xl p-3 md:p-2 flex flex-col md:flex-row items-center gap-0 md:gap-6 overflow-hidden"
             style="
               background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200');
             "
@@ -655,7 +655,7 @@
                     </div>
                     <div class="p-4 flex flex-col flex-grow">
                       <span
-                        class="text-sm font-bold tracking-wide text-sky-600 mb-1.5"
+                        class="text-sm font-bold tracking-wide text-blue-600 mb-1.5"
                         style="font-family: 'Kalam', cursive"
                         >Fasilitas</span
                       >
@@ -698,7 +698,7 @@
                     </div>
                     <div class="p-4 flex flex-col flex-grow">
                       <span
-                        class="text-sm font-bold tracking-wide text-cyan-600 mb-1.5"
+                        class="text-sm font-bold tracking-wide text-blue-600 mb-1.5"
                         style="font-family: 'Kalam', cursive"
                         >Kegiatan</span
                       >
