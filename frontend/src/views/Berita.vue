@@ -1,8 +1,9 @@
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
 import {
   PhCalendarBlank,
   PhUser,
+  PhCaretLeft,
   PhCaretRight,
   PhEye,
   PhFileX,
@@ -123,15 +124,72 @@ const getCategoryCount = (categoryId) => {
   return newsList.value.filter((news) => news.category === categoryId).length;
 };
 
+// --- Fitur Pagination ---
+const itemsPerPage = 6;
+const currentPage = ref(1);
 const isLoading = ref(false);
 let searchTimeout = null;
 
+const totalPages = computed(() => {
+  return Math.ceil(filteredNews.value.length / itemsPerPage);
+});
+
+const paginatedNews = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return filteredNews.value.slice(start, end);
+});
+
+const changePage = (page) => {
+  if (page < 1 || page > totalPages.value) return;
+  isLoading.value = true;
+  setTimeout(() => {
+    currentPage.value = page;
+    isLoading.value = false;
+    const container = document.getElementById("news-list-container");
+    if (container) {
+      window.scrollTo({ top: container.offsetTop - 120, behavior: "smooth" });
+    }
+  }, 400);
+};
+
+const skeletonCount = computed(() => {
+  if (!isLoading.value) return 0;
+  return itemsPerPage;
+});
+
 watch([searchQuery, activeCategory], () => {
   isLoading.value = true;
+  currentPage.value = 1;
   if (searchTimeout) clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
     isLoading.value = false;
   }, 800); // Tampilkan loading selama 800ms
+});
+
+let observer;
+
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("opacity-100", "translate-y-0");
+          entry.target.classList.remove("opacity-0", "translate-y-10");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+
+  document.querySelectorAll(".fade-on-scroll").forEach((el) => {
+    observer.observe(el);
+  });
+});
+
+onBeforeUnmount(() => {
+  if (observer) observer.disconnect();
 });
 </script>
 
@@ -147,7 +205,9 @@ watch([searchQuery, activeCategory], () => {
     <!-- News Section -->
     <section class="py-16 md:py-12 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
       <!-- Breadcrumb -->
-      <div class="container mx-auto max-w-full px-0 lg:px-8 mb-8 md:mb-10">
+      <div
+        class="container mx-auto max-w-full px-0 lg:px-8 mb-8 md:mb-10 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out"
+      >
         <Breadcrumb
           :items="[{ name: 'Beranda', link: '/', icon: 'home' }, { name: 'Berita' }]"
         />
@@ -157,11 +217,14 @@ watch([searchQuery, activeCategory], () => {
         class="container mx-auto max-w-full px-0 lg:px-8 flex flex-col lg:flex-row gap-8 lg:gap-10"
       >
         <!-- KIRI: Daftar Berita -->
-        <div class="w-full lg:w-2/3 order-2 lg:order-1">
+        <div
+          id="news-list-container"
+          class="w-full lg:w-2/3 order-2 lg:order-1 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
+        >
           <!-- Skeleton Loading -->
           <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div
-              v-for="i in 4"
+              v-for="i in skeletonCount"
               :key="'skeleton-' + i"
               class="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col h-full animate-pulse"
             >
@@ -189,89 +252,146 @@ watch([searchQuery, activeCategory], () => {
           </div>
 
           <template v-else>
-            <!-- Grid Berita dengan Animasi -->
-            <TransitionGroup
-              v-if="filteredNews.length > 0"
-              name="news-list"
-              tag="div"
-              class="grid grid-cols-1 md:grid-cols-2 gap-8 relative"
-            >
-              <article
-                v-for="news in filteredNews"
-                :key="news.id"
-                class="group relative bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full transform hover:-translate-y-1"
+            <div v-if="filteredNews.length > 0">
+              <!-- Grid Berita dengan Animasi -->
+              <TransitionGroup
+                name="news-list"
+                tag="div"
+                class="grid grid-cols-1 md:grid-cols-2 gap-8 relative"
               >
-                <!-- Image Container -->
-                <div class="relative h-56 overflow-hidden shrink-0">
-                  <img
-                    :src="news.image"
-                    :alt="news.title"
-                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div
-                    class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80"
-                  ></div>
+                <article
+                  v-for="news in paginatedNews"
+                  :key="news.id"
+                  class="group relative bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full transform hover:-translate-y-1"
+                >
+                  <!-- Image Container -->
+                  <div class="relative h-56 overflow-hidden shrink-0">
+                    <img
+                      :src="news.image"
+                      :alt="news.title"
+                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div
+                      class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80"
+                    ></div>
 
-                  <!-- Category Badge -->
+                    <!-- Category Badge -->
+                    <div
+                      class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-blue-700 text-sm font-bold rounded-md capitalize tracking-wide shadow-sm"
+                      style="font-family: 'Kalam', cursive"
+                    >
+                      {{ categories.find((c) => c.id === news.category)?.name }}
+                    </div>
+                  </div>
+
+                  <!-- Content -->
                   <div
-                    class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-blue-700 text-sm font-bold rounded-md capitalize tracking-wide shadow-sm"
+                    class="p-6 flex flex-col flex-1 relative bg-white dark:bg-slate-800"
+                  >
+                    <!-- Meta Info -->
+                    <div
+                      class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 gap-4 font-medium"
+                    >
+                      <span class="flex items-center">
+                        <PhCalendarBlank class="w-3.5 h-3.5 mr-1.5 text-blue-500" />
+                        {{ news.date }}
+                      </span>
+                      <span class="flex items-center">
+                        <PhUser class="w-3.5 h-3.5 mr-1.5 text-blue-500" />
+                        {{ news.author }}
+                      </span>
+                    </div>
+
+                    <h3
+                      class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight"
+                    >
+                      <router-link to="/artikel" class="focus:outline-none">
+                        <span class="absolute inset-0"></span>
+                        {{ news.title }}
+                      </router-link>
+                    </h3>
+
+                    <p
+                      class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3 mb-6"
+                    >
+                      {{ news.excerpt }}
+                    </p>
+
+                    <div class="mt-auto flex items-center justify-between">
+                      <router-link
+                        to="/artikel"
+                        class="flex items-center text-sm font-bold text-blue-600 dark:text-blue-400 group-hover:underline"
+                      >
+                        Baca Selengkapnya
+                        <PhArrowUpRight
+                          class="w-4 h-4 ml-1 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+                        />
+                      </router-link>
+                      <span
+                        class="flex items-center text-xs font-medium text-gray-500 dark:text-gray-400"
+                      >
+                        <PhEye class="w-4 h-4 mr-1.5 text-blue-500" />
+                        {{ news.views }}
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              </TransitionGroup>
+
+              <!-- Pagination Berita -->
+              <div
+                v-if="totalPages > 1"
+                class="flex justify-between items-center gap-2 mt-10 relative z-10 w-full"
+              >
+                <button
+                  @click="changePage(currentPage - 1)"
+                  :disabled="currentPage === 1 || isLoading"
+                  class="flex items-center px-4 py-2 rounded-lg text-base tracking-wide font-bold transition-colors border"
+                  style="font-family: 'Kalam', cursive"
+                  :class="
+                    currentPage === 1
+                      ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed dark:bg-slate-800 dark:border-slate-700 dark:text-gray-500'
+                      : 'bg-white text-blue-600 border-gray-200 hover:bg-blue-50 hover:border-blue-300 dark:bg-slate-800 dark:text-blue-400 dark:border-slate-700 dark:hover:border-blue-500'
+                  "
+                >
+                  <PhCaretLeft class="w-4 h-4 mr-1" />
+                  Sebelumnya
+                </button>
+
+                <div class="flex items-center gap-1 hidden sm:flex">
+                  <button
+                    v-for="page in totalPages"
+                    :key="page"
+                    @click="changePage(page)"
+                    :disabled="isLoading"
+                    class="w-10 h-10 rounded-lg text-base font-bold transition-colors flex items-center justify-center border"
                     style="font-family: 'Kalam', cursive"
+                    :class="
+                      currentPage === page
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-md'
+                        : 'bg-white text-gray-600 border-gray-200 hover:bg-blue-50 hover:text-blue-600 dark:bg-slate-800 dark:text-gray-300 dark:border-slate-700 dark:hover:border-blue-500 dark:hover:text-blue-400'
+                    "
                   >
-                    {{ categories.find((c) => c.id === news.category)?.name }}
-                  </div>
+                    {{ page }}
+                  </button>
                 </div>
 
-                <!-- Content -->
-                <div class="p-6 flex flex-col flex-1 relative bg-white dark:bg-slate-800">
-                  <!-- Meta Info -->
-                  <div
-                    class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 gap-4 font-medium"
-                  >
-                    <span class="flex items-center">
-                      <PhCalendarBlank class="w-3.5 h-3.5 mr-1.5 text-blue-500" />
-                      {{ news.date }}
-                    </span>
-                    <span class="flex items-center">
-                      <PhUser class="w-3.5 h-3.5 mr-1.5 text-blue-500" />
-                      {{ news.author }}
-                    </span>
-                  </div>
-
-                  <h3
-                    class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight"
-                  >
-                    <router-link to="/artikel" class="focus:outline-none">
-                      <span class="absolute inset-0"></span>
-                      {{ news.title }}
-                    </router-link>
-                  </h3>
-
-                  <p
-                    class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3 mb-6"
-                  >
-                    {{ news.excerpt }}
-                  </p>
-
-                  <div class="mt-auto flex items-center justify-between">
-                    <router-link
-                      to="/artikel"
-                      class="flex items-center text-sm font-bold text-blue-600 dark:text-blue-400 group-hover:underline"
-                    >
-                      Baca Selengkapnya
-                      <PhArrowUpRight
-                        class="w-4 h-4 ml-1 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
-                      />
-                    </router-link>
-                    <span
-                      class="flex items-center text-xs font-medium text-gray-500 dark:text-gray-400"
-                    >
-                      <PhEye class="w-4 h-4 mr-1.5 text-blue-500" />
-                      {{ news.views }}
-                    </span>
-                  </div>
-                </div>
-              </article>
-            </TransitionGroup>
+                <button
+                  @click="changePage(currentPage + 1)"
+                  :disabled="currentPage === totalPages || isLoading"
+                  class="flex items-center px-4 py-2 rounded-lg text-base tracking-wide font-bold transition-colors border"
+                  style="font-family: 'Kalam', cursive"
+                  :class="
+                    currentPage === totalPages
+                      ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed dark:bg-slate-800 dark:border-slate-700 dark:text-gray-500'
+                      : 'bg-white text-blue-600 border-gray-200 hover:bg-blue-50 hover:border-blue-300 dark:bg-slate-800 dark:text-blue-400 dark:border-slate-700 dark:hover:border-blue-500'
+                  "
+                >
+                  Selanjutnya
+                  <PhCaretRight class="w-4 h-4 ml-1" />
+                </button>
+              </div>
+            </div>
 
             <!-- Empty State -->
             <div
@@ -306,7 +426,7 @@ watch([searchQuery, activeCategory], () => {
         <aside class="contents lg:block w-full lg:w-1/3 order-1 lg:order-2">
           <!-- Search & Category Widget -->
           <div
-            class="w-full order-1 lg:order-none mb-0 lg:mb-8 bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
+            class="w-full order-1 lg:order-none mb-0 lg:mb-8 bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out"
           >
             <h3
               class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center"
@@ -354,7 +474,7 @@ watch([searchQuery, activeCategory], () => {
 
           <!-- Berita Populer Widget -->
           <div
-            class="w-full order-3 lg:order-none bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
+            class="w-full order-3 lg:order-none bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
           >
             <h3
               class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"

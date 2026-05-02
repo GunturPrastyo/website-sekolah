@@ -59,7 +59,7 @@
             <div class="flex items-center gap-3 mb-6">
               <h2
                 class="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-950 dark:text-white tracking-wide"
-                style="font-family: 'Dancing Script', cursive"
+                style="font-family: 'Kalam', cursive"
               >
                 Sambutan Kepala Sekolah
               </h2>
@@ -123,7 +123,8 @@
           ></div>
           <div class="relative z-10">
             <h3
-              class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 md:mb-6 tracking-wide"
+              class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6 tracking-wide"
+              style="font-family: 'Kalam', cursive"
             >
               Visi
             </h3>
@@ -137,17 +138,18 @@
         </div>
 
         <div
-          class="w-full lg:w-7/12 relative p-8 sm:p-10 md:p-16 lg:p-24 flex flex-col justify-center"
+          class="w-full lg:w-7/12 relative p-8 sm:p-10 md:p-16 lg:p-24 flex flex-col justify-center text-white overflow-hidden"
         >
           <!-- Parallax Overlay Misi -->
           <div
-            class="absolute inset-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-[2px]"
+            class="absolute inset-0 bg-gradient-to-br from-blue-950/90 to-blue-900/90 dark:from-slate-950/95 dark:to-slate-900/95 backdrop-blur-[2px]"
           ></div>
           <div
-            class="relative z-10 mb-6 md:mb-8 pb-4 border-b border-gray-200 dark:border-slate-700"
+            class="relative z-10 mb-6 md:mb-8 pb-4 border-b border-blue-800 dark:border-slate-700"
           >
             <h3
-              class="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-950 dark:text-white"
+              class="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-wide"
+              style="font-family: 'Kalam', cursive"
             >
               Misi
             </h3>
@@ -156,11 +158,11 @@
           <ul class="relative z-10 space-y-4 md:space-y-6">
             <li class="flex items-start group">
               <span
-                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-gray-100 dark:border-slate-700"
+                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-slate-800 text-blue-200 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-white/20 dark:border-slate-700"
                 >1</span
               >
               <p
-                class="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
+                class="text-blue-50 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
               >
                 Menumbuhkembangkan keimanan dan ketaqwaan melalui pembiasaan kegiatan
                 keagamaan di lingkungan sekolah.
@@ -168,11 +170,11 @@
             </li>
             <li class="flex items-start group">
               <span
-                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-gray-100 dark:border-slate-700"
+                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-slate-800 text-blue-200 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-white/20 dark:border-slate-700"
                 >2</span
               >
               <p
-                class="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
+                class="text-blue-50 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
               >
                 Melaksanakan proses pembelajaran dan bimbingan secara efektif, inovatif,
                 dan berpusat pada peserta didik.
@@ -180,11 +182,11 @@
             </li>
             <li class="flex items-start group">
               <span
-                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-gray-100 dark:border-slate-700"
+                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-slate-800 text-blue-200 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-white/20 dark:border-slate-700"
                 >3</span
               >
               <p
-                class="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
+                class="text-blue-50 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
               >
                 Membina peserta didik untuk mengembangkan minat, bakat, dan potensi yang
                 dimiliki melalui kegiatan ekstrakurikuler.
@@ -192,11 +194,11 @@
             </li>
             <li class="flex items-start group">
               <span
-                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-gray-100 dark:border-slate-700"
+                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-slate-800 text-blue-200 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-white/20 dark:border-slate-700"
                 >4</span
               >
               <p
-                class="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
+                class="text-blue-50 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
               >
                 Mewujudkan lingkungan sekolah yang bersih, asri, aman, dan nyaman sebagai
                 pilar utama pendukung proses belajar mengajar.
@@ -204,11 +206,11 @@
             </li>
             <li class="flex items-start group">
               <span
-                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-gray-100 dark:border-slate-700"
+                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-slate-800 text-blue-200 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-white/20 dark:border-slate-700"
                 >5</span
               >
               <p
-                class="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
+                class="text-blue-50 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
               >
                 Meningkatkan kemampuan pemanfaatan teknologi informasi dan komunikasi
                 untuk siap bersaing di tingkat global.
@@ -266,5 +268,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
 </style>
