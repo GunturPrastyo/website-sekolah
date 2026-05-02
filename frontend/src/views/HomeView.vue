@@ -83,7 +83,7 @@
           <div class="mb-4 md:mb-8 px-2 md:px-0 mt-4 sm:mt-6">
             <div class="relative block">
               <h2
-                class="text-xl md:text-3xl font-bold text-blue-950 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-2"
+                class="text-xl md:text-3xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-2"
                 style="font-family: 'Oswald', sans-serif"
               >
                 Kenapa Pilih Sekolah Ini?
@@ -115,6 +115,7 @@
                   <div class="mt-auto flex flex-col">
                     <h3
                       class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300"
+                      style="font-family: 'Oswald', sans-serif"
                     >
                       Fasilitas Lengkap
                     </h3>
@@ -162,6 +163,7 @@
                   <div class="mt-auto flex flex-col">
                     <h3
                       class="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300"
+                      style="font-family: 'Oswald', sans-serif"
                     >
                       Guru Berpengalaman
                     </h3>
@@ -208,6 +210,7 @@
                   <div class="mt-auto flex flex-col">
                     <h3
                       class="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300"
+                      style="font-family: 'Oswald', sans-serif"
                     >
                       Prestasi Siswa
                     </h3>
@@ -264,7 +267,7 @@
             <!-- LEFT TEXT -->
             <div class="relative z-10 md:w-2/5 lg:w-1/3 mx-0 sm:mx-6 mt-4 md:mt-0">
               <h3
-                class="text-xl lg:text-2xl font-bold text-white mb-2"
+                class="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2"
                 style="font-family: 'Oswald', sans-serif"
               >
                 Persebaran Alumni Kami
@@ -517,7 +520,7 @@
           >
             <div class="relative block">
               <h2
-                class="text-xl md:text-3xl font-bold text-blue-950 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
+                class="text-xl md:text-3xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
                 style="font-family: 'Oswald', sans-serif"
               >
                 Berita & Pengumuman
@@ -751,9 +754,10 @@
                   class="p-5 md:p-6 border-b border-blue-100 dark:border-slate-700/50 bg-gray-50 dark:bg-slate-700/50 z-20 flex items-center justify-between shadow-sm"
                 >
                   <h3
-                    class="text-md md:text-xl font-bold text-blue-950 dark:text-blue-200 flex items-center"
+                    class="text-md md:text-xl font-bold text-slate-800 dark:text-slate-200 flex items-center"
                   >
-                    <PhBell class="w-5 h-5 mr-2 text-blue-600" /> Pengumuman
+                    <PhBell class="w-5 h-5 mr-2 text-slate-800 dark:text-slate-200" />
+                    Pengumuman
                   </h3>
                 </div>
 
@@ -1042,7 +1046,7 @@
           <div class="mb-6 md:mb-10">
             <div class="relative block">
               <h2
-                class="text-xl md:text-3xl font-bold text-blue-950 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
+                class="text-xl md:text-3xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
                 style="font-family: 'Oswald', sans-serif"
               >
                 Agenda Sekolah
@@ -1327,10 +1331,10 @@
                   class="p-5 md:p-6 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex items-center justify-between shrink-0"
                 >
                   <h3
-                    class="text-lg md:text-xl font-bold text-blue-950 dark:text-slate-200 flex items-center"
+                    class="text-lg md:text-xl font-bold text-slate-800 dark:text-slate-200 flex items-center"
                     style="font-family: 'Kalam', cursive"
                   >
-                    <PhCalendar class="w-5 h-5 mr-2 text-slate-600 dark:text-slate-200" />
+                    <PhCalendar class="w-6 h-6 mr-2 text-slate-600 dark:text-slate-200" />
                     Daftar Agenda
                   </h3>
                 </div>
