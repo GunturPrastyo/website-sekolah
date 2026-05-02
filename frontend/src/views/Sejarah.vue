@@ -158,7 +158,7 @@ onBeforeUnmount(() => {
             class="w-full lg:w-5/12 h-72 sm:h-80 lg:h-[450px] relative rounded-xl overflow-hidden shadow-xl border border-gray-100 dark:border-slate-700"
           >
             <img
-              src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800"
+              src="/assets/img/gedung.jpg"
               class="absolute inset-0 w-full h-full object-cover"
               alt="Gedung Sekolah"
             />
@@ -168,9 +168,10 @@ onBeforeUnmount(() => {
               class="absolute bottom-3 md:bottom-4 left-3 md:left-4 bg-blue-600 dark:bg-blue-500 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl shadow-lg hover:scale-105 hover:bg-blue-800 dark:hover:bg-blue-700 transition-all duration-300"
             >
               <span
-                class="text-white font-extrabold text-xs md:text-sm flex items-center tracking-wide"
+                class="text-white font-bold text-sm md:text-base flex items-center tracking-wide"
+                style="font-family: 'Kalam', cursive"
               >
-            <PhCheckCircle class="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5" />
+                <PhCheckCircle class="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5" />
                 Terakreditasi A <span class="hidden sm:inline ml-1">(Sangat Baik)</span>
               </span>
             </div>
@@ -202,7 +203,7 @@ onBeforeUnmount(() => {
                 <div
                   class="w-11 h-11 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shrink-0 mr-4 group-hover:bg-blue-800 dark:group-hover:bg-blue-700 transition-colors shadow-sm"
                 >
-              <PhHash class="w-5 h-5" />
+                  <PhHash class="w-5 h-5" />
                 </div>
                 <div>
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">NPSN</h4>
@@ -213,7 +214,7 @@ onBeforeUnmount(() => {
                 <div
                   class="w-11 h-11 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shrink-0 mr-4 group-hover:bg-blue-800 dark:group-hover:bg-blue-700 transition-colors shadow-sm"
                 >
-              <PhCalendar class="w-5 h-5" />
+                  <PhCalendar class="w-5 h-5" />
                 </div>
                 <div>
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">
@@ -228,7 +229,7 @@ onBeforeUnmount(() => {
                 <div
                   class="w-11 h-11 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shrink-0 mr-4 group-hover:bg-blue-800 dark:group-hover:bg-blue-700 transition-colors shadow-sm"
                 >
-              <PhMapPin class="w-5 h-5" />
+                  <PhMapPin class="w-5 h-5" />
                 </div>
                 <div>
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">Lokasi</h4>
@@ -241,7 +242,7 @@ onBeforeUnmount(() => {
                 <div
                   class="w-11 h-11 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shrink-0 mr-4 group-hover:bg-blue-800 dark:group-hover:bg-blue-700 transition-colors shadow-sm"
                 >
-              <PhMedal class="w-5 h-5" />
+                  <PhMedal class="w-5 h-5" />
                 </div>
                 <div>
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">Status</h4>
