@@ -263,7 +263,10 @@
 
             <!-- LEFT TEXT -->
             <div class="relative z-10 md:w-2/5 lg:w-1/3 mx-0 sm:mx-6 mt-4 md:mt-0">
-              <h3 class="text-xl lg:text-2xl font-bold text-white mb-2" style="font-family: 'Oswald', sans-serif">
+              <h3
+                class="text-xl lg:text-2xl font-bold text-white mb-2"
+                style="font-family: 'Oswald', sans-serif"
+              >
                 Persebaran Alumni Kami
               </h3>
               <p class="text-sm lg:text-base text-sky-50 leading-relaxed">
@@ -336,7 +339,10 @@
               class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-900/80 to-slate-800/50 backdrop-blur-[2px]"
             ></div>
             <div class="relative z-10 -mt-12 pl-4 pr-4 md:px-14 max-w-2xl text-white">
-              <h2 class="text-3xl md:text-5xl font-bold mb-2 md:mb-4" style="font-family: 'Oswald', sans-serif">
+              <h2
+                class="text-3xl md:text-5xl font-bold mb-2 md:mb-4"
+                style="font-family: 'Oswald', sans-serif"
+              >
                 Pilihan Jurusan Unggulan
               </h2>
               <p class="text-sm md:text-xl text-gray-200">
@@ -557,7 +563,8 @@
                 ></div>
                 <div class="absolute bottom-0 left-0 p-5 md:p-8 w-full">
                   <span
-                    class="inline-block px-3 py-1 mb-3 text-xs font-semibold text-white bg-blue-600 rounded-full"
+                    class="inline-block px-3 py-1 mb-3 text-sm font-bold tracking-wide text-white bg-blue-600 rounded-full"
+                    style="font-family: 'Kalam', cursive"
                     >Kegiatan</span
                   >
                   <h3
@@ -601,7 +608,9 @@
                       />
                     </div>
                     <div class="p-4 flex flex-col flex-grow">
-                      <span class="text-xs font-semibold text-blue-600 mb-1.5"
+                      <span
+                        class="text-sm font-bold tracking-wide text-blue-600 mb-1.5"
+                        style="font-family: 'Kalam', cursive"
                         >Prestasi</span
                       >
                       <h4
@@ -642,7 +651,9 @@
                       />
                     </div>
                     <div class="p-4 flex flex-col flex-grow">
-                      <span class="text-xs font-semibold text-sky-600 mb-1.5"
+                      <span
+                        class="text-sm font-bold tracking-wide text-sky-600 mb-1.5"
+                        style="font-family: 'Kalam', cursive"
                         >Fasilitas</span
                       >
                       <h4
@@ -683,7 +694,9 @@
                       />
                     </div>
                     <div class="p-4 flex flex-col flex-grow">
-                      <span class="text-xs font-semibold text-cyan-600 mb-1.5"
+                      <span
+                        class="text-sm font-bold tracking-wide text-cyan-600 mb-1.5"
+                        style="font-family: 'Kalam', cursive"
                         >Kegiatan</span
                       >
                       <h4
@@ -803,6 +816,7 @@
                           <!-- Date Badge -->
                           <div
                             class="bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 rounded-lg p-2 mr-4 text-center min-w-[60px] flex-shrink-0"
+                            style="font-family: 'Kalam', cursive"
                           >
                             <span class="block text-xl font-bold leading-none">{{
                               item.tgl
@@ -1314,6 +1328,7 @@
                 >
                   <h3
                     class="text-lg md:text-xl font-bold text-blue-950 dark:text-slate-200 flex items-center"
+                    style="font-family: 'Kalam', cursive"
                   >
                     <PhCalendar class="w-5 h-5 mr-2 text-slate-600 dark:text-slate-200" />
                     Daftar Agenda
@@ -1332,12 +1347,12 @@
                       <!-- Date Box (Calendar Style) -->
                       <div
                         class="rounded-xl flex flex-col items-center justify-center min-w-[65px] w-[65px] sm:min-w-[95px] sm:w-[95px] border transition-all duration-300 overflow-hidden shrink-0"
-                        style="font-family: 'Oswald', sans-serif"
+                        style="font-family: 'Kalam', cursive"
                         :class="themeClasses[agenda.color].dateBox"
                       >
                         <div
                           class="w-full text-center py-1 sm:py-1.5 transition-colors"
-                          style="font-family: 'Oswald', sans-serif"
+                          style="font-family: 'Kalam', cursive"
                           :class="themeClasses[agenda.color].monthBg"
                         >
                           <span
@@ -1351,9 +1366,9 @@
                           :class="themeClasses[agenda.color].dateBg"
                         >
                           <span
-                            class="text-xl sm:text-3xl font-extrabold leading-none tracking-tight font-serif"
+                            class="text-xl sm:text-3xl font-extrabold leading-none tracking-tight"
                             :class="themeClasses[agenda.color].dateText"
-                            style="font-family: 'Merriweather', serif"
+                            style="font-family: 'Kalam', cursive"
                             >{{ agenda.date }}</span
                           >
                         </div>
@@ -1446,7 +1461,10 @@
             <!-- FAQ Kolom Kiri -->
             <div class="flex flex-col justify-center p-0 sm:p-4">
               <div class="mb-8 md:mb-10 text-center lg:text-left">
-                <h2 class="text-xl md:text-4xl font-bold text-white mb-3" style="font-family: 'Oswald', sans-serif">
+                <h2
+                  class="text-xl md:text-4xl font-bold text-white mb-3"
+                  style="font-family: 'Oswald', sans-serif"
+                >
                   Pertanyaan Seputar PPDB
                 </h2>
                 <p
@@ -2044,6 +2062,7 @@ onMounted(() => {
 @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
 
 @keyframes float {
   0%,
