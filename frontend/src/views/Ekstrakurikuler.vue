@@ -552,9 +552,9 @@ onBeforeUnmount(() => {
           <div class="w-full lg:w-1/3 shrink-0 order-1 lg:order-2">
             <div class="flex flex-col gap-6 lg:sticky lg:top-32">
               <!-- Search Bar & Dropdown -->
-              <div class="flex flex-col sm:flex-row lg:flex-col gap-4 w-full">
+              <div class="flex flex-col sm:flex-row gap-4 w-full">
                 <!-- Search Bar -->
-                <div class="relative w-full sm:flex-1 lg:w-full">
+                <div class="relative w-full sm:flex-1">
                   <PhMagnifyingGlass
                     class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
                   />
@@ -567,23 +567,38 @@ onBeforeUnmount(() => {
                 </div>
 
                 <!-- Dropdown Hari -->
-                <div class="relative w-full sm:w-48 lg:w-full shrink-0">
+                <div class="relative w-full sm:w-48 lg:w-14 shrink-0" title="Filter Hari">
                   <PhCalendar
-                    class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+                    class="absolute left-5 lg:left-1/2 top-1/2 -translate-y-1/2 lg:-translate-x-1/2 w-5 h-5 pointer-events-none transition-colors"
+                    :class="
+                      activeDay !== 'semua'
+                        ? 'text-blue-500 dark:text-blue-400'
+                        : 'text-gray-400'
+                    "
                   />
                   <select
                     v-model="activeDay"
-                    class="w-full pl-12 pr-10 py-4 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-inner text-sm appearance-none cursor-pointer"
+                    class="w-full h-full pl-12 lg:pl-0 pr-10 lg:pr-0 py-4 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white lg:text-transparent lg:dark:text-transparent focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-inner text-sm appearance-none cursor-pointer"
                   >
-                    <option v-for="day in days" :key="day.id" :value="day.id">
+                    <option
+                      v-for="day in days"
+                      :key="day.id"
+                      :value="day.id"
+                      class="text-gray-900 dark:text-white"
+                    >
                       {{ day.name }}
                     </option>
                   </select>
                   <div
-                    class="absolute inset-y-0 right-5 flex items-center pointer-events-none"
+                    class="absolute inset-y-0 right-5 flex lg:hidden items-center pointer-events-none"
                   >
                     <PhCaretDown class="w-4 h-4 text-gray-400" />
                   </div>
+                  <!-- Indikator filter aktif (Desktop) -->
+                  <div
+                    v-if="activeDay !== 'semua'"
+                    class="hidden lg:block absolute top-3 right-3 w-2.5 h-2.5 bg-blue-500 rounded-full border-2 border-gray-50 dark:border-slate-900/50 pointer-events-none"
+                  ></div>
                 </div>
               </div>
 
