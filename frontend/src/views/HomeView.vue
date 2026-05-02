@@ -83,7 +83,7 @@
           <div class="mb-4 md:mb-8 px-2 md:px-0 mt-4 sm:mt-6">
             <div class="relative block">
               <h2
-                class="text-xl md:text-3xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-2"
+                class="text-2xl md:text-4xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-2"
                 style="font-family: 'Oswald', sans-serif"
               >
                 Kenapa Pilih Sekolah Ini?
@@ -114,7 +114,7 @@
                 <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
                   <div class="mt-auto flex flex-col">
                     <h3
-                      class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300"
+                      class="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300"
                       style="font-family: 'Oswald', sans-serif"
                     >
                       Fasilitas Lengkap
@@ -520,7 +520,7 @@
           >
             <div class="relative block">
               <h2
-                class="text-xl md:text-3xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
+                class="text-2xl md:text-4xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
                 style="font-family: 'Oswald', sans-serif"
               >
                 Berita & Pengumuman
@@ -1046,7 +1046,7 @@
           <div class="mb-6 md:mb-10">
             <div class="relative block">
               <h2
-                class="text-xl md:text-3xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
+                class="text-2xl md:text-4xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
                 style="font-family: 'Oswald', sans-serif"
               >
                 Agenda Sekolah
@@ -1466,7 +1466,7 @@
             <div class="flex flex-col justify-center p-0 sm:p-4">
               <div class="mb-8 md:mb-10 text-center lg:text-left">
                 <h2
-                  class="text-xl md:text-4xl font-bold text-white mb-3"
+                  class="text-2xl md:text-4xl font-bold text-white mb-3"
                   style="font-family: 'Oswald', sans-serif"
                 >
                   Pertanyaan Seputar PPDB
