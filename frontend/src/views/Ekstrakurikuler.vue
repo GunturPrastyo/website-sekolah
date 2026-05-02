@@ -651,7 +651,7 @@ onBeforeUnmount(() => {
                 class="w-full bg-gray-50 dark:bg-slate-900/50 p-5 lg:p-6 rounded-xl shadow-inner border border-gray-200 dark:border-slate-700 flex flex-col gap-4"
               >
                 <h4
-                  class="text-sm font-bold text-blue-950 dark:text-white flex items-center"
+                  class="text-sm sm:text-md font-bold text-blue-950 dark:text-white flex items-center"
                 >
                   <PhFunnel class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
                   Kategori Ekskul
@@ -688,7 +688,7 @@ onBeforeUnmount(() => {
                   class="text-lg font-bold text-blue-950 dark:text-white flex items-center border-b border-gray-100 dark:border-slate-700 pb-3 tracking-wide"
                   style="font-family: 'Kalam', cursive"
                 >
-                  <PhCalendar class="w-6 h-6 mr-2 text-blue-500" />
+                  <PhCalendar class="w-6 h-6 mr-2 text-blue-950 dark:text-white" />
                   Jadwal Kegiatan
                 </h4>
                 <div
