@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import {
   PhTrophy,
   PhGlobe,
@@ -13,7 +13,7 @@ import {
   PhFunnel,
   PhMedal,
   PhCertificate,
-  PhArrowRight,
+  PhArrowUpRight,
   PhUser,
 } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
@@ -213,6 +213,17 @@ const getRankStyle = (rank) => {
   }
 };
 
+const isLoading = ref(false);
+let filterTimeout = null;
+
+watch([activeFilter, activeType, activeYear, searchQuery], () => {
+  isLoading.value = true;
+  if (filterTimeout) clearTimeout(filterTimeout);
+  filterTimeout = setTimeout(() => {
+    isLoading.value = false;
+  }, 800); // Simulasi loading selama 800ms
+});
+
 onMounted(() => {
   animateValue("internasional", counts.value.internasional);
   animateValue("nasional", counts.value.nasional);
@@ -232,7 +243,7 @@ onMounted(() => {
         <div
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] text-yellow-500 pointer-events-none"
         >
-        <PhTrophy class="w-[400px] h-[400px]" />
+          <PhTrophy class="w-[400px] h-[400px]" />
         </div>
       </template>
     </PageHeader>
@@ -246,10 +257,10 @@ onMounted(() => {
         >
           <!-- Internasional -->
           <div
-            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-transform hover:-translate-y-1"
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 border-t-4 border-t-blue-500 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-500/20"
           >
             <div
-              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3 md:mb-4"
+              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shadow-md mb-3 md:mb-4"
             >
               <PhGlobe class="w-5 h-5 md:w-6 md:h-6" />
             </div>
@@ -265,10 +276,10 @@ onMounted(() => {
 
           <!-- Nasional -->
           <div
-            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-transform hover:-translate-y-1"
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 border-t-4 border-t-red-500 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-red-500/20"
           >
             <div
-              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-red-50 dark:bg-slate-700 flex items-center justify-center text-red-600 dark:text-red-400 mb-3 md:mb-4"
+              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-red-600 dark:bg-red-500 flex items-center justify-center text-white shadow-md mb-3 md:mb-4"
             >
               <PhFlag class="w-5 h-5 md:w-6 md:h-6" />
             </div>
@@ -284,10 +295,10 @@ onMounted(() => {
 
           <!-- Provinsi -->
           <div
-            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-transform hover:-translate-y-1"
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 border-t-4 border-t-green-500 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-green-500/20"
           >
             <div
-              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-green-50 dark:bg-slate-700 flex items-center justify-center text-green-600 dark:text-green-400 mb-3 md:mb-4"
+              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-green-600 dark:bg-green-500 flex items-center justify-center text-white shadow-md mb-3 md:mb-4"
             >
               <PhMapPin class="w-5 h-5 md:w-6 md:h-6" />
             </div>
@@ -303,10 +314,10 @@ onMounted(() => {
 
           <!-- Kabupaten -->
           <div
-            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-transform hover:-translate-y-1"
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 border-t-4 border-t-amber-500 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-amber-500/20"
           >
             <div
-              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-amber-50 dark:bg-slate-700 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-3 md:mb-4"
+              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-amber-500 dark:bg-amber-400 flex items-center justify-center text-white shadow-md mb-3 md:mb-4"
             >
               <PhBuildings class="w-5 h-5 md:w-6 md:h-6" />
             </div>
@@ -427,8 +438,44 @@ onMounted(() => {
           </div>
         </div>
 
+        <!-- Skeleton Loading -->
+        <div
+          v-if="isLoading"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative"
+        >
+          <div
+            v-for="i in 6"
+            :key="'skeleton-' + i"
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-gray-100 dark:border-slate-700 flex flex-col h-full overflow-hidden animate-pulse"
+          >
+            <div
+              class="h-48 bg-gray-200 dark:bg-slate-700 w-full shrink-0 border-b-[6px] border-gray-300 dark:border-slate-600"
+            ></div>
+            <div class="p-6 flex flex-col flex-1">
+              <div class="flex justify-between mb-4">
+                <div class="h-6 w-24 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                <div class="h-6 w-28 bg-gray-200 dark:bg-slate-700 rounded"></div>
+              </div>
+              <div class="h-6 w-full bg-gray-200 dark:bg-slate-700 rounded mb-3"></div>
+              <div class="h-6 w-3/4 bg-gray-200 dark:bg-slate-700 rounded mb-6"></div>
+              <div
+                class="mt-auto pt-5 border-t border-gray-100 dark:border-slate-700 flex items-center gap-3"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-gray-200 dark:bg-slate-700 shrink-0"
+                ></div>
+                <div class="flex-1 space-y-2">
+                  <div class="h-3 w-20 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                  <div class="h-4 w-32 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Daftar Prestasi dengan Efek Papan Penghargaan -->
         <TransitionGroup
+          v-else-if="filteredPrestasi.length > 0"
           name="list"
           tag="div"
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative"
@@ -436,7 +483,7 @@ onMounted(() => {
           <div
             v-for="prestasi in filteredPrestasi"
             :key="prestasi.id"
-            class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full cursor-default transform hover:-translate-y-2"
+            class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col h-full cursor-default transform hover:-translate-y-2"
           >
             <!-- Gambar Sertifikat / Lomba -->
             <div
@@ -462,14 +509,19 @@ onMounted(() => {
                   class="w-6 h-6 mt-1 mb-0.5"
                   :class="prestasi.rank === 1 ? 'fill-yellow-100' : ''"
                 />
-                <span class="text-[10px] font-black uppercase">{{
-                  prestasi.rank === 1 ? "1st" : prestasi.rank === 2 ? "2nd" : "3rd"
-                }}</span>
+                <span
+                  class="text-xs font-bold tracking-wider"
+                  style="font-family: 'Kalam', cursive"
+                  >{{
+                    prestasi.rank === 1 ? "1st" : prestasi.rank === 2 ? "2nd" : "3rd"
+                  }}</span
+                >
               </div>
 
               <!-- Kategori Tag -->
               <div
-                class="absolute bottom-3 left-4 px-2.5 py-1 bg-black/50 backdrop-blur-md text-white text-[10px] font-semibold rounded uppercase tracking-wider"
+                class="absolute bottom-3 left-4 px-2.5 py-1 bg-black/50 backdrop-blur-md text-white text-xs font-bold rounded capitalize tracking-wider"
+                style="font-family: 'Kalam', cursive"
               >
                 Tingkat <span class="text-yellow-400">{{ prestasi.level }}</span>
               </div>
@@ -482,11 +534,16 @@ onMounted(() => {
               <div
                 class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-3 font-semibold"
               >
-                <span class="bg-gray-100 dark:bg-slate-700 px-2 py-1 rounded">{{
-                  prestasi.type
-                }}</span>
-                <span class="flex items-center"
-                  ><PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> {{ prestasi.year }}</span
+                <span
+                  class="bg-gray-100 dark:bg-slate-700 px-2.5 py-1 rounded text-sm tracking-wide"
+                  style="font-family: 'Kalam', cursive"
+                  >{{ prestasi.type }}</span
+                >
+                <span
+                  class="flex items-center bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 px-2.5 py-1 rounded text-sm tracking-wide"
+                  style="font-family: 'Kalam', cursive"
+                  ><PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> Tahun
+                  {{ prestasi.year }}</span
                 >
               </div>
 
@@ -503,7 +560,7 @@ onMounted(() => {
                 class="inline-flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors mb-4 w-fit"
               >
                 Baca Liputan Berita
-                <PhArrowRight class="w-3.5 h-3.5 ml-1" />
+                <PhArrowUpRight class="w-3.5 h-3.5 ml-1" />
               </router-link>
 
               <div
@@ -531,7 +588,7 @@ onMounted(() => {
 
         <!-- Empty State -->
         <div
-          v-if="filteredPrestasi.length === 0"
+          v-else
           class="py-20 text-center bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm mt-4"
         >
           <div
@@ -544,6 +601,17 @@ onMounted(() => {
             Data prestasi yang Anda cari tidak ditemukan. Coba kata kunci atau filter
             lain.
           </p>
+          <button
+            @click="
+              searchQuery = '';
+              activeFilter = 'semua';
+              activeType = 'semua';
+              activeYear = 'semua';
+            "
+            class="mt-6 px-6 py-2.5 bg-blue-50 text-blue-600 dark:bg-slate-700 dark:text-blue-400 rounded-xl text-sm font-semibold hover:bg-blue-100 transition-colors"
+          >
+            Reset Filter
+          </button>
         </div>
       </div>
     </section>
@@ -551,6 +619,8 @@ onMounted(() => {
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
+
 .list-move,
 .list-enter-active,
 .list-leave-active {
