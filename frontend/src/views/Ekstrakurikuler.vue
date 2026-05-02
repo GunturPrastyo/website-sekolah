@@ -322,7 +322,7 @@ onBeforeUnmount(() => {
 
     <!-- Gallery Section -->
     <section
-      class="relative pt-0 md:pt-12 pb-0 md:px-6 min-h-screen bg-gradient-to-b from-blue-50/50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden"
+      class="relative pt-0 md:pt-6 pb-0 md:px-6 min-h-screen bg-gradient-to-b from-blue-50/50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden"
     >
       <!-- Elemen Dekorasi Latar Belakang (Blob Cahaya) -->
       <div
@@ -332,7 +332,7 @@ onBeforeUnmount(() => {
       <div class="container relative z-10 mx-auto max-w-full">
         <div
           id="ekskul-list-container"
-          class="bg-white dark:bg-slate-800 shadow-sm md:shadow-md border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-8 lg:p-10 flex flex-col lg:flex-row items-start gap-8 lg:gap-12 w-full lg:rounded-2xl lg:mt-8"
+          class="bg-white dark:bg-slate-800 shadow-sm md:shadow-md border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-8 lg:p-10 flex flex-col lg:flex-row items-start gap-8 lg:gap-12 w-full lg:mt-8"
         >
           <!-- KIRI: Daftar Card Ekstrakurikuler -->
           <div class="flex-1 w-full order-2 lg:order-1">
@@ -364,23 +364,23 @@ onBeforeUnmount(() => {
               >
                 <!-- Dekorasi Card Belakang (Offset Kanan Bawah) -->
                 <div
-                  class="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-slate-700 dark:to-slate-800 rounded-xl transform translate-x-3 translate-y-3 transition-all duration-500 group-hover:translate-x-4 group-hover:translate-y-4 z-0"
+                  class="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-slate-700 dark:to-slate-800 rounded-xl transform translate-x-3 translate-y-3 transition-all duration-500 lg:group-hover:translate-x-4 lg:group-hover:translate-y-4 z-0"
                 ></div>
 
                 <!-- Main Card -->
                 <div
-                  class="relative z-10 bg-slate-900 rounded-xl overflow-hidden shadow-lg group-hover:shadow-2xl transition-all duration-500 aspect-[3/4] transform group-hover:-translate-y-1 group-hover:-translate-x-1 border border-gray-200 dark:border-slate-700 h-full w-full"
+                  class="relative z-10 bg-slate-900 rounded-xl overflow-hidden shadow-lg lg:group-hover:shadow-2xl transition-all duration-500 aspect-[3/4] transform lg:group-hover:-translate-y-1 lg:group-hover:-translate-x-1 border border-gray-200 dark:border-slate-700 h-full w-full"
                 >
                   <!-- Full Background Image -->
                   <img
                     :src="ekskul.image"
                     :alt="ekskul.name"
-                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-95 group-hover:opacity-100"
+                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-110 opacity-80 lg:opacity-95 lg:group-hover:opacity-100"
                   />
 
                   <!-- Gradient Overlay (Darkens on hover) -->
                   <div
-                    class="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/30 to-transparent transition-all duration-500 group-hover:via-slate-900/70 group-hover:from-slate-900"
+                    class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 lg:from-slate-900/95 lg:via-slate-900/30 to-transparent transition-all duration-500 lg:group-hover:via-slate-900/70 lg:group-hover:from-slate-900"
                   ></div>
 
                   <!-- Floating Category Badge -->
@@ -399,7 +399,7 @@ onBeforeUnmount(() => {
 
                   <!-- Content Area (Slides up smoothly) -->
                   <div
-                    class="absolute bottom-0 left-0 w-full p-6 md:p-8 transition-all duration-500 ease-out z-20 group-hover:bg-slate-900/60 group-hover:backdrop-blur-md"
+                    class="absolute bottom-0 left-0 w-full p-6 md:p-8 transition-all duration-500 ease-out z-20 bg-slate-900/50 backdrop-blur-sm lg:bg-transparent lg:backdrop-blur-none lg:group-hover:bg-slate-900/60 lg:group-hover:backdrop-blur-md"
                   >
                     <h3
                       class="text-2xl font-extrabold text-white mb-2 leading-tight tracking-wide drop-shadow-md"
@@ -416,7 +416,7 @@ onBeforeUnmount(() => {
 
                     <!-- Hidden Expandable Content -->
                     <div
-                      class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-[300px] group-hover:opacity-100"
+                      class="max-h-[300px] opacity-100 lg:max-h-0 lg:opacity-0 overflow-hidden transition-all duration-500 ease-in-out lg:group-hover:max-h-[300px] lg:group-hover:opacity-100"
                     >
                       <div class="pt-4 mt-4 border-t border-white/20">
                         <!-- Ekstra Info: Members & Pembina -->
@@ -446,7 +446,7 @@ onBeforeUnmount(() => {
                         >
                           Jelajahi Klub
                           <PhArrowRight
-                            class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform"
+                            class="w-4 h-4 ml-2 transform lg:group-hover:translate-x-1 transition-transform"
                           />
                         </button>
                       </div>
@@ -491,7 +491,7 @@ onBeforeUnmount(() => {
             <!-- Pagination Ekstrakurikuler -->
             <div
               v-if="totalPages > 1"
-              class="flex justify-between items-center gap-2 mt-10 relative z-10 w-full fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
+              class="flex justify-between items-center gap-2 mt-10 mb-6 sm:mb-0 relative z-10 w-full fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
             >
               <button
                 @click="changePage(currentPage - 1)"
