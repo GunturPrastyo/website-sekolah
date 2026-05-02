@@ -349,7 +349,7 @@
       class="lg:hidden overflow-hidden transition-all duration-500 ease-in-out w-full"
     >
       <div
-        class="mt-4 space-y-2 rounded-xl bg-white/95 backdrop-blur-md dark:bg-slate-800/95 border border-gray-100 dark:border-slate-700/50 p-5 text-gray-800 dark:text-gray-200 shadow-2xl mx-1"
+        class="mt-4 pt-4 pb-2 space-y-2 text-gray-800 dark:text-gray-200 border-t border-gray-100 dark:border-slate-700/50"
       >
         <router-link
           to="/"

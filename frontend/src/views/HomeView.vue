@@ -262,7 +262,7 @@
 
             <!-- LEFT TEXT -->
             <div class="relative z-10 md:w-2/5 lg:w-1/3 mx-0 sm:mx-6 mt-4 md:mt-0">
-              <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-white mb-2">
+              <h3 class="text-xl lg:text-2xl font-bold text-white mb-2">
                 Persebaran Alumni Kami
               </h3>
               <p class="text-sm lg:text-base text-sky-50 leading-relaxed">
@@ -343,7 +343,7 @@
               class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-900/80 to-slate-800/50 backdrop-blur-[2px]"
             ></div>
             <div class="relative z-10 -mt-12 pl-4 pr-4 md:px-14 max-w-2xl text-white">
-              <h2 class="text-xl md:text-5xl font-bold mb-2 md:mb-4">
+              <h2 class="text-3xl md:text-5xl font-bold mb-2 md:mb-4">
                 Pilihan Jurusan Unggulan
               </h2>
               <p class="text-sm md:text-xl text-gray-200">

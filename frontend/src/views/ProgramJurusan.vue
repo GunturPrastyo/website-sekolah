@@ -146,7 +146,7 @@ onMounted(() => {
       badge="Akademik"
       title="Program Jurusan Unggulan"
       description="Temukan minat, bakat, dan potensi terbaikmu melalui berbagai pilihan peminatan yang dirancang khusus untuk mempersiapkan masa depanmu di dunia perkuliahan maupun industri."
-      bgImage="https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=1600&auto=format&fit=crop"
+      bgImage="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1600&auto=format&fit=crop"
     />
 
     <!-- Program Details Section -->
