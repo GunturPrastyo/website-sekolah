@@ -14,7 +14,7 @@
         >
           <div
             :key="currentCategory.id + '-header'"
-            class="relative h-[380px] md:h-[450px] lg:h-[500px] overflow-hidden shadow-xl lg:rounded-b-[3rem] border-b border-gray-200 dark:border-slate-800"
+            class="relative h-[350px] md:h-[400px] lg:h-[450px] overflow-hidden shadow-lg lg:rounded-b-2xl border-b border-gray-200 dark:border-slate-800"
           >
             <img
               :src="currentCategory.items[0].src"
@@ -28,20 +28,20 @@
             <div class="absolute bottom-0 left-0 w-full p-2 md:p-14 py-8 text-white">
               <div class="container mx-auto max-w-7xl">
                 <span
-                  class="inline-block px-5 py-2 mb-4 text-sm md:text-md font-extrabold text-blue-950 bg-yellow-400 rounded-full shadow-lg tracking-wide uppercase"
+                  class="inline-block px-4 py-1.5 mb-4 text-xs md:text-sm font-bold text-blue-700 bg-blue-100/90 backdrop-blur-sm dark:bg-blue-900/40 dark:text-blue-300 rounded-full shadow-sm tracking-widest uppercase"
                   style="font-family: 'Kalam', cursive"
                 >
                   Fasilitas Unggulan
                 </span>
 
                 <h1
-                  class="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 md:mb-4 drop-shadow-lg"
+                  class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 drop-shadow-md"
                 >
                   {{ currentCategory.name }}
                 </h1>
 
                 <p
-                  class="text-gray-200 text-sm md:text-lg max-w-2xl leading-relaxed drop-shadow"
+                  class="text-blue-50 text-sm md:text-base max-w-2xl leading-relaxed drop-shadow"
                 >
                   Jelajahi berbagai fasilitas modern yang mendukung pengalaman belajar
                   siswa secara optimal di lingkungan SMAN 1 Nogosari.
@@ -68,18 +68,18 @@
             >
               <div
                 :key="currentCategory.id + '-content'"
-                class="bg-white dark:bg-slate-800 p-6 md:p-8 lg:p-10 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm space-y-10"
+                class="bg-white dark:bg-slate-800 p-6 md:p-8 lg:p-10 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm space-y-8"
               >
                 <!-- Konten Pengantar -->
-                <div class="space-y-8">
+                <div class="space-y-6">
                   <p
-                    class="text-lg md:text-xl font-medium text-gray-800 dark:text-gray-200 leading-relaxed text-justify first-letter:text-6xl md:first-letter:text-7xl first-letter:font-bold first-letter:font-serif first-letter:text-blue-600 dark:first-letter:text-blue-400 first-letter:mr-3 first-letter:float-left first-letter:leading-none"
+                    class="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed text-justify"
                   >
                     {{ currentCategory.description }}
                   </p>
 
                   <blockquote
-                    class="relative border-l-4 border-blue-500 bg-gradient-to-r from-blue-50 to-transparent dark:from-slate-700/50 dark:to-transparent p-6 sm:p-8 rounded-r-2xl italic text-gray-700 dark:text-gray-300 shadow-sm overflow-hidden"
+                    class="relative border-l-4 border-blue-400 bg-blue-50/50 dark:bg-slate-800/50 p-6 sm:p-8 rounded-r-xl italic text-gray-600 dark:text-gray-400 shadow-sm overflow-hidden"
                   >
                     <div
                       class="absolute -right-4 -top-4 text-blue-100 dark:text-slate-700/50 opacity-50 transform rotate-180 pointer-events-none"
@@ -91,7 +91,7 @@
                       </svg>
                     </div>
                     <p
-                      class="relative z-10 text-lg md:text-xl font-medium leading-relaxed"
+                      class="relative z-10 text-base md:text-lg font-medium leading-relaxed"
                     >
                       "Fasilitas yang baik bukan hanya pelengkap, tetapi fondasi utama
                       dalam menciptakan pengalaman belajar yang maksimal bagi setiap
@@ -110,10 +110,10 @@
                     class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out space-y-5"
                   >
                     <h3
-                      class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3"
+                      class="text-lg md:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3"
                     >
                       <div
-                        class="w-10 h-10 shrink-0 rounded-xl bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 flex items-center justify-center text-lg font-black shadow-inner"
+                        class="w-8 h-8 shrink-0 rounded-lg bg-blue-50 dark:bg-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center text-base font-bold border border-blue-100 dark:border-slate-600"
                       >
                         {{ index + 1 }}
                       </div>
