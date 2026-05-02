@@ -475,7 +475,8 @@ onBeforeUnmount(() => {
                   :key="page"
                   @click="changePage(page)"
                   :disabled="isLoading"
-                  class="w-10 h-10 rounded-lg text-sm font-bold transition-colors flex items-center justify-center border"
+                  class="w-10 h-10 rounded-lg text-base font-bold transition-colors flex items-center justify-center border"
+                  style="font-family: 'Kalam', cursive"
                   :class="
                     currentPage === page
                       ? 'bg-blue-600 text-white border-blue-600 shadow-md'
