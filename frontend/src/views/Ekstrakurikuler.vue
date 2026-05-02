@@ -34,6 +34,7 @@ const categories = [
 ];
 
 const activeDay = ref("semua");
+const isDayDropdownOpen = ref(false);
 
 const days = [
   { id: "semua", name: "Semua Hari" },
@@ -567,9 +568,9 @@ onBeforeUnmount(() => {
           <div class="w-full lg:w-1/3 shrink-0 order-1 lg:order-2">
             <div class="flex flex-col gap-6 lg:sticky lg:top-32">
               <!-- Search Bar & Dropdown -->
-              <div class="flex flex-col sm:flex-row gap-4 w-full">
+              <div class="flex flex-row gap-3 sm:gap-4 w-full">
                 <!-- Search Bar -->
-                <div class="relative w-full sm:flex-1">
+                <div class="relative flex-1">
                   <PhMagnifyingGlass
                     class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
                   />
@@ -582,38 +583,66 @@ onBeforeUnmount(() => {
                 </div>
 
                 <!-- Dropdown Hari -->
-                <div class="relative w-full sm:w-48 lg:w-14 shrink-0" title="Filter Hari">
-                  <PhCalendar
-                    class="absolute left-5 lg:left-1/2 top-1/2 -translate-y-1/2 lg:-translate-x-1/2 w-5 h-5 pointer-events-none transition-colors"
-                    :class="
-                      activeDay !== 'semua'
-                        ? 'text-blue-500 dark:text-blue-400'
-                        : 'text-gray-400'
-                    "
-                  />
-                  <select
-                    v-model="activeDay"
-                    class="w-full h-full pl-12 lg:pl-0 pr-10 lg:pr-0 py-4 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 text-gray-900 dark:text-white lg:text-transparent lg:dark:text-transparent focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-inner text-sm appearance-none cursor-pointer"
+                <div class="relative w-14 shrink-0" title="Filter Hari">
+                  <!-- Toggle Button -->
+                  <button
+                    @click="isDayDropdownOpen = !isDayDropdownOpen"
+                    class="w-full h-full py-4 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-inner flex items-center justify-center cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-800"
                   >
-                    <option
-                      v-for="day in days"
-                      :key="day.id"
-                      :value="day.id"
-                      class="text-gray-900 dark:text-white"
-                    >
-                      {{ day.name }}
-                    </option>
-                  </select>
-                  <div
-                    class="absolute inset-y-0 right-5 flex lg:hidden items-center pointer-events-none"
-                  >
-                    <PhCaretDown class="w-4 h-4 text-gray-400" />
-                  </div>
-                  <!-- Indikator filter aktif (Desktop) -->
+                    <PhCalendar
+                      class="w-5 h-5 transition-colors"
+                      :class="
+                        activeDay !== 'semua'
+                          ? 'text-blue-500 dark:text-blue-400'
+                          : 'text-gray-400'
+                      "
+                    />
+                  </button>
+
+                  <!-- Indikator filter aktif -->
                   <div
                     v-if="activeDay !== 'semua'"
-                    class="hidden lg:block absolute top-3 right-3 w-2.5 h-2.5 bg-blue-500 rounded-full border-2 border-gray-50 dark:border-slate-900/50 pointer-events-none"
+                    class="absolute top-3 right-3 w-2.5 h-2.5 bg-blue-500 rounded-full border-2 border-gray-50 dark:border-slate-900/50 pointer-events-none"
                   ></div>
+
+                  <!-- Dropdown Card Menu -->
+                  <Transition
+                    enter-active-class="transition ease-out duration-200"
+                    enter-from-class="opacity-0 translate-y-1 scale-95"
+                    enter-to-class="opacity-100 translate-y-0 scale-100"
+                    leave-active-class="transition ease-in duration-150"
+                    leave-from-class="opacity-100 translate-y-0 scale-100"
+                    leave-to-class="opacity-0 translate-y-1 scale-95"
+                  >
+                    <div
+                      v-if="isDayDropdownOpen"
+                      class="absolute top-full right-0 mt-3 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 p-2 z-50 origin-top-right"
+                    >
+                      <!-- Transparent Overlay for clicking outside -->
+                      <div
+                        class="fixed inset-0 z-[-1]"
+                        @click="isDayDropdownOpen = false"
+                      ></div>
+                      <div class="flex flex-col gap-1 relative z-10">
+                        <button
+                          v-for="day in days"
+                          :key="day.id"
+                          @click="
+                            activeDay = day.id;
+                            isDayDropdownOpen = false;
+                          "
+                          class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold transition-colors"
+                          :class="
+                            activeDay === day.id
+                              ? 'bg-blue-50 text-blue-600 dark:bg-slate-700 dark:text-blue-400'
+                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50'
+                          "
+                        >
+                          {{ day.name }}
+                        </button>
+                      </div>
+                    </div>
+                  </Transition>
                 </div>
               </div>
 
