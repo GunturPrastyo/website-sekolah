@@ -1,4 +1,5 @@
 <template>
+  <div class="overflow-x-hidden w-full max-w-full">
   <!-- Header Section -->
   <header
     class="relative flex flex-col items-center justify-center h-[70vh] md:h-screen text-center text-white"
@@ -352,7 +353,7 @@
       <div class="w-full max-w-full container relative z-10 mx-auto">
         <!-- HEADER -->
         <div
-          class="relative overflow-hidden shadow-2xl min-h-[240px] sm:min-h-[450px] flex items-center md:rounded-lg bg-fixed bg-center bg-cover"
+          class="relative overflow-hidden shadow-2xl min-h-[350px] sm:min-h-[450px] flex items-center md:rounded-lg bg-fixed bg-center bg-cover"
           style="background-image: url('assets/img/jurusan.jpg')"
         >
           <!-- Overlay Parallax -->
@@ -1560,6 +1561,7 @@
       </div>
     </section>
   </main>
+  </div>
 </template>
 
 <script setup>
