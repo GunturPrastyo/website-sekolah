@@ -574,12 +574,34 @@ const currentSyllabus = computed(() => {
 
     <!-- Interactive Syllabus Area (Full Width to Footer) -->
     <section
-      class="relative w-full py-16 md:py-24 px-6 border-t border-blue-800/30 dark:border-slate-800 bg-center bg-cover overflow-hidden"
+      class="relative w-full py-12 md:py-16 px-6 border-t border-blue-800/30 dark:border-slate-800 bg-center bg-cover overflow-hidden"
     >
       <!-- Background Overlay -->
       <div
         class="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900/90 dark:from-slate-900/95 dark:to-slate-950/95 backdrop-blur-[2px]"
       ></div>
+
+      <!-- Header Silabus -->
+      <div class="relative z-10 container mx-auto max-w-6xl text-center mb-12 md:mb-16">
+        <div class="inline-flex items-center justify-center space-x-2 mb-3">
+          <span class="h-px w-8 sm:w-12 bg-blue-400 rounded-full"></span>
+          <span
+            class="text-blue-400 font-bold text-sm sm:text-base tracking-wider uppercase"
+            style="font-family: 'Kalam', cursive"
+            >Struktur Kurikulum</span
+          >
+          <span class="h-px w-8 sm:w-12 bg-blue-400 rounded-full"></span>
+        </div>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4 tracking-tight">
+          Silabus Pembelajaran
+        </h2>
+        <p
+          class="text-blue-100/80 dark:text-gray-400 max-w-2xl mx-auto text-sm sm:text-base"
+        >
+          Eksplorasi daftar mata pelajaran beserta rincian materi yang akan dipelajari
+          sesuai dengan jenjang kelas dan peminatan yang dipilih.
+        </p>
+      </div>
 
       <div
         class="container relative z-10 mx-auto max-w-6xl flex flex-col lg:flex-row gap-8 lg:gap-12 items-start"

@@ -151,14 +151,27 @@ onMounted(() => {
 
     <!-- Program Details Section -->
     <div
-      class="min-h-screen flex flex-col bg-white dark:bg-slate-900 transition-colors duration-700"
+      class="min-h-screen flex flex-col relative transition-colors duration-700 bg-fixed bg-cover bg-center"
+      style="
+        background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop');
+      "
     >
+      <!-- Base Overlay -->
+      <div
+        class="absolute inset-0 bg-white/90 dark:bg-slate-900/95 backdrop-blur-[2px] z-0 pointer-events-none"
+      ></div>
+
       <!-- Render Tiap Jurusan dengan Selang-seling (Alternate Layout & Background) -->
       <section
         v-for="(program, index) in programs"
         :key="program.id"
-        class="relative py-16 md:py-24 px-6 transition-colors duration-700 ease-in-out overflow-hidden"
-        :class="index % 2 === 0 ? 'bg-white dark:bg-slate-900' : program.sectionBgClass"
+        class="relative py-16 md:py-24 px-6 transition-colors duration-700 ease-in-out overflow-hidden z-10"
+        :class="
+          index % 2 === 0
+            ? 'bg-transparent'
+            : program.sectionBgClass +
+              ' bg-opacity-95 dark:bg-opacity-95 backdrop-blur-md'
+        "
       >
         <!-- Parallax Background Overlay -->
         <div
@@ -182,11 +195,11 @@ onMounted(() => {
               :class="index % 2 === 0 ? '-translate-x-10' : 'translate-x-10'"
             >
               <div
-                class="absolute inset-0 translate-x-3 translate-y-3 md:translate-x-4 md:translate-y-4 rounded-xl shadow-lg transition-all duration-700 ease-in-out group-hover:translate-x-5 group-hover:translate-y-5 md:group-hover:translate-x-6 md:group-hover:translate-y-6"
+                class="absolute inset-0 translate-x-3 translate-y-3 md:translate-x-4 md:translate-y-4 rounded-lg shadow-lg transition-all duration-700 ease-in-out group-hover:translate-x-5 group-hover:translate-y-5 md:group-hover:translate-x-6 md:group-hover:translate-y-6"
                 :class="program.decorationClass"
               ></div>
               <div
-                class="relative rounded-xl overflow-hidden shadow-2xl aspect-video md:aspect-[4/3] border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-800 z-10 transition-colors duration-700 ease-in-out"
+                class="relative rounded-lg overflow-hidden shadow-2xl aspect-video md:aspect-[4/3] border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-800 z-10 transition-colors duration-700 ease-in-out"
               >
                 <img
                   :src="program.image"

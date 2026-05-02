@@ -313,7 +313,6 @@
                   <span
                     class="relative w-1.5 h-1.5 md:w-2 md:h-2 bg-white rounded-full shadow-[0_0_6px_rgba(255,255,255,0.9)] group-hover:scale-150 group-focus:scale-150 transition-transform duration-300"
                   ></span>
-
                 </div>
               </div>
             </div>
@@ -323,8 +322,16 @@
 
       <!-- Jurusan Section -->
       <section
-        class="relative -my-12 -mx-6 md:-mx-6 lg:-mx-0 bg-blue-50 dark:bg-slate-900 overflow-hidden px-0 md:px-6 mb-10 md:mb-16"
+        class="relative -my-12 -mx-6 md:-mx-6 lg:-mx-0 overflow-hidden px-0 md:px-6 mb-10 md:mb-16 bg-fixed bg-center bg-cover shadow-inner"
+        style="
+          background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop');
+        "
       >
+        <!-- Overlay Parallax -->
+        <div
+          class="absolute inset-0 bg-blue-50/90 dark:bg-slate-900/90 backdrop-blur-[2px]"
+        ></div>
+
         <div class="w-full max-w-full container relative z-10 mx-auto">
           <!-- HEADER -->
           <div
@@ -1542,53 +1549,61 @@
       </section>
     </main>
 
-  <!-- Global Dynamic Tooltip Map -->
-  <Teleport to="body">
-    <Transition
-      enter-active-class="transition-opacity duration-200"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition-opacity duration-200"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div
-        v-if="tooltip.show && tooltip.data"
-        class="fixed pointer-events-none z-[100] w-56 md:w-60 bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-slate-700"
-        :style="{ top: tooltip.y + 'px', left: tooltip.x + 'px', transform: 'translate(-50%, -100%)' }"
+    <!-- Global Dynamic Tooltip Map -->
+    <Teleport to="body">
+      <Transition
+        enter-active-class="transition-opacity duration-200"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition-opacity duration-200"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
       >
-        <!-- Chat Bubble Tail -->
         <div
-          class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-slate-800 rotate-45 border-b border-r border-gray-100 dark:border-slate-700 rounded-sm"
-        ></div>
-
-        <div class="flex flex-col relative z-10">
-          <div class="flex items-center gap-3 mb-3">
-            <div
-              class="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 border border-gray-100 dark:border-slate-600 p-1.5 shrink-0 flex items-center justify-center shadow-inner"
-            >
-              <img :src="tooltip.data.logo" class="w-full h-full object-contain" />
-            </div>
-            <div class="flex flex-col text-left">
-              <h4
-                class="font-bold text-sm text-gray-900 dark:text-white leading-tight line-clamp-2"
-              >
-                {{ tooltip.data.name }}
-              </h4>
-            </div>
-          </div>
+          v-if="tooltip.show && tooltip.data"
+          class="fixed pointer-events-none z-[100] w-56 md:w-60 bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-slate-700"
+          :style="{
+            top: tooltip.y + 'px',
+            left: tooltip.x + 'px',
+            transform: 'translate(-50%, -100%)',
+          }"
+        >
+          <!-- Chat Bubble Tail -->
           <div
-            class="bg-blue-50 dark:bg-blue-900/30 rounded-lg py-2 px-3 flex justify-between items-center border border-blue-100 dark:border-blue-800/50"
-          >
-            <span class="text-[11px] font-medium text-blue-600 dark:text-blue-300">Total Alumni</span>
-            <span class="font-bold text-blue-700 dark:text-blue-400 text-xs bg-white dark:bg-slate-800 border border-blue-100/50 dark:border-slate-700 px-2 py-0.5 rounded shadow-sm">
-              {{ tooltip.data.alumni }} Orang
-            </span>
+            class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-slate-800 rotate-45 border-b border-r border-gray-100 dark:border-slate-700 rounded-sm"
+          ></div>
+
+          <div class="flex flex-col relative z-10">
+            <div class="flex items-center gap-3 mb-3">
+              <div
+                class="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 border border-gray-100 dark:border-slate-600 p-1.5 shrink-0 flex items-center justify-center shadow-inner"
+              >
+                <img :src="tooltip.data.logo" class="w-full h-full object-contain" />
+              </div>
+              <div class="flex flex-col text-left">
+                <h4
+                  class="font-bold text-sm text-gray-900 dark:text-white leading-tight line-clamp-2"
+                >
+                  {{ tooltip.data.name }}
+                </h4>
+              </div>
+            </div>
+            <div
+              class="bg-blue-50 dark:bg-blue-900/30 rounded-lg py-2 px-3 flex justify-between items-center border border-blue-100 dark:border-blue-800/50"
+            >
+              <span class="text-[11px] font-medium text-blue-600 dark:text-blue-300"
+                >Total Alumni</span
+              >
+              <span
+                class="font-bold text-blue-700 dark:text-blue-400 text-xs bg-white dark:bg-slate-800 border border-blue-100/50 dark:border-slate-700 px-2 py-0.5 rounded shadow-sm"
+              >
+                {{ tooltip.data.alumni }} Orang
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-    </Transition>
-  </Teleport>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
@@ -1628,7 +1643,7 @@ const tooltip = ref({
   show: false,
   x: 0,
   y: 0,
-  data: null
+  data: null,
 });
 const showTooltip = (e, loc) => {
   tooltip.value.show = true;
