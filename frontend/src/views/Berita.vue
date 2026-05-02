@@ -9,6 +9,7 @@ import {
   PhFadersHorizontal,
   PhMagnifyingGlass,
   PhTrendUp,
+  PhArrowUpRight,
 } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 import Breadcrumb from "@/components/Breadcrumb.vue";
@@ -213,7 +214,8 @@ watch([searchQuery, activeCategory], () => {
 
                   <!-- Category Badge -->
                   <div
-                    class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-blue-700 text-xs font-bold rounded-md uppercase tracking-wider shadow-sm"
+                    class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-blue-700 text-sm font-bold rounded-md capitalize tracking-wide shadow-sm"
+                    style="font-family: 'Kalam', cursive"
                   >
                     {{ categories.find((c) => c.id === news.category)?.name }}
                   </div>
@@ -256,8 +258,8 @@ watch([searchQuery, activeCategory], () => {
                       class="flex items-center text-sm font-bold text-blue-600 dark:text-blue-400 group-hover:underline"
                     >
                       Baca Selengkapnya
-                      <PhCaretRight
-                        class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform"
+                      <PhArrowUpRight
+                        class="w-4 h-4 ml-1 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
                       />
                     </router-link>
                     <span
@@ -409,6 +411,8 @@ watch([searchQuery, activeCategory], () => {
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
+
 .news-list-move,
 .news-list-enter-active,
 .news-list-leave-active {

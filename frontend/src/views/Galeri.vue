@@ -185,7 +185,7 @@ const closeModal = () => {
       <div class="container mx-auto max-w-full px-0 lg:px-8">
         <!-- Video Profil Section -->
         <div
-          class="mb-6 relative rounded-xl overflow-hidden shadow-xl aspect-video md:aspect-[21/9] group cursor-pointer w-full block"
+          class="mb-6 relative rounded-xl overflow-hidden shadow-xl aspect-[4/3] sm:aspect-video md:aspect-[21/9] group cursor-pointer w-full block"
         >
           <img
             src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop"

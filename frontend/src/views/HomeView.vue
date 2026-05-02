@@ -298,6 +298,12 @@
                   tabindex="0"
                   class="absolute flex justify-center items-center group cursor-pointer hover:z-50 focus:z-50 w-5 h-5 md:w-8 md:h-8 -translate-x-1/2 -translate-y-1/2 focus:outline-none"
                   :style="{ top: loc.top, left: loc.left, zIndex: 10 }"
+                  @mouseenter="showTooltip($event, loc)"
+                  @mousemove="updateTooltipPos($event)"
+                  @mouseleave="hideTooltip"
+                  @touchstart.passive="showTooltip($event, loc)"
+                  @touchmove.passive="updateTooltipPos($event)"
+                  @touchend.passive="hideTooltip"
                 >
                   <!-- Elegant Pulse Effect -->
                   <span
@@ -308,45 +314,6 @@
                     class="relative w-1.5 h-1.5 md:w-2 md:h-2 bg-white rounded-full shadow-[0_0_6px_rgba(255,255,255,0.9)] group-hover:scale-150 group-focus:scale-150 transition-transform duration-300"
                   ></span>
 
-                  <!-- Tooltip Detail PTN -->
-                  <div
-                    class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 w-56 md:w-60 bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-all duration-500 pointer-events-none z-20 translate-y-4 group-hover:translate-y-0 group-focus:translate-y-0 scale-90 group-hover:scale-100 group-focus:scale-100 origin-bottom border border-gray-100 dark:border-slate-700"
-                  >
-                    <!-- Chat Bubble Tail -->
-                    <div
-                      class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-slate-800 rotate-45 border-b border-r border-gray-100 dark:border-slate-700 rounded-sm"
-                    ></div>
-
-                    <div class="flex flex-col relative z-10">
-                      <div class="flex items-center gap-3 mb-3">
-                        <div
-                          class="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 border border-gray-100 dark:border-slate-600 p-1.5 shrink-0 flex items-center justify-center shadow-inner"
-                        >
-                          <img :src="loc.logo" class="w-full h-full object-contain" />
-                        </div>
-                        <div class="flex flex-col text-left">
-                          <h4
-                            class="font-bold text-sm text-gray-900 dark:text-white leading-tight line-clamp-2"
-                          >
-                            {{ loc.name }}
-                          </h4>
-                        </div>
-                      </div>
-                      <div
-                        class="bg-blue-50 dark:bg-blue-900/30 rounded-lg py-2 px-3 flex justify-between items-center border border-blue-100 dark:border-blue-800/50"
-                      >
-                        <span
-                          class="text-[11px] font-medium text-blue-600 dark:text-blue-300"
-                          >Total Alumni</span
-                        >
-                        <span
-                          class="font-bold text-blue-700 dark:text-blue-400 text-xs bg-white dark:bg-slate-800 border border-blue-100/50 dark:border-slate-700 px-2 py-0.5 rounded shadow-sm"
-                        >
-                          {{ loc.alumni }} Orang
-                        </span>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -1574,6 +1541,54 @@
         </div>
       </section>
     </main>
+
+  <!-- Global Dynamic Tooltip Map -->
+  <Teleport to="body">
+    <Transition
+      enter-active-class="transition-opacity duration-200"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-200"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="tooltip.show && tooltip.data"
+        class="fixed pointer-events-none z-[100] w-56 md:w-60 bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-slate-700"
+        :style="{ top: tooltip.y + 'px', left: tooltip.x + 'px', transform: 'translate(-50%, -100%)' }"
+      >
+        <!-- Chat Bubble Tail -->
+        <div
+          class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-slate-800 rotate-45 border-b border-r border-gray-100 dark:border-slate-700 rounded-sm"
+        ></div>
+
+        <div class="flex flex-col relative z-10">
+          <div class="flex items-center gap-3 mb-3">
+            <div
+              class="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 border border-gray-100 dark:border-slate-600 p-1.5 shrink-0 flex items-center justify-center shadow-inner"
+            >
+              <img :src="tooltip.data.logo" class="w-full h-full object-contain" />
+            </div>
+            <div class="flex flex-col text-left">
+              <h4
+                class="font-bold text-sm text-gray-900 dark:text-white leading-tight line-clamp-2"
+              >
+                {{ tooltip.data.name }}
+              </h4>
+            </div>
+          </div>
+          <div
+            class="bg-blue-50 dark:bg-blue-900/30 rounded-lg py-2 px-3 flex justify-between items-center border border-blue-100 dark:border-blue-800/50"
+          >
+            <span class="text-[11px] font-medium text-blue-600 dark:text-blue-300">Total Alumni</span>
+            <span class="font-bold text-blue-700 dark:text-blue-400 text-xs bg-white dark:bg-slate-800 border border-blue-100/50 dark:border-slate-700 px-2 py-0.5 rounded shadow-sm">
+              {{ tooltip.data.alumni }} Orang
+            </span>
+          </div>
+        </div>
+      </div>
+    </Transition>
+  </Teleport>
   </div>
 </template>
 
@@ -1606,6 +1621,29 @@ const showSubtitle = ref(false);
 const activeFaq = ref(null);
 const toggleFaq = (index) => {
   activeFaq.value = activeFaq.value === index ? null : index;
+};
+
+// State Tooltip Dinamis Map
+const tooltip = ref({
+  show: false,
+  x: 0,
+  y: 0,
+  data: null
+});
+const showTooltip = (e, loc) => {
+  tooltip.value.show = true;
+  tooltip.value.data = loc;
+  updateTooltipPos(e);
+};
+const updateTooltipPos = (e) => {
+  if (!tooltip.value.show) return;
+  const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
+  tooltip.value.x = clientX;
+  tooltip.value.y = clientY - 15; // Beri sedikit jarak vertikal ke atas agar tidak menutupi jari/kursor
+};
+const hideTooltip = () => {
+  tooltip.value.show = false;
 };
 
 // --- Data Animasi Statistik Header ---
