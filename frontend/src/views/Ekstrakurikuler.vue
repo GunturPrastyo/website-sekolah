@@ -17,7 +17,7 @@ import {
   PhLightbulb,
   PhDownloadSimple,
   PhClipboardText,
-  PhInbox,
+  PhFileX,
 } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 import EkskulModal from "@/components/EkskulModal.vue";
@@ -305,7 +305,7 @@ onBeforeUnmount(() => {
             <div class="flex flex-col sm:flex-row items-center gap-4 w-full">
               <!-- Dropdown Hari -->
               <div class="relative w-full sm:w-48 shrink-0">
-            <PhCalendar
+                <PhCalendar
                   class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
                 />
                 <select
@@ -319,13 +319,13 @@ onBeforeUnmount(() => {
                 <div
                   class="absolute inset-y-0 right-5 flex items-center pointer-events-none"
                 >
-              <PhCaretDown class="w-4 h-4 text-gray-400" />
+                  <PhCaretDown class="w-4 h-4 text-gray-400" />
                 </div>
               </div>
 
               <!-- Search Bar -->
               <div class="relative w-full sm:flex-1 lg:flex-none lg:w-[350px]">
-            <PhMagnifyingGlass
+                <PhMagnifyingGlass
                   class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
                 />
                 <input
@@ -344,7 +344,7 @@ onBeforeUnmount(() => {
               <h4
                 class="text-sm font-bold text-blue-950 dark:text-white flex items-center"
               >
-            <PhFunnel class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
+                <PhFunnel class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
                 Kategori:
               </h4>
               <div class="flex flex-wrap items-center gap-2 md:gap-2.5">
@@ -429,7 +429,7 @@ onBeforeUnmount(() => {
                   <div
                     class="flex items-center text-blue-300 text-xs font-bold uppercase tracking-wider mb-2"
                   >
-                <PhClock class="w-3.5 h-3.5 mr-1.5" />
+                    <PhClock class="w-3.5 h-3.5 mr-1.5" />
                     {{ ekskul.schedule }}
                   </div>
 
@@ -443,13 +443,13 @@ onBeforeUnmount(() => {
                         <span
                           class="inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-blue-100 bg-blue-900/60 border border-blue-400/30 px-2.5 py-1 rounded backdrop-blur-md shadow-sm"
                         >
-                      <PhUsers class="w-3 h-3 mr-1.5" />
+                          <PhUsers class="w-3 h-3 mr-1.5" />
                           {{ ekskul.members }} Anggota
                         </span>
                         <span
                           class="inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-emerald-100 bg-emerald-900/60 border border-emerald-400/30 px-2.5 py-1 rounded backdrop-blur-md shadow-sm"
                         >
-                      <PhUser class="w-3 h-3 mr-1.5" />
+                          <PhUser class="w-3 h-3 mr-1.5" />
                           {{ ekskul.pembina.split(",")[0] }}
                         </span>
                       </div>
@@ -462,7 +462,7 @@ onBeforeUnmount(() => {
                         class="inline-flex items-center text-xs font-bold text-white uppercase tracking-widest hover:text-blue-300 transition-colors focus:outline-none"
                       >
                         Jelajahi Klub
-                    <PhArrowRight
+                        <PhArrowRight
                           class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform"
                         />
                       </button>
@@ -520,7 +520,7 @@ onBeforeUnmount(() => {
             >
               <span v-if="!isLoading" class="flex items-center">
                 Muat Lebih Banyak
-            <PhCaretDown
+                <PhCaretDown
                   class="w-4 h-4 ml-1.5 transform group-hover:translate-y-1 transition-transform"
                 />
               </span>
@@ -561,7 +561,7 @@ onBeforeUnmount(() => {
             <div
               class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white dark:bg-slate-800 mb-4 text-gray-400 shadow-sm"
             >
-            <PhInbox class="w-8 h-8" />
+              <PhFileX class="w-8 h-8" />
             </div>
             <h3 class="text-lg font-bold text-blue-950 dark:text-white">
               Tidak Ditemukan
@@ -592,7 +592,7 @@ onBeforeUnmount(() => {
               class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm md:text-md font-bold mb-4 border border-white/30"
               style="font-family: 'Kalam', cursive"
             >
-            <PhLightbulb class="w-4 h-4 text-white animate-pulse" />
+              <PhLightbulb class="w-4 h-4 text-white animate-pulse" />
               Inisiatif Siswa
             </span>
             <h2 class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">
@@ -608,7 +608,7 @@ onBeforeUnmount(() => {
             <button
               class="inline-flex items-center justify-center px-6 py-3 bg-yellow-400 text-blue-900 font-bold rounded-xl shadow-lg hover:bg-yellow-300 hover:-translate-y-1 transition-all text-sm md:text-base focus:outline-none"
             >
-            Unduh Panduan Proposal <PhDownloadSimple class="w-4 h-4 ml-2" />
+              Unduh Panduan Proposal <PhDownloadSimple class="w-4 h-4 ml-2" />
             </button>
           </div>
 
@@ -622,7 +622,7 @@ onBeforeUnmount(() => {
               <h3
                 class="text-xl font-bold text-gray-900 mb-5 flex items-center border-b border-gray-900/20 pb-4"
               >
-            <PhClipboardText class="w-5 h-5 mr-2 text-gray-900" />
+                <PhClipboardText class="w-5 h-5 mr-2 text-gray-900" />
                 Syarat Pengajuan Klub
               </h3>
               <ul class="space-y-5 relative">

@@ -21,15 +21,19 @@ defineProps({
 
     <div class="container relative z-10 mx-auto px-6 text-center">
       <span
-        class="inline-block px-5 py-1.5 mb-5 text-lg md:text-xl font-bold text-blue-900 bg-white/90 rounded-full shadow-sm backdrop-blur tracking-wide text-transform: capitalize"
+        class="inline-block px-4 md:px-5 py-1 md:py-1.5 mb-4 md:mb-5 text-base md:text-xl font-bold text-blue-900 bg-white/90 rounded-full shadow-sm backdrop-blur tracking-wide capitalize"
         style="font-family: 'Kalam', cursive"
       >
         {{ badge }}
       </span>
-      <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
+      <h1
+        class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 md:mb-4 leading-tight"
+      >
         {{ title }}
       </h1>
-      <p class="text-blue-100 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+      <p
+        class="text-blue-100 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
+      >
         {{ description }}
       </p>
     </div>
