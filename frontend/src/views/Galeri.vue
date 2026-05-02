@@ -257,7 +257,7 @@ const closeModal = () => {
 
         <!-- Tabs & Heading Gallery -->
         <div
-          class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 p-2 md:p-4 rounded-2xl shadow-md bg-gradient-to-br from-blue-800 to-blue-900 dark:from-blue-900 dark:to-blue-950"
+          class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 p-4 rounded-xl shadow-md bg-gradient-to-br from-blue-800 to-blue-900 dark:from-blue-900 dark:to-blue-950"
         >
           <h3
             class="text-md sm:text-lg font-bold text-white flex items-center tracking-wide"
