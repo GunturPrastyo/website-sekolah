@@ -84,6 +84,7 @@
             <div class="relative block">
               <h2
                 class="text-xl md:text-3xl font-bold text-blue-950 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-2"
+                style="font-family: 'Oswald', sans-serif"
               >
                 Kenapa Pilih Sekolah Ini?
               </h2>
@@ -262,7 +263,7 @@
 
             <!-- LEFT TEXT -->
             <div class="relative z-10 md:w-2/5 lg:w-1/3 mx-0 sm:mx-6 mt-4 md:mt-0">
-              <h3 class="text-xl lg:text-2xl font-bold text-white mb-2">
+              <h3 class="text-xl lg:text-2xl font-bold text-white mb-2" style="font-family: 'Oswald', sans-serif">
                 Persebaran Alumni Kami
               </h3>
               <p class="text-sm lg:text-base text-sky-50 leading-relaxed">
@@ -335,7 +336,7 @@
               class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-900/80 to-slate-800/50 backdrop-blur-[2px]"
             ></div>
             <div class="relative z-10 -mt-12 pl-4 pr-4 md:px-14 max-w-2xl text-white">
-              <h2 class="text-3xl md:text-5xl font-bold mb-2 md:mb-4">
+              <h2 class="text-3xl md:text-5xl font-bold mb-2 md:mb-4" style="font-family: 'Oswald', sans-serif">
                 Pilihan Jurusan Unggulan
               </h2>
               <p class="text-sm md:text-xl text-gray-200">
@@ -511,6 +512,7 @@
             <div class="relative block">
               <h2
                 class="text-xl md:text-3xl font-bold text-blue-950 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
+                style="font-family: 'Oswald', sans-serif"
               >
                 Berita & Pengumuman
               </h2>
@@ -726,7 +728,7 @@
 
             <!-- KANAN: Bagian Pengumuman (Auto Scroll-Y) -->
             <div
-              class="lg:col-span-1 relative h-[480px] lg:h-auto fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
+              class="lg:col-span-1 relative h-[550px] lg:h-auto fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
             >
               <div
                 class="absolute inset-0 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col overflow-hidden"
@@ -863,7 +865,7 @@
             <div class="relative block mt-4">
               <h2
                 class="text-2xl md:text-4xl font-bold text-white mb-4 sm:mb-2 tracking-wide"
-                style="font-family: 'Kalam', cursive"
+                style="font-family: 'Oswald', sans-serif"
               >
                 Video Profil & Galeri
               </h2>
@@ -1027,6 +1029,7 @@
             <div class="relative block">
               <h2
                 class="text-xl md:text-3xl font-bold text-blue-950 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
+                style="font-family: 'Oswald', sans-serif"
               >
                 Agenda Sekolah
               </h2>
@@ -1329,12 +1332,12 @@
                       <!-- Date Box (Calendar Style) -->
                       <div
                         class="rounded-xl flex flex-col items-center justify-center min-w-[65px] w-[65px] sm:min-w-[95px] sm:w-[95px] border transition-all duration-300 overflow-hidden shrink-0"
-                        style="font-family: 'Kalam', cursive"
+                        style="font-family: 'Oswald', sans-serif"
                         :class="themeClasses[agenda.color].dateBox"
                       >
                         <div
                           class="w-full text-center py-1 sm:py-1.5 transition-colors"
-                          style="font-family: 'Kalam', cursive"
+                          style="font-family: 'Oswald', sans-serif"
                           :class="themeClasses[agenda.color].monthBg"
                         >
                           <span
@@ -1443,7 +1446,7 @@
             <!-- FAQ Kolom Kiri -->
             <div class="flex flex-col justify-center p-0 sm:p-4">
               <div class="mb-8 md:mb-10 text-center lg:text-left">
-                <h2 class="text-xl md:text-4xl font-bold text-white mb-3">
+                <h2 class="text-xl md:text-4xl font-bold text-white mb-3" style="font-family: 'Oswald', sans-serif">
                   Pertanyaan Seputar PPDB
                 </h2>
                 <p
@@ -1516,6 +1519,7 @@
                 >
                 <h2
                   class="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6 leading-tight"
+                  style="font-family: 'Oswald', sans-serif"
                 >
                   Siap Menjadi Bagian dari Generasi Berprestasi?
                 </h2>
@@ -2039,6 +2043,7 @@ onMounted(() => {
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap");
 
 @keyframes float {
   0%,

@@ -210,7 +210,7 @@ const closeModal = () => {
           >
             <span
               class="inline-block px-3 py-1 mb-3 text-sm font-semibold text-blue-900 bg-blue-100 rounded-full"
-              style="font-family: 'Kalam', cursive"
+              style="font-family: 'Oswald', sans-serif"
               >Video Profil</span
             >
             <h3
@@ -261,7 +261,7 @@ const closeModal = () => {
         >
           <h3
             class="text-md sm:text-lg font-bold text-white flex items-center tracking-wide"
-            style="font-family: 'Kalam', cursive"
+            style="font-family: 'Oswald', sans-serif"
           >
             <PhImage class="w-6 h-6 mr-2 text-white" />
             Koleksi Galeri
@@ -421,7 +421,7 @@ const closeModal = () => {
 </template>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap");
 
 .gallery-move,
 .gallery-enter-active,
