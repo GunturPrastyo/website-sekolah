@@ -182,33 +182,35 @@ const getRankStyle = (rank) => {
   switch (rank) {
     case 1:
       return {
-        badge:
-          "bg-gradient-to-r from-yellow-400 to-yellow-600 text-white shadow-yellow-500/50",
+        badge: "bg-[#FFD700] text-yellow-950 shadow-[#FFD700]/50",
         text: "Juara 1 (Emas)",
         icon: PhMedal,
-        border: "border-yellow-400",
+        border: "border-[#FFD700]",
+        iconFill: "fill-yellow-700",
       };
     case 2:
       return {
-        badge: "bg-gradient-to-r from-gray-300 to-gray-500 text-white shadow-gray-500/50",
+        badge: "bg-[#C0C0C0] text-gray-900 shadow-[#C0C0C0]/50",
         text: "Juara 2 (Perak)",
         icon: PhMedal,
-        border: "border-gray-400",
+        border: "border-[#C0C0C0]",
+        iconFill: "fill-gray-600",
       };
     case 3:
       return {
-        badge:
-          "bg-gradient-to-r from-amber-600 to-orange-700 text-white shadow-orange-500/50",
+        badge: "bg-[#CD7F32] text-white shadow-[#CD7F32]/50",
         text: "Juara 3 (Perunggu)",
         icon: PhMedal,
-        border: "border-orange-500",
+        border: "border-[#CD7F32]",
+        iconFill: "fill-orange-200",
       };
     default:
       return {
-        badge: "bg-gradient-to-r from-blue-400 to-blue-600 text-white shadow-blue-500/50",
+        badge: "bg-blue-500 text-white shadow-blue-500/50",
         text: "Finalis / Penghargaan",
         icon: PhCertificate,
-        border: "border-blue-400",
+        border: "border-blue-500",
+        iconFill: "fill-blue-200",
       };
   }
 };
@@ -257,7 +259,7 @@ onMounted(() => {
         >
           <!-- Internasional -->
           <div
-            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 border-t-4 border-t-blue-500 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-500/20"
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-500/20"
           >
             <div
               class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shadow-md mb-3 md:mb-4"
@@ -276,10 +278,10 @@ onMounted(() => {
 
           <!-- Nasional -->
           <div
-            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 border-t-4 border-t-red-500 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-red-500/20"
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-500/20"
           >
             <div
-              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-red-600 dark:bg-red-500 flex items-center justify-center text-white shadow-md mb-3 md:mb-4"
+              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shadow-md mb-3 md:mb-4"
             >
               <PhFlag class="w-5 h-5 md:w-6 md:h-6" />
             </div>
@@ -295,10 +297,10 @@ onMounted(() => {
 
           <!-- Provinsi -->
           <div
-            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 border-t-4 border-t-green-500 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-green-500/20"
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-500/20"
           >
             <div
-              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-green-600 dark:bg-green-500 flex items-center justify-center text-white shadow-md mb-3 md:mb-4"
+              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shadow-md mb-3 md:mb-4"
             >
               <PhMapPin class="w-5 h-5 md:w-6 md:h-6" />
             </div>
@@ -314,10 +316,10 @@ onMounted(() => {
 
           <!-- Kabupaten -->
           <div
-            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 border-t-4 border-t-amber-500 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-amber-500/20"
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-500/20"
           >
             <div
-              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-amber-500 dark:bg-amber-400 flex items-center justify-center text-white shadow-md mb-3 md:mb-4"
+              class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shadow-md mb-3 md:mb-4"
             >
               <PhBuildings class="w-5 h-5 md:w-6 md:h-6" />
             </div>
@@ -507,7 +509,7 @@ onMounted(() => {
                 <component
                   :is="getRankStyle(prestasi.rank).icon"
                   class="w-6 h-6 mt-1 mb-0.5"
-                  :class="prestasi.rank === 1 ? 'fill-yellow-100' : ''"
+                  :class="getRankStyle(prestasi.rank).iconFill"
                 />
                 <span
                   class="text-xs font-bold tracking-wider"
