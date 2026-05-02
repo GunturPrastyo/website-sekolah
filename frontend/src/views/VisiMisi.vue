@@ -4,6 +4,7 @@
       badge="Profil Sekolah"
       title="Visi, Misi & Tujuan"
       description="Mengenal lebih dekat arah, tujuan, dan landasan utama SMAN 1 Nogosari dalam mencetak generasi unggul penerus bangsa."
+      bgImage="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1600&auto=format&fit=crop"
     />
 
     <!-- Sambutan Kepala Sekolah Section -->

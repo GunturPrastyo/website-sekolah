@@ -140,6 +140,7 @@ watch([searchQuery, activeCategory], () => {
       badge="Informasi Publik"
       title="Berita & Artikel Sekolah"
       description="Ikuti terus perkembangan, kegiatan, prestasi, dan pengumuman terbaru seputar lingkungan SMA Negeri 1 Nogosari."
+      bgImage="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1600&auto=format&fit=crop"
     />
 
     <!-- News Section -->

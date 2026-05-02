@@ -3,6 +3,7 @@ defineProps({
   badge: { type: String, required: true },
   title: { type: String, required: true },
   description: { type: String, required: true },
+  bgImage: { type: String, default: "" },
 });
 </script>
 
@@ -10,6 +11,11 @@ defineProps({
   <div
     class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 dark:from-slate-900 dark:to-slate-950 overflow-hidden"
   >
+    <!-- Background Image -->
+    <div v-if="bgImage" class="absolute inset-0 z-0">
+      <img :src="bgImage" class="w-full h-full object-cover opacity-20 mix-blend-screen dark:mix-blend-overlay" alt="Header Background" />
+    </div>
+
     <!-- <div
       class="absolute -top-32 -left-32 w-96 h-96 bg-blue-500/20 blur-3xl rounded-full pointer-events-none"
     ></div>

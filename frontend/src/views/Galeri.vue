@@ -177,6 +177,7 @@ const closeModal = () => {
       badge="Koleksi Visual"
       title="Galeri Kegiatan"
       description="Merekam jejak langkah, fasilitas, dan berbagai momen tak terlupakan di lingkungan SMAN 1 Nogosari."
+      bgImage="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop"
     />
 
     <!-- Gallery Section -->
