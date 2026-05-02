@@ -73,8 +73,8 @@ const grade10Base = [
         id: "10-w-1",
         name: "Pendidikan Agama dan Budi Pekerti",
         icon: PhBook,
-        color: "text-green-600 dark:text-green-400",
-        bg: "bg-green-100 dark:bg-green-900/30",
+        color: "text-white",
+        bg: "bg-green-600 dark:bg-green-500 shadow-md",
         desc:
           "Mempelajari nilai-nilai spiritual, toleransi, dan pembentukan karakter akhlak mulia.",
         topics: [
@@ -88,8 +88,8 @@ const grade10Base = [
         id: "10-w-2",
         name: "Pendidikan Pancasila",
         icon: PhMedal,
-        color: "text-red-600 dark:text-red-400",
-        bg: "bg-red-100 dark:bg-red-900/30",
+        color: "text-white",
+        bg: "bg-red-600 dark:bg-red-500 shadow-md",
         desc: "Pendalaman ideologi negara dan pembentukan Profil Pelajar Pancasila.",
         topics: [
           "Sejarah Perumusan Pancasila",
@@ -102,8 +102,8 @@ const grade10Base = [
         id: "10-w-3",
         name: "Bahasa Indonesia",
         icon: PhBookOpen,
-        color: "text-blue-600 dark:text-blue-400",
-        bg: "bg-blue-100 dark:bg-blue-900/30",
+        color: "text-white",
+        bg: "bg-blue-600 dark:bg-blue-500 shadow-md",
         desc:
           "Peningkatan literasi, keterampilan menulis, dan analisis literatur sastra.",
         topics: [
@@ -117,8 +117,8 @@ const grade10Base = [
         id: "10-w-4",
         name: "Matematika Dasar",
         icon: PhCalculator,
-        color: "text-purple-600 dark:text-purple-400",
-        bg: "bg-purple-100 dark:bg-purple-900/30",
+        color: "text-white",
+        bg: "bg-purple-600 dark:bg-purple-500 shadow-md",
         desc: "Konsep dasar matematika, aljabar, dan logika komputasional dasar.",
         topics: [
           "Eksponen dan Logaritma",
@@ -136,8 +136,8 @@ const grade10Base = [
         id: "10-p-1",
         name: "Informatika",
         icon: PhMonitor,
-        color: "text-cyan-600 dark:text-cyan-400",
-        bg: "bg-cyan-100 dark:bg-cyan-900/30",
+        color: "text-white",
+        bg: "bg-cyan-600 dark:bg-cyan-500 shadow-md",
         desc: "Pengenalan teknologi informasi, logika pemrograman, dan literasi digital.",
         topics: [
           "Berpikir Komputasional",
@@ -150,8 +150,8 @@ const grade10Base = [
         id: "10-p-2",
         name: "Ilmu Pengetahuan Alam & Sosial (IPAS)",
         icon: PhFlask,
-        color: "text-emerald-600 dark:text-emerald-400",
-        bg: "bg-emerald-100 dark:bg-emerald-900/30",
+        color: "text-white",
+        bg: "bg-emerald-600 dark:bg-emerald-500 shadow-md",
         desc: "Integrasi dasar Fisika, Kimia, Biologi, Geografi, dan Sosiologi.",
         topics: [
           "Pengukuran dalam Kerja Ilmiah",
@@ -180,8 +180,8 @@ const curriculumData = ref({
             id: "11-ipa-1",
             name: "Fisika Lanjutan",
             icon: PhLightning,
-            color: "text-amber-600 dark:text-amber-400",
-            bg: "bg-amber-100 dark:bg-amber-900/30",
+            color: "text-white",
+            bg: "bg-amber-600 dark:bg-amber-500 shadow-md",
             desc: "Pendalaman mekanika, termodinamika, dan gelombang.",
             topics: [
               "Dinamika Rotasi dan Kesetimbangan",
@@ -194,8 +194,8 @@ const curriculumData = ref({
             id: "11-ipa-2",
             name: "Biologi Terapan",
             icon: PhLeaf,
-            color: "text-green-600 dark:text-green-400",
-            bg: "bg-green-100 dark:bg-green-900/30",
+            color: "text-white",
+            bg: "bg-green-600 dark:bg-green-500 shadow-md",
             desc: "Studi anatomi, fisiologi, dan ekosistem makhluk hidup tingkat lanjut.",
             topics: [
               "Struktur dan Fungsi Sel",
@@ -215,8 +215,8 @@ const curriculumData = ref({
             id: "11-ips-1",
             name: "Ekonomi Pembangunan",
             icon: PhChartPieSlice,
-            color: "text-emerald-600 dark:text-emerald-400",
-            bg: "bg-emerald-100 dark:bg-emerald-900/30",
+            color: "text-white",
+            bg: "bg-emerald-600 dark:bg-emerald-500 shadow-md",
             desc: "Memahami makroekonomi, kebijakan fiskal, dan pembangunan wilayah.",
             topics: [
               "Pendapatan Nasional",
@@ -229,8 +229,8 @@ const curriculumData = ref({
             id: "11-ips-2",
             name: "Sosiologi Masyarakat",
             icon: PhUsers,
-            color: "text-orange-600 dark:text-orange-400",
-            bg: "bg-orange-100 dark:bg-orange-900/30",
+            color: "text-white",
+            bg: "bg-orange-600 dark:bg-orange-500 shadow-md",
             desc: "Kajian mendalam tentang struktur masyarakat dan dinamika sosial.",
             topics: [
               "Kelompok Sosial",
@@ -250,8 +250,8 @@ const curriculumData = ref({
             id: "11-bhs-1",
             name: "Sastra Indonesia Lanjutan",
             icon: PhBookOpen,
-            color: "text-rose-600 dark:text-rose-400",
-            bg: "bg-rose-100 dark:bg-rose-900/30",
+            color: "text-white",
+            bg: "bg-rose-600 dark:bg-rose-500 shadow-md",
             desc: "Analisis karya sastra klasik hingga modern, puisi, dan prosa.",
             topics: [
               "Kritik Sastra",
@@ -264,8 +264,8 @@ const curriculumData = ref({
             id: "11-bhs-2",
             name: "Bahasa Asing (Jepang/Mandarin)",
             icon: PhTranslate,
-            color: "text-cyan-600 dark:text-cyan-400",
-            bg: "bg-cyan-100 dark:bg-cyan-900/30",
+            color: "text-white",
+            bg: "bg-cyan-600 dark:bg-cyan-500 shadow-md",
             desc: "Penguasaan dasar percakapan dan tata bahasa asing pilihan.",
             topics: [
               "Huruf Dasar (Hiragana/Katakana)",
@@ -287,8 +287,8 @@ const curriculumData = ref({
             id: "12-ipa-1",
             name: "Matematika Peminatan",
             icon: PhSigma,
-            color: "text-indigo-600 dark:text-indigo-400",
-            bg: "bg-indigo-100 dark:bg-indigo-900/30",
+            color: "text-white",
+            bg: "bg-indigo-600 dark:bg-indigo-500 shadow-md",
             desc: "Kalkulus lanjutan, trigonometri kompleks, dan geometri ruang.",
             topics: [
               "Limit Fungsi Trigonometri",
@@ -301,8 +301,8 @@ const curriculumData = ref({
             id: "12-ipa-2",
             name: "Kimia Analisis",
             icon: PhFlask,
-            color: "text-pink-600 dark:text-pink-400",
-            bg: "bg-pink-100 dark:bg-pink-900/30",
+            color: "text-white",
+            bg: "bg-pink-600 dark:bg-pink-500 shadow-md",
             desc: "Reaksi kimia organik, termokimia, dan elektrokimia.",
             topics: [
               "Sifat Koligatif Larutan",
@@ -322,8 +322,8 @@ const curriculumData = ref({
             id: "12-ips-1",
             name: "Geografi Regional",
             icon: PhMapTrifold,
-            color: "text-teal-600 dark:text-teal-400",
-            bg: "bg-teal-100 dark:bg-teal-900/30",
+            color: "text-white",
+            bg: "bg-teal-600 dark:bg-teal-500 shadow-md",
             desc: "Pemetaan spasial, sistem informasi geografis, dan tata ruang.",
             topics: [
               "Konsep Wilayah dan Tata Ruang",
@@ -336,8 +336,8 @@ const curriculumData = ref({
             id: "12-ips-2",
             name: "Sejarah Dunia Modern",
             icon: PhHourglass,
-            color: "text-amber-700 dark:text-amber-500",
-            bg: "bg-amber-100 dark:bg-amber-900/30",
+            color: "text-white",
+            bg: "bg-amber-600 dark:bg-amber-500 shadow-md",
             desc: "Analisis sejarah kontemporer dan dampaknya pada geopolitik.",
             topics: [
               "Perang Dingin",
@@ -357,8 +357,8 @@ const curriculumData = ref({
             id: "12-bhs-1",
             name: "Bahasa Inggris Lanjut (TOEFL Prep)",
             icon: PhGlobe,
-            color: "text-indigo-600 dark:text-indigo-400",
-            bg: "bg-indigo-100 dark:bg-indigo-900/30",
+            color: "text-white",
+            bg: "bg-indigo-600 dark:bg-indigo-500 shadow-md",
             desc:
               "Penguasaan tata bahasa kompleks, reading comprehension, dan listening.",
             topics: [
@@ -372,8 +372,8 @@ const curriculumData = ref({
             id: "12-bhs-2",
             name: "Antropologi Budaya",
             icon: PhUsersThree,
-            color: "text-rose-700 dark:text-rose-500",
-            bg: "bg-rose-100 dark:bg-rose-900/30",
+            color: "text-white",
+            bg: "bg-rose-600 dark:bg-rose-500 shadow-md",
             desc: "Kajian etnografi dan pewarisan budaya masyarakat lokal dan global.",
             topics: [
               "Keberagaman Budaya Lokal",
@@ -428,7 +428,22 @@ const currentSyllabus = computed(() => {
         <!-- Profil Pelajar Pancasila -->
         <div>
           <div class="text-center mb-10">
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <div class="inline-flex items-center justify-center space-x-2 mb-3">
+              <span
+                class="h-px w-8 sm:w-12 bg-blue-600 dark:bg-blue-400 rounded-full"
+              ></span>
+              <span
+                class="text-blue-600 dark:text-blue-400 font-bold text-sm sm:text-base tracking-wider uppercase"
+                style="font-family: 'Kalam', cursive"
+                >Pilar Karakter</span
+              >
+              <span
+                class="h-px w-8 sm:w-12 bg-blue-600 dark:bg-blue-400 rounded-full"
+              ></span>
+            </div>
+            <h2
+              class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight"
+            >
               Profil Pelajar Pancasila
             </h2>
             <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -442,7 +457,7 @@ const currentSyllabus = computed(() => {
               class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 transition-transform hover:-translate-y-1"
             >
               <div
-                class="w-12 h-12 shrink-0 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex items-center justify-center"
+                class="w-12 h-12 shrink-0 rounded-full bg-red-600 text-white dark:bg-red-500 flex items-center justify-center shadow-md"
               >
                 <PhHeart class="w-6 h-6" />
               </div>
@@ -462,7 +477,7 @@ const currentSyllabus = computed(() => {
               class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 transition-transform hover:-translate-y-1"
             >
               <div
-                class="w-12 h-12 shrink-0 rounded-full bg-yellow-100 dark:bg-yellow-900/40 text-yellow-600 dark:text-yellow-400 flex items-center justify-center"
+                class="w-12 h-12 shrink-0 rounded-full bg-yellow-500 text-white flex items-center justify-center shadow-md"
               >
                 <PhGlobeHemisphereWest class="w-6 h-6" />
               </div>
@@ -482,7 +497,7 @@ const currentSyllabus = computed(() => {
               class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 transition-transform hover:-translate-y-1"
             >
               <div
-                class="w-12 h-12 shrink-0 rounded-full bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 flex items-center justify-center"
+                class="w-12 h-12 shrink-0 rounded-full bg-green-600 text-white dark:bg-green-500 flex items-center justify-center shadow-md"
               >
                 <PhUsers class="w-6 h-6" />
               </div>
@@ -502,7 +517,7 @@ const currentSyllabus = computed(() => {
               class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 transition-transform hover:-translate-y-1"
             >
               <div
-                class="w-12 h-12 shrink-0 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center"
+                class="w-12 h-12 shrink-0 rounded-full bg-blue-600 text-white dark:bg-blue-500 flex items-center justify-center shadow-md"
               >
                 <PhUserCheck class="w-6 h-6" />
               </div>
@@ -520,7 +535,7 @@ const currentSyllabus = computed(() => {
               class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 transition-transform hover:-translate-y-1"
             >
               <div
-                class="w-12 h-12 shrink-0 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 flex items-center justify-center"
+                class="w-12 h-12 shrink-0 rounded-full bg-purple-600 text-white dark:bg-purple-500 flex items-center justify-center shadow-md"
               >
                 <PhLightbulb class="w-6 h-6" />
               </div>
@@ -540,7 +555,7 @@ const currentSyllabus = computed(() => {
               class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 transition-transform hover:-translate-y-1"
             >
               <div
-                class="w-12 h-12 shrink-0 rounded-full bg-pink-100 dark:bg-pink-900/40 text-pink-600 dark:text-pink-400 flex items-center justify-center"
+                class="w-12 h-12 shrink-0 rounded-full bg-pink-600 text-white dark:bg-pink-500 flex items-center justify-center shadow-md"
               >
                 <PhPalette class="w-6 h-6" />
               </div>
@@ -806,3 +821,7 @@ const currentSyllabus = computed(() => {
     </section>
   </div>
 </template>
+
+<style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
+</style>
