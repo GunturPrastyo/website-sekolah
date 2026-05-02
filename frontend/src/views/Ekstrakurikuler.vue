@@ -14,6 +14,7 @@ import {
   PhUser,
   PhArrowRight,
   PhCaretLeft,
+  PhCaretRight,
   PhLightbulb,
   PhDownloadSimple,
   PhClipboardText,
@@ -186,38 +187,46 @@ const filteredEkskul = computed(() => {
   return filtered;
 });
 
-// --- Fitur Load More ---
-const itemsPerPage = 6;
-const itemsToShow = ref(itemsPerPage);
+// --- Fitur Pagination ---
+const itemsPerPage = 4;
+const currentPage = ref(1);
+const isLoading = ref(false);
 
-// Reset jumlah item ke awal setiap kali filter atau pencarian berubah
-watch([activeCategory, activeDay, searchQuery], () => {
-  itemsToShow.value = itemsPerPage;
+const totalPages = computed(() => {
+  return Math.ceil(filteredEkskul.value.length / itemsPerPage);
 });
 
 const paginatedEkskul = computed(() => {
-  return filteredEkskul.value.slice(0, itemsToShow.value);
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return filteredEkskul.value.slice(start, end);
 });
 
-const hasMoreItems = computed(() => {
-  return itemsToShow.value < filteredEkskul.value.length;
+watch([activeCategory, activeDay, searchQuery], () => {
+  isLoading.value = true;
+  currentPage.value = 1;
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 400);
 });
 
-const isLoading = ref(false);
-
-// Hitung berapa banyak skeleton yang perlu ditampilkan (maks 6 atau sisa item yang belum di-load)
-const skeletonCount = computed(() => {
-  if (!isLoading.value) return 0;
-  return Math.min(itemsPerPage, filteredEkskul.value.length - itemsToShow.value);
-});
-
-const loadMore = () => {
+const changePage = (page) => {
+  if (page < 1 || page > totalPages.value) return;
   isLoading.value = true;
   setTimeout(() => {
-    itemsToShow.value += itemsPerPage;
+    currentPage.value = page;
     isLoading.value = false;
-  }, 800); // Simulasi delay 800ms
+    const container = document.getElementById("ekskul-list-container");
+    if (container) {
+      window.scrollTo({ top: container.offsetTop - 120, behavior: "smooth" });
+    }
+  }, 400);
 };
+
+const skeletonCount = computed(() => {
+  if (!isLoading.value) return 0;
+  return itemsPerPage;
+});
 // ------------------------
 
 const getCategoryCount = (categoryId) => {
@@ -298,19 +307,20 @@ onBeforeUnmount(() => {
 
       <div class="container relative z-10 mx-auto max-w-full">
         <div
-          class="bg-white dark:bg-slate-800 shadow-sm md:shadow-md border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-8 lg:p-10 flex flex-col lg:flex-row gap-8 lg:gap-12 w-full lg:rounded-2xl lg:mt-8"
+          id="ekskul-list-container"
+          class="bg-white dark:bg-slate-800 shadow-sm md:shadow-md border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-8 lg:p-10 flex flex-col lg:flex-row items-start gap-8 lg:gap-12 w-full lg:rounded-2xl lg:mt-8"
         >
           <!-- KIRI: Daftar Card Ekstrakurikuler -->
           <div class="flex-1 w-full order-2 lg:order-1">
             <TransitionGroup
               name="gallery"
               tag="div"
-              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 relative w-full"
+              class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 relative w-full"
             >
               <div
-                v-for="ekskul in paginatedEkskul"
+                v-for="ekskul in isLoading ? [] : paginatedEkskul"
                 :key="ekskul.id"
-                class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out relative group cursor-pointer max-w-[300px] sm:max-w-none mx-auto w-full"
+                class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out relative group cursor-pointer max-w-[280px] sm:max-w-[340px] lg:max-w-[300px] xl:max-w-[340px] mx-auto w-full"
                 @click="openModal(ekskul)"
               >
                 <!-- Dekorasi Card Belakang (Offset Kanan Bawah) -->
@@ -411,7 +421,7 @@ onBeforeUnmount(() => {
                 <div
                   v-for="n in skeletonCount"
                   :key="'skeleton-' + n"
-                  class="relative transition-all duration-500 ease-out max-w-[300px] sm:max-w-none mx-auto w-full"
+                  class="relative transition-all duration-500 ease-out max-w-[280px] sm:max-w-[340px] lg:max-w-[300px] xl:max-w-[340px] mx-auto w-full"
                 >
                   <!-- Dekorasi Card Belakang -->
                   <div
