@@ -234,6 +234,29 @@ const getCategoryCount = (categoryId) => {
   return ekskulList.value.filter((ekskul) => ekskul.category === categoryId).length;
 };
 
+const scheduleByDay = computed(() => {
+  const daysList = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+  const result = [];
+  daysList.forEach((day) => {
+    const ekskuls = ekskulList.value.filter((e) =>
+      e.schedule.toLowerCase().includes(day.toLowerCase())
+    );
+    if (ekskuls.length > 0) {
+      result.push({
+        day,
+        items: ekskuls.map((e) => {
+          const timeMatch = e.schedule.match(/\d{2}\.\d{2}\s*-\s*\d{2}\.\d{2}/);
+          return {
+            name: e.name,
+            time: timeMatch ? timeMatch[0] : e.schedule,
+          };
+        }),
+      });
+    }
+  });
+  return result;
+});
+
 const isModalOpen = ref(false);
 const selectedEkskul = ref(null);
 
@@ -597,6 +620,57 @@ onBeforeUnmount(() => {
                   </button>
                 </div>
               </div>
+
+              <!-- Widget Jadwal Mingguan -->
+              <div
+                class="w-full bg-white dark:bg-slate-800 p-5 lg:p-6 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col gap-4 mt-2 lg:mt-0"
+              >
+                <h4
+                  class="text-lg font-bold text-blue-950 dark:text-white flex items-center border-b border-gray-100 dark:border-slate-700 pb-3 tracking-wide"
+                  style="font-family: 'Kalam', cursive"
+                >
+                  <PhCalendar class="w-6 h-6 mr-2 text-blue-500" />
+                  Jadwal Kegiatan
+                </h4>
+                <div
+                  class="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"
+                >
+                  <div
+                    v-for="(daySchedule, index) in scheduleByDay"
+                    :key="index"
+                    class="relative pl-4 border-l-2 border-blue-100 dark:border-slate-700"
+                  >
+                    <div
+                      class="absolute -left-[5px] top-0.5 w-2 h-2 rounded-full bg-blue-500"
+                    ></div>
+                    <h5
+                      class="text-sm font-bold text-gray-900 dark:text-white mb-2 uppercase tracking-widest"
+                    >
+                      {{ daySchedule.day }}
+                    </h5>
+                    <div class="space-y-2">
+                      <div
+                        v-for="(item, idx) in daySchedule.items"
+                        :key="idx"
+                        class="bg-gray-50 dark:bg-slate-900/50 p-2.5 rounded-lg border border-gray-100 dark:border-slate-700"
+                      >
+                        <div class="flex justify-between items-start mb-1">
+                          <span
+                            class="text-sm font-bold text-blue-900 dark:text-blue-400"
+                            >{{ item.name }}</span
+                          >
+                        </div>
+                        <div
+                          class="flex items-center text-xs text-gray-500 dark:text-gray-400"
+                        >
+                          <PhClock class="w-3.5 h-3.5 mr-1 text-gray-400" />
+                          {{ item.time }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -736,5 +810,19 @@ onBeforeUnmount(() => {
 
 .gallery-leave-active {
   position: absolute;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 10px;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #475569;
 }
 </style>
