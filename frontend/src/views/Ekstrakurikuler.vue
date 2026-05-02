@@ -449,52 +449,57 @@ onBeforeUnmount(() => {
               </template>
             </TransitionGroup>
 
-            <!-- Load More Button -->
+            <!-- Pagination Ekstrakurikuler -->
             <div
-              v-if="hasMoreItems"
-              class="flex justify-center items-center mt-10 relative z-10 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out w-full"
+              v-if="totalPages > 1"
+              class="flex justify-between items-center gap-2 mt-10 relative z-10 w-full fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
             >
-              <div
-                class="h-px bg-gray-200 dark:bg-slate-700 flex-grow max-w-[80px] md:max-w-[150px]"
-              ></div>
               <button
-                @click="loadMore"
-                :disabled="isLoading"
-                class="mx-5 inline-flex items-center text-sm md:text-base font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors group focus:outline-none disabled:opacity-70 disabled:cursor-not-allowed"
+                @click="changePage(currentPage - 1)"
+                :disabled="currentPage === 1 || isLoading"
+                class="flex items-center px-4 py-2 rounded-lg text-base tracking-wide font-bold transition-colors border"
+                style="font-family: 'Kalam', cursive"
+                :class="
+                  currentPage === 1
+                    ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed dark:bg-slate-800 dark:border-slate-700 dark:text-gray-500'
+                    : 'bg-white text-blue-600 border-gray-200 hover:bg-blue-50 hover:border-blue-300 dark:bg-slate-800 dark:text-blue-400 dark:border-slate-700 dark:hover:border-blue-500'
+                "
               >
-                <span v-if="!isLoading" class="flex items-center">
-                  Muat Lebih Banyak
-                  <PhCaretDown
-                    class="w-4 h-4 ml-1.5 transform group-hover:translate-y-1 transition-transform"
-                  />
-                </span>
-                <span v-else class="flex items-center">
-                  <svg
-                    class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-600 dark:text-blue-400"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      class="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      stroke-width="4"
-                    ></circle>
-                    <path
-                      class="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Memuat...
-                </span>
+                <PhCaretLeft class="w-4 h-4 mr-1" />
+                Sebelumnya
               </button>
-              <div
-                class="h-px bg-gray-200 dark:bg-slate-700 flex-grow max-w-[80px] md:max-w-[150px]"
-              ></div>
+
+              <div class="flex items-center gap-1 hidden sm:flex">
+                <button
+                  v-for="page in totalPages"
+                  :key="page"
+                  @click="changePage(page)"
+                  :disabled="isLoading"
+                  class="w-10 h-10 rounded-lg text-sm font-bold transition-colors flex items-center justify-center border"
+                  :class="
+                    currentPage === page
+                      ? 'bg-blue-600 text-white border-blue-600 shadow-md'
+                      : 'bg-white text-gray-600 border-gray-200 hover:bg-blue-50 hover:text-blue-600 dark:bg-slate-800 dark:text-gray-300 dark:border-slate-700 dark:hover:border-blue-500 dark:hover:text-blue-400'
+                  "
+                >
+                  {{ page }}
+                </button>
+              </div>
+
+              <button
+                @click="changePage(currentPage + 1)"
+                :disabled="currentPage === totalPages || isLoading"
+                class="flex items-center px-4 py-2 rounded-lg text-base tracking-wide font-bold transition-colors border"
+                style="font-family: 'Kalam', cursive"
+                :class="
+                  currentPage === totalPages
+                    ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed dark:bg-slate-800 dark:border-slate-700 dark:text-gray-500'
+                    : 'bg-white text-blue-600 border-gray-200 hover:bg-blue-50 hover:border-blue-300 dark:bg-slate-800 dark:text-blue-400 dark:border-slate-700 dark:hover:border-blue-500'
+                "
+              >
+                Selanjutnya
+                <PhCaretRight class="w-4 h-4 ml-1" />
+              </button>
             </div>
 
             <!-- Empty State -->

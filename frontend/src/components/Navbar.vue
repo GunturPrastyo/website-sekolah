@@ -33,9 +33,8 @@
         >
 
         <!-- Profil Dropdown -->
-        <div class="group relative">
+        <div class="group relative" @mouseenter="activeDropdown = 'profil'" @mouseleave="activeDropdown = null">
           <button
-            @click.stop="toggleDropdown('profil')"
             class="flex items-center rounded-md px-3 py-2"
             :class="{
               'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400':
@@ -52,12 +51,12 @@
             </span>
           </button>
           <transition
-            enter-active-class="transition ease-out duration-200"
-            enter-from-class="transform opacity-0 scale-95"
-            enter-to-class="transform opacity-100 scale-100"
-            leave-active-class="transition ease-in duration-150"
-            leave-from-class="transform opacity-100 scale-100"
-            leave-to-class="transform opacity-0 scale-95"
+            enter-active-class="transition-all ease-out duration-300"
+            enter-from-class="transform opacity-0 -translate-y-4"
+            enter-to-class="transform opacity-100 translate-y-0"
+            leave-active-class="transition-all ease-in duration-200"
+            leave-from-class="transform opacity-100 translate-y-0"
+            leave-to-class="transform opacity-0 -translate-y-4"
           >
             <div
               v-show="activeDropdown === 'profil'"
@@ -98,9 +97,8 @@
         </div>
 
         <!-- Akademik Dropdown -->
-        <div class="group relative">
+        <div class="group relative" @mouseenter="activeDropdown = 'akademik'" @mouseleave="activeDropdown = null">
           <button
-            @click.stop="toggleDropdown('akademik')"
             class="flex items-center rounded-md px-3 py-2"
             :class="{
               'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400':
@@ -117,12 +115,12 @@
             </span>
           </button>
           <transition
-            enter-active-class="transition ease-out duration-200"
-            enter-from-class="transform opacity-0 scale-95"
-            enter-to-class="transform opacity-100 scale-100"
-            leave-active-class="transition ease-in duration-150"
-            leave-from-class="transform opacity-100 scale-100"
-            leave-to-class="transform opacity-0 scale-95"
+            enter-active-class="transition-all ease-out duration-300"
+            enter-from-class="transform opacity-0 -translate-y-4"
+            enter-to-class="transform opacity-100 translate-y-0"
+            leave-active-class="transition-all ease-in duration-200"
+            leave-from-class="transform opacity-100 translate-y-0"
+            leave-to-class="transform opacity-0 -translate-y-4"
           >
             <div
               v-show="activeDropdown === 'akademik'"
@@ -157,9 +155,8 @@
         </div>
 
         <!-- Layanan / Portal Dropdown -->
-        <div class="group relative">
+        <div class="group relative" @mouseenter="activeDropdown = 'layanan'" @mouseleave="activeDropdown = null">
           <button
-            @click.stop="toggleDropdown('layanan')"
             class="flex items-center rounded-md px-3 py-2"
             :class="{
               'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400':
@@ -176,12 +173,12 @@
             </span>
           </button>
           <transition
-            enter-active-class="transition ease-out duration-200"
-            enter-from-class="transform opacity-0 scale-95"
-            enter-to-class="transform opacity-100 scale-100"
-            leave-active-class="transition ease-in duration-150"
-            leave-from-class="transform opacity-100 scale-100"
-            leave-to-class="transform opacity-0 scale-95"
+            enter-active-class="transition-all ease-out duration-300"
+            enter-from-class="transform opacity-0 -translate-y-4"
+            enter-to-class="transform opacity-100 translate-y-0"
+            leave-active-class="transition-all ease-in duration-200"
+            leave-from-class="transform opacity-100 translate-y-0"
+            leave-to-class="transform opacity-0 -translate-y-4"
           >
             <div
               v-show="activeDropdown === 'layanan'"
@@ -210,9 +207,8 @@
         </div>
 
         <!-- Informasi Dropdown -->
-        <div class="group relative">
+        <div class="group relative" @mouseenter="activeDropdown = 'informasi'" @mouseleave="activeDropdown = null">
           <button
-            @click.stop="toggleDropdown('informasi')"
             class="flex items-center rounded-md px-3 py-2"
             :class="{
               'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400':
@@ -229,12 +225,12 @@
             </span>
           </button>
           <transition
-            enter-active-class="transition ease-out duration-200"
-            enter-from-class="transform opacity-0 scale-95"
-            enter-to-class="transform opacity-100 scale-100"
-            leave-active-class="transition ease-in duration-150"
-            leave-from-class="transform opacity-100 scale-100"
-            leave-to-class="transform opacity-0 scale-95"
+            enter-active-class="transition-all ease-out duration-300"
+            enter-from-class="transform opacity-0 -translate-y-4"
+            enter-to-class="transform opacity-100 translate-y-0"
+            leave-active-class="transition-all ease-in duration-200"
+            leave-from-class="transform opacity-100 translate-y-0"
+            leave-to-class="transform opacity-0 -translate-y-4"
           >
             <div
               v-show="activeDropdown === 'informasi'"
