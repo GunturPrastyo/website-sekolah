@@ -335,15 +335,30 @@ onBeforeUnmount(() => {
         >
           <!-- KIRI: Daftar Card Ekstrakurikuler -->
           <div class="flex-1 w-full order-2 lg:order-1">
+            <!-- Judul Pembuka Daftar Ekskul -->
+            <div
+              class="mb-8 border-b border-gray-100 dark:border-slate-700 pb-3 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out"
+            >
+              <h2
+                class="text-2xl sm:text-3xl font-bold text-blue-950 dark:text-white tracking-wide"
+                style="font-family: 'Kalam', cursive"
+              >
+                Eksplorasi Klub
+              </h2>
+              <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Temukan ekstrakurikuler yang tepat untuk mengembangkan potensimu.
+              </p>
+            </div>
+
             <TransitionGroup
               name="gallery"
               tag="div"
-              class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 relative w-full"
+              class="grid grid-cols-1 sm:grid-cols-2 gap-10 sm:gap-8 lg:gap-10 relative w-full"
             >
               <div
                 v-for="ekskul in isLoading ? [] : paginatedEkskul"
                 :key="ekskul.id"
-                class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out relative group cursor-pointer max-w-[280px] sm:max-w-[340px] lg:max-w-[300px] xl:max-w-[340px] mx-auto w-full"
+                class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out relative group cursor-pointer max-w-[340px] lg:max-w-[300px] xl:max-w-[340px] mx-auto w-full"
                 @click="openModal(ekskul)"
               >
                 <!-- Dekorasi Card Belakang (Offset Kanan Bawah) -->
@@ -444,7 +459,7 @@ onBeforeUnmount(() => {
                 <div
                   v-for="n in skeletonCount"
                   :key="'skeleton-' + n"
-                  class="relative transition-all duration-500 ease-out max-w-[280px] sm:max-w-[340px] lg:max-w-[300px] xl:max-w-[340px] mx-auto w-full"
+                  class="relative transition-all duration-500 ease-out max-w-[340px] lg:max-w-[300px] xl:max-w-[340px] mx-auto w-full"
                 >
                   <!-- Dekorasi Card Belakang -->
                   <div
