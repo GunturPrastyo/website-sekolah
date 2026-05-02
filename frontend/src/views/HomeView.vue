@@ -322,16 +322,8 @@
 
       <!-- Jurusan Section -->
       <section
-        class="relative -my-12 -mx-6 md:-mx-6 lg:-mx-0 overflow-hidden px-0 md:px-6 mb-10 md:mb-16 bg-fixed bg-center bg-cover shadow-inner"
-        style="
-          background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop');
-        "
+        class="relative -my-12 -mx-6 md:-mx-6 lg:-mx-0 overflow-hidden px-0 md:px-6 mb-10 md:mb-16"
       >
-        <!-- Overlay Parallax -->
-        <div
-          class="absolute inset-0 bg-blue-50/90 dark:bg-slate-900/90 backdrop-blur-[2px]"
-        ></div>
-
         <div class="w-full max-w-full container relative z-10 mx-auto">
           <!-- HEADER -->
           <div
@@ -357,7 +349,9 @@
           <div class="relative z-20 mt-[-80px] md:mt-[-100px]">
             <!-- dibuat 80% dari header -->
             <div class="max-w-[90%] mx-auto md:max-w-[95%]">
-              <div class="swiper jurusan-swiper rounded-2xl overflow-hidden shadow-xl">
+              <div
+                class="swiper jurusan-swiper rounded-lg md:rounded-2xl overflow-hidden shadow-xl"
+              >
                 <div class="swiper-wrapper items-stretch">
                   <!-- IPA -->
                   <div
@@ -549,7 +543,7 @@
               <!-- Berita Utama (Atas - 1 Besar) -->
               <router-link
                 to="/berita"
-                class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out group relative rounded-2xl overflow-hidden shadow-lg h-[280px] sm:h-[350px] md:h-[400px] w-full block"
+                class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out group relative rounded-lg overflow-hidden shadow-lg h-[280px] sm:h-[350px] md:h-[400px] w-full block"
               >
                 <img
                   src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&auto=format&fit=crop"
@@ -595,7 +589,7 @@
                   <!-- Card 1 -->
                   <router-link
                     to="/berita"
-                    class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full"
+                    class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full"
                   >
                     <div class="h-40 overflow-hidden relative">
                       <img
@@ -636,7 +630,7 @@
                   <!-- Card 2 -->
                   <router-link
                     to="/berita"
-                    class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full"
+                    class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full"
                   >
                     <div class="h-40 overflow-hidden relative">
                       <img
@@ -677,7 +671,7 @@
                   <!-- Card 3 -->
                   <router-link
                     to="/berita"
-                    class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full sm:hidden lg:flex"
+                    class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full sm:hidden lg:flex"
                   >
                     <div class="h-40 overflow-hidden relative">
                       <img
