@@ -2,7 +2,7 @@
   <div class="overflow-x-hidden w-full max-w-full">
     <!-- Header Section -->
     <header
-      class="relative flex flex-col items-center justify-center h-[70vh] md:h-screen text-center text-white"
+      class="relative flex flex-col items-center justify-center h-[90vh] lg:h-screen text-center text-white"
     >
       <!-- Swiper Carousel Background -->
       <div class="absolute top-0 left-0 w-full h-full swiper-container -z-10">
@@ -867,7 +867,7 @@
 
       <!-- Video Profil & Galeri Section -->
       <section
-        class="relative py-8 md:py-6 mt-12 md:mt-16 -mx-6 md:mx-0 bg-blue-950 overflow-hidden px-6 md:px-10 mb-12 md:rounded-xl shadow-xl bg-fixed bg-center bg-cover"
+        class="relative py-8 md:py-6 mt-12 md:mt-16 -mx-6 md:mx-0 bg-blue-950 overflow-hidden px-6 md:px-4 lg:px-10 mb-12 md:rounded-xl shadow-xl bg-fixed bg-center bg-cover"
         style="
           background-image: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop');
         "
@@ -1041,7 +1041,7 @@
       <section
         class="relative py-8 md:py-6 mt-12 md:mt-16 -mx-6 md:mx-0 bg-white dark:bg-slate-800 overflow-hidden px-6 md:px-2 mb-12 md:rounded-xl shadow-xl"
       >
-        <div class="container mx-auto px-0 md:px-4">
+        <div class="container mx-auto px-0 md:px-2">
           <!-- Header Section -->
           <div class="mb-6 md:mb-10">
             <div class="relative block">
