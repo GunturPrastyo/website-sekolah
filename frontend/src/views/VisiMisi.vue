@@ -9,7 +9,7 @@
 
     <!-- Sambutan Kepala Sekolah Section -->
     <section
-      class="relative py-12 md:py-24 px-6 md:px-0 bg-fixed bg-center bg-cover overflow-hidden"
+      class="relative py-12 md:py-16 px-6 md:px-0 bg-fixed bg-center bg-cover overflow-hidden"
       style="
         background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1600&auto=format&fit=crop');
       "
@@ -19,10 +19,20 @@
         class="absolute inset-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-[2px] transition-colors duration-500"
       ></div>
       <div class="container relative z-10 mx-auto px-0 md:px-4 max-w-6xl">
-        <div class="flex flex-col md:flex-row items-center gap-8 md:gap-16">
+        <!-- Judul Mobile/Tablet -->
+        <div class="flex lg:hidden items-center gap-3 mb-8 md:px-12">
+          <h2
+            class="text-2xl md:text-4xl font-bold text-blue-950 dark:text-white tracking-wide"
+            style="font-family: 'Kalam', cursive"
+          >
+            Sambutan Kepala Sekolah
+          </h2>
+        </div>
+
+        <div class="flex flex-col lg:flex-row items-center gap-8 md:gap-12 lg:gap-16">
           <!-- Gambar Kepala Sekolah -->
           <div
-            class="w-full md:w-1/3 flex justify-center order-2 md:order-1 mt-8 md:mt-0 pl-4 pb-4 md:pl-0 md:pb-0"
+            class="w-full lg:w-1/3 flex justify-center pl-4 pb-4 md:pl-8 md:pb-6 lg:pl-0 lg:pb-0"
           >
             <div class="relative w-full max-w-sm aspect-[4/5]">
               <div
@@ -45,20 +55,14 @@
                   </p>
                 </div>
               </div>
-              <div
-                class="absolute -bottom-8 -right-8 bg-blue-500 w-32 h-32 rounded-full -z-10 blur-3xl opacity-30 dark:opacity-20"
-              ></div>
-              <div
-                class="absolute -top-8 -left-8 bg-cyan-400 w-32 h-32 rounded-full -z-10 blur-3xl opacity-30 dark:opacity-20"
-              ></div>
             </div>
           </div>
 
           <!-- Teks Sambutan -->
-          <div class="w-full md:w-2/3 order-1 md:order-2 mt-4 md:mt-0">
-            <div class="flex items-center gap-3 mb-6">
+          <div class="w-full lg:w-2/3 mt-4 lg:mt-0 md:px-12 lg:px-0">
+            <div class="hidden lg:flex items-center gap-3 mb-6">
               <h2
-                class="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-950 dark:text-white tracking-wide"
+                class="text-2xl md:text-4xl font-bold text-blue-950 dark:text-white tracking-wide"
                 style="font-family: 'Kalam', cursive"
               >
                 Sambutan Kepala Sekolah
