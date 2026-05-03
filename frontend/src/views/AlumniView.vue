@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
+import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
 import L from "leaflet";
 import PageHeader from "@/components/PageHeader.vue";
 import {
@@ -267,7 +267,16 @@ onMounted(() => {
               :lat-lng="alumnus.latlng"
               :icon="createPulseIcon(alumnus.field)"
               @click="openModal(alumnus)"
-            />
+            >
+              <l-tooltip>
+                <div class="text-center">
+                  <div class="font-bold text-gray-900">{{ alumnus.name }}</div>
+                  <div class="text-xs text-blue-600 font-medium mt-0.5">
+                    {{ alumnus.role }}
+                  </div>
+                </div>
+              </l-tooltip>
+            </l-marker>
           </l-map>
         </div>
 

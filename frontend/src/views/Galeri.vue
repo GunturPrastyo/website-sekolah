@@ -59,80 +59,92 @@ const categories = [
 ];
 
 // Data Dummy Galeri
-const galleryList = ref([
-  {
-    id: 1,
-    title: "Gedung Utama Sekolah",
-    category: "fasilitas",
-    image:
-      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800&h=1000&fit=crop",
-    likes: 120,
-  },
-  {
-    id: 2,
-    title: "Upacara Bendera HUT RI",
-    category: "hut-ri",
-    image:
-      "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&h=800&fit=crop",
-    likes: 540,
-  },
-  {
-    id: 3,
-    title: "Praktikum Laboratorium Kimia",
-    category: "fasilitas",
-    image:
-      "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&h=1200&fit=crop",
-    likes: 85,
-  },
-  {
-    id: 4,
-    title: "Pertandingan Bola Basket",
-    category: "ekskul",
-    image:
-      "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1000&h=1000&fit=crop",
-    likes: 210,
-  },
-  {
-    id: 5,
-    title: "Perpustakaan Digital",
-    category: "fasilitas",
-    image:
-      "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800&h=1100&fit=crop",
-    likes: 150,
-  },
-  {
-    id: 6,
-    title: "Pentas Seni Tradisional",
-    category: "pentas-seni",
-    image:
-      "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&h=700&fit=crop",
-    likes: 430,
-  },
-  {
-    id: 7,
-    title: "Klub Robotika",
-    category: "ekskul",
-    image:
-      "https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?q=80&w=900&h=1200&fit=crop",
-    likes: 95,
-  },
-  {
-    id: 8,
-    title: "Ruang Kelas Modern",
-    category: "fasilitas",
-    image:
-      "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=1200&h=900&fit=crop",
-    likes: 180,
-  },
-  {
-    id: 9,
-    title: "Kegiatan Pramuka Kemah Bakti",
-    category: "ekskul",
-    image:
-      "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800&h=800&fit=crop",
-    likes: 275,
-  },
-]);
+const galleryList = ref(
+  [
+    {
+      id: 1,
+      title: "Gedung Utama Sekolah",
+      category: "fasilitas",
+      image:
+        "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800&h=1000&fit=crop",
+      likes: 120,
+    },
+    {
+      id: 2,
+      title: "Upacara Bendera HUT RI",
+      category: "hut-ri",
+      image:
+        "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&h=800&fit=crop",
+      likes: 540,
+    },
+    {
+      id: 3,
+      title: "Praktikum Laboratorium Kimia",
+      category: "fasilitas",
+      image:
+        "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&h=1200&fit=crop",
+      likes: 85,
+    },
+    {
+      id: 4,
+      title: "Pertandingan Bola Basket",
+      category: "ekskul",
+      image:
+        "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1000&h=1000&fit=crop",
+      likes: 210,
+    },
+    {
+      id: 5,
+      title: "Perpustakaan Digital",
+      category: "fasilitas",
+      image:
+        "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800&h=1100&fit=crop",
+      likes: 150,
+    },
+    {
+      id: 6,
+      title: "Pentas Seni Tradisional",
+      category: "pentas-seni",
+      image:
+        "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&h=700&fit=crop",
+      likes: 430,
+    },
+    {
+      id: 7,
+      title: "Klub Robotika",
+      category: "ekskul",
+      image:
+        "https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?q=80&w=900&h=1200&fit=crop",
+      likes: 95,
+    },
+    {
+      id: 8,
+      title: "Ruang Kelas Modern",
+      category: "fasilitas",
+      image:
+        "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=1200&h=900&fit=crop",
+      likes: 180,
+    },
+    {
+      id: 9,
+      title: "Kegiatan Pramuka Kemah Bakti",
+      category: "ekskul",
+      image:
+        "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800&h=800&fit=crop",
+      likes: 275,
+    },
+  ].map((item) => ({ ...item, liked: false }))
+);
+
+const toggleLike = (item) => {
+  if (item.liked) {
+    item.likes--;
+    item.liked = false;
+  } else {
+    item.likes++;
+    item.liked = true;
+  }
+};
 
 const filteredGallery = computed(() => {
   let result = galleryList.value;
@@ -319,22 +331,27 @@ const closeModal = () => {
 
             <!-- Top Right Actions (Stock Photo Style) -->
             <div
-              class="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0 z-20"
+              class="absolute top-4 right-4 flex flex-col gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-0 md:translate-x-2 group-hover:translate-x-0 z-20"
             >
               <button
-                @click.stop
-                class="h-9 px-3 rounded-lg bg-white/90 hover:bg-white text-gray-700 hover:text-red-500 flex items-center justify-center shadow-sm transition-colors font-semibold text-xs gap-1.5"
+                @click.stop="toggleLike(item)"
+                class="h-9 px-3 rounded-lg bg-white/90 hover:bg-white flex items-center justify-center shadow-sm transition-colors font-semibold text-xs gap-1.5"
+                :class="item.liked ? 'text-red-500' : 'text-gray-700 hover:text-red-500'"
                 title="Suka"
               >
-                <PhHeart class="w-4 h-4" /> {{ item.likes }}
+                <PhHeart class="w-4 h-4" :weight="item.liked ? 'fill' : 'regular'" />
+                {{ item.likes }}
               </button>
-              <button
+              <a
                 @click.stop
-                class="w-9 h-9 rounded-lg bg-white/90 hover:bg-white text-gray-700 hover:text-blue-600 flex items-center justify-center shadow-sm transition-colors"
+                :href="item.image"
+                download
+                target="_blank"
+                class="w-9 h-9 rounded-lg bg-white/90 hover:bg-white text-gray-700 hover:text-blue-600 hidden md:flex items-center justify-center shadow-sm transition-colors"
                 title="Unduh"
               >
                 <PhDownloadSimple class="w-4 h-4" />
-              </button>
+              </a>
             </div>
 
             <!-- Bottom Left Text -->
@@ -393,13 +410,29 @@ const closeModal = () => {
         class="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4"
         @click="closeModal"
       >
-        <!-- Close Button -->
-        <button
-          @click.stop="closeModal"
-          class="absolute top-4 right-4 md:top-6 md:right-6 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors z-50 focus:outline-none"
+        <!-- Action Buttons -->
+        <div
+          class="absolute top-4 right-4 md:top-6 md:right-6 flex items-center gap-3 z-50"
         >
-          <PhX class="w-6 h-6" />
-        </button>
+          <a
+            v-if="currentImage"
+            @click.stop
+            :href="currentImage.image"
+            download
+            target="_blank"
+            class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors focus:outline-none"
+            title="Unduh Foto"
+          >
+            <PhDownloadSimple class="w-5 h-5 md:w-6 md:h-6" />
+          </a>
+          <button
+            @click.stop="closeModal"
+            class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors focus:outline-none"
+            title="Tutup"
+          >
+            <PhX class="w-5 h-5 md:w-6 md:h-6" />
+          </button>
+        </div>
 
         <!-- Image -->
         <div class="relative max-w-5xl w-full flex flex-col items-center" @click.stop>
