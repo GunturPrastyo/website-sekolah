@@ -206,9 +206,9 @@ const activeCategoryName = computed(() => {
               <!-- Breadcrumb -->
               <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
                 <span class="hover:text-blue-600 cursor-pointer">Beranda</span>
-                <PhCaretRight class="w-3.5 h-3.5 mx-2" />
+                <PhCaretRight class="w-3.5 h-3.5 mx-2 text-gray-300 dark:text-gray-600" />
                 <span class="hover:text-blue-600 cursor-pointer">Unduhan</span>
-                <PhCaretRight class="w-3.5 h-3.5 mx-2" />
+                <PhCaretRight class="w-3.5 h-3.5 mx-2 text-gray-300 dark:text-gray-600" />
                 <span class="font-bold text-gray-800 dark:text-gray-200">{{
                   activeCategoryName
                 }}</span>
@@ -359,7 +359,7 @@ const activeCategoryName = computed(() => {
                     weight="fill"
                   />
                   <span
-                    class="text-xs font-semibold text-gray-800 dark:text-gray-200 line-clamp-2 break-words group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+                    class="text-xs font-semibold text-gray-800 dark:text-gray-200 line-clamp-2 break-all w-full px-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
                   >
                     {{ file.name }}
                   </span>
