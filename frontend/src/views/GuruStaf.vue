@@ -192,7 +192,7 @@ onMounted(() => {
     />
 
     <!-- Main Content -->
-    <section class="pt-0 pb-0 md:py-16 md:px-6 bg-gray-50 dark:bg-slate-900">
+    <section class="pt-0 pb-0 py-4 sm:py-8 md:px-6 bg-gray-50 dark:bg-slate-900">
       <div class="container mx-auto max-w-8xl">
         <div
           class="bg-white dark:bg-slate-800 md:rounded-lg shadow-sm md:shadow-md border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-10 lg:p-12 flex flex-col w-full"
@@ -233,7 +233,7 @@ onMounted(() => {
                 class="w-full bg-gray-50 dark:bg-slate-900/50 p-5 lg:p-6 rounded-lg shadow-inner border border-gray-200 dark:border-slate-700 flex flex-col gap-4"
               >
                 <h4
-                  class="text-sm font-bold text-gray-900 dark:text-white flex items-center"
+                  class="text-sm md:text-md font-bold text-gray-900 dark:text-white flex items-center"
                 >
                   <svg
                     class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
@@ -328,6 +328,7 @@ onMounted(() => {
                     <div class="flex items-center gap-4 mb-8">
                       <h2
                         class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white shrink-0"
+                        style="font-family: 'Oswald', sans-serif"
                       >
                         Pimpinan Sekolah
                       </h2>
@@ -367,16 +368,17 @@ onMounted(() => {
                           </h3>
                           <div class="mb-3">
                             <span
-                              class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[11px] font-bold tracking-wide"
+                              class="inline-flex items-center px-3 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[13px] font-bold tracking-wide"
+                              style="font-family: 'Kalam', cursive"
                             >
                               {{ staff.role }}
                             </span>
                           </div>
                           <p
-                            class="text-xs text-gray-500 dark:text-gray-400 mb-5 flex items-center justify-center gap-1.5"
+                            class="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-5 flex items-center justify-center gap-1.5"
                           >
                             <svg
-                              class="w-3.5 h-3.5 opacity-70"
+                              class="w-4 h-4 text-gray-800 dark:text-gray-200"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -384,7 +386,7 @@ onMounted(() => {
                               <path
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
-                                stroke-width="2"
+                                stroke-width="2.5"
                                 d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
                               ></path>
                             </svg>
@@ -395,26 +397,22 @@ onMounted(() => {
                           ></div>
                           <div class="flex gap-3">
                             <button
-                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-red-50 dark:bg-slate-800 dark:hover:bg-red-900/50 flex items-center justify-center text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors shadow-sm"
                               title="Email"
                             >
                               <svg
                                 class="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
+                                fill="currentColor"
                                 viewBox="0 0 24 24"
                               >
                                 <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                  d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4.236l-8 4.882-8-4.882V6.095l8 4.882 8-4.882v2.141z"
                                 ></path>
                               </svg>
                             </button>
                             <button
                               @click.stop
-                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors shadow-sm"
                               title="LinkedIn"
                             >
                               <svg
@@ -438,6 +436,7 @@ onMounted(() => {
                     <div class="flex items-center gap-4 mb-8">
                       <h2
                         class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white shrink-0"
+                        style="font-family: 'Oswald', sans-serif"
                       >
                         Tenaga Pendidik
                       </h2>
@@ -478,15 +477,16 @@ onMounted(() => {
                           <div class="mb-3">
                             <span
                               class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[11px] font-bold tracking-wide"
+                              style="font-family: 'Kalam', cursive"
                             >
                               {{ staff.role }}
                             </span>
                           </div>
                           <p
-                            class="text-xs text-gray-500 dark:text-gray-400 mb-5 flex items-center justify-center gap-1.5"
+                            class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-5 flex items-center justify-center gap-1.5"
                           >
                             <svg
-                              class="w-3.5 h-3.5 opacity-70"
+                              class="w-4 h-4 text-gray-800 dark:text-gray-200"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -494,7 +494,7 @@ onMounted(() => {
                               <path
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
-                                stroke-width="2"
+                                stroke-width="2.5"
                                 d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
                               ></path>
                             </svg>
@@ -505,26 +505,22 @@ onMounted(() => {
                           ></div>
                           <div class="flex gap-3">
                             <button
-                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-red-50 dark:bg-slate-800 dark:hover:bg-red-900/50 flex items-center justify-center text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors shadow-sm"
                               title="Email"
                             >
                               <svg
                                 class="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
+                                fill="currentColor"
                                 viewBox="0 0 24 24"
                               >
                                 <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                  d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4.236l-8 4.882-8-4.882V6.095l8 4.882 8-4.882v2.141z"
                                 ></path>
                               </svg>
                             </button>
                             <button
                               @click.stop
-                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors shadow-sm"
                               title="LinkedIn"
                             >
                               <svg
@@ -548,6 +544,7 @@ onMounted(() => {
                     <div class="flex items-center gap-4 mb-8">
                       <h2
                         class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white shrink-0"
+                        style="font-family: 'Oswald', sans-serif"
                       >
                         Tenaga Kependidikan
                       </h2>
@@ -588,15 +585,16 @@ onMounted(() => {
                           <div class="mb-3">
                             <span
                               class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[11px] font-bold tracking-wide"
+                              style="font-family: 'Kalam', cursive"
                             >
                               {{ staff.role }}
                             </span>
                           </div>
                           <p
-                            class="text-xs text-gray-500 dark:text-gray-400 mb-5 flex items-center justify-center gap-1.5"
+                            class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-5 flex items-center justify-center gap-1.5"
                           >
                             <svg
-                              class="w-3.5 h-3.5 opacity-70"
+                              class="w-4 h-4 text-gray-800 dark:text-gray-200"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -604,7 +602,7 @@ onMounted(() => {
                               <path
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
-                                stroke-width="2"
+                                stroke-width="2.5"
                                 d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
                               ></path>
                             </svg>
@@ -615,26 +613,22 @@ onMounted(() => {
                           ></div>
                           <div class="flex gap-3">
                             <button
-                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-red-50 dark:bg-slate-800 dark:hover:bg-red-900/50 flex items-center justify-center text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors shadow-sm"
                               title="Email"
                             >
                               <svg
                                 class="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
+                                fill="currentColor"
                                 viewBox="0 0 24 24"
                               >
                                 <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                  d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4.236l-8 4.882-8-4.882V6.095l8 4.882 8-4.882v2.141z"
                                 ></path>
                               </svg>
                             </button>
                             <button
                               @click.stop
-                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors shadow-sm"
                               title="LinkedIn"
                             >
                               <svg
@@ -697,6 +691,7 @@ onMounted(() => {
                     <div class="flex items-center gap-4 mb-8">
                       <h2
                         class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white shrink-0"
+                        style="font-family: 'Oswald', sans-serif"
                       >
                         {{ activeCategoryName }}
                       </h2>
@@ -742,10 +737,10 @@ onMounted(() => {
                             </span>
                           </div>
                           <p
-                            class="text-xs text-gray-500 dark:text-gray-400 mb-5 flex items-center justify-center gap-1.5"
+                            class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-5 flex items-center justify-center gap-1.5"
                           >
                             <svg
-                              class="w-3.5 h-3.5 opacity-70"
+                              class="w-4 h-4 text-gray-800 dark:text-gray-200"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -753,7 +748,7 @@ onMounted(() => {
                               <path
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
-                                stroke-width="2"
+                                stroke-width="2.5"
                                 d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
                               ></path>
                             </svg>
@@ -764,26 +759,22 @@ onMounted(() => {
                           ></div>
                           <div class="flex gap-3">
                             <button
-                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-red-50 dark:bg-slate-800 dark:hover:bg-red-900/50 flex items-center justify-center text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors shadow-sm"
                               title="Email"
                             >
                               <svg
                                 class="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
+                                fill="currentColor"
                                 viewBox="0 0 24 24"
                               >
                                 <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                  d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4.236l-8 4.882-8-4.882V6.095l8 4.882 8-4.882v2.141z"
                                 ></path>
                               </svg>
                             </button>
                             <button
                               @click.stop
-                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors shadow-sm"
                               title="LinkedIn"
                             >
                               <svg
@@ -903,6 +894,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap");
+
 @keyframes fadeInUp {
   from {
     opacity: 0;

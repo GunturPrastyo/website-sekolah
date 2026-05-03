@@ -80,7 +80,7 @@
           class="w-full max-w-full container mt-12 sm:mt-8 relative z-10 mx-auto px-0 lg:px-4"
         >
           <!-- HEADER -->
-          <div class="mb-4 md:mb-8 px-2 md:px-0 mt-4 sm:mt-6">
+          <div class="mb-8 px-2 md:px-0 mt-4 sm:mt-6">
             <div class="relative block">
               <h2
                 class="text-2xl md:text-4xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-2"
@@ -511,7 +511,7 @@
 
       <!-- Berita & Pengumuman Section -->
       <section
-        class="relative py-8 rounded-lg -mx-6 md:mx-0 overflow-hidden px-6 md:px-0 bg-white dark:bg-slate-800 shadow-lg"
+        class="relative py-8 md:rounded-lg -mx-6 md:mx-0 overflow-hidden px-6 md:px-0 bg-white dark:bg-slate-800 shadow-lg"
       >
         <div class="w-full max-w-full container mx-auto px-0 md:px-4">
           <!-- Header Section -->
@@ -867,7 +867,7 @@
 
       <!-- Video Profil & Galeri Section -->
       <section
-        class="relative py-8 md:py-6 mt-12 md:mt-16 -mx-6 md:mx-0 bg-blue-950 overflow-hidden px-6 md:px-4 lg:px-10 mb-12 md:rounded-xl shadow-xl bg-fixed bg-center bg-cover"
+        class="relative py-8 md:py-6 mt-0 md:mt-16 -mx-6 md:mx-0 bg-blue-950 overflow-hidden px-6 md:px-4 lg:px-10 mb-0 md:mb-12 md:rounded-lg shadow-xl bg-fixed bg-center bg-cover"
         style="
           background-image: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop');
         "
@@ -1039,7 +1039,7 @@
 
       <!-- Agenda Sekolah Section -->
       <section
-        class="relative py-8 md:py-6 mt-12 md:mt-16 -mx-6 md:mx-0 bg-white dark:bg-slate-800 overflow-hidden px-6 md:px-2 mb-12 md:rounded-xl shadow-xl"
+        class="relative py-8 md:py-6 pb-16 md:pb-0 mt-0 md:mt-16 -mx-6 md:mx-0 bg-white dark:bg-slate-800 overflow-hidden px-6 md:px-2 mb-0 md:mb-12 md:rounded-xl shadow-xl"
       >
         <div class="container mx-auto px-0 md:px-2">
           <!-- Header Section -->
@@ -1451,7 +1451,7 @@
       <!-- FAQ & CTA PPDB Section (Sejajar di Desktop) -->
       <section class="relative -mx-6 md:mx-0 overflow-hidden">
         <div
-          class="w-full max-w-full relative mx-auto p-8 mb-8 px-4 md:px-6 lg:px-4 rounded-sm sm:rounded-xl bg-fixed bg-center bg-cover overflow-hidden shadow-xl"
+          class="w-full max-w-full relative mx-auto p-8 px-4 md:px-6 lg:px-4 md:rounded-xl bg-fixed bg-center bg-cover overflow-hidden shadow-xl"
           style="
             background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200');
           "
@@ -1524,7 +1524,7 @@
 
             <!-- CTA Kolom Kanan -->
             <div
-              class="relative py-12 md:py-16 bg-gradient-to-br from-blue-600 to-blue-800 border border-blue-500/30 px-6 md:px-10 text-center rounded-2xl shadow-2xl overflow-hidden flex flex-col justify-center items-center"
+              class="relative py-12 md:py-16 bg-gradient-to-br from-blue-600 to-blue-800 border border-blue-500/30 px-6 md:px-10 text-center rounded-lg shadow-xl overflow-hidden flex flex-col justify-center items-center"
             >
               <!-- Decoration elements -->
               <div
