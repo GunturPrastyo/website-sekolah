@@ -33,7 +33,11 @@
         >
 
         <!-- Profil Dropdown -->
-        <div class="group relative" @mouseenter="activeDropdown = 'profil'" @mouseleave="activeDropdown = null">
+        <div
+          class="group relative"
+          @mouseenter="activeDropdown = 'profil'"
+          @mouseleave="activeDropdown = null"
+        >
           <button
             class="flex items-center rounded-md px-3 py-2"
             :class="{
@@ -97,7 +101,11 @@
         </div>
 
         <!-- Akademik Dropdown -->
-        <div class="group relative" @mouseenter="activeDropdown = 'akademik'" @mouseleave="activeDropdown = null">
+        <div
+          class="group relative"
+          @mouseenter="activeDropdown = 'akademik'"
+          @mouseleave="activeDropdown = null"
+        >
           <button
             class="flex items-center rounded-md px-3 py-2"
             :class="{
@@ -154,8 +162,8 @@
           </transition>
         </div>
 
-        <!-- Layanan / Portal Dropdown -->
-        <div class="group relative" @mouseenter="activeDropdown = 'layanan'" @mouseleave="activeDropdown = null">
+        <!-- Layanan / Portal Dropdown (Dinonaktifkan Sementara) -->
+        <!-- <div class="group relative" @mouseenter="activeDropdown = 'layanan'" @mouseleave="activeDropdown = null">
           <button
             class="flex items-center rounded-md px-3 py-2"
             :class="{
@@ -204,10 +212,14 @@
               >
             </div>
           </transition>
-        </div>
+        </div> -->
 
         <!-- Informasi Dropdown -->
-        <div class="group relative" @mouseenter="activeDropdown = 'informasi'" @mouseleave="activeDropdown = null">
+        <div
+          class="group relative"
+          @mouseenter="activeDropdown = 'informasi'"
+          @mouseleave="activeDropdown = null"
+        >
           <button
             class="flex items-center rounded-md px-3 py-2"
             :class="{
@@ -456,8 +468,8 @@
           </div>
         </div>
 
-        <!-- Mobile Layanan Dropdown -->
-        <div>
+        <!-- Mobile Layanan Dropdown (Dinonaktifkan Sementara) -->
+        <!-- <div>
           <button
             @click="toggleMobileDropdown('layanan')"
             class="flex w-full items-center justify-between rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors"
@@ -496,7 +508,7 @@
               >E-Perpustakaan</a
             >
           </div>
-        </div>
+        </div> -->
 
         <!-- Mobile Informasi Dropdown -->
         <div>
