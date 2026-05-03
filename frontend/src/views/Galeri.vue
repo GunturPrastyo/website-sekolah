@@ -181,11 +181,11 @@ const closeModal = () => {
     />
 
     <!-- Gallery Section -->
-    <section class="py-8 md:py-12 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
+    <section class="py-4 md:py-12 px-0 md:px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
       <div class="container mx-auto max-w-full px-0 lg:px-8">
         <!-- Video Profil Section -->
         <div
-          class="mb-6 relative rounded-xl overflow-hidden shadow-xl aspect-[4/3] sm:aspect-video md:aspect-[21/9] group cursor-pointer w-full block"
+          class="mb-6 relative rounded-none sm:rounded-xl overflow-hidden shadow-xl aspect-[4/3] sm:aspect-video md:aspect-[21/9] group cursor-pointer w-full block"
         >
           <img
             src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop"
@@ -222,12 +222,12 @@ const closeModal = () => {
         </div>
 
         <!-- Category Cards (Flexible Wrap untuk Ganjil/Genap) -->
-        <div class="flex flex-wrap gap-3 md:gap-4 mb-10">
+        <div class="flex flex-wrap gap-2 md:gap-4 mb-8 md:mb-10 px-3 md:px-0">
           <div
             v-for="cat in categories"
             :key="cat.id"
             @click="activeCategory = cat.id"
-            class="flex-grow basis-[140px] sm:basis-[180px] lg:basis-[200px] max-w-full relative rounded-xl overflow-hidden h-28 md:h-36 cursor-pointer group shadow-sm hover:shadow-md transition-all duration-300 border-2"
+            class="flex-grow basis-[120px] sm:basis-[180px] lg:basis-[200px] max-w-full relative rounded-lg md:rounded-xl overflow-hidden h-24 md:h-36 cursor-pointer group shadow-sm hover:shadow-md transition-all duration-300 border-2"
             :class="[
               activeCategory === cat.id
                 ? 'border-blue-500 ring-4 ring-blue-500/20 dark:ring-blue-500/30'
@@ -244,7 +244,7 @@ const closeModal = () => {
             <div
               class="absolute inset-0 flex flex-col items-center justify-center text-white p-4 text-center"
             >
-              <span class="font-bold text-base md:text-lg drop-shadow-md">{{
+              <span class="font-bold text-sm md:text-lg drop-shadow-md">{{
                 cat.name
               }}</span>
               <span
@@ -257,7 +257,7 @@ const closeModal = () => {
 
         <!-- Tabs & Heading Gallery -->
         <div
-          class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 p-4 rounded-xl shadow-md bg-gradient-to-br from-blue-800 to-blue-900 dark:from-blue-900 dark:to-blue-950"
+          class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 md:mb-6 p-4 md:rounded-xl shadow-md bg-gradient-to-br from-blue-800 to-blue-900 dark:from-blue-900 dark:to-blue-950"
         >
           <h3
             class="text-md sm:text-lg font-bold text-white flex items-center tracking-wide"
@@ -298,13 +298,13 @@ const closeModal = () => {
         <TransitionGroup
           name="gallery"
           tag="div"
-          class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 w-full pt-4"
+          class="columns-2 md:columns-3 lg:columns-4 gap-1 sm:gap-4 md:gap-6 w-full pt-0 md:pt-4"
         >
           <div
             v-for="item in filteredGallery"
             :key="item.id"
             @click="openModal(item)"
-            class="group relative overflow-hidden rounded-xl cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-200 dark:bg-slate-800 block break-inside-avoid mb-6"
+            class="group relative overflow-hidden rounded-none sm:rounded-xl cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-200 dark:bg-slate-800 block break-inside-avoid mb-1 sm:mb-4 md:mb-6"
           >
             <img
               :src="item.image"
@@ -339,22 +339,23 @@ const closeModal = () => {
 
             <!-- Bottom Left Text -->
             <div
-              class="absolute bottom-0 left-0 p-5 w-full z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
+              class="absolute bottom-0 left-0 p-3 md:p-5 w-full z-20 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-0 md:translate-y-2 group-hover:translate-y-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent md:bg-none"
             >
               <h4
-                class="text-white font-bold text-sm md:text-base leading-snug drop-shadow-md mb-2"
+                class="text-white font-bold text-xs md:text-base leading-snug drop-shadow-md mb-1 md:mb-2 line-clamp-2"
               >
                 {{ item.title }}
               </h4>
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-1.5 md:gap-2">
                 <div
-                  class="w-6 h-6 rounded-full bg-blue-600 border border-white/50 flex items-center justify-center text-white text-[10px] font-bold shadow-sm"
+                  class="hidden md:flex w-6 h-6 rounded-full bg-blue-600 border border-white/50 items-center justify-center text-white text-[10px] font-bold shadow-sm"
                 >
                   SM
                 </div>
-                <span class="text-gray-300 text-xs font-medium tracking-wide">{{
-                  categories.find((c) => c.id === item.category)?.name
-                }}</span>
+                <span
+                  class="text-gray-300 text-[10px] md:text-xs font-medium tracking-wide"
+                  >{{ categories.find((c) => c.id === item.category)?.name }}</span
+                >
               </div>
             </div>
           </div>
