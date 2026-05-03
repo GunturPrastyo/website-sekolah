@@ -4,6 +4,7 @@ import VisiMisi from '@/views/VisiMisi.vue'
 import Fasilitas from '@/views/FasilitasView.vue'
 import GuruStaf from '@/views/GuruStaf.vue'
 import Kurikulum from '@/views/KurikulumView.vue'
+import Alumni from '@/views/AlumniView.vue'
 
 
 const router = createRouter({
@@ -38,6 +39,11 @@ const router = createRouter({
       path: '/kurikulum',
       name: 'kurikulum',
       component: Kurikulum
+    },
+    {
+      path: '/alumni',
+      name: 'alumni',
+      component: Alumni
     },
     {
       path: '/program-jurusan',
