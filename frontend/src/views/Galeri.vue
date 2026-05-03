@@ -167,9 +167,11 @@ const filteredGallery = computed(() => {
 // Lightbox Modal State
 const isModalOpen = ref(false);
 const currentImage = ref(null);
+const currentIndex = ref(0);
 
-const openModal = (item) => {
-  currentImage.value = item;
+const openModal = (index) => {
+  currentIndex.value = index;
+  currentImage.value = filteredGallery.value[index];
   isModalOpen.value = true;
   document.body.style.overflow = "hidden"; // Prevent scrolling
 };
@@ -180,6 +182,18 @@ const closeModal = () => {
     currentImage.value = null;
   }, 300); // Tunggu animasi selesai
   document.body.style.overflow = ""; // Restore scrolling
+};
+
+const nextImage = () => {
+  currentIndex.value = (currentIndex.value + 1) % filteredGallery.value.length;
+  currentImage.value = filteredGallery.value[currentIndex.value];
+};
+
+const prevImage = () => {
+  currentIndex.value =
+    (currentIndex.value - 1 + filteredGallery.value.length) %
+    filteredGallery.value.length;
+  currentImage.value = filteredGallery.value[currentIndex.value];
 };
 </script>
 
@@ -313,9 +327,9 @@ const closeModal = () => {
           class="columns-2 md:columns-3 lg:columns-4 gap-1 sm:gap-4 md:gap-6 w-full pt-0 md:pt-4"
         >
           <div
-            v-for="item in filteredGallery"
+            v-for="(item, index) in filteredGallery"
             :key="item.id"
-            @click="openModal(item)"
+            @click="openModal(index)"
             class="group relative overflow-hidden rounded-none sm:rounded-xl cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-200 dark:bg-slate-800 block break-inside-avoid mb-1 sm:mb-4 md:mb-6"
           >
             <img
@@ -339,7 +353,11 @@ const closeModal = () => {
                 :class="item.liked ? 'text-red-500' : 'text-gray-700 hover:text-red-500'"
                 title="Suka"
               >
-                <PhHeart class="w-4 h-4" :weight="item.liked ? 'fill' : 'regular'" />
+                <PhHeart
+                  class="w-4 h-4 transition-transform"
+                  :class="{ 'animate-bounce-heart': item.liked }"
+                  :weight="item.liked ? 'fill' : 'regular'"
+                />
                 {{ item.likes }}
               </button>
               <a
@@ -434,19 +452,65 @@ const closeModal = () => {
           </button>
         </div>
 
+        <!-- Navigation Buttons -->
+        <button
+          v-if="filteredGallery.length > 1"
+          @click.stop="prevImage"
+          class="absolute left-2 md:left-6 text-white/70 hover:text-white transition-colors z-50 p-2 md:p-4 hover:bg-white/10 rounded-full focus:outline-none"
+        >
+          <svg
+            class="w-8 h-8 md:w-10 md:h-10"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            ></path>
+          </svg>
+        </button>
+        <button
+          v-if="filteredGallery.length > 1"
+          @click.stop="nextImage"
+          class="absolute right-2 md:right-6 text-white/70 hover:text-white transition-colors z-50 p-2 md:p-4 hover:bg-white/10 rounded-full focus:outline-none"
+        >
+          <svg
+            class="w-8 h-8 md:w-10 md:h-10"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7-7"
+            ></path>
+          </svg>
+        </button>
+
         <!-- Image -->
         <div class="relative max-w-5xl w-full flex flex-col items-center" @click.stop>
           <img
             v-if="currentImage"
             :src="currentImage.image"
             :alt="currentImage.title"
-            class="w-full max-h-[80vh] object-contain rounded-xl shadow-2xl"
+            class="w-full max-h-[80vh] object-contain rounded-xl shadow-2xl transition-transform duration-300"
           />
           <div class="mt-4 text-center">
             <h3 class="text-xl font-bold text-white">{{ currentImage?.title }}</h3>
             <p class="text-gray-400 text-sm mt-1 uppercase tracking-wider">
               {{ categories.find((c) => c.id === currentImage?.category)?.name }}
             </p>
+          </div>
+          <div
+            v-if="filteredGallery.length > 1"
+            class="absolute -bottom-8 md:-bottom-10 text-white/80 text-xs md:text-sm font-medium bg-black/50 px-3 py-1 rounded-full"
+          >
+            {{ currentIndex + 1 }} / {{ filteredGallery.length }}
           </div>
         </div>
       </div>
@@ -469,5 +533,21 @@ const closeModal = () => {
 }
 .gallery-leave-active {
   position: absolute;
+}
+
+@keyframes bounce-heart {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-bounce-heart {
+  animation: bounce-heart 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 </style>
