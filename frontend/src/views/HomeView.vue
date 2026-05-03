@@ -2,7 +2,7 @@
   <div class="overflow-x-hidden w-full max-w-full">
     <!-- Header Section -->
     <header
-      class="relative flex flex-col items-center justify-center h-[90vh] lg:h-screen text-center text-white"
+      class="relative flex flex-col items-center justify-center h-screen md:h-[90vh] lg:h-screen text-center text-white"
     >
       <!-- Swiper Carousel Background -->
       <div class="absolute top-0 left-0 w-full h-full swiper-container -z-10">
@@ -52,17 +52,21 @@
           class="w-11/12 sm:w-full max-w-96 sm:max-w-2xl mx-auto mt-12 overflow-hidden bg-white/15 backdrop-blur-sm rounded-lg shadow-lg border border-white/20 transition-all duration-1000 delay-500 ease-out"
           :class="showSubtitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
         >
-          <div class="p-4 stats-swiper">
-            <div class="swiper-wrapper text-lg sm:text-2xl">
+          <div class="p-3 sm:p-4 stats-swiper">
+            <div class="swiper-wrapper">
               <div
                 v-for="(stat, index) in statsArray"
                 :key="index"
                 class="text-center swiper-slide"
               >
-                <h3 class="font-bold text-white">
+                <h3
+                  class="font-bold text-white text-base min-[400px]:text-lg sm:text-2xl"
+                >
                   {{ stat.prefix }}{{ stat.value }}{{ stat.suffix }}
                 </h3>
-                <p class="mt-1 text-xs font-semibold uppercase text-white/80">
+                <p
+                  class="mt-0.5 sm:mt-1 text-[9px] min-[400px]:text-[10px] sm:text-xs font-semibold uppercase text-white/80 tracking-tighter sm:tracking-normal line-clamp-1"
+                >
                   {{ stat.label }}
                 </p>
               </div>
@@ -2010,10 +2014,10 @@ onMounted(() => {
       delay: 2500,
       disableOnInteraction: false,
     },
-    slidesPerView: 2,
-    spaceBetween: 10,
+    slidesPerView: 3,
+    spaceBetween: 5,
     breakpoints: {
-      400: { slidesPerView: 3, spaceBetween: 15 },
+      400: { slidesPerView: 3, spaceBetween: 10 },
       640: { slidesPerView: 4, spaceBetween: 20 },
     },
   });
