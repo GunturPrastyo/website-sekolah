@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
 import {
   PhPlay,
   PhImage,
@@ -59,80 +59,89 @@ const categories = [
 ];
 
 // Data Dummy Galeri
+const baseGallery = [
+  {
+    id: 1,
+    title: "Gedung Utama Sekolah",
+    category: "fasilitas",
+    image:
+      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800&h=1000&fit=crop",
+    likes: 120,
+  },
+  {
+    id: 2,
+    title: "Upacara Bendera HUT RI",
+    category: "hut-ri",
+    image:
+      "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&h=800&fit=crop",
+    likes: 540,
+  },
+  {
+    id: 3,
+    title: "Praktikum Laboratorium Kimia",
+    category: "fasilitas",
+    image:
+      "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&h=1200&fit=crop",
+    likes: 85,
+  },
+  {
+    id: 4,
+    title: "Pertandingan Bola Basket",
+    category: "ekskul",
+    image:
+      "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1000&h=1000&fit=crop",
+    likes: 210,
+  },
+  {
+    id: 5,
+    title: "Perpustakaan Digital",
+    category: "fasilitas",
+    image:
+      "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800&h=1100&fit=crop",
+    likes: 150,
+  },
+  {
+    id: 6,
+    title: "Pentas Seni Tradisional",
+    category: "pentas-seni",
+    image:
+      "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&h=700&fit=crop",
+    likes: 430,
+  },
+  {
+    id: 7,
+    title: "Klub Robotika",
+    category: "ekskul",
+    image:
+      "https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?q=80&w=900&h=1200&fit=crop",
+    likes: 95,
+  },
+  {
+    id: 8,
+    title: "Ruang Kelas Modern",
+    category: "fasilitas",
+    image:
+      "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=1200&h=900&fit=crop",
+    likes: 180,
+  },
+  {
+    id: 9,
+    title: "Kegiatan Pramuka Kemah Bakti",
+    category: "ekskul",
+    image:
+      "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800&h=800&fit=crop",
+    likes: 275,
+  },
+];
+
 const galleryList = ref(
   [
-    {
-      id: 1,
-      title: "Gedung Utama Sekolah",
-      category: "fasilitas",
-      image:
-        "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800&h=1000&fit=crop",
-      likes: 120,
-    },
-    {
-      id: 2,
-      title: "Upacara Bendera HUT RI",
-      category: "hut-ri",
-      image:
-        "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&h=800&fit=crop",
-      likes: 540,
-    },
-    {
-      id: 3,
-      title: "Praktikum Laboratorium Kimia",
-      category: "fasilitas",
-      image:
-        "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&h=1200&fit=crop",
-      likes: 85,
-    },
-    {
-      id: 4,
-      title: "Pertandingan Bola Basket",
-      category: "ekskul",
-      image:
-        "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1000&h=1000&fit=crop",
-      likes: 210,
-    },
-    {
-      id: 5,
-      title: "Perpustakaan Digital",
-      category: "fasilitas",
-      image:
-        "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800&h=1100&fit=crop",
-      likes: 150,
-    },
-    {
-      id: 6,
-      title: "Pentas Seni Tradisional",
-      category: "pentas-seni",
-      image:
-        "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&h=700&fit=crop",
-      likes: 430,
-    },
-    {
-      id: 7,
-      title: "Klub Robotika",
-      category: "ekskul",
-      image:
-        "https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?q=80&w=900&h=1200&fit=crop",
-      likes: 95,
-    },
-    {
-      id: 8,
-      title: "Ruang Kelas Modern",
-      category: "fasilitas",
-      image:
-        "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=1200&h=900&fit=crop",
-      likes: 180,
-    },
-    {
-      id: 9,
-      title: "Kegiatan Pramuka Kemah Bakti",
-      category: "ekskul",
-      image:
-        "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800&h=800&fit=crop",
-      likes: 275,
-    },
+    ...baseGallery,
+    ...baseGallery.map((item) => ({
+      ...item,
+      id: item.id + 100,
+      likes: item.likes + 15,
+    })),
   ].map((item) => ({ ...item, liked: false }))
 );
 
@@ -162,6 +171,51 @@ const filteredGallery = computed(() => {
   }
 
   return result;
+});
+
+// --- INFINITE SCROLL STATE ---
+const itemsPerPage = 8;
+const visibleCount = ref(itemsPerPage);
+const isLoadingMore = ref(false);
+const loadMoreSentinel = ref(null);
+
+const displayedGallery = computed(() => {
+  return filteredGallery.value.slice(0, visibleCount.value);
+});
+
+const hasMore = computed(() => {
+  return visibleCount.value < filteredGallery.value.length;
+});
+
+const loadMore = () => {
+  if (isLoadingMore.value || !hasMore.value) return;
+  isLoadingMore.value = true;
+  setTimeout(() => {
+    visibleCount.value += itemsPerPage;
+    isLoadingMore.value = false;
+  }, 800); // Jeda simulasi loading
+};
+
+watch([activeCategory, activeTab], () => {
+  visibleCount.value = itemsPerPage;
+});
+
+let observer = null;
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting && hasMore.value) {
+        loadMore();
+      }
+    },
+    { rootMargin: "200px" }
+  ); // Pemicu aktif 200px sebelum mentok ke bawah
+
+  if (loadMoreSentinel.value) observer.observe(loadMoreSentinel.value);
+});
+
+onBeforeUnmount(() => {
+  if (observer) observer.disconnect();
 });
 
 // Lightbox Modal State
@@ -195,6 +249,12 @@ const prevImage = () => {
     filteredGallery.value.length;
   currentImage.value = filteredGallery.value[currentIndex.value];
 };
+
+// Tracking loading state untuk skeleton
+const imageLoaded = ref({});
+const onImageLoad = (id) => {
+  imageLoaded.value[id] = true;
+};
 </script>
 
 <template>
@@ -208,7 +268,7 @@ const prevImage = () => {
 
     <!-- Gallery Section -->
     <section class="py-4 md:py-12 px-0 md:px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
-      <div class="container mx-auto max-w-full px-0 lg:px-8">
+      <div class="container mx-auto max-w-full">
         <!-- Video Profil Section -->
         <div
           class="mb-6 relative rounded-none sm:rounded-xl overflow-hidden shadow-xl aspect-[4/3] sm:aspect-video md:aspect-[21/9] group cursor-pointer w-full block"
@@ -263,6 +323,7 @@ const prevImage = () => {
             <img
               :src="cat.image"
               class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              loading="lazy"
             />
             <div
               class="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-colors duration-300"
@@ -324,27 +385,41 @@ const prevImage = () => {
         <TransitionGroup
           name="gallery"
           tag="div"
-          class="columns-2 md:columns-3 lg:columns-4 gap-1 sm:gap-4 md:gap-6 w-full pt-0 md:pt-4"
+          class="columns-2 md:columns-3 lg:columns-4 gap-1 sm:gap-4 md:gap-6 w-full pt-0 md:pt-4 transform-gpu"
         >
           <div
-            v-for="(item, index) in filteredGallery"
+            v-for="(item, index) in displayedGallery"
             :key="item.id"
             @click="openModal(index)"
-            class="group relative overflow-hidden rounded-none sm:rounded-xl cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-200 dark:bg-slate-800 block break-inside-avoid mb-1 sm:mb-4 md:mb-6"
+            class="group relative overflow-hidden rounded-none sm:rounded-xl cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-200 dark:bg-slate-800 block break-inside-avoid mb-1 sm:mb-4 md:mb-6 transform-gpu"
+            :class="{ 'min-h-[200px] animate-pulse': !imageLoaded[item.id] }"
           >
+            <!-- Skeleton placeholder -->
+            <div
+              v-if="!imageLoaded[item.id]"
+              class="absolute inset-0 flex items-center justify-center bg-gray-300 dark:bg-slate-700 z-10"
+            >
+              <PhImage class="w-8 h-8 text-gray-400 dark:text-gray-500" />
+            </div>
+
             <img
               :src="item.image"
               :alt="item.title"
-              class="w-full h-auto block transition-transform duration-700 group-hover:scale-105"
+              @load="onImageLoad(item.id)"
+              class="w-full h-auto block transition-all duration-700 group-hover:scale-105"
+              :class="imageLoaded[item.id] ? 'opacity-100' : 'opacity-0'"
+              loading="lazy"
             />
 
             <!-- Dark Overlay on Hover -->
             <div
+              v-show="imageLoaded[item.id]"
               class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             ></div>
 
             <!-- Top Right Actions (Stock Photo Style) -->
             <div
+              v-show="imageLoaded[item.id]"
               class="absolute top-4 right-4 flex flex-col gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-0 md:translate-x-2 group-hover:translate-x-0 z-20"
             >
               <button
@@ -374,6 +449,7 @@ const prevImage = () => {
 
             <!-- Bottom Left Text -->
             <div
+              v-show="imageLoaded[item.id]"
               class="absolute bottom-0 left-0 p-3 md:p-5 w-full z-20 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-0 md:translate-y-2 group-hover:translate-y-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent md:bg-none"
             >
               <h4
@@ -395,6 +471,39 @@ const prevImage = () => {
             </div>
           </div>
         </TransitionGroup>
+
+        <!-- Sentinel / Loading Indicator untuk Infinite Scroll -->
+        <div
+          ref="loadMoreSentinel"
+          class="w-full py-8 flex justify-center items-center min-h-[100px]"
+        >
+          <div
+            v-if="hasMore"
+            class="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold bg-blue-50 dark:bg-slate-800 px-5 py-2.5 rounded-full shadow-sm transition-all"
+          >
+            <svg
+              class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-600 dark:text-blue-400"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            Memuat foto...
+          </div>
+        </div>
 
         <!-- Empty State -->
         <div
@@ -529,7 +638,7 @@ const prevImage = () => {
 .gallery-enter-from,
 .gallery-leave-to {
   opacity: 0;
-  transform: scale(0.95) translateY(20px);
+  transform: scale(0.95) translateY(-30px);
 }
 .gallery-leave-active {
   position: absolute;
