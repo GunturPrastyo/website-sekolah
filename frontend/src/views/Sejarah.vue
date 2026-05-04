@@ -99,19 +99,8 @@ onMounted(() => {
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add(
-            "opacity-100",
-            "translate-y-0",
-            "scale-100",
-            "lg:translate-x-0"
-          );
-          entry.target.classList.remove(
-            "opacity-0",
-            "translate-y-10",
-            "scale-95",
-            "lg:-translate-x-20",
-            "lg:translate-x-20"
-          );
+          entry.target.classList.add("opacity-100", "translate-y-0", "scale-100");
+          entry.target.classList.remove("opacity-0", "translate-y-10", "scale-95");
 
           // Animasi fade-in berurutan untuk setiap kalimat di dalam card
           const sentences = entry.target.querySelectorAll(".fade-sentence");
@@ -260,7 +249,7 @@ onBeforeUnmount(() => {
 
     <!-- Timeline Section -->
     <section
-      class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-blue-950 dark:bg-slate-900"
+      class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-blue-950 dark:bg-gray-900"
     >
       <div
         class="container relative z-10 mx-auto px-5 sm:px-8 md:px-14 lg:px-16 w-full max-w-full"
@@ -294,7 +283,7 @@ onBeforeUnmount(() => {
         <div class="relative wrap overflow-hidden h-full" ref="timelineRef">
           <!-- Garis Tengah Timeline (Latar Belakang) -->
           <div
-            class="hidden min-[400px]:block absolute z-0 w-1 bg-blue-900 dark:bg-slate-800 h-full left-6 sm:left-8 lg:left-1/2 transform -translate-x-1/2 rounded-full"
+            class="hidden min-[400px]:block absolute z-0 w-1 bg-blue-900 dark:bg-slate-800 h-full left-6 sm:left-8 transform -translate-x-1/2 rounded-full"
           >
             <!-- Garis Animasi Menjalar (Foreground) -->
             <div
@@ -308,18 +297,10 @@ onBeforeUnmount(() => {
             v-for="(item, index) in timeline"
             :key="index"
             class="fade-on-scroll opacity-0 translate-y-10 scale-95 transition-all duration-1000 ease-out relative z-10 flex items-center w-full mb-8 min-[400px]:mb-12 last:mb-0 group"
-            :class="
-              index % 2 === 0
-                ? 'lg:flex-row-reverse lg:-translate-x-20'
-                : 'lg:flex-row lg:translate-x-20'
-            "
           >
-            <!-- Ruang Kosong untuk Penyeimbang Grid Desktop -->
-            <div class="hidden lg:block lg:w-1/2"></div>
-
             <!-- Ikon Lingkaran Timeline -->
             <div
-              class="hidden min-[400px]:flex absolute left-6 sm:left-8 lg:left-1/2 transform -translate-x-1/2 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-blue-950 dark:border-slate-950 shadow-lg z-20 group-hover:scale-110 transition-all duration-500"
+              class="hidden min-[400px]:flex absolute left-6 sm:left-8 transform -translate-x-1/2 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-blue-950 dark:border-slate-950 shadow-lg z-20 group-hover:scale-110 transition-all duration-500"
               :class="
                 currentProgress >= index / timeline.length
                   ? 'bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]'
@@ -330,18 +311,12 @@ onBeforeUnmount(() => {
             </div>
 
             <!-- Kartu Konten -->
-            <div
-              class="ml-0 min-[400px]:ml-16 sm:ml-20 lg:ml-0 flex-1 lg:flex-none lg:w-1/2"
-              :class="index % 2 === 0 ? 'lg:pr-12 xl:pr-16' : 'lg:pl-12 xl:pl-16'"
-            >
+            <div class="ml-0 min-[400px]:ml-16 sm:ml-20 lg:ml-24 flex-1 w-full">
               <div
                 class="group/card relative hover:-translate-y-1.5 transition-transform duration-400"
               >
                 <div
-                  class="hidden md:block absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-slate-800 transform rotate-45 z-20"
-                  :class="
-                    index % 2 === 0 ? '-left-3 lg:left-auto lg:-right-3' : '-left-3'
-                  "
+                  class="hidden md:block absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-slate-800 transform rotate-45 z-20 -left-3"
                 ></div>
 
                 <div
@@ -367,7 +342,7 @@ onBeforeUnmount(() => {
                   <div class="clearfix">
                     <!-- Gambar mengambang ke kiri -->
                     <div
-                      class="float-left w-[40%] sm:w-[50%] max-w-[200px] mr-4 mb-2 md:mr-5 md:mb-3"
+                      class="float-left w-[45%] sm:w-[40%] lg:w-[35%] max-w-[200px] sm:max-w-[240px] md:max-w-[280px] lg:max-w-[360px] mr-4 mb-2 md:mr-6 md:mb-4 lg:mr-8 lg:mb-5"
                     >
                       <div
                         class="rounded-lg overflow-hidden shadow-sm group-hover/card:shadow-md transition-shadow duration-300"
