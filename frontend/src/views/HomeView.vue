@@ -244,7 +244,7 @@
 
             <!-- PAGINATION -->
             <div
-              class="alasan-pagination absolute bottom-4 z-20 w-full flex justify-center md:hidden"
+              class="alasan-pagination absolute bottom-4 z-20 w-full flex justify-center md:hidden mb-6"
             ></div>
           </div>
         </div>
@@ -266,12 +266,12 @@
             <div
               class="relative z-10 md:w-2/5 lg:w-1/3 mx-0 sm:mx-6 mt-4 md:mt-0 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out alumni-stats-container"
             >
-              <span
+              <!-- <span
                 class="inline-block px-3 py-1 mb-3 text-xs sm:text-sm font-bold tracking-wide text-blue-900 bg-yellow-400 rounded-full shadow-sm"
                 style="font-family: 'Kalam', cursive"
               >
                 Jejak Lulusan
-              </span>
+              </span> -->
               <h3
                 class="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2"
                 style="font-family: 'Oswald', sans-serif"
@@ -426,7 +426,7 @@
                 <div class="swiper-wrapper items-stretch">
                   <!-- IPA -->
                   <div
-                    class="swiper-slide !h-auto relative min-h-[280px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
+                    class="swiper-slide !h-auto relative min-h-[320px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
                   >
                     <div
                       class="absolute inset-0 bg-gradient-to-br from-blue-900 to-slate-900 group-hover:from-blue-800 transition-colors duration-500"
@@ -460,7 +460,7 @@
 
                   <!-- IPS -->
                   <div
-                    class="swiper-slide !h-auto relative min-h-[280px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
+                    class="swiper-slide !h-auto relative min-h-[320px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
                   >
                     <div
                       class="absolute inset-0 bg-gradient-to-br from-cyan-900 to-slate-900 group-hover:from-cyan-800 transition-colors duration-500"
@@ -493,7 +493,7 @@
 
                   <!-- BAHASA -->
                   <div
-                    class="swiper-slide !h-auto relative min-h-[280px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
+                    class="swiper-slide !h-auto relative min-h-[320px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
                   >
                     <div
                       class="absolute inset-0 bg-gradient-to-br from-sky-900 to-slate-900 group-hover:from-sky-800 transition-colors duration-500"
@@ -526,7 +526,7 @@
 
                   <!-- INFORMATIKA -->
                   <div
-                    class="swiper-slide !h-auto relative min-h-[280px] overflow-hidden group cursor-pointer"
+                    class="swiper-slide !h-auto relative min-h-[320px] overflow-hidden group cursor-pointer"
                   >
                     <div
                       class="absolute inset-0 bg-gradient-to-br from-indigo-900 to-slate-900 group-hover:from-indigo-800 transition-colors duration-500"
@@ -562,7 +562,7 @@
 
                 <!-- Jurusan Pagination -->
                 <div
-                  class="jurusan-pagination absolute bottom-4 left-0 z-30 flex w-full justify-center"
+                  class="jurusan-pagination absolute bottom-4 left-0 z-30 flex w-full justify-center mb-4"
                 ></div>
               </div>
             </div>
@@ -916,7 +916,7 @@
                 >
                   <router-link
                     to="/berita"
-                    class="text-sm font-semibold text-blue-500 hover:text-blue-600 transition-colors inline-flex items-center"
+                    class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors inline-flex items-center"
                   >
                     Lihat Semua Pengumuman
                   </router-link>
