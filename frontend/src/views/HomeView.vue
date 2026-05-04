@@ -34,17 +34,20 @@
 
       <!-- Hero Content -->
       <div class="z-20 p-5">
-        <h1 class="text-2xl sm:text-4xl font-bold md:text-6xl">
+        <h1
+          class="text-3xl sm:text-5xl font-bold md:text-7xl tracking-wide uppercase drop-shadow-lg"
+          style="font-family: 'Oswald', sans-serif"
+        >
           {{ displayedTitle
           }}<span class="animate-pulse font-light text-white/70">|</span>
         </h1>
-        <p class="mt-4 text-md sm:text-lg opacity-90 md:text-xl -mt-2 text-center"></p>
         <p
-          class="mt-4 text-md sm:text-lg md:text-xl -mt-2 text-center transition-all duration-1000 ease-out"
-          :class="showSubtitle ? 'opacity-90 translate-y-0' : 'opacity-0 translate-y-5'"
+          class="mt-6 text-lg sm:text-xl md:text-2xl text-center transition-all duration-1000 ease-out text-gray-100 drop-shadow-lg"
+          :class="showSubtitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'"
+          style="font-family: 'Merriweather', serif"
         >
           <span class="inline-flex items-center justify-center">
-            <PhQuotes class="w-5 h-5 mr-2 hidden sm:block" />
+            <PhQuotes class="w-6 h-6 sm:w-8 sm:h-8 mr-2 hidden sm:block opacity-80" />
             Mencetak Generasi Unggul, Berkarakter, dan Berwawasan Global
           </span>
         </p>
@@ -62,7 +65,9 @@
                 <h3
                   class="font-bold text-white text-base min-[400px]:text-lg sm:text-2xl"
                 >
-                  {{ stat.prefix }}{{ stat.value }}{{ stat.suffix }}
+                  {{ stat.prefix
+                  }}{{ stat.isNumber ? stat.value.toLocaleString("id-ID") : stat.value
+                  }}{{ stat.suffix }}
                 </h3>
                 <p
                   class="mt-0.5 sm:mt-1 text-[9px] min-[400px]:text-[10px] sm:text-xs font-semibold uppercase text-white/80 tracking-tighter sm:tracking-normal line-clamp-1"
@@ -1733,7 +1738,7 @@ const statsArray = ref([
 ]);
 
 const animateStats = () => {
-  const duration = 2000;
+  const duration = 3000; // Durasi diperpanjang menjadi 3 detik agar efek naiknya lebih dramatis
   let startTimestamp = null;
   const step = (timestamp) => {
     if (!startTimestamp) startTimestamp = timestamp;
@@ -2067,7 +2072,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
