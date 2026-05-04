@@ -4,32 +4,19 @@
     <header
       class="relative flex flex-col items-center justify-center h-screen md:h-[90vh] lg:h-screen text-center text-white"
     >
-      <!-- Swiper Carousel Background -->
-      <div class="absolute top-0 left-0 w-full h-full swiper-container -z-10">
-        <div class="swiper-wrapper">
-          <div
-            class="swiper-slide bg-cover bg-center"
-            style="
-              background-image: linear-gradient(
-                  rgba(0, 18, 32, 0.7),
-                  rgba(0, 18, 32, 0.7)
-                ),
-                url('/assets/img/banner2.jpeg');
-            "
-          ></div>
-          <div
-            class="swiper-slide bg-cover bg-center"
-            style="
-              background-image: linear-gradient(
-                  rgba(0, 18, 32, 0.7),
-                  rgba(0, 18, 32, 0.7)
-                ),
-                url('/assets/img/banner1.jpg');
-            "
-          ></div>
-        </div>
-        <!-- Swiper Controls -->
-        <div class="swiper-pagination"></div>
+      <!-- Video Background -->
+      <div class="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden bg-slate-900">
+        <video
+          autoplay
+          loop
+          muted
+          playsinline
+          class="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/assets/img/footage.webm" type="video/webm" />
+        </video>
+        <!-- Dark Overlay -->
+        <div class="absolute inset-0 bg-slate-900/70"></div>
       </div>
 
       <!-- Hero Content -->
@@ -1460,7 +1447,7 @@
       <!-- FAQ & CTA PPDB Section (Sejajar di Desktop) -->
       <section class="relative -mx-6 md:mx-0 overflow-hidden">
         <div
-          class="w-full max-w-full relative mx-auto p-8 px-4 md:px-6 lg:px-4 md:rounded-xl bg-fixed bg-center bg-cover overflow-hidden shadow-xl"
+          class="w-full max-w-full relative mx-auto mb-0 md:mb-12 p-8 px-4 md:px-6 lg:px-4 md:rounded-xl bg-fixed bg-center bg-cover overflow-hidden shadow-xl"
           style="
             background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200');
           "
