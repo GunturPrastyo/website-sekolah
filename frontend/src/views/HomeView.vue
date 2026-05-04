@@ -1706,10 +1706,12 @@
 
           <div class="flex flex-col relative z-10 max-h-64 overflow-y-auto pr-1">
             <h4
-              class="font-bold text-sm text-gray-900 dark:text-white border-b border-gray-100 dark:border-slate-700 pb-2 mb-2 flex items-center"
+              class="font-bold text-sm text-gray-900 dark:text-white border-b border-gray-100 dark:border-slate-700 pb-2 mb-2 flex items-center overflow-hidden"
             >
-              <PhMapPin weight="fill" class="w-4 h-4 mr-1.5 text-blue-500" />
-              {{ tooltip.data.name }}
+              <PhMapPin weight="fill" class="w-4 h-4 mr-1.5 text-blue-500 shrink-0" />
+              <div class="text-marquee-container flex-1">
+                <span class="text-marquee-content">{{ tooltip.data.name }}</span>
+              </div>
             </h4>
             <div class="flex flex-col gap-2 mb-2">
               <div
@@ -1723,10 +1725,13 @@
                   <img :src="inst.logo" class="w-full h-full object-contain" />
                 </div>
                 <div class="flex flex-col flex-1 min-w-0">
-                  <span
-                    class="font-bold text-xs text-gray-900 dark:text-white leading-tight truncate"
-                    >{{ inst.name }}</span
-                  >
+                  <div class="text-marquee-container">
+                    <span
+                      class="font-bold text-xs text-gray-900 dark:text-white leading-tight text-marquee-content"
+                    >
+                      {{ inst.name }}
+                    </span>
+                  </div>
                   <span
                     class="text-[10px] text-gray-500 dark:text-gray-400 font-medium"
                     >{{
@@ -2322,5 +2327,30 @@ onMounted(() => {
 }
 .animate-float:hover {
   animation-play-state: paused;
+}
+
+/* Efek Marquee Horizontal Otomatis (Hanya berjalan jika teks overflow) */
+.text-marquee-container {
+  container-type: inline-size;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+.text-marquee-content {
+  display: inline-block;
+  min-width: 100%;
+  animation: slide-text 5s linear infinite alternate;
+}
+@keyframes slide-text {
+  0%,
+  20% {
+    transform: translateX(0);
+  }
+  /* Jika text (100%) > kontainer (100cqw), hasil kalkulasi akan negatif dan memicu scroll. 
+     Jika lebih pendek, hasil min(0, positif) tetap 0 (tidak bergerak). */
+  80%,
+  100% {
+    transform: translateX(min(0px, calc(100cqw - 100%)));
+  }
 }
 </style>
