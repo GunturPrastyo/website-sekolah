@@ -263,7 +263,9 @@
             ></div>
 
             <!-- LEFT TEXT -->
-            <div class="relative z-10 md:w-2/5 lg:w-1/3 mx-0 sm:mx-6 mt-4 md:mt-0">
+            <div
+              class="relative z-10 md:w-2/5 lg:w-1/3 mx-0 sm:mx-6 mt-4 md:mt-0 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out alumni-stats-container"
+            >
               <span
                 class="inline-block px-3 py-1 mb-3 text-xs sm:text-sm font-bold tracking-wide text-blue-900 bg-yellow-400 rounded-full shadow-sm"
                 style="font-family: 'Kalam', cursive"
@@ -281,24 +283,39 @@
                 berbagai sektor industri terkemuka.
               </p>
 
-              <div class="grid grid-cols-2 gap-4">
+              <div class="grid grid-cols-3 gap-2 sm:gap-4">
                 <div>
                   <h4
                     class="text-2xl md:text-3xl font-bold text-yellow-400"
                     style="font-family: 'Oswald', sans-serif"
                   >
-                    1.2k+
+                    {{ alumniStats.alumni.value.toFixed(1) }}k+
                   </h4>
-                  <p class="text-xs text-sky-200 mt-1 font-medium">Alumni Sukses</p>
+                  <p class="text-[10px] sm:text-xs text-sky-200 mt-1 font-medium">
+                    Alumni Sukses
+                  </p>
                 </div>
                 <div>
                   <h4
                     class="text-2xl md:text-3xl font-bold text-yellow-400"
                     style="font-family: 'Oswald', sans-serif"
                   >
-                    45+
+                    {{ Math.floor(alumniStats.ptn.value) }}+
                   </h4>
-                  <p class="text-xs text-sky-200 mt-1 font-medium">PTN & Kampus Top</p>
+                  <p class="text-[10px] sm:text-xs text-sky-200 mt-1 font-medium">
+                    PTN & Kampus Top
+                  </p>
+                </div>
+                <div>
+                  <h4
+                    class="text-2xl md:text-3xl font-bold text-yellow-400"
+                    style="font-family: 'Oswald', sans-serif"
+                  >
+                    {{ Math.floor(alumniStats.mitra.value) }}+
+                  </h4>
+                  <p class="text-[10px] sm:text-xs text-sky-200 mt-1 font-medium">
+                    Mitra Industri
+                  </p>
                 </div>
               </div>
             </div>
@@ -1777,6 +1794,38 @@ const animateStats = () => {
   window.requestAnimationFrame(step);
 };
 
+// --- Data Animasi Statistik Alumni ---
+const alumniStats = ref({
+  alumni: { value: 0, target: 1.2 },
+  ptn: { value: 0, target: 45 },
+  mitra: { value: 0, target: 60 },
+});
+
+const animateAlumniStats = () => {
+  const duration = 2500;
+  let startTimestamp = null;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    const easeProgress = 1 - Math.pow(1 - progress, 4); // Efek ease-out
+
+    alumniStats.value.alumni.value = easeProgress * alumniStats.value.alumni.target;
+    alumniStats.value.ptn.value = Math.floor(easeProgress * alumniStats.value.ptn.target);
+    alumniStats.value.mitra.value = Math.floor(
+      easeProgress * alumniStats.value.mitra.target
+    );
+
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    } else {
+      alumniStats.value.alumni.value = alumniStats.value.alumni.target;
+      alumniStats.value.ptn.value = alumniStats.value.ptn.target;
+      alumniStats.value.mitra.value = alumniStats.value.mitra.target;
+    }
+  };
+  window.requestAnimationFrame(step);
+};
+
 const themeClasses = {
   yellow: {
     card:
@@ -1999,6 +2048,11 @@ onMounted(() => {
         if (entry.isIntersecting) {
           entry.target.classList.add("opacity-100", "translate-y-0");
           entry.target.classList.remove("opacity-0", "translate-y-10");
+
+          // Jalankan animasi angka spesifik untuk area alumni
+          if (entry.target.classList.contains("alumni-stats-container")) {
+            animateAlumniStats();
+          }
           observer.unobserve(entry.target); // Animasi hanya berjalan 1x
         }
       });
