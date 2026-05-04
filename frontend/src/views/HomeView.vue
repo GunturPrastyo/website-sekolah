@@ -534,12 +534,10 @@
                 </p>
                 <router-link
                   to="/berita"
-                  class="hidden md:inline-flex items-center px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white dark:bg-slate-700 dark:text-blue-400 dark:hover:bg-blue-600 dark:hover:text-white text-sm font-semibold rounded-full transition-all duration-300 shrink-0 group shadow-sm hover:shadow-md mb-2 md:mb-1"
+                  class="hidden md:inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-semibold transition-colors shrink-0 md:pb-4 md:-mb-px border-b-2 border-transparent hover:border-blue-600 dark:hover:border-blue-400"
                 >
                   Lihat berita lainnya
-                  <PhCaretRight
-                    class="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform"
-                  />
+                  <PhCaretRight class="w-4 h-4 ml-1" />
                 </router-link>
               </div>
             </div>
@@ -596,7 +594,7 @@
               <!-- Berita Pendukung (Bawah - 3 Kecil) -->
               <div class="relative">
                 <div
-                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pb-8 lg:pb-0"
+                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
                 >
                   <!-- Card 1 -->
                   <router-link
@@ -728,18 +726,16 @@
                   </router-link>
                 </div>
 
-                <!-- Fade Blur Overlay -->
+                <!-- Mobile "Lihat berita lainnya" Link -->
                 <div
-                  class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-blue-50/95 via-blue-50/70 to-transparent dark:from-slate-900/95 dark:via-slate-900/70 flex items-end justify-center pb-4 z-10 pointer-events-none md:hidden"
+                  class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex justify-end md:hidden"
                 >
                   <router-link
                     to="/berita"
-                    class="pointer-events-auto inline-flex items-center px-5 py-2.5 bg-blue-600 text-white hover:bg-blue-700 text-sm font-semibold rounded-full shadow-md transition-colors group"
+                    class="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-semibold transition-colors"
                   >
-                    Lihat Semua
-                    <PhCaretRight
-                      class="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform"
-                    />
+                    Lihat berita lainnya
+                    <PhCaretRight class="w-4 h-4 ml-1" />
                   </router-link>
                 </div>
               </div>
