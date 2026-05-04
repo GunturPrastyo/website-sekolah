@@ -13,7 +13,11 @@ defineProps({
   >
     <!-- Background Image -->
     <div v-if="bgImage" class="absolute inset-0 z-0">
-      <img :src="bgImage" class="w-full h-full object-cover opacity-20 mix-blend-screen dark:mix-blend-overlay" alt="Header Background" />
+      <img
+        :src="bgImage"
+        class="w-full h-full object-cover opacity-20 mix-blend-screen dark:mix-blend-overlay"
+        alt="Header Background"
+      />
     </div>
 
     <!-- <div
@@ -34,6 +38,7 @@ defineProps({
       </span>
       <h1
         class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 md:mb-4 leading-tight"
+        style="font-family: 'Oswald', sans-serif"
       >
         {{ title }}
       </h1>
@@ -48,4 +53,5 @@ defineProps({
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap");
 </style>
