@@ -264,16 +264,43 @@
 
             <!-- LEFT TEXT -->
             <div class="relative z-10 md:w-2/5 lg:w-1/3 mx-0 sm:mx-6 mt-4 md:mt-0">
+              <span
+                class="inline-block px-3 py-1 mb-3 text-xs sm:text-sm font-bold tracking-wide text-blue-900 bg-yellow-400 rounded-full shadow-sm"
+                style="font-family: 'Kalam', cursive"
+              >
+                Jejak Lulusan
+              </span>
               <h3
                 class="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2"
                 style="font-family: 'Oswald', sans-serif"
               >
                 Persebaran Alumni Kami
               </h3>
-              <p class="text-sm lg:text-base text-sky-50 leading-relaxed">
-                Lulusan kami telah berhasil melanjutkan pendidikan ke berbagai perguruan
-                tinggi ternama serta sukses berkarir di dunia industri dan profesional.
+              <p class="text-sm lg:text-base text-sky-50 leading-relaxed mb-4">
+                Tersebar di berbagai perguruan tinggi favorit dan sukses berkarir di
+                berbagai sektor industri terkemuka.
               </p>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <h4
+                    class="text-2xl md:text-3xl font-bold text-yellow-400"
+                    style="font-family: 'Oswald', sans-serif"
+                  >
+                    1.2k+
+                  </h4>
+                  <p class="text-xs text-sky-200 mt-1 font-medium">Alumni Sukses</p>
+                </div>
+                <div>
+                  <h4
+                    class="text-2xl md:text-3xl font-bold text-yellow-400"
+                    style="font-family: 'Oswald', sans-serif"
+                  >
+                    45+
+                  </h4>
+                  <p class="text-xs text-sky-200 mt-1 font-medium">PTN & Kampus Top</p>
+                </div>
+              </div>
             </div>
 
             <!-- RIGHT MAP VISUALIZATION -->
