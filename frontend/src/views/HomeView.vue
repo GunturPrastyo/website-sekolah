@@ -1473,19 +1473,23 @@
                             </svg>
                             <div class="flex flex-wrap items-center">
                               <span
-                                class="font-semibold text-gray-500 dark:text-gray-400 mr-1"
-                                >Mulai Acara:</span
+                                class="font-semibold text-gray-800 dark:text-gray-100 mr-1"
+                                >Mulai Acara :</span
                               >
-                              <span class="font-medium mr-2">{{
-                                agenda.time.split("-")[0].trim()
-                              }}</span>
                               <span
-                                class="font-semibold text-gray-500 dark:text-gray-400 mr-1"
-                                >| Selesai:</span
+                                class="font-medium text-gray-600 dark:text-gray-300 mr-2"
+                                >{{ agenda.time.split("-")[0].trim() }}
+                              </span>
+                              <span
+                                class="font-semibold text-gray-800 dark:text-gray-100 mx-1"
+                                >Selesai :</span
                               >
-                              <span class="font-medium">{{
-                                agenda.time.split("-")[1]?.trim() || "Selesai"
-                              }}</span>
+                              <span
+                                class="font-medium text-gray-600 dark:text-gray-300"
+                                >{{
+                                  agenda.time.split("-")[1]?.trim() || "Selesai"
+                                }}</span
+                              >
                             </div>
                           </div>
 
@@ -1506,10 +1510,34 @@
                             </svg>
                             <div class="flex flex-wrap items-center">
                               <span
-                                class="font-semibold text-gray-500 dark:text-gray-400 mr-1"
-                                >Tempat Pelaksanaan:</span
+                                class="font-semibold text-gray-800 dark:text-gray-100 mr-1"
+                                >Tempat Pelaksanaan :</span
                               >
-                              <span class="font-medium">{{ agenda.loc }}</span>
+                              <span
+                                class="font-medium text-gray-600 dark:text-gray-300"
+                                >{{ agenda.loc }}</span
+                              >
+                            </div>
+                          </div>
+
+                          <!-- File Lampiran -->
+                          <div
+                            v-if="agenda.file"
+                            class="flex items-start text-[11px] sm:text-xs pt-1"
+                          >
+                            <PhPaperclip
+                              class="w-4 h-4 mr-2 mt-0.5 shrink-0"
+                              :class="themeClasses[agenda.color].infoIcon"
+                            />
+                            <div class="flex flex-wrap items-center">
+                              <button
+                                @click.stop="openAttachmentModal(agenda)"
+                                class="inline-flex items-center font-bold px-3 py-1 rounded-md transition-all hover:-translate-y-0.5 shadow-sm focus:outline-none"
+                                :class="themeClasses[agenda.color].fileBtn"
+                              >
+                                <PhPaperclip class="w-3.5 h-3.5 mr-1.5" />
+                                Lihat Lampiran
+                              </button>
                             </div>
                           </div>
                         </div>
@@ -1734,6 +1762,94 @@
         </div>
       </Transition>
     </Teleport>
+
+    <!-- Modal Lampiran -->
+    <Teleport to="body">
+      <Transition
+        enter-active-class="transition-opacity duration-300"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition-opacity duration-300"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div
+          v-if="isAttachmentModalOpen"
+          class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          @click="closeAttachmentModal"
+        >
+          <div
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-3xl overflow-hidden transform transition-all flex flex-col max-h-[90vh]"
+            @click.stop
+          >
+            <div
+              class="p-5 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-800/80 shrink-0"
+            >
+              <h3
+                class="text-lg font-bold text-gray-900 dark:text-white flex items-center"
+              >
+                <PhPaperclip class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
+                Lampiran Agenda
+              </h3>
+              <button
+                @click="closeAttachmentModal"
+                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors focus:outline-none bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 p-1.5 rounded-lg"
+              >
+                <PhX class="w-5 h-5" />
+              </button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1 custom-scrollbar">
+              <h4 class="font-bold text-xl text-gray-900 dark:text-white mb-2">
+                {{ selectedAgenda?.title }}
+              </h4>
+              <p class="text-sm text-gray-500 dark:text-gray-400 mb-5">
+                Pratinjau dokumen lampiran untuk agenda ini.
+              </p>
+
+              <!-- Preview Area -->
+              <div
+                class="w-full bg-gray-100 dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden mb-6 flex items-center justify-center relative min-h-[300px]"
+              >
+                <img
+                  v-if="selectedAgenda?.fileType === 'image'"
+                  :src="selectedAgenda?.file"
+                  class="w-full h-auto max-h-[60vh] object-contain"
+                />
+                <iframe
+                  v-else-if="selectedAgenda?.fileType === 'pdf'"
+                  :src="selectedAgenda?.file"
+                  class="w-full h-[60vh]"
+                ></iframe>
+                <div v-else class="text-center p-8">
+                  <PhImage class="w-16 h-16 text-gray-400 mx-auto mb-3 opacity-50" />
+                  <p class="text-gray-500 font-medium">
+                    Pratinjau visual tidak tersedia untuk format ini.
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex flex-col sm:flex-row gap-3">
+                <a
+                  :href="selectedAgenda?.file"
+                  target="_blank"
+                  download
+                  class="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold flex items-center justify-center transition-colors shadow-md shadow-blue-500/30"
+                >
+                  <PhDownloadSimple class="w-5 h-5 mr-2" />
+                  Unduh Dokumen
+                </a>
+                <button
+                  @click="closeAttachmentModal"
+                  class="flex-1 py-3 px-4 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200 rounded-xl font-bold transition-colors focus:outline-none"
+                >
+                  Tutup
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
@@ -1758,6 +1874,8 @@ import {
   PhPlay,
   PhImage,
   PhDownloadSimple,
+  PhPaperclip,
+  PhX,
 } from "@phosphor-icons/vue";
 
 const displayedTitle = ref("");
@@ -1790,6 +1908,24 @@ const updateTooltipPos = (e) => {
 };
 const hideTooltip = () => {
   tooltip.value.show = false;
+};
+
+// Modal Lampiran
+const isAttachmentModalOpen = ref(false);
+const selectedAgenda = ref(null);
+
+const openAttachmentModal = (agenda) => {
+  selectedAgenda.value = agenda;
+  isAttachmentModalOpen.value = true;
+  document.body.style.overflow = "hidden";
+};
+
+const closeAttachmentModal = () => {
+  isAttachmentModalOpen.value = false;
+  document.body.style.overflow = "";
+  setTimeout(() => {
+    selectedAgenda.value = null;
+  }, 300);
 };
 
 // --- Data Animasi Statistik Header ---
@@ -1907,6 +2043,8 @@ const themeClasses = {
       "text-gray-900 group-hover:text-yellow-600 dark:text-slate-100 dark:group-hover:text-yellow-400",
     infoIcon: "text-yellow-500",
     infoText: "text-gray-700 dark:text-slate-300",
+    fileBtn:
+      "bg-yellow-50 text-yellow-700 border border-yellow-200 hover:bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-700/50 dark:hover:bg-yellow-900/50",
   },
   red: {
     card:
@@ -1920,6 +2058,8 @@ const themeClasses = {
       "text-gray-900 group-hover:text-red-600 dark:text-slate-100 dark:group-hover:text-red-400",
     infoIcon: "text-red-500",
     infoText: "text-gray-700 dark:text-slate-300",
+    fileBtn:
+      "bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:border-red-700/50 dark:hover:bg-red-900/50",
   },
   green: {
     card:
@@ -1933,6 +2073,8 @@ const themeClasses = {
       "text-gray-900 group-hover:text-green-600 dark:text-slate-100 dark:group-hover:text-green-400",
     infoIcon: "text-green-500",
     infoText: "text-gray-700 dark:text-slate-300",
+    fileBtn:
+      "bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 dark:border-green-700/50 dark:hover:bg-green-900/50",
   },
   blue: {
     card:
@@ -1946,6 +2088,8 @@ const themeClasses = {
       "text-gray-900 group-hover:text-blue-600 dark:text-slate-100 dark:group-hover:text-blue-400",
     infoIcon: "text-blue-500",
     infoText: "text-gray-700 dark:text-slate-300",
+    fileBtn:
+      "bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-700/50 dark:hover:bg-blue-900/50",
   },
 };
 
@@ -1957,6 +2101,9 @@ const agendas = [
     time: "07:30 - Selesai",
     loc: "Ruang Kelas",
     color: "yellow",
+    file: "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?q=80&w=800",
+    fileType: "image",
+    fileLabel: "Unduh Jadwal Ujian",
   },
   {
     date: "09",
@@ -1981,6 +2128,9 @@ const agendas = [
     time: "09:00 - 12:00",
     loc: "Aula Utama",
     color: "blue",
+    file: "https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=800",
+    fileType: "image",
+    fileLabel: "Lihat Poster Acara",
   },
   {
     date: "22",
@@ -1989,6 +2139,9 @@ const agendas = [
     time: "08:00 - 15:00",
     loc: "Lapangan Olahraga",
     color: "green",
+    file: "https://images.unsplash.com/photo-1574629810360-7efbbcb27a4e?q=80&w=800",
+    fileType: "image",
+    fileLabel: "Unduh Juknis Lomba",
   },
   {
     date: "28",
