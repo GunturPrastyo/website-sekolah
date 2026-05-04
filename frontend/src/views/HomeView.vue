@@ -806,7 +806,7 @@
 
             <!-- KANAN: Bagian Pengumuman (Auto Scroll-Y) -->
             <div
-              class="lg:col-span-1 relative h-[550px] lg:h-auto fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
+              class="lg:col-span-1 relative h-[550px] lg:h-auto mt-0 md:mt-8 lg:mt-0 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
             >
               <div
                 class="absolute inset-0 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col overflow-hidden"
@@ -916,7 +916,7 @@
                 >
                   <router-link
                     to="/berita"
-                    class="text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors inline-flex items-center"
+                    class="text-sm font-semibold text-blue-500 hover:text-blue-600 transition-colors inline-flex items-center"
                   >
                     Lihat Semua Pengumuman
                   </router-link>
@@ -1123,7 +1123,9 @@
           </div>
 
           <!-- Main Grid Layout -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-stretch">
+          <div
+            class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-stretch md:pb-8 md:pr-2"
+          >
             <!-- KIRI: Kalender -->
             <div
               class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 p-5 md:p-6 flex flex-col"
@@ -1385,7 +1387,7 @@
             </div>
 
             <!-- KANAN: Daftar Agenda -->
-            <div class="lg:col-span-7 relative h-[540px] md:h-[640px] lg:h-auto">
+            <div class="lg:col-span-7 relative h-[540px] lg:h-[640px] lg:h-auto">
               <div
                 class="absolute inset-0 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col"
               >
