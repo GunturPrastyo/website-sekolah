@@ -1597,7 +1597,7 @@
                 >
                   <button
                     @click="toggleFaq(index)"
-                    class="w-full text-left px-5 md:px-6 py-4 font-semibold text-blue-950 dark:text-slate-700 flex justify-between items-center hover:bg-gray-100 dark:hover:bg-blue-900 transition-colors rounded-xl focus:outline-none"
+                    class="w-full text-left px-5 md:px-6 py-4 font-semibold text-gray-900 flex justify-between items-center hover:bg-gray-100 dark:hover:bg-blue-900 transition-colors rounded-xl focus:outline-none"
                   >
                     <span class="pr-0 sm:pr-2 text-sm md:text-base">{{ faq.q }}</span>
                     <svg
@@ -1620,7 +1620,7 @@
                       'max-h-96 opacity-100 pb-4': activeFaq === index,
                       'max-h-0 opacity-0 overflow-hidden': activeFaq !== index,
                     }"
-                    class="transition-all duration-300 px-5 md:px-6 text-blue-900 dark:text-blue-200 text-sm md:text-base"
+                    class="transition-all duration-300 px-5 md:px-6 text-gray-700 text-sm md:text-base"
                   >
                     <div
                       class="border-t border-yellow-500/50 dark:border-yellow-400/50 pt-3"
@@ -1700,7 +1700,8 @@
         >
           <!-- Chat Bubble Tail -->
           <div
-            class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-slate-800 rotate-45 border-b border-r border-gray-100 dark:border-slate-700 rounded-sm"
+            class="absolute -bottom-2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-slate-800 rotate-45 border-b border-r border-gray-100 dark:border-slate-700 rounded-sm transition-all"
+            :style="{ left: `calc(50% + ${tooltip.tailOffset || 0}px)` }"
           ></div>
 
           <div class="flex flex-col relative z-10 max-h-64 overflow-y-auto pr-1">
@@ -1800,6 +1801,7 @@ const tooltip = ref({
   show: false,
   x: 0,
   y: 0,
+  tailOffset: 0,
   data: null,
 });
 const showTooltip = (e, loc) => {
@@ -1811,11 +1813,33 @@ const updateTooltipPos = (e) => {
   if (!tooltip.value.show) return;
   const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
   const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
-  tooltip.value.x = clientX;
+
+  let tooltipX = clientX;
+  const tooltipHalfWidth = window.innerWidth < 768 ? 128 : 144; // Estimasi w-64 = 256px, w-72 = 288px
+  const margin = 16; // Jarak aman dari tepi layar
+  let tailOffset = 0;
+
+  // Penyesuaian batas horizontal agar tooltip tidak terpotong (keluar layar)
+  if (tooltipX < tooltipHalfWidth + margin) {
+    tailOffset = tooltipX - (tooltipHalfWidth + margin);
+    tooltipX = tooltipHalfWidth + margin;
+  } else if (tooltipX > window.innerWidth - tooltipHalfWidth - margin) {
+    tailOffset = tooltipX - (window.innerWidth - tooltipHalfWidth - margin);
+    tooltipX = window.innerWidth - tooltipHalfWidth - margin;
+  }
+
+  // Batasi pergeseran ekor (tail) agar tidak terlepas dari area card (menjaga sudut membulat)
+  const maxTailOffset = tooltipHalfWidth - 24;
+  if (tailOffset > maxTailOffset) tailOffset = maxTailOffset;
+  if (tailOffset < -maxTailOffset) tailOffset = -maxTailOffset;
+
+  tooltip.value.x = tooltipX;
   tooltip.value.y = clientY - 15; // Beri sedikit jarak vertikal ke atas agar tidak menutupi jari/kursor
+  tooltip.value.tailOffset = tailOffset;
 };
 const hideTooltip = () => {
   tooltip.value.show = false;
+  tooltip.value.tailOffset = 0;
 };
 
 // Modal Lampiran
