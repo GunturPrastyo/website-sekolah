@@ -1453,12 +1453,13 @@
                           </h4>
                         </div>
                         <div
-                          class="flex flex-wrap items-center text-[11px] sm:text-xs gap-x-3 sm:gap-x-4 gap-y-1.5 sm:gap-y-2 mt-1 sm:mt-2 transition-colors"
+                          class="flex flex-col gap-1.5 sm:gap-2 mt-2 transition-colors"
                           :class="themeClasses[agenda.color].infoText"
                         >
-                          <span class="flex items-center"
-                            ><svg
-                              class="w-3.5 h-3.5 mr-1.5"
+                          <!-- Waktu -->
+                          <div class="flex items-start text-[11px] sm:text-xs">
+                            <svg
+                              class="w-4 h-4 mr-2 mt-0.5 shrink-0"
                               :class="themeClasses[agenda.color].infoIcon"
                               fill="none"
                               stroke="currentColor"
@@ -1470,11 +1471,28 @@
                               <circle cx="12" cy="12" r="10" />
                               <polyline points="12 6 12 12 16 14" />
                             </svg>
-                            {{ agenda.time }}</span
-                          >
-                          <span class="flex items-center"
-                            ><svg
-                              class="w-3.5 h-3.5 mr-1.5"
+                            <div class="flex flex-wrap items-center">
+                              <span
+                                class="font-semibold text-gray-500 dark:text-gray-400 mr-1"
+                                >Mulai Acara:</span
+                              >
+                              <span class="font-medium mr-2">{{
+                                agenda.time.split("-")[0].trim()
+                              }}</span>
+                              <span
+                                class="font-semibold text-gray-500 dark:text-gray-400 mr-1"
+                                >| Selesai:</span
+                              >
+                              <span class="font-medium">{{
+                                agenda.time.split("-")[1]?.trim() || "Selesai"
+                              }}</span>
+                            </div>
+                          </div>
+
+                          <!-- Lokasi -->
+                          <div class="flex items-start text-[11px] sm:text-xs">
+                            <svg
+                              class="w-4 h-4 mr-2 mt-0.5 shrink-0"
                               :class="themeClasses[agenda.color].infoIcon"
                               fill="none"
                               stroke="currentColor"
@@ -1486,8 +1504,14 @@
                               <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
                               <circle cx="12" cy="10" r="3" />
                             </svg>
-                            {{ agenda.loc }}</span
-                          >
+                            <div class="flex flex-wrap items-center">
+                              <span
+                                class="font-semibold text-gray-500 dark:text-gray-400 mr-1"
+                                >Tempat Pelaksanaan:</span
+                              >
+                              <span class="font-medium">{{ agenda.loc }}</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1873,63 +1897,63 @@ const animateAlumniStats = () => {
 const themeClasses = {
   yellow: {
     card:
-      "bg-yellow-50 border-yellow-100 hover:border-yellow-300 hover:shadow-yellow-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-yellow-500/50",
+      "bg-white border-gray-100 hover:border-yellow-300 hover:shadow-yellow-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-yellow-500/50",
     dateBox: "border-yellow-400 dark:border-yellow-600 border-b-4",
     monthBg:
       "bg-yellow-500 dark:bg-yellow-600 group-hover:bg-yellow-600 dark:group-hover:bg-yellow-500",
     monthText: "text-white",
-    dateBg: "bg-white dark:bg-slate-800",
+    dateBg: "bg-yellow-50 dark:bg-slate-700/50",
     dateText:
-      "text-yellow-600 dark:text-yellow-400 group-hover:text-yellow-700 dark:group-hover:text-yellow-300",
+      "text-yellow-700 dark:text-yellow-400 group-hover:text-yellow-800 dark:group-hover:text-yellow-300",
     title:
-      "text-yellow-900 group-hover:text-yellow-700 dark:text-slate-100 dark:group-hover:text-yellow-400",
+      "text-gray-900 group-hover:text-yellow-600 dark:text-slate-100 dark:group-hover:text-yellow-400",
     infoIcon: "text-yellow-500",
-    infoText: "text-yellow-700 dark:text-slate-400",
+    infoText: "text-gray-700 dark:text-slate-300",
   },
   red: {
     card:
-      "bg-red-50 border-red-100 hover:border-red-300 hover:shadow-red-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-red-500/50",
+      "bg-white border-gray-100 hover:border-red-300 hover:shadow-red-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-red-500/50",
     dateBox: "border-red-400 dark:border-red-600 border-b-4",
     monthBg:
       "bg-red-500 dark:bg-red-600 group-hover:bg-red-600 dark:group-hover:bg-red-500",
     monthText: "text-white",
-    dateBg: "bg-white dark:bg-slate-800",
+    dateBg: "bg-red-50 dark:bg-slate-700/50",
     dateText:
-      "text-red-600 dark:text-red-400 group-hover:text-red-700 dark:group-hover:text-red-300",
+      "text-red-700 dark:text-red-400 group-hover:text-red-800 dark:group-hover:text-red-300",
     title:
-      "text-red-900 group-hover:text-red-700 dark:text-slate-100 dark:group-hover:text-red-400",
+      "text-gray-900 group-hover:text-red-600 dark:text-slate-100 dark:group-hover:text-red-400",
     infoIcon: "text-red-500",
-    infoText: "text-red-700 dark:text-slate-400",
+    infoText: "text-gray-700 dark:text-slate-300",
   },
   green: {
     card:
-      "bg-green-50 border-green-100 hover:border-green-300 hover:shadow-green-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-green-500/50",
+      "bg-white border-gray-100 hover:border-green-300 hover:shadow-green-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-green-500/50",
     dateBox: "border-green-400 dark:border-green-600 border-b-4",
     monthBg:
       "bg-green-500 dark:bg-green-600 group-hover:bg-green-600 dark:group-hover:bg-green-500",
     monthText: "text-white",
-    dateBg: "bg-white dark:bg-slate-800",
+    dateBg: "bg-green-50 dark:bg-slate-700/50",
     dateText:
-      "text-green-600 dark:text-green-400 group-hover:text-green-700 dark:group-hover:text-green-300",
+      "text-green-700 dark:text-green-400 group-hover:text-green-800 dark:group-hover:text-green-300",
     title:
-      "text-green-900 group-hover:text-green-700 dark:text-slate-100 dark:group-hover:text-green-400",
+      "text-gray-900 group-hover:text-green-600 dark:text-slate-100 dark:group-hover:text-green-400",
     infoIcon: "text-green-500",
-    infoText: "text-green-700 dark:text-slate-400",
+    infoText: "text-gray-700 dark:text-slate-300",
   },
   blue: {
     card:
-      "bg-blue-50 border-blue-100 hover:border-blue-300 hover:shadow-blue-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-blue-500/50",
+      "bg-white border-gray-100 hover:border-blue-300 hover:shadow-blue-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-blue-500/50",
     dateBox: "border-blue-400 dark:border-blue-600 border-b-4",
     monthBg:
       "bg-blue-500 dark:bg-blue-600 group-hover:bg-blue-600 dark:group-hover:bg-blue-500",
     monthText: "text-white",
-    dateBg: "bg-white dark:bg-slate-800",
+    dateBg: "bg-blue-50 dark:bg-slate-700/50",
     dateText:
-      "text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300",
+      "text-blue-700 dark:text-blue-400 group-hover:text-blue-800 dark:group-hover:text-blue-300",
     title:
-      "text-blue-900 group-hover:text-blue-700 dark:text-slate-100 dark:group-hover:text-blue-400",
+      "text-gray-900 group-hover:text-blue-600 dark:text-slate-100 dark:group-hover:text-blue-400",
     infoIcon: "text-blue-500",
-    infoText: "text-blue-700 dark:text-slate-400",
+    infoText: "text-gray-700 dark:text-slate-300",
   },
 };
 
