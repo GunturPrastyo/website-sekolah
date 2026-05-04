@@ -101,7 +101,7 @@
             >
               <!-- FASILITAS (2x2 Desktop) -->
               <div
-                class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500"
+                class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500"
                 style="background-image: url('/assets/img/fasilitas.jpg')"
               >
                 <!-- Overlay Parallax -->
@@ -149,7 +149,7 @@
 
               <!-- GURU -->
               <div
-                class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
+                class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
                 style="background-image: url('/assets/img/pengajar.jpg')"
               >
                 <!-- Overlay Parallax -->
@@ -196,7 +196,7 @@
 
               <!-- PRESTASI -->
               <div
-                class="swiper-slide md:!w-auto relative bg-fixed bg-center bg-cover sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
+                class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
                 style="background-image: url('/assets/img/prestasi.jpg')"
               >
                 <!-- Overlay Parallax -->
@@ -252,7 +252,7 @@
         <!-- ALUMNI / PTN -->
         <div class="mt-8 px-0 md:px-8 lg:px-4 mb-20 md:mb-24 -mx-0 md:-mx-8 lg:-mx-0">
           <div
-            class="relative bg-fixed bg-center bg-cover sm:rounded-xl shadow-xl p-3 md:p-2 flex flex-col md:flex-row items-center gap-0 md:gap-6 overflow-hidden"
+            class="relative bg-center bg-fixed sm:rounded-xl shadow-xl p-3 md:p-2 flex flex-col md:flex-row items-center gap-0 md:gap-6 overflow-hidden"
             style="
               background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200');
             "
@@ -395,7 +395,7 @@
         <div class="w-full max-w-full container relative z-10 mx-auto">
           <!-- HEADER -->
           <div
-            class="relative overflow-hidden shadow-2xl min-h-[320px] sm:min-h-[450px] flex items-center md:rounded-lg bg-fixed bg-center bg-cover"
+            class="relative overflow-hidden shadow-2xl min-h-[320px] sm:min-h-[450px] flex items-center md:rounded-lg bg-center bg-cover md:bg-fixed"
             style="background-image: url('assets/img/jurusan.jpg')"
           >
             <!-- Overlay Parallax -->
@@ -929,7 +929,7 @@
 
       <!-- Video Profil & Galeri Section -->
       <section
-        class="relative py-8 md:py-6 mt-0 md:mt-16 -mx-6 md:mx-0 bg-blue-950 overflow-hidden px-6 md:px-4 lg:px-10 mb-0 md:mb-12 md:rounded-lg shadow-xl bg-fixed bg-center bg-cover"
+        class="relative py-8 md:py-6 mt-0 md:mt-16 -mx-6 md:mx-0 bg-blue-950 overflow-hidden px-6 md:px-4 lg:px-10 mb-0 md:mb-12 md:rounded-lg shadow-xl bg-center bg-cover md:bg-fixed"
         style="
           background-image: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop');
         "
@@ -1513,7 +1513,7 @@
       <!-- FAQ & CTA PPDB Section (Sejajar di Desktop) -->
       <section class="relative -mx-6 md:mx-0 overflow-hidden">
         <div
-          class="w-full max-w-full relative mx-auto mb-0 md:mb-12 p-8 px-4 md:px-6 lg:px-4 md:rounded-xl bg-fixed bg-center bg-cover overflow-hidden shadow-xl"
+          class="w-full max-w-full relative mx-auto mb-0 md:mb-12 p-8 px-4 md:px-6 lg:px-4 md:rounded-xl bg-center bg-cover md:bg-fixed overflow-hidden shadow-xl"
           style="
             background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200');
           "
