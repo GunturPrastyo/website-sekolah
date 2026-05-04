@@ -1387,7 +1387,7 @@
             </div>
 
             <!-- KANAN: Daftar Agenda -->
-            <div class="lg:col-span-7 relative h-[540px] lg:h-[640px] lg:h-auto">
+            <div class="lg:col-span-7 relative h-[540px] md:h-[640px] lg:h-auto">
               <div
                 class="absolute inset-0 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col"
               >
