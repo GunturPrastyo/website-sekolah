@@ -311,10 +311,10 @@
                     class="text-2xl md:text-3xl font-bold text-yellow-400"
                     style="font-family: 'Oswald', sans-serif"
                   >
-                    {{ Math.floor(alumniStats.mitra.value) }}+
+                    {{ Math.floor(alumniStats.instansi.value) }}+
                   </h4>
                   <p class="text-[10px] sm:text-xs text-sky-200 mt-1 font-medium">
-                    Sektor Profesional
+                    Instansi & Kedinasan
                   </p>
                 </div>
               </div>
@@ -1798,7 +1798,7 @@ const animateStats = () => {
 const alumniStats = ref({
   alumni: { value: 0, target: 1.2 },
   ptn: { value: 0, target: 45 },
-  mitra: { value: 0, target: 60 },
+  instansi: { value: 0, target: 120 },
 });
 
 const animateAlumniStats = () => {
@@ -1811,8 +1811,8 @@ const animateAlumniStats = () => {
 
     alumniStats.value.alumni.value = easeProgress * alumniStats.value.alumni.target;
     alumniStats.value.ptn.value = Math.floor(easeProgress * alumniStats.value.ptn.target);
-    alumniStats.value.mitra.value = Math.floor(
-      easeProgress * alumniStats.value.mitra.target
+    alumniStats.value.instansi.value = Math.floor(
+      easeProgress * alumniStats.value.instansi.target
     );
 
     if (progress < 1) {
@@ -1820,7 +1820,7 @@ const animateAlumniStats = () => {
     } else {
       alumniStats.value.alumni.value = alumniStats.value.alumni.target;
       alumniStats.value.ptn.value = alumniStats.value.ptn.target;
-      alumniStats.value.mitra.value = alumniStats.value.mitra.target;
+      alumniStats.value.instansi.value = alumniStats.value.instansi.target;
     }
   };
   window.requestAnimationFrame(step);
