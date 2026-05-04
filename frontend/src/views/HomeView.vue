@@ -929,7 +929,7 @@
 
       <!-- Video Profil & Galeri Section -->
       <section
-        class="relative py-8 md:py-6 mt-0 md:mt-16 -mx-6 md:mx-0 bg-blue-950 overflow-hidden px-6 md:px-4 lg:px-10 mb-0 md:mb-12 md:rounded-lg shadow-xl bg-center bg-cover md:bg-fixed"
+        class="relative py-8 md:py-6 mt-0 md:mt-16 -mx-6 md:mx-0 bg-blue-950 overflow-hidden px-6 md:px-4 lg:px-6 mb-0 md:mb-12 md:rounded-lg shadow-xl bg-center bg-cover md:bg-fixed"
         style="
           background-image: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop');
         "
@@ -1128,7 +1128,7 @@
           >
             <!-- KIRI: Kalender -->
             <div
-              class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 p-5 md:p-6 flex flex-col"
+              class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-5 md:p-6 flex flex-col"
             >
               <div class="flex items-center justify-between mb-6">
                 <button
@@ -1389,7 +1389,7 @@
             <!-- KANAN: Daftar Agenda -->
             <div class="lg:col-span-7 relative h-[540px] lg:h-[640px] lg:h-auto">
               <div
-                class="absolute inset-0 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col"
+                class="absolute inset-0 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col"
               >
                 <div
                   class="p-5 md:p-6 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex items-center justify-between shrink-0"
