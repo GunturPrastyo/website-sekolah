@@ -71,7 +71,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="px-6 bg-gray-100 dark:bg-slate-900">
+    <main class="px-6 bg-gray-100 dark:bg-gray-900">
       <!-- SECTION -->
       <section class="relative -mx-6 md:mx-0 overflow-hidden">
         <div
