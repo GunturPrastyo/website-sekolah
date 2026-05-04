@@ -24,14 +24,14 @@
       <!-- Hero Content -->
       <div class="z-20 p-5">
         <h1
-          class="text-3xl sm:text-5xl font-bold md:text-7xl tracking-wide uppercase drop-shadow-lg"
+          class="text-3xl md:text-5xl lg:text-5xl font-bold tracking-wide uppercase drop-shadow-lg"
           style="font-family: 'Oswald', sans-serif"
         >
           {{ displayedTitle
           }}<span class="animate-pulse font-light text-white/70">|</span>
         </h1>
         <p
-          class="mt-6 text-lg sm:text-xl md:text-2xl text-center transition-all duration-1000 ease-out text-gray-100 drop-shadow-lg"
+          class="mt-6 text-lg md:text-xl lg:text-2xl text-center transition-all duration-1000 ease-out text-gray-100 drop-shadow-lg"
           :class="showSubtitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'"
           style="font-family: 'Merriweather', serif"
         >
@@ -1385,7 +1385,7 @@
             </div>
 
             <!-- KANAN: Daftar Agenda -->
-            <div class="lg:col-span-7 relative h-[500px] lg:h-auto">
+            <div class="lg:col-span-7 relative h-[540px] md:h-[640px] lg:h-auto">
               <div
                 class="absolute inset-0 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col"
               >
@@ -1471,24 +1471,14 @@
                               <circle cx="12" cy="12" r="10" />
                               <polyline points="12 6 12 12 16 14" />
                             </svg>
-                            <div class="flex flex-wrap items-center">
+                            <div class="flex flex-wrap items-center mt-0.5">
                               <span
                                 class="font-semibold text-gray-800 dark:text-gray-100 mr-1"
-                                >Mulai Acara :</span
-                              >
-                              <span
-                                class="font-medium text-gray-600 dark:text-gray-300 mr-2"
-                                >{{ agenda.time.split("-")[0].trim() }}
-                              </span>
-                              <span
-                                class="font-semibold text-gray-800 dark:text-gray-100 mx-1"
-                                >Selesai :</span
+                                >Waktu:</span
                               >
                               <span
                                 class="font-medium text-gray-600 dark:text-gray-300"
-                                >{{
-                                  agenda.time.split("-")[1]?.trim() || "Selesai"
-                                }}</span
+                                >{{ agenda.time }}</span
                               >
                             </div>
                           </div>
@@ -1508,10 +1498,10 @@
                               <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
                               <circle cx="12" cy="10" r="3" />
                             </svg>
-                            <div class="flex flex-wrap items-center">
+                            <div class="flex flex-wrap items-center mt-0.5">
                               <span
                                 class="font-semibold text-gray-800 dark:text-gray-100 mr-1"
-                                >Tempat Pelaksanaan :</span
+                                >Tempat:</span
                               >
                               <span
                                 class="font-medium text-gray-600 dark:text-gray-300"
@@ -1529,15 +1519,19 @@
                               class="w-4 h-4 mr-2 mt-0.5 shrink-0"
                               :class="themeClasses[agenda.color].infoIcon"
                             />
-                            <div class="flex flex-wrap items-center">
-                              <button
-                                @click.stop="openAttachmentModal(agenda)"
-                                class="inline-flex items-center font-bold px-3 py-1 rounded-md transition-all hover:-translate-y-0.5 shadow-sm focus:outline-none"
-                                :class="themeClasses[agenda.color].fileBtn"
+                            <div class="flex flex-wrap items-center mt-0.5">
+                              <span
+                                class="font-semibold text-gray-800 dark:text-gray-100 mr-1"
+                                >Lampiran:</span
                               >
-                                <PhPaperclip class="w-3.5 h-3.5 mr-1.5" />
-                                Lihat Lampiran
-                              </button>
+                              <a
+                                :href="agenda.file"
+                                target="_blank"
+                                class="inline-flex items-center font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline transition-colors"
+                                @click.stop
+                              >
+                                Lihat Dokumen
+                              </a>
                             </div>
                           </div>
                         </div>
@@ -1757,94 +1751,6 @@
               <span class="font-bold text-blue-700 dark:text-blue-400 text-xs">
                 {{ tooltip.data.totalAlumni }} Orang
               </span>
-            </div>
-          </div>
-        </div>
-      </Transition>
-    </Teleport>
-
-    <!-- Modal Lampiran -->
-    <Teleport to="body">
-      <Transition
-        enter-active-class="transition-opacity duration-300"
-        enter-from-class="opacity-0"
-        enter-to-class="opacity-100"
-        leave-active-class="transition-opacity duration-300"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
-      >
-        <div
-          v-if="isAttachmentModalOpen"
-          class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
-          @click="closeAttachmentModal"
-        >
-          <div
-            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-3xl overflow-hidden transform transition-all flex flex-col max-h-[90vh]"
-            @click.stop
-          >
-            <div
-              class="p-5 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-800/80 shrink-0"
-            >
-              <h3
-                class="text-lg font-bold text-gray-900 dark:text-white flex items-center"
-              >
-                <PhPaperclip class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
-                Lampiran Agenda
-              </h3>
-              <button
-                @click="closeAttachmentModal"
-                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors focus:outline-none bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 p-1.5 rounded-lg"
-              >
-                <PhX class="w-5 h-5" />
-              </button>
-            </div>
-            <div class="p-6 overflow-y-auto flex-1 custom-scrollbar">
-              <h4 class="font-bold text-xl text-gray-900 dark:text-white mb-2">
-                {{ selectedAgenda?.title }}
-              </h4>
-              <p class="text-sm text-gray-500 dark:text-gray-400 mb-5">
-                Pratinjau dokumen lampiran untuk agenda ini.
-              </p>
-
-              <!-- Preview Area -->
-              <div
-                class="w-full bg-gray-100 dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden mb-6 flex items-center justify-center relative min-h-[300px]"
-              >
-                <img
-                  v-if="selectedAgenda?.fileType === 'image'"
-                  :src="selectedAgenda?.file"
-                  class="w-full h-auto max-h-[60vh] object-contain"
-                />
-                <iframe
-                  v-else-if="selectedAgenda?.fileType === 'pdf'"
-                  :src="selectedAgenda?.file"
-                  class="w-full h-[60vh]"
-                ></iframe>
-                <div v-else class="text-center p-8">
-                  <PhImage class="w-16 h-16 text-gray-400 mx-auto mb-3 opacity-50" />
-                  <p class="text-gray-500 font-medium">
-                    Pratinjau visual tidak tersedia untuk format ini.
-                  </p>
-                </div>
-              </div>
-
-              <div class="flex flex-col sm:flex-row gap-3">
-                <a
-                  :href="selectedAgenda?.file"
-                  target="_blank"
-                  download
-                  class="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold flex items-center justify-center transition-colors shadow-md shadow-blue-500/30"
-                >
-                  <PhDownloadSimple class="w-5 h-5 mr-2" />
-                  Unduh Dokumen
-                </a>
-                <button
-                  @click="closeAttachmentModal"
-                  class="flex-1 py-3 px-4 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200 rounded-xl font-bold transition-colors focus:outline-none"
-                >
-                  Tutup
-                </button>
-              </div>
             </div>
           </div>
         </div>
