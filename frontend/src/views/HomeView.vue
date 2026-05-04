@@ -1898,13 +1898,11 @@ const themeClasses = {
   yellow: {
     card:
       "bg-white border-gray-100 hover:border-yellow-300 hover:shadow-yellow-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-yellow-500/50",
-    dateBox: "border-yellow-400 dark:border-yellow-600 border-b-4",
-    monthBg:
-      "bg-yellow-500 dark:bg-yellow-600 group-hover:bg-yellow-600 dark:group-hover:bg-yellow-500",
+    dateBox: "border-yellow-400 border-b-4",
+    monthBg: "bg-yellow-500 group-hover:bg-yellow-600",
     monthText: "text-white",
-    dateBg: "bg-yellow-50 dark:bg-slate-700/50",
-    dateText:
-      "text-yellow-700 dark:text-yellow-400 group-hover:text-yellow-800 dark:group-hover:text-yellow-300",
+    dateBg: "bg-yellow-50",
+    dateText: "text-yellow-700 group-hover:text-yellow-800",
     title:
       "text-gray-900 group-hover:text-yellow-600 dark:text-slate-100 dark:group-hover:text-yellow-400",
     infoIcon: "text-yellow-500",
@@ -1913,13 +1911,11 @@ const themeClasses = {
   red: {
     card:
       "bg-white border-gray-100 hover:border-red-300 hover:shadow-red-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-red-500/50",
-    dateBox: "border-red-400 dark:border-red-600 border-b-4",
-    monthBg:
-      "bg-red-500 dark:bg-red-600 group-hover:bg-red-600 dark:group-hover:bg-red-500",
+    dateBox: "border-red-400 border-b-4",
+    monthBg: "bg-red-500 group-hover:bg-red-600",
     monthText: "text-white",
-    dateBg: "bg-red-50 dark:bg-slate-700/50",
-    dateText:
-      "text-red-700 dark:text-red-400 group-hover:text-red-800 dark:group-hover:text-red-300",
+    dateBg: "bg-red-50",
+    dateText: "text-red-700 group-hover:text-red-800",
     title:
       "text-gray-900 group-hover:text-red-600 dark:text-slate-100 dark:group-hover:text-red-400",
     infoIcon: "text-red-500",
@@ -1928,13 +1924,11 @@ const themeClasses = {
   green: {
     card:
       "bg-white border-gray-100 hover:border-green-300 hover:shadow-green-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-green-500/50",
-    dateBox: "border-green-400 dark:border-green-600 border-b-4",
-    monthBg:
-      "bg-green-500 dark:bg-green-600 group-hover:bg-green-600 dark:group-hover:bg-green-500",
+    dateBox: "border-green-400 border-b-4",
+    monthBg: "bg-green-500 group-hover:bg-green-600",
     monthText: "text-white",
-    dateBg: "bg-green-50 dark:bg-slate-700/50",
-    dateText:
-      "text-green-700 dark:text-green-400 group-hover:text-green-800 dark:group-hover:text-green-300",
+    dateBg: "bg-green-50",
+    dateText: "text-green-700 group-hover:text-green-800",
     title:
       "text-gray-900 group-hover:text-green-600 dark:text-slate-100 dark:group-hover:text-green-400",
     infoIcon: "text-green-500",
@@ -1943,13 +1937,11 @@ const themeClasses = {
   blue: {
     card:
       "bg-white border-gray-100 hover:border-blue-300 hover:shadow-blue-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-blue-500/50",
-    dateBox: "border-blue-400 dark:border-blue-600 border-b-4",
-    monthBg:
-      "bg-blue-500 dark:bg-blue-600 group-hover:bg-blue-600 dark:group-hover:bg-blue-500",
+    dateBox: "border-blue-400 border-b-4",
+    monthBg: "bg-blue-500 group-hover:bg-blue-600",
     monthText: "text-white",
-    dateBg: "bg-blue-50 dark:bg-slate-700/50",
-    dateText:
-      "text-blue-700 dark:text-blue-400 group-hover:text-blue-800 dark:group-hover:text-blue-300",
+    dateBg: "bg-blue-50",
+    dateText: "text-blue-700 group-hover:text-blue-800",
     title:
       "text-gray-900 group-hover:text-blue-600 dark:text-slate-100 dark:group-hover:text-blue-400",
     infoIcon: "text-blue-500",
