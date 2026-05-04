@@ -314,7 +314,7 @@
                     {{ Math.floor(alumniStats.mitra.value) }}+
                   </h4>
                   <p class="text-[10px] sm:text-xs text-sky-200 mt-1 font-medium">
-                    Mitra Industri
+                    Sektor Profesional
                   </p>
                 </div>
               </div>
