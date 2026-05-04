@@ -71,7 +71,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="px-6 bg-blue-50 dark:bg-slate-900">
+    <main class="px-6 bg-gray-100 dark:bg-slate-900">
       <!-- SECTION -->
       <section class="relative -mx-6 md:mx-0 overflow-hidden">
         <div
@@ -101,7 +101,7 @@
             >
               <!-- FASILITAS (2x2 Desktop) -->
               <div
-                class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500"
+                class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[340px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500"
                 style="background-image: url('/assets/img/fasilitas.jpg')"
               >
                 <!-- Overlay Parallax -->
@@ -118,7 +118,7 @@
                       Fasilitas Lengkap
                     </h3>
                     <p
-                      class="text-slate-300 text-sm md:text-base leading-relaxed mb-5 line-clamp-2 md:line-clamp-3 group-hover:text-white transition-colors duration-300"
+                      class="text-slate-300 text-sm md:text-base leading-relaxed mb-5 line-clamp-3 group-hover:text-white transition-colors duration-300"
                     >
                       Didukung dengan laboratorium modern, ruang kelas yang nyaman, serta
                       sarana olahraga lengkap untuk menunjang kegiatan belajar mengajar
@@ -149,7 +149,7 @@
 
               <!-- GURU -->
               <div
-                class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
+                class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[340px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
                 style="background-image: url('/assets/img/pengajar.jpg')"
               >
                 <!-- Overlay Parallax -->
@@ -166,7 +166,7 @@
                       Guru Berpengalaman
                     </h3>
                     <p
-                      class="text-slate-300 text-sm leading-relaxed mb-4 line-clamp-2 group-hover:text-white transition-colors duration-300"
+                      class="text-slate-300 text-sm leading-relaxed mb-4 line-clamp-3 md:line-clamp-2 group-hover:text-white transition-colors duration-300"
                     >
                       Tenaga pendidik profesional yang siap membimbing serta mendampingi
                       siswa mencapai potensi terbaiknya.
@@ -196,7 +196,7 @@
 
               <!-- PRESTASI -->
               <div
-                class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[280px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
+                class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[340px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
                 style="background-image: url('/assets/img/prestasi.jpg')"
               >
                 <!-- Overlay Parallax -->
@@ -213,7 +213,7 @@
                       Prestasi Siswa
                     </h3>
                     <p
-                      class="text-slate-300 text-sm leading-relaxed mb-4 line-clamp-2 group-hover:text-white transition-colors duration-300"
+                      class="text-slate-300 text-sm leading-relaxed mb-4 line-clamp-3 md:line-clamp-2 group-hover:text-white transition-colors duration-300"
                     >
                       Berbagai pencapaian membanggakan di tingkat regional hingga nasional
                       yang diraih oleh siswa-siswi berbakat.
@@ -395,7 +395,7 @@
         <div class="w-full max-w-full container relative z-10 mx-auto">
           <!-- HEADER -->
           <div
-            class="relative overflow-hidden shadow-2xl min-h-[320px] sm:min-h-[450px] flex items-center md:rounded-lg bg-center bg-cover md:bg-fixed"
+            class="relative overflow-hidden shadow-2xl min-h-[340px] md:min-h-[450px] flex items-center md:rounded-lg bg-center bg-cover lg:bg-fixed"
             style="background-image: url('assets/img/jurusan.jpg')"
           >
             <!-- Overlay Parallax -->
@@ -463,7 +463,7 @@
                     class="swiper-slide !h-auto relative min-h-[280px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
                   >
                     <div
-                      class="absolute inset-0 bg-gradient-to-br from-sky-900 to-slate-900 group-hover:from-sky-800 transition-colors duration-500"
+                      class="absolute inset-0 bg-gradient-to-br from-cyan-900 to-slate-900 group-hover:from-cyan-800 transition-colors duration-500"
                     ></div>
 
                     <div
@@ -496,7 +496,7 @@
                     class="swiper-slide !h-auto relative min-h-[280px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
                   >
                     <div
-                      class="absolute inset-0 bg-gradient-to-br from-cyan-900 to-slate-900 group-hover:from-cyan-800 transition-colors duration-500"
+                      class="absolute inset-0 bg-gradient-to-br from-sky-900 to-slate-900 group-hover:from-sky-800 transition-colors duration-500"
                     ></div>
 
                     <div
@@ -529,7 +529,7 @@
                     class="swiper-slide !h-auto relative min-h-[280px] overflow-hidden group cursor-pointer"
                   >
                     <div
-                      class="absolute inset-0 bg-gradient-to-br from-purple-900 to-slate-900 group-hover:from-purple-800 transition-colors duration-500"
+                      class="absolute inset-0 bg-gradient-to-br from-indigo-900 to-slate-900 group-hover:from-indigo-800 transition-colors duration-500"
                     ></div>
 
                     <div
@@ -542,14 +542,14 @@
                       </div>
                       <h3 class="text-2xl font-bold mb-2 text-white">Informatika</h3>
                       <p
-                        class="text-purple-100 text-sm md:text-base mb-4 leading-relaxed"
+                        class="text-indigo-100 text-sm md:text-base mb-4 leading-relaxed"
                       >
                         Mendalami dunia koding, jaringan, dan pengembangan software untuk
                         karir di industri digital.
                       </p>
                       <router-link
                         to="/program-jurusan"
-                        class="mt-2 inline-flex items-center text-sm font-bold text-white group-hover:text-purple-200 transition-colors w-fit"
+                        class="mt-2 inline-flex items-center text-sm font-bold text-white group-hover:text-indigo-200 transition-colors w-fit"
                       >
                         Lihat Selengkapnya
                         <PhCaretRight
