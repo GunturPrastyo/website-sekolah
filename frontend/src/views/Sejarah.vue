@@ -363,17 +363,41 @@ onBeforeUnmount(() => {
                   >
                     {{ item.title }}
                   </h3>
-                  <p
-                    class="text-gray-600 dark:text-gray-400 text-xs min-[400px]:text-sm md:text-base leading-relaxed text-justify"
-                  >
-                    <span
-                      v-for="(sentence, sIdx) in splitSentences(item.description)"
-                      :key="sIdx"
-                      class="fade-sentence opacity-0 transition-opacity duration-1000 ease-in-out"
+
+                  <div class="clearfix">
+                    <!-- Gambar mengambang ke kiri -->
+                    <div
+                      class="float-left w-[40%] sm:w-[50%] max-w-[200px] mr-4 mb-2 md:mr-5 md:mb-3"
                     >
-                      {{ sentence }}
-                    </span>
-                  </p>
+                      <div
+                        class="rounded-lg overflow-hidden shadow-sm group-hover/card:shadow-md transition-shadow duration-300"
+                      >
+                        <img
+                          :src="item.image"
+                          :alt="item.title"
+                          class="w-full aspect-[4/3] object-cover group-hover/card:scale-110 transition-transform duration-700"
+                        />
+                      </div>
+                      <!-- Keterangan Gambar -->
+                      <p
+                        class="text-xs font-light text-gray-500 dark:text-gray-400 mt-1.5 md:mt-2 text-center line-clamp-2 leading-tight px-1 italic"
+                      >
+                        Ilustrasi: {{ item.title }}
+                      </p>
+                    </div>
+
+                    <p
+                      class="text-gray-600 dark:text-gray-400 text-xs min-[400px]:text-sm md:text-base leading-relaxed text-justify"
+                    >
+                      <span
+                        v-for="(sentence, sIdx) in splitSentences(item.description)"
+                        :key="sIdx"
+                        class="fade-sentence opacity-0 transition-opacity duration-1000 ease-in-out"
+                      >
+                        {{ sentence }}
+                      </span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
