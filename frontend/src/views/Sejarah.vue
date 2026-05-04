@@ -334,7 +334,7 @@ onBeforeUnmount(() => {
 
                   <!-- Teks/Deskripsi -->
                   <h3
-                    class="text-lg min-[400px]:text-xl md:text-2xl font-bold text-blue-950 dark:text-white mb-2 min-[400px]:mb-3 leading-tight group-hover/card:text-blue-600 dark:group-hover/card:text-blue-400 transition-colors"
+                    class="text-md md:text-2xl font-bold text-blue-950 dark:text-white mb-4 md:mb-6 leading-tight group-hover/card:text-blue-600 dark:group-hover/card:text-blue-400 transition-colors"
                   >
                     {{ item.title }}
                   </h3>
@@ -355,14 +355,14 @@ onBeforeUnmount(() => {
                       </div>
                       <!-- Keterangan Gambar -->
                       <p
-                        class="text-xs font-light text-gray-500 dark:text-gray-400 mt-1.5 md:mt-2 text-center line-clamp-2 leading-tight px-1 italic"
+                        class="text-xs md:text-md font-light text-gray-500 dark:text-gray-400 mt-1.5 md:mt-2 text-center line-clamp-2 leading-tight px-1 italic"
                       >
                         Ilustrasi: {{ item.title }}
                       </p>
                     </div>
 
                     <p
-                      class="text-gray-600 dark:text-gray-400 text-xs min-[400px]:text-sm md:text-base leading-relaxed text-justify"
+                      class="text-gray-600 dark:text-gray-400 text-sm md:text-lg leading-relaxed text-justify"
                     >
                       <span
                         v-for="(sentence, sIdx) in splitSentences(item.description)"
