@@ -345,7 +345,7 @@
                   v-for="loc in alumniLocations"
                   :key="loc.id"
                   tabindex="0"
-                  class="absolute flex justify-center items-center group cursor-pointer hover:z-50 focus:z-50 w-5 h-5 md:w-8 md:h-8 -translate-x-1/2 -translate-y-1/2 focus:outline-none"
+                  class="absolute flex justify-center items-end group cursor-pointer hover:z-50 focus:z-50 w-8 h-10 md:w-10 md:h-12 -translate-x-1/2 -translate-y-full focus:outline-none"
                   :style="{ top: loc.top, left: loc.left, zIndex: 10 }"
                   @mouseenter="showTooltip($event, loc)"
                   @mousemove="updateTooltipPos($event)"
@@ -354,14 +354,33 @@
                   @touchmove.passive="updateTooltipPos($event)"
                   @touchend.passive="hideTooltip"
                 >
-                  <!-- Elegant Pulse Effect -->
-                  <span
-                    class="absolute w-4 h-4 md:w-5 md:h-5 rounded-full border border-sky-300 opacity-75 animate-ping group-hover:border-white group-focus:border-white transition-colors"
-                  ></span>
-                  <!-- Dot Core -->
-                  <span
-                    class="relative w-1.5 h-1.5 md:w-2 md:h-2 bg-white rounded-full shadow-[0_0_6px_rgba(255,255,255,0.9)] group-hover:scale-150 group-focus:scale-150 transition-transform duration-300"
-                  ></span>
+                  <!-- Shadow Map -->
+                  <div
+                    class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1.5 md:w-5 md:h-2 bg-black/40 rounded-[100%] blur-[2px] group-hover:scale-50 transition-transform duration-300"
+                  ></div>
+
+                  <!-- Pin Icon (Bounce effect on hover) -->
+                  <div
+                    class="relative drop-shadow-[0_5px_8px_rgba(0,0,0,0.4)] group-hover:-translate-y-2 transition-transform duration-300 origin-bottom"
+                  >
+                    <PhMapPin
+                      weight="fill"
+                      class="w-8 h-8 md:w-10 md:h-10"
+                      :class="
+                        loc.type === 'ptn'
+                          ? 'text-sky-500'
+                          : loc.type === 'kedinasan'
+                          ? 'text-yellow-500'
+                          : loc.type === 'instansi'
+                          ? 'text-emerald-500'
+                          : 'text-blue-500'
+                      "
+                    />
+                    <!-- Inner Dot -->
+                    <div
+                      class="absolute top-[8px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 md:top-[10px] md:w-3 md:h-3 bg-white rounded-full"
+                    ></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1624,7 +1643,7 @@
       >
         <div
           v-if="tooltip.show && tooltip.data"
-          class="fixed pointer-events-none z-[100] w-56 md:w-60 bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-slate-700"
+          class="fixed pointer-events-none z-[100] w-64 md:w-72 bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-slate-700"
           :style="{
             top: tooltip.y + 'px',
             left: tooltip.x + 'px',
@@ -1636,31 +1655,55 @@
             class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-slate-800 rotate-45 border-b border-r border-gray-100 dark:border-slate-700 rounded-sm"
           ></div>
 
-          <div class="flex flex-col relative z-10">
-            <div class="flex items-center gap-3 mb-3">
+          <div class="flex flex-col relative z-10 max-h-64 overflow-y-auto pr-1">
+            <h4
+              class="font-bold text-sm text-gray-900 dark:text-white border-b border-gray-100 dark:border-slate-700 pb-2 mb-2 flex items-center"
+            >
+              <PhMapPin weight="fill" class="w-4 h-4 mr-1.5 text-blue-500" />
+              {{ tooltip.data.name }}
+            </h4>
+            <div class="flex flex-col gap-2 mb-2">
               <div
-                class="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 border border-gray-100 dark:border-slate-600 p-1.5 shrink-0 flex items-center justify-center shadow-inner"
+                v-for="inst in tooltip.data.institutions"
+                :key="inst.name"
+                class="flex items-center gap-3 bg-gray-50 dark:bg-slate-700/50 p-2 rounded-lg border border-gray-100 dark:border-slate-600/50"
               >
-                <img :src="tooltip.data.logo" class="w-full h-full object-contain" />
-              </div>
-              <div class="flex flex-col text-left">
-                <h4
-                  class="font-bold text-sm text-gray-900 dark:text-white leading-tight line-clamp-2"
+                <div
+                  class="w-8 h-8 rounded-full bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 p-1 shrink-0 flex items-center justify-center"
                 >
-                  {{ tooltip.data.name }}
-                </h4>
+                  <img :src="inst.logo" class="w-full h-full object-contain" />
+                </div>
+                <div class="flex flex-col flex-1 min-w-0">
+                  <span
+                    class="font-bold text-xs text-gray-900 dark:text-white leading-tight truncate"
+                    >{{ inst.name }}</span
+                  >
+                  <span
+                    class="text-[10px] text-gray-500 dark:text-gray-400 font-medium"
+                    >{{
+                      inst.type === "ptn"
+                        ? "PTN"
+                        : inst.type === "kedinasan"
+                        ? "Kedinasan"
+                        : "Instansi & BUMN"
+                    }}</span
+                  >
+                </div>
+                <div
+                  class="bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-[10px] font-bold px-2 py-1 rounded shrink-0"
+                >
+                  {{ inst.alumni }}
+                </div>
               </div>
             </div>
             <div
-              class="bg-blue-50 dark:bg-blue-900/30 rounded-lg py-2 px-3 flex justify-between items-center border border-blue-100 dark:border-blue-800/50"
+              class="bg-blue-50 dark:bg-blue-900/30 rounded-lg py-2 px-3 flex justify-between items-center border border-blue-100 dark:border-blue-800/50 mt-1"
             >
               <span class="text-[11px] font-medium text-blue-600 dark:text-blue-300"
-                >Total Alumni</span
+                >Total Alumni di Kawasan</span
               >
-              <span
-                class="font-bold text-blue-700 dark:text-blue-400 text-xs bg-white dark:bg-slate-800 border border-blue-100/50 dark:border-slate-700 px-2 py-0.5 rounded shadow-sm"
-              >
-                {{ tooltip.data.alumni }} Orang
+              <span class="font-bold text-blue-700 dark:text-blue-400 text-xs">
+                {{ tooltip.data.totalAlumni }} Orang
               </span>
             </div>
           </div>
@@ -1677,6 +1720,7 @@ import "swiper/swiper-bundle.css";
 import {
   PhQuotes,
   PhFlask,
+  PhMapPin,
   PhGlobe,
   PhTranslate,
   PhMonitor,
@@ -1967,59 +2011,75 @@ const faqs = [
 const alumniLocations = ref([
   {
     id: 1,
-    name: "Universitas Indonesia",
-    alumni: 45,
-    top: "72%",
-    left: "28%",
-    logo: "/assets/img/ui.png",
+    name: "Jabodetabek & Sekitarnya",
+    type: "mixed",
+    totalAlumni: 194,
+    top: "73%",
+    left: "27%",
+    institutions: [
+      {
+        name: "Universitas Indonesia",
+        type: "ptn",
+        alumni: 45,
+        logo: "/assets/img/ui.png",
+      },
+      {
+        name: "Politeknik Keuangan Negara STAN",
+        type: "kedinasan",
+        alumni: 64,
+        logo: "https://img.icons8.com/color/96/bank-building.png",
+      },
+      {
+        name: "Instansi BUMN & Kementerian",
+        type: "instansi",
+        alumni: 85,
+        logo: "https://img.icons8.com/color/96/city-buildings.png",
+      },
+    ],
   },
   {
     id: 2,
-    name: "Institut Pertanian Bogor",
-    alumni: 38,
-    top: "76%",
-    left: "30%",
-    logo: "/assets/img/ipb.png",
+    name: "Jawa Barat",
+    type: "ptn",
+    totalAlumni: 70,
+    top: "77%",
+    left: "31%",
+    institutions: [
+      {
+        name: "Institut Pertanian Bogor",
+        type: "ptn",
+        alumni: 38,
+        logo: "/assets/img/ipb.png",
+      },
+      {
+        name: "Institut Teknologi Bandung",
+        type: "ptn",
+        alumni: 32,
+        logo: "/assets/img/itb.png",
+      },
+    ],
   },
   {
     id: 3,
-    name: "Institut Teknologi Bandung",
-    alumni: 32,
-    top: "79%",
-    left: "33%",
-    logo: "/assets/img/itb.png",
-  },
-  {
-    id: 4,
-    name: "Kawasan Industri & Manufaktur",
-    alumni: 125,
-    top: "74%",
-    left: "31%",
-    logo: "https://img.icons8.com/color/96/factory.png",
-  },
-  {
-    id: 5,
-    name: "Universitas Gadjah Mada",
-    alumni: 50,
-    top: "81%",
-    left: "40%",
-    logo: "/assets/img/ugm.png",
-  },
-  {
-    id: 6,
-    name: "BUMN & Instansi Pemerintah",
-    alumni: 85,
-    top: "70%",
-    left: "27%",
-    logo: "https://img.icons8.com/color/96/city-buildings.png",
-  },
-  {
-    id: 7,
-    name: "Perusahaan Tech & Startup",
-    alumni: 64,
-    top: "78%",
-    left: "26%",
-    logo: "https://img.icons8.com/color/96/laptop--v1.png",
+    name: "Jawa Tengah & DIY",
+    type: "mixed",
+    totalAlumni: 175,
+    top: "80%",
+    left: "38%",
+    institutions: [
+      {
+        name: "Universitas Gadjah Mada",
+        type: "ptn",
+        alumni: 50,
+        logo: "/assets/img/ugm.png",
+      },
+      {
+        name: "Akademi Kepolisian (AKPOL)",
+        type: "kedinasan",
+        alumni: 125,
+        logo: "https://img.icons8.com/color/96/police-badge.png",
+      },
+    ],
   },
 ]);
 
