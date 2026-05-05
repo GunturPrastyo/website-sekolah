@@ -249,8 +249,15 @@ onBeforeUnmount(() => {
 
     <!-- Timeline Section -->
     <section
-      class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-blue-950 dark:bg-gray-900"
+      class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-blue-950 dark:bg-gray-900 bg-fixed bg-center bg-cover"
+      style="background-image: url('assets/img/sejarah.jpg')"
     >
+      a
+      <!-- Overlay Parallax untuk memastikan teks tetap bisa dibaca -->
+      <div
+        class="absolute inset-0 bg-blue-950/90 dark:bg-gray-900/90 backdrop-blur-[2px]"
+      ></div>
+
       <div
         class="container relative z-10 mx-auto px-5 sm:px-8 md:px-14 lg:px-16 w-full max-w-full"
       >
