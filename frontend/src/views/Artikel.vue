@@ -124,10 +124,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="pt-28 pb-16 bg-gray-50 dark:bg-slate-900 min-h-screen">
-    <div class="container mx-auto max-w-full px-2 lg:px-8">
+  <div class="pt-28 pb-0 bg-gray-50 dark:bg-slate-900 min-h-screen">
+    <div class="container mx-auto max-w-full px-0 lg:px-8">
       <!-- Breadcrumb -->
-      <div class="mb-6 md:mb-8">
+      <div class="mb-6 md:mb-8 px-4 lg:px-0">
         <Breadcrumb
           :items="[
             { name: 'Beranda', link: '/', icon: 'home' },
@@ -137,10 +137,10 @@ onMounted(() => {
         />
       </div>
 
-      <div class="flex flex-col lg:flex-row gap-8">
+      <div class="flex flex-col lg:flex-row gap-0">
         <!-- KIRI: Konten Utama Artikel -->
         <main
-          class="w-full lg:w-2/3 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden"
+          class="w-full lg:w-2/3 bg-white dark:bg-slate-800 rounded-none lg:rounded-tl-lg shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden relative z-10"
         >
           <!-- Header Artikel -->
           <div class="p-6 md:p-10 border-b border-gray-100 dark:border-slate-700">
@@ -306,10 +306,12 @@ onMounted(() => {
         </main>
 
         <!-- KANAN: Sidebar -->
-        <aside class="w-full lg:w-1/3 space-y-8">
+        <aside
+          class="w-full lg:w-1/3 flex flex-col -mt-px lg:mt-0 lg:-ml-px relative z-0"
+        >
           <!-- Author Profile Widget -->
           <div
-            class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 text-center"
+            class="bg-white dark:bg-slate-800 py-8 px-6 rounded-none lg:rounded-tr-lg shadow-sm border border-gray-100 dark:border-slate-700 text-center relative z-20"
           >
             <div
               class="w-20 h-20 mx-auto rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-2xl mb-4 border-4 border-white shadow-sm"
@@ -358,7 +360,7 @@ onMounted(() => {
 
           <!-- Artikel Terkait Widget -->
           <div
-            class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
+            class="bg-white dark:bg-slate-800 py-8 px-6 rounded-none shadow-sm border border-gray-100 dark:border-slate-700 -mt-px relative z-10"
           >
             <h3
               class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
@@ -416,7 +418,7 @@ onMounted(() => {
 
           <!-- Berita Populer Widget -->
           <div
-            class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700"
+            class="bg-white dark:bg-slate-800 py-8 px-6 rounded-none shadow-sm border border-gray-100 dark:border-slate-700 -mt-px relative z-0"
           >
             <h3
               class="text-lg font-bold text-gray-900 dark:text-white mb-0 md:mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
