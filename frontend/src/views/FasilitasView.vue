@@ -28,7 +28,7 @@
             <div class="absolute bottom-0 left-0 w-full p-2 md:p-14 py-8 text-white">
               <div class="container mx-auto max-w-7xl">
                 <span
-                  class="inline-block px-4 py-1.5 mb-4 text-md font-extrabold text-blue-900 bg-yellow-400 backdrop-blur-sm dark:bg-blue-900/40 dark:text-blue-300 rounded-full shadow-sm"
+                  class="inline-block px-4 py-1.5 mb-4 text-md font-extrabold text-blue-900 bg-white backdrop-blur-sm dark:bg-blue-900/40 dark:text-blue-300 rounded-full shadow-sm"
                   style="font-family: 'Kalam', cursive"
                 >
                   Fasilitas Unggulan
@@ -101,9 +101,7 @@
                 </div>
 
                 <!-- List Fasilitas -->
-                <div
-                  class="space-y-12 pt-8 border-t border-gray-100 dark:border-slate-700"
-                >
+                <div class="space-y-12">
                   <div
                     v-for="(item, index) in currentCategory.items"
                     :key="item.title + index"
@@ -112,11 +110,11 @@
                     <h3
                       class="text-lg md:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3"
                     >
-                      <div
-                        class="w-8 h-8 shrink-0 rounded-lg bg-blue-50 dark:bg-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center text-base font-bold border border-blue-100 dark:border-slate-600"
+                      <span
+                        class="text-gray-900 dark:text-white text-lg md:text-xl font-bold"
                       >
-                        {{ index + 1 }}
-                      </div>
+                        {{ index + 1 }}.
+                      </span>
                       {{ item.title }}
                     </h3>
 
