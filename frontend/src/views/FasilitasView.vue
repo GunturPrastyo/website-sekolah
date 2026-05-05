@@ -28,7 +28,7 @@
             <div class="absolute bottom-0 left-0 w-full p-2 md:p-14 py-8 text-white">
               <div class="container mx-auto max-w-7xl">
                 <span
-                  class="inline-block px-4 py-1.5 mb-4 text-xs md:text-sm font-bold text-blue-700 bg-blue-100/90 backdrop-blur-sm dark:bg-blue-900/40 dark:text-blue-300 rounded-full shadow-sm tracking-widest uppercase"
+                  class="inline-block px-4 py-1.5 mb-4 text-md font-extrabold text-blue-900 bg-yellow-400 backdrop-blur-sm dark:bg-blue-900/40 dark:text-blue-300 rounded-full shadow-sm"
                   style="font-family: 'Kalam', cursive"
                 >
                   Fasilitas Unggulan
@@ -53,7 +53,7 @@
 
         <!-- CONTENT AREA -->
         <div
-          class="container mx-auto max-w-full px-2 sm:px-8 py-10 lg:py-16 grid lg:grid-cols-12 gap-10 items-start"
+          class="container mx-auto max-w-full px-2 sm:px-8 py-6 lg:py-8 grid lg:grid-cols-12 gap-10 items-start"
         >
           <!-- MAIN ARTICLE (Transitions on change) -->
           <div class="lg:col-span-8">

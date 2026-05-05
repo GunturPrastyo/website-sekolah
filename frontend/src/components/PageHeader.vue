@@ -31,7 +31,7 @@ defineProps({
 
     <div class="container relative z-10 mx-auto px-6 text-center">
       <span
-        class="inline-block px-4 md:px-5 py-1 md:py-1.5 mb-4 md:mb-5 text-base md:text-xl font-bold text-blue-900 bg-white/90 rounded-full shadow-sm backdrop-blur tracking-wide capitalize"
+        class="inline-block px-4 md:px-5 py-1 md:py-1.5 mb-4 md:mb-5 text-base md:text-xl font-bold text-blue-900 bg-white rounded-full shadow-sm backdrop-blur tracking-wide capitalize"
         style="font-family: 'Kalam', cursive"
       >
         {{ badge }}
