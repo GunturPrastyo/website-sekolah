@@ -271,7 +271,7 @@ const onImageLoad = (id) => {
       <div class="container mx-auto max-w-full">
         <!-- Video Profil Section -->
         <div
-          class="mb-6 relative rounded-none sm:rounded-xl overflow-hidden shadow-xl aspect-[4/3] sm:aspect-video md:aspect-[21/9] group cursor-pointer w-full block"
+          class="mb-4 md:mb-6 relative rounded-none sm:rounded-xl overflow-hidden shadow-xl aspect-[4/3] sm:aspect-video md:aspect-[21/9] group cursor-pointer w-full block"
         >
           <img
             src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop"
@@ -296,7 +296,7 @@ const onImageLoad = (id) => {
           >
             <span
               class="inline-block px-3 py-1 mb-3 text-sm font-semibold text-blue-900 bg-blue-100 rounded-full"
-              style="font-family: 'Oswald', sans-serif"
+              style="font-family: 'Kalam', cursive"
               >Video Profil</span
             >
             <h3
@@ -308,7 +308,7 @@ const onImageLoad = (id) => {
         </div>
 
         <!-- Category Cards (Flexible Wrap untuk Ganjil/Genap) -->
-        <div class="flex flex-wrap gap-2 md:gap-4 mb-8 md:mb-10 px-3 md:px-0">
+        <div class="flex flex-wrap gap-2 md:gap-4 mb-4 md:mb-6 px-0 md:px-0">
           <div
             v-for="cat in categories"
             :key="cat.id"
@@ -385,7 +385,7 @@ const onImageLoad = (id) => {
         <TransitionGroup
           name="gallery"
           tag="div"
-          class="columns-2 md:columns-3 lg:columns-4 gap-1 sm:gap-4 md:gap-6 w-full pt-0 md:pt-4 transform-gpu"
+          class="columns-2 md:columns-3 lg:columns-4 gap-1 sm:gap-4 md:gap-6 w-full transform-gpu"
         >
           <div
             v-for="(item, index) in displayedGallery"
@@ -479,7 +479,7 @@ const onImageLoad = (id) => {
         >
           <div
             v-if="hasMore"
-            class="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold bg-blue-50 dark:bg-slate-800 px-5 py-2.5 rounded-full shadow-sm transition-all"
+            class="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold px-5 py-2.5 transition-all"
           >
             <svg
               class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-600 dark:text-blue-400"
