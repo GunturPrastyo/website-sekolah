@@ -1476,7 +1476,7 @@
                             <div class="flex flex-wrap items-center mt-0.5">
                               <span
                                 class="font-semibold text-gray-800 dark:text-gray-100 mr-1"
-                                >Waktu:</span
+                                >Waktu :</span
                               >
                               <span
                                 class="font-medium text-gray-600 dark:text-gray-300"
@@ -1503,7 +1503,7 @@
                             <div class="flex flex-wrap items-center mt-0.5">
                               <span
                                 class="font-semibold text-gray-800 dark:text-gray-100 mr-1"
-                                >Tempat:</span
+                                >Tempat :</span
                               >
                               <span
                                 class="font-medium text-gray-600 dark:text-gray-300"
@@ -1524,7 +1524,7 @@
                             <div class="flex flex-wrap items-center mt-0.5">
                               <span
                                 class="font-semibold text-gray-800 dark:text-gray-100 mr-1"
-                                >Lampiran:</span
+                                >Lampiran :</span
                               >
                               <a
                                 :href="agenda.file"

@@ -151,10 +151,10 @@ const activeCategoryName = computed(() => {
       bgImage="https://images.unsplash.com/photo-1568044852337-9cbac391ce42?q=80&w=1600&auto=format&fit=crop"
     />
 
-    <section class="py-0 md:py-12 bg-gray-50 dark:bg-slate-900 min-h-[60vh]">
+    <section class="py-0 md:py-12 bg-gray-50 dark:bg-gray-900 min-h-[60vh]">
       <div class="container mx-auto max-w-full px-0 md:px-8">
         <div
-          class="flex flex-col lg:flex-row bg-white dark:bg-slate-800 rounded-none md:rounded-2xl shadow-sm md:shadow-md border-y md:border border-gray-200 dark:border-slate-700 overflow-hidden min-h-[600px]"
+          class="flex flex-col lg:flex-row bg-white dark:bg-gray-800 rounded-none md:rounded-xl shadow-sm md:shadow-md border-y md:border border-gray-200 dark:border-slate-700 overflow-hidden min-h-[600px]"
         >
           <!-- SIDEBAR (File Manager Tree) -->
           <div
@@ -198,10 +198,10 @@ const activeCategoryName = computed(() => {
           </div>
 
           <!-- MAIN AREA (File Viewer) -->
-          <div class="flex-1 flex flex-col bg-white dark:bg-slate-800 min-w-0">
+          <div class="flex-1 flex flex-col bg-white dark:bg-gray-800 min-w-0">
             <!-- Toolbar Top -->
             <div
-              class="px-5 py-4 border-b border-gray-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-800"
+              class="px-5 py-4 border-b border-gray-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-gray-800"
             >
               <!-- Breadcrumb -->
               <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
