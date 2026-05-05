@@ -118,14 +118,6 @@ const otherAuthors = [
   },
 ];
 
-const categoryStyles = {
-  Kegiatan: "bg-blue-600 text-white",
-  Pengumuman: "bg-red-600 text-white",
-  Prestasi: "bg-amber-600 text-white",
-  Akademik: "bg-green-600 text-white",
-  Fasilitas: "bg-purple-600 text-white",
-};
-
 onMounted(() => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
@@ -145,22 +137,32 @@ onMounted(() => {
         />
       </div>
 
-      <div class="flex flex-col lg:flex-row gap-10">
+      <div class="flex flex-col lg:flex-row gap-8">
         <!-- KIRI: Konten Utama Artikel -->
         <main
           class="w-full lg:w-2/3 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden"
         >
           <!-- Header Artikel -->
           <div class="p-6 md:p-10 border-b border-gray-100 dark:border-slate-700">
-            <div class="flex items-center gap-3 mb-4">
-              <span
-                class="px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 text-xs font-bold rounded-md uppercase tracking-wider"
+            <div class="flex items-center justify-between gap-2 mb-4">
+              <div class="flex flex-wrap items-center gap-3">
+                <span
+                  class="px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-md uppercase tracking-wider shadow-sm"
+                >
+                  Kegiatan
+                </span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                  <PhClock class="w-3.5 h-3.5 mr-1.5" /> 3 menit baca
+                </span>
+              </div>
+
+              <!-- Tombol Aksi (Mobile) -->
+              <button
+                @click="openShareModal"
+                class="sm:hidden shrink-0 p-2 rounded-full bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-blue-50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               >
-                Kegiatan
-              </span>
-              <span class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
-                <PhClock class="w-3.5 h-3.5 mr-1.5" /> 3 menit baca
-              </span>
+                <PhShareNetwork class="w-5 h-5" />
+              </button>
             </div>
 
             <h1
@@ -187,8 +189,8 @@ onMounted(() => {
                 </div>
               </div>
 
-              <!-- Tombol Aksi -->
-              <div class="flex items-center gap-2">
+              <!-- Tombol Aksi (Desktop) -->
+              <div class="hidden sm:flex items-center gap-2">
                 <button
                   @click="openShareModal"
                   class="p-2 rounded-full bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-blue-50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
@@ -379,8 +381,7 @@ onMounted(() => {
                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div
-                    :class="categoryStyles[article.category] || 'bg-gray-600 text-white'"
-                    class="absolute top-0 left-0 px-2 py-0.5 flex items-center justify-center text-[10px] font-bold rounded-br-lg shadow-sm z-10"
+                    class="absolute top-0 left-0 px-2 py-0.5 flex items-center justify-center text-[10px] font-bold rounded-br-lg shadow-sm z-10 bg-blue-600 text-white"
                   >
                     {{ article.category }}
                   </div>
@@ -438,8 +439,7 @@ onMounted(() => {
                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div
-                    :class="categoryStyles[news.category] || 'bg-gray-600 text-white'"
-                    class="absolute top-0 left-0 px-2 py-0.5 flex items-center justify-center text-[10px] font-bold rounded-br-lg shadow-sm z-10"
+                    class="absolute top-0 left-0 px-2 py-0.5 flex items-center justify-center text-[10px] font-bold rounded-br-lg shadow-sm z-10 bg-blue-600 text-white"
                   >
                     {{ news.category }}
                   </div>
