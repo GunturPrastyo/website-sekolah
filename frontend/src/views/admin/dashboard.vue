@@ -42,7 +42,7 @@ const stats = ref([
 </script>
 
 <template>
-  <div class="flex h-screen bg-gray-100 dark:bg-slate-900 font-sans">
+  <div class="flex h-screen bg-gray-100 dark:bg-slate-900 font-sans max-w-full">
     <!-- Konten utama -->
     <div class="flex-1 flex flex-col overflow-hidden">
       <!-- Konten Dasbor -->
@@ -50,7 +50,9 @@ const stats = ref([
         class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-slate-900 p-6 md:p-8"
       >
         <div class="container mx-auto">
-          <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-6">
+          <h2
+            class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-8 pb-3 border-b-2 border-blue-500"
+          >
             Dashboard
           </h2>
 
@@ -59,13 +61,13 @@ const stats = ref([
             <div
               v-for="stat in stats"
               :key="stat.title"
-              class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 flex items-center gap-5"
+              class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 flex items-center gap-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
             >
               <div
                 class="w-14 h-14 rounded-full flex items-center justify-center"
                 :class="[stat.bgColor, stat.color]"
               >
-                <component :is="stat.icon" :size="28" />
+                <component :is="stat.icon" :size="32" />
               </div>
               <div>
                 <div class="text-3xl font-bold text-gray-800 dark:text-white">
@@ -82,7 +84,7 @@ const stats = ref([
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
             <!-- Grafik Pengunjung -->
             <div
-              class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700"
+              class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700"
             >
               <h3
                 class="font-bold text-lg text-gray-800 dark:text-white mb-4 flex items-center"
@@ -99,7 +101,7 @@ const stats = ref([
 
             <!-- Aktivitas Terbaru -->
             <div
-              class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700"
+              class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700"
             >
               <h3
                 class="font-bold text-lg text-gray-800 dark:text-white mb-4 flex items-center"
@@ -108,7 +110,9 @@ const stats = ref([
                 Aktivitas Terbaru
               </h3>
               <div class="space-y-4">
-                <div class="flex items-start gap-3">
+                <div
+                  class="flex items-start gap-3 pb-4 border-b border-gray-100 dark:border-slate-700 last:border-b-0 last:pb-0 hover:bg-gray-50 dark:hover:bg-slate-700/50 rounded-md p-2 -mx-2 transition-colors"
+                >
                   <div
                     class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-500 flex items-center justify-center shrink-0 text-xs font-bold"
                   >
@@ -123,7 +127,9 @@ const stats = ref([
                     </p>
                   </div>
                 </div>
-                <div class="flex items-start gap-3">
+                <div
+                  class="flex items-start gap-3 pb-4 border-b border-gray-100 dark:border-slate-700 last:border-b-0 last:pb-0 hover:bg-gray-50 dark:hover:bg-slate-700/50 rounded-md p-2 -mx-2 transition-colors"
+                >
                   <div
                     class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-500 flex items-center justify-center shrink-0 text-xs font-bold"
                   >
@@ -139,7 +145,9 @@ const stats = ref([
                     </p>
                   </div>
                 </div>
-                <div class="flex items-start gap-3">
+                <div
+                  class="flex items-start gap-3 pb-4 border-b border-gray-100 dark:border-slate-700 last:border-b-0 last:pb-0 hover:bg-gray-50 dark:hover:bg-slate-700/50 rounded-md p-2 -mx-2 transition-colors"
+                >
                   <div
                     class="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/50 text-amber-500 flex items-center justify-center shrink-0 text-xs font-bold"
                   >
@@ -155,7 +163,9 @@ const stats = ref([
                     </p>
                   </div>
                 </div>
-                <div class="flex items-start gap-3">
+                <div
+                  class="flex items-start gap-3 pb-4 border-b border-gray-100 dark:border-slate-700 last:border-b-0 last:pb-0 hover:bg-gray-50 dark:hover:bg-slate-700/50 rounded-md p-2 -mx-2 transition-colors"
+                >
                   <div
                     class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-500 flex items-center justify-center shrink-0 text-xs font-bold"
                   >

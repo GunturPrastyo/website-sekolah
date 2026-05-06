@@ -1,11 +1,15 @@
 <script setup>
+import { ref } from "vue";
 import {
   PhHouse,
   PhNewspaper,
-  PhNote,
   PhUsers,
   PhGear,
   PhSignOut,
+  PhCaretDown,
+  PhBuildings,
+  PhChalkboard,
+  PhMegaphone,
 } from "@phosphor-icons/vue";
 
 const props = defineProps({
@@ -14,6 +18,51 @@ const props = defineProps({
     default: true,
   },
 });
+
+const openDropdown = ref(null);
+
+const toggleDropdown = (menuName) => {
+  if (openDropdown.value === menuName) {
+    openDropdown.value = null;
+  } else {
+    openDropdown.value = menuName;
+  }
+};
+
+const menu = ref([
+  { name: "Dashboard", icon: PhHouse, link: "/admin/dashboard", active: true },
+  {
+    name: "Profil Sekolah",
+    icon: PhBuildings,
+    children: [
+      { name: "Sejarah", link: "#" },
+      { name: "Visi & Misi", link: "#" },
+      { name: "Fasilitas", link: "#" },
+    ],
+  },
+  {
+    name: "Akademik",
+    icon: PhChalkboard,
+    children: [
+      { name: "Guru & Staf", link: "#" },
+      { name: "Kurikulum", link: "#" },
+      { name: "Program Jurusan", link: "#" },
+      { name: "Ekstrakurikuler", link: "#" },
+      { name: "Prestasi", link: "#" },
+    ],
+  },
+  {
+    name: "Informasi",
+    icon: PhMegaphone,
+    children: [
+      { name: "Berita & Artikel", link: "#" },
+      { name: "Galeri", link: "#" },
+      { name: "Unduhan", link: "#" },
+    ],
+  },
+  { name: "Pengguna", icon: PhUsers, link: "#" },
+  { name: "Pengaturan", icon: PhGear, link: "#" },
+]);
 </script>
 
 <template>
@@ -26,42 +75,55 @@ const props = defineProps({
     >
       <h1 class="text-2xl font-bold text-blue-600 dark:text-blue-400">Admin Panel</h1>
     </div>
-    <nav class="mt-6 flex-1">
-      <a
-        href="#"
-        class="flex items-center px-6 py-3 text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-300 border-l-4 border-blue-600"
-      >
-        <PhHouse :size="20" class="mr-3" />
-        <span class="font-semibold">Dashboard</span>
-      </a>
-      <a
-        href="#"
-        class="flex items-center px-6 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
-      >
-        <PhNewspaper :size="20" class="mr-3" />
-        <span>Berita & Artikel</span>
-      </a>
-      <a
-        href="#"
-        class="flex items-center px-6 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
-      >
-        <PhNote :size="20" class="mr-3" />
-        <span>Halaman</span>
-      </a>
-      <a
-        href="#"
-        class="flex items-center px-6 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
-      >
-        <PhUsers :size="20" class="mr-3" />
-        <span>Pengguna</span>
-      </a>
-      <a
-        href="#"
-        class="flex items-center px-6 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
-      >
-        <PhGear :size="20" class="mr-3" />
-        <span>Pengaturan</span>
-      </a>
+    <nav class="mt-6 flex-1 overflow-y-auto">
+      <div v-for="item in menu" :key="item.name" class="mb-1">
+        <!-- Item with children (dropdown) -->
+        <div v-if="item.children">
+          <button
+            @click="toggleDropdown(item.name)"
+            class="w-full flex items-center justify-between px-6 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
+          >
+            <span class="flex items-center">
+              <component :is="item.icon" :size="20" class="mr-3" />
+              <span class="font-semibold">{{ item.name }}</span>
+            </span>
+            <PhCaretDown
+              :size="16"
+              class="transition-transform duration-300"
+              :class="openDropdown === item.name && 'rotate-180'"
+            />
+          </button>
+          <div
+            class="overflow-hidden transition-all duration-300"
+            :class="openDropdown === item.name ? 'max-h-96' : 'max-h-0'"
+          >
+            <div class="py-1 pl-12 pr-6 bg-gray-50/50 dark:bg-slate-900/30">
+              <router-link
+                v-for="child in item.children"
+                :key="child.name"
+                :to="child.link"
+                class="flex items-center py-2.5 text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              >
+                {{ child.name }}
+              </router-link>
+            </div>
+          </div>
+        </div>
+        <!-- Item without children (link) -->
+        <router-link
+          v-else
+          :to="item.link"
+          class="flex items-center px-6 py-3"
+          :class="
+            item.active
+              ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-300 border-l-4 border-blue-600 font-semibold'
+              : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors font-semibold'
+          "
+        >
+          <component :is="item.icon" :size="20" class="mr-3" />
+          <span>{{ item.name }}</span>
+        </router-link>
+      </div>
     </nav>
     <div class="absolute bottom-0 w-full border-t border-gray-100 dark:border-slate-700">
       <a
