@@ -1,21 +1,13 @@
 <script setup>
 import { ref } from "vue";
 import {
-  PhNewspaper,
   PhStudent,
   PhChalkboardTeacher,
   PhEye,
   PhChartLine,
   PhClockClockwise,
+  PhNewspaper, // Keep PhNewspaper if used in stats
 } from "@phosphor-icons/vue";
-import AdminSidebar from "./components/admin/AdminSidebar.vue";
-import AdminNavbar from "./components/admin/AdminNavbar.vue";
-
-const isSidebarOpen = ref(true); // Default untuk terbuka di desktop
-
-const toggleSidebar = () => {
-  isSidebarOpen.value = !isSidebarOpen.value;
-};
 
 const stats = ref([
   {
@@ -51,12 +43,8 @@ const stats = ref([
 
 <template>
   <div class="flex h-screen bg-gray-100 dark:bg-slate-900 font-sans">
-    <AdminSidebar :is-open="isSidebarOpen" />
-
     <!-- Konten utama -->
     <div class="flex-1 flex flex-col overflow-hidden">
-      <AdminNavbar @toggle-sidebar="toggleSidebar" />
-
       <!-- Konten Dasbor -->
       <main
         class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-slate-900 p-6 md:p-8"

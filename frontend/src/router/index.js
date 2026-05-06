@@ -5,6 +5,7 @@ import Fasilitas from '@/views/FasilitasView.vue'
 import GuruStaf from '@/views/GuruStaf.vue'
 import Kurikulum from '@/views/KurikulumView.vue'
 import Alumni from '@/views/AlumniView.vue'
+import AdminLayout from '@/layouts/AdminLayout.vue' // Import the new AdminLayout
 
 
 const router = createRouter({
@@ -86,9 +87,17 @@ const router = createRouter({
       component: () => import('../views/UnduhanView.vue')
     },
     {
-      path: '/admin/dashboard',
-      name: 'admin-dashboard',
-      component: () => import('../views/admin/Dashboard.vue')
+      path: '/admin', // Parent route for admin section
+      name: 'admin',
+      component: AdminLayout, // Use the new AdminLayout
+      children: [
+        {
+          path: 'dashboard', // Child route for the dashboard
+          name: 'dashboard',
+          component: () => import('../views/admin/Dashboard.vue')
+        }
+        // Add other admin routes here as children
+      ]
     }
 
 
