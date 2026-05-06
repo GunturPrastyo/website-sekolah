@@ -84,6 +84,11 @@ const router = createRouter({
       path: '/unduhan',
       name: 'unduhan',
       component: () => import('../views/UnduhanView.vue')
+    },
+    {
+      path: '/admin/dashboard',
+      name: 'admin-dashboard',
+      component: () => import('../views/admin/Dashboard.vue')
     }
 
 
