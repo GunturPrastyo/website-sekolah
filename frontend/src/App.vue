@@ -1,16 +1,10 @@
 <template>
-  <Navbar />
-  <main>
-    <router-view />
-  </main>
-  <Footer />
+  <router-view />
 </template>
 
 <script setup>
 import { onMounted, watch, nextTick } from "vue";
 import { useRoute } from "vue-router";
-import Navbar from "./components/Navbar.vue";
-import Footer from "./components/Footer.vue";
 
 const route = useRoute();
 
