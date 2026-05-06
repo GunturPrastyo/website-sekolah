@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue';
-import AdminSidebar from '@/views/admin/components/AdminSidebar.vue';
-import AdminNavbar from '@/views/admin/components/AdminNavbar.vue';
+import { ref } from "vue";
+import AdminSidebar from "@/components/admin/AdminSidebar.vue"; // Corrected path
+import AdminNavbar from "@/components/admin/AdminNavbar.vue"; // Corrected path
 
 const isSidebarOpen = ref(true); // Default untuk terbuka di desktop
 
@@ -19,7 +19,9 @@ const toggleSidebar = () => {
       <AdminNavbar @toggle-sidebar="toggleSidebar" />
 
       <!-- Konten Dasbor -->
-      <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-slate-900 p-6 md:p-8">
+      <main
+        class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-slate-900 p-6 md:p-8"
+      >
         <router-view />
       </main>
     </div>
@@ -29,6 +31,6 @@ const toggleSidebar = () => {
 <style scoped>
 /* Menggunakan font Poppins dari file HTML, jika tidak ada, gunakan sans-serif */
 .font-sans {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 </style>
