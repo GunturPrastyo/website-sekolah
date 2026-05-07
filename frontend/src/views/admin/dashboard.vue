@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, markRaw } from "vue";
 import {
   PhStudent,
   PhChalkboardTeacher,
@@ -13,28 +13,28 @@ const stats = ref([
   {
     title: "Total Siswa",
     value: "1,123",
-    icon: PhStudent,
+    icon: markRaw(PhStudent),
     color: "text-blue-500",
     bgColor: "bg-blue-100 dark:bg-blue-900/40",
   },
   {
     title: "Total Guru",
     value: "75",
-    icon: PhChalkboardTeacher,
+    icon: markRaw(PhChalkboardTeacher),
     color: "text-emerald-500",
     bgColor: "bg-emerald-100 dark:bg-emerald-900/40",
   },
   {
     title: "Artikel Diterbitkan",
     value: "48",
-    icon: PhNewspaper,
+    icon: markRaw(PhNewspaper),
     color: "text-amber-500",
     bgColor: "bg-amber-100 dark:bg-amber-900/40",
   },
   {
     title: "Pengunjung Hari Ini",
     value: "2,456",
-    icon: PhEye,
+    icon: markRaw(PhEye),
     color: "text-indigo-500",
     bgColor: "bg-indigo-100 dark:bg-indigo-900/40",
   },
