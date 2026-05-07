@@ -16,7 +16,7 @@ const emit = defineEmits(["toggle-sidebar"]);
     <div class="flex items-center">
       <button
         @click="emit('toggle-sidebar')"
-        class="lg:hidden text-gray-600 dark:text-gray-300 focus:outline-none mr-4"
+        class="text-gray-600 dark:text-gray-300 focus:outline-none mr-4"
       >
         <PhList :size="24" />
       </button>

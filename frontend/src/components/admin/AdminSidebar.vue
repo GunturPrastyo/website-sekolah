@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, markRaw } from "vue";
 import {
   PhHouse,
   PhNewspaper,
@@ -30,10 +30,10 @@ const toggleDropdown = (menuName) => {
 };
 
 const menu = ref([
-  { name: "Dashboard", icon: PhHouse, link: "/admin/dashboard", active: true },
+  { name: "Dashboard", icon: markRaw(PhHouse), link: "/admin/dashboard", active: true },
   {
     name: "Profil Sekolah",
-    icon: PhBuildings,
+    icon: markRaw(PhBuildings),
     children: [
       { name: "Sejarah", link: "#" },
       { name: "Visi & Misi", link: "#" },
@@ -42,7 +42,7 @@ const menu = ref([
   },
   {
     name: "Akademik",
-    icon: PhChalkboard,
+    icon: markRaw(PhChalkboard),
     children: [
       { name: "Guru & Staf", link: "#" },
       { name: "Kurikulum", link: "#" },
@@ -53,15 +53,15 @@ const menu = ref([
   },
   {
     name: "Informasi",
-    icon: PhMegaphone,
+    icon: markRaw(PhMegaphone),
     children: [
       { name: "Berita & Artikel", link: "#" },
       { name: "Galeri", link: "#" },
       { name: "Unduhan", link: "#" },
     ],
   },
-  { name: "Pengguna", icon: PhUsers, link: "#" },
-  { name: "Pengaturan", icon: PhGear, link: "#" },
+  { name: "Pengguna", icon: markRaw(PhUsers), link: "#" },
+  { name: "Pengaturan", icon: markRaw(PhGear), link: "#" },
 ]);
 </script>
 
@@ -70,6 +70,7 @@ const menu = ref([
     :class="props.isOpen ? 'translate-x-0' : '-translate-x-full'"
     class="fixed inset-y-0 left-0 z-30 w-64 bg-white dark:bg-slate-800 shadow-lg transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:shadow-none"
   >
+    <!-- The sidebar will now be fixed and hide/show on all screen sizes based on isOpen -->
     <div
       class="flex items-center justify-center h-20 border-b border-gray-100 dark:border-slate-700"
     >
