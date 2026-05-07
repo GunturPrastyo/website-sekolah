@@ -1,5 +1,6 @@
 <script setup>
-import { ref, markRaw } from "vue";
+import { ref, markRaw, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
 import {
   PhHouse,
   PhNewspaper,
@@ -11,6 +12,8 @@ import {
   PhChalkboard,
   PhMegaphone,
 } from "@phosphor-icons/vue";
+
+const route = useRoute();
 
 const props = defineProps({
   isOpen: {
@@ -30,7 +33,7 @@ const toggleDropdown = (menuName) => {
 };
 
 const menu = ref([
-  { name: "Dashboard", icon: markRaw(PhHouse), link: "/admin/dashboard", active: true },
+  { name: "Dashboard", icon: markRaw(PhHouse), link: "/admin/dashboard" },
   {
     name: "Profil Sekolah",
     icon: markRaw(PhBuildings),
@@ -63,6 +66,20 @@ const menu = ref([
   { name: "Pengguna", icon: markRaw(PhUsers), link: "#" },
   { name: "Pengaturan", icon: markRaw(PhGear), link: "#" },
 ]);
+
+const checkActiveMenu = () => {
+  for (const item of menu.value) {
+    if (item.children) {
+      const isActive = item.children.some((child) => child.link === route.path);
+      if (isActive) {
+        openDropdown.value = item.name;
+      }
+    }
+  }
+};
+
+onMounted(checkActiveMenu);
+watch(() => route.path, checkActiveMenu);
 </script>
 
 <template>
@@ -81,7 +98,12 @@ const menu = ref([
         <div v-if="item.children">
           <button
             @click="toggleDropdown(item.name)"
-            class="w-full flex items-center justify-between px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
+            class="w-full flex items-center justify-between px-6 py-3 text-sm transition-colors border-l-4"
+            :class="
+              item.children.some((child) => child.link === route.path)
+                ? 'text-blue-600 bg-blue-50/50 dark:bg-blue-900/20 dark:text-blue-400 border-blue-600/50 font-semibold'
+                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 border-transparent'
+            "
           >
             <span class="flex items-center">
               <component :is="item.icon" :size="20" class="mr-3" />
@@ -102,7 +124,12 @@ const menu = ref([
                 v-for="child in item.children"
                 :key="child.name"
                 :to="child.link"
-                class="flex items-center py-2.5 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                class="flex items-center py-2.5 transition-colors"
+                :class="
+                  route.path === child.link
+                    ? 'text-blue-600 dark:text-blue-400 font-semibold'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400'
+                "
               >
                 {{ child.name }}
               </router-link>
@@ -113,11 +140,11 @@ const menu = ref([
         <router-link
           v-else
           :to="item.link"
-          class="flex items-center px-6 py-3"
+          class="flex items-center px-6 py-3 border-l-4"
           :class="
-            item.active
-              ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-300 border-l-4 border-blue-600 font-semibold'
-              : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors font-semibold'
+            route.path === item.link
+              ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-300 border-blue-600 font-semibold'
+              : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors font-semibold border-transparent'
           "
         >
           <component :is="item.icon" :size="20" class="mr-3" />

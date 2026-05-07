@@ -1,11 +1,13 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
   PhTrash,
   PhXCircle,
   PhFloppyDisk,
+  PhDotsSixVertical,
+  PhMagnifyingGlass,
 } from "@phosphor-icons/vue";
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
@@ -163,6 +165,37 @@ const cancelDelete = () => {
   itemToDelete.value = null;
   isDeleteModalOpen.value = false;
 };
+
+// State dan fungsi untuk Drag & Drop
+const draggedItemIndex = ref(null);
+
+const handleDragStart = (entry, event) => {
+  draggedItemIndex.value = timeline.value.findIndex((e) => e.id === entry.id);
+  event.dataTransfer.effectAllowed = "move";
+};
+
+const handleDrop = (entry) => {
+  if (draggedItemIndex.value === null) return;
+  const targetIndex = timeline.value.findIndex((e) => e.id === entry.id);
+  if (draggedItemIndex.value === targetIndex) return; // Mencegah drop pada dirinya sendiri
+
+  const draggedItem = timeline.value.splice(draggedItemIndex.value, 1)[0];
+  timeline.value.splice(targetIndex, 0, draggedItem);
+  draggedItemIndex.value = null;
+};
+
+const searchQuery = ref("");
+
+const filteredTimeline = computed(() => {
+  if (!searchQuery.value) return timeline.value;
+  const query = searchQuery.value.toLowerCase();
+  return timeline.value.filter(
+    (entry) =>
+      entry.year.toLowerCase().includes(query) ||
+      entry.title.toLowerCase().includes(query) ||
+      entry.description.toLowerCase().includes(query)
+  );
+});
 </script>
 
 <template>
@@ -289,13 +322,42 @@ const cancelDelete = () => {
           Tambah Entri Baru
         </button>
       </div>
+
+      <!-- Kolom Pencarian -->
+      <div class="mb-6 relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <PhMagnifyingGlass class="w-5 h-5 text-gray-400" />
+        </div>
+        <input
+          type="text"
+          v-model="searchQuery"
+          placeholder="Cari berdasarkan tahun, judul, atau deskripsi..."
+          class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+        />
+      </div>
+
       <div class="space-y-4">
         <div
-          v-for="entry in timeline"
+          v-for="entry in filteredTimeline"
           :key="entry.id"
-          class="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-700 rounded-lg border border-gray-100 dark:border-slate-600"
+          :draggable="!searchQuery"
+          @dragstart="handleDragStart(entry, $event)"
+          @dragover.prevent
+          @dragenter.prevent
+          @drop="handleDrop(entry)"
+          class="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-700 rounded-lg border border-gray-100 dark:border-slate-600 hover:shadow-md transition-shadow group"
+          :class="!searchQuery ? 'cursor-move' : ''"
+          :title="!searchQuery ? 'Tahan dan geser untuk mengubah urutan' : ''"
         >
           <div class="flex items-center gap-3">
+            <PhDotsSixVertical
+              class="w-6 h-6 shrink-0 transition-colors"
+              :class="
+                !searchQuery
+                  ? 'text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 cursor-grab active:cursor-grabbing'
+                  : 'text-gray-300 dark:text-gray-600 opacity-50 cursor-not-allowed'
+              "
+            />
             <component
               :is="educationIcons[entry.icon]"
               class="w-6 h-6 text-blue-500 shrink-0"
@@ -327,12 +389,15 @@ const cancelDelete = () => {
             </button>
           </div>
         </div>
-        <p
-          v-if="timeline.length === 0"
-          class="text-center text-gray-500 dark:text-gray-400"
+        <div
+          v-if="filteredTimeline.length === 0"
+          class="text-center py-8 text-gray-500 dark:text-gray-400"
         >
-          Belum ada entri timeline.
-        </p>
+          <p v-if="searchQuery">
+            Tidak ada entri yang cocok dengan pencarian "{{ searchQuery }}".
+          </p>
+          <p v-else>Belum ada entri timeline.</p>
+        </div>
       </div>
     </div>
 
