@@ -103,6 +103,11 @@ const router = createRouter({
           path: 'dashboard', // Child route for the dashboard
           name: 'dashboard',
           component: () => import('../views/admin/dashboard.vue')
+        },
+        {
+          path: 'sejarah', // Child route for sejarah
+          name: 'sejarah',
+          component: () => import('../views/admin/AdminSejarah.vue')
         }
         // Add other admin routes here as children
       ]

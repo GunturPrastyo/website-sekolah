@@ -35,7 +35,7 @@ const menu = ref([
     name: "Profil Sekolah",
     icon: markRaw(PhBuildings),
     children: [
-      { name: "Sejarah", link: "#" },
+      { name: "Sejarah", link: "/admin/sejarah" }, // Link ke halaman admin sejarah
       { name: "Visi & Misi", link: "#" },
       { name: "Fasilitas", link: "#" },
     ],
