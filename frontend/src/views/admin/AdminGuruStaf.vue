@@ -243,8 +243,14 @@ const getCategoryName = (id) => {
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Kolom Kiri: Foto -->
             <div class="lg:col-span-1">
-              <ImageUploader v-model="form.image" label="Foto Profil" />
-              <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              <ImageUploader
+                v-model="form.image"
+                label="Foto Profil"
+                :isCircular="true"
+                containerClass="w-full max-w-[240px] mx-auto lg:mx-0"
+                imageClass="object-cover object-top"
+              />
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center lg:text-left max-w-[240px] mx-auto lg:mx-0">
                 Rasio foto terbaik adalah 1:1 (persegi).
               </p>
             </div>
