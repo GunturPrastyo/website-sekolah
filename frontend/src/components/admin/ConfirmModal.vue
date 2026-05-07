@@ -1,5 +1,5 @@
 <script setup>
-import { PhWarningCircle, PhX } from "@phosphor-icons/vue";
+import { PhWarningCircle, PhInfo, PhX } from "@phosphor-icons/vue";
 
 defineProps({
   isOpen: {
@@ -21,6 +21,10 @@ defineProps({
   cancelText: {
     type: String,
     default: "Batal",
+  },
+  theme: {
+    type: String,
+    default: "danger", // 'danger' untuk hapus (merah), 'primary' untuk simpan (biru)
   },
 });
 
@@ -44,8 +48,12 @@ defineEmits(["confirm", "cancel"]);
       <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100 dark:border-slate-700 transform transition-all">
         <div class="p-6">
           <div class="flex items-start gap-4">
-            <div class="shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
-              <PhWarningCircle class="w-6 h-6" weight="fill" />
+            <div
+              class="shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-full"
+              :class="theme === 'danger' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'"
+            >
+              <PhWarningCircle v-if="theme === 'danger'" class="w-6 h-6" weight="fill" />
+              <PhInfo v-else class="w-6 h-6" weight="fill" />
             </div>
             <div class="flex-1 mt-1">
               <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ title }}</h3>
@@ -58,7 +66,11 @@ defineEmits(["confirm", "cancel"]);
         </div>
         <div class="px-6 py-4 bg-gray-50 dark:bg-slate-700/50 border-t border-gray-100 dark:border-slate-700 flex justify-end gap-3">
           <button @click="$emit('cancel')" class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 dark:focus:ring-offset-slate-800">{{ cancelText }}</button>
-          <button @click="$emit('confirm')" class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:focus:ring-offset-slate-800">{{ confirmText }}</button>
+          <button
+            @click="$emit('confirm')"
+            class="px-4 py-2 text-sm font-medium text-white border border-transparent rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-800"
+            :class="theme === 'danger' ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500' : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'"
+          >{{ confirmText }}</button>
         </div>
       </div>
     </div>
