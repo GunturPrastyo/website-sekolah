@@ -1,24 +1,14 @@
 <script setup>
-import { ref, markRaw } from "vue";
+import { ref } from "vue";
 import {
-  PhBuildings,
-  PhHammer,
-  PhMedal,
-  PhMonitor,
-  PhLeaf,
-  PhRocket,
-  PhCheckCircle,
-  PhHash,
-  PhCalendar,
-  PhMapPin,
   PhPlusCircle,
   PhPencilSimple,
   PhTrash,
   PhXCircle,
   PhFloppyDisk,
 } from "@phosphor-icons/vue";
-import { QuillEditor } from "@vueup/vue-quill";
-import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import RichTextEditor from "@/components/RichTextEditor.vue";
+import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
 
 // Dummy data, in a real app this would come from an API
 const timeline = ref([
@@ -26,7 +16,7 @@ const timeline = ref([
     id: 1,
     year: "1985",
     title: "Pendirian & Peresmian SMAN 1",
-    icon: markRaw(PhBuildings),
+    icon: "PhBuildings",
     image: "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?q=80&w=800",
     description:
       "Sekolah ini resmi didirikan pada tanggal 17 Agustus 1985 berdasarkan SK Menteri Pendidikan. Pada awalnya, sekolah hanya memiliki 3 ruang kelas dengan 120 siswa angkatan pertama dan menumpang di gedung SMP terdekat selama proses pembangunan gedung utama berlangsung.",
@@ -35,7 +25,7 @@ const timeline = ref([
     id: 2,
     year: "1992",
     title: "Pembangunan Gedung Utama",
-    icon: markRaw(PhHammer),
+    icon: "PhHammer",
     image: "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=800",
     description:
       "Pembangunan gedung sekolah mandiri akhirnya selesai dan diresmikan oleh Gubernur. Di tahun ini, SMAN 1 mulai menempati lokasi saat ini dengan fasilitas yang diperluas, meliputi 12 ruang kelas, ruang guru, dan lapangan olahraga serbaguna.",
@@ -44,7 +34,7 @@ const timeline = ref([
     id: 3,
     year: "2005",
     title: "Akreditasi A & Prestasi Nasional",
-    icon: markRaw(PhMedal),
+    icon: "PhMedal",
     image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800",
     description:
       "Berkat dedikasi seluruh civitas akademika, SMAN 1 berhasil meraih akreditasi A (Sangat Baik). Pada tahun yang sama, tim cerdas cermat sekolah berhasil membawa pulang piala Juara 1 tingkat Nasional untuk pertama kalinya.",
@@ -53,7 +43,7 @@ const timeline = ref([
     id: 4,
     year: "2015",
     title: "Era Transformasi Digital",
-    icon: markRaw(PhMonitor),
+    icon: "PhMonitor",
     image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800",
     description:
       "Menjawab tantangan abad 21, sekolah mulai mengintegrasikan teknologi ke dalam pembelajaran. Pembangunan laboratorium komputer modern, perpustakaan digital, serta pengadaan proyektor dan Wi-Fi di seluruh area sekolah mulai direalisasikan.",
@@ -62,7 +52,7 @@ const timeline = ref([
     id: 5,
     year: "2021",
     title: "Sekolah Adiwiyata & Peduli Lingkungan",
-    icon: markRaw(PhLeaf),
+    icon: "PhLeaf",
     image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e736?q=80&w=800",
     description:
       "Berkomitmen pada lingkungan yang asri, sekolah memenangkan penghargaan Sekolah Adiwiyata tingkat Provinsi. Program bank sampah, taman hidroponik, dan ruang hijau terpadu menjadi identitas baru SMAN 1.",
@@ -71,26 +61,12 @@ const timeline = ref([
     id: 6,
     year: "2026",
     title: "Pelopor Kurikulum Merdeka",
-    icon: markRaw(PhRocket),
+    icon: "PhRocket",
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800",
     description:
       "Hari ini, SMAN 1 Nogosari terus melesat menjadi sekolah percontohan dalam implementasi Kurikulum Merdeka. Dengan lebih dari 1100 siswa, kami terus melahirkan lulusan yang cerdas, berkarakter, dan berdaya saing global.",
   },
 ]);
-
-// Available icons for selection
-const availableIcons = {
-  PhBuildings: markRaw(PhBuildings),
-  PhHammer: markRaw(PhHammer),
-  PhMedal: markRaw(PhMedal),
-  PhMonitor: markRaw(PhMonitor),
-  PhLeaf: markRaw(PhLeaf),
-  PhRocket: markRaw(PhRocket),
-  PhCheckCircle: markRaw(PhCheckCircle),
-  PhHash: markRaw(PhHash),
-  PhCalendar: markRaw(PhCalendar),
-  PhMapPin: markRaw(PhMapPin),
-};
 
 const form = ref({
   id: null,
@@ -126,7 +102,6 @@ const addEntry = () => {
   timeline.value.push({
     ...form.value,
     id: newId,
-    icon: availableIcons[form.value.icon], // Assign the actual icon component
   });
   resetForm();
 };
@@ -135,8 +110,7 @@ const startEdit = (entry) => {
   isEditing.value = true;
   form.value = {
     ...entry,
-    icon: Object.keys(availableIcons).find((key) => availableIcons[key] === entry.icon),
-  }; // Store a copy and icon name
+  }; 
 };
 
 const saveEntry = () => {
@@ -149,7 +123,6 @@ const saveEntry = () => {
   if (index !== -1) {
     timeline.value[index] = {
       ...form.value,
-      icon: availableIcons[form.value.icon], // Assign the actual icon component
     };
   }
   resetForm();
@@ -220,27 +193,10 @@ const deleteEntry = (id) => {
 
         <div class="mb-4">
           <label
-            for="icon"
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >Ikon</label
+            >Ikon Representasi</label
           >
-          <div class="flex flex-wrap gap-3 mt-2">
-            <button
-              v-for="(iconComp, name) in availableIcons"
-              :key="name"
-              type="button"
-              @click="form.icon = name"
-              :class="[
-                'p-3 rounded-xl border transition-all flex items-center justify-center',
-                form.icon === name
-                  ? 'border-blue-500 bg-blue-50 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400 scale-105 shadow-sm'
-                  : 'border-gray-200 bg-white text-gray-500 hover:border-blue-300 hover:text-blue-500 dark:border-slate-600 dark:bg-slate-700 dark:text-gray-400 dark:hover:border-blue-500',
-              ]"
-              :title="name"
-            >
-              <component :is="iconComp" class="w-6 h-6" />
-            </button>
-          </div>
+          <IconPicker v-model="form.icon" />
         </div>
 
         <div class="mb-4">
@@ -264,17 +220,10 @@ const deleteEntry = (id) => {
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >Deskripsi</label
           >
-          <div
-            class="bg-white dark:bg-slate-800 rounded-lg border border-gray-300 dark:border-slate-600 focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500"
-          >
-            <QuillEditor
-              v-model:content="form.description"
-              contentType="html"
-              theme="snow"
-              placeholder="Masukkan deskripsi lengkap entri timeline..."
-              class="min-h-[150px] text-gray-900 dark:text-white border-0"
-            />
-          </div>
+          <RichTextEditor
+            v-model="form.description"
+            placeholder="Masukkan deskripsi lengkap entri timeline..."
+          />
         </div>
 
         <div class="flex gap-3">
@@ -313,7 +262,7 @@ const deleteEntry = (id) => {
           class="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-700 rounded-lg border border-gray-100 dark:border-slate-600"
         >
           <div class="flex items-center gap-3">
-            <component :is="entry.icon" class="w-6 h-6 text-blue-500" />
+            <component :is="educationIcons[entry.icon]" class="w-6 h-6 text-blue-500 shrink-0" />
             <div>
               <p class="font-semibold text-gray-800 dark:text-white">
                 {{ entry.year }} - {{ entry.title }}
@@ -353,34 +302,4 @@ const deleteEntry = (id) => {
 </template>
 
 <style scoped>
-/* Custom styles untuk Quill Editor di Mode Terang / Gelap */
-:deep(.ql-toolbar) {
-  border-radius: 0.5rem 0.5rem 0 0;
-  border-color: inherit !important;
-  background-color: #f8fafc;
-}
-.dark :deep(.ql-toolbar) {
-  background-color: #334155;
-  border-color: #475569 !important;
-}
-.dark :deep(.ql-stroke) {
-  stroke: #cbd5e1 !important;
-}
-.dark :deep(.ql-fill) {
-  fill: #cbd5e1 !important;
-}
-.dark :deep(.ql-picker) {
-  color: #cbd5e1 !important;
-}
-:deep(.ql-container) {
-  border-radius: 0 0 0.5rem 0.5rem;
-  border-color: inherit !important;
-  font-family: inherit;
-}
-.dark :deep(.ql-container) {
-  border-color: #475569 !important;
-}
-.dark :deep(.ql-editor.ql-blank::before) {
-  color: #94a3b8;
-}
 </style>
