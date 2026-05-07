@@ -15,7 +15,10 @@ const toggleSidebar = () => {
     <AdminSidebar :is-open="isSidebarOpen" />
 
     <!-- Konten utama -->
-    <div class="flex-1 flex flex-col overflow-hidden">
+    <div
+      class="flex-1 flex flex-col overflow-hidden transition-all duration-300 ease-in-out"
+      :class="{ 'lg:ml-64': isSidebarOpen, 'lg:ml-0': !isSidebarOpen }"
+    >
       <AdminNavbar @toggle-sidebar="toggleSidebar" />
 
       <!-- Konten Dasbor -->

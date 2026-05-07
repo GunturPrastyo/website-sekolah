@@ -68,9 +68,8 @@ const menu = ref([
 <template>
   <aside
     :class="props.isOpen ? 'translate-x-0' : '-translate-x-full'"
-    class="fixed inset-y-0 left-0 z-30 w-64 bg-white dark:bg-slate-800 shadow-lg transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:shadow-none"
+    class="fixed inset-y-0 left-0 z-30 w-64 bg-white dark:bg-slate-800 shadow-lg transform transition-transform duration-300 ease-in-out"
   >
-    <!-- The sidebar will now be fixed and hide/show on all screen sizes based on isOpen -->
     <div
       class="flex items-center justify-center h-20 border-b border-gray-100 dark:border-slate-700"
     >
