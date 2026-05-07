@@ -1,12 +1,40 @@
 <script setup>
+import { ref, onMounted } from "vue";
 import {
   PhMagnifyingGlass,
   PhBell,
   PhCaretDown,
   PhList,
+  PhSun,
+  PhMoon,
 } from "@phosphor-icons/vue";
 
 const emit = defineEmits(["toggle-sidebar"]);
+
+const isDarkMode = ref(false);
+
+onMounted(() => {
+  if (
+    localStorage.getItem("color-theme") === "dark" ||
+    (!("color-theme" in localStorage) &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches)
+  ) {
+    isDarkMode.value = true;
+  } else {
+    isDarkMode.value = false;
+  }
+});
+
+const toggleDarkMode = () => {
+  isDarkMode.value = !isDarkMode.value;
+  if (isDarkMode.value) {
+    document.documentElement.classList.add("dark");
+    localStorage.setItem("color-theme", "dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+    localStorage.setItem("color-theme", "light");
+  }
+};
 </script>
 
 <template>
@@ -32,6 +60,14 @@ const emit = defineEmits(["toggle-sidebar"]);
       </div>
     </div>
     <div class="flex items-center gap-4">
+      <button
+        @click="toggleDarkMode"
+        class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+        title="Ganti Tema"
+      >
+        <PhMoon v-if="!isDarkMode" :size="20" />
+        <PhSun v-else :size="20" />
+      </button>
       <button
         class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
       >
