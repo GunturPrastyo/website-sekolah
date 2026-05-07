@@ -113,7 +113,12 @@ const router = createRouter({
           path: 'visi-misi', // Child route for Visi & Misi
           name: 'admin-visi-misi',
           component: () => import('../views/admin/AdminVisiMisi.vue')
-        }
+        },
+        {
+          path: '/admin/guru-staf',
+          name: 'AdminGuruStaf',
+          component: () => import('../views/admin/AdminGuruStaf.vue')
+        },
         // Add other admin routes here as children
       ]
     }

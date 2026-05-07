@@ -40,6 +40,7 @@ const menu = ref([
     children: [
       { name: "Sejarah", link: "/admin/sejarah" }, // Link ke halaman admin sejarah
       { name: "Visi & Misi", link: "/admin/visi-misi" },
+      { name: "Guru & Staf", link: "/admin/guru-staf" },
       { name: "Fasilitas", link: "#" },
     ],
   },
@@ -47,7 +48,6 @@ const menu = ref([
     name: "Akademik",
     icon: markRaw(PhChalkboard),
     children: [
-      { name: "Guru & Staf", link: "#" },
       { name: "Kurikulum", link: "#" },
       { name: "Program Jurusan", link: "#" },
       { name: "Ekstrakurikuler", link: "#" },
