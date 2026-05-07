@@ -41,7 +41,7 @@ const menu = ref([
       { name: "Sejarah", link: "/admin/sejarah" }, // Link ke halaman admin sejarah
       { name: "Visi & Misi", link: "/admin/visi-misi" },
       { name: "Guru & Staf", link: "/admin/guru-staf" },
-      { name: "Fasilitas", link: "#" },
+      { name: "Fasilitas", link: "/admin/fasilitas" },
     ],
   },
   {

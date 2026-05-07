@@ -119,7 +119,11 @@ const router = createRouter({
           name: 'AdminGuruStaf',
           component: () => import('../views/admin/AdminGuruStaf.vue')
         },
-        // Add other admin routes here as children
+        {
+          path: 'fasilitas', // Child route for fasilitas
+          name: 'admin-fasilitas',
+          component: () => import('../views/admin/AdminFasilitas.vue')
+        }
       ]
     }
 
