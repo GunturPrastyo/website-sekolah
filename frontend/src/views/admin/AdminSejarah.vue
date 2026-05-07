@@ -13,6 +13,7 @@ import RichTextEditor from "@/components/RichTextEditor.vue";
 import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
+import ToastNotification from "@/components/admin/ToastNotification.vue";
 
 // Dummy data, in a real app this would come from an API
 const timeline = ref([
@@ -86,6 +87,17 @@ const isEditing = ref(false); // Indicates if an entry is being edited
 const isDeleteModalOpen = ref(false); // Indicates if delete modal is open
 const itemToDelete = ref(null); // Stores the id of the item to be deleted
 
+const showToast = ref(false);
+const toastData = ref({ title: "", message: "", type: "success" });
+
+const triggerToast = (title, message, type = "success") => {
+  toastData.value = { title, message, type };
+  showToast.value = true;
+  setTimeout(() => {
+    showToast.value = false;
+  }, 4000);
+};
+
 const resetForm = () => {
   form.value = {
     id: null,
@@ -106,7 +118,11 @@ const showAddForm = () => {
 const addEntry = () => {
   const plainDesc = form.value.description.replace(/<[^>]*>?/gm, "").trim();
   if (!form.value.year || !form.value.title || !plainDesc) {
-    alert("Tahun, Judul, dan Deskripsi tidak boleh kosong!");
+    triggerToast(
+      "Gagal Menyimpan",
+      "Kolom Tahun, Judul, dan Deskripsi wajib diisi!",
+      "error"
+    );
     return;
   }
   const newId =
@@ -116,6 +132,10 @@ const addEntry = () => {
     id: newId,
   });
   isFormVisible.value = false; // Hide form after adding
+  triggerToast(
+    "Berhasil Ditambahkan",
+    "Entri lini masa baru telah ditambahkan ke sistem."
+  );
   resetForm();
 };
 
@@ -130,7 +150,11 @@ const startEdit = (entry) => {
 const saveEntry = () => {
   const plainDesc = form.value.description.replace(/<[^>]*>?/gm, "").trim();
   if (!form.value.year || !form.value.title || !plainDesc) {
-    alert("Tahun, Judul, dan Deskripsi tidak boleh kosong!");
+    triggerToast(
+      "Gagal Menyimpan",
+      "Kolom Tahun, Judul, dan Deskripsi wajib diisi!",
+      "error"
+    );
     return;
   }
   const index = timeline.value.findIndex((e) => e.id === form.value.id);
@@ -140,6 +164,7 @@ const saveEntry = () => {
     };
   }
   isFormVisible.value = false; // Hide form after saving
+  triggerToast("Perubahan Disimpan", "Entri lini masa berhasil diperbarui.");
   resetForm();
 };
 
@@ -157,6 +182,7 @@ const confirmDelete = () => {
   if (itemToDelete.value !== null) {
     timeline.value = timeline.value.filter((e) => e.id !== itemToDelete.value);
     itemToDelete.value = null;
+    triggerToast("Data Dihapus", "Satu entri lini masa berhasil dihapus.", "info");
   }
   isDeleteModalOpen.value = false;
 };
@@ -408,6 +434,15 @@ const filteredTimeline = computed(() => {
       message="Apakah Anda yakin ingin menghapus entri sejarah ini? Data yang telah dihapus tidak dapat dikembalikan."
       @confirm="confirmDelete"
       @cancel="cancelDelete"
+    />
+
+    <!-- Notifikasi Toast -->
+    <ToastNotification
+      :isOpen="showToast"
+      :title="toastData.title"
+      :message="toastData.message"
+      :type="toastData.type"
+      @close="showToast = false"
     />
   </main>
 </template>

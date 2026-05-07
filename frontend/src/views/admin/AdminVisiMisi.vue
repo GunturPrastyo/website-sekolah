@@ -8,6 +8,7 @@ import {
 } from "@phosphor-icons/vue";
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
+import ToastNotification from "@/components/admin/ToastNotification.vue";
 
 // Data dummy state. Nanti bisa diganti dengan fetch dari API
 const visi = ref(
@@ -56,9 +57,20 @@ const removeMisi = (index) => {
 
 const isSaveModalOpen = ref(false);
 
+const showToast = ref(false);
+const toastData = ref({ title: "", message: "", type: "success" });
+
+const triggerToast = (title, message, type = "success") => {
+  toastData.value = { title, message, type };
+  showToast.value = true;
+  setTimeout(() => {
+    showToast.value = false;
+  }, 4000); // Otomatis hilang setelah 4 detik
+};
+
 const confirmSave = () => {
   // Logika untuk menyimpan ke API
-  alert("Perubahan Visi, Misi, dan Sambutan berhasil disimpan!");
+  triggerToast("Berhasil Disimpan!", "Pembaruan pada Visi, Misi, dan Sambutan Kepala Sekolah berhasil diterapkan ke sistem.");
   console.log({
     visi: visi.value,
     misi: misi.value,
@@ -212,6 +224,15 @@ const handleDrop = (index) => {
       theme="primary"
       @confirm="confirmSave"
       @cancel="isSaveModalOpen = false"
+    />
+
+    <!-- Notifikasi Toast -->
+    <ToastNotification
+      :isOpen="showToast"
+      :title="toastData.title"
+      :message="toastData.message"
+      :type="toastData.type"
+      @close="showToast = false"
     />
   </main>
 </template>
