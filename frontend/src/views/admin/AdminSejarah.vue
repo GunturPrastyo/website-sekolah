@@ -10,6 +10,7 @@ import {
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
+import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 
 // Dummy data, in a real app this would come from an API
 const timeline = ref([
@@ -79,6 +80,8 @@ const form = ref({
 });
 
 const isEditing = ref(false); // Indicates if an entry is being edited
+const isDeleteModalOpen = ref(false); // Indicates if delete modal is open
+const itemToDelete = ref(null); // Stores the id of the item to be deleted
 
 const resetForm = () => {
   form.value = {
@@ -111,7 +114,7 @@ const startEdit = (entry) => {
   isEditing.value = true;
   form.value = {
     ...entry,
-  }; 
+  };
 };
 
 const saveEntry = () => {
@@ -134,9 +137,21 @@ const cancelEdit = () => {
 };
 
 const deleteEntry = (id) => {
-  if (confirm("Apakah Anda yakin ingin menghapus entri ini?")) {
-    timeline.value = timeline.value.filter((e) => e.id !== id);
+  itemToDelete.value = id;
+  isDeleteModalOpen.value = true;
+};
+
+const confirmDelete = () => {
+  if (itemToDelete.value !== null) {
+    timeline.value = timeline.value.filter((e) => e.id !== itemToDelete.value);
+    itemToDelete.value = null;
   }
+  isDeleteModalOpen.value = false;
+};
+
+const cancelDelete = () => {
+  itemToDelete.value = null;
+  isDeleteModalOpen.value = false;
 };
 </script>
 
@@ -193,8 +208,7 @@ const deleteEntry = (id) => {
         </div>
 
         <div class="mb-4">
-          <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >Ikon Representasi</label
           >
           <IconPicker v-model="form.icon" />
@@ -252,7 +266,10 @@ const deleteEntry = (id) => {
           class="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-700 rounded-lg border border-gray-100 dark:border-slate-600"
         >
           <div class="flex items-center gap-3">
-            <component :is="educationIcons[entry.icon]" class="w-6 h-6 text-blue-500 shrink-0" />
+            <component
+              :is="educationIcons[entry.icon]"
+              class="w-6 h-6 text-blue-500 shrink-0"
+            />
             <div>
               <p class="font-semibold text-gray-800 dark:text-white">
                 {{ entry.year }} - {{ entry.title }}
@@ -288,8 +305,16 @@ const deleteEntry = (id) => {
         </p>
       </div>
     </div>
+
+    <!-- Modal Konfirmasi Hapus -->
+    <ConfirmModal
+      :isOpen="isDeleteModalOpen"
+      title="Hapus Entri Timeline"
+      message="Apakah Anda yakin ingin menghapus entri sejarah ini? Data yang telah dihapus tidak dapat dikembalikan."
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    />
   </main>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
