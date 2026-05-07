@@ -16,12 +16,31 @@ import ToastNotification from "@/components/admin/ToastNotification.vue";
 // Kategori Staf
 const categories = [
   { id: "pimpinan", name: "Pimpinan Sekolah" },
-  { id: "informatika", name: "Guru Informatika" },
-  { id: "matematika", name: "Guru Matematika" },
-  { id: "olahraga", name: "Guru Olahraga" },
-  { id: "bahasa_inggris", name: "Guru Bahasa Inggris" },
-  { id: "pustakawan", name: "Pustakawan" },
-  { id: "tata_usaha", name: "Staff Tata Usaha" },
+  { id: "pendidik", name: "Tenaga Pendidik" },
+  { id: "kependidikan", name: "Tenaga Kependidikan" },
+];
+
+// Saran Jabatan/Posisi Umum (Datalist Autocomplete)
+const commonRoles = [
+  "Kepala Sekolah",
+  "Wakil Kepala Sekolah",
+  "Guru Matematika",
+  "Guru Bahasa Indonesia",
+  "Guru Bahasa Inggris",
+  "Guru Fisika",
+  "Guru Kimia",
+  "Guru Biologi",
+  "Guru Pendidikan Agama",
+  "Guru Penjasorkes",
+  "Guru Seni Budaya",
+  "Guru Informatika",
+  "Guru Bimbingan Konseling (BK)",
+  "Kepala Tata Usaha",
+  "Staf Tata Usaha",
+  "Pustakawan",
+  "Laboran",
+  "Petugas Keamanan",
+  "Petugas Kebersihan",
 ];
 
 // Dummy Data
@@ -51,7 +70,7 @@ const staffList = ref([
     id: 3,
     name: "Ahmad Fauzi, S.Kom",
     role: "Guru Informatika",
-    category: "informatika",
+    category: "pendidik",
     image:
       "https://ui-avatars.com/api/?name=Ahmad+Fauzi&background=0D8ABC&color=fff&size=256",
     nip: "19900215 201504 1 003",
@@ -286,7 +305,11 @@ const getCategoryName = (id) => {
                   required
                   class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Contoh: Guru Matematika Kelas X"
+                  list="role-suggestions"
                 />
+                <datalist id="role-suggestions">
+                  <option v-for="role in commonRoles" :key="role" :value="role"></option>
+                </datalist>
               </div>
 
               <div class="md:col-span-2">
