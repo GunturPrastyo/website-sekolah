@@ -39,7 +39,7 @@ const menu = ref([
     icon: markRaw(PhBuildings),
     children: [
       { name: "Sejarah", link: "/admin/sejarah" }, // Link ke halaman admin sejarah
-      { name: "Visi & Misi", link: "#" },
+      { name: "Visi & Misi", link: "/admin/visi-misi" },
       { name: "Fasilitas", link: "#" },
     ],
   },
