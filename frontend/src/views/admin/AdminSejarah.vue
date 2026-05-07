@@ -79,6 +79,7 @@ const form = ref({
   description: "",
 });
 
+const isFormVisible = ref(false); // Controls form visibility
 const isEditing = ref(false); // Indicates if an entry is being edited
 const isDeleteModalOpen = ref(false); // Indicates if delete modal is open
 const itemToDelete = ref(null); // Stores the id of the item to be deleted
@@ -95,6 +96,11 @@ const resetForm = () => {
   isEditing.value = false;
 };
 
+const showAddForm = () => {
+  resetForm();
+  isFormVisible.value = true;
+};
+
 const addEntry = () => {
   const plainDesc = form.value.description.replace(/<[^>]*>?/gm, "").trim();
   if (!form.value.year || !form.value.title || !plainDesc) {
@@ -107,6 +113,7 @@ const addEntry = () => {
     ...form.value,
     id: newId,
   });
+  isFormVisible.value = false; // Hide form after adding
   resetForm();
 };
 
@@ -115,6 +122,7 @@ const startEdit = (entry) => {
   form.value = {
     ...entry,
   };
+  isFormVisible.value = true; // Show form for editing
 };
 
 const saveEntry = () => {
@@ -129,11 +137,13 @@ const saveEntry = () => {
       ...form.value,
     };
   }
+  isFormVisible.value = false; // Hide form after saving
   resetForm();
 };
 
-const cancelEdit = () => {
+const hideForm = () => {
   resetForm();
+  isFormVisible.value = false;
 };
 
 const deleteEntry = (id) => {
@@ -167,98 +177,118 @@ const cancelDelete = () => {
     </div>
 
     <!-- Form Tambah/Edit Data -->
-    <div
-      class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm mb-8"
+    <Transition
+      enter-active-class="transition-all duration-500 ease-out"
+      leave-active-class="transition-all duration-300 ease-in"
+      enter-from-class="opacity-0 -translate-y-4 max-h-0"
+      enter-to-class="opacity-100 translate-y-0 max-h-[1000px]"
+      leave-from-class="opacity-100 translate-y-0 max-h-[1000px]"
+      leave-to-class="opacity-0 -translate-y-4 max-h-0"
     >
-      <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-        {{ isEditing ? "Edit Entri Timeline" : "Tambah Entri Baru" }}
-      </h3>
-      <form @submit.prevent="isEditing ? saveEntry() : addEntry()">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label
-              for="year"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >Tahun</label
+      <div
+        v-if="isFormVisible"
+        class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm mb-8"
+      >
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+          {{ isEditing ? "Edit Entri Timeline" : "Tambah Entri Baru" }}
+        </h3>
+        <form @submit.prevent="isEditing ? saveEntry() : addEntry()">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label
+                for="year"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >Tahun</label
+              >
+              <input
+                type="text"
+                id="year"
+                v-model="form.year"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Contoh: 1985"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="title"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >Judul</label
+              >
+              <input
+                type="text"
+                id="title"
+                v-model="form.title"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Contoh: Pendirian SMAN 1"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >Ikon Representasi</label
             >
-            <input
-              type="text"
-              id="year"
-              v-model="form.year"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Contoh: 1985"
-              required
+            <IconPicker v-model="form.icon" />
+          </div>
+
+          <div class="mb-4">
+            <ImageUploader v-model="form.image" label="Gambar Representasi" />
+          </div>
+
+          <div class="mb-6">
+            <label
+              for="description"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >Deskripsi</label
+            >
+            <RichTextEditor
+              v-model="form.description"
+              placeholder="Masukkan deskripsi lengkap entri timeline..."
             />
           </div>
-          <div>
-            <label
-              for="title"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >Judul</label
+
+          <div class="flex gap-3">
+            <button
+              type="submit"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-800"
             >
-            <input
-              type="text"
-              id="title"
-              v-model="form.title"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Contoh: Pendirian SMAN 1"
-              required
-            />
+              <PhFloppyDisk v-if="isEditing" class="w-5 h-5 mr-2" />
+              <PhPlusCircle v-else class="w-5 h-5 mr-2" />
+              {{ isEditing ? "Simpan Perubahan" : "Tambah Entri" }}
+            </button>
+            <button
+              v-if="isEditing"
+              type="button"
+              @click="hideForm"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-slate-800"
+            >
+              <PhXCircle class="w-5 h-5 mr-2" />
+              Batal
+            </button>
           </div>
-        </div>
-
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >Ikon Representasi</label
-          >
-          <IconPicker v-model="form.icon" />
-        </div>
-
-        <div class="mb-4">
-          <ImageUploader v-model="form.image" label="Gambar Representasi" />
-        </div>
-
-        <div class="mb-6">
-          <label
-            for="description"
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >Deskripsi</label
-          >
-          <RichTextEditor
-            v-model="form.description"
-            placeholder="Masukkan deskripsi lengkap entri timeline..."
-          />
-        </div>
-
-        <div class="flex gap-3">
-          <button
-            type="submit"
-            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-800"
-          >
-            <PhFloppyDisk v-if="isEditing" class="w-5 h-5 mr-2" />
-            <PhPlusCircle v-else class="w-5 h-5 mr-2" />
-            {{ isEditing ? "Simpan Perubahan" : "Tambah Entri" }}
-          </button>
-          <button
-            v-if="isEditing"
-            type="button"
-            @click="cancelEdit"
-            class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-slate-800"
-          >
-            <PhXCircle class="w-5 h-5 mr-2" />
-            Batal
-          </button>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </Transition>
 
     <!-- Daftar Entri Timeline -->
     <div
       class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
     >
-      <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-        Daftar Entri Timeline
-      </h3>
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-white">
+          Daftar Entri Timeline
+        </h3>
+        <button
+          v-if="!isFormVisible"
+          @click="showAddForm"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-800"
+        >
+          <PhPlusCircle class="w-5 h-5 mr-2" />
+          Tambah Entri Baru
+        </button>
+      </div>
       <div class="space-y-4">
         <div
           v-for="entry in timeline"
@@ -317,4 +347,9 @@ const cancelDelete = () => {
   </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* Style untuk transisi max-height */
+.transition-all {
+  overflow: hidden;
+}
+</style>
