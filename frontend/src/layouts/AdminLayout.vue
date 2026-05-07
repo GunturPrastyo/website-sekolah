@@ -23,7 +23,7 @@ const toggleSidebar = () => {
 
       <!-- Konten Dasbor -->
       <main
-        class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-slate-900 p-6 md:p-8"
+        class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-slate-900"
       >
         <router-view />
       </main>
