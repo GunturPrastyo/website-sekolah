@@ -73,15 +73,15 @@ const menu = ref([
     <div
       class="flex items-center justify-center h-20 border-b border-gray-100 dark:border-slate-700"
     >
-      <h1 class="text-2xl font-bold text-blue-600 dark:text-blue-400">Admin Panel</h1>
+      <h1 class="text-xl font-bold text-blue-600 dark:text-blue-400">Admin Panel</h1>
     </div>
-    <nav class="mt-6 flex-1 overflow-y-auto">
+    <nav class="mt-6 flex-1 overflow-y-auto text-sm">
       <div v-for="item in menu" :key="item.name" class="mb-1">
         <!-- Item with children (dropdown) -->
         <div v-if="item.children">
           <button
             @click="toggleDropdown(item.name)"
-            class="w-full flex items-center justify-between px-6 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
+            class="w-full flex items-center justify-between px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
           >
             <span class="flex items-center">
               <component :is="item.icon" :size="20" class="mr-3" />
@@ -102,7 +102,7 @@ const menu = ref([
                 v-for="child in item.children"
                 :key="child.name"
                 :to="child.link"
-                class="flex items-center py-2.5 text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                class="flex items-center py-2.5 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               >
                 {{ child.name }}
               </router-link>
