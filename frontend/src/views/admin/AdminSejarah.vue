@@ -17,6 +17,8 @@ import {
   PhXCircle,
   PhFloppyDisk,
 } from "@phosphor-icons/vue";
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
 
 // Dummy data, in a real app this would come from an API
 const timeline = ref([
@@ -114,7 +116,8 @@ const resetForm = () => {
 };
 
 const addEntry = () => {
-  if (!form.value.year || !form.value.title || !form.value.description) {
+  const plainDesc = form.value.description.replace(/<[^>]*>?/gm, "").trim();
+  if (!form.value.year || !form.value.title || !plainDesc) {
     alert("Tahun, Judul, dan Deskripsi tidak boleh kosong!");
     return;
   }
@@ -137,7 +140,8 @@ const startEdit = (entry) => {
 };
 
 const saveEntry = () => {
-  if (!form.value.year || !form.value.title || !form.value.description) {
+  const plainDesc = form.value.description.replace(/<[^>]*>?/gm, "").trim();
+  if (!form.value.year || !form.value.title || !plainDesc) {
     alert("Tahun, Judul, dan Deskripsi tidak boleh kosong!");
     return;
   }
@@ -220,15 +224,23 @@ const deleteEntry = (id) => {
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >Ikon</label
           >
-          <select
-            id="icon"
-            v-model="form.icon"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option v-for="(iconComp, name) in availableIcons" :key="name" :value="name">
-              {{ name }}
-            </option>
-          </select>
+          <div class="flex flex-wrap gap-3 mt-2">
+            <button
+              v-for="(iconComp, name) in availableIcons"
+              :key="name"
+              type="button"
+              @click="form.icon = name"
+              :class="[
+                'p-3 rounded-xl border transition-all flex items-center justify-center',
+                form.icon === name
+                  ? 'border-blue-500 bg-blue-50 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400 scale-105 shadow-sm'
+                  : 'border-gray-200 bg-white text-gray-500 hover:border-blue-300 hover:text-blue-500 dark:border-slate-600 dark:bg-slate-700 dark:text-gray-400 dark:hover:border-blue-500',
+              ]"
+              :title="name"
+            >
+              <component :is="iconComp" class="w-6 h-6" />
+            </button>
+          </div>
         </div>
 
         <div class="mb-4">
@@ -252,15 +264,17 @@ const deleteEntry = (id) => {
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >Deskripsi</label
           >
-          <!-- TODO: Replace with a rich text editor component -->
-          <textarea
-            id="description"
-            v-model="form.description"
-            rows="5"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Masukkan deskripsi lengkap entri timeline..."
-            required
-          ></textarea>
+          <div
+            class="bg-white dark:bg-slate-800 rounded-lg border border-gray-300 dark:border-slate-600 focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500"
+          >
+            <QuillEditor
+              v-model:content="form.description"
+              contentType="html"
+              theme="snow"
+              placeholder="Masukkan deskripsi lengkap entri timeline..."
+              class="min-h-[150px] text-gray-900 dark:text-white border-0"
+            />
+          </div>
         </div>
 
         <div class="flex gap-3">
@@ -304,9 +318,10 @@ const deleteEntry = (id) => {
               <p class="font-semibold text-gray-800 dark:text-white">
                 {{ entry.year }} - {{ entry.title }}
               </p>
-              <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-1">
-                {{ entry.description }}
-              </p>
+              <div
+                class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mt-1"
+                v-html="entry.description"
+              ></div>
             </div>
           </div>
           <div class="flex gap-2">
@@ -338,5 +353,34 @@ const deleteEntry = (id) => {
 </template>
 
 <style scoped>
-/* Add any specific styles if needed */
+/* Custom styles untuk Quill Editor di Mode Terang / Gelap */
+:deep(.ql-toolbar) {
+  border-radius: 0.5rem 0.5rem 0 0;
+  border-color: inherit !important;
+  background-color: #f8fafc;
+}
+.dark :deep(.ql-toolbar) {
+  background-color: #334155;
+  border-color: #475569 !important;
+}
+.dark :deep(.ql-stroke) {
+  stroke: #cbd5e1 !important;
+}
+.dark :deep(.ql-fill) {
+  fill: #cbd5e1 !important;
+}
+.dark :deep(.ql-picker) {
+  color: #cbd5e1 !important;
+}
+:deep(.ql-container) {
+  border-radius: 0 0 0.5rem 0.5rem;
+  border-color: inherit !important;
+  font-family: inherit;
+}
+.dark :deep(.ql-container) {
+  border-color: #475569 !important;
+}
+.dark :deep(.ql-editor.ql-blank::before) {
+  color: #94a3b8;
+}
 </style>
