@@ -1,7 +1,7 @@
 <template>
   <div
     ref="editorWrapper"
-    class="rich-text-editor bg-white dark:bg-slate-800 rounded-lg border border-gray-300 dark:border-slate-600 focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500"
+    class="rich-text-editor relative bg-white dark:bg-slate-800 rounded-lg border border-gray-300 dark:border-slate-600 focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500"
   >
     <!-- Input file tersembunyi untuk mengambil alih upload gambar -->
     <input
@@ -254,9 +254,22 @@ const updateToolbarPosition = () => {
   const imgRect = selectedImage.value.getBoundingClientRect();
   const wrapperRect = editorWrapper.value.getBoundingClientRect();
 
+  let topPos = imgRect.top - wrapperRect.top + 10;
+  let leftPos = imgRect.left - wrapperRect.left + 10;
+
+  // Batasi posisi ke kiri agar tidak keluar dari area editor
+  if (leftPos < 10) leftPos = 10;
+
+  // Batasi posisi ke kanan agar tidak keluar dari area editor (lebar toolbar ~200px)
+  if (leftPos + 220 > wrapperRect.width) leftPos = Math.max(10, wrapperRect.width - 230);
+
+  // Batasi batas atas dan bawah saat user melakukan scroll dalam editor
+  if (topPos < 10) topPos = 10;
+  if (topPos + 80 > wrapperRect.height) topPos = Math.max(10, wrapperRect.height - 90);
+
   toolbarStyle.value = {
-    top: `${imgRect.top - wrapperRect.top + 10}px`,
-    left: `${imgRect.left - wrapperRect.left + 10}px`,
+    top: `${topPos}px`,
+    left: `${leftPos}px`,
   };
 };
 
