@@ -70,14 +70,6 @@ const extractImages = (html) => {
   return images;
 };
 
-const stripTags = (html) => {
-  if (!html) return "";
-  return html
-    .replace(/<[^>]*>?/gm, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-};
-
 const saveFacility = () => {
   if (!form.value.category.trim()) {
     triggerToast("Gagal", "Kategori fasilitas wajib diisi!", "error");
@@ -206,13 +198,13 @@ const confirmDelete = () => {
         :key="facility.id"
         class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6 shadow-sm flex flex-col gap-4 group"
       >
-        <div class="flex items-start justify-between">
-          <div>
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex-1 overflow-hidden">
             <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">
               {{ facility.category }}
             </h3>
-            <div class="text-gray-600 dark:text-gray-400 text-sm line-clamp-3">
-              {{ stripTags(facility.content) }}
+            <div class="text-gray-800 dark:text-gray-200 text-sm">
+              <div v-html="facility.content" class="editor-content-preview"></div>
             </div>
           </div>
           <div class="flex gap-2 shrink-0">
@@ -230,33 +222,6 @@ const confirmDelete = () => {
             >
               <PhTrash class="w-5 h-5" />
             </button>
-          </div>
-        </div>
-
-        <!-- Image Grid Preview -->
-        <div v-if="facility.images && facility.images.length > 0" class="mt-2">
-          <div
-            class="grid gap-2"
-            :class="{
-              'grid-cols-1 md:grid-cols-2 lg:grid-cols-3': facility.images.length === 1,
-              'grid-cols-2': facility.images.length === 2,
-              'grid-cols-3': facility.images.length === 3,
-              'grid-cols-2 md:grid-cols-4': facility.images.length >= 4,
-            }"
-          >
-            <div
-              v-for="(img, idx) in facility.images.slice(0, 4)"
-              :key="idx"
-              class="relative aspect-video rounded-xl overflow-hidden"
-            >
-              <img :src="img" class="w-full h-full object-cover" />
-              <div
-                v-if="idx === 3 && facility.images.length > 4"
-                class="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-2xl backdrop-blur-sm"
-              >
-                +{{ facility.images.length - 4 }}
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -288,3 +253,13 @@ const confirmDelete = () => {
     />
   </main>
 </template>
+
+<style scoped>
+.editor-content-preview {
+  overflow: hidden; /* Clearfix untuk mencegah overflow saat gambar mengapung (float) */
+}
+.editor-content-preview :deep(img) {
+  max-width: 100%;
+  height: auto;
+}
+</style>
