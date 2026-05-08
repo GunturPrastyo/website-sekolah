@@ -1,21 +1,145 @@
 <template>
   <div
+    ref="editorWrapper"
     class="rich-text-editor bg-white dark:bg-slate-800 rounded-lg border border-gray-300 dark:border-slate-600 focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500"
   >
+    <!-- Input file tersembunyi untuk mengambil alih upload gambar -->
+    <input
+      type="file"
+      accept="image/*"
+      ref="fileInput"
+      @change="handleImageUpload"
+      class="hidden"
+    />
+
+    <!-- Menu Apung (Floating Toolbar) Pengaturan Gambar -->
+    <div
+      v-show="selectedImage"
+      :style="toolbarStyle"
+      class="absolute z-10 flex flex-col gap-1 p-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 shadow-xl rounded-lg pointer-events-auto transition-opacity"
+    >
+      <!-- Opsi Posisi / Alignment -->
+      <div
+        class="flex items-center gap-1 border-b border-gray-100 dark:border-slate-700 pb-1 mb-1"
+      >
+        <span class="text-[10px] text-gray-500 font-bold px-1 uppercase">Posisi</span>
+        <button
+          @mousedown.prevent
+          @click="setImageStyle('float: left; margin: 0 1rem 1rem 0;')"
+          class="p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded text-gray-700 dark:text-gray-300"
+          title="Menyamping (Kiri)"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h8m-8 6h16M4 18h.01M4 12h.01"
+            />
+          </svg>
+        </button>
+        <button
+          @mousedown.prevent
+          @click="
+            setImageStyle('display: block; margin: 1rem auto; clear: both; float: none;')
+          "
+          class="p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded text-gray-700 dark:text-gray-300"
+          title="Tengah (Blok)"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+        <button
+          @mousedown.prevent
+          @click="setImageStyle('float: right; margin: 0 0 1rem 1rem;')"
+          class="p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded text-gray-700 dark:text-gray-300"
+          title="Menyamping (Kanan)"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M12 12h8m-8 6h16M20 18h.01M20 12h.01"
+            />
+          </svg>
+        </button>
+        <button
+          @mousedown.prevent
+          @click="
+            setImageStyle(
+              'display: block; margin: 1rem auto 1rem 0; clear: both; float: none;'
+            )
+          "
+          class="p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded text-gray-700 dark:text-gray-300"
+          title="Kiri (Blok)"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h10m-10 6h16"
+            />
+          </svg>
+        </button>
+      </div>
+      <!-- Opsi Ukuran -->
+      <div class="flex items-center gap-1">
+        <span class="text-[10px] text-gray-500 font-bold px-1 uppercase">Ukuran</span>
+        <button
+          @mousedown.prevent
+          @click="setImageWidth('100%')"
+          class="px-2 py-1 text-xs hover:bg-gray-100 dark:hover:bg-slate-700 rounded text-gray-700 dark:text-gray-300 font-medium transition-colors"
+        >
+          100%
+        </button>
+        <button
+          @mousedown.prevent
+          @click="setImageWidth('50%')"
+          class="px-2 py-1 text-xs hover:bg-gray-100 dark:hover:bg-slate-700 rounded text-gray-700 dark:text-gray-300 font-medium transition-colors"
+        >
+          50%
+        </button>
+        <button
+          @mousedown.prevent
+          @click="setImageWidth('25%')"
+          class="px-2 py-1 text-xs hover:bg-gray-100 dark:hover:bg-slate-700 rounded text-gray-700 dark:text-gray-300 font-medium transition-colors"
+        >
+          25%
+        </button>
+        <button
+          @mousedown.prevent
+          @click="setImageWidth('auto')"
+          class="px-2 py-1 text-xs hover:bg-gray-100 dark:hover:bg-slate-700 rounded text-gray-700 dark:text-gray-300 font-medium transition-colors"
+        >
+          Auto
+        </button>
+      </div>
+    </div>
+
     <QuillEditor
+      ref="quillRef"
       v-model:content="content"
       contentType="html"
       theme="snow"
       :toolbar="toolbarOptions"
       :placeholder="placeholder"
+      @ready="onEditorReady"
       class="min-h-[250px] text-gray-900 dark:text-white border-0"
     />
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { QuillEditor } from "@vueup/vue-quill";
+import { ref, computed } from "vue";
+import { QuillEditor, Quill } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 
 // 0. Patch sementara untuk mematikan warning Chrome terkait DOMNodeInserted dari Quill 1.3.x
@@ -27,6 +151,31 @@ if (typeof window !== "undefined" && !window.__quillDomNodeInsertedPatched) {
     return originalAddEventListener.call(this, type, listener, options);
   };
   window.__quillDomNodeInsertedPatched = true;
+}
+
+// 1. Register Custom Blot untuk mempertahankan attribut 'style' & 'width' saat disisipkan & disimpan
+if (typeof window !== "undefined" && Quill) {
+  const BaseImage = Quill.import("formats/image");
+  class StylableImage extends BaseImage {
+    static formats(domNode) {
+      return {
+        width: domNode.getAttribute("width") || "",
+        style: domNode.getAttribute("style") || "",
+      };
+    }
+    format(name, value) {
+      if (name === "width" || name === "style") {
+        if (value) {
+          this.domNode.setAttribute(name, value);
+        } else {
+          this.domNode.removeAttribute(name);
+        }
+      } else {
+        super.format(name, value);
+      }
+    }
+  }
+  Quill.register(StylableImage, true);
 }
 
 const props = defineProps({
@@ -46,6 +195,13 @@ const content = computed({
   get: () => props.modelValue,
   set: (val) => emit("update:modelValue", val),
 });
+
+const quillRef = ref(null);
+const editorWrapper = ref(null);
+const fileInput = ref(null);
+const selectedImage = ref(null);
+const toolbarStyle = ref({ top: "0px", left: "0px" });
+let qInstance = null;
 
 // Konfigurasi Toolbar yang lebih lengkap (termasuk link, gambar, video, dan styling text)
 const toolbarOptions = [
@@ -68,6 +224,74 @@ const toolbarOptions = [
   ["link", "image", "video"], // Link, attach gambar, dan video
   ["clean"], // Tombol remove formatting
 ];
+
+const onEditorReady = (quill) => {
+  qInstance = quill;
+
+  // Override default click gambar dari toolbar
+  quill.getModule("toolbar").addHandler("image", () => {
+    if (fileInput.value) fileInput.value.click();
+  });
+
+  // Deteksi klik pada gambar untuk memunculkan floating toolbar
+  quill.root.addEventListener("click", (e) => {
+    if (e.target.tagName === "IMG") {
+      selectedImage.value = e.target;
+      updateToolbarPosition();
+    } else {
+      selectedImage.value = null;
+    }
+  });
+
+  // Sembunyikan toolbar jika user lanjut mengetik
+  quill.on("text-change", () => {
+    selectedImage.value = null;
+  });
+};
+
+const updateToolbarPosition = () => {
+  if (!selectedImage.value || !editorWrapper.value) return;
+  const imgRect = selectedImage.value.getBoundingClientRect();
+  const wrapperRect = editorWrapper.value.getBoundingClientRect();
+
+  toolbarStyle.value = {
+    top: `${imgRect.top - wrapperRect.top + 10}px`,
+    left: `${imgRect.left - wrapperRect.left + 10}px`,
+  };
+};
+
+const handleImageUpload = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    const url = evt.target.result;
+    const range = qInstance.getSelection(true) || { index: qInstance.getLength() };
+
+    qInstance.insertEmbed(range.index, "image", url, "user");
+
+    // SOLUSI BUG: Memaksa memberikan baris baru '\n' langsung di bawah gambar
+    // Sehingga kursor pengguna tidak akan "nyangkut" sebelum gambar
+    qInstance.insertText(range.index + 1, "\n", "user");
+    qInstance.setSelection(range.index + 2, "user");
+
+    if (fileInput.value) fileInput.value.value = "";
+  };
+  reader.readAsDataURL(file);
+};
+
+const applyFormat = (formatType, valueStr) => {
+  if (!selectedImage.value || !qInstance) return;
+  const blot = Quill.find(selectedImage.value);
+  if (blot) {
+    blot.format(formatType, valueStr);
+    emit("update:modelValue", qInstance.root.innerHTML); // Paksa sinkronisasi V-Model
+    updateToolbarPosition();
+  }
+};
+
+const setImageStyle = (styleStr) => applyFormat("style", styleStr);
+const setImageWidth = (widthStr) => applyFormat("width", widthStr);
 </script>
 
 <style scoped>
@@ -106,5 +330,10 @@ const toolbarOptions = [
   max-width: 100%;
   height: auto;
   border-radius: 0.5rem;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+:deep(.ql-editor img:hover) {
+  box-shadow: 0 0 0 2px #3b82f6; /* Ring biru saat dihover menandakan gambar bisa diedit */
 }
 </style>
