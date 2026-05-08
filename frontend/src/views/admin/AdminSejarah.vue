@@ -371,13 +371,13 @@ const filteredTimeline = computed(() => {
           @dragover.prevent
           @dragenter.prevent
           @drop="handleDrop(entry)"
-          class="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-700 rounded-lg border border-gray-100 dark:border-slate-600 hover:shadow-md transition-shadow group"
+          class="flex items-start justify-between p-4 bg-gray-50 dark:bg-slate-700 rounded-lg border border-gray-100 dark:border-slate-600 hover:shadow-md transition-shadow group gap-4"
           :class="!searchQuery ? 'cursor-move' : ''"
           :title="!searchQuery ? 'Tahan dan geser untuk mengubah urutan' : ''"
         >
-          <div class="flex items-center gap-3">
+          <div class="flex items-start gap-3 flex-1 overflow-hidden">
             <PhDotsSixVertical
-              class="w-6 h-6 shrink-0 transition-colors"
+              class="w-6 h-6 shrink-0 transition-colors mt-0.5"
               :class="
                 !searchQuery
                   ? 'text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 cursor-grab active:cursor-grabbing'
@@ -386,19 +386,19 @@ const filteredTimeline = computed(() => {
             />
             <component
               :is="educationIcons[entry.icon]"
-              class="w-6 h-6 text-blue-500 shrink-0"
+              class="w-6 h-6 text-blue-500 shrink-0 mt-0.5"
             />
-            <div>
+            <div class="flex-1 overflow-hidden">
               <p class="font-semibold text-gray-800 dark:text-white">
                 {{ entry.year }} - {{ entry.title }}
               </p>
               <div
-                class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mt-1"
+                class="text-sm text-gray-600 dark:text-gray-400 mt-1 editor-content-preview"
                 v-html="entry.description"
               ></div>
             </div>
           </div>
-          <div class="flex gap-2">
+          <div class="flex gap-2 shrink-0">
             <button
               @click="startEdit(entry)"
               class="p-2 rounded-full text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
@@ -451,5 +451,12 @@ const filteredTimeline = computed(() => {
 /* Style untuk transisi max-height */
 .transition-all {
   overflow: hidden;
+}
+.editor-content-preview {
+  overflow: hidden; /* Clearfix untuk mencegah overflow saat gambar mengapung (float) */
+}
+.editor-content-preview :deep(img) {
+  max-width: 100%;
+  height: auto;
 }
 </style>
