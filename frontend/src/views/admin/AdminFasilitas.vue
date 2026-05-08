@@ -1,17 +1,13 @@
 <script setup>
-import { ref, nextTick } from "vue";
+import { ref } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
   PhTrash,
   PhFloppyDisk,
   PhImage,
-  PhList,
-  PhListNumbers,
-  PhTextAlignLeft,
-  PhTextAlignCenter,
-  PhTextAlignRight,
 } from "@phosphor-icons/vue";
+import RichTextEditor from "@/components/RichTextEditor.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
@@ -130,10 +126,6 @@ const saveFacility = () => {
     return;
   }
 
-  if (editorContent.value) {
-    form.value.content = editorContent.value.innerHTML;
-  }
-
   if (!form.value.content || !form.value.content.trim()) {
     triggerToast("Gagal", "Isi fasilitas wajib diisi!", "error");
     return;
@@ -216,124 +208,42 @@ const confirmDelete = () => {
                 type="text"
                 v-model="form.category"
                 required
-                class="w-full px-4 py-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 focus:ring-blue-500 focus:border-blue-500"
+                class="w-full px-4 py-2 bg-gray-50 dark:bg-slate-700/50 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
                 placeholder="Contoh: Ruang Kelas, Laboratorium, dll."
               />
             </div>
             <div>
-              <label class="block text-sm font-medium mb-1"
-                >Isi Fasilitas (Teks & Gambar)</label
-              >
-              <div
-                class="border rounded-lg dark:border-slate-600 overflow-hidden bg-white dark:bg-slate-800 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-shadow"
-              >
-                <div
-                  class="bg-gray-50 dark:bg-slate-700/50 p-2 flex flex-wrap gap-2 border-b dark:border-slate-600 items-center"
+              <div class="flex items-center justify-between mb-2">
+                <label class="block text-sm font-medium"
+                  >Isi Fasilitas (Teks & Gambar)</label
                 >
-                  <button
-                    type="button"
-                    @click="execCmd('bold')"
-                    class="px-2 py-1.5 text-sm font-bold hover:bg-gray-200 dark:hover:bg-slate-600 rounded transition-colors"
-                    title="Bold"
-                  >
-                    B
-                  </button>
-                  <button
-                    type="button"
-                    @click="execCmd('italic')"
-                    class="px-2 py-1.5 text-sm italic hover:bg-gray-200 dark:hover:bg-slate-600 rounded transition-colors"
-                    title="Italic"
-                  >
-                    I
-                  </button>
-                  <button
-                    type="button"
-                    @click="execCmd('underline')"
-                    class="px-2 py-1.5 text-sm underline hover:bg-gray-200 dark:hover:bg-slate-600 rounded transition-colors"
-                    title="Underline"
-                  >
-                    U
-                  </button>
-
-                  <div class="w-px h-6 bg-gray-300 dark:bg-slate-600 mx-1"></div>
-
-                  <button
-                    type="button"
-                    @click="execCmd('justifyLeft')"
-                    class="p-1.5 hover:bg-gray-200 dark:hover:bg-slate-600 rounded text-gray-700 dark:text-gray-300 transition-colors"
-                    title="Align Left"
-                  >
-                    <PhTextAlignLeft class="w-5 h-5" />
-                  </button>
-                  <button
-                    type="button"
-                    @click="execCmd('justifyCenter')"
-                    class="p-1.5 hover:bg-gray-200 dark:hover:bg-slate-600 rounded text-gray-700 dark:text-gray-300 transition-colors"
-                    title="Align Center"
-                  >
-                    <PhTextAlignCenter class="w-5 h-5" />
-                  </button>
-                  <button
-                    type="button"
-                    @click="execCmd('justifyRight')"
-                    class="p-1.5 hover:bg-gray-200 dark:hover:bg-slate-600 rounded text-gray-700 dark:text-gray-300 transition-colors"
-                    title="Align Right"
-                  >
-                    <PhTextAlignRight class="w-5 h-5" />
-                  </button>
-
-                  <div class="w-px h-6 bg-gray-300 dark:bg-slate-600 mx-1"></div>
-
-                  <button
-                    type="button"
-                    @click="execCmd('insertUnorderedList')"
-                    class="p-1.5 hover:bg-gray-200 dark:hover:bg-slate-600 rounded text-gray-700 dark:text-gray-300 transition-colors"
-                    title="Bullet List"
-                  >
-                    <PhList class="w-5 h-5" />
-                  </button>
-                  <button
-                    type="button"
-                    @click="execCmd('insertOrderedList')"
-                    class="p-1.5 hover:bg-gray-200 dark:hover:bg-slate-600 rounded text-gray-700 dark:text-gray-300 transition-colors"
-                    title="Numbered List"
-                  >
-                    <PhListNumbers class="w-5 h-5" />
-                  </button>
-
-                  <div class="w-px h-6 bg-gray-300 dark:bg-slate-600 mx-1"></div>
-
-                  <button
-                    type="button"
-                    @click="$refs.editorImageInput.click()"
-                    class="px-3 py-1.5 text-sm bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 rounded font-medium flex items-center gap-1.5 transition-colors"
-                  >
-                    <PhImage class="w-4 h-4" /> Upload Gambar
-                  </button>
-                  <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    class="hidden"
-                    ref="editorImageInput"
-                    @change="insertImages"
-                  />
-                </div>
-
-                <div
-                  ref="editorContent"
-                  contenteditable="true"
-                  class="w-full p-4 outline-none min-h-[300px] max-h-[600px] overflow-y-auto prose dark:prose-invert max-w-none prose-img:rounded-xl prose-img:shadow-sm"
-                  @input="form.content = $event.target.innerHTML"
-                ></div>
+                <button
+                  type="button"
+                  @click="$refs.editorImageInput.click()"
+                  class="px-3 py-1.5 text-sm bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 rounded-lg font-medium flex items-center gap-1.5 transition-colors"
+                >
+                  <PhImage class="w-4 h-4" /> Sisipkan Gambar (Grid)
+                </button>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  class="hidden"
+                  ref="editorImageInput"
+                  @change="insertImagesAsGrid"
+                />
               </div>
+              <RichTextEditor
+                v-model="form.content"
+                placeholder="Masukkan isi fasilitas..."
+              />
             </div>
           </div>
           <div class="flex justify-end gap-3 pt-4 border-t dark:border-slate-700">
             <button
               type="button"
               @click="hideForm"
-              class="px-4 py-2 text-sm font-medium border rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+              class="px-4 py-2 text-sm font-medium bg-gray-100 dark:bg-slate-700 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
             >
               Batal
             </button>
