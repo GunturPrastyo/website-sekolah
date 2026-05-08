@@ -1,11 +1,16 @@
 <script setup>
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
   PhTrash,
   PhFloppyDisk,
-  PhUploadSimple,
+  PhImage,
+  PhList,
+  PhListNumbers,
+  PhTextAlignLeft,
+  PhTextAlignCenter,
+  PhTextAlignRight,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -14,8 +19,7 @@ const facilities = ref([
   {
     id: 1,
     category: "Ruang Kelas",
-    description:
-      "Ruang kelas dirancang untuk menciptakan suasana belajar yang nyaman, interaktif, dan mendukung konsentrasi siswa dalam mengikuti pembelajaran.",
+    content: `Ruang kelas dirancang untuk menciptakan suasana belajar yang nyaman, interaktif, dan mendukung konsentrasi siswa dalam mengikuti pembelajaran.<br><br><img src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px;"><img src="https://images.unsplash.com/photo-1594434533439-04c3a735d359?q=80&w=800" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px;"><img src="https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px;"><img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px;"><img src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px;">`,
     images: [
       "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800",
       "https://images.unsplash.com/photo-1594434533439-04c3a735d359?q=80&w=800",
@@ -27,8 +31,7 @@ const facilities = ref([
   {
     id: 2,
     category: "Laboratorium",
-    description:
-      "Laboratorium menjadi sarana penting dalam mendukung pembelajaran berbasis praktik dan eksperimen dengan fasilitas lengkap.",
+    content: `Laboratorium menjadi sarana penting dalam mendukung pembelajaran berbasis praktik dan eksperimen dengan fasilitas lengkap.<br><br><img src="https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px;">`,
     images: ["https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800"],
   },
 ]);
@@ -48,41 +51,77 @@ const triggerToast = (title, message, type = "success") => {
 // Form State
 const isFormVisible = ref(false);
 const isEditing = ref(false);
-const form = ref({ id: null, category: "", description: "", images: [] });
-const fileInput = ref(null);
+const form = ref({ id: null, category: "", content: "" });
+const editorContent = ref(null);
+const editorImageInput = ref(null);
 
 const openAddForm = () => {
-  form.value = { id: null, category: "", description: "", images: [] };
+  form.value = { id: null, category: "", content: "" };
   isEditing.value = false;
   isFormVisible.value = true;
+  nextTick(() => {
+    if (editorContent.value) {
+      editorContent.value.innerHTML = "";
+    }
+  });
 };
 
 const openEditForm = (item) => {
-  form.value = { ...item, images: [...item.images] };
+  form.value = { id: item.id, category: item.category, content: item.content };
   isEditing.value = true;
   isFormVisible.value = true;
+  nextTick(() => {
+    if (editorContent.value) {
+      editorContent.value.innerHTML = item.content || "";
+    }
+  });
 };
 
 const hideForm = () => {
   isFormVisible.value = false;
 };
 
-const handleMultipleUpload = (event) => {
+const execCmd = (cmd, value = null) => {
+  document.execCommand(cmd, false, value);
+  if (editorContent.value) {
+    editorContent.value.focus();
+    form.value.content = editorContent.value.innerHTML;
+  }
+};
+
+const insertImages = (event) => {
   const files = event.target.files;
   if (!files || files.length === 0) return;
 
-  // In a real app, you would upload these files to a server and get URLs back
-  // Here we use URL.createObjectURL for preview purposes
+  editorContent.value?.focus();
+
   for (let i = 0; i < files.length; i++) {
-    form.value.images.push(URL.createObjectURL(files[i]));
+    const url = URL.createObjectURL(files[i]);
+    const imgTag = `<img src="${url}" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px; display: block;" />`;
+    document.execCommand("insertHTML", false, imgTag);
   }
 
-  // Reset file input
-  if (fileInput.value) fileInput.value.value = "";
+  if (editorImageInput.value) editorImageInput.value.value = "";
+  if (editorContent.value) form.value.content = editorContent.value.innerHTML;
 };
 
-const removeFormImage = (index) => {
-  form.value.images.splice(index, 1);
+const extractImages = (html) => {
+  if (!html) return [];
+  const regex = /<img[^>]+src="([^">]+)"/g;
+  const images = [];
+  let match;
+  while ((match = regex.exec(html))) {
+    images.push(match[1]);
+  }
+  return images;
+};
+
+const stripTags = (html) => {
+  if (!html) return "";
+  return html
+    .replace(/<[^>]*>?/gm, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 };
 
 const saveFacility = () => {
@@ -90,27 +129,33 @@ const saveFacility = () => {
     triggerToast("Gagal", "Kategori fasilitas wajib diisi!", "error");
     return;
   }
-  if (!form.value.description.trim()) {
-    triggerToast("Gagal", "Deskripsi fasilitas wajib diisi!", "error");
+
+  if (editorContent.value) {
+    form.value.content = editorContent.value.innerHTML;
+  }
+
+  if (!form.value.content || !form.value.content.trim()) {
+    triggerToast("Gagal", "Isi fasilitas wajib diisi!", "error");
     return;
   }
-  if (form.value.images.length === 0) {
-    triggerToast("Gagal", "Minimal 1 foto fasilitas wajib diunggah!", "error");
-    return;
-  }
+
+  const extractedImages = extractImages(form.value.content);
 
   if (isEditing.value) {
     const idx = facilities.value.findIndex((f) => f.id === form.value.id);
     if (idx !== -1) {
-      facilities.value[idx] = { ...form.value };
+      facilities.value[idx] = {
+        ...form.value,
+        images: extractedImages,
+      };
     }
     triggerToast("Disimpan", "Data fasilitas berhasil diperbarui.");
   } else {
     facilities.value.push({
       id: Date.now(),
       category: form.value.category,
-      description: form.value.description,
-      images: [...form.value.images],
+      content: form.value.content,
+      images: extractedImages,
     });
     triggerToast("Ditambahkan", "Fasilitas baru berhasil ditambahkan.");
   }
@@ -176,88 +221,112 @@ const confirmDelete = () => {
               />
             </div>
             <div>
-              <label class="block text-sm font-medium mb-1">Deskripsi (Rich Text)</label>
-              <div class="border rounded-lg dark:border-slate-600 overflow-hidden">
+              <label class="block text-sm font-medium mb-1"
+                >Isi Fasilitas (Teks & Gambar)</label
+              >
+              <div
+                class="border rounded-lg dark:border-slate-600 overflow-hidden bg-white dark:bg-slate-800 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-shadow"
+              >
                 <div
-                  class="bg-gray-50 dark:bg-slate-700 p-2 flex gap-2 border-b dark:border-slate-600"
+                  class="bg-gray-50 dark:bg-slate-700/50 p-2 flex flex-wrap gap-2 border-b dark:border-slate-600 items-center"
                 >
                   <button
                     type="button"
-                    class="px-2 py-1 text-sm font-bold hover:bg-gray-200 dark:hover:bg-slate-600 rounded"
+                    @click="execCmd('bold')"
+                    class="px-2 py-1.5 text-sm font-bold hover:bg-gray-200 dark:hover:bg-slate-600 rounded transition-colors"
+                    title="Bold"
                   >
                     B
                   </button>
                   <button
                     type="button"
-                    class="px-2 py-1 text-sm italic hover:bg-gray-200 dark:hover:bg-slate-600 rounded"
+                    @click="execCmd('italic')"
+                    class="px-2 py-1.5 text-sm italic hover:bg-gray-200 dark:hover:bg-slate-600 rounded transition-colors"
+                    title="Italic"
                   >
                     I
                   </button>
                   <button
                     type="button"
-                    class="px-2 py-1 text-sm underline hover:bg-gray-200 dark:hover:bg-slate-600 rounded"
+                    @click="execCmd('underline')"
+                    class="px-2 py-1.5 text-sm underline hover:bg-gray-200 dark:hover:bg-slate-600 rounded transition-colors"
+                    title="Underline"
                   >
                     U
                   </button>
-                  <div class="w-px h-6 bg-gray-300 dark:bg-slate-500 mx-1"></div>
+
+                  <div class="w-px h-6 bg-gray-300 dark:bg-slate-600 mx-1"></div>
+
                   <button
                     type="button"
-                    class="px-2 py-1 text-sm hover:bg-gray-200 dark:hover:bg-slate-600 rounded"
+                    @click="execCmd('justifyLeft')"
+                    class="p-1.5 hover:bg-gray-200 dark:hover:bg-slate-600 rounded text-gray-700 dark:text-gray-300 transition-colors"
+                    title="Align Left"
                   >
-                    List
+                    <PhTextAlignLeft class="w-5 h-5" />
                   </button>
-                </div>
-                <textarea
-                  v-model="form.description"
-                  rows="5"
-                  class="w-full px-4 py-2 outline-none dark:bg-slate-800 focus:ring-0"
-                  placeholder="Tuliskan deskripsi fasilitas..."
-                ></textarea>
-              </div>
-            </div>
-
-            <!-- Multiple Image Upload -->
-            <div>
-              <label class="block text-sm font-medium mb-2"
-                >Galeri Foto (Bisa pilih banyak gambar sekaligus)</label
-              >
-
-              <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-4">
-                <div
-                  v-for="(img, idx) in form.images"
-                  :key="idx"
-                  class="relative group aspect-video rounded-xl overflow-hidden border dark:border-slate-600"
-                >
-                  <img :src="img" class="w-full h-full object-cover" />
                   <button
-                    @click.prevent="removeFormImage(idx)"
-                    class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                    title="Hapus Foto"
+                    type="button"
+                    @click="execCmd('justifyCenter')"
+                    class="p-1.5 hover:bg-gray-200 dark:hover:bg-slate-600 rounded text-gray-700 dark:text-gray-300 transition-colors"
+                    title="Align Center"
                   >
-                    <PhTrash class="w-4 h-4" />
+                    <PhTextAlignCenter class="w-5 h-5" />
                   </button>
+                  <button
+                    type="button"
+                    @click="execCmd('justifyRight')"
+                    class="p-1.5 hover:bg-gray-200 dark:hover:bg-slate-600 rounded text-gray-700 dark:text-gray-300 transition-colors"
+                    title="Align Right"
+                  >
+                    <PhTextAlignRight class="w-5 h-5" />
+                  </button>
+
+                  <div class="w-px h-6 bg-gray-300 dark:bg-slate-600 mx-1"></div>
+
+                  <button
+                    type="button"
+                    @click="execCmd('insertUnorderedList')"
+                    class="p-1.5 hover:bg-gray-200 dark:hover:bg-slate-600 rounded text-gray-700 dark:text-gray-300 transition-colors"
+                    title="Bullet List"
+                  >
+                    <PhList class="w-5 h-5" />
+                  </button>
+                  <button
+                    type="button"
+                    @click="execCmd('insertOrderedList')"
+                    class="p-1.5 hover:bg-gray-200 dark:hover:bg-slate-600 rounded text-gray-700 dark:text-gray-300 transition-colors"
+                    title="Numbered List"
+                  >
+                    <PhListNumbers class="w-5 h-5" />
+                  </button>
+
+                  <div class="w-px h-6 bg-gray-300 dark:bg-slate-600 mx-1"></div>
+
+                  <button
+                    type="button"
+                    @click="$refs.editorImageInput.click()"
+                    class="px-3 py-1.5 text-sm bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 rounded font-medium flex items-center gap-1.5 transition-colors"
+                  >
+                    <PhImage class="w-4 h-4" /> Upload Gambar
+                  </button>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    class="hidden"
+                    ref="editorImageInput"
+                    @change="insertImages"
+                  />
                 </div>
 
                 <div
-                  class="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-xl flex flex-col items-center justify-center aspect-video cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
-                  @click="$refs.fileInput.click()"
-                >
-                  <PhUploadSimple class="w-8 h-8 text-gray-400 mb-1" />
-                  <span
-                    class="text-xs font-medium text-gray-500 dark:text-gray-400 text-center px-2"
-                    >Upload<br />Gambar</span
-                  >
-                </div>
+                  ref="editorContent"
+                  contenteditable="true"
+                  class="w-full p-4 outline-none min-h-[300px] max-h-[600px] overflow-y-auto prose dark:prose-invert max-w-none prose-img:rounded-xl prose-img:shadow-sm"
+                  @input="form.content = $event.target.innerHTML"
+                ></div>
               </div>
-
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                @change="handleMultipleUpload"
-                class="hidden"
-                ref="fileInput"
-              />
             </div>
           </div>
           <div class="flex justify-end gap-3 pt-4 border-t dark:border-slate-700">
@@ -291,8 +360,8 @@ const confirmDelete = () => {
             <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">
               {{ facility.category }}
             </h3>
-            <div class="text-gray-600 dark:text-gray-400 whitespace-pre-line text-sm">
-              {{ facility.description }}
+            <div class="text-gray-600 dark:text-gray-400 text-sm line-clamp-3">
+              {{ stripTags(facility.content) }}
             </div>
           </div>
           <div class="flex gap-2 shrink-0">
