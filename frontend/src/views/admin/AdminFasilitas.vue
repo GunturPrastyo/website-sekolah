@@ -1,12 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import {
-  PhPlusCircle,
-  PhPencilSimple,
-  PhTrash,
-  PhFloppyDisk,
-  PhImage,
-} from "@phosphor-icons/vue";
+import { PhPlusCircle, PhPencilSimple, PhTrash, PhFloppyDisk } from "@phosphor-icons/vue";
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -48,57 +42,21 @@ const triggerToast = (title, message, type = "success") => {
 const isFormVisible = ref(false);
 const isEditing = ref(false);
 const form = ref({ id: null, category: "", content: "" });
-const editorContent = ref(null);
-const editorImageInput = ref(null);
 
 const openAddForm = () => {
   form.value = { id: null, category: "", content: "" };
   isEditing.value = false;
   isFormVisible.value = true;
-  nextTick(() => {
-    if (editorContent.value) {
-      editorContent.value.innerHTML = "";
-    }
-  });
 };
 
 const openEditForm = (item) => {
   form.value = { id: item.id, category: item.category, content: item.content };
   isEditing.value = true;
   isFormVisible.value = true;
-  nextTick(() => {
-    if (editorContent.value) {
-      editorContent.value.innerHTML = item.content || "";
-    }
-  });
 };
 
 const hideForm = () => {
   isFormVisible.value = false;
-};
-
-const execCmd = (cmd, value = null) => {
-  document.execCommand(cmd, false, value);
-  if (editorContent.value) {
-    editorContent.value.focus();
-    form.value.content = editorContent.value.innerHTML;
-  }
-};
-
-const insertImages = (event) => {
-  const files = event.target.files;
-  if (!files || files.length === 0) return;
-
-  editorContent.value?.focus();
-
-  for (let i = 0; i < files.length; i++) {
-    const url = URL.createObjectURL(files[i]);
-    const imgTag = `<img src="${url}" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px; display: block;" />`;
-    document.execCommand("insertHTML", false, imgTag);
-  }
-
-  if (editorImageInput.value) editorImageInput.value.value = "";
-  if (editorContent.value) form.value.content = editorContent.value.innerHTML;
 };
 
 const extractImages = (html) => {
@@ -213,26 +171,9 @@ const confirmDelete = () => {
               />
             </div>
             <div>
-              <div class="flex items-center justify-between mb-2">
-                <label class="block text-sm font-medium"
-                  >Isi Fasilitas (Teks & Gambar)</label
-                >
-                <button
-                  type="button"
-                  @click="$refs.editorImageInput.click()"
-                  class="px-3 py-1.5 text-sm bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 rounded-lg font-medium flex items-center gap-1.5 transition-colors"
-                >
-                  <PhImage class="w-4 h-4" /> Sisipkan Gambar (Grid)
-                </button>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  class="hidden"
-                  ref="editorImageInput"
-                  @change="insertImagesAsGrid"
-                />
-              </div>
+              <label class="block text-sm font-medium mb-2"
+                >Isi Fasilitas (Teks & Gambar)</label
+              >
               <RichTextEditor
                 v-model="form.content"
                 placeholder="Masukkan isi fasilitas..."
