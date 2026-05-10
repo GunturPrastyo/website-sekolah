@@ -2,7 +2,7 @@
   <div class="overflow-x-hidden w-full max-w-full">
     <!-- Header Section -->
     <header
-      class="relative flex flex-col items-center justify-center h-screen md:h-[90vh] lg:h-screen text-center text-white"
+      class="relative z-0 flex flex-col items-center justify-center h-screen md:h-[90vh] lg:h-screen text-center text-white"
     >
       <!-- Video Background -->
       <div class="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden bg-slate-900">
