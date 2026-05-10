@@ -11,7 +11,6 @@ import {
 } from "@phosphor-icons/vue";
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
-import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
@@ -78,7 +77,6 @@ const form = ref({
   year: "",
   title: "",
   icon: "PhBuildings", // Default icon
-  image: "",
   description: "",
 });
 
@@ -104,7 +102,6 @@ const resetForm = () => {
     year: "",
     title: "",
     icon: "PhBuildings",
-    image: "",
     description: "",
   };
   isEditing.value = false;
@@ -292,10 +289,6 @@ const filteredTimeline = computed(() => {
             <IconPicker v-model="form.icon" />
           </div>
 
-          <div class="mb-4">
-            <ImageUploader v-model="form.image" label="Gambar Representasi" />
-          </div>
-
           <div class="mb-6">
             <label
               for="description"
@@ -458,5 +451,73 @@ const filteredTimeline = computed(() => {
 .editor-content-preview :deep(img) {
   max-width: 100%;
   height: auto;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.editor-content-preview :deep(p) {
+  margin-bottom: 1rem;
+}
+.editor-content-preview :deep(p:last-child) {
+  margin-bottom: 0;
+}
+.editor-content-preview :deep(h1),
+.editor-content-preview :deep(h2),
+.editor-content-preview :deep(h3),
+.editor-content-preview :deep(h4),
+.editor-content-preview :deep(h5),
+.editor-content-preview :deep(h6) {
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.editor-content-preview :deep(h1) {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+.editor-content-preview :deep(h2) {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+.editor-content-preview :deep(h3) {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.editor-content-preview :deep(h4) {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.editor-content-preview :deep(ul) {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+.editor-content-preview :deep(ol) {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+.editor-content-preview :deep(li) {
+  margin-bottom: 0.25rem;
+}
+.editor-content-preview :deep(a) {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+.editor-content-preview :deep(blockquote) {
+  border-left: 4px solid #cbd5e1;
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+  color: #64748b;
+}
+.editor-content-preview :deep(.ql-align-center) {
+  text-align: center;
+}
+.editor-content-preview :deep(.ql-align-right) {
+  text-align: right;
+}
+.editor-content-preview :deep(.ql-align-justify) {
+  text-align: justify;
 }
 </style>
