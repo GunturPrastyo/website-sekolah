@@ -32,6 +32,8 @@ const toggleSidebar = () => {
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap");
+
 /* Menggunakan font Poppins dari file HTML, jika tidak ada, gunakan sans-serif */
 .font-sans {
   font-family: "Poppins", sans-serif;
