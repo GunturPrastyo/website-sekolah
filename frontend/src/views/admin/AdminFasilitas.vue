@@ -47,12 +47,24 @@ const openAddForm = () => {
   form.value = { id: null, category: "", content: "" };
   isEditing.value = false;
   isFormVisible.value = true;
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
+      el.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }, 100);
 };
 
 const openEditForm = (item) => {
   form.value = { id: item.id, category: item.category, content: item.content };
   isEditing.value = true;
   isFormVisible.value = true;
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
+      el.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }, 100);
 };
 
 const hideForm = () => {
@@ -145,7 +157,7 @@ const confirmDelete = () => {
     >
       <div
         v-if="isFormVisible"
-        class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6 mb-8 shadow-sm"
+        class="bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 p-6 mb-8 shadow-sm"
       >
         <h4 class="text-lg font-bold mb-4 border-b pb-2 dark:border-slate-700">
           {{ isEditing ? "Edit Fasilitas" : "Tambah Fasilitas Baru" }}
@@ -196,7 +208,7 @@ const confirmDelete = () => {
       <div
         v-for="facility in facilities"
         :key="facility.id"
-        class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6 shadow-sm flex flex-col gap-4 group"
+        class="bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 p-6 shadow-sm flex flex-col gap-4 group"
       >
         <div class="flex items-start justify-between gap-4">
           <div class="flex-1 overflow-hidden">
@@ -230,7 +242,7 @@ const confirmDelete = () => {
 
       <div
         v-if="facilities.length === 0"
-        class="py-20 text-center border-2 border-dashed rounded-2xl dark:border-slate-700 bg-white dark:bg-slate-800"
+        class="py-20 text-center border-2 border-dashed rounded-lg dark:border-slate-700 bg-white dark:bg-slate-800"
       >
         <p class="text-gray-500 dark:text-gray-400">Belum ada data fasilitas.</p>
       </div>

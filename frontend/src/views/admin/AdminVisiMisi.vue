@@ -70,7 +70,10 @@ const triggerToast = (title, message, type = "success") => {
 
 const confirmSave = () => {
   // Logika untuk menyimpan ke API
-  triggerToast("Berhasil Disimpan!", "Pembaruan pada Visi, Misi, dan Sambutan Kepala Sekolah berhasil diterapkan ke sistem.");
+  triggerToast(
+    "Berhasil Disimpan!",
+    "Pembaruan pada Visi, Misi, dan Sambutan Kepala Sekolah berhasil diterapkan ke sistem."
+  );
   console.log({
     visi: visi.value,
     misi: misi.value,
@@ -122,7 +125,7 @@ const handleDrop = (index) => {
       <div class="xl:col-span-2 space-y-8">
         <!-- Form Visi -->
         <div
-          class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm p-6"
+          class="bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm p-6"
         >
           <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
             Visi Sekolah
@@ -130,14 +133,14 @@ const handleDrop = (index) => {
           <textarea
             v-model="visi"
             rows="3"
-            class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-xl bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 resize-none transition-colors text-sm sm:text-base"
+            class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 resize-none transition-colors text-sm sm:text-base"
             placeholder="Tuliskan visi sekolah di sini..."
           ></textarea>
         </div>
 
         <!-- Form Misi -->
         <div
-          class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm p-6"
+          class="bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm p-6"
         >
           <div class="flex flex-wrap items-center justify-between mb-4 gap-2">
             <h3 class="text-xl font-semibold text-gray-800 dark:text-white">
@@ -171,7 +174,7 @@ const handleDrop = (index) => {
                 <textarea
                   v-model="item.text"
                   rows="2"
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-xl bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 resize-none transition-colors text-sm sm:text-base"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 resize-none transition-colors text-sm sm:text-base"
                   placeholder="Tuliskan butir misi..."
                 ></textarea>
               </div>
@@ -185,7 +188,7 @@ const handleDrop = (index) => {
             </div>
             <div
               v-if="misi.length === 0"
-              class="text-center py-6 text-gray-500 dark:text-gray-400 text-sm border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
+              class="text-center py-6 text-gray-500 dark:text-gray-400 text-sm border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-lg"
             >
               Belum ada data misi. Silakan klik "Tambah Misi".
             </div>
@@ -196,7 +199,7 @@ const handleDrop = (index) => {
       <!-- Kolom Kanan: Sambutan Kepala Sekolah -->
       <div class="xl:col-span-1">
         <div
-          class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm p-6 sticky top-6"
+          class="bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm p-6 sticky top-6"
         >
           <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
             Sambutan Kepala Sekolah

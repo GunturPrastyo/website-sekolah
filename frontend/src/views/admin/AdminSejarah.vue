@@ -110,6 +110,12 @@ const resetForm = () => {
 const showAddForm = () => {
   resetForm();
   isFormVisible.value = true;
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
+      el.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }, 100);
 };
 
 const addEntry = () => {
@@ -142,6 +148,12 @@ const startEdit = (entry) => {
     ...entry,
   };
   isFormVisible.value = true; // Show form for editing
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
+      el.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }, 100);
 };
 
 const saveEntry = () => {
@@ -243,7 +255,7 @@ const filteredTimeline = computed(() => {
     >
       <div
         v-if="isFormVisible"
-        class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm mb-8"
+        class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm mb-8"
       >
         <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
           {{ isEditing ? "Edit Entri Timeline" : "Tambah Entri Baru" }}
@@ -326,7 +338,7 @@ const filteredTimeline = computed(() => {
 
     <!-- Daftar Entri Timeline -->
     <div
-      class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
+      class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm"
     >
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-xl font-semibold text-gray-800 dark:text-white">
