@@ -254,7 +254,10 @@ const filteredTimeline = computed(() => {
 <template>
   <main class="flex-1 overflow-y-auto px-6 md:px-10 py-8">
     <div class="mb-8">
-      <h2 class="text-3xl font-bold text-gray-800 dark:text-white">
+      <h2
+        class="text-3xl font-bold text-gray-800 dark:text-white"
+        style="font-family: 'Oswald', sans-serif"
+      >
         Manajemen Sejarah Sekolah
       </h2>
       <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">

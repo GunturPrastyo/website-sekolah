@@ -8,6 +8,8 @@ import {
   PhFloppyDisk,
   PhMagnifyingGlass,
   PhUser,
+  PhEnvelopeSimple,
+  PhLinkedinLogo,
 } from "@phosphor-icons/vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
@@ -53,8 +55,8 @@ const staffList = ref([
     image:
       "https://ui-avatars.com/api/?name=Budi+Santoso&background=0D8ABC&color=fff&size=256",
     nip: "19750817 200003 1 004",
-    bio:
-      "Berpengalaman lebih dari 15 tahun dalam manajemen pendidikan dan memimpin sekolah menuju akreditasi A.",
+    email: "budi.santoso@sman1nogosari.sch.id",
+    linkedin: "https://linkedin.com/in/budisantoso",
   },
   {
     id: 2,
@@ -64,7 +66,8 @@ const staffList = ref([
     image:
       "https://ui-avatars.com/api/?name=Siti+Aminah&background=0D8ABC&color=fff&size=256",
     nip: "19800512 200501 2 001",
-    bio: "",
+    email: "siti.aminah@sman1nogosari.sch.id",
+    linkedin: "",
   },
   {
     id: 3,
@@ -74,7 +77,8 @@ const staffList = ref([
     image:
       "https://ui-avatars.com/api/?name=Ahmad+Fauzi&background=0D8ABC&color=fff&size=256",
     nip: "19900215 201504 1 003",
-    bio: "",
+    email: "",
+    linkedin: "https://linkedin.com/in/ahmadfauzi",
   },
 ]);
 
@@ -84,7 +88,8 @@ const form = ref({
   role: "",
   category: "pimpinan",
   nip: "",
-  bio: "",
+  email: "",
+  linkedin: "",
   image: "",
 });
 
@@ -112,7 +117,8 @@ const resetForm = () => {
     role: "",
     category: "pimpinan",
     nip: "",
-    bio: "",
+    email: "",
+    linkedin: "",
     image: "",
   };
   isEditing.value = false;
@@ -204,7 +210,7 @@ const getCategoryName = (id) => {
   <main class="flex-1 overflow-y-auto px-6 md:px-10 py-8">
     <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h2 class="text-3xl font-bold text-gray-800 dark:text-white">
+        <h2 class="text-3xl font-bold text-gray-800 dark:text-white" style="font-family: 'Oswald', sans-serif">
           Manajemen Guru & Staf
         </h2>
         <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
@@ -250,7 +256,9 @@ const getCategoryName = (id) => {
                 containerClass="w-full max-w-[240px] mx-auto lg:mx-0"
                 imageClass="object-cover object-top"
               />
-              <p class="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center lg:text-left max-w-[240px] mx-auto lg:mx-0">
+              <p
+                class="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center lg:text-left max-w-[240px] mx-auto lg:mx-0"
+              >
                 Rasio foto terbaik adalah 1:1 (persegi).
               </p>
             </div>
@@ -318,17 +326,30 @@ const getCategoryName = (id) => {
                 </datalist>
               </div>
 
-              <div class="md:col-span-2">
+              <div>
                 <label
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >Biografi Singkat (Opsional)</label
+                  >Email (Opsional)</label
                 >
-                <textarea
-                  v-model="form.bio"
-                  rows="3"
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 resize-none"
-                  placeholder="Tuliskan pengalaman atau deskripsi singkat..."
-                ></textarea>
+                <input
+                  type="email"
+                  v-model="form.email"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Contoh: guru@sekolah.sch.id"
+                />
+              </div>
+
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Profil LinkedIn (Opsional)</label
+                >
+                <input
+                  type="url"
+                  v-model="form.linkedin"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Contoh: https://linkedin.com/in/username"
+                />
               </div>
             </div>
           </div>
@@ -428,6 +449,31 @@ const getCategoryName = (id) => {
           <div
             class="mt-auto pt-4 border-t border-gray-100 dark:border-slate-700 w-full flex flex-col gap-1.5"
           >
+            <!-- Tautan Kontak -->
+            <div
+              v-if="staff.email || staff.linkedin"
+              class="flex justify-center gap-2 mb-1"
+            >
+              <a
+                v-if="staff.email"
+                :href="'mailto:' + staff.email"
+                class="p-1.5 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
+                title="Kirim Email"
+              >
+                <PhEnvelopeSimple class="w-5 h-5" />
+              </a>
+              <a
+                v-if="staff.linkedin"
+                :href="staff.linkedin"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="p-1.5 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
+                title="Profil LinkedIn"
+              >
+                <PhLinkedinLogo class="w-5 h-5" />
+              </a>
+            </div>
+
             <div
               class="text-xs text-gray-500 dark:text-gray-400 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 px-2.5 py-1.5 rounded"
             >
