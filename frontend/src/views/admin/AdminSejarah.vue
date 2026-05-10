@@ -135,6 +135,12 @@ const addEntry = () => {
     id: newId,
   });
   isFormVisible.value = false; // Hide form after adding
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
+      el.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }, 100);
   triggerToast(
     "Berhasil Ditambahkan",
     "Entri lini masa baru telah ditambahkan ke sistem."
@@ -173,6 +179,12 @@ const saveEntry = () => {
     };
   }
   isFormVisible.value = false; // Hide form after saving
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
+      el.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }, 100);
   triggerToast("Perubahan Disimpan", "Entri lini masa berhasil diperbarui.");
   resetForm();
 };
@@ -180,6 +192,12 @@ const saveEntry = () => {
 const hideForm = () => {
   resetForm();
   isFormVisible.value = false;
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
+      el.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }, 100);
 };
 
 const deleteEntry = (id) => {

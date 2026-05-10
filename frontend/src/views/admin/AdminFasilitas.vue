@@ -69,6 +69,12 @@ const openEditForm = (item) => {
 
 const hideForm = () => {
   isFormVisible.value = false;
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
+      el.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }, 100);
 };
 
 const extractImages = (html) => {
@@ -114,6 +120,12 @@ const saveFacility = () => {
     triggerToast("Ditambahkan", "Fasilitas baru berhasil ditambahkan.");
   }
   isFormVisible.value = false;
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
+      el.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }, 100);
 };
 
 // Hapus Data
