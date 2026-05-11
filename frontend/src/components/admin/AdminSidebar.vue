@@ -51,7 +51,7 @@ const menu = ref([
       { name: "Kurikulum", link: "/admin/kurikulum" },
       { name: "Program Jurusan", link: "/admin/program-jurusan" },
       { name: "Ekstrakurikuler", link: "/admin/ekstrakurikuler" },
-      { name: "Prestasi", link: "#" },
+      { name: "Prestasi", link: "/admin/prestasi" },
     ],
   },
   {

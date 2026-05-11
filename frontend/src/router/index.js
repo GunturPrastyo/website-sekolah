@@ -138,6 +138,11 @@ const router = createRouter({
           path: 'ekstrakurikuler',
           name: 'admin-ekstrakurikuler',
           component: () => import('../views/admin/AdminEkstrakurikuler.vue')
+        },
+        {
+          path: 'prestasi',
+          name: 'admin-prestasi',
+          component: () => import('../views/admin/AdminPrestasi.vue')
         }
       ]
     }
