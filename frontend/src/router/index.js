@@ -123,6 +123,11 @@ const router = createRouter({
           path: 'fasilitas', // Child route for fasilitas
           name: 'admin-fasilitas',
           component: () => import('../views/admin/AdminFasilitas.vue')
+        },
+        {
+          path: 'kurikulum', // Child route for kurikulum
+          name: 'admin-kurikulum',
+          component: () => import('../views/admin/AdminKurikulum.vue')
         }
       ]
     }

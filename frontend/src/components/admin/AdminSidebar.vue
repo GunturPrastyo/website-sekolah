@@ -48,7 +48,7 @@ const menu = ref([
     name: "Akademik",
     icon: markRaw(PhChalkboard),
     children: [
-      { name: "Kurikulum", link: "#" },
+      { name: "Kurikulum", link: "/admin/kurikulum" },
       { name: "Program Jurusan", link: "#" },
       { name: "Ekstrakurikuler", link: "#" },
       { name: "Prestasi", link: "#" },
