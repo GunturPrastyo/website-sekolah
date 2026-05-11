@@ -133,6 +133,11 @@ const router = createRouter({
           path: 'program-jurusan', // Child route for Program Jurusan
           name: 'admin-program-jurusan',
           component: () => import('../views/admin/AdminProgramJurusan.vue')
+        },
+        {
+          path: 'ekstrakurikuler',
+          name: 'admin-ekstrakurikuler',
+          component: () => import('../views/admin/AdminEkstrakurikuler.vue')
         }
       ]
     }

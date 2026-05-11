@@ -50,7 +50,7 @@ const menu = ref([
     children: [
       { name: "Kurikulum", link: "/admin/kurikulum" },
       { name: "Program Jurusan", link: "/admin/program-jurusan" },
-      { name: "Ekstrakurikuler", link: "#" },
+      { name: "Ekstrakurikuler", link: "/admin/ekstrakurikuler" },
       { name: "Prestasi", link: "#" },
     ],
   },
