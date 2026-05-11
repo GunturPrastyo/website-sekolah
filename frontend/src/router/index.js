@@ -128,6 +128,11 @@ const router = createRouter({
           path: 'kurikulum', // Child route for kurikulum
           name: 'admin-kurikulum',
           component: () => import('../views/admin/AdminKurikulum.vue')
+        },
+        {
+          path: 'program-jurusan', // Child route for Program Jurusan
+          name: 'admin-program-jurusan',
+          component: () => import('../views/admin/AdminProgramJurusan.vue')
         }
       ]
     }
