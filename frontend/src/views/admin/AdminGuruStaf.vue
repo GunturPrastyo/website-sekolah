@@ -200,6 +200,15 @@ const filteredStaff = computed(() => {
   );
 });
 
+const groupedStaff = computed(() => {
+  return categories
+    .map((cat) => ({
+      ...cat,
+      staff: filteredStaff.value.filter((s) => s.category === cat.id),
+    }))
+    .filter((cat) => cat.staff.length > 0);
+});
+
 const getCategoryName = (id) => {
   const category = categories.find((c) => c.id === id);
   return category ? category.name : id;
@@ -398,111 +407,127 @@ const getCategoryName = (id) => {
         />
       </div>
 
-      <!-- Grid Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <div
-          v-for="staff in filteredStaff"
-          :key="staff.id"
-          class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-shadow p-5 flex flex-col items-center text-center relative group"
-        >
-          <!-- Dropdown Aksi (Muncul saat hover) -->
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-slate-800/90 backdrop-blur p-1 rounded-lg border border-gray-100 dark:border-slate-700"
-          >
-            <button
-              @click="startEdit(staff)"
-              class="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-md transition-colors"
-              title="Edit"
+      <!-- Empty State -->
+      <div
+        v-if="filteredStaff.length === 0"
+        class="py-12 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
+      >
+        <p v-if="searchQuery">Tidak ada staf yang cocok dengan "{{ searchQuery }}".</p>
+        <p v-else>Belum ada data guru/staf yang ditambahkan.</p>
+      </div>
+
+      <!-- Grouped Grid Cards -->
+      <div v-else class="space-y-10">
+        <div v-for="group in groupedStaff" :key="group.id">
+          <div class="flex items-center mb-6">
+            <h3
+              class="text-xl font-bold text-gray-800 dark:text-white shrink-0 pr-4"
+              style="font-family: 'Oswald', sans-serif"
             >
-              <PhPencilSimple class="w-4 h-4" />
-            </button>
-            <button
-              @click="deleteEntry(staff.id)"
-              class="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-slate-700 rounded-md transition-colors"
-              title="Hapus"
-            >
-              <PhTrash class="w-4 h-4" />
-            </button>
+              {{ group.name }}
+            </h3>
+            <div class="flex-1 h-px bg-gray-200 dark:bg-slate-700"></div>
           </div>
 
-          <!-- Foto -->
           <div
-            class="w-20 h-20 mb-4 shrink-0 rounded-full border-2 border-gray-100 dark:border-slate-600 overflow-hidden bg-gray-50 dark:bg-slate-700 flex items-center justify-center"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
           >
-            <img
-              v-if="staff.image"
-              :src="staff.image"
-              :alt="staff.name"
-              class="w-full h-full object-cover"
-            />
-            <PhUser v-else class="w-8 h-8 text-gray-400" />
-          </div>
-
-          <!-- Info -->
-          <h4
-            class="font-bold text-gray-900 dark:text-white line-clamp-1 mb-1"
-            :title="staff.name"
-          >
-            {{ staff.name }}
-          </h4>
-          <p class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">
-            {{ staff.role }}
-          </p>
-
-          <div
-            class="mt-auto pt-4 border-t border-gray-100 dark:border-slate-700 w-full flex flex-col gap-1.5"
-          >
-            <!-- Tautan Kontak -->
             <div
-              v-if="staff.email || staff.linkedin"
-              class="flex justify-center gap-2 mb-1"
+              v-for="staff in group.staff"
+              :key="staff.id"
+              class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-shadow p-5 flex flex-col items-center text-center relative group"
             >
-              <a
-                v-if="staff.email"
-                :href="'mailto:' + staff.email"
-                class="p-1.5 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-                title="Kirim Email"
+              <!-- Dropdown Aksi (Muncul saat hover) -->
+              <div
+                class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-slate-800/90 backdrop-blur p-1 rounded-lg border border-gray-100 dark:border-slate-700 z-10"
               >
-                <PhEnvelopeSimple class="w-5 h-5" />
-              </a>
-              <a
-                v-if="staff.linkedin"
-                :href="staff.linkedin"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="p-1.5 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-                title="Profil LinkedIn"
-              >
-                <PhLinkedinLogo class="w-5 h-5" />
-              </a>
-            </div>
+                <button
+                  @click="startEdit(staff)"
+                  class="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-md transition-colors"
+                  title="Edit"
+                >
+                  <PhPencilSimple class="w-4 h-4" />
+                </button>
+                <button
+                  @click="deleteEntry(staff.id)"
+                  class="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-slate-700 rounded-md transition-colors"
+                  title="Hapus"
+                >
+                  <PhTrash class="w-4 h-4" />
+                </button>
+              </div>
 
-            <div
-              class="text-xs text-gray-500 dark:text-gray-400 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 px-2.5 py-1.5 rounded"
-            >
-              <span>NIP:</span>
-              <span class="font-semibold text-gray-700 dark:text-gray-300">{{
-                staff.nip || "-"
-              }}</span>
-            </div>
-            <div
-              class="text-xs text-gray-500 dark:text-gray-400 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 px-2.5 py-1.5 rounded"
-            >
-              <span>Kategori:</span>
-              <span class="font-semibold text-gray-700 dark:text-gray-300">{{
-                getCategoryName(staff.category)
-              }}</span>
+              <!-- Foto -->
+              <div
+                class="w-20 h-20 mb-4 shrink-0 rounded-full border-2 border-gray-100 dark:border-slate-600 overflow-hidden bg-gray-50 dark:bg-slate-700 flex items-center justify-center"
+              >
+                <img
+                  v-if="staff.image"
+                  :src="staff.image"
+                  :alt="staff.name"
+                  class="w-full h-full object-cover"
+                />
+                <PhUser v-else class="w-8 h-8 text-gray-400" />
+              </div>
+
+              <!-- Info -->
+              <h4
+                class="font-bold text-gray-900 dark:text-white line-clamp-1 mb-1"
+                :title="staff.name"
+              >
+                {{ staff.name }}
+              </h4>
+              <p class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">
+                {{ staff.role }}
+              </p>
+
+              <div
+                class="mt-auto pt-4 border-t border-gray-100 dark:border-slate-700 w-full flex flex-col gap-1.5"
+              >
+                <!-- Tautan Kontak -->
+                <div
+                  v-if="staff.email || staff.linkedin"
+                  class="flex justify-center gap-2 mb-1"
+                >
+                  <a
+                    v-if="staff.email"
+                    :href="'mailto:' + staff.email"
+                    class="p-1.5 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
+                    title="Kirim Email"
+                  >
+                    <PhEnvelopeSimple class="w-5 h-5" />
+                  </a>
+                  <a
+                    v-if="staff.linkedin"
+                    :href="staff.linkedin"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="p-1.5 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
+                    title="Profil LinkedIn"
+                  >
+                    <PhLinkedinLogo class="w-5 h-5" />
+                  </a>
+                </div>
+
+                <div
+                  class="text-xs text-gray-500 dark:text-gray-400 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 px-2.5 py-1.5 rounded"
+                >
+                  <span>NIP:</span>
+                  <span class="font-semibold text-gray-700 dark:text-gray-300">{{
+                    staff.nip || "-"
+                  }}</span>
+                </div>
+                <div
+                  class="text-xs text-gray-500 dark:text-gray-400 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 px-2.5 py-1.5 rounded"
+                >
+                  <span>Kategori:</span>
+                  <span class="font-semibold text-gray-700 dark:text-gray-300">{{
+                    getCategoryName(staff.category)
+                  }}</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-
-        <!-- Empty State -->
-        <div
-          v-if="filteredStaff.length === 0"
-          class="col-span-full py-12 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
-        >
-          <p v-if="searchQuery">Tidak ada staf yang cocok dengan "{{ searchQuery }}".</p>
-          <p v-else>Belum ada data guru/staf yang ditambahkan.</p>
         </div>
       </div>
     </div>

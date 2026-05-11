@@ -48,14 +48,14 @@ const toggleDarkMode = () => {
       >
         <PhList :size="24" />
       </button>
-      <div class="relative hidden md:block">
+      <div class="relative hidden md:block md:w-64 lg:w-96">
         <PhMagnifyingGlass
-          class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+          class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500"
         />
         <input
           type="text"
           placeholder="Cari sesuatu..."
-          class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+          class="w-full pl-11 pr-4 py-2 rounded-lg border-transparent bg-gray-100 dark:bg-slate-700/50 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:border-transparent focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all"
         />
       </div>
     </div>
