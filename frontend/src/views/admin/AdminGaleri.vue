@@ -10,7 +10,6 @@ import {
   PhImage,
   PhHeart,
 } from "@phosphor-icons/vue";
-import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
@@ -53,7 +52,7 @@ const form = ref({
   id: null,
   title: "",
   category: "fasilitas",
-  image: "",
+  images: [],
 });
 
 const isFormVisible = ref(false);
@@ -64,6 +63,28 @@ const itemToDelete = ref(null);
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
+
+const fileInput = ref(null);
+
+const triggerFileInput = () => {
+  if (fileInput.value) fileInput.value.click();
+};
+
+const handleFileUpload = (event) => {
+  const files = Array.from(event.target.files);
+  files.forEach((file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      form.value.images.push(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  });
+  event.target.value = "";
+};
+
+const removeImage = (index) => {
+  form.value.images.splice(index, 1);
+};
 
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };
@@ -78,7 +99,7 @@ const resetForm = () => {
     id: null,
     title: "",
     category: "fasilitas",
-    image: "",
+    images: [],
   };
   isEditing.value = false;
 };
@@ -89,36 +110,75 @@ const showAddForm = () => {
 };
 
 const addEntry = () => {
-  if (!form.value.title || !form.value.image) {
+  if (!form.value.title || form.value.images.length === 0) {
     triggerToast("Gagal Menyimpan", "Judul Foto dan Gambar wajib diisi!", "error");
     return;
   }
-  const newId =
-    galleryList.value.length > 0
-      ? Math.max(...galleryList.value.map((s) => s.id)) + 1
-      : 1;
-  galleryList.value.unshift({ ...form.value, id: newId, likes: 0 });
+
+  let currentId =
+    galleryList.value.length > 0 ? Math.max(...galleryList.value.map((s) => s.id)) : 0;
+
+  const newEntries = form.value.images.map((img) => {
+    currentId++;
+    return {
+      id: currentId,
+      title: form.value.title,
+      category: form.value.category,
+      image: img,
+      likes: 0,
+    };
+  });
+
+  galleryList.value.unshift(...newEntries);
 
   isFormVisible.value = false;
-  triggerToast("Berhasil Ditambahkan", "Data foto baru telah ditambahkan ke galeri.");
+  triggerToast(
+    "Berhasil Ditambahkan",
+    `${newEntries.length} foto baru telah ditambahkan ke galeri.`
+  );
   resetForm();
 };
 
 const startEdit = (item) => {
   isEditing.value = true;
-  form.value = { ...item };
+  form.value = {
+    id: item.id,
+    title: item.title,
+    category: item.category,
+    images: [item.image],
+  };
   isFormVisible.value = true;
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
 const saveEntry = () => {
-  if (!form.value.title || !form.value.image) {
+  if (!form.value.title || form.value.images.length === 0) {
     triggerToast("Gagal Menyimpan", "Judul Foto dan Gambar wajib diisi!", "error");
     return;
   }
   const index = galleryList.value.findIndex((s) => s.id === form.value.id);
   if (index !== -1) {
-    galleryList.value[index] = { ...galleryList.value[index], ...form.value };
+    galleryList.value[index] = {
+      ...galleryList.value[index],
+      title: form.value.title,
+      category: form.value.category,
+      image: form.value.images[0],
+    };
+
+    if (form.value.images.length > 1) {
+      let currentId = Math.max(...galleryList.value.map((s) => s.id));
+      const newEntries = form.value.images.slice(1).map((img) => {
+        currentId++;
+        return {
+          id: currentId,
+          title: form.value.title,
+          category: form.value.category,
+          image: img,
+          likes: 0,
+        };
+      });
+      galleryList.value.unshift(...newEntries);
+    }
   }
 
   isFormVisible.value = false;
@@ -205,22 +265,12 @@ const getCategoryName = (id) => {
           {{ isEditing ? "Edit Data Foto" : "Tambah Foto Baru" }}
         </h3>
         <form @submit.prevent="isEditing ? saveEntry() : addEntry()">
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Image Uploader -->
-            <div class="lg:col-span-1">
-              <ImageUploader
-                v-model="form.image"
-                label="Unggah Foto"
-                containerClass="w-full aspect-[4/3] mx-auto"
-                imageClass="object-cover rounded-xl"
-              />
-            </div>
-
+          <div class="flex flex-col gap-6">
             <!-- Form Fields -->
-            <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="md:col-span-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
                 <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
                   >Judul Foto</label
                 >
                 <input
@@ -232,9 +282,9 @@ const getCategoryName = (id) => {
                 />
               </div>
 
-              <div class="md:col-span-2">
+              <div>
                 <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
                   >Kategori</label
                 >
                 <select
@@ -247,6 +297,80 @@ const getCategoryName = (id) => {
                   </option>
                 </select>
               </div>
+            </div>
+
+            <!-- Image Uploader -->
+            <div
+              class="border border-gray-200 dark:border-slate-600 rounded-xl p-4 md:p-6 bg-gray-50 dark:bg-slate-700/50"
+            >
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"
+              >
+                Unggah Foto
+              </label>
+
+              <div v-if="form.images.length > 0" class="mb-4">
+                <div
+                  class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3"
+                >
+                  <!-- Gambar Utama (Index 0) -->
+                  <div
+                    class="relative col-span-2 row-span-2 rounded-lg overflow-hidden group shadow-sm aspect-[4/3]"
+                  >
+                    <img :src="form.images[0]" class="w-full h-full object-cover" />
+                    <div
+                      class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm"
+                    >
+                      Utama
+                    </div>
+                    <button
+                      type="button"
+                      @click="removeImage(0)"
+                      class="absolute top-2 right-2 p-1.5 bg-red-500/90 hover:bg-red-600 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                    >
+                      <PhTrash class="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <!-- Grid Gambar Lainnya -->
+                  <div
+                    v-for="(img, index) in form.images.slice(1)"
+                    :key="index + 1"
+                    class="relative rounded-lg overflow-hidden group shadow-sm aspect-square"
+                  >
+                    <img :src="img" class="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      @click="removeImage(index + 1)"
+                      class="absolute top-1 right-1 p-1 bg-red-500/90 hover:bg-red-600 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                    >
+                      <PhTrash class="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <input
+                type="file"
+                ref="fileInput"
+                multiple
+                accept="image/*"
+                class="hidden"
+                @change="handleFileUpload"
+              />
+              <button
+                type="button"
+                @click="triggerFileInput"
+                class="w-full py-6 border-2 border-dashed border-gray-300 dark:border-slate-500 rounded-lg flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors"
+              >
+                <PhPlusCircle class="w-6 h-6 mb-2 text-gray-400" />
+                <span class="text-sm font-medium">Klik tambah foto</span>
+              </button>
+              <p
+                class="text-[10px] text-gray-500 dark:text-gray-400 mt-3 text-center leading-relaxed"
+              >
+                Anda dapat memilih lebih dari satu foto sekaligus untuk diunggah.
+              </p>
             </div>
           </div>
 
