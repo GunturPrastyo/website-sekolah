@@ -58,7 +58,7 @@ const menu = ref([
     name: "Informasi",
     icon: markRaw(PhMegaphone),
     children: [
-      { name: "Berita & Artikel", link: "#" },
+      { name: "Berita & Artikel", link: "/admin/berita" },
       { name: "Galeri", link: "#" },
       { name: "Unduhan", link: "#" },
     ],

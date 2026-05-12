@@ -143,6 +143,11 @@ const router = createRouter({
           path: 'prestasi',
           name: 'admin-prestasi',
           component: () => import('../views/admin/AdminPrestasi.vue')
+        },
+        {
+          path: 'berita',
+          name: 'admin-berita',
+          component: () => import('../views/admin/AdminBerita.vue')
         }
       ]
     }
