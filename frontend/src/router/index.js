@@ -158,6 +158,11 @@ const router = createRouter({
           path: 'unduhan',
           name: 'admin-unduhan',
           component: () => import('../views/admin/AdminUnduhan.vue')
+        },
+        {
+          path: 'pengguna',
+          name: 'admin-pengguna',
+          component: () => import('../views/admin/AdminPengguna.vue')
         }
       ]
     }

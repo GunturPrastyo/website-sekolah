@@ -63,7 +63,7 @@ const menu = ref([
       { name: "Unduhan", link: "/admin/unduhan" },
     ],
   },
-  { name: "Pengguna", icon: markRaw(PhUsers), link: "#" },
+  { name: "Pengguna", icon: markRaw(PhUsers), link: "/admin/pengguna" },
   { name: "Pengaturan", icon: markRaw(PhGear), link: "#" },
 ]);
 
