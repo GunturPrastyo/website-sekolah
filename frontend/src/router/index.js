@@ -153,6 +153,11 @@ const router = createRouter({
           path: 'galeri',
           name: 'admin-galeri',
           component: () => import('../views/admin/AdminGaleri.vue')
+        },
+        {
+          path: 'unduhan',
+          name: 'admin-unduhan',
+          component: () => import('../views/admin/AdminUnduhan.vue')
         }
       ]
     }

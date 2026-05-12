@@ -60,7 +60,7 @@ const menu = ref([
     children: [
       { name: "Berita & Artikel", link: "/admin/berita" },
       { name: "Galeri", link: "/admin/galeri" },
-      { name: "Unduhan", link: "#" },
+      { name: "Unduhan", link: "/admin/unduhan" },
     ],
   },
   { name: "Pengguna", icon: markRaw(PhUsers), link: "#" },
