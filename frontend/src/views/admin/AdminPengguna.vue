@@ -10,7 +10,6 @@ import {
   PhUser,
   PhShieldCheck,
   PhEnvelopeSimple,
-  PhCircle
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -27,21 +26,18 @@ const usersList = ref([
     name: "Admin Utama",
     email: "admin@sman1nogosari.sch.id",
     role: "super_admin",
-    status: "aktif",
   },
   {
     id: 2,
     name: "Staf Humas",
     email: "humas@sman1nogosari.sch.id",
     role: "editor_berita",
-    status: "aktif",
   },
   {
     id: 3,
     name: "Staf Kesiswaan",
     email: "kesiswaan@sman1nogosari.sch.id",
     role: "editor_galeri",
-    status: "nonaktif",
   },
 ]);
 
@@ -49,9 +45,7 @@ const form = ref({
   id: null,
   name: "",
   email: "",
-  password: "",
   role: "editor_berita",
-  status: "aktif",
 });
 
 const isFormVisible = ref(false);
@@ -77,9 +71,7 @@ const resetForm = () => {
     id: null,
     name: "",
     email: "",
-    password: "",
     role: "editor_berita",
-    status: "aktif",
   };
   isEditing.value = false;
 };
@@ -90,8 +82,8 @@ const showAddForm = () => {
 };
 
 const addEntry = () => {
-  if (!form.value.name || !form.value.email || !form.value.password) {
-    triggerToast("Gagal Menyimpan", "Nama, Email, dan Password wajib diisi!", "error");
+  if (!form.value.name || !form.value.email) {
+    triggerToast("Gagal Menyimpan", "Nama dan Email wajib diisi!", "error");
     return;
   }
 
@@ -103,11 +95,13 @@ const addEntry = () => {
     name: form.value.name,
     email: form.value.email,
     role: form.value.role,
-    status: form.value.status,
   });
 
   isFormVisible.value = false;
-  triggerToast("Berhasil Ditambahkan", "Pengguna baru telah ditambahkan ke sistem.");
+  triggerToast(
+    "Berhasil Ditambahkan",
+    "Pengguna baru ditambahkan dengan sandi: password123"
+  );
   resetForm();
 };
 
@@ -117,9 +111,7 @@ const startEdit = (item) => {
     id: item.id,
     name: item.name,
     email: item.email,
-    password: "", // Sengaja dikosongkan, hanya diisi jika ingin ubah
     role: item.role,
-    status: item.status,
   };
   isFormVisible.value = true;
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -130,7 +122,7 @@ const saveEntry = () => {
     triggerToast("Gagal Menyimpan", "Nama dan Email wajib diisi!", "error");
     return;
   }
-  
+
   const index = usersList.value.findIndex((s) => s.id === form.value.id);
   if (index !== -1) {
     const item = usersList.value[index];
@@ -140,7 +132,6 @@ const saveEntry = () => {
       name: form.value.name,
       email: form.value.email,
       role: form.value.role,
-      status: form.value.status,
     };
   }
 
@@ -184,7 +175,8 @@ const filteredUsers = computed(() => {
     const query = searchQuery.value.toLowerCase();
     result = result.filter(
       (item) =>
-        item.name.toLowerCase().includes(query) || item.email.toLowerCase().includes(query)
+        item.name.toLowerCase().includes(query) ||
+        item.email.toLowerCase().includes(query)
     );
   }
   return result;
@@ -241,7 +233,9 @@ const getRoleName = (id) => {
         <form @submit.prevent="isEditing ? saveEntry() : addEntry()">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="md:col-span-1">
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
                 Nama Lengkap
               </label>
               <input
@@ -254,7 +248,9 @@ const getRoleName = (id) => {
             </div>
 
             <div class="md:col-span-1">
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
                 Alamat Email
               </label>
               <input
@@ -266,47 +262,30 @@ const getRoleName = (id) => {
               />
             </div>
 
-            <div class="md:col-span-1">
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Kata Sandi {{ isEditing ? '(Kosongkan jika tidak ingin mengubah)' : '' }}
-              </label>
-              <input
-                type="password"
-                v-model="form.password"
-                :required="!isEditing"
+            <div class="md:col-span-2">
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >Peran (Role) Akses</label
+              >
+              <select
+                v-model="form.role"
+                required
                 class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Masukkan kata sandi"
-              />
-            </div>
-
-            <div class="md:col-span-1 grid grid-cols-2 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Peran (Role)</label>
-                <select
-                  v-model="form.role"
-                  required
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option v-for="role in roles" :key="role.id" :value="role.id">
-                    {{ role.name }}
-                  </option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
-                <select
-                  v-model="form.status"
-                  required
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="aktif">Aktif</option>
-                  <option value="nonaktif">Nonaktif</option>
-                </select>
-              </div>
+              >
+                <option v-for="role in roles" :key="role.id" :value="role.id">
+                  {{ role.name }}
+                </option>
+              </select>
+              <p v-if="!isEditing" class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                * Kata sandi untuk pengguna baru akan diatur otomatis menjadi
+                <strong class="text-gray-700 dark:text-gray-300">password123</strong>.
+              </p>
             </div>
           </div>
 
-          <div class="flex gap-3 mt-6 justify-end border-t border-gray-100 dark:border-slate-700 pt-6">
+          <div
+            class="flex gap-3 mt-6 justify-end border-t border-gray-100 dark:border-slate-700 pt-6"
+          >
             <button
               type="button"
               @click="hideForm"
@@ -328,11 +307,17 @@ const getRoleName = (id) => {
     </Transition>
 
     <!-- Data Table -->
-    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
-      <div class="p-6 border-b border-gray-100 dark:border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div
+      class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden"
+    >
+      <div
+        class="p-6 border-b border-gray-100 dark:border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+      >
         <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
           <div class="relative w-full md:w-80">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
               <PhMagnifyingGlass class="w-5 h-5 text-gray-400" />
             </div>
             <input
@@ -357,51 +342,81 @@ const getRoleName = (id) => {
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-gray-50 dark:bg-slate-700/50 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <tr
+              class="bg-gray-50 dark:bg-slate-700/50 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
               <th class="px-6 py-4">Nama Pengguna</th>
               <th class="px-6 py-4 hidden sm:table-cell">Peran (Role)</th>
-              <th class="px-6 py-4 hidden md:table-cell">Status</th>
               <th class="px-6 py-4 text-right">Aksi</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
             <tr v-if="filteredUsers.length === 0">
-              <td colspan="4" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+              <td
+                colspan="3"
+                class="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
+              >
                 <PhUser class="w-12 h-12 mx-auto text-gray-300 dark:text-gray-500 mb-3" />
                 <p>Tidak ada pengguna yang ditemukan.</p>
               </td>
             </tr>
-            <tr v-for="user in filteredUsers" :key="user.id" class="hover:bg-blue-50/50 dark:hover:bg-slate-700/30 transition-colors group">
+            <tr
+              v-for="user in filteredUsers"
+              :key="user.id"
+              class="hover:bg-blue-50/50 dark:hover:bg-slate-700/30 transition-colors group"
+            >
               <td class="px-6 py-4">
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                  <div
+                    class="w-10 h-10 rounded-full bg-blue-100 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0"
+                  >
                     <PhUser class="w-5 h-5" weight="fill" />
                   </div>
                   <div>
-                    <span class="block text-sm font-semibold text-gray-800 dark:text-gray-200">{{ user.name }}</span>
-                    <span class="block text-xs text-gray-400 dark:text-gray-500 mt-0.5"><PhEnvelopeSimple class="w-3.5 h-3.5 inline mr-1" />{{ user.email }}</span>
+                    <span
+                      class="block text-sm font-semibold text-gray-800 dark:text-gray-200"
+                      >{{ user.name }}</span
+                    >
+                    <span class="block text-xs text-gray-400 dark:text-gray-500 mt-0.5"
+                      ><PhEnvelopeSimple class="w-3.5 h-3.5 inline mr-1" />{{
+                        user.email
+                      }}</span
+                    >
                   </div>
                 </div>
               </td>
               <td class="px-6 py-4 hidden sm:table-cell">
-                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold" 
-                  :class="user.role === 'super_admin' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' : 'bg-gray-100 text-gray-700 dark:bg-slate-700 dark:text-gray-300'">
-                  <PhShieldCheck v-if="user.role === 'super_admin'" class="w-3.5 h-3.5 mr-1" />
+                <span
+                  class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold"
+                  :class="
+                    user.role === 'super_admin'
+                      ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
+                      : 'bg-gray-100 text-gray-700 dark:bg-slate-700 dark:text-gray-300'
+                  "
+                >
+                  <PhShieldCheck
+                    v-if="user.role === 'super_admin'"
+                    class="w-3.5 h-3.5 mr-1"
+                  />
                   {{ getRoleName(user.role) }}
                 </span>
               </td>
-              <td class="px-6 py-4 hidden md:table-cell">
-                <span class="inline-flex items-center text-xs font-semibold" :class="user.status === 'aktif' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'">
-                  <PhCircle class="w-2.5 h-2.5 mr-1.5" weight="fill" />
-                  {{ user.status === 'aktif' ? 'Aktif' : 'Nonaktif' }}
-                </span>
-              </td>
               <td class="px-6 py-4 text-right">
-                <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button @click="startEdit(user)" class="p-1.5 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-md transition-colors" title="Edit Pengguna">
+                <div
+                  class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <button
+                    @click="startEdit(user)"
+                    class="p-1.5 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-md transition-colors"
+                    title="Edit Pengguna"
+                  >
                     <PhPencilSimple class="w-4 h-4" />
                   </button>
-                  <button @click="deleteEntry(user.id)" class="p-1.5 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-md transition-colors" title="Hapus Pengguna">
+                  <button
+                    @click="deleteEntry(user.id)"
+                    class="p-1.5 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-md transition-colors"
+                    title="Hapus Pengguna"
+                  >
                     <PhTrash class="w-4 h-4" />
                   </button>
                 </div>
