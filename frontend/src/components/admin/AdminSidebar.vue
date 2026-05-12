@@ -59,7 +59,7 @@ const menu = ref([
     icon: markRaw(PhMegaphone),
     children: [
       { name: "Berita & Artikel", link: "/admin/berita" },
-      { name: "Galeri", link: "#" },
+      { name: "Galeri", link: "/admin/galeri" },
       { name: "Unduhan", link: "#" },
     ],
   },

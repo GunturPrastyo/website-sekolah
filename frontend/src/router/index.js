@@ -148,6 +148,11 @@ const router = createRouter({
           path: 'berita',
           name: 'admin-berita',
           component: () => import('../views/admin/AdminBerita.vue')
+        },
+        {
+          path: 'galeri',
+          name: 'admin-galeri',
+          component: () => import('../views/admin/AdminGaleri.vue')
         }
       ]
     }
