@@ -6,7 +6,6 @@ import {
   PhTrash,
   PhXCircle,
   PhFloppyDisk,
-  PhMagnifyingGlass,
   PhImage,
   PhHeart,
 } from "@phosphor-icons/vue";
@@ -62,7 +61,7 @@ const itemToDelete = ref(null);
 
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
-const searchQuery = ref("");
+const activeCategory = ref("semua");
 
 const fileInput = ref(null);
 
@@ -211,9 +210,8 @@ const cancelDelete = () => {
 };
 
 const filteredGallery = computed(() => {
-  if (!searchQuery.value) return galleryList.value;
-  const query = searchQuery.value.toLowerCase();
-  return galleryList.value.filter((item) => item.title.toLowerCase().includes(query));
+  if (activeCategory.value === "semua") return galleryList.value;
+  return galleryList.value.filter((item) => item.category === activeCategory.value);
 });
 
 const getCategoryName = (id) => {
@@ -401,16 +399,31 @@ const getCategoryName = (id) => {
     <div
       class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
     >
-      <div class="mb-6 relative max-w-md">
-        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <PhMagnifyingGlass class="w-5 h-5 text-gray-400" />
-        </div>
-        <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Cari judul foto..."
-          class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-        />
+      <div class="flex flex-wrap gap-2.5 mb-6">
+        <button
+          @click="activeCategory = 'semua'"
+          class="px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 focus:outline-none border"
+          :class="
+            activeCategory === 'semua'
+              ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
+              : 'bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
+          "
+        >
+          Semua
+        </button>
+        <button
+          v-for="cat in categories"
+          :key="cat.id"
+          @click="activeCategory = cat.id"
+          class="px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 focus:outline-none border"
+          :class="
+            activeCategory === cat.id
+              ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
+              : 'bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
+          "
+        >
+          {{ cat.name }}
+        </button>
       </div>
 
       <div
@@ -425,18 +438,20 @@ const getCategoryName = (id) => {
         <p>Tidak ada foto yang ditemukan.</p>
       </div>
 
-      <div
+      <TransitionGroup
+        name="gallery"
+        tag="div"
         v-else
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6"
+        class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 md:gap-6 w-full transform-gpu"
       >
         <div
           v-for="item in filteredGallery"
           :key="item.id"
-          class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-600 shadow-sm flex flex-col overflow-hidden relative group"
+          class="group relative overflow-hidden rounded-xl shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-200 dark:bg-slate-800 block break-inside-avoid mb-4 md:mb-6 transform-gpu"
         >
           <!-- Floating Actions -->
           <div
-            class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-slate-800/90 p-1 rounded-lg border border-gray-100 dark:border-slate-700 z-10"
+            class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-slate-800/90 p-1 rounded-lg border border-gray-100 dark:border-slate-700 z-30"
           >
             <button
               @click="startEdit(item)"
@@ -454,41 +469,49 @@ const getCategoryName = (id) => {
             </button>
           </div>
 
-          <!-- Image Thumbnail -->
-          <div class="w-full aspect-square bg-gray-100 dark:bg-slate-700 relative">
-            <img v-if="item.image" :src="item.image" class="w-full h-full object-cover" />
-            <div
-              v-else
-              class="w-full h-full flex items-center justify-center text-gray-400"
-            >
-              <PhImage class="w-12 h-12 opacity-50" />
-            </div>
-
-            <div class="absolute bottom-3 left-3 flex gap-2">
-              <span
-                class="bg-blue-600/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded"
-              >
-                {{ getCategoryName(item.category) }}
-              </span>
-            </div>
+          <!-- Image -->
+          <img
+            v-if="item.image"
+            :src="item.image"
+            class="w-full h-auto block transition-all duration-700 group-hover:scale-105"
+          />
+          <div
+            v-else
+            class="w-full aspect-square flex items-center justify-center text-gray-400 bg-gray-100 dark:bg-slate-700"
+          >
+            <PhImage class="w-12 h-12 opacity-50" />
           </div>
 
-          <!-- Content Info -->
-          <div class="p-4 flex flex-col flex-1">
+          <!-- Dark Overlay on Hover -->
+          <div
+            class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+          ></div>
+
+          <!-- Bottom Left Text -->
+          <div
+            class="absolute bottom-0 left-0 p-3 md:p-5 w-full z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
+          >
             <h4
-              class="font-bold text-gray-900 dark:text-white text-md mb-2 leading-tight line-clamp-2"
+              class="text-white font-bold text-sm md:text-base leading-snug drop-shadow-md mb-1 md:mb-2 line-clamp-2"
             >
               {{ item.title }}
             </h4>
-            <div
-              class="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-auto pt-2 border-t border-gray-100 dark:border-slate-700"
-            >
-              <PhHeart class="w-4 h-4 mr-1 text-red-500" weight="fill" />
-              {{ item.likes }} Suka
+            <div class="flex items-center gap-1.5 md:gap-2">
+              <span
+                class="bg-blue-600/90 backdrop-blur-sm px-2 py-0.5 text-white text-[10px] font-bold uppercase tracking-wider rounded"
+              >
+                {{ getCategoryName(item.category) }}
+              </span>
+              <span
+                class="text-gray-300 text-[10px] md:text-xs font-medium tracking-wide flex items-center"
+              >
+                <PhHeart class="w-3 h-3 mr-1 text-red-500" weight="fill" />
+                {{ item.likes }}
+              </span>
             </div>
           </div>
         </div>
-      </div>
+      </TransitionGroup>
     </div>
 
     <ConfirmModal
@@ -511,5 +534,19 @@ const getCategoryName = (id) => {
 <style scoped>
 .transition-all {
   overflow: hidden;
+}
+
+.gallery-move,
+.gallery-enter-active,
+.gallery-leave-active {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.gallery-enter-from,
+.gallery-leave-to {
+  opacity: 0;
+  transform: scale(0.95) translateY(-30px);
+}
+.gallery-leave-active {
+  position: absolute;
 }
 </style>
