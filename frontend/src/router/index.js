@@ -163,6 +163,11 @@ const router = createRouter({
           path: 'pengguna',
           name: 'admin-pengguna',
           component: () => import('../views/admin/AdminPengguna.vue')
+        },
+        {
+          path: 'ppdb',
+          name: 'admin-ppdb',
+          component: () => import('../views/admin/AdminPPDB.vue')
         }
       ]
     }
