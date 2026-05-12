@@ -11,7 +11,6 @@ import {
   PhEye,
   PhTag,
 } from "@phosphor-icons/vue";
-import ImageUploader from "@/components/admin/ImageUploader.vue";
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -28,7 +27,7 @@ const newsList = ref([
     id: 1,
     title: "Peringatan Hari Guru Nasional Berlangsung Meriah",
     category: "kegiatan",
-    image: "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800",
+    images: ["https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800"],
     views: 1250,
     content:
       "<p>Seluruh siswa dan staf pengajar berpartisipasi dalam rangkaian acara yang dimeriahkan dengan berbagai penampilan pentas seni dan penghargaan bagi guru berprestasi.</p>",
@@ -38,7 +37,7 @@ const newsList = ref([
     id: 2,
     title: "Siswa SMAN 1 Meraih Juara 1 Olimpiade Sains Tingkat Nasional",
     category: "prestasi",
-    image: "https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800",
+    images: ["https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800"],
     views: 3420,
     content:
       "<p>Prestasi membanggakan kembali ditorehkan oleh siswa-siswi kita di kancah nasional dalam bidang sains terapan, mengalahkan ratusan peserta dari sekolah lain.</p>",
@@ -50,7 +49,7 @@ const form = ref({
   id: null,
   title: "",
   category: "akademik",
-  image: "",
+  images: [],
   content: "",
   tags: "",
 });
@@ -63,6 +62,29 @@ const itemToDelete = ref(null);
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
+
+const fileInput = ref(null);
+const draggedImageIndex = ref(null);
+
+const triggerFileInput = () => {
+  if (fileInput.value) fileInput.value.click();
+};
+
+const handleFileUpload = (event) => {
+  const files = Array.from(event.target.files);
+  files.forEach((file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      form.value.images.push(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  });
+  event.target.value = "";
+};
+
+const removeImage = (index) => {
+  form.value.images.splice(index, 1);
+};
 
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };
@@ -77,7 +99,7 @@ const resetForm = () => {
     id: null,
     title: "",
     category: "akademik",
-    image: "",
+    images: [],
     content: "",
     tags: "",
   };
@@ -105,7 +127,7 @@ const addEntry = () => {
 
 const startEdit = (item) => {
   isEditing.value = true;
-  form.value = { ...item };
+  form.value = { ...item, images: item.images ? [...item.images] : [] };
   isFormVisible.value = true;
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
@@ -147,6 +169,18 @@ const confirmDelete = () => {
 const cancelDelete = () => {
   itemToDelete.value = null;
   isDeleteModalOpen.value = false;
+};
+
+const handleImageDragStart = (index, event) => {
+  draggedImageIndex.value = index;
+  event.dataTransfer.effectAllowed = "move";
+};
+
+const handleImageDrop = (index) => {
+  if (draggedImageIndex.value === null || draggedImageIndex.value === index) return;
+  const draggedItem = form.value.images.splice(draggedImageIndex.value, 1)[0];
+  form.value.images.splice(index, 0, draggedItem);
+  draggedImageIndex.value = null;
 };
 
 const filteredNews = computed(() => {
@@ -206,17 +240,85 @@ const getCategoryName = (id) => {
         <form @submit.prevent="isEditing ? saveEntry() : addEntry()">
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Image Uploader -->
-            <div class="lg:col-span-1">
-              <ImageUploader
-                v-model="form.image"
-                label="Gambar Utama Berita (Opsional)"
-                containerClass="w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] mx-auto"
-                imageClass="object-cover rounded-xl"
-              />
-              <p
-                class="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center lg:text-left max-w-sm mx-auto"
+            <div
+              class="lg:col-span-1 border border-gray-200 dark:border-slate-600 rounded-xl p-4 bg-gray-50 dark:bg-slate-700/50 h-max"
+            >
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"
               >
-                Gunakan gambar resolusi tinggi untuk menarik perhatian pembaca.
+                Gambar Berita
+              </label>
+
+              <div v-if="form.images.length > 0" class="mb-4">
+                <!-- Gambar Utama (Index 0) -->
+                <div
+                  class="relative w-full aspect-[4/3] rounded-lg overflow-hidden mb-2 group cursor-move shadow-sm"
+                  draggable="true"
+                  @dragstart="handleImageDragStart(0, $event)"
+                  @dragover.prevent
+                  @dragenter.prevent
+                  @drop="handleImageDrop(0)"
+                >
+                  <img :src="form.images[0]" class="w-full h-full object-cover" />
+                  <div
+                    class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm"
+                  >
+                    Utama
+                  </div>
+                  <button
+                    type="button"
+                    @click="removeImage(0)"
+                    class="absolute top-2 right-2 p-1.5 bg-red-500/90 hover:bg-red-600 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                  >
+                    <PhTrash class="w-4 h-4" />
+                  </button>
+                </div>
+
+                <!-- Grid Gambar Lainnya -->
+                <div class="grid grid-cols-3 gap-2">
+                  <div
+                    v-for="(img, index) in form.images.slice(1)"
+                    :key="index + 1"
+                    class="relative aspect-square rounded-md overflow-hidden group cursor-move shadow-sm"
+                    draggable="true"
+                    @dragstart="handleImageDragStart(index + 1, $event)"
+                    @dragover.prevent
+                    @dragenter.prevent
+                    @drop="handleImageDrop(index + 1)"
+                  >
+                    <img :src="img" class="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      @click="removeImage(index + 1)"
+                      class="absolute top-1 right-1 p-1 bg-red-500/90 hover:bg-red-600 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                    >
+                      <PhTrash class="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <input
+                type="file"
+                ref="fileInput"
+                multiple
+                accept="image/*"
+                class="hidden"
+                @change="handleFileUpload"
+              />
+              <button
+                type="button"
+                @click="triggerFileInput"
+                class="w-full py-6 border-2 border-dashed border-gray-300 dark:border-slate-500 rounded-lg flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors"
+              >
+                <PhPlusCircle class="w-6 h-6 mb-2 text-gray-400" />
+                <span class="text-sm font-medium">Klik tambah gambar</span>
+              </button>
+              <p
+                class="text-[10px] text-gray-500 dark:text-gray-400 mt-3 text-center leading-relaxed"
+              >
+                Tahan dan geser (drag & drop) gambar untuk mengubah urutan. Gambar paling
+                atas akan menjadi thumbnail utama.
               </p>
             </div>
 
@@ -364,7 +466,11 @@ const getCategoryName = (id) => {
 
           <!-- Image Thumbnail -->
           <div class="w-full aspect-[16/9] bg-gray-100 dark:bg-slate-700 relative">
-            <img v-if="news.image" :src="news.image" class="w-full h-full object-cover" />
+            <img
+              v-if="news.images && news.images.length > 0"
+              :src="news.images[0]"
+              class="w-full h-full object-cover"
+            />
             <div
               v-else
               class="w-full h-full flex items-center justify-center text-gray-400"
@@ -378,6 +484,12 @@ const getCategoryName = (id) => {
                 class="bg-blue-600/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded"
               >
                 {{ getCategoryName(news.category) }}
+              </span>
+              <span
+                v-if="news.images && news.images.length > 1"
+                class="bg-gray-900/80 backdrop-blur-sm px-2 py-1 text-white text-[10px] font-bold rounded flex items-center shadow-sm"
+              >
+                +{{ news.images.length - 1 }} Foto
               </span>
             </div>
           </div>
