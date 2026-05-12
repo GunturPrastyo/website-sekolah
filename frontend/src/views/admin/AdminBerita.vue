@@ -8,11 +8,11 @@ import {
   PhFloppyDisk,
   PhMagnifyingGlass,
   PhNewspaper,
-  PhUser,
-  PhCalendar,
   PhEye,
+  PhTag,
 } from "@phosphor-icons/vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
+import RichTextEditor from "@/components/RichTextEditor.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
@@ -28,23 +28,21 @@ const newsList = ref([
     id: 1,
     title: "Peringatan Hari Guru Nasional Berlangsung Meriah",
     category: "kegiatan",
-    date: "2025-11-24",
-    author: "Tim Redaksi",
     image: "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800",
     views: 1250,
-    excerpt:
-      "Seluruh siswa dan staf pengajar berpartisipasi dalam rangkaian acara yang dimeriahkan dengan berbagai penampilan pentas seni dan penghargaan bagi guru berprestasi.",
+    content:
+      "<p>Seluruh siswa dan staf pengajar berpartisipasi dalam rangkaian acara yang dimeriahkan dengan berbagai penampilan pentas seni dan penghargaan bagi guru berprestasi.</p>",
+    tags: "Guru, Acara, Sekolah",
   },
   {
     id: 2,
     title: "Siswa SMAN 1 Meraih Juara 1 Olimpiade Sains Tingkat Nasional",
     category: "prestasi",
-    date: "2026-01-10",
-    author: "Humas",
     image: "https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800",
     views: 3420,
-    excerpt:
-      "Prestasi membanggakan kembali ditorehkan oleh siswa-siswi kita di kancah nasional dalam bidang sains terapan, mengalahkan ratusan peserta dari sekolah lain.",
+    content:
+      "<p>Prestasi membanggakan kembali ditorehkan oleh siswa-siswi kita di kancah nasional dalam bidang sains terapan, mengalahkan ratusan peserta dari sekolah lain.</p>",
+    tags: "Olimpiade, Sains, Prestasi",
   },
 ]);
 
@@ -52,10 +50,9 @@ const form = ref({
   id: null,
   title: "",
   category: "akademik",
-  date: new Date().toISOString().split("T")[0],
-  author: "",
   image: "",
-  excerpt: "",
+  content: "",
+  tags: "",
 });
 
 const isFormVisible = ref(false);
@@ -80,10 +77,9 @@ const resetForm = () => {
     id: null,
     title: "",
     category: "akademik",
-    date: new Date().toISOString().split("T")[0],
-    author: "",
     image: "",
-    excerpt: "",
+    content: "",
+    tags: "",
   };
   isEditing.value = false;
 };
@@ -94,8 +90,8 @@ const showAddForm = () => {
 };
 
 const addEntry = () => {
-  if (!form.value.title || !form.value.author) {
-    triggerToast("Gagal Menyimpan", "Judul Berita dan Penulis wajib diisi!", "error");
+  if (!form.value.title) {
+    triggerToast("Gagal Menyimpan", "Judul Berita wajib diisi!", "error");
     return;
   }
   const newId =
@@ -115,8 +111,8 @@ const startEdit = (item) => {
 };
 
 const saveEntry = () => {
-  if (!form.value.title || !form.value.author) {
-    triggerToast("Gagal Menyimpan", "Judul Berita dan Penulis wajib diisi!", "error");
+  if (!form.value.title) {
+    triggerToast("Gagal Menyimpan", "Judul Berita wajib diisi!", "error");
     return;
   }
   const index = newsList.value.findIndex((s) => s.id === form.value.id);
@@ -156,11 +152,7 @@ const cancelDelete = () => {
 const filteredNews = computed(() => {
   if (!searchQuery.value) return newsList.value;
   const query = searchQuery.value.toLowerCase();
-  return newsList.value.filter(
-    (item) =>
-      item.title.toLowerCase().includes(query) ||
-      item.author.toLowerCase().includes(query)
-  );
+  return newsList.value.filter((item) => item.title.toLowerCase().includes(query));
 });
 
 const getCategoryName = (id) => {
@@ -260,44 +252,35 @@ const getCategoryName = (id) => {
                 </select>
               </div>
 
-              <div class="md:col-span-1">
+              <div class="md:col-span-2">
                 <label
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >Tanggal</label
+                  >Isi Berita</label
                 >
-                <input
-                  type="date"
-                  v-model="form.date"
-                  required
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                <RichTextEditor
+                  v-model="form.content"
+                  placeholder="Tuliskan isi lengkap berita di sini..."
                 />
               </div>
 
               <div class="md:col-span-2">
                 <label
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >Penulis / Sumber</label
+                  >Tags</label
                 >
-                <input
-                  type="text"
-                  v-model="form.author"
-                  required
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Contoh: Tim Redaksi atau Humas SMAN 1"
-                />
-              </div>
-
-              <div class="md:col-span-2">
-                <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >Kutipan Singkat (Excerpt)</label
-                >
-                <textarea
-                  v-model="form.excerpt"
-                  rows="3"
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Ringkasan atau kalimat pembuka untuk berita..."
-                ></textarea>
+                <div class="relative">
+                  <div
+                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                  >
+                    <PhTag class="w-5 h-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="text"
+                    v-model="form.tags"
+                    class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Pisahkan dengan koma. Contoh: Pendidikan, Prestasi, Sekolah"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -336,7 +319,7 @@ const getCategoryName = (id) => {
         <input
           type="text"
           v-model="searchQuery"
-          placeholder="Cari judul berita atau penulis..."
+          placeholder="Cari judul berita..."
           class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
       </div>
@@ -401,26 +384,16 @@ const getCategoryName = (id) => {
 
           <!-- Content Info -->
           <div class="p-5 flex flex-col flex-1">
-            <div
-              class="flex items-center text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 gap-3"
-            >
-              <span class="flex items-center text-blue-600 dark:text-blue-400">
-                <PhCalendar class="w-4 h-4 mr-1" /> {{ news.date }}
-              </span>
-              <span class="flex items-center">
-                <PhUser class="w-4 h-4 mr-1" /> {{ news.author }}
-              </span>
-            </div>
-
             <h4
               class="font-bold text-gray-900 dark:text-white text-lg mb-2 leading-tight"
             >
               {{ news.title }}
             </h4>
 
-            <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 mb-4 flex-1">
-              {{ news.excerpt }}
-            </p>
+            <div
+              class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 mb-4 flex-1"
+              v-html="news.content"
+            ></div>
 
             <div
               class="flex items-center text-xs font-medium text-gray-400 dark:text-gray-500 mt-auto border-t border-gray-100 dark:border-slate-700 pt-3"
