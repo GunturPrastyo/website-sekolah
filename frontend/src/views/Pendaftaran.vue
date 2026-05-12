@@ -192,7 +192,10 @@ onMounted(() => {
           >
             TAHUN AJARAN 2026/2027
           </span>
-          <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
+          <h1
+            class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight"
+            style="font-family: 'Oswald', sans-serif"
+          >
             Penerimaan Peserta Didik Baru
           </h1>
           <p class="text-blue-100 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
@@ -208,7 +211,10 @@ onMounted(() => {
       >
         <div class="container mx-auto max-w-full px-0 lg:px-16">
           <div class="text-center mb-10">
-            <h2 class="text-2xl md:text-3xl font-bold text-blue-950 dark:text-white">
+            <h2
+              class="text-3xl md:text-4xl font-bold text-blue-950 dark:text-white"
+              style="font-family: 'Oswald', sans-serif"
+            >
               Informasi & Persyaratan
             </h2>
             <p class="text-gray-600 dark:text-gray-400 mt-2">
@@ -224,7 +230,7 @@ onMounted(() => {
               <h3
                 class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
               >
-                <PhListChecks class="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400" />
+                <PhListChecks class="w-6 h-6 mr-2 text-blue-950 dark:text-white" />
                 Syarat Pendaftaran
               </h3>
               <ul class="space-y-4">
@@ -263,7 +269,7 @@ onMounted(() => {
               <h3
                 class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
               >
-                <PhGitMerge class="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400" />
+                <PhGitMerge class="w-6 h-6 mr-2 text-blue-950 dark:text-white" />
                 Alur Pendaftaran
               </h3>
               <div
@@ -343,7 +349,10 @@ onMounted(() => {
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             <!-- Left: Teks Deskripsi -->
             <div class="lg:col-span-5 text-center lg:text-left">
-              <h2 class="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
+              <h2
+                class="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight"
+                style="font-family: 'Oswald', sans-serif"
+              >
                 Jalur Pendaftaran PPDB
               </h2>
               <p
