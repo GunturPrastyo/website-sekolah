@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, nextTick, watch } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -62,6 +62,9 @@ const itemToDelete = ref(null);
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const activeCategory = ref("semua");
+
+const selectedItems = ref([]);
+const isBulkDeleteModalOpen = ref(false);
 
 const fileInput = ref(null);
 
@@ -138,7 +141,7 @@ const addEntry = () => {
   resetForm();
 };
 
-const startEdit = (item) => {
+const startEdit = async (item) => {
   isEditing.value = true;
   form.value = {
     id: item.id,
@@ -147,6 +150,7 @@ const startEdit = (item) => {
     images: [item.image],
   };
   isFormVisible.value = true;
+  await nextTick();
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
@@ -212,6 +216,35 @@ const cancelDelete = () => {
 const filteredGallery = computed(() => {
   if (activeCategory.value === "semua") return galleryList.value;
   return galleryList.value.filter((item) => item.category === activeCategory.value);
+});
+
+const selectAll = () => {
+  const filteredIds = filteredGallery.value.map((item) => item.id);
+  const allSelected = filteredIds.every((id) => selectedItems.value.includes(id));
+
+  if (allSelected && filteredIds.length > 0) {
+    selectedItems.value = selectedItems.value.filter((id) => !filteredIds.includes(id));
+  } else {
+    const newSelection = new Set([...selectedItems.value, ...filteredIds]);
+    selectedItems.value = Array.from(newSelection);
+  }
+};
+
+const confirmBulkDelete = () => {
+  galleryList.value = galleryList.value.filter(
+    (item) => !selectedItems.value.includes(item.id)
+  );
+  triggerToast(
+    "Data Dihapus",
+    `${selectedItems.value.length} foto berhasil dihapus dari galeri.`,
+    "info"
+  );
+  selectedItems.value = [];
+  isBulkDeleteModalOpen.value = false;
+};
+
+watch(activeCategory, () => {
+  selectedItems.value = [];
 });
 
 const getCategoryName = (id) => {
@@ -399,31 +432,58 @@ const getCategoryName = (id) => {
     <div
       class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
     >
-      <div class="flex flex-wrap gap-2.5 mb-6">
-        <button
-          @click="activeCategory = 'semua'"
-          class="px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 focus:outline-none border"
-          :class="
-            activeCategory === 'semua'
-              ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
-              : 'bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
-          "
+      <div
+        class="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center mb-6"
+      >
+        <div class="flex flex-wrap gap-2.5">
+          <button
+            @click="activeCategory = 'semua'"
+            class="px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 focus:outline-none border"
+            :class="
+              activeCategory === 'semua'
+                ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
+                : 'bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
+            "
+          >
+            Semua
+          </button>
+          <button
+            v-for="cat in categories"
+            :key="cat.id"
+            @click="activeCategory = cat.id"
+            class="px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 focus:outline-none border"
+            :class="
+              activeCategory === cat.id
+                ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
+                : 'bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
+            "
+          >
+            {{ cat.name }}
+          </button>
+        </div>
+        <div
+          class="flex items-center gap-2 w-full sm:w-auto"
+          v-if="filteredGallery.length > 0 || selectedItems.length > 0"
         >
-          Semua
-        </button>
-        <button
-          v-for="cat in categories"
-          :key="cat.id"
-          @click="activeCategory = cat.id"
-          class="px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 focus:outline-none border"
-          :class="
-            activeCategory === cat.id
-              ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
-              : 'bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
-          "
-        >
-          {{ cat.name }}
-        </button>
+          <button
+            v-if="selectedItems.length > 0"
+            @click="isBulkDeleteModalOpen = true"
+            class="flex-1 sm:flex-none justify-center px-3 py-1.5 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors flex items-center shadow-sm"
+          >
+            <PhTrash class="w-4 h-4 mr-1.5" /> Hapus ({{ selectedItems.length }})
+          </button>
+          <button
+            @click="selectAll"
+            class="flex-1 sm:flex-none justify-center px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-lg text-sm font-semibold hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors text-gray-700 dark:text-gray-300 shadow-sm"
+          >
+            {{
+              selectedItems.length === filteredGallery.length &&
+              filteredGallery.length > 0
+                ? "Batal Pilih Semua"
+                : "Pilih Semua"
+            }}
+          </button>
+        </div>
       </div>
 
       <div
@@ -448,10 +508,24 @@ const getCategoryName = (id) => {
           v-for="item in filteredGallery"
           :key="item.id"
           class="group relative overflow-hidden rounded-xl shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-200 dark:bg-slate-800 block break-inside-avoid mb-4 md:mb-6 transform-gpu"
+          :class="{ 'ring-2 ring-blue-500 shadow-md': selectedItems.includes(item.id) }"
         >
+          <!-- Checkbox Multiple Select -->
+          <label
+            class="absolute top-3 left-3 z-40 cursor-pointer flex items-center justify-center w-8 h-8 rounded-full bg-white/90 dark:bg-slate-800/90 shadow-sm border border-gray-200 dark:border-slate-600 opacity-0 group-hover:opacity-100 transition-opacity"
+            :class="{ 'opacity-100 !border-blue-500': selectedItems.includes(item.id) }"
+          >
+            <input
+              type="checkbox"
+              :value="item.id"
+              v-model="selectedItems"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer"
+            />
+          </label>
+
           <!-- Floating Actions -->
           <div
-            class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-slate-800/90 p-1 rounded-lg border border-gray-100 dark:border-slate-700 z-30"
+            class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-slate-800/90 p-1 rounded-lg border border-gray-100 dark:border-slate-700 z-40"
           >
             <button
               @click="startEdit(item)"
