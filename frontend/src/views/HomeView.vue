@@ -1663,54 +1663,54 @@
                 <!-- Countdown Timer -->
                 <div class="flex justify-center gap-3 sm:gap-4 mb-8">
                   <div
-                    class="flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20"
+                    class="group flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20 hover:bg-white/20 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all duration-300 cursor-default"
                   >
                     <span
-                      class="text-xl sm:text-2xl font-bold text-white mb-1"
+                      class="text-xl sm:text-2xl font-bold text-white mb-1 transform group-hover:scale-110 group-hover:text-yellow-300 transition-all duration-300 inline-block"
                       style="font-family: 'Oswald', sans-serif"
                       >{{ ppdbCountdown.days }}</span
                     >
                     <span
-                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider"
+                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider group-hover:text-white transition-colors duration-300"
                       >Hari</span
                     >
                   </div>
                   <div
-                    class="flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20"
+                    class="group flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20 hover:bg-white/20 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all duration-300 cursor-default"
                   >
                     <span
-                      class="text-xl sm:text-2xl font-bold text-white mb-1"
+                      class="text-xl sm:text-2xl font-bold text-white mb-1 transform group-hover:scale-110 group-hover:text-yellow-300 transition-all duration-300 inline-block"
                       style="font-family: 'Oswald', sans-serif"
                       >{{ ppdbCountdown.hours }}</span
                     >
                     <span
-                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider"
+                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider group-hover:text-white transition-colors duration-300"
                       >Jam</span
                     >
                   </div>
                   <div
-                    class="flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20"
+                    class="group flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20 hover:bg-white/20 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all duration-300 cursor-default"
                   >
                     <span
-                      class="text-xl sm:text-2xl font-bold text-white mb-1"
+                      class="text-xl sm:text-2xl font-bold text-white mb-1 transform group-hover:scale-110 group-hover:text-yellow-300 transition-all duration-300 inline-block"
                       style="font-family: 'Oswald', sans-serif"
                       >{{ ppdbCountdown.minutes }}</span
                     >
                     <span
-                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider"
+                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider group-hover:text-white transition-colors duration-300"
                       >Menit</span
                     >
                   </div>
                   <div
-                    class="flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20"
+                    class="group flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20 hover:bg-white/20 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all duration-300 cursor-default"
                   >
                     <span
-                      class="text-xl sm:text-2xl font-bold text-white mb-1"
+                      class="text-xl sm:text-2xl font-bold text-white mb-1 transform group-hover:scale-110 group-hover:text-yellow-300 transition-all duration-300 inline-block"
                       style="font-family: 'Oswald', sans-serif"
                       >{{ ppdbCountdown.seconds }}</span
                     >
                     <span
-                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider"
+                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider group-hover:text-white transition-colors duration-300"
                       >Detik</span
                     >
                   </div>
