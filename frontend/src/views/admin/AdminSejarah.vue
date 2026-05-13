@@ -84,6 +84,9 @@ const schoolProfile = ref({
   image: "/assets/img/gedung.jpg",
 });
 
+const isProfileModalVisible = ref(false);
+const tempProfile = ref({});
+
 const form = ref({
   id: null,
   year: "",
@@ -150,7 +153,21 @@ const addEntry = () => {
   resetForm();
 };
 
+const openProfileModal = () => {
+  tempProfile.value = { ...schoolProfile.value };
+  isProfileModalVisible.value = true;
+  document.body.style.overflow = "hidden";
+};
+
+const closeProfileModal = () => {
+  isProfileModalVisible.value = false;
+  document.body.style.overflow = "";
+};
+
 const saveProfile = () => {
+  schoolProfile.value = { ...tempProfile.value };
+  isProfileModalVisible.value = false;
+  document.body.style.overflow = "";
   triggerToast("Profil Disimpan", "Data profil singkat sekolah berhasil diperbarui.");
 };
 
@@ -258,96 +275,227 @@ const filteredTimeline = computed(() => {
           Kelola profil singkat dan data lini masa sejarah SMAN 1 Nogosari
         </p>
       </div>
-      <button
-        @click="saveProfile"
-        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-800 transition-colors"
-      >
-        <PhFloppyDisk class="w-5 h-5 mr-2" />
-        Simpan Profil
-      </button>
     </div>
 
-    <!-- Form Profil Singkat Sekolah -->
+    <!-- Profil Singkat Sekolah (View Mode) -->
     <div
-      class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm mb-12"
+      class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm mb-12 relative group"
     >
-      <h3
-        class="text-xl font-semibold text-gray-800 dark:text-white mb-4 border-b border-gray-100 dark:border-slate-700 pb-3"
+      <div
+        class="flex justify-between items-center mb-4 border-b border-gray-100 dark:border-slate-700 pb-3"
       >
-        Profil Singkat Sekolah
-      </h3>
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-white">
+          Profil Singkat Sekolah
+        </h3>
+        <button
+          @click="openProfileModal"
+          class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+        >
+          <PhPencilSimple class="w-4 h-4 mr-2" />
+          Edit Profil
+        </button>
+      </div>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2 space-y-4">
           <div>
-            <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >
+            <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
               Deskripsi Profil
-            </label>
-            <textarea
-              v-model="schoolProfile.description"
-              rows="6"
-              class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors"
-              placeholder="Masukkan deskripsi profil singkat..."
-            ></textarea>
+            </p>
+            <p class="text-gray-900 dark:text-white leading-relaxed">
+              {{ schoolProfile.description }}
+            </p>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
             <div>
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                >NPSN</label
-              >
-              <input
-                type="text"
-                v-model="schoolProfile.npsn"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-              />
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                NPSN
+              </p>
+              <p class="text-gray-900 dark:text-white font-medium">
+                {{ schoolProfile.npsn }}
+              </p>
             </div>
             <div>
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                >Tahun Berdiri</label
-              >
-              <input
-                type="text"
-                v-model="schoolProfile.founded"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-              />
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                Tahun Berdiri
+              </p>
+              <p class="text-gray-900 dark:text-white font-medium">
+                {{ schoolProfile.founded }}
+              </p>
             </div>
             <div>
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                >Lokasi</label
-              >
-              <input
-                type="text"
-                v-model="schoolProfile.location"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-              />
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                Lokasi
+              </p>
+              <p class="text-gray-900 dark:text-white font-medium">
+                {{ schoolProfile.location }}
+              </p>
             </div>
             <div>
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                >Status</label
-              >
-              <input
-                type="text"
-                v-model="schoolProfile.status"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-              />
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                Status
+              </p>
+              <p class="text-gray-900 dark:text-white font-medium">
+                {{ schoolProfile.status }}
+              </p>
             </div>
           </div>
         </div>
         <div class="lg:col-span-1">
-          <ImageUploader
-            v-model="schoolProfile.image"
-            label="Foto Gedung Utama"
-            containerClass="w-full aspect-[4/3] mx-auto"
-            imageClass="object-cover rounded-xl"
-          />
+          <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+            Foto Gedung Utama
+          </p>
+          <div
+            class="w-full aspect-[4/3] rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-slate-700"
+          >
+            <img
+              v-if="schoolProfile.image"
+              :src="schoolProfile.image"
+              class="w-full h-full object-cover"
+            />
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Modal Form Edit Profil -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isProfileModalVisible"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="closeProfileModal"
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden transform transition-all"
+          @click.stop
+        >
+          <!-- Modal Header -->
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+              Edit Profil Sekolah
+            </h3>
+            <button
+              @click="closeProfileModal"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
+          </div>
+
+          <!-- Modal Body -->
+          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
+            <form id="profileForm" @submit.prevent="saveProfile">
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-4">
+                  <div>
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Deskripsi Profil
+                    </label>
+                    <textarea
+                      v-model="tempProfile.description"
+                      rows="6"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      placeholder="Masukkan deskripsi profil singkat..."
+                      required
+                    ></textarea>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >NPSN</label
+                      >
+                      <input
+                        type="text"
+                        v-model="tempProfile.npsn"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >Tahun Berdiri</label
+                      >
+                      <input
+                        type="text"
+                        v-model="tempProfile.founded"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >Lokasi</label
+                      >
+                      <input
+                        type="text"
+                        v-model="tempProfile.location"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >Status</label
+                      >
+                      <input
+                        type="text"
+                        v-model="tempProfile.status"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="lg:col-span-1">
+                  <ImageUploader
+                    v-model="tempProfile.image"
+                    label="Foto Gedung Utama"
+                    containerClass="w-full aspect-[4/3] mx-auto"
+                    imageClass="object-cover rounded-xl"
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Modal Footer -->
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+          >
+            <button
+              type="button"
+              @click="closeProfileModal"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            >
+              <PhXCircle class="w-5 h-5 mr-2" />
+              Batal
+            </button>
+            <button
+              form="profileForm"
+              type="submit"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-800 transition-colors"
+            >
+              <PhFloppyDisk class="w-5 h-5 mr-2" />
+              Simpan Profil
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
 
     <div class="flex justify-between items-center mb-6">
       <h3
