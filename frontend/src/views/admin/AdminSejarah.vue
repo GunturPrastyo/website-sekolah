@@ -8,9 +8,11 @@ import {
   PhFloppyDisk,
   PhDotsSixVertical,
   PhMagnifyingGlass,
+  PhX,
 } from "@phosphor-icons/vue";
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
+import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
@@ -72,6 +74,16 @@ const timeline = ref([
   },
 ]);
 
+const schoolProfile = ref({
+  description:
+    "SMA Negeri 1 Nogosari adalah lembaga pendidikan menengah atas yang berdedikasi tinggi dalam mencetak generasi penerus bangsa yang unggul, cerdas, dan berkarakter. Berada di lingkungan yang asri, kami senantiasa berupaya memberikan suasana belajar yang kondusif, didukung oleh tenaga pendidik profesional dan fasilitas yang terus berkembang mengikuti zaman.",
+  npsn: "20301234",
+  founded: "17 Agustus 1985",
+  location: "Nogosari, Kab. Boyolali",
+  status: "Sekolah Negeri",
+  image: "/assets/img/gedung.jpg",
+});
+
 const form = ref({
   id: null,
   year: "",
@@ -110,12 +122,7 @@ const resetForm = () => {
 const showAddForm = () => {
   resetForm();
   isFormVisible.value = true;
-  setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
-      el.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }, 100);
+  document.body.style.overflow = "hidden";
 };
 
 const addEntry = () => {
@@ -135,17 +142,16 @@ const addEntry = () => {
     id: newId,
   });
   isFormVisible.value = false; // Hide form after adding
-  setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
-      el.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }, 100);
+  document.body.style.overflow = "";
   triggerToast(
     "Berhasil Ditambahkan",
     "Entri lini masa baru telah ditambahkan ke sistem."
   );
   resetForm();
+};
+
+const saveProfile = () => {
+  triggerToast("Profil Disimpan", "Data profil singkat sekolah berhasil diperbarui.");
 };
 
 const startEdit = (entry) => {
@@ -154,12 +160,7 @@ const startEdit = (entry) => {
     ...entry,
   };
   isFormVisible.value = true; // Show form for editing
-  setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
-      el.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }, 100);
+  document.body.style.overflow = "hidden";
 };
 
 const saveEntry = () => {
@@ -179,12 +180,7 @@ const saveEntry = () => {
     };
   }
   isFormVisible.value = false; // Hide form after saving
-  setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
-      el.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }, 100);
+  document.body.style.overflow = "";
   triggerToast("Perubahan Disimpan", "Entri lini masa berhasil diperbarui.");
   resetForm();
 };
@@ -192,12 +188,7 @@ const saveEntry = () => {
 const hideForm = () => {
   resetForm();
   isFormVisible.value = false;
-  setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
-      el.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }, 100);
+  document.body.style.overflow = "";
 };
 
 const deleteEntry = (id) => {
@@ -253,107 +244,237 @@ const filteredTimeline = computed(() => {
 
 <template>
   <main class="flex-1 overflow-y-auto px-6 md:px-10 py-8">
-    <div class="mb-8">
-      <h2
-        class="text-3xl font-bold text-gray-800 dark:text-white"
-        style="font-family: 'Oswald', sans-serif"
+    <div
+      class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+    >
+      <div>
+        <h2
+          class="text-3xl font-bold text-gray-800 dark:text-white"
+          style="font-family: 'Oswald', sans-serif"
+        >
+          Manajemen Profil & Sejarah
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+          Kelola profil singkat dan data lini masa sejarah SMAN 1 Nogosari
+        </p>
+      </div>
+      <button
+        @click="saveProfile"
+        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-800 transition-colors"
       >
-        Manajemen Sejarah Sekolah
-      </h2>
-      <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
-        Kelola data lini masa sejarah SMAN 1 Nogosari
-      </p>
+        <PhFloppyDisk class="w-5 h-5 mr-2" />
+        Simpan Profil
+      </button>
     </div>
 
-    <!-- Form Tambah/Edit Data -->
+    <!-- Form Profil Singkat Sekolah -->
+    <div
+      class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm mb-12"
+    >
+      <h3
+        class="text-xl font-semibold text-gray-800 dark:text-white mb-4 border-b border-gray-100 dark:border-slate-700 pb-3"
+      >
+        Profil Singkat Sekolah
+      </h3>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-4">
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Deskripsi Profil
+            </label>
+            <textarea
+              v-model="schoolProfile.description"
+              rows="6"
+              class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              placeholder="Masukkan deskripsi profil singkat..."
+            ></textarea>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >NPSN</label
+              >
+              <input
+                type="text"
+                v-model="schoolProfile.npsn"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >Tahun Berdiri</label
+              >
+              <input
+                type="text"
+                v-model="schoolProfile.founded"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >Lokasi</label
+              >
+              <input
+                type="text"
+                v-model="schoolProfile.location"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >Status</label
+              >
+              <input
+                type="text"
+                v-model="schoolProfile.status"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="lg:col-span-1">
+          <ImageUploader
+            v-model="schoolProfile.image"
+            label="Foto Gedung Utama"
+            containerClass="w-full aspect-[4/3] mx-auto"
+            imageClass="object-cover rounded-xl"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-between items-center mb-6">
+      <h3
+        class="text-2xl font-bold text-gray-800 dark:text-white"
+        style="font-family: 'Oswald', sans-serif"
+      >
+        Lini Masa Sejarah
+      </h3>
+    </div>
+
+    <!-- Modal Form Tambah/Edit Data -->
     <Transition
-      enter-active-class="transition-all duration-500 ease-out"
-      leave-active-class="transition-all duration-300 ease-in"
-      enter-from-class="opacity-0 -translate-y-4 max-h-0"
-      enter-to-class="opacity-100 translate-y-0 max-h-[1000px]"
-      leave-from-class="opacity-100 translate-y-0 max-h-[1000px]"
-      leave-to-class="opacity-0 -translate-y-4 max-h-0"
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
     >
       <div
         v-if="isFormVisible"
-        class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm mb-8"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="hideForm"
       >
-        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-          {{ isEditing ? "Edit Entri Timeline" : "Tambah Entri Baru" }}
-        </h3>
-        <form @submit.prevent="isEditing ? saveEntry() : addEntry()">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label
-                for="year"
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                >Tahun</label
-              >
-              <input
-                type="text"
-                id="year"
-                v-model="form.year"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Contoh: 1985"
-                required
-              />
-            </div>
-            <div>
-              <label
-                for="title"
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                >Judul</label
-              >
-              <input
-                type="text"
-                id="title"
-                v-model="form.title"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Contoh: Pendirian SMAN 1"
-                required
-              />
-            </div>
-          </div>
-
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >Ikon Representasi</label
-            >
-            <IconPicker v-model="form.icon" />
-          </div>
-
-          <div class="mb-6">
-            <label
-              for="description"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >Deskripsi</label
-            >
-            <RichTextEditor
-              v-model="form.description"
-              placeholder="Masukkan deskripsi lengkap entri timeline..."
-            />
-          </div>
-
-          <div class="flex gap-3">
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden transform transition-all"
+          @click.stop
+        >
+          <!-- Modal Header -->
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+              {{ isEditing ? "Edit Entri Timeline" : "Tambah Entri Baru" }}
+            </h3>
             <button
+              @click="hideForm"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
+          </div>
+
+          <!-- Modal Body -->
+          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
+            <form
+              id="timelineForm"
+              @submit.prevent="isEditing ? saveEntry() : addEntry()"
+            >
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label
+                    for="year"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Tahun</label
+                  >
+                  <input
+                    type="text"
+                    id="year"
+                    v-model="form.year"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Contoh: 1985"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="title"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Judul</label
+                  >
+                  <input
+                    type="text"
+                    id="title"
+                    v-model="form.title"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Contoh: Pendirian SMAN 1"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Ikon Representasi</label
+                >
+                <IconPicker v-model="form.icon" />
+              </div>
+
+              <div class="mb-2">
+                <label
+                  for="description"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Deskripsi</label
+                >
+                <RichTextEditor
+                  v-model="form.description"
+                  placeholder="Masukkan deskripsi lengkap entri timeline..."
+                />
+              </div>
+            </form>
+          </div>
+
+          <!-- Modal Footer -->
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+          >
+            <button
+              type="button"
+              @click="hideForm"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            >
+              <PhXCircle class="w-5 h-5 mr-2" />
+              Batal
+            </button>
+            <button
+              form="timelineForm"
               type="submit"
-              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-800"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-800 transition-colors"
             >
               <PhFloppyDisk v-if="isEditing" class="w-5 h-5 mr-2" />
               <PhPlusCircle v-else class="w-5 h-5 mr-2" />
               {{ isEditing ? "Simpan Perubahan" : "Tambah Entri" }}
             </button>
-            <button
-              v-if="isEditing"
-              type="button"
-              @click="hideForm"
-              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-slate-800"
-            >
-              <PhXCircle class="w-5 h-5 mr-2" />
-              Batal
-            </button>
           </div>
-        </form>
+        </div>
       </div>
     </Transition>
 
