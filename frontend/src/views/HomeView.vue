@@ -396,7 +396,7 @@
           <!-- HEADER -->
           <div
             class="relative overflow-hidden shadow-2xl min-h-[340px] md:min-h-[450px] flex items-center md:rounded-lg bg-center bg-cover lg:bg-fixed"
-            style="background-image: url('assets/img/jurusan.jpg')"
+            style="background-image: url('/assets/img/jurusan.jpg')"
           >
             <!-- Overlay Parallax -->
             <div
