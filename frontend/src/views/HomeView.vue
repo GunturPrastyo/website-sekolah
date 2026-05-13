@@ -1655,16 +1655,74 @@
                 >
                   Siap Menjadi Bagian dari Generasi Berprestasi?
                 </h2>
-                <p class="text-blue-100 text-sm md:text-base mb-8 max-w-md mx-auto">
+                <p class="text-blue-100 text-sm md:text-base mb-6 max-w-md mx-auto">
                   Pendaftaran Peserta Didik Baru (PPDB) SMAN 1 Nogosari akan segera
-                  dibuka. Daftarkan dirimu dan raih masa depan gemilang bersama kami!
+                  dibuka. Siapkan berkas dan pantau informasi selengkapnya!
                 </p>
+
+                <!-- Countdown Timer -->
+                <div class="flex justify-center gap-3 sm:gap-4 mb-8">
+                  <div
+                    class="flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20"
+                  >
+                    <span
+                      class="text-xl sm:text-2xl font-bold text-white mb-1"
+                      style="font-family: 'Oswald', sans-serif"
+                      >{{ ppdbCountdown.days }}</span
+                    >
+                    <span
+                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider"
+                      >Hari</span
+                    >
+                  </div>
+                  <div
+                    class="flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20"
+                  >
+                    <span
+                      class="text-xl sm:text-2xl font-bold text-white mb-1"
+                      style="font-family: 'Oswald', sans-serif"
+                      >{{ ppdbCountdown.hours }}</span
+                    >
+                    <span
+                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider"
+                      >Jam</span
+                    >
+                  </div>
+                  <div
+                    class="flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20"
+                  >
+                    <span
+                      class="text-xl sm:text-2xl font-bold text-white mb-1"
+                      style="font-family: 'Oswald', sans-serif"
+                      >{{ ppdbCountdown.minutes }}</span
+                    >
+                    <span
+                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider"
+                      >Menit</span
+                    >
+                  </div>
+                  <div
+                    class="flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20"
+                  >
+                    <span
+                      class="text-xl sm:text-2xl font-bold text-white mb-1"
+                      style="font-family: 'Oswald', sans-serif"
+                      >{{ ppdbCountdown.seconds }}</span
+                    >
+                    <span
+                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider"
+                      >Detik</span
+                    >
+                  </div>
+                </div>
+
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                   <router-link
                     to="/pendaftaran"
-                    class="px-6 py-3.5 bg-yellow-400 text-blue-950 font-bold rounded-xl shadow-lg hover:bg-yellow-300 hover:scale-105 transition-all text-sm md:text-base animate-float"
-                    >Daftar Sekarang</router-link
+                    class="px-6 py-3.5 bg-yellow-400 text-blue-950 font-bold rounded-xl shadow-lg hover:bg-yellow-300 hover:scale-105 transition-all text-sm md:text-base animate-float flex items-center justify-center"
                   >
+                    Info Pendaftaran
+                  </router-link>
                   <a
                     href="#"
                     class="px-6 py-3.5 bg-gray-50/10 text-white font-semibold rounded-xl border border-white/50 hover:bg-gray-50/20 transition-all flex items-center justify-center text-sm md:text-base"
@@ -1768,7 +1826,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, onBeforeUnmount, reactive } from "vue";
 import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.css";
 import {
@@ -1863,6 +1921,41 @@ const closeAttachmentModal = () => {
   setTimeout(() => {
     selectedAgenda.value = null;
   }, 300);
+};
+
+// State Countdown PPDB
+const ppdbCountdown = ref({
+  days: "00",
+  hours: "00",
+  minutes: "00",
+  seconds: "00",
+});
+
+let countdownInterval;
+
+const updateCountdown = () => {
+  // Misal target buka pendaftaran: 1 Juni 2026
+  const targetDate = new Date("June 1, 2026 08:00:00").getTime();
+  const now = new Date().getTime();
+  const distance = targetDate - now;
+
+  if (distance < 0) {
+    clearInterval(countdownInterval);
+    ppdbCountdown.value = { days: "00", hours: "00", minutes: "00", seconds: "00" };
+    return;
+  }
+
+  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  ppdbCountdown.value = {
+    days: String(days).padStart(2, "0"),
+    hours: String(hours).padStart(2, "0"),
+    minutes: String(minutes).padStart(2, "0"),
+    seconds: String(seconds).padStart(2, "0"),
+  };
 };
 
 // --- Data Animasi Statistik Header ---
@@ -2207,6 +2300,10 @@ onMounted(() => {
     }
   }, 120); // Kecepatan mengetik 120ms per huruf
 
+  // Initialize countdown
+  updateCountdown();
+  countdownInterval = setInterval(updateCountdown, 1000);
+
   // Intersection Observer untuk animasi fade-up pada saat scroll
   const observer = new IntersectionObserver(
     (entries) => {
@@ -2305,6 +2402,10 @@ onMounted(() => {
       },
     },
   });
+});
+
+onBeforeUnmount(() => {
+  if (countdownInterval) clearInterval(countdownInterval);
 });
 </script>
 
