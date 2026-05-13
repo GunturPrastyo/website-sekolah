@@ -278,11 +278,6 @@
       </div>
 
       <div class="hidden items-center lg:flex">
-        <router-link
-          to="/pendaftaran"
-          class="rounded-full bg-blue-600 px-5 py-2 font-semibold text-white transition-colors hover:bg-blue-700"
-          >Pendaftaran</router-link
-        >
         <!-- Dark Mode Toggle -->
         <button
           @click="toggleDarkMode"
