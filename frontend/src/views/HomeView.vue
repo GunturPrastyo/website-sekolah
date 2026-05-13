@@ -97,7 +97,7 @@
           <!-- SWIPER / GRID -->
           <div class="swiper alasan-swiper overflow-visible px-4 md:px-0">
             <div
-              class="swiper-wrapper md:grid md:grid-cols-4 md:auto-rows-[250px] md:gap-6"
+              class="swiper-wrapper md:grid md:grid-cols-4 md:auto-rows-[280px] lg:auto-rows-[320px] md:gap-6"
             >
               <!-- FASILITAS (2x2 Desktop) -->
               <div
