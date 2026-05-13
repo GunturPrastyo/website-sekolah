@@ -8,7 +8,18 @@ import {
   PhFloppyDisk,
   PhMagnifyingGlass,
   PhBookOpen,
+  PhX,
+  PhHeart,
+  PhGlobeHemisphereWest,
+  PhGlobe,
+  PhUsers,
+  PhUserCheck,
+  PhLightbulb,
+  PhPalette,
+  PhBook,
+  PhLightning,
 } from "@phosphor-icons/vue";
+import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
@@ -36,6 +47,85 @@ const categories = [
   "Kelompok Persiapan Ujian Lanjutan (Sastra)",
 ];
 
+// Konfigurasi Ikon Cadangan (jika tidak ada di IconPicker)
+const fallbackIcons = {
+  PhHeart,
+  PhGlobeHemisphereWest,
+  PhGlobe,
+  PhUsers,
+  PhUserCheck,
+  PhLightbulb,
+  PhPalette,
+  PhBookOpen,
+  PhBook,
+  PhLightning,
+};
+
+const getIconComponent = (iconName) => {
+  if (educationIcons && educationIcons[iconName]) return educationIcons[iconName];
+  return fallbackIcons[iconName] || PhBookOpen;
+};
+
+// State Profil Pelajar Pancasila
+const pppData = ref({
+  title: "Profil Pelajar Pancasila",
+  description:
+    "Kurikulum kami berfokus pada pembentukan karakter siswa yang berlandaskan 6 dimensi Profil Pelajar Pancasila.",
+  dimensions: [
+    {
+      id: 1,
+      name: "Beriman & Berakhlak",
+      desc:
+        "Membentuk siswa yang religius dan memiliki etika baik dalam kehidupan sehari-hari.",
+      icon: "PhHeart",
+      bg: "bg-red-600 dark:bg-red-500",
+    },
+    {
+      id: 2,
+      name: "Berkebinekaan Global",
+      desc:
+        "Menghargai keberagaman budaya, toleran, dan berwawasan luas di kancah internasional.",
+      icon: "PhGlobeHemisphereWest",
+      bg: "bg-yellow-500",
+    },
+    {
+      id: 3,
+      name: "Bergotong Royong",
+      desc:
+        "Mampu berkolaborasi, peduli terhadap sesama, dan berbagi dalam menyelesaikan masalah.",
+      icon: "PhUsers",
+      bg: "bg-green-600 dark:bg-green-500",
+    },
+    {
+      id: 4,
+      name: "Mandiri",
+      desc:
+        "Bertanggung jawab atas proses dan hasil belajarnya sendiri dengan kesadaran tinggi.",
+      icon: "PhUserCheck",
+      bg: "bg-blue-600 dark:bg-blue-500",
+    },
+    {
+      id: 5,
+      name: "Bernalar Kritis",
+      desc:
+        "Mampu memproses informasi secara objektif, mengevaluasi, dan menyimpulkan dengan baik.",
+      icon: "PhLightbulb",
+      bg: "bg-purple-600 dark:bg-purple-500",
+    },
+    {
+      id: 6,
+      name: "Kreatif",
+      desc:
+        "Mampu memodifikasi dan menghasilkan gagasan, karya, atau tindakan yang orisinal.",
+      icon: "PhPalette",
+      bg: "bg-pink-600 dark:bg-pink-500",
+    },
+  ],
+});
+
+const isPPPModalVisible = ref(false);
+const tempPPPData = ref({});
+
 const subjectList = ref([
   {
     id: 1,
@@ -43,6 +133,7 @@ const subjectList = ref([
     major: "umum",
     category: "Muatan Nasional (Wajib)",
     name: "Pendidikan Agama dan Budi Pekerti",
+    icon: "PhBook",
     desc:
       "Mempelajari nilai-nilai spiritual, toleransi, dan pembentukan karakter akhlak mulia.",
     topics:
@@ -54,6 +145,7 @@ const subjectList = ref([
     major: "ipa",
     category: "Kelompok Mata Pelajaran Pilihan (Sains & Teknologi)",
     name: "Fisika Lanjutan",
+    icon: "PhLightning",
     desc: "Pendalaman mekanika, termodinamika, dan gelombang.",
     topics:
       "Dinamika Rotasi dan Kesetimbangan, Elastisitas Bahan, Fluida Statis dan Dinamis, Suhu dan Kalor",
@@ -66,6 +158,7 @@ const form = ref({
   major: "umum",
   category: "Muatan Nasional (Wajib)",
   name: "",
+  icon: "PhBook",
   desc: "",
   topics: "",
 });
@@ -78,6 +171,27 @@ const itemToDelete = ref(null);
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
+
+const openPPPModal = () => {
+  tempPPPData.value = JSON.parse(JSON.stringify(pppData.value));
+  isPPPModalVisible.value = true;
+  document.body.style.overflow = "hidden";
+};
+
+const closePPPModal = () => {
+  isPPPModalVisible.value = false;
+  document.body.style.overflow = "";
+};
+
+const savePPPData = () => {
+  if (!tempPPPData.value.title.trim() || !tempPPPData.value.description.trim()) {
+    triggerToast("Gagal Menyimpan", "Judul dan deskripsi utama wajib diisi!", "error");
+    return;
+  }
+  pppData.value = JSON.parse(JSON.stringify(tempPPPData.value));
+  closePPPModal();
+  triggerToast("Profil Disimpan", "Data Profil Pelajar Pancasila berhasil diperbarui.");
+};
 
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };
@@ -94,6 +208,7 @@ const resetForm = () => {
     major: "umum",
     category: "Muatan Nasional (Wajib)",
     name: "",
+    icon: "PhBook",
     desc: "",
     topics: "",
   };
@@ -103,6 +218,7 @@ const resetForm = () => {
 const showAddForm = () => {
   resetForm();
   isFormVisible.value = true;
+  document.body.style.overflow = "hidden";
 };
 
 const addEntry = () => {
@@ -117,6 +233,7 @@ const addEntry = () => {
   subjectList.value.push({ ...form.value, id: newId });
 
   isFormVisible.value = false;
+  document.body.style.overflow = "";
   triggerToast(
     "Berhasil Ditambahkan",
     "Data mata pelajaran baru telah ditambahkan ke sistem."
@@ -128,7 +245,7 @@ const startEdit = (subject) => {
   isEditing.value = true;
   form.value = { ...subject };
   isFormVisible.value = true;
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  document.body.style.overflow = "hidden";
 };
 
 const saveEntry = () => {
@@ -142,6 +259,7 @@ const saveEntry = () => {
   }
 
   isFormVisible.value = false;
+  document.body.style.overflow = "";
   triggerToast("Perubahan Disimpan", "Data mata pelajaran berhasil diperbarui.");
   resetForm();
 };
@@ -149,6 +267,7 @@ const saveEntry = () => {
 const hideForm = () => {
   resetForm();
   isFormVisible.value = false;
+  document.body.style.overflow = "";
 };
 
 const deleteEntry = (id) => {
@@ -219,145 +338,368 @@ const getMajorName = (id) => {
       </button>
     </div>
 
-    <!-- Form Tambah/Edit Data -->
+    <!-- Profil Pelajar Pancasila Section -->
+    <div
+      class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm mb-8 relative group"
+    >
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <div class="inline-flex items-center space-x-2 mb-2">
+            <span class="h-px w-6 bg-blue-600 dark:bg-blue-400 rounded-full"></span>
+            <span
+              class="text-blue-600 dark:text-blue-400 font-bold text-xs tracking-wider uppercase"
+              >Pilar Karakter</span
+            >
+          </div>
+          <h3 class="text-2xl font-bold text-gray-800 dark:text-white">
+            {{ pppData.title }}
+          </h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 max-w-2xl">
+            {{ pppData.description }}
+          </p>
+        </div>
+        <button
+          @click="openPPPModal"
+          class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors shrink-0"
+        >
+          <PhPencilSimple class="w-4 h-4 mr-2" />
+          Edit Profil
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          v-for="dim in pppData.dimensions"
+          :key="dim.id"
+          class="p-4 rounded-xl border border-gray-100 dark:border-slate-700 flex items-start gap-4 hover:shadow-md transition-shadow bg-gray-50 dark:bg-slate-700/30"
+        >
+          <div
+            :class="dim.bg"
+            class="w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-white shadow-sm"
+          >
+            <component :is="getIconComponent(dim.icon)" class="w-5 h-5" />
+          </div>
+          <div>
+            <h4 class="font-bold text-gray-900 dark:text-white mb-1">{{ dim.name }}</h4>
+            <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+              {{ dim.desc }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Edit Profil Pelajar Pancasila -->
     <Transition
-      enter-active-class="transition-all duration-500 ease-out"
-      leave-active-class="transition-all duration-300 ease-in"
-      enter-from-class="opacity-0 -translate-y-4 max-h-0"
-      enter-to-class="opacity-100 translate-y-0 max-h-[2000px]"
-      leave-from-class="opacity-100 translate-y-0 max-h-[2000px]"
-      leave-to-class="opacity-0 -translate-y-4 max-h-0"
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
     >
       <div
-        v-if="isFormVisible"
-        class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm mb-8"
+        v-if="isPPPModalVisible"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="closePPPModal"
       >
-        <h3
-          class="text-xl font-semibold text-gray-800 dark:text-white mb-6 border-b border-gray-100 dark:border-slate-700 pb-3"
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden transform transition-all"
+          @click.stop
         >
-          {{ isEditing ? "Edit Data Mata Pelajaran" : "Tambah Data Mata Pelajaran Baru" }}
-        </h3>
-        <form @submit.prevent="isEditing ? saveEntry() : addEntry()">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >
-                Tingkat Kelas
-              </label>
-              <select
-                v-model="form.grade"
-                required
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option v-for="grade in grades" :key="grade.id" :value="grade.id">
-                  {{ grade.name }}
-                </option>
-              </select>
-            </div>
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+              Edit Profil Pelajar Pancasila
+            </h3>
+            <button
+              @click="closePPPModal"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
+          </div>
 
-            <div>
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
+            <form id="pppForm" @submit.prevent="savePPPData">
+              <div
+                class="mb-6 space-y-4 border-b border-gray-100 dark:border-slate-700 pb-6"
               >
-                Peminatan / Jurusan
-              </label>
-              <select
-                v-model="form.major"
-                required
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option v-for="major in majors" :key="major.id" :value="major.id">
-                  {{ major.name }}
-                </option>
-              </select>
-            </div>
+                <div>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Judul Seksi</label
+                  >
+                  <input
+                    type="text"
+                    v-model="tempPPPData.title"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Deskripsi Singkat</label
+                  >
+                  <textarea
+                    v-model="tempPPPData.description"
+                    required
+                    rows="2"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  ></textarea>
+                </div>
+              </div>
 
-            <div class="md:col-span-2">
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >
-                Kategori Kurikulum
-              </label>
-              <input
-                type="text"
-                v-model="form.category"
-                required
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Contoh: Muatan Nasional (Wajib)"
-                list="category-suggestions"
-              />
-              <datalist id="category-suggestions">
-                <option v-for="cat in categories" :key="cat" :value="cat"></option>
-              </datalist>
-            </div>
-
-            <div class="md:col-span-2">
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >
-                Nama Mata Pelajaran
-              </label>
-              <input
-                type="text"
-                v-model="form.name"
-                required
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Contoh: Matematika Peminatan"
-              />
-            </div>
-
-            <div class="md:col-span-2">
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >
-                Deskripsi Singkat
-              </label>
-              <textarea
-                v-model="form.desc"
-                rows="2"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Deskripsi tentang mata pelajaran"
-              ></textarea>
-            </div>
-
-            <div class="md:col-span-2">
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >
-                Topik Pembelajaran
-                <span class="text-xs text-gray-500">(Pisahkan dengan koma)</span>
-              </label>
-              <textarea
-                v-model="form.topics"
-                rows="3"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Contoh: Eksponen dan Logaritma, Barisan dan Deret, Sistem Persamaan Linear"
-              ></textarea>
-            </div>
+              <h4 class="font-bold text-gray-800 dark:text-white mb-4">
+                Dimensi Karakter
+              </h4>
+              <div class="space-y-4">
+                <div
+                  v-for="(dim, index) in tempPPPData.dimensions"
+                  :key="dim.id"
+                  class="p-4 bg-gray-50 dark:bg-slate-700/30 rounded-lg border border-gray-100 dark:border-slate-600"
+                >
+                  <h5
+                    class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider"
+                  >
+                    Dimensi {{ index + 1 }}
+                  </h5>
+                  <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div class="md:col-span-3">
+                      <label
+                        class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >Ikon</label
+                      >
+                      <IconPicker v-model="dim.icon" />
+                    </div>
+                    <div class="md:col-span-9">
+                      <label
+                        class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >Nama Dimensi</label
+                      >
+                      <input
+                        type="text"
+                        v-model="dim.name"
+                        required
+                        class="w-full px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      />
+                    </div>
+                    <div class="md:col-span-12">
+                      <label
+                        class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >Deskripsi</label
+                      >
+                      <textarea
+                        v-model="dim.desc"
+                        required
+                        rows="2"
+                        class="w-full px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
 
           <div
-            class="flex gap-3 mt-6 justify-end border-t border-gray-100 dark:border-slate-700 pt-6"
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+          >
+            <button
+              type="button"
+              @click="closePPPModal"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
+            >
+              <PhXCircle class="w-5 h-5 mr-2" /> Batal
+            </button>
+            <button
+              type="submit"
+              form="pppForm"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+            >
+              <PhFloppyDisk class="w-5 h-5 mr-2" /> Simpan Perubahan
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Modal Form Tambah/Edit Data -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isFormVisible"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="hideForm"
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden transform transition-all"
+          @click.stop
+        >
+          <!-- Modal Header -->
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+              {{
+                isEditing ? "Edit Data Mata Pelajaran" : "Tambah Data Mata Pelajaran Baru"
+              }}
+            </h3>
+            <button
+              @click="hideForm"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
+          </div>
+
+          <!-- Modal Body -->
+          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
+            <form
+              id="kurikulumForm"
+              @submit.prevent="isEditing ? saveEntry() : addEntry()"
+            >
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
+                    Tingkat Kelas
+                  </label>
+                  <select
+                    v-model="form.grade"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option v-for="grade in grades" :key="grade.id" :value="grade.id">
+                      {{ grade.name }}
+                    </option>
+                  </select>
+                </div>
+
+                <div>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
+                    Peminatan / Jurusan
+                  </label>
+                  <select
+                    v-model="form.major"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option v-for="major in majors" :key="major.id" :value="major.id">
+                      {{ major.name }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="md:col-span-2">
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
+                    Ikon Representasi
+                  </label>
+                  <IconPicker v-model="form.icon" />
+                </div>
+
+                <div class="md:col-span-2">
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
+                    Kategori Kurikulum
+                  </label>
+                  <input
+                    type="text"
+                    v-model="form.category"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Contoh: Muatan Nasional (Wajib)"
+                    list="category-suggestions"
+                  />
+                  <datalist id="category-suggestions">
+                    <option v-for="cat in categories" :key="cat" :value="cat"></option>
+                  </datalist>
+                </div>
+
+                <div class="md:col-span-2">
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
+                    Nama Mata Pelajaran
+                  </label>
+                  <input
+                    type="text"
+                    v-model="form.name"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Contoh: Matematika Peminatan"
+                  />
+                </div>
+
+                <div class="md:col-span-2">
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
+                    Deskripsi Singkat
+                  </label>
+                  <textarea
+                    v-model="form.desc"
+                    rows="2"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Deskripsi tentang mata pelajaran"
+                  ></textarea>
+                </div>
+
+                <div class="md:col-span-2">
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
+                    Topik Pembelajaran
+                    <span class="text-xs text-gray-500">(Pisahkan dengan koma)</span>
+                  </label>
+                  <textarea
+                    v-model="form.topics"
+                    rows="3"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Contoh: Eksponen dan Logaritma, Barisan dan Deret, Sistem Persamaan Linear"
+                  ></textarea>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Modal Footer -->
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
           >
             <button
               type="button"
               @click="hideForm"
-              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >
               <PhXCircle class="w-5 h-5 mr-2" />
               Batal
             </button>
             <button
               type="submit"
-              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              form="kurikulumForm"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >
               <PhFloppyDisk v-if="isEditing" class="w-5 h-5 mr-2" />
               <PhPlusCircle v-else class="w-5 h-5 mr-2" />
               {{ isEditing ? "Simpan Perubahan" : "Simpan Data" }}
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </Transition>
 
@@ -421,7 +763,7 @@ const getMajorName = (id) => {
             <div
               class="w-10 h-10 shrink-0 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center"
             >
-              <PhBookOpen class="w-5 h-5" />
+              <component :is="getIconComponent(subject.icon)" class="w-5 h-5" />
             </div>
             <div>
               <h4
