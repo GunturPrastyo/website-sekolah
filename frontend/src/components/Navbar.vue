@@ -266,6 +266,12 @@
                 class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
                 >Unduhan Publik</router-link
               >
+              <router-link
+                to="/pendaftaran"
+                @click="closeDropdowns"
+                class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
+                >Info PPDB</router-link
+              >
             </div>
           </transition>
         </div>
@@ -548,6 +554,12 @@
               @click="closeMobileMenu"
               class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
               >Unduhan Publik</router-link
+            >
+            <router-link
+              to="/pendaftaran"
+              @click="closeMobileMenu"
+              class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
+              >Info PPDB</router-link
             >
           </div>
         </div>
