@@ -65,7 +65,7 @@ const menu = ref([
       { name: "Info PPDB", link: "/admin/info-ppdb" },
     ],
   },
-  { name: "Data PPDB", icon: markRaw(PhClipboardText), link: "/admin/ppdb" },
+
   { name: "Pengguna", icon: markRaw(PhUsers), link: "/admin/pengguna" },
   { name: "Pengaturan", icon: markRaw(PhGear), link: "#" },
 ]);
