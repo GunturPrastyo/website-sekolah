@@ -106,7 +106,7 @@ const router = createRouter({
         },
         {
           path: 'sejarah', // Child route for sejarah
-          name: 'sejarah',
+          name: 'admin-sejarah',
           component: () => import('../views/admin/AdminSejarah.vue')
         },
         {
