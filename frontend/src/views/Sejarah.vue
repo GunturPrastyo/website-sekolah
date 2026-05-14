@@ -14,6 +14,9 @@ import {
 } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 
+import imgGedung from "@/assets/img/gedung.jpg";
+import bgSejarah from "@/assets/img/sejarah.jpg";
+
 const timelineRef = ref(null);
 const lineHeight = ref("0%");
 const currentProgress = ref(0);
@@ -148,7 +151,7 @@ onBeforeUnmount(() => {
             class="w-full lg:w-5/12 h-72 sm:h-80 lg:h-[450px] relative rounded-xl overflow-hidden shadow-xl border border-gray-100 dark:border-slate-700"
           >
             <img
-              src="/assets/img/gedung.jpg"
+              :src="imgGedung"
               class="absolute inset-0 w-full h-full object-cover"
               alt="Gedung Sekolah"
             />
@@ -250,7 +253,7 @@ onBeforeUnmount(() => {
     <!-- Timeline Section -->
     <section
       class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-blue-950 dark:bg-gray-900 bg-fixed bg-center bg-cover"
-      style="background-image: url('/assets/img/sejarah.jpg')"
+      :style="{ backgroundImage: `url(${bgSejarah})` }"
     >
       <!-- Overlay Parallax untuk memastikan teks tetap bisa dibaca -->
       <div
