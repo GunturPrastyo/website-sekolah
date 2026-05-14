@@ -12,6 +12,7 @@ import {
   PhArchive,
   PhImage,
   PhDownloadSimple,
+  PhX,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -162,6 +163,7 @@ const resetForm = () => {
 const showAddForm = () => {
   resetForm();
   isFormVisible.value = true;
+  document.body.style.overflow = "hidden";
 };
 
 const handleFileUpload = (event) => {
@@ -221,6 +223,7 @@ const addEntry = () => {
   });
 
   isFormVisible.value = false;
+  document.body.style.overflow = "";
   triggerToast("Berhasil Ditambahkan", "Data file baru telah ditambahkan ke sistem.");
   resetForm();
 };
@@ -234,7 +237,7 @@ const startEdit = (item) => {
     file: null,
   };
   isFormVisible.value = true;
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  document.body.style.overflow = "hidden";
 };
 
 const saveEntry = () => {
@@ -268,6 +271,7 @@ const saveEntry = () => {
   }
 
   isFormVisible.value = false;
+  document.body.style.overflow = "";
   triggerToast("Perubahan Disimpan", "Data file berhasil diperbarui.");
   resetForm();
 };
@@ -275,6 +279,7 @@ const saveEntry = () => {
 const hideForm = () => {
   resetForm();
   isFormVisible.value = false;
+  document.body.style.overflow = "";
 };
 
 const deleteEntry = (id) => {
@@ -343,93 +348,116 @@ const getCategoryName = (id) => {
       </button>
     </div>
 
-    <!-- Form Tambah/Edit -->
+    <!-- Modal Form Tambah/Edit -->
     <Transition
-      enter-active-class="transition-all duration-500 ease-out"
-      leave-active-class="transition-all duration-300 ease-in"
-      enter-from-class="opacity-0 -translate-y-4 max-h-0"
-      enter-to-class="opacity-100 translate-y-0 max-h-[2000px]"
-      leave-from-class="opacity-100 translate-y-0 max-h-[2000px]"
-      leave-to-class="opacity-0 -translate-y-4 max-h-0"
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
     >
       <div
         v-if="isFormVisible"
-        class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm mb-8"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="hideForm"
       >
-        <h3
-          class="text-xl font-semibold text-gray-800 dark:text-white mb-6 border-b border-gray-100 dark:border-slate-700 pb-3"
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden transform transition-all"
+          @click.stop
         >
-          {{ isEditing ? "Edit Data File" : "Unggah File Baru" }}
-        </h3>
-        <form @submit.prevent="isEditing ? saveEntry() : addEntry()">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="md:col-span-2">
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >
-                Pilih File
-                {{ isEditing ? "(Opsional - Kosongkan jika tidak mengubah file)" : "" }}
-              </label>
-              <input
-                type="file"
-                ref="fileInput"
-                @change="handleFileUpload"
-                :required="!isEditing"
-                class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-slate-700 dark:file:text-blue-400 dark:hover:file:bg-slate-600 transition-colors cursor-pointer border border-gray-300 dark:border-slate-600 rounded-lg p-1 bg-gray-50 dark:bg-slate-700"
-              />
-            </div>
-
-            <div class="md:col-span-1">
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                >Nama File</label
-              >
-              <input
-                type="text"
-                v-model="form.name"
-                required
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Contoh: Kalender_Akademik_2025.pdf"
-              />
-            </div>
-
-            <div class="md:col-span-1">
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                >Kategori Direktori</label
-              >
-              <select
-                v-model="form.category"
-                required
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-                  {{ cat.name }}
-                </option>
-              </select>
-            </div>
+          <!-- Modal Header -->
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+              {{ isEditing ? "Edit Data File" : "Unggah File Baru" }}
+            </h3>
+            <button
+              @click="hideForm"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
           </div>
 
+          <!-- Modal Body -->
+          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
+            <form id="unduhanForm" @submit.prevent="isEditing ? saveEntry() : addEntry()">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="md:col-span-2">
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
+                    Pilih File
+                    {{
+                      isEditing ? "(Opsional - Kosongkan jika tidak mengubah file)" : ""
+                    }}
+                  </label>
+                  <input
+                    type="file"
+                    ref="fileInput"
+                    @change="handleFileUpload"
+                    :required="!isEditing"
+                    class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-slate-700 dark:file:text-blue-400 dark:hover:file:bg-slate-600 transition-colors cursor-pointer border border-gray-300 dark:border-slate-600 rounded-lg p-1 bg-gray-50 dark:bg-slate-700"
+                  />
+                </div>
+
+                <div class="md:col-span-1">
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Nama File</label
+                  >
+                  <input
+                    type="text"
+                    v-model="form.name"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Contoh: Kalender_Akademik_2025.pdf"
+                  />
+                </div>
+
+                <div class="md:col-span-1">
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Kategori Direktori</label
+                  >
+                  <select
+                    v-model="form.category"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                      {{ cat.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Modal Footer -->
           <div
-            class="flex gap-3 mt-6 justify-end border-t border-gray-100 dark:border-slate-700 pt-6"
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
           >
             <button
               type="button"
               @click="hideForm"
-              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >
               <PhXCircle class="w-5 h-5 mr-2" /> Batal
             </button>
             <button
               type="submit"
-              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              form="unduhanForm"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >
               <PhFloppyDisk v-if="isEditing" class="w-5 h-5 mr-2" />
               <PhPlusCircle v-else class="w-5 h-5 mr-2" />
               {{ isEditing ? "Simpan Perubahan" : "Unggah File" }}
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </Transition>
 
