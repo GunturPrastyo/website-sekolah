@@ -13,7 +13,7 @@
           playsinline
           class="absolute inset-0 w-full h-full object-cover"
         >
-          <source src="/assets/img/footage.webm" type="video/webm" />
+          <source src="/img/footage.webm" type="video/webm" />
         </video>
         <!-- Dark Overlay -->
         <div
@@ -102,7 +102,7 @@
               <!-- FASILITAS (2x2 Desktop) -->
               <div
                 class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[340px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500"
-                style="background-image: url('/assets/img/fasilitas.jpg')"
+                style="background-image: url('/img/fasilitas.jpg')"
               >
                 <!-- Overlay Parallax -->
                 <div
@@ -150,7 +150,7 @@
               <!-- GURU -->
               <div
                 class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[340px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
-                style="background-image: url('/assets/img/pengajar.jpg')"
+                style="background-image: url('/img/pengajar.jpg')"
               >
                 <!-- Overlay Parallax -->
                 <div
@@ -197,7 +197,7 @@
               <!-- PRESTASI -->
               <div
                 class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[340px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
-                style="background-image: url('/assets/img/prestasi.jpg')"
+                style="background-image: url('/img/prestasi.jpg')"
               >
                 <!-- Overlay Parallax -->
                 <div
@@ -330,7 +330,7 @@
               >
                 <!-- Base Map (Peta Indonesia) menggunakan tag img agar bebas blokir CORS -->
                 <img
-                  src="/assets/img/indonesia.svg"
+                  src="/img/indonesia.svg"
                   alt="Ilustrasi Persebaran Alumni"
                   class="absolute inset-0 w-full h-full object-fill pointer-events-none opacity-70 dark:opacity-40 transition-opacity duration-700 group-hover/map:opacity-100 dark:group-hover/map:opacity-70"
                   style="
@@ -396,7 +396,7 @@
           <!-- HEADER -->
           <div
             class="relative overflow-hidden shadow-2xl min-h-[340px] md:min-h-[450px] flex items-center md:rounded-lg bg-center bg-cover lg:bg-fixed"
-            style="background-image: url('/assets/img/jurusan.jpg')"
+            style="background-image: url('/img/jurusan.jpg')"
           >
             <!-- Overlay Parallax -->
             <div
@@ -2220,7 +2220,7 @@ const alumniLocations = ref([
         name: "Universitas Indonesia",
         type: "ptn",
         alumni: 45,
-        logo: "/assets/img/ui.png",
+        logo: "/img/ui.png",
       },
       {
         name: "Politeknik Keuangan Negara STAN",
@@ -2248,13 +2248,13 @@ const alumniLocations = ref([
         name: "Institut Pertanian Bogor",
         type: "ptn",
         alumni: 38,
-        logo: "/assets/img/ipb.png",
+        logo: "/img/ipb.png",
       },
       {
         name: "Institut Teknologi Bandung",
         type: "ptn",
         alumni: 32,
-        logo: "/assets/img/itb.png",
+        logo: "/img/itb.png",
       },
     ],
   },
@@ -2270,7 +2270,7 @@ const alumniLocations = ref([
         name: "Universitas Gadjah Mada",
         type: "ptn",
         alumni: 50,
-        logo: "/assets/img/ugm.png",
+        logo: "/img/ugm.png",
       },
       {
         name: "Akademi Kepolisian (AKPOL)",

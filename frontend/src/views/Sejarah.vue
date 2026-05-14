@@ -148,7 +148,7 @@ onBeforeUnmount(() => {
             class="w-full lg:w-5/12 h-72 sm:h-80 lg:h-[450px] relative rounded-xl overflow-hidden shadow-xl border border-gray-100 dark:border-slate-700"
           >
             <img
-              src="/assets/img/gedung.jpg"
+              src="/img/gedung.jpg"
               class="absolute inset-0 w-full h-full object-cover"
               alt="Gedung Sekolah"
             />
@@ -250,7 +250,7 @@ onBeforeUnmount(() => {
     <!-- Timeline Section -->
     <section
       class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-blue-950 dark:bg-gray-900 bg-fixed bg-center bg-cover"
-      style="background-image: url('/assets/img/sejarah.jpg')"
+      style="background-image: url('/img/sejarah.jpg')"
     >
       <!-- Overlay Parallax untuk memastikan teks tetap bisa dibaca -->
       <div

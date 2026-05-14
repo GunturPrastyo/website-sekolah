@@ -81,7 +81,7 @@ const schoolProfile = ref({
   founded: "17 Agustus 1985",
   location: "Nogosari, Kab. Boyolali",
   status: "Sekolah Negeri",
-  image: "/assets/img/gedung.jpg",
+  image: "/img/gedung.jpg",
 });
 
 const isProfileModalVisible = ref(false);
