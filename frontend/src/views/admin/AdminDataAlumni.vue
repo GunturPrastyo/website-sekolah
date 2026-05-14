@@ -9,6 +9,8 @@ import {
   PhMagnifyingGlass,
   PhGraduationCap,
   PhX,
+  PhMapPin,
+  PhMapTrifold,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -51,6 +53,150 @@ const form = ref({
   status: "Kuliah",
   instansi: "",
 });
+
+// Data Peta Persebaran (Untuk Home View)
+const mapLocations = ref([
+  {
+    id: 1,
+    name: "Jabodetabek & Sekitarnya",
+    type: "mixed",
+    totalAlumni: 194,
+    top: "73%",
+    left: "27%",
+    institutions: [
+      { name: "Universitas Indonesia", type: "ptn", alumni: 45, logo: "/img/ui.png" },
+      {
+        name: "Politeknik Keuangan Negara STAN",
+        type: "kedinasan",
+        alumni: 64,
+        logo: "https://img.icons8.com/color/96/bank-building.png",
+      },
+      {
+        name: "Instansi BUMN & Kementerian",
+        type: "instansi",
+        alumni: 85,
+        logo: "https://img.icons8.com/color/96/city-buildings.png",
+      },
+    ],
+  },
+  {
+    id: 2,
+    name: "Jawa Barat",
+    type: "ptn",
+    totalAlumni: 70,
+    top: "77%",
+    left: "31%",
+    institutions: [
+      { name: "Institut Pertanian Bogor", type: "ptn", alumni: 38, logo: "/img/ipb.png" },
+      {
+        name: "Institut Teknologi Bandung",
+        type: "ptn",
+        alumni: 32,
+        logo: "/img/itb.png",
+      },
+    ],
+  },
+  {
+    id: 3,
+    name: "Jawa Tengah & DIY",
+    type: "mixed",
+    totalAlumni: 175,
+    top: "80%",
+    left: "38%",
+    institutions: [
+      { name: "Universitas Gadjah Mada", type: "ptn", alumni: 50, logo: "/img/ugm.png" },
+      {
+        name: "Akademi Kepolisian (AKPOL)",
+        type: "kedinasan",
+        alumni: 125,
+        logo: "https://img.icons8.com/color/96/police-badge.png",
+      },
+    ],
+  },
+]);
+
+const isMapModalOpen = ref(false);
+const isMapEditing = ref(false);
+const mapForm = ref({
+  id: null,
+  name: "",
+  type: "mixed",
+  totalAlumni: 0,
+  top: "50%",
+  left: "50%",
+  institutions: [],
+});
+
+const mapContainerRef = ref(null);
+
+const handleMapClick = (e) => {
+  if (!mapContainerRef.value) return;
+  const rect = mapContainerRef.value.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const leftPercent = ((x / rect.width) * 100).toFixed(2);
+  const topPercent = ((y / rect.height) * 100).toFixed(2);
+  mapForm.value.left = leftPercent + "%";
+  mapForm.value.top = topPercent + "%";
+};
+
+const openAddMap = () => {
+  mapForm.value = {
+    id: null,
+    name: "",
+    type: "mixed",
+    totalAlumni: 0,
+    top: "50%",
+    left: "50%",
+    institutions: [],
+  };
+  isMapEditing.value = false;
+  isMapModalOpen.value = true;
+  document.body.style.overflow = "hidden";
+};
+
+const openEditMap = (loc) => {
+  mapForm.value = JSON.parse(JSON.stringify(loc));
+  isMapEditing.value = true;
+  isMapModalOpen.value = true;
+  document.body.style.overflow = "hidden";
+};
+
+const saveMapLocation = () => {
+  if (!mapForm.value.name) {
+    triggerToast("Gagal", "Nama wilayah harus diisi!", "error");
+    return;
+  }
+  mapForm.value.totalAlumni = mapForm.value.institutions.reduce(
+    (sum, inst) => sum + (Number(inst.alumni) || 0),
+    0
+  );
+  if (isMapEditing.value) {
+    const idx = mapLocations.value.findIndex((l) => l.id === mapForm.value.id);
+    if (idx !== -1) mapLocations.value[idx] = JSON.parse(JSON.stringify(mapForm.value));
+  } else {
+    mapForm.value.id = Date.now();
+    mapLocations.value.push(JSON.parse(JSON.stringify(mapForm.value)));
+  }
+  isMapModalOpen.value = false;
+  document.body.style.overflow = "";
+  triggerToast("Disimpan", "Data persebaran alumni berhasil disimpan.");
+};
+
+const deleteMapLocation = (id) => {
+  if (confirm("Hapus lokasi ini dari peta?")) {
+    mapLocations.value = mapLocations.value.filter((l) => l.id !== id);
+    triggerToast("Dihapus", "Lokasi berhasil dihapus.", "info");
+  }
+};
+
+const addInstitution = () => {
+  mapForm.value.institutions.push({ name: "", type: "ptn", alumni: 0, logo: "" });
+};
+
+const removeInstitution = (idx) => {
+  mapForm.value.institutions.splice(idx, 1);
+};
 
 const isFormVisible = ref(false);
 const isEditing = ref(false);
@@ -522,6 +668,324 @@ const filteredAlumni = computed(() => {
         </table>
       </div>
     </div>
+
+    <!-- Bagian Peta Persebaran Alumni -->
+    <div
+      class="mt-12 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden p-6"
+    >
+      <div
+        class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4"
+      >
+        <div>
+          <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center">
+            <PhMapTrifold class="w-6 h-6 mr-2 text-blue-600" />
+            Manajemen Peta Persebaran Alumni
+          </h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Atur titik lokasi (pin) dan daftar instansi untuk ditampilkan di Halaman Utama
+            (Home).
+          </p>
+        </div>
+        <button
+          @click="openAddMap"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+        >
+          <PhPlusCircle class="w-5 h-5 mr-2" />
+          Tambah Lokasi (Pin)
+        </button>
+      </div>
+
+      <!-- Preview Peta -->
+      <div
+        class="relative w-full aspect-[2.5/1] md:aspect-[3/1] bg-blue-50 dark:bg-slate-900 rounded-xl overflow-hidden border border-gray-200 dark:border-slate-700 mb-6"
+      >
+        <img
+          src="/img/indonesia.svg"
+          class="absolute inset-0 w-full h-full object-fill opacity-50 pointer-events-none"
+        />
+
+        <div
+          v-for="loc in mapLocations"
+          :key="loc.id"
+          class="absolute flex justify-center items-end group cursor-pointer w-8 h-10 -translate-x-1/2 -translate-y-full"
+          :style="{ top: loc.top, left: loc.left }"
+          @click="openEditMap(loc)"
+          title="Klik untuk mengedit"
+        >
+          <PhMapPin
+            weight="fill"
+            class="w-8 h-8 text-blue-600 dark:text-blue-400 drop-shadow-md group-hover:-translate-y-1 transition-transform"
+          />
+          <div
+            class="absolute top-10 whitespace-nowrap bg-white dark:bg-slate-800 text-xs px-2 py-1 rounded shadow border border-gray-100 dark:border-slate-600 opacity-0 group-hover:opacity-100 transition-opacity z-10 font-medium"
+          >
+            {{ loc.name }} ({{ loc.totalAlumni }})
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabel Daftar Lokasi -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr
+              class="bg-gray-50 dark:bg-slate-700/50 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
+              <th class="px-6 py-4">Nama Wilayah</th>
+              <th class="px-6 py-4">Titik (Top/Left)</th>
+              <th class="px-6 py-4">Total Instansi</th>
+              <th class="px-6 py-4">Total Alumni</th>
+              <th class="px-6 py-4 text-right">Aksi</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
+            <tr
+              v-for="loc in mapLocations"
+              :key="loc.id"
+              class="hover:bg-blue-50/50 dark:hover:bg-slate-700/30"
+            >
+              <td
+                class="px-6 py-4 text-sm font-semibold text-gray-800 dark:text-gray-200"
+              >
+                {{ loc.name }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400 font-mono">
+                {{ loc.top }}, {{ loc.left }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                {{ loc.institutions.length }} Instansi
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                {{ loc.totalAlumni }} Alumni
+              </td>
+              <td class="px-6 py-4 text-right">
+                <button
+                  @click="openEditMap(loc)"
+                  class="p-1.5 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-md transition-colors mr-1"
+                  title="Edit"
+                >
+                  <PhPencilSimple class="w-4 h-4" />
+                </button>
+                <button
+                  @click="deleteMapLocation(loc.id)"
+                  class="p-1.5 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-md transition-colors"
+                  title="Hapus"
+                >
+                  <PhTrash class="w-4 h-4" />
+                </button>
+              </td>
+            </tr>
+            <tr v-if="mapLocations.length === 0">
+              <td colspan="5" class="px-6 py-8 text-center text-gray-500">
+                Belum ada titik peta persebaran alumni.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Modal Edit/Tambah Lokasi Peta -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isMapModalOpen"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="
+          isMapModalOpen = false;
+          document.body.style.overflow = '';
+        "
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden"
+          @click.stop
+        >
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+              {{ isMapEditing ? "Edit Lokasi Peta" : "Tambah Lokasi Peta Baru" }}
+            </h3>
+            <button
+              @click="
+                isMapModalOpen = false;
+                document.body.style.overflow = '';
+              "
+              class="text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
+          </div>
+
+          <div
+            class="p-6 overflow-y-auto custom-scrollbar flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8"
+          >
+            <!-- Kolom Kiri: Form Basic & Peta -->
+            <div class="space-y-4">
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Nama Wilayah</label
+                >
+                <input
+                  type="text"
+                  v-model="mapForm.name"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Contoh: Jawa Tengah"
+                />
+              </div>
+
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Atur Posisi Titik (Klik pada peta)</label
+                >
+                <div
+                  ref="mapContainerRef"
+                  @click="handleMapClick"
+                  class="relative w-full aspect-[2/1] bg-blue-50 dark:bg-slate-900 rounded-lg overflow-hidden border border-gray-300 dark:border-slate-600 cursor-crosshair"
+                >
+                  <img
+                    src="/img/indonesia.svg"
+                    class="absolute inset-0 w-full h-full object-fill opacity-60 pointer-events-none"
+                  />
+                  <div
+                    class="absolute flex justify-center items-end w-6 h-8 -translate-x-1/2 -translate-y-full pointer-events-none"
+                    :style="{ top: mapForm.top, left: mapForm.left }"
+                  >
+                    <PhMapPin weight="fill" class="w-6 h-8 text-red-500 drop-shadow" />
+                  </div>
+                </div>
+                <div class="flex gap-4 mt-3">
+                  <div class="flex-1">
+                    <label class="text-xs text-gray-500 font-medium">Top (%)</label>
+                    <input
+                      type="text"
+                      v-model="mapForm.top"
+                      class="w-full px-2 py-1 text-sm border rounded bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+                    />
+                  </div>
+                  <div class="flex-1">
+                    <label class="text-xs text-gray-500 font-medium">Left (%)</label>
+                    <input
+                      type="text"
+                      v-model="mapForm.left"
+                      class="w-full px-2 py-1 text-sm border rounded bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Kolom Kanan: Daftar Instansi -->
+            <div class="space-y-4">
+              <div
+                class="flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 p-3 rounded-lg border border-gray-100 dark:border-slate-600"
+              >
+                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300"
+                  >Daftar Universitas / Instansi</label
+                >
+                <button
+                  @click="addInstitution"
+                  class="text-xs px-2.5 py-1.5 bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 rounded hover:bg-blue-200 transition-colors flex items-center font-bold"
+                >
+                  <PhPlusCircle class="w-3.5 h-3.5 mr-1" /> Tambah
+                </button>
+              </div>
+
+              <div class="space-y-3 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
+                <div
+                  v-for="(inst, idx) in mapForm.institutions"
+                  :key="idx"
+                  class="p-4 border border-gray-200 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700/30 relative group"
+                >
+                  <button
+                    @click="removeInstitution(idx)"
+                    class="absolute top-2 right-2 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30 rounded p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <PhTrash class="w-4 h-4" />
+                  </button>
+                  <div class="space-y-3 pr-6">
+                    <div>
+                      <label class="text-xs text-gray-500">Nama Instansi</label>
+                      <input
+                        type="text"
+                        v-model="inst.name"
+                        placeholder="Universitas / Instansi"
+                        class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div class="flex gap-3">
+                      <div class="flex-1">
+                        <label class="text-xs text-gray-500">Jenis</label>
+                        <select
+                          v-model="inst.type"
+                          class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500"
+                        >
+                          <option value="ptn">PTN</option>
+                          <option value="kedinasan">Kedinasan</option>
+                          <option value="instansi">BUMN / Instansi</option>
+                        </select>
+                      </div>
+                      <div class="w-24">
+                        <label class="text-xs text-gray-500">Jml Alumni</label>
+                        <input
+                          type="number"
+                          v-model="inst.alumni"
+                          placeholder="0"
+                          class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label class="text-xs text-gray-500">URL Logo (Opsional)</label>
+                      <input
+                        type="text"
+                        v-model="inst.logo"
+                        placeholder="/img/logo.png"
+                        class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  v-if="mapForm.institutions.length === 0"
+                  class="text-center text-sm text-gray-500 py-8 border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg"
+                >
+                  Belum ada instansi yang ditambahkan.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+          >
+            <button
+              @click="
+                isMapModalOpen = false;
+                document.body.style.overflow = '';
+              "
+              class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-600"
+            >
+              Batal
+            </button>
+            <button
+              @click="saveMapLocation"
+              class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+            >
+              <PhFloppyDisk class="w-5 h-5 mr-2" /> Simpan Titik Peta
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
 
     <ConfirmModal
       :isOpen="isDeleteModalOpen"
