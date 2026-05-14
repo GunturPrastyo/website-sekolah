@@ -178,6 +178,11 @@ const router = createRouter({
           path: 'data-alumni',
           name: 'admin-data-alumni',
           component: () => import('../views/admin/AdminDataAlumni.vue')
+        },
+        {
+          path: 'agenda',
+          name: 'admin-agenda',
+          component: () => import('../views/admin/AdminAgenda.vue')
         }
         
       ]

@@ -14,6 +14,7 @@ import {
   PhDatabase,
   PhGraduationCap,
   PhBooks,
+  PhCalendar,
 } from "@phosphor-icons/vue";
 
 const route = useRoute();
@@ -62,9 +63,7 @@ const menu = ref([
     children: [
       { name: "Kurikulum", link: "/admin/kurikulum" },
       { name: "Program Jurusan", link: "/admin/program-jurusan" },
-      { name: "Mata Pelajaran", link: "/admin/mata-pelajaran" },
       { name: "Jadwal Pelajaran", link: "/admin/jadwal-pelajaran" },
-      { name: "Penilaian & Rapor", link: "/admin/penilaian" },
     ],
   },
   {
@@ -76,6 +75,7 @@ const menu = ref([
       { name: "Pelanggaran & Tatib", link: "/admin/pelanggaran" },
     ],
   },
+  { name: "Agenda Sekolah", icon: markRaw(PhCalendar), link: "/admin/agenda" },
   { name: "Informasi PPDB", icon: markRaw(PhClipboardText), link: "/admin/info-ppdb" },
   {
     name: "Publikasi & Media",
