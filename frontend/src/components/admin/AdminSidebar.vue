@@ -76,15 +76,7 @@ const menu = ref([
       { name: "Pelanggaran & Tatib", link: "/admin/pelanggaran" },
     ],
   },
-  {
-    name: "Penerimaan Siswa (PPDB)",
-    icon: markRaw(PhClipboardText),
-    children: [
-      { name: "Informasi PPDB", link: "/admin/info-ppdb" },
-      { name: "Data Pendaftar", link: "/admin/pendaftar-ppdb" },
-      { name: "Hasil Seleksi", link: "/admin/seleksi-ppdb" },
-    ],
-  },
+  { name: "Informasi PPDB", icon: markRaw(PhClipboardText), link: "/admin/info-ppdb" },
   {
     name: "Publikasi & Media",
     icon: markRaw(PhMegaphone),
