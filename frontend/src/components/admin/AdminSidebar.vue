@@ -62,6 +62,7 @@ const menu = ref([
       { name: "Berita & Artikel", link: "/admin/berita" },
       { name: "Galeri", link: "/admin/galeri" },
       { name: "Unduhan", link: "/admin/unduhan" },
+      { name: "Info PPDB", link: "/admin/info-ppdb" },
     ],
   },
   { name: "Data PPDB", icon: markRaw(PhClipboardText), link: "/admin/ppdb" },

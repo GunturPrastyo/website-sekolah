@@ -115,8 +115,8 @@ const router = createRouter({
           component: () => import('../views/admin/AdminVisiMisi.vue')
         },
         {
-          path: '/admin/guru-staf',
-          name: 'AdminGuruStaf',
+          path: 'guru-staf',
+          name: 'admin-guru-staf',
           component: () => import('../views/admin/AdminGuruStaf.vue')
         },
         {
@@ -158,6 +158,11 @@ const router = createRouter({
           path: 'unduhan',
           name: 'admin-unduhan',
           component: () => import('../views/admin/AdminUnduhan.vue')
+        },
+        {
+          path: 'info-ppdb',
+          name: 'admin-info-ppdb',
+          component: () => import('../views/admin/AdminInfoPPDB.vue')
         },
         {
           path: 'pengguna',
