@@ -127,6 +127,27 @@ const mapForm = ref({
   institutions: [],
 });
 
+// Hitung daftar instansi unik yang ada di daftar alumni beserta jumlah alumninya
+const availableInstitutions = computed(() => {
+  const counts = {};
+  alumniList.value.forEach((a) => {
+    const inst = a.instansi?.trim();
+    if (inst) {
+      counts[inst] = (counts[inst] || 0) + 1;
+    }
+  });
+  return Object.keys(counts)
+    .map((name) => ({ name, count: counts[name] }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+});
+
+const autoFillCount = (inst) => {
+  const found = availableInstitutions.value.find((i) => i.name === inst.name);
+  if (found) {
+    inst.alumni = found.count;
+  }
+};
+
 const mapContainerRef = ref(null);
 
 const handleMapClick = (e) => {
@@ -917,9 +938,18 @@ const filteredAlumni = computed(() => {
                       <input
                         type="text"
                         v-model="inst.name"
+                        @input="autoFillCount(inst)"
+                        list="available-instansi"
                         placeholder="Universitas / Instansi"
                         class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500"
                       />
+                      <datalist id="available-instansi">
+                        <option
+                          v-for="item in availableInstitutions"
+                          :key="item.name"
+                          :value="item.name"
+                        ></option>
+                      </datalist>
                     </div>
                     <div class="flex gap-3">
                       <div class="flex-1">
