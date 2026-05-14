@@ -3,7 +3,6 @@ import { ref, markRaw, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import {
   PhHouse,
-  PhNewspaper,
   PhUsers,
   PhGear,
   PhSignOut,
@@ -12,6 +11,9 @@ import {
   PhChalkboard,
   PhMegaphone,
   PhClipboardText,
+  PhDatabase,
+  PhGraduationCap,
+  PhBooks,
 } from "@phosphor-icons/vue";
 
 const route = useRoute();
@@ -41,33 +43,60 @@ const menu = ref([
     children: [
       { name: "Sejarah", link: "/admin/sejarah" }, // Link ke halaman admin sejarah
       { name: "Visi & Misi", link: "/admin/visi-misi" },
-      { name: "Guru & Staf", link: "/admin/guru-staf" },
       { name: "Fasilitas", link: "/admin/fasilitas" },
     ],
   },
   {
-    name: "Akademik",
-    icon: markRaw(PhChalkboard),
+    name: "Data Master",
+    icon: markRaw(PhDatabase),
     children: [
-      { name: "Kurikulum", link: "/admin/kurikulum" },
-      { name: "Program Jurusan", link: "/admin/program-jurusan" },
-      { name: "Ekstrakurikuler", link: "/admin/ekstrakurikuler" },
-      { name: "Prestasi", link: "/admin/prestasi" },
+      { name: "Data Siswa", link: "/admin/data-siswa" },
+      { name: "Data Guru & Staf", link: "/admin/guru-staf" },
+      { name: "Data Alumni", link: "/admin/data-alumni" },
+      { name: "Data Kelas", link: "/admin/data-kelas" },
     ],
   },
   {
-    name: "Informasi",
+    name: "Akademik",
+    icon: markRaw(PhBooks),
+    children: [
+      { name: "Kurikulum", link: "/admin/kurikulum" },
+      { name: "Program Jurusan", link: "/admin/program-jurusan" },
+      { name: "Mata Pelajaran", link: "/admin/mata-pelajaran" },
+      { name: "Jadwal Pelajaran", link: "/admin/jadwal-pelajaran" },
+      { name: "Penilaian & Rapor", link: "/admin/penilaian" },
+    ],
+  },
+  {
+    name: "Kesiswaan",
+    icon: markRaw(PhGraduationCap),
+    children: [
+      { name: "Ekstrakurikuler", link: "/admin/ekstrakurikuler" },
+      { name: "Prestasi Siswa", link: "/admin/prestasi" },
+      { name: "Pelanggaran & Tatib", link: "/admin/pelanggaran" },
+    ],
+  },
+  {
+    name: "Penerimaan Siswa (PPDB)",
+    icon: markRaw(PhClipboardText),
+    children: [
+      { name: "Informasi PPDB", link: "/admin/info-ppdb" },
+      { name: "Data Pendaftar", link: "/admin/pendaftar-ppdb" },
+      { name: "Hasil Seleksi", link: "/admin/seleksi-ppdb" },
+    ],
+  },
+  {
+    name: "Publikasi & Media",
     icon: markRaw(PhMegaphone),
     children: [
       { name: "Berita & Artikel", link: "/admin/berita" },
-      { name: "Galeri", link: "/admin/galeri" },
-      { name: "Unduhan", link: "/admin/unduhan" },
-      { name: "Info PPDB", link: "/admin/info-ppdb" },
+      { name: "Galeri Foto & Video", link: "/admin/galeri" },
+      { name: "Unduhan File", link: "/admin/unduhan" },
     ],
   },
 
-  { name: "Pengguna", icon: markRaw(PhUsers), link: "/admin/pengguna" },
-  { name: "Pengaturan", icon: markRaw(PhGear), link: "#" },
+  { name: "Pengguna Sistem", icon: markRaw(PhUsers), link: "/admin/pengguna" },
+  { name: "Pengaturan Umum", icon: markRaw(PhGear), link: "#" },
 ]);
 
 const checkActiveMenu = () => {

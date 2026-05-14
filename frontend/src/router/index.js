@@ -168,6 +168,11 @@ const router = createRouter({
           path: 'pengguna',
           name: 'admin-pengguna',
           component: () => import('../views/admin/AdminPengguna.vue')
+        },
+        {
+          path: 'data-siswa',
+          name: 'admin-data-siswa',
+          component: () => import('../views/admin/AdminDataSiswa.vue')
         }
         
       ]
