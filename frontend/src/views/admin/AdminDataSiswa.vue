@@ -607,7 +607,8 @@ const filteredStudents = computed(() => {
             <tr
               class="bg-gray-50 dark:bg-slate-700/50 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
-              <th class="px-6 py-4">NISN / Nama Siswa</th>
+              <th class="px-6 py-4">NISN</th>
+              <th class="px-6 py-4">Nama</th>
               <th class="px-6 py-4">L/P</th>
               <th class="px-6 py-4">Kelas</th>
               <th class="px-6 py-4">Jurusan</th>
@@ -618,7 +619,7 @@ const filteredStudents = computed(() => {
           <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
             <tr v-if="filteredStudents.length === 0">
               <td
-                colspan="6"
+                colspan="7"
                 class="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
               >
                 <PhGraduationCap
@@ -633,16 +634,15 @@ const filteredStudents = computed(() => {
               class="hover:bg-blue-50/50 dark:hover:bg-slate-700/30 transition-colors group"
             >
               <td class="px-6 py-4">
-                <div>
-                  <span
-                    class="block text-sm font-semibold text-gray-800 dark:text-gray-200"
-                    >{{ student.name }}</span
-                  >
-                  <span
-                    class="block text-xs text-gray-400 dark:text-gray-500 mt-0.5 font-mono"
-                    >{{ student.nisn }}</span
-                  >
-                </div>
+                <span class="block text-sm text-gray-600 dark:text-gray-400 font-mono">{{
+                  student.nisn
+                }}</span>
+              </td>
+              <td class="px-6 py-4">
+                <span
+                  class="block text-sm font-semibold text-gray-800 dark:text-gray-200"
+                  >{{ student.name }}</span
+                >
               </td>
               <td class="px-6 py-4">
                 <span
