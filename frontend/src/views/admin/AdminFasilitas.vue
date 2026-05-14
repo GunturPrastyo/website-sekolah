@@ -1,6 +1,13 @@
 <script setup>
 import { ref } from "vue";
-import { PhPlusCircle, PhPencilSimple, PhTrash, PhFloppyDisk } from "@phosphor-icons/vue";
+import {
+  PhPlusCircle,
+  PhPencilSimple,
+  PhTrash,
+  PhFloppyDisk,
+  PhX,
+  PhXCircle,
+} from "@phosphor-icons/vue";
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -47,34 +54,19 @@ const openAddForm = () => {
   form.value = { id: null, category: "", content: "" };
   isEditing.value = false;
   isFormVisible.value = true;
-  setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
-      el.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }, 100);
+  document.body.style.overflow = "hidden";
 };
 
 const openEditForm = (item) => {
   form.value = { id: item.id, category: item.category, content: item.content };
   isEditing.value = true;
   isFormVisible.value = true;
-  setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
-      el.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }, 100);
+  document.body.style.overflow = "hidden";
 };
 
 const hideForm = () => {
   isFormVisible.value = false;
-  setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
-      el.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }, 100);
+  document.body.style.overflow = "";
 };
 
 const extractImages = (html) => {
@@ -120,12 +112,7 @@ const saveFacility = () => {
     triggerToast("Ditambahkan", "Fasilitas baru berhasil ditambahkan.");
   }
   isFormVisible.value = false;
-  setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    document.querySelectorAll(".overflow-y-auto").forEach((el) => {
-      el.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }, 100);
+  document.body.style.overflow = "";
 };
 
 // Hapus Data
@@ -164,57 +151,91 @@ const confirmDelete = () => {
       </button>
     </div>
 
-    <!-- Form Tambah/Edit Fasilitas -->
+    <!-- Modal Form Tambah/Edit Fasilitas -->
     <Transition
-      enter-active-class="transition-all duration-300"
-      enter-from-class="opacity-0 -translate-y-4"
-      enter-to-class="opacity-100 translate-y-0"
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
     >
       <div
         v-if="isFormVisible"
-        class="bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 p-6 mb-8 shadow-sm"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="hideForm"
       >
-        <h4 class="text-lg font-bold mb-4 border-b pb-2 dark:border-slate-700">
-          {{ isEditing ? "Edit Fasilitas" : "Tambah Fasilitas Baru" }}
-        </h4>
-        <form @submit.prevent="saveFacility">
-          <div class="space-y-4 mb-6">
-            <div>
-              <label class="block text-sm font-medium mb-1">Kategori Fasilitas</label>
-              <input
-                type="text"
-                v-model="form.category"
-                required
-                class="w-full px-4 py-2 bg-gray-50 dark:bg-slate-700/50 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
-                placeholder="Contoh: Ruang Kelas, Laboratorium, dll."
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium mb-2"
-                >Isi Fasilitas (Teks & Gambar)</label
-              >
-              <RichTextEditor
-                v-model="form.content"
-                placeholder="Masukkan isi fasilitas..."
-              />
-            </div>
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden transform transition-all"
+          @click.stop
+        >
+          <!-- Modal Header -->
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+              {{ isEditing ? "Edit Fasilitas" : "Tambah Fasilitas Baru" }}
+            </h3>
+            <button
+              @click="hideForm"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
           </div>
-          <div class="flex justify-end gap-3 pt-4 border-t dark:border-slate-700">
+
+          <!-- Modal Body -->
+          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
+            <form id="facilityForm" @submit.prevent="saveFacility">
+              <div class="space-y-4 mb-6">
+                <div>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Kategori Fasilitas</label
+                  >
+                  <input
+                    type="text"
+                    v-model="form.category"
+                    required
+                    class="w-full px-4 py-2 bg-gray-50 dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow"
+                    placeholder="Contoh: Ruang Kelas, Laboratorium, dll."
+                  />
+                </div>
+                <div>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >Isi Fasilitas (Teks & Gambar)</label
+                  >
+                  <RichTextEditor
+                    v-model="form.content"
+                    placeholder="Masukkan isi fasilitas..."
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Modal Footer -->
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+          >
             <button
               type="button"
               @click="hideForm"
-              class="px-4 py-2 text-sm font-medium bg-gray-100 dark:bg-slate-700 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >
+              <PhXCircle class="w-5 h-5 mr-2" />
               Batal
             </button>
             <button
+              form="facilityForm"
               type="submit"
-              class="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >
-              <PhFloppyDisk class="w-5 h-5" /> Simpan
+              <PhFloppyDisk class="w-5 h-5 mr-2" /> Simpan
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </Transition>
 
