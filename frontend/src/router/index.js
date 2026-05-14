@@ -173,6 +173,11 @@ const router = createRouter({
           path: 'data-siswa',
           name: 'admin-data-siswa',
           component: () => import('../views/admin/AdminDataSiswa.vue')
+        },
+        {
+          path: 'data-alumni',
+          name: 'admin-data-alumni',
+          component: () => import('../views/admin/AdminDataAlumni.vue')
         }
         
       ]
