@@ -88,18 +88,19 @@ const colors = [
     name: "Akademik",
     bg: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
     calBg:
-      "bg-yellow-100 dark:bg-yellow-900/40 hover:bg-yellow-200 dark:hover:bg-yellow-900/60",
-    calHeader: "bg-yellow-400 dark:bg-yellow-600 text-yellow-900 dark:text-yellow-100",
-    calText: "text-yellow-800 dark:text-yellow-300",
+      "bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/40",
+    calHeader:
+      "bg-yellow-200/70 dark:bg-yellow-700/40 text-yellow-800 dark:text-yellow-200",
+    calText: "text-yellow-700 dark:text-yellow-300",
     legendBg: "bg-yellow-400",
   },
   {
     id: "red",
     name: "Guru & Staf",
     bg: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-    calBg: "bg-red-100 dark:bg-red-900/40 hover:bg-red-200 dark:hover:bg-red-900/60",
-    calHeader: "bg-red-400 dark:bg-red-600 text-red-900 dark:text-red-100",
-    calText: "text-red-800 dark:text-red-300",
+    calBg: "bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40",
+    calHeader: "bg-red-200/70 dark:bg-red-700/40 text-red-800 dark:text-red-200",
+    calText: "text-red-700 dark:text-red-300",
     legendBg: "bg-red-500",
   },
   {
@@ -107,18 +108,18 @@ const colors = [
     name: "Kegiatan",
     bg: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
     calBg:
-      "bg-green-100 dark:bg-green-900/40 hover:bg-green-200 dark:hover:bg-green-900/60",
-    calHeader: "bg-green-400 dark:bg-green-600 text-green-900 dark:text-green-100",
-    calText: "text-green-800 dark:text-green-300",
+      "bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/40",
+    calHeader: "bg-green-200/70 dark:bg-green-700/40 text-green-800 dark:text-green-200",
+    calText: "text-green-700 dark:text-green-300",
     legendBg: "bg-green-500",
   },
   {
     id: "blue",
     name: "Seminar & Acara",
     bg: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-    calBg: "bg-blue-100 dark:bg-blue-900/40 hover:bg-blue-200 dark:hover:bg-blue-900/60",
-    calHeader: "bg-blue-400 dark:bg-blue-600 text-blue-900 dark:text-blue-100",
-    calText: "text-blue-800 dark:text-blue-300",
+    calBg: "bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40",
+    calHeader: "bg-blue-200/70 dark:bg-blue-700/40 text-blue-800 dark:text-blue-200",
+    calText: "text-blue-700 dark:text-blue-300",
     legendBg: "bg-blue-500",
   },
 ];
@@ -575,62 +576,52 @@ const calendarBlocks = computed(() => {
         class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4"
       >
         <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center">
-          <PhCalendarBlank class="w-6 h-6 mr-2 text-blue-600" /> Visualisasi Kalender
+          <PhCalendarBlank class="w-6 h-6 mr-2 text-gray-800" /> Kalender
         </h3>
         <div
-          class="flex items-center gap-2 bg-gray-50 dark:bg-slate-700/50 p-1.5 rounded-lg border border-gray-200 dark:border-slate-600 w-full sm:w-auto justify-between sm:justify-center"
+          class="flex items-center gap-1 bg-slate-50 dark:bg-slate-800/80 p-1.5 rounded-full border border-slate-100 dark:border-slate-700 w-full sm:w-auto justify-between sm:justify-center shadow-sm"
         >
           <button
             @click="prevMonth"
-            class="p-1.5 hover:bg-white dark:hover:bg-slate-600 rounded-md transition-colors shadow-sm"
+            class="p-2 hover:bg-white dark:hover:bg-slate-700 rounded-full transition-all hover:shadow-sm text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
             title="Bulan Sebelumnya"
           >
-            <PhCaretLeft class="w-5 h-5 text-gray-600 dark:text-gray-300" />
+            <PhCaretLeft class="w-4 h-4 md:w-5 md:h-5" weight="bold" />
           </button>
           <span
-            class="font-bold text-sm md:text-base text-gray-800 dark:text-white w-32 text-center"
+            class="font-semibold text-sm md:text-base text-slate-700 dark:text-slate-200 w-32 text-center tracking-wide"
             >{{ currentMonthName }}</span
           >
           <button
             @click="nextMonth"
-            class="p-1.5 hover:bg-white dark:hover:bg-slate-600 rounded-md transition-colors shadow-sm"
+            class="p-2 hover:bg-white dark:hover:bg-slate-700 rounded-full transition-all hover:shadow-sm text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
             title="Bulan Selanjutnya"
           >
-            <PhCaretRight class="w-5 h-5 text-gray-600 dark:text-gray-300" />
+            <PhCaretRight class="w-4 h-4 md:w-5 md:h-5" weight="bold" />
           </button>
         </div>
       </div>
 
       <div class="grid grid-cols-7 gap-1 md:gap-2 text-center mb-2">
-        <div class="text-xs md:text-sm font-bold text-red-500 py-1 md:py-2">Min</div>
-        <div
-          class="text-xs md:text-sm font-bold text-gray-500 dark:text-gray-400 py-1 md:py-2"
-        >
+        <div class="text-xs font-semibold text-red-400/80 dark:text-red-400/70 py-2">
+          Min
+        </div>
+        <div class="text-xs font-semibold text-slate-400 dark:text-slate-500 py-2">
           Sen
         </div>
-        <div
-          class="text-xs md:text-sm font-bold text-gray-500 dark:text-gray-400 py-1 md:py-2"
-        >
+        <div class="text-xs font-semibold text-slate-400 dark:text-slate-500 py-2">
           Sel
         </div>
-        <div
-          class="text-xs md:text-sm font-bold text-gray-500 dark:text-gray-400 py-1 md:py-2"
-        >
+        <div class="text-xs font-semibold text-slate-400 dark:text-slate-500 py-2">
           Rab
         </div>
-        <div
-          class="text-xs md:text-sm font-bold text-gray-500 dark:text-gray-400 py-1 md:py-2"
-        >
+        <div class="text-xs font-semibold text-slate-400 dark:text-slate-500 py-2">
           Kam
         </div>
-        <div
-          class="text-xs md:text-sm font-bold text-gray-500 dark:text-gray-400 py-1 md:py-2"
-        >
+        <div class="text-xs font-semibold text-slate-400 dark:text-slate-500 py-2">
           Jum
         </div>
-        <div
-          class="text-xs md:text-sm font-bold text-gray-500 dark:text-gray-400 py-1 md:py-2"
-        >
+        <div class="text-xs font-semibold text-slate-400 dark:text-slate-500 py-2">
           Sab
         </div>
       </div>
@@ -641,21 +632,21 @@ const calendarBlocks = computed(() => {
 
           <div
             v-else-if="block.type === 'day'"
-            class="py-2 mx-0.5 rounded-lg cursor-pointer transition-colors flex items-center justify-center"
+            class="py-1.5 mx-0.5 rounded-xl cursor-pointer transition-all duration-200 flex items-center justify-center group"
             :class="
               block.isSunday
-                ? 'hover:bg-red-50 dark:hover:bg-red-900/20'
-                : 'hover:bg-blue-50 dark:hover:bg-slate-700/50'
+                ? 'hover:bg-red-50/50 dark:hover:bg-red-900/20'
+                : 'hover:bg-slate-50 dark:hover:bg-slate-700/30'
             "
           >
             <span
-              class="w-7 h-7 flex items-center justify-center rounded-full"
+              class="w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300"
               :class="
                 block.isToday
-                  ? 'bg-blue-600 text-white shadow-md font-bold'
+                  ? 'bg-blue-500 text-white shadow-sm font-semibold scale-110'
                   : block.isSunday
-                  ? 'text-red-500 dark:text-red-400 font-medium'
-                  : 'text-gray-700 dark:text-gray-300'
+                  ? 'text-red-400 dark:text-red-400/80 font-medium group-hover:text-red-500'
+                  : 'text-slate-600 dark:text-slate-400 font-medium group-hover:text-blue-600 dark:group-hover:text-blue-400'
               "
             >
               {{ block.date }}
@@ -664,7 +655,7 @@ const calendarBlocks = computed(() => {
 
           <div
             v-else-if="block.type === 'event'"
-            class="mx-0.5 relative rounded-md overflow-hidden cursor-pointer transition-colors flex flex-col justify-between"
+            class="mx-0.5 relative rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-md flex flex-col justify-between group"
             :class="[
               getColSpanClass(block.span),
               getColorConfig(block.event.color).calBg,
@@ -673,13 +664,13 @@ const calendarBlocks = computed(() => {
             @click="startEdit(block.event)"
           >
             <div
-              class="text-[10px] font-bold px-2 py-0.5 text-left truncate"
+              class="text-[10px] font-semibold px-2.5 py-1 text-left truncate transition-colors"
               :class="getColorConfig(block.event.color).calHeader"
             >
               {{ block.event.title }}
             </div>
             <div
-              class="grid w-full py-1"
+              class="grid w-full py-1.5"
               :style="`grid-template-columns: repeat(${block.span}, minmax(0, 1fr))`"
             >
               <div
@@ -688,12 +679,12 @@ const calendarBlocks = computed(() => {
                 class="flex items-center justify-center"
               >
                 <span
-                  class="w-6 h-6 flex items-center justify-center rounded-full font-bold"
+                  class="w-7 h-7 flex items-center justify-center rounded-full font-medium transition-transform group-hover:scale-105"
                   :class="[
                     d.isToday
-                      ? 'bg-blue-600 text-white shadow-md'
+                      ? 'bg-blue-500 text-white shadow-sm font-semibold'
                       : d.isSunday
-                      ? 'text-red-500'
+                      ? 'text-red-400 dark:text-red-400/80'
                       : getColorConfig(block.event.color).calText,
                   ]"
                 >
