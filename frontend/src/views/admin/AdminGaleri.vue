@@ -9,6 +9,7 @@ import {
   PhImage,
   PhHeart,
   PhX,
+  PhVideoCamera,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -68,6 +69,47 @@ const selectedItems = ref([]);
 const isBulkDeleteModalOpen = ref(false);
 
 const fileInput = ref(null);
+
+// Video Profil State
+const videoUrl = ref("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+const tempVideoUrl = ref("");
+const isEditingVideo = ref(false);
+
+const embedVideoUrl = computed(() => {
+  if (!videoUrl.value) return "";
+  let url = videoUrl.value;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  if (match && match[2].length === 11) {
+    return `https://www.youtube.com/embed/${match[2]}`;
+  }
+  return url;
+});
+
+const startEditVideo = () => {
+  tempVideoUrl.value = videoUrl.value;
+  isEditingVideo.value = true;
+};
+
+const cancelEditVideo = () => {
+  isEditingVideo.value = false;
+  tempVideoUrl.value = "";
+};
+
+const saveVideo = () => {
+  if (!tempVideoUrl.value) {
+    triggerToast("Gagal Menyimpan", "Tautan video tidak boleh kosong!", "error");
+    return;
+  }
+  videoUrl.value = tempVideoUrl.value;
+  isEditingVideo.value = false;
+  triggerToast("Perubahan Disimpan", "Tautan video profil berhasil diperbarui.");
+};
+
+const deleteVideo = () => {
+  videoUrl.value = "";
+  triggerToast("Data Dihapus", "Tautan video profil berhasil dihapus.", "info");
+};
 
 const triggerFileInput = () => {
   if (fileInput.value) fileInput.value.click();
@@ -271,14 +313,6 @@ const getCategoryName = (id) => {
           Kelola data foto dokumentasi kegiatan sekolah.
         </p>
       </div>
-      <button
-        v-if="!isFormVisible"
-        @click="showAddForm"
-        class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-      >
-        <PhPlusCircle class="w-5 h-5 mr-2" />
-        Tambah Foto
-      </button>
     </div>
 
     <!-- Modal Form Tambah/Edit -->
@@ -453,6 +487,99 @@ const getCategoryName = (id) => {
       </div>
     </Transition>
 
+    <!-- Pengaturan Video Profil -->
+    <div
+      class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm mb-8"
+    >
+      <div
+        class="flex items-center justify-between mb-4 border-b border-gray-100 dark:border-slate-700 pb-4"
+      >
+        <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center">
+          <PhVideoCamera class="w-6 h-6 mr-2 text-blue-600" />
+          Video Profil Sekolah
+        </h3>
+        <div class="flex items-center gap-3">
+          <button
+            v-if="videoUrl && !isEditingVideo"
+            @click="deleteVideo"
+            class="text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors flex items-center"
+          >
+            <PhTrash class="w-4 h-4 mr-1" />
+            Hapus
+          </button>
+          <button
+            @click="isEditingVideo ? cancelEditVideo() : startEditVideo()"
+            class="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors flex items-center"
+          >
+            <PhPencilSimple v-if="!isEditingVideo && videoUrl" class="w-4 h-4 mr-1" />
+            <PhPlusCircle v-if="!isEditingVideo && !videoUrl" class="w-4 h-4 mr-1" />
+            <PhXCircle v-if="isEditingVideo" class="w-4 h-4 mr-1" />
+            {{ isEditingVideo ? "Batal" : videoUrl ? "Edit Tautan" : "Tambah Tautan" }}
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-6">
+        <!-- Input Form -->
+        <div v-if="isEditingVideo" class="flex flex-col gap-4">
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+            >
+              Tautan Video YouTube
+            </label>
+            <textarea
+              v-model="tempVideoUrl"
+              rows="2"
+              class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
+              placeholder="Contoh: https://www.youtube.com/watch?v=..."
+            ></textarea>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">
+              Masukkan tautan video YouTube untuk ditampilkan di halaman profil. Sistem
+              akan otomatis mengonversi ke format embed.
+            </p>
+          </div>
+          <button
+            @click="saveVideo"
+            class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors self-start"
+          >
+            <PhFloppyDisk class="w-5 h-5 mr-2" />
+            Simpan Tautan
+          </button>
+        </div>
+
+        <div v-else class="flex flex-col justify-center">
+          <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Tautan saat ini:
+          </p>
+          <div
+            class="p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-gray-200 dark:border-slate-600 break-all text-sm font-mono text-gray-800 dark:text-gray-200"
+          >
+            {{ videoUrl || "Belum ada tautan video yang diatur." }}
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <div
+          class="relative w-full aspect-video lg:aspect-[21/9] rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800 flex items-center justify-center"
+        >
+          <iframe
+            v-if="embedVideoUrl"
+            :src="embedVideoUrl"
+            title="Video Profil Sekolah"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            class="w-full h-full"
+          ></iframe>
+          <div v-else class="text-gray-400 dark:text-gray-500 flex flex-col items-center">
+            <PhVideoCamera class="w-12 h-12 mb-2 opacity-50" />
+            <span class="text-sm font-medium">Preview Video</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- List/Grid -->
     <div
       class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
@@ -486,10 +613,7 @@ const getCategoryName = (id) => {
             {{ cat.name }}
           </button>
         </div>
-        <div
-          class="flex items-center gap-2 w-full sm:w-auto"
-          v-if="filteredGallery.length > 0 || selectedItems.length > 0"
-        >
+        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
           <button
             v-if="selectedItems.length > 0"
             @click="isBulkDeleteModalOpen = true"
@@ -498,6 +622,7 @@ const getCategoryName = (id) => {
             <PhTrash class="w-4 h-4 mr-1.5" /> Hapus ({{ selectedItems.length }})
           </button>
           <button
+            v-if="filteredGallery.length > 0 || selectedItems.length > 0"
             @click="selectAll"
             class="flex-1 sm:flex-none justify-center px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-lg text-sm font-semibold hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors text-gray-700 dark:text-gray-300 shadow-sm"
           >
@@ -507,6 +632,13 @@ const getCategoryName = (id) => {
                 ? "Batal Pilih Semua"
                 : "Pilih Semua"
             }}
+          </button>
+          <button
+            v-if="!isFormVisible"
+            @click="showAddForm"
+            class="flex-1 sm:flex-none justify-center px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors flex items-center shadow-sm"
+          >
+            <PhPlusCircle class="w-4 h-4 mr-1.5" /> Tambah Foto
           </button>
         </div>
       </div>
