@@ -83,6 +83,9 @@ const isEditing = ref(false);
 const isDeleteModalOpen = ref(false);
 const itemToDelete = ref(null);
 
+const isStartDropdownOpen = ref(false);
+const isEndDropdownOpen = ref(false);
+
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
@@ -144,6 +147,8 @@ const resetForm = () => {
     teacher: "",
   };
   isEditing.value = false;
+  isStartDropdownOpen.value = false;
+  isEndDropdownOpen.value = false;
 };
 
 const showAddForm = () => {
@@ -528,88 +533,220 @@ const groupedSchedule = computed(() => {
                   </select>
                 </div>
 
-                <div>
+                <div class="relative">
                   <label
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                   >
                     Waktu Mulai
                   </label>
                   <div
-                    class="flex items-center justify-between w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-colors"
+                    class="flex items-center justify-between w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white hover:border-blue-400 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-colors cursor-pointer"
+                    @click="
+                      isStartDropdownOpen = !isStartDropdownOpen;
+                      isEndDropdownOpen = false;
+                    "
                   >
                     <div class="flex items-center">
-                      <select
-                        v-model="formStartHour"
-                        class="bg-transparent border-none appearance-none outline-none focus:ring-0 p-0 m-0 cursor-pointer text-center font-medium hover:text-blue-600 transition-colors"
-                      >
-                        <option
-                          v-for="h in hours"
-                          :key="h"
-                          :value="h"
-                          class="text-gray-900 dark:text-white bg-white dark:bg-slate-700"
-                        >
-                          {{ h }}
-                        </option>
-                      </select>
+                      <span class="font-medium w-6 text-center">{{ formStartHour }}</span>
                       <span class="mx-1 font-bold">:</span>
-                      <select
-                        v-model="formStartMinute"
-                        class="bg-transparent border-none appearance-none outline-none focus:ring-0 p-0 m-0 cursor-pointer text-center font-medium hover:text-blue-600 transition-colors"
-                      >
-                        <option
-                          v-for="m in minutes"
-                          :key="m"
-                          :value="m"
-                          class="text-gray-900 dark:text-white bg-white dark:bg-slate-700"
-                        >
-                          {{ m }}
-                        </option>
-                      </select>
+                      <span class="font-medium w-6 text-center">{{
+                        formStartMinute
+                      }}</span>
                     </div>
                     <PhClock class="w-5 h-5 text-gray-400 pointer-events-none" />
                   </div>
+
+                  <Transition
+                    enter-active-class="transition ease-out duration-200"
+                    enter-from-class="opacity-0 translate-y-1 scale-95"
+                    enter-to-class="opacity-100 translate-y-0 scale-100"
+                    leave-active-class="transition ease-in duration-150"
+                    leave-from-class="opacity-100 translate-y-0 scale-100"
+                    leave-to-class="opacity-0 translate-y-1 scale-95"
+                  >
+                    <div
+                      v-if="isStartDropdownOpen"
+                      class="absolute top-full left-0 mt-2 w-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-xl z-50 flex flex-col overflow-hidden origin-top"
+                    >
+                      <div
+                        class="fixed inset-0 z-[-1] cursor-default"
+                        @click.stop="isStartDropdownOpen = false"
+                      ></div>
+
+                      <div
+                        class="flex border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50"
+                      >
+                        <div
+                          class="flex-1 text-center py-2 text-xs font-bold text-gray-500 dark:text-gray-400"
+                        >
+                          JAM
+                        </div>
+                        <div
+                          class="flex-1 text-center py-2 text-xs font-bold text-gray-500 dark:text-gray-400 border-l border-gray-100 dark:border-slate-700"
+                        >
+                          MENIT
+                        </div>
+                      </div>
+
+                      <div class="flex h-48 bg-white dark:bg-slate-800 relative z-10">
+                        <div
+                          class="flex-1 overflow-y-auto custom-scrollbar border-r border-gray-100 dark:border-slate-700 scroll-smooth"
+                        >
+                          <button
+                            v-for="h in hours"
+                            :key="h"
+                            type="button"
+                            @click.stop="formStartHour = h"
+                            class="w-full text-center py-2 text-sm hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
+                            :class="
+                              formStartHour === h
+                                ? 'bg-blue-100 text-blue-600 font-bold dark:bg-slate-700 dark:text-blue-400'
+                                : 'text-gray-700 dark:text-gray-300'
+                            "
+                          >
+                            {{ h }}
+                          </button>
+                        </div>
+                        <div
+                          class="flex-1 overflow-y-auto custom-scrollbar scroll-smooth"
+                        >
+                          <button
+                            v-for="m in minutes"
+                            :key="m"
+                            type="button"
+                            @click.stop="formStartMinute = m"
+                            class="w-full text-center py-2 text-sm hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
+                            :class="
+                              formStartMinute === m
+                                ? 'bg-blue-100 text-blue-600 font-bold dark:bg-slate-700 dark:text-blue-400'
+                                : 'text-gray-700 dark:text-gray-300'
+                            "
+                          >
+                            {{ m }}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div
+                        class="p-2 border-t border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 relative z-10"
+                      >
+                        <button
+                          type="button"
+                          @click.stop="isStartDropdownOpen = false"
+                          class="w-full py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+                        >
+                          Pilih Waktu
+                        </button>
+                      </div>
+                    </div>
+                  </Transition>
                 </div>
 
-                <div>
+                <div class="relative">
                   <label
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                   >
                     Waktu Selesai
                   </label>
                   <div
-                    class="flex items-center justify-between w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-colors"
+                    class="flex items-center justify-between w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white hover:border-blue-400 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-colors cursor-pointer"
+                    @click="
+                      isEndDropdownOpen = !isEndDropdownOpen;
+                      isStartDropdownOpen = false;
+                    "
                   >
                     <div class="flex items-center">
-                      <select
-                        v-model="formEndHour"
-                        class="bg-transparent border-none appearance-none outline-none focus:ring-0 p-0 m-0 cursor-pointer text-center font-medium hover:text-blue-600 transition-colors"
-                      >
-                        <option
-                          v-for="h in hours"
-                          :key="h"
-                          :value="h"
-                          class="text-gray-900 dark:text-white bg-white dark:bg-slate-700"
-                        >
-                          {{ h }}
-                        </option>
-                      </select>
+                      <span class="font-medium w-6 text-center">{{ formEndHour }}</span>
                       <span class="mx-1 font-bold">:</span>
-                      <select
-                        v-model="formEndMinute"
-                        class="bg-transparent border-none appearance-none outline-none focus:ring-0 p-0 m-0 cursor-pointer text-center font-medium hover:text-blue-600 transition-colors"
-                      >
-                        <option
-                          v-for="m in minutes"
-                          :key="m"
-                          :value="m"
-                          class="text-gray-900 dark:text-white bg-white dark:bg-slate-700"
-                        >
-                          {{ m }}
-                        </option>
-                      </select>
+                      <span class="font-medium w-6 text-center">{{ formEndMinute }}</span>
                     </div>
                     <PhClock class="w-5 h-5 text-gray-400 pointer-events-none" />
                   </div>
+
+                  <Transition
+                    enter-active-class="transition ease-out duration-200"
+                    enter-from-class="opacity-0 translate-y-1 scale-95"
+                    enter-to-class="opacity-100 translate-y-0 scale-100"
+                    leave-active-class="transition ease-in duration-150"
+                    leave-from-class="opacity-100 translate-y-0 scale-100"
+                    leave-to-class="opacity-0 translate-y-1 scale-95"
+                  >
+                    <div
+                      v-if="isEndDropdownOpen"
+                      class="absolute top-full left-0 mt-2 w-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-xl z-50 flex flex-col overflow-hidden origin-top"
+                    >
+                      <div
+                        class="fixed inset-0 z-[-1] cursor-default"
+                        @click.stop="isEndDropdownOpen = false"
+                      ></div>
+
+                      <div
+                        class="flex border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50"
+                      >
+                        <div
+                          class="flex-1 text-center py-2 text-xs font-bold text-gray-500 dark:text-gray-400"
+                        >
+                          JAM
+                        </div>
+                        <div
+                          class="flex-1 text-center py-2 text-xs font-bold text-gray-500 dark:text-gray-400 border-l border-gray-100 dark:border-slate-700"
+                        >
+                          MENIT
+                        </div>
+                      </div>
+
+                      <div class="flex h-48 bg-white dark:bg-slate-800 relative z-10">
+                        <div
+                          class="flex-1 overflow-y-auto custom-scrollbar border-r border-gray-100 dark:border-slate-700 scroll-smooth"
+                        >
+                          <button
+                            v-for="h in hours"
+                            :key="h"
+                            type="button"
+                            @click.stop="formEndHour = h"
+                            class="w-full text-center py-2 text-sm hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
+                            :class="
+                              formEndHour === h
+                                ? 'bg-blue-100 text-blue-600 font-bold dark:bg-slate-700 dark:text-blue-400'
+                                : 'text-gray-700 dark:text-gray-300'
+                            "
+                          >
+                            {{ h }}
+                          </button>
+                        </div>
+                        <div
+                          class="flex-1 overflow-y-auto custom-scrollbar scroll-smooth"
+                        >
+                          <button
+                            v-for="m in minutes"
+                            :key="m"
+                            type="button"
+                            @click.stop="formEndMinute = m"
+                            class="w-full text-center py-2 text-sm hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
+                            :class="
+                              formEndMinute === m
+                                ? 'bg-blue-100 text-blue-600 font-bold dark:bg-slate-700 dark:text-blue-400'
+                                : 'text-gray-700 dark:text-gray-300'
+                            "
+                          >
+                            {{ m }}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div
+                        class="p-2 border-t border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 relative z-10"
+                      >
+                        <button
+                          type="button"
+                          @click.stop="isEndDropdownOpen = false"
+                          class="w-full py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+                        >
+                          Pilih Waktu
+                        </button>
+                      </div>
+                    </div>
+                  </Transition>
                 </div>
 
                 <div class="md:col-span-2">
@@ -945,5 +1082,18 @@ const groupedSchedule = computed(() => {
 <style scoped>
 .transition-all {
   overflow: hidden;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 10px;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #475569;
 }
 </style>
