@@ -14,6 +14,7 @@ import {
   PhX,
   PhList,
   PhCalendarBlank,
+  PhWarningCircle,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -121,6 +122,34 @@ const hideForm = () => {
   document.body.style.overflow = "";
 };
 
+const checkConflict = (schedule) => {
+  return scheduleList.value.some((s) => {
+    if (schedule.id && s.id === schedule.id) return false;
+    if (s.className !== schedule.className || s.day !== schedule.day) return false;
+
+    const start1 = timeToMinutes(s.startTime);
+    const end1 = timeToMinutes(s.endTime);
+    const start2 = timeToMinutes(schedule.startTime);
+    const end2 = timeToMinutes(schedule.endTime);
+
+    return start1 < end2 && end1 > start2;
+  });
+};
+
+const hasConflict = (schedule) => {
+  return scheduleList.value.some((s) => {
+    if (s.id === schedule.id) return false;
+    if (s.className !== schedule.className || s.day !== schedule.day) return false;
+
+    const start1 = timeToMinutes(s.startTime);
+    const end1 = timeToMinutes(s.endTime);
+    const start2 = timeToMinutes(schedule.startTime);
+    const end2 = timeToMinutes(schedule.endTime);
+
+    return start1 < end2 && end1 > start2;
+  });
+};
+
 const addEntry = () => {
   if (
     !form.value.subject ||
@@ -129,6 +158,14 @@ const addEntry = () => {
     !form.value.endTime
   ) {
     triggerToast("Gagal Menyimpan", "Mohon lengkapi semua kolom form!", "error");
+    return;
+  }
+  if (checkConflict(form.value)) {
+    triggerToast(
+      "Gagal Menyimpan",
+      "Terdapat jadwal yang bentrok di kelas dan hari tersebut!",
+      "error"
+    );
     return;
   }
   const newId =
@@ -158,6 +195,14 @@ const saveEntry = () => {
     !form.value.endTime
   ) {
     triggerToast("Gagal Menyimpan", "Mohon lengkapi semua kolom form!", "error");
+    return;
+  }
+  if (checkConflict(form.value)) {
+    triggerToast(
+      "Gagal Menyimpan",
+      "Terdapat jadwal yang bentrok di kelas dan hari tersebut!",
+      "error"
+    );
     return;
   }
   const index = scheduleList.value.findIndex((s) => s.id === form.value.id);
@@ -542,11 +587,23 @@ const getColorForSubject = (subject) => {
                   v-for="schedule in group.schedules"
                   :key="schedule.id"
                   class="absolute top-1 bottom-1 rounded-md border p-2 flex flex-col justify-center overflow-hidden cursor-pointer group/block shadow-sm transition-all hover:z-10 hover:shadow-md hover:scale-[1.02]"
-                  :class="getColorForSubject(schedule.subject)"
+                  :class="[
+                    getColorForSubject(schedule.subject),
+                    hasConflict(schedule)
+                      ? 'ring-2 ring-red-500 ring-offset-1 dark:ring-offset-slate-800'
+                      : '',
+                  ]"
                   :style="getBlockStyle(schedule.startTime, schedule.endTime)"
                   @click="startEdit(schedule)"
                 >
-                  <div class="font-bold text-xs truncate leading-tight">
+                  <div
+                    class="font-bold text-xs truncate leading-tight flex items-center gap-1"
+                  >
+                    <PhWarningCircle
+                      v-if="hasConflict(schedule)"
+                      class="w-3.5 h-3.5 text-red-600 dark:text-red-400 shrink-0"
+                      title="Jadwal Bentrok"
+                    />
                     {{ schedule.subject }}
                   </div>
                   <div class="text-[10px] opacity-80 truncate">

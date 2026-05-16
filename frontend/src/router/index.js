@@ -175,6 +175,11 @@ const router = createRouter({
           component: () => import('../views/admin/AdminPengguna.vue')
         },
         {
+          path: 'data-kelas',
+          name: 'admin-data-kelas',
+          component: () => import('../views/admin/AdminDataKelas.vue')
+        },
+        {
           path: 'data-siswa',
           name: 'admin-data-siswa',
           component: () => import('../views/admin/AdminDataSiswa.vue')
