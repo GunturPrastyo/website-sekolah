@@ -300,13 +300,14 @@ const groupedSchedule = computed(() => {
 });
 
 const getColorForSubject = (subject) => {
+  if (!subject) return "bg-gray-500 text-white dark:bg-gray-600";
   const colors = [
-    "bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800",
-    "bg-green-100 text-green-800 border-green-200 hover:bg-green-200 dark:bg-green-900/40 dark:text-green-300 dark:border-green-800",
-    "bg-purple-100 text-purple-800 border-purple-200 hover:bg-purple-200 dark:bg-purple-900/40 dark:text-purple-300 dark:border-purple-800",
-    "bg-amber-100 text-amber-800 border-amber-200 hover:bg-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-800",
-    "bg-pink-100 text-pink-800 border-pink-200 hover:bg-pink-200 dark:bg-pink-900/40 dark:text-pink-300 dark:border-pink-800",
-    "bg-indigo-100 text-indigo-800 border-indigo-200 hover:bg-indigo-200 dark:bg-indigo-900/40 dark:text-indigo-300 dark:border-indigo-800",
+    "bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600",
+    "bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600",
+    "bg-purple-600 text-white hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600",
+    "bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600",
+    "bg-rose-600 text-white hover:bg-rose-700 dark:bg-rose-500 dark:hover:bg-rose-600",
+    "bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600",
   ];
   let hash = 0;
   for (let i = 0; i < subject.length; i++) {
@@ -521,9 +522,9 @@ const getColorForSubject = (subject) => {
     <!-- Gantt Chart Timeline View -->
     <div
       v-if="viewMode === 'timeline'"
-      class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden p-4 sm:p-6 mb-8"
+      class="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden p-4 sm:p-6 mb-8"
     >
-      <div class="flex gap-2 mb-6 overflow-x-auto pb-2 custom-scrollbar">
+      <div class="flex gap-2 mb-8 overflow-x-auto pb-2 custom-scrollbar">
         <button
           v-for="day in days"
           :key="day"
@@ -532,61 +533,66 @@ const getColorForSubject = (subject) => {
           :class="
             activeDay === day
               ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
-              : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-600'
+              : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100 hover:text-blue-600 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-600 dark:hover:text-blue-400'
           "
         >
           {{ day }}
         </button>
       </div>
 
-      <div class="overflow-x-auto pb-4">
-        <div class="min-w-[800px] lg:min-w-[1000px] relative">
-          <!-- Time Header -->
+      <div class="overflow-x-auto pb-6 custom-scrollbar">
+        <div
+          class="min-w-[800px] lg:min-w-[1000px] relative mt-6 border-t border-l border-gray-200 dark:border-slate-700 rounded-tl-lg"
+        >
+          <!-- Background Grid Lines -->
           <div
-            class="flex border-b border-gray-200 dark:border-slate-700 pb-2 mb-4 ml-[120px] relative"
+            class="absolute top-0 bottom-0 left-[140px] right-0 pointer-events-none flex"
           >
             <div
-              v-for="hour in 10"
-              :key="hour"
-              class="absolute text-xs font-bold text-gray-400 dark:text-gray-500 -translate-x-1/2"
-              :style="{ left: `${((hour - 1) / 9) * 100}%` }"
+              v-for="hour in 9"
+              :key="'grid-' + hour"
+              class="flex-1 border-r border-gray-200 border-dashed dark:border-slate-700 relative"
             >
-              {{ String(hour + 6).padStart(2, "0") }}:00
+              <span
+                class="absolute -top-7 -translate-x-1/2 text-[10px] font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-700 px-2 py-0.5 rounded border border-gray-200 dark:border-slate-600 shadow-sm"
+              >
+                {{ String(hour + 6).padStart(2, "0") }}:00
+              </span>
             </div>
-            <div class="h-4 w-full"></div>
+            <!-- Last grid line text -->
+            <div class="relative w-0">
+              <span
+                class="absolute -top-7 -translate-x-1/2 text-[10px] font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-700 px-2 py-0.5 rounded border border-gray-200 dark:border-slate-600 shadow-sm"
+              >
+                16:00
+              </span>
+            </div>
           </div>
 
           <!-- Class Rows -->
-          <div class="space-y-4">
+          <div
+            class="relative z-10 divide-y divide-gray-100 dark:divide-slate-700/50 border-b border-gray-200 dark:border-slate-700"
+          >
             <div
               v-for="group in groupedSchedule"
               :key="group.className"
-              class="flex items-center relative"
+              class="flex items-stretch relative group/row hover:bg-blue-50/30 dark:hover:bg-slate-700/30 transition-colors"
             >
               <!-- Class Name -->
               <div
-                class="w-[120px] shrink-0 font-bold text-gray-800 dark:text-gray-200 text-sm"
+                class="w-[140px] shrink-0 font-bold text-gray-700 dark:text-gray-300 text-sm flex items-center pl-4 py-6 bg-gray-50/50 dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700"
               >
+                <div class="w-2.5 h-2.5 rounded-full bg-blue-500 mr-2.5 shadow-sm"></div>
                 {{ group.className }}
               </div>
 
               <!-- Schedule Blocks Area -->
-              <div
-                class="flex-1 h-16 relative bg-gray-50 dark:bg-slate-700/30 rounded-lg border border-gray-100 dark:border-slate-700/50"
-              >
-                <!-- Grid Lines -->
-                <div
-                  v-for="hour in 9"
-                  :key="hour"
-                  class="absolute top-0 bottom-0 border-l border-gray-200/50 dark:border-slate-600/50 pointer-events-none"
-                  :style="{ left: `${(hour / 9) * 100}%` }"
-                ></div>
-
+              <div class="flex-1 h-24 relative">
                 <!-- Blocks -->
                 <div
                   v-for="schedule in group.schedules"
                   :key="schedule.id"
-                  class="absolute top-1 bottom-1 rounded-md border p-2 flex flex-col justify-center overflow-hidden cursor-pointer group/block shadow-sm transition-all hover:z-10 hover:shadow-md hover:scale-[1.02]"
+                  class="absolute top-1.5 bottom-1.5 p-2 flex flex-col justify-center overflow-hidden cursor-pointer shadow-sm transition-all hover:z-20 hover:shadow-md hover:-translate-y-0.5 group/block"
                   :class="[
                     getColorForSubject(schedule.subject),
                     hasConflict(schedule)
@@ -597,30 +603,32 @@ const getColorForSubject = (subject) => {
                   @click="startEdit(schedule)"
                 >
                   <div
-                    class="font-bold text-xs truncate leading-tight flex items-center gap-1"
+                    class="font-bold text-[11px] sm:text-xs truncate leading-tight flex items-center gap-1 mb-1"
                   >
                     <PhWarningCircle
                       v-if="hasConflict(schedule)"
-                      class="w-3.5 h-3.5 text-red-600 dark:text-red-400 shrink-0"
+                      class="w-3.5 h-3.5 text-yellow-300 shrink-0"
                       title="Jadwal Bentrok"
                     />
                     {{ schedule.subject }}
                   </div>
-                  <div class="text-[10px] opacity-80 truncate">
+                  <div
+                    class="text-[10px] font-medium opacity-90 truncate flex items-center gap-1 mb-0.5"
+                  >
+                    <PhClock class="w-3 h-3 shrink-0" />
                     {{ schedule.startTime }} - {{ schedule.endTime }}
                   </div>
-                  <div
-                    class="text-[10px] opacity-80 truncate hidden group-hover/block:block"
-                  >
+                  <div class="text-[10px] opacity-80 truncate flex items-center gap-1">
+                    <PhChalkboardTeacher class="w-3 h-3 shrink-0" />
                     {{ schedule.teacher }}
                   </div>
 
                   <!-- Floating Delete Button -->
                   <button
                     @click.stop="deleteEntry(schedule.id)"
-                    class="absolute top-1 right-1 p-0.5 rounded bg-white/50 hover:bg-red-500 hover:text-white text-gray-600 opacity-0 group-hover/block:opacity-100 transition-opacity"
+                    class="absolute top-1 right-1 p-1 rounded-md bg-black/20 hover:bg-red-500 text-white opacity-0 group-hover/block:opacity-100 transition-all"
                   >
-                    <PhTrash class="w-3 h-3" />
+                    <PhTrash class="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
