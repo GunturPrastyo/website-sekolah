@@ -23,6 +23,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  accept: {
+    type: String,
+    default: "image/*",
+  },
 });
 
 const emit = defineEmits(["update:modelValue", "file-selected"]);
@@ -40,16 +44,30 @@ const startMouseY = ref(0);
 const startPosX = ref(50);
 const startPosY = ref(50);
 
+const isVideo = ref(false);
+
+const checkIfVideo = (url) => {
+  if (url.startsWith("data:video")) {
+    isVideo.value = true;
+  } else if (url.match(/\.(mp4|webm|ogg)$/i)) {
+    isVideo.value = true;
+  } else {
+    isVideo.value = false;
+  }
+};
+
 // Sinkronisasi awal jika form diisi data dari API/Parent
 watch(
   () => props.modelValue,
   (newVal) => {
     if (newVal && !rawImage.value) {
       rawImage.value = newVal;
+      checkIfVideo(newVal);
       posX.value = 50;
       posY.value = 50;
     } else if (!newVal) {
       rawImage.value = "";
+      isVideo.value = false;
       posX.value = 50;
       posY.value = 50;
     }
@@ -93,6 +111,7 @@ const cropImage = () => {
 };
 
 const startDrag = (e) => {
+  if (isVideo.value) return;
   if (!rawImage.value || !rawImage.value.startsWith("data:")) return;
   isDraggingImage.value = true;
   startMouseX.value = e.clientX || e.touches?.[0]?.clientX;
@@ -102,6 +121,7 @@ const startDrag = (e) => {
 };
 
 const onDrag = (e) => {
+  if (isVideo.value) return;
   if (!isDraggingImage.value) return;
   if (e.cancelable) e.preventDefault(); // Mencegah halaman ikut scroll saat mengatur foto
 
@@ -127,18 +147,23 @@ const triggerInput = () => {
 };
 
 const handleFile = (file) => {
-  if (file && file.type.startsWith("image/")) {
+  if (file && (file.type.startsWith("image/") || file.type.startsWith("video/"))) {
     const reader = new FileReader();
     reader.onload = (e) => {
       rawImage.value = e.target.result;
       posX.value = 50; // Reset posisi ke tengah
       posY.value = 50;
-      cropImage();
+      checkIfVideo(rawImage.value);
+      if (!isVideo.value) {
+        cropImage();
+      } else {
+        emit("update:modelValue", rawImage.value);
+      }
       emit("file-selected", file); // Melempar file mentah jika ingin upload via API (FormData)
     };
     reader.readAsDataURL(file);
   } else {
-    alert("Harap unggah file berupa gambar yang valid.");
+    alert("Harap unggah file gambar atau video yang valid.");
   }
 };
 
@@ -157,6 +182,7 @@ const onDrop = (e) => {
 
 const removeImage = () => {
   rawImage.value = "";
+  isVideo.value = false;
   posX.value = 50;
   posY.value = 50;
   emit("update:modelValue", "");
@@ -202,23 +228,26 @@ const removeImage = () => {
         ]"
       >
         {{
-          isCircular
-            ? "Klik/Seret Foto"
-            : "Klik untuk mengunggah atau seret gambar ke sini"
+          isCircular ? "Klik/Seret Foto" : "Klik untuk mengunggah atau seret file ke sini"
         }}
       </p>
-      <p v-if="!isCircular" class="text-xs text-gray-500 dark:text-gray-400">
-        Format yang didukung: JPG, PNG, GIF, WEBP
+      <p
+        v-if="!isCircular"
+        class="text-xs text-gray-500 dark:text-gray-400 mt-1 px-4 leading-relaxed"
+      >
+        Format yang didukung:
+        {{ accept.includes("video") ? "JPG, PNG, MP4, WEBM" : "JPG, PNG, GIF, WEBP" }}
       </p>
     </div>
 
     <!-- Preview Gambar -->
     <div
       v-else
-      class="relative overflow-hidden shadow-sm border border-gray-200 dark:border-slate-700 group cursor-move"
+      class="relative overflow-hidden shadow-sm border border-gray-200 dark:border-slate-700 group"
       :class="[
         isCircular ? 'rounded-full aspect-square' : 'rounded-xl aspect-video',
         containerClass,
+        isVideo ? '' : 'cursor-move',
       ]"
       @mousedown="startDrag"
       @mousemove="onDrag"
@@ -228,7 +257,17 @@ const removeImage = () => {
       @touchmove="onDrag"
       @touchend="stopDrag"
     >
+      <video
+        v-if="isVideo"
+        :src="rawImage"
+        class="w-full h-full bg-gray-100 dark:bg-slate-800 object-cover"
+        autoplay
+        loop
+        muted
+        playsinline
+      ></video>
       <img
+        v-else
         :src="rawImage"
         alt="Preview Gambar"
         class="w-full h-full bg-gray-100 dark:bg-slate-800 object-cover pointer-events-none"
@@ -250,7 +289,7 @@ const removeImage = () => {
           @touchstart.stop
           @click.stop="triggerInput"
           class="p-2.5 bg-white/20 hover:bg-blue-600 text-white rounded-full transition-colors pointer-events-auto"
-          title="Ubah Gambar"
+          title="Ubah Media"
         >
           <PhImage class="w-5 h-5" />
         </button>
@@ -260,7 +299,7 @@ const removeImage = () => {
           @touchstart.stop
           @click.stop="removeImage"
           class="p-2.5 bg-white/20 hover:bg-red-600 text-white rounded-full transition-colors pointer-events-auto"
-          title="Hapus Gambar"
+          title="Hapus Media"
         >
           <PhTrash class="w-5 h-5" />
         </button>
@@ -272,7 +311,7 @@ const removeImage = () => {
         :class="isDraggingImage ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'"
       >
         <span
-          v-if="rawImage && rawImage.startsWith('data:')"
+          v-if="rawImage && rawImage.startsWith('data:') && !isVideo"
           class="bg-black/60 text-white text-[10px] px-2.5 py-1 rounded-md backdrop-blur-sm border border-white/10 shadow-sm"
           >Geser gambar untuk menyesuaikan</span
         >
@@ -282,7 +321,7 @@ const removeImage = () => {
     <input
       type="file"
       ref="fileInput"
-      accept="image/*"
+      :accept="accept"
       class="hidden"
       @change="onFileChange"
     />
