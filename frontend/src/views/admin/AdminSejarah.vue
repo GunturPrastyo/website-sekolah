@@ -23,6 +23,7 @@ const timeline = ref([
     year: "1985",
     title: "Pendirian & Peresmian SMAN 1",
     icon: "PhBuildings",
+    color: "text-blue-500",
     image: "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?q=80&w=800",
     description:
       "Sekolah ini resmi didirikan pada tanggal 17 Agustus 1985 berdasarkan SK Menteri Pendidikan. Pada awalnya, sekolah hanya memiliki 3 ruang kelas dengan 120 siswa angkatan pertama dan menumpang di gedung SMP terdekat selama proses pembangunan gedung utama berlangsung.",
@@ -32,6 +33,7 @@ const timeline = ref([
     year: "1992",
     title: "Pembangunan Gedung Utama",
     icon: "PhHammer",
+    color: "text-orange-500",
     image: "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=800",
     description:
       "Pembangunan gedung sekolah mandiri akhirnya selesai dan diresmikan oleh Gubernur. Di tahun ini, SMAN 1 mulai menempati lokasi saat ini dengan fasilitas yang diperluas, meliputi 12 ruang kelas, ruang guru, dan lapangan olahraga serbaguna.",
@@ -41,6 +43,7 @@ const timeline = ref([
     year: "2005",
     title: "Akreditasi A & Prestasi Nasional",
     icon: "PhMedal",
+    color: "text-yellow-500",
     image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800",
     description:
       "Berkat dedikasi seluruh civitas akademika, SMAN 1 berhasil meraih akreditasi A (Sangat Baik). Pada tahun yang sama, tim cerdas cermat sekolah berhasil membawa pulang piala Juara 1 tingkat Nasional untuk pertama kalinya.",
@@ -50,6 +53,7 @@ const timeline = ref([
     year: "2015",
     title: "Era Transformasi Digital",
     icon: "PhMonitor",
+    color: "text-teal-500",
     image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800",
     description:
       "Menjawab tantangan abad 21, sekolah mulai mengintegrasikan teknologi ke dalam pembelajaran. Pembangunan laboratorium komputer modern, perpustakaan digital, serta pengadaan proyektor dan Wi-Fi di seluruh area sekolah mulai direalisasikan.",
@@ -59,6 +63,7 @@ const timeline = ref([
     year: "2021",
     title: "Sekolah Adiwiyata & Peduli Lingkungan",
     icon: "PhLeaf",
+    color: "text-green-500",
     image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e736?q=80&w=800",
     description:
       "Berkomitmen pada lingkungan yang asri, sekolah memenangkan penghargaan Sekolah Adiwiyata tingkat Provinsi. Program bank sampah, taman hidroponik, dan ruang hijau terpadu menjadi identitas baru SMAN 1.",
@@ -68,6 +73,7 @@ const timeline = ref([
     year: "2026",
     title: "Pelopor Kurikulum Merdeka",
     icon: "PhRocket",
+    color: "text-purple-500",
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800",
     description:
       "Hari ini, SMAN 1 Nogosari terus melesat menjadi sekolah percontohan dalam implementasi Kurikulum Merdeka. Dengan lebih dari 1100 siswa, kami terus melahirkan lulusan yang cerdas, berkarakter, dan berdaya saing global.",
@@ -92,6 +98,7 @@ const form = ref({
   year: "",
   title: "",
   icon: "PhBuildings", // Default icon
+  color: "text-blue-500",
   description: "",
 });
 
@@ -117,6 +124,7 @@ const resetForm = () => {
     year: "",
     title: "",
     icon: "PhBuildings",
+    color: "text-blue-500",
     description: "",
   };
   isEditing.value = false;
@@ -175,6 +183,7 @@ const startEdit = (entry) => {
   isEditing.value = true;
   form.value = {
     ...entry,
+    color: entry.color || "text-blue-500",
   };
   isFormVisible.value = true; // Show form for editing
   document.body.style.overflow = "hidden";
@@ -583,7 +592,7 @@ const filteredTimeline = computed(() => {
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                   >Ikon Representasi</label
                 >
-                <IconPicker v-model="form.icon" />
+                <IconPicker v-model="form.icon" v-model:colorValue="form.color" />
               </div>
 
               <div class="mb-2">
@@ -681,7 +690,8 @@ const filteredTimeline = computed(() => {
             />
             <component
               :is="educationIcons[entry.icon]"
-              class="w-6 h-6 text-blue-500 shrink-0 mt-0.5"
+              class="w-6 h-6 shrink-0 mt-0.5"
+              :class="entry.color || 'text-blue-500'"
             />
             <div class="flex-1 overflow-hidden">
               <p class="font-semibold text-gray-800 dark:text-white">
