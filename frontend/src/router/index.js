@@ -135,6 +135,11 @@ const router = createRouter({
           component: () => import('../views/admin/AdminProgramJurusan.vue')
         },
         {
+          path: 'jadwal-pelajaran',
+          name: 'admin-jadwal-pelajaran',
+          component: () => import('../views/admin/AdminJadwalPelajaran.vue')
+        },
+        {
           path: 'ekstrakurikuler',
           name: 'admin-ekstrakurikuler',
           component: () => import('../views/admin/AdminEkstrakurikuler.vue')
