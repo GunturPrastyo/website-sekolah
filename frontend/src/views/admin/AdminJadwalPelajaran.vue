@@ -123,6 +123,19 @@ const hideForm = () => {
   document.body.style.overflow = "";
 };
 
+const normalizeTime = (timeStr) => {
+  if (!timeStr) return "";
+  let normalized = timeStr.replace(".", ":");
+  // Tambahkan nol di depan jika formatnya misal "7:00" -> "07:00"
+  const parts = normalized.split(":");
+  if (parts.length === 2) {
+    const h = parts[0].padStart(2, "0");
+    const m = parts[1].padStart(2, "0");
+    return `${h}:${m}`;
+  }
+  return normalized;
+};
+
 const checkConflict = (schedule) => {
   return scheduleList.value.some((s) => {
     if (schedule.id && s.id === schedule.id) return false;
@@ -161,6 +174,10 @@ const addEntry = () => {
     triggerToast("Gagal Menyimpan", "Mohon lengkapi semua kolom form!", "error");
     return;
   }
+
+  form.value.startTime = normalizeTime(form.value.startTime);
+  form.value.endTime = normalizeTime(form.value.endTime);
+
   if (checkConflict(form.value)) {
     triggerToast(
       "Gagal Menyimpan",
@@ -183,7 +200,11 @@ const addEntry = () => {
 
 const startEdit = (item) => {
   isEditing.value = true;
-  form.value = { ...item };
+  form.value = {
+    ...item,
+    startTime: item.startTime,
+    endTime: item.endTime,
+  };
   isFormVisible.value = true;
   document.body.style.overflow = "hidden";
 };
@@ -198,6 +219,10 @@ const saveEntry = () => {
     triggerToast("Gagal Menyimpan", "Mohon lengkapi semua kolom form!", "error");
     return;
   }
+
+  form.value.startTime = normalizeTime(form.value.startTime);
+  form.value.endTime = normalizeTime(form.value.endTime);
+
   if (checkConflict(form.value)) {
     triggerToast(
       "Gagal Menyimpan",
@@ -303,28 +328,52 @@ const getBlockStyle = (startTime, endTime) => {
 
 const groupedSchedule = computed(() => {
   const filtered = scheduleList.value.filter((s) => s.className === activeClass.value);
-  return days.map((d) => ({
-    day: d,
-    schedules: filtered.filter((s) => s.day === d),
-  }));
-});
 
-const getColorForSubject = (subject) => {
-  if (!subject) return "bg-gray-500/95 backdrop-blur-sm text-white dark:bg-gray-600/95";
+  // Palet analogous (berdekatan) untuk estetika teori warna yang harmonis dan modern
   const colors = [
-    "bg-blue-600/95 backdrop-blur-sm text-white hover:bg-blue-700 dark:bg-blue-500/95 dark:hover:bg-blue-600",
-    "bg-emerald-600/95 backdrop-blur-sm text-white hover:bg-emerald-700 dark:bg-emerald-500/95 dark:hover:bg-emerald-600",
-    "bg-purple-600/95 backdrop-blur-sm text-white hover:bg-purple-700 dark:bg-purple-500/95 dark:hover:bg-purple-600",
-    "bg-amber-600/95 backdrop-blur-sm text-white hover:bg-amber-700 dark:bg-amber-500/95 dark:hover:bg-amber-600",
-    "bg-rose-600/95 backdrop-blur-sm text-white hover:bg-rose-700 dark:bg-rose-500/95 dark:hover:bg-rose-600",
-    "bg-indigo-600/95 backdrop-blur-sm text-white hover:bg-indigo-700 dark:bg-indigo-500/95 dark:hover:bg-indigo-600",
+    "bg-teal-500/95 backdrop-blur-sm text-white hover:bg-teal-600 dark:bg-teal-600/95 dark:hover:bg-teal-700",
+    "bg-cyan-500/95 backdrop-blur-sm text-white hover:bg-cyan-600 dark:bg-cyan-600/95 dark:hover:bg-cyan-700",
+    "bg-sky-500/95 backdrop-blur-sm text-white hover:bg-sky-600 dark:bg-sky-600/95 dark:hover:bg-sky-700",
+    "bg-blue-500/95 backdrop-blur-sm text-white hover:bg-blue-600 dark:bg-blue-600/95 dark:hover:bg-blue-700",
+    "bg-indigo-500/95 backdrop-blur-sm text-white hover:bg-indigo-600 dark:bg-indigo-600/95 dark:hover:bg-indigo-700",
+    "bg-violet-500/95 backdrop-blur-sm text-white hover:bg-violet-600 dark:bg-violet-600/95 dark:hover:bg-violet-700",
   ];
-  let hash = 0;
-  for (let i = 0; i < subject.length; i++) {
-    hash = subject.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  return colors[Math.abs(hash) % colors.length];
-};
+
+  return days.map((d) => {
+    const daySchedules = filtered
+      .filter((s) => s.day === d)
+      .sort((a, b) => a.startTime.localeCompare(b.startTime)); // Urutkan berdasarkan waktu
+
+    let prevColorIndex = -1;
+
+    const schedulesWithColor = daySchedules.map((schedule) => {
+      let hash = 0;
+      const subject = schedule.subject || "";
+      for (let i = 0; i < subject.length; i++) {
+        hash = subject.charCodeAt(i) + ((hash << 5) - hash);
+      }
+
+      let colorIndex = Math.abs(hash) % colors.length;
+
+      // Apabila indeks warna sama dengan warna pada blok sebelumnya, ubah warnanya
+      if (colorIndex === prevColorIndex) {
+        colorIndex = (colorIndex + 1) % colors.length;
+      }
+
+      prevColorIndex = colorIndex;
+
+      return {
+        ...schedule,
+        colorClass: colors[colorIndex],
+      };
+    });
+
+    return {
+      day: d,
+      schedules: schedulesWithColor,
+    };
+  });
+});
 </script>
 
 <template>
@@ -566,7 +615,7 @@ const getColorForSubject = (subject) => {
               <span
                 class="absolute -top-7 -translate-x-1/2 text-[10px] font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-700 px-2 py-0.5 rounded border border-gray-200 dark:border-slate-600 shadow-sm"
               >
-                {{ String(hour + 6).padStart(2, "0") }}:00
+                {{ String(hour + 6).padStart(2, "0") }}.00
               </span>
             </div>
             <!-- Last grid line text -->
@@ -574,7 +623,7 @@ const getColorForSubject = (subject) => {
               <span
                 class="absolute -top-7 -translate-x-1/2 text-[10px] font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-700 px-2 py-0.5 rounded border border-gray-200 dark:border-slate-600 shadow-sm"
               >
-                16:00
+                16.00
               </span>
             </div>
           </div>
@@ -603,7 +652,7 @@ const getColorForSubject = (subject) => {
                   :key="schedule.id"
                   class="absolute top-2 bottom-2 p-2.5 rounded-lg border border-white/20 dark:border-white/10 flex flex-col justify-center overflow-hidden cursor-pointer shadow-sm transition-all hover:z-20 hover:shadow-md hover:-translate-y-0.5 group/block"
                   :class="[
-                    getColorForSubject(schedule.subject),
+                    schedule.colorClass,
                     hasConflict(schedule)
                       ? 'ring-2 ring-red-500 ring-offset-1 dark:ring-offset-slate-800'
                       : '',
@@ -625,7 +674,8 @@ const getColorForSubject = (subject) => {
                     class="text-[10px] font-medium opacity-90 truncate flex items-center gap-1 mb-0.5"
                   >
                     <PhClock class="w-3 h-3 shrink-0" />
-                    {{ schedule.startTime }} - {{ schedule.endTime }}
+                    {{ schedule.startTime.replace(":", ".") }} -
+                    {{ schedule.endTime.replace(":", ".") }}
                   </div>
                   <div class="text-[10px] opacity-80 truncate flex items-center gap-1">
                     <PhChalkboardTeacher class="w-3 h-3 shrink-0" />
@@ -740,7 +790,8 @@ const getColorForSubject = (subject) => {
                   class="flex items-center text-sm text-blue-600 dark:text-blue-400 font-medium"
                 >
                   <PhClock class="w-4 h-4 mr-1.5" />
-                  {{ schedule.startTime }} - {{ schedule.endTime }}
+                  {{ schedule.startTime.replace(":", ".") }} -
+                  {{ schedule.endTime.replace(":", ".") }}
                 </div>
               </td>
               <td class="px-6 py-4">
