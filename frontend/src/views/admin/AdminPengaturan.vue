@@ -40,6 +40,7 @@ const generalSettings = ref({
 
 // State Tampilan
 const appearanceSettings = ref({
+  headerBeranda: "/img/banner1.jpg",
   headerSejarah:
     "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?q=80&w=1600",
   headerVisiMisi:
@@ -292,6 +293,20 @@ const saveSettings = () => {
           <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
             Atur gambar banner/header untuk masing-masing halaman website utama.
           </p>
+
+          <div
+            class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30 mb-6"
+          >
+            <ImageUploader
+              v-model="appearanceSettings.headerBeranda"
+              label="Banner Beranda Utama"
+              accept="image/*,video/mp4,video/webm"
+              containerClass="w-full aspect-[16/9] md:aspect-[21/9]"
+            />
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              Mendukung format gambar (JPG/PNG) dan video (MP4/WebM).
+            </p>
+          </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             <div
