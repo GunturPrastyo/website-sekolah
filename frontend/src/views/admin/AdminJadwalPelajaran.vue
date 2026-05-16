@@ -69,8 +69,8 @@ const form = ref({
   id: null,
   className: "X MIPA 1",
   day: "Senin",
-  startTime: "",
-  endTime: "",
+  startTime: "07:00",
+  endTime: "08:30",
   subject: "",
   teacher: "",
 });
@@ -90,6 +90,41 @@ const filterClass = ref("semua");
 const filterDay = ref("semua");
 const filterTeacher = ref("semua");
 
+const hours = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"));
+const minutes = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, "0"));
+
+const formStartHour = computed({
+  get: () => (form.value.startTime ? form.value.startTime.split(":")[0] : "07"),
+  set: (val) => {
+    const currentM = form.value.startTime ? form.value.startTime.split(":")[1] : "00";
+    form.value.startTime = `${val}:${currentM}`;
+  },
+});
+
+const formStartMinute = computed({
+  get: () => (form.value.startTime ? form.value.startTime.split(":")[1] : "00"),
+  set: (val) => {
+    const currentH = form.value.startTime ? form.value.startTime.split(":")[0] : "07";
+    form.value.startTime = `${currentH}:${val}`;
+  },
+});
+
+const formEndHour = computed({
+  get: () => (form.value.endTime ? form.value.endTime.split(":")[0] : "08"),
+  set: (val) => {
+    const currentM = form.value.endTime ? form.value.endTime.split(":")[1] : "30";
+    form.value.endTime = `${val}:${currentM}`;
+  },
+});
+
+const formEndMinute = computed({
+  get: () => (form.value.endTime ? form.value.endTime.split(":")[1] : "30"),
+  set: (val) => {
+    const currentH = form.value.endTime ? form.value.endTime.split(":")[0] : "08";
+    form.value.endTime = `${currentH}:${val}`;
+  },
+});
+
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };
   showToast.value = true;
@@ -103,8 +138,8 @@ const resetForm = () => {
     id: null,
     className: "X MIPA 1",
     day: "Senin",
-    startTime: "",
-    endTime: "",
+    startTime: "07:00",
+    endTime: "08:30",
     subject: "",
     teacher: "",
   };
@@ -499,12 +534,40 @@ const groupedSchedule = computed(() => {
                   >
                     Waktu Mulai
                   </label>
-                  <input
-                    type="time"
-                    v-model="form.startTime"
-                    required
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                  />
+                  <div
+                    class="flex items-center justify-between w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-colors"
+                  >
+                    <div class="flex items-center">
+                      <select
+                        v-model="formStartHour"
+                        class="bg-transparent border-none appearance-none outline-none focus:ring-0 p-0 m-0 cursor-pointer text-center font-medium hover:text-blue-600 transition-colors"
+                      >
+                        <option
+                          v-for="h in hours"
+                          :key="h"
+                          :value="h"
+                          class="text-gray-900 dark:text-white bg-white dark:bg-slate-700"
+                        >
+                          {{ h }}
+                        </option>
+                      </select>
+                      <span class="mx-1 font-bold">:</span>
+                      <select
+                        v-model="formStartMinute"
+                        class="bg-transparent border-none appearance-none outline-none focus:ring-0 p-0 m-0 cursor-pointer text-center font-medium hover:text-blue-600 transition-colors"
+                      >
+                        <option
+                          v-for="m in minutes"
+                          :key="m"
+                          :value="m"
+                          class="text-gray-900 dark:text-white bg-white dark:bg-slate-700"
+                        >
+                          {{ m }}
+                        </option>
+                      </select>
+                    </div>
+                    <PhClock class="w-5 h-5 text-gray-400 pointer-events-none" />
+                  </div>
                 </div>
 
                 <div>
@@ -513,12 +576,40 @@ const groupedSchedule = computed(() => {
                   >
                     Waktu Selesai
                   </label>
-                  <input
-                    type="time"
-                    v-model="form.endTime"
-                    required
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                  />
+                  <div
+                    class="flex items-center justify-between w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-colors"
+                  >
+                    <div class="flex items-center">
+                      <select
+                        v-model="formEndHour"
+                        class="bg-transparent border-none appearance-none outline-none focus:ring-0 p-0 m-0 cursor-pointer text-center font-medium hover:text-blue-600 transition-colors"
+                      >
+                        <option
+                          v-for="h in hours"
+                          :key="h"
+                          :value="h"
+                          class="text-gray-900 dark:text-white bg-white dark:bg-slate-700"
+                        >
+                          {{ h }}
+                        </option>
+                      </select>
+                      <span class="mx-1 font-bold">:</span>
+                      <select
+                        v-model="formEndMinute"
+                        class="bg-transparent border-none appearance-none outline-none focus:ring-0 p-0 m-0 cursor-pointer text-center font-medium hover:text-blue-600 transition-colors"
+                      >
+                        <option
+                          v-for="m in minutes"
+                          :key="m"
+                          :value="m"
+                          class="text-gray-900 dark:text-white bg-white dark:bg-slate-700"
+                        >
+                          {{ m }}
+                        </option>
+                      </select>
+                    </div>
+                    <PhClock class="w-5 h-5 text-gray-400 pointer-events-none" />
+                  </div>
                 </div>
 
                 <div class="md:col-span-2">
