@@ -76,7 +76,7 @@ const form = ref({
 });
 
 const viewMode = ref("timeline"); // 'timeline' or 'table'
-const activeDay = ref("Senin");
+const activeClass = ref("X MIPA 1");
 
 const isFormVisible = ref(false);
 const isEditing = ref(false);
@@ -292,10 +292,10 @@ const getBlockStyle = (startTime, endTime) => {
 };
 
 const groupedSchedule = computed(() => {
-  const filtered = scheduleList.value.filter((s) => s.day === activeDay.value);
-  return classes.map((c) => ({
-    className: c,
-    schedules: filtered.filter((s) => s.className === c),
+  const filtered = scheduleList.value.filter((s) => s.className === activeClass.value);
+  return days.map((d) => ({
+    day: d,
+    schedules: filtered.filter((s) => s.day === d),
   }));
 });
 
@@ -526,17 +526,17 @@ const getColorForSubject = (subject) => {
     >
       <div class="flex gap-2 mb-8 overflow-x-auto pb-2 custom-scrollbar">
         <button
-          v-for="day in days"
-          :key="day"
-          @click="activeDay = day"
+          v-for="className in classes"
+          :key="className"
+          @click="activeClass = className"
           class="px-5 py-2.5 rounded-lg font-semibold whitespace-nowrap transition-colors border text-sm"
           :class="
-            activeDay === day
+            activeClass === className
               ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
               : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100 hover:text-blue-600 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-600 dark:hover:text-blue-400'
           "
         >
-          {{ day }}
+          {{ className }}
         </button>
       </div>
 
@@ -575,15 +575,14 @@ const getColorForSubject = (subject) => {
           >
             <div
               v-for="group in groupedSchedule"
-              :key="group.className"
+              :key="group.day"
               class="flex items-stretch relative group/row hover:bg-blue-50/30 dark:hover:bg-slate-700/30 transition-colors"
             >
-              <!-- Class Name -->
+              <!-- Day Name -->
               <div
                 class="w-[140px] shrink-0 font-bold text-gray-700 dark:text-gray-300 text-sm flex items-center pl-4 py-6 bg-gray-50/50 dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700"
               >
-                <div class="w-2.5 h-2.5 rounded-full bg-blue-500 mr-2.5 shadow-sm"></div>
-                {{ group.className }}
+                {{ group.day }}
               </div>
 
               <!-- Schedule Blocks Area -->
