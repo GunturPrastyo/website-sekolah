@@ -88,6 +88,7 @@ const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
 const filterClass = ref("semua");
 const filterDay = ref("semua");
+const filterTeacher = ref("semua");
 
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };
@@ -239,6 +240,11 @@ const cancelDelete = () => {
   isDeleteModalOpen.value = false;
 };
 
+const uniqueTeachers = computed(() => {
+  const teachers = new Set(scheduleList.value.map((s) => s.teacher));
+  return Array.from(teachers).sort();
+});
+
 const filteredSchedule = computed(() => {
   let result = scheduleList.value;
 
@@ -248,6 +254,10 @@ const filteredSchedule = computed(() => {
 
   if (filterDay.value !== "semua") {
     result = result.filter((item) => item.day === filterDay.value);
+  }
+
+  if (filterTeacher.value !== "semua") {
+    result = result.filter((item) => item.teacher === filterTeacher.value);
   }
 
   if (searchQuery.value) {
@@ -672,6 +682,15 @@ const getColorForSubject = (subject) => {
           >
             <option value="semua">Semua Hari</option>
             <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
+          </select>
+          <select
+            v-model="filterTeacher"
+            class="block w-full sm:w-48 px-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm cursor-pointer"
+          >
+            <option value="semua">Semua Guru</option>
+            <option v-for="teacher in uniqueTeachers" :key="teacher" :value="teacher">
+              {{ teacher }}
+            </option>
           </select>
         </div>
       </div>
