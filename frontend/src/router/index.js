@@ -193,6 +193,11 @@ const router = createRouter({
           path: 'agenda',
           name: 'admin-agenda',
           component: () => import('../views/admin/AdminAgenda.vue')
+        },
+        {
+          path: 'pengaturan',
+          name: 'admin-pengaturan',
+          component: () => import('../views/admin/AdminPengaturan.vue')
         }
         
       ]

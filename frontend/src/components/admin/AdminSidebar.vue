@@ -88,7 +88,7 @@ const menu = ref([
   },
 
   { name: "Pengguna Sistem", icon: markRaw(PhUsers), link: "/admin/pengguna" },
-  { name: "Pengaturan Umum", icon: markRaw(PhGear), link: "#" },
+  { name: "Pengaturan Umum", icon: markRaw(PhGear), link: "/admin/pengaturan" },
 ]);
 
 const checkActiveMenu = () => {
