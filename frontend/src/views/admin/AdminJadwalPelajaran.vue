@@ -546,7 +546,7 @@ const getColorForSubject = (subject) => {
         >
           <!-- Background Grid Lines -->
           <div
-            class="absolute top-0 bottom-0 left-[140px] right-0 pointer-events-none flex"
+            class="absolute top-0 bottom-0 left-[100px] right-0 pointer-events-none flex"
           >
             <div
               v-for="hour in 9"
@@ -580,7 +580,7 @@ const getColorForSubject = (subject) => {
             >
               <!-- Day Name -->
               <div
-                class="w-[140px] shrink-0 font-bold text-gray-700 dark:text-gray-300 text-sm flex items-center pl-4 py-6 border-r border-gray-200 dark:border-slate-700"
+                class="w-[100px] shrink-0 font-bold text-gray-700 dark:text-gray-300 text-sm flex items-center pl-4 py-6 border-r border-gray-200 dark:border-slate-700"
               >
                 {{ group.day }}
               </div>
