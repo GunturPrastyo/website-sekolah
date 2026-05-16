@@ -300,14 +300,14 @@ const groupedSchedule = computed(() => {
 });
 
 const getColorForSubject = (subject) => {
-  if (!subject) return "bg-gray-500 text-white dark:bg-gray-600";
+  if (!subject) return "bg-gray-500/95 backdrop-blur-sm text-white dark:bg-gray-600/95";
   const colors = [
-    "bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600",
-    "bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600",
-    "bg-purple-600 text-white hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600",
-    "bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600",
-    "bg-rose-600 text-white hover:bg-rose-700 dark:bg-rose-500 dark:hover:bg-rose-600",
-    "bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600",
+    "bg-blue-600/95 backdrop-blur-sm text-white hover:bg-blue-700 dark:bg-blue-500/95 dark:hover:bg-blue-600",
+    "bg-emerald-600/95 backdrop-blur-sm text-white hover:bg-emerald-700 dark:bg-emerald-500/95 dark:hover:bg-emerald-600",
+    "bg-purple-600/95 backdrop-blur-sm text-white hover:bg-purple-700 dark:bg-purple-500/95 dark:hover:bg-purple-600",
+    "bg-amber-600/95 backdrop-blur-sm text-white hover:bg-amber-700 dark:bg-amber-500/95 dark:hover:bg-amber-600",
+    "bg-rose-600/95 backdrop-blur-sm text-white hover:bg-rose-700 dark:bg-rose-500/95 dark:hover:bg-rose-600",
+    "bg-indigo-600/95 backdrop-blur-sm text-white hover:bg-indigo-700 dark:bg-indigo-500/95 dark:hover:bg-indigo-600",
   ];
   let hash = 0;
   for (let i = 0; i < subject.length; i++) {
@@ -551,7 +551,7 @@ const getColorForSubject = (subject) => {
             <div
               v-for="hour in 9"
               :key="'grid-' + hour"
-              class="flex-1 border-r border-gray-200 border-dashed dark:border-slate-700 relative"
+              class="flex-1 border-r border-gray-200/70 border-dashed dark:border-slate-700/70 relative"
             >
               <span
                 class="absolute -top-7 -translate-x-1/2 text-[10px] font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-700 px-2 py-0.5 rounded border border-gray-200 dark:border-slate-600 shadow-sm"
@@ -576,11 +576,11 @@ const getColorForSubject = (subject) => {
             <div
               v-for="group in groupedSchedule"
               :key="group.day"
-              class="flex items-stretch relative group/row hover:bg-blue-50/30 dark:hover:bg-slate-700/30 transition-colors"
+              class="flex items-stretch relative group/row hover:bg-blue-50/50 dark:hover:bg-slate-700/50 transition-colors even:bg-gray-50/40 dark:even:bg-slate-800/40"
             >
               <!-- Day Name -->
               <div
-                class="w-[140px] shrink-0 font-bold text-gray-700 dark:text-gray-300 text-sm flex items-center pl-4 py-6 bg-gray-50/50 dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700"
+                class="w-[140px] shrink-0 font-bold text-gray-700 dark:text-gray-300 text-sm flex items-center pl-4 py-6 border-r border-gray-200 dark:border-slate-700"
               >
                 {{ group.day }}
               </div>
@@ -591,7 +591,7 @@ const getColorForSubject = (subject) => {
                 <div
                   v-for="schedule in group.schedules"
                   :key="schedule.id"
-                  class="absolute top-1.5 bottom-1.5 p-2 flex flex-col justify-center overflow-hidden cursor-pointer shadow-sm transition-all hover:z-20 hover:shadow-md hover:-translate-y-0.5 group/block"
+                  class="absolute top-2 bottom-2 p-2.5 rounded-lg border border-white/20 dark:border-white/10 flex flex-col justify-center overflow-hidden cursor-pointer shadow-sm transition-all hover:z-20 hover:shadow-md hover:-translate-y-0.5 group/block"
                   :class="[
                     getColorForSubject(schedule.subject),
                     hasConflict(schedule)
