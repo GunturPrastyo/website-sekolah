@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import {
   PhGear,
   PhImage,
@@ -29,18 +29,22 @@ const generalSettings = ref({
   namaSekolah: "SMAN 1 Nogosari",
   deskripsi: "Pendidikan berkualitas berfokus pada pembentukan karakter",
   alamat: "Nogosari, Kab. Boyolali, Jawa Tengah",
+  embedMap:
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.5103639967265!2d110.79379!3d-7.4682055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMjgnMDUuNSJTIDExMMKwNDcnMzcuNiJF!5e0!3m2!1sen!2sid!4v1620000000000!5m2!1sen!2sid",
   email: "info@sman1nogosari.sch.id",
   telepon: "(0276) 123456",
   instagram: "@sman1nogosari",
   youtube: "SMAN 1 Nogosari Official",
   facebook: "SMAN 1 Nogosari",
+  x: "@sman1nogosari",
+  tiktok: "@sman1nogosari",
   logo: "",
   favicon: "",
 });
 
 // State Tampilan
 const appearanceSettings = ref({
-  headerBeranda: "/img/banner1.jpg",
+  headerBeranda: "/img/footage.webm",
   headerSejarah:
     "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?q=80&w=1600",
   headerVisiMisi:
@@ -85,7 +89,21 @@ const removeCategory = (type, index) => {
   triggerToast("Dihapus", "Kategori dihapus", "info");
 };
 
+const isMapUrlValid = computed(() => {
+  const url = generalSettings.value.embedMap;
+  if (!url) return true;
+  return url.startsWith("https://www.google.com/maps/embed");
+});
+
 const saveSettings = () => {
+  if (!isMapUrlValid.value) {
+    triggerToast(
+      "Gagal Menyimpan",
+      "Link Embed Map tidak valid. Pastikan menggunakan URL dari iframe Google Maps.",
+      "error"
+    );
+    return;
+  }
   triggerToast("Tersimpan", "Pengaturan berhasil disimpan", "success");
 };
 </script>
@@ -172,7 +190,7 @@ const saveSettings = () => {
               <input
                 type="text"
                 v-model="generalSettings.namaSekolah"
-                class="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               />
             </div>
             <div>
@@ -183,8 +201,50 @@ const saveSettings = () => {
               <textarea
                 v-model="generalSettings.alamat"
                 rows="2"
-                class="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               ></textarea>
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >Link Embed Map (Lokasi)</label
+              >
+              <textarea
+                v-model="generalSettings.embedMap"
+                rows="3"
+                class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all mb-1"
+                :class="
+                  !isMapUrlValid && generalSettings.embedMap
+                    ? 'border-red-500 ring-2 ring-red-500 focus:ring-red-500 focus:border-red-500'
+                    : ''
+                "
+                placeholder="Masukkan URL dari atribut src iframe Google Maps..."
+              ></textarea>
+              <p
+                v-if="!isMapUrlValid && generalSettings.embedMap"
+                class="text-xs text-red-500 mb-2 font-medium"
+              >
+                URL tidak valid. Harus diawali dengan https://www.google.com/maps/embed
+              </p>
+              <div
+                class="h-56 w-full rounded-xl overflow-hidden border-4 border-gray-100 dark:border-slate-700/50 bg-gray-50 dark:bg-slate-800/50 mt-2 shadow-sm"
+              >
+                <iframe
+                  v-if="generalSettings.embedMap"
+                  :src="generalSettings.embedMap"
+                  width="100%"
+                  height="100%"
+                  style="border: 0"
+                  allowfullscreen=""
+                  loading="lazy"
+                ></iframe>
+                <div
+                  v-else
+                  class="flex items-center justify-center w-full h-full text-gray-400 text-sm"
+                >
+                  Preview Peta
+                </div>
+              </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -195,7 +255,7 @@ const saveSettings = () => {
                 <input
                   type="email"
                   v-model="generalSettings.email"
-                  class="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 />
               </div>
               <div>
@@ -206,7 +266,7 @@ const saveSettings = () => {
                 <input
                   type="text"
                   v-model="generalSettings.telepon"
-                  class="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 />
               </div>
             </div>
@@ -225,7 +285,7 @@ const saveSettings = () => {
                 <input
                   type="text"
                   v-model="generalSettings.instagram"
-                  class="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   placeholder="@username"
                 />
               </div>
@@ -237,7 +297,7 @@ const saveSettings = () => {
                 <input
                   type="text"
                   v-model="generalSettings.facebook"
-                  class="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 />
               </div>
               <div>
@@ -248,7 +308,29 @@ const saveSettings = () => {
                 <input
                   type="text"
                   v-model="generalSettings.youtube"
-                  class="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >X (Twitter)</label
+                >
+                <input
+                  type="text"
+                  v-model="generalSettings.x"
+                  class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >TikTok</label
+                >
+                <input
+                  type="text"
+                  v-model="generalSettings.tiktok"
+                  class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 />
               </div>
             </div>
@@ -374,7 +456,7 @@ const saveSettings = () => {
                 v-model="newCategory.berita"
                 @keyup.enter="addCategory('berita')"
                 placeholder="Tambah kategori berita..."
-                class="flex-1 px-3 py-2 border rounded-lg bg-white dark:bg-slate-700 dark:border-slate-600 dark:text-white text-sm focus:ring-blue-500 focus:border-blue-500"
+                class="flex-1 px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
               />
               <button
                 @click="addCategory('berita')"
@@ -419,7 +501,7 @@ const saveSettings = () => {
                 v-model="newCategory.galeri"
                 @keyup.enter="addCategory('galeri')"
                 placeholder="Tambah kategori galeri..."
-                class="flex-1 px-3 py-2 border rounded-lg bg-white dark:bg-slate-700 dark:border-slate-600 dark:text-white text-sm focus:ring-blue-500 focus:border-blue-500"
+                class="flex-1 px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
               />
               <button
                 @click="addCategory('galeri')"
@@ -464,7 +546,7 @@ const saveSettings = () => {
                 v-model="newCategory.jabatan"
                 @keyup.enter="addCategory('jabatan')"
                 placeholder="Tambah posisi/jabatan..."
-                class="flex-1 px-3 py-2 border rounded-lg bg-white dark:bg-slate-700 dark:border-slate-600 dark:text-white text-sm focus:ring-blue-500 focus:border-blue-500"
+                class="flex-1 px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
               />
               <button
                 @click="addCategory('jabatan')"
