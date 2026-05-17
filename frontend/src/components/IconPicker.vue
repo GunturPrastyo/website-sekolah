@@ -127,63 +127,63 @@ const colors = [
     text: "text-blue-500",
     bg: "bg-blue-500",
     active:
-      "bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 ring-blue-500 border-blue-500",
+      "bg-blue-600 dark:bg-blue-500 text-white border-transparent",
   },
   {
     name: "Merah",
     text: "text-red-500",
     bg: "bg-red-500",
     active:
-      "bg-red-100 dark:bg-red-900/60 text-red-600 dark:text-red-400 ring-red-500 border-red-500",
+      "bg-red-600 dark:bg-red-500 text-white border-transparent",
   },
   {
     name: "Hijau",
     text: "text-green-500",
     bg: "bg-green-500",
     active:
-      "bg-green-100 dark:bg-green-900/60 text-green-600 dark:text-green-400 ring-green-500 border-green-500",
+      "bg-green-600 dark:bg-green-500 text-white border-transparent",
   },
   {
     name: "Kuning",
     text: "text-yellow-500",
     bg: "bg-yellow-500",
     active:
-      "bg-yellow-100 dark:bg-yellow-900/60 text-yellow-600 dark:text-yellow-400 ring-yellow-500 border-yellow-500",
+      "bg-yellow-500 dark:bg-yellow-600 text-white border-transparent",
   },
   {
     name: "Ungu",
     text: "text-purple-500",
     bg: "bg-purple-500",
     active:
-      "bg-purple-100 dark:bg-purple-900/60 text-purple-600 dark:text-purple-400 ring-purple-500 border-purple-500",
+      "bg-purple-600 dark:bg-purple-500 text-white border-transparent",
   },
   {
     name: "Jingga",
     text: "text-orange-500",
     bg: "bg-orange-500",
     active:
-      "bg-orange-100 dark:bg-orange-900/60 text-orange-600 dark:text-orange-400 ring-orange-500 border-orange-500",
+      "bg-orange-500 dark:bg-orange-600 text-white border-transparent",
   },
   {
     name: "Merah Muda",
     text: "text-pink-500",
     bg: "bg-pink-500",
     active:
-      "bg-pink-100 dark:bg-pink-900/60 text-pink-600 dark:text-pink-400 ring-pink-500 border-pink-500",
+      "bg-pink-600 dark:bg-pink-500 text-white border-transparent",
   },
   {
     name: "Teal",
     text: "text-teal-500",
     bg: "bg-teal-500",
     active:
-      "bg-teal-100 dark:bg-teal-900/60 text-teal-600 dark:text-teal-400 ring-teal-500 border-teal-500",
+      "bg-teal-600 dark:bg-teal-500 text-white border-transparent",
   },
   {
     name: "Abu-abu",
     text: "text-gray-500",
     bg: "bg-gray-500",
     active:
-      "bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 ring-gray-500 border-gray-500",
+      "bg-gray-600 dark:bg-gray-500 text-white border-transparent",
   },
 ];
 
@@ -191,7 +191,7 @@ const activeClasses = computed(() => {
   const found = colors.find((c) => c.text === props.colorValue);
   return found
     ? found.active
-    : "bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 ring-blue-500 border-blue-500";
+    : "bg-blue-600 dark:bg-blue-500 text-white border-transparent";
 });
 
 const selectedIconComponent = computed(() => educationIcons[props.modelValue]);
