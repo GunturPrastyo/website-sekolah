@@ -9,7 +9,6 @@ import {
   PhRocket,
   PhCheckCircle,
   PhHash,
-  PhCalendar,
   PhMapPin,
 } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
@@ -153,18 +152,6 @@ onBeforeUnmount(() => {
               alt="Gedung Sekolah"
             />
             <div class="absolute inset-0 bg-blue-900/20 mix-blend-multiply"></div>
-            <!-- Badge Overlay -->
-            <div
-              class="absolute bottom-3 md:bottom-4 left-3 md:left-4 bg-blue-600 dark:bg-blue-500 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl shadow-lg hover:scale-105 hover:bg-blue-800 dark:hover:bg-blue-700 transition-all duration-300"
-            >
-              <span
-                class="text-white font-bold text-sm md:text-base flex items-center tracking-wide"
-                style="font-family: 'Kalam', cursive"
-              >
-                <PhCheckCircle class="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5" />
-                Terakreditasi A <span class="hidden sm:inline ml-1">(Sangat Baik)</span>
-              </span>
-            </div>
           </div>
 
           <!-- Info & Fakta -->
@@ -204,14 +191,14 @@ onBeforeUnmount(() => {
                 <div
                   class="w-11 h-11 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white shrink-0 mr-4 group-hover:bg-blue-800 dark:group-hover:bg-blue-700 transition-colors shadow-sm"
                 >
-                  <PhCalendar class="w-5 h-5" />
+                  <PhCheckCircle class="w-5 h-5" />
                 </div>
                 <div>
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">
-                    Tahun Berdiri
+                    Akreditasi
                   </h4>
                   <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                    17 Agustus 1985
+                    A (Sangat Baik)
                   </p>
                 </div>
               </div>
