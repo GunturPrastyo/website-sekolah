@@ -55,6 +55,19 @@ const selectedItem = ref(null);
 const isRejectModalOpen = ref(false);
 const rejectionNote = ref("");
 
+const isPreviewModalOpen = ref(false);
+const previewItem = ref(null);
+
+const openPreview = (item) => {
+  previewItem.value = item;
+  isPreviewModalOpen.value = true;
+};
+
+const closePreview = () => {
+  isPreviewModalOpen.value = false;
+  previewItem.value = null;
+};
+
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };
   showToast.value = true;
@@ -82,7 +95,7 @@ const handleConfirm = () => {
 
     if (index !== -1) {
       if (confirmActionType.value === "approve") {
-        list.value.splice(index, 1);
+        list.value[index].status = "approved";
         triggerToast(
           "Berhasil Disetujui",
           "Konten berhasil disetujui dan telah dipublikasikan.",
@@ -106,7 +119,7 @@ const handleReject = () => {
     const index = list.value.findIndex((i) => i.id === selectedItem.value.id);
 
     if (index !== -1) {
-      list.value.splice(index, 1);
+      list.value[index].status = "rejected";
       triggerToast(
         "Konten Ditolak",
         rejectionNote.value.trim()
@@ -230,12 +243,35 @@ const closeRejectModal = () => {
             <tr
               v-for="item in activeTab === 'berita' ? pendingBerita : pendingGaleri"
               :key="item.id"
-              class="hover:bg-blue-50/50 dark:hover:bg-slate-700/30 transition-colors"
+              class="transition-colors"
+              :class="{
+                'bg-green-50/50 dark:bg-green-900/10': item.status === 'approved',
+                'bg-red-50/50 dark:bg-red-900/10': item.status === 'rejected',
+                'hover:bg-blue-50/50 dark:hover:bg-slate-700/30':
+                  item.status === 'pending',
+              }"
             >
               <td
-                class="px-6 py-4 text-sm font-semibold text-gray-800 dark:text-gray-200"
+                class="px-6 py-4 text-sm font-semibold"
+                :class="{
+                  'text-green-600 dark:text-green-400': item.status === 'approved',
+                  'text-red-600 dark:text-red-400': item.status === 'rejected',
+                  'text-gray-800 dark:text-gray-200': item.status === 'pending',
+                }"
               >
                 {{ item.title }}
+                <span
+                  v-if="item.status === 'approved'"
+                  class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                >
+                  Disetujui
+                </span>
+                <span
+                  v-if="item.status === 'rejected'"
+                  class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                >
+                  Ditolak
+                </span>
               </td>
               <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
                 {{ item.author }}
@@ -256,12 +292,14 @@ const closeRejectModal = () => {
               <td class="px-6 py-4 text-right">
                 <div class="flex items-center justify-end gap-2">
                   <button
+                    @click="openPreview(item)"
                     class="p-1.5 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-md transition-colors"
                     title="Lihat Pratinjau"
                   >
                     <PhEye class="w-4 h-4" />
                   </button>
                   <button
+                    v-if="item.status === 'pending'"
                     @click="openConfirm('approve', item)"
                     class="p-1.5 text-green-600 hover:bg-green-100 dark:hover:bg-green-900/50 rounded-md transition-colors"
                     title="Setujui (Publikasi)"
@@ -269,12 +307,18 @@ const closeRejectModal = () => {
                     <PhCheckCircle class="w-4 h-4" />
                   </button>
                   <button
+                    v-if="item.status === 'pending'"
                     @click="openConfirm('reject', item)"
                     class="p-1.5 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-md transition-colors"
                     title="Tolak Konten"
                   >
                     <PhXCircle class="w-4 h-4" />
                   </button>
+                  <span
+                    v-if="item.status !== 'pending'"
+                    class="text-xs text-gray-400 italic px-1"
+                    >Selesai</span
+                  >
                 </div>
               </td>
             </tr>
@@ -352,6 +396,89 @@ const closeRejectModal = () => {
             >
               <PhXCircle class="w-5 h-5 mr-2" />
               Tolak Konten
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Modal Pratinjau Konten -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isPreviewModalOpen"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="closePreview"
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all flex flex-col max-h-[90vh]"
+          @click.stop
+        >
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center">
+              <PhEye class="w-6 h-6 mr-2 text-blue-600" />
+              Pratinjau Konten
+            </h3>
+            <button
+              @click="closePreview"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
+          </div>
+
+          <div class="p-6 overflow-y-auto custom-scrollbar" v-if="previewItem">
+            <div class="mb-6">
+              <span
+                class="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400"
+                >{{ previewItem.category || "Galeri" }}</span
+              >
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+                {{ previewItem.title }}
+              </h2>
+              <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                Oleh: {{ previewItem.author }} &bull; {{ previewItem.date }}
+              </p>
+            </div>
+            <div
+              class="bg-gray-100 dark:bg-slate-700/50 rounded-lg p-8 flex items-center justify-center border-2 border-dashed border-gray-200 dark:border-slate-600 min-h-[200px]"
+            >
+              <p class="text-gray-500 dark:text-gray-400 text-center">
+                [Area Pratinjau Gambar/Isi Berita Lengkap]<br />
+                <span class="text-sm"
+                  >Di mode produksi, detail isi konten penuh akan ditampilkan di
+                  sini.</span
+                >
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+          >
+            <button
+              @click="closePreview"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
+            >
+              Tutup Pratinjau
+            </button>
+            <button
+              v-if="previewItem && previewItem.status === 'pending'"
+              @click="
+                closePreview();
+                openConfirm('approve', previewItem);
+              "
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 transition-colors"
+            >
+              <PhCheckCircle class="w-5 h-5 mr-2" /> Setujui Konten
             </button>
           </div>
         </div>
