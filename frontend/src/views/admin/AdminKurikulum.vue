@@ -18,6 +18,7 @@ import {
   PhPalette,
   PhBook,
   PhLightning,
+  PhList,
 } from "@phosphor-icons/vue";
 import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
@@ -36,7 +37,7 @@ const majors = [
   { id: "bahasa", name: "Bahasa" },
 ];
 
-const categories = [
+const categories = ref([
   "Muatan Nasional (Wajib)",
   "Muatan Pilihan (Fase E)",
   "Kelompok Mata Pelajaran Pilihan (Sains & Teknologi)",
@@ -45,7 +46,7 @@ const categories = [
   "Kelompok Persiapan UTBK (Sains & Teknologi)",
   "Kelompok Persiapan UTBK (Soshum)",
   "Kelompok Persiapan Ujian Lanjutan (Sastra)",
-];
+]);
 
 // Konfigurasi Ikon Cadangan (jika tidak ada di IconPicker)
 const fallbackIcons = {
@@ -190,6 +191,34 @@ const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
 
+const isCategoryModalVisible = ref(false);
+const newCategoryName = ref("");
+
+const openCategoryModal = () => {
+  isCategoryModalVisible.value = true;
+  document.body.style.overflow = "hidden";
+};
+
+const closeCategoryModal = () => {
+  isCategoryModalVisible.value = false;
+  document.body.style.overflow = "";
+  newCategoryName.value = "";
+};
+
+const addCategory = () => {
+  if (
+    newCategoryName.value.trim() &&
+    !categories.value.includes(newCategoryName.value.trim())
+  ) {
+    categories.value.push(newCategoryName.value.trim());
+    newCategoryName.value = "";
+  }
+};
+
+const removeCategory = (index) => {
+  categories.value.splice(index, 1);
+};
+
 const openPPPModal = () => {
   tempPPPData.value = JSON.parse(JSON.stringify(pppData.value));
   isPPPModalVisible.value = true;
@@ -199,6 +228,20 @@ const openPPPModal = () => {
 const closePPPModal = () => {
   isPPPModalVisible.value = false;
   document.body.style.overflow = "";
+};
+
+const removeDimension = (index) => {
+  tempPPPData.value.dimensions.splice(index, 1);
+};
+
+const addDimension = () => {
+  tempPPPData.value.dimensions.push({
+    id: Date.now(),
+    name: "",
+    desc: "",
+    icon: "PhHeart",
+    color: "text-blue-500",
+  });
 };
 
 const savePPPData = () => {
@@ -347,14 +390,6 @@ const getMajorName = (id) => {
           Kelola data silabus dan mata pelajaran per tingkat kelas dan peminatan.
         </p>
       </div>
-      <button
-        v-if="!isFormVisible"
-        @click="showAddForm"
-        class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-      >
-        <PhPlusCircle class="w-5 h-5 mr-2" />
-        Tambah Mata Pelajaran
-      </button>
     </div>
 
     <!-- Profil Pelajar Pancasila Section -->
@@ -471,29 +506,48 @@ const getMajorName = (id) => {
                 </div>
               </div>
 
-              <h4 class="font-bold text-gray-800 dark:text-white mb-4">
-                Dimensi Karakter
-              </h4>
+              <div class="flex justify-between items-center mb-4">
+                <h4 class="font-bold text-gray-800 dark:text-white">Dimensi Karakter</h4>
+                <button
+                  type="button"
+                  @click="addDimension"
+                  class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/50 dark:text-blue-400 dark:hover:bg-blue-900 transition-colors"
+                >
+                  <PhPlusCircle class="w-4 h-4 mr-1" /> Tambah Dimensi
+                </button>
+              </div>
+
               <div class="space-y-4">
                 <div
                   v-for="(dim, index) in tempPPPData.dimensions"
                   :key="dim.id"
                   class="p-4 bg-gray-50 dark:bg-slate-700/30 rounded-lg border border-gray-100 dark:border-slate-600"
                 >
-                  <h5
-                    class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider"
-                  >
-                    Dimensi {{ index + 1 }}
-                  </h5>
-                  <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                    <div class="md:col-span-3">
+                  <div class="flex justify-between items-center mb-3">
+                    <h5
+                      class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                    >
+                      Dimensi {{ index + 1 }}
+                    </h5>
+                    <button
+                      type="button"
+                      @click="removeDimension(index)"
+                      class="text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors"
+                      title="Hapus Dimensi"
+                    >
+                      <PhTrash class="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <div class="flex flex-col gap-4">
+                    <div>
                       <label
                         class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
                         >Ikon</label
                       >
                       <IconPicker v-model="dim.icon" v-model:color-value="dim.color" />
                     </div>
-                    <div class="md:col-span-9">
+                    <div>
                       <label
                         class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
                         >Nama Dimensi</label
@@ -505,7 +559,7 @@ const getMajorName = (id) => {
                         class="w-full px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 text-sm"
                       />
                     </div>
-                    <div class="md:col-span-12">
+                    <div>
                       <label
                         class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
                         >Deskripsi</label
@@ -636,17 +690,16 @@ const getMajorName = (id) => {
                   >
                     Kategori Kurikulum
                   </label>
-                  <input
-                    type="text"
+                  <select
                     v-model="form.category"
                     required
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Contoh: Muatan Nasional (Wajib)"
-                    list="category-suggestions"
-                  />
-                  <datalist id="category-suggestions">
-                    <option v-for="cat in categories" :key="cat" :value="cat"></option>
-                  </datalist>
+                  >
+                    <option disabled value="">Pilih Kategori...</option>
+                    <option v-for="cat in categories" :key="cat" :value="cat">
+                      {{ cat }}
+                    </option>
+                  </select>
                 </div>
 
                 <div class="md:col-span-2">
@@ -726,17 +779,41 @@ const getMajorName = (id) => {
     <div
       class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
     >
-      <!-- Kolom Pencarian -->
-      <div class="mb-6 relative max-w-md">
-        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <PhMagnifyingGlass class="w-5 h-5 text-gray-400" />
+      <!-- Kolom Pencarian & Tombol Tambah -->
+      <div
+        class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+      >
+        <div class="relative w-full max-w-md">
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
+            <PhMagnifyingGlass class="w-5 h-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Cari mata pelajaran atau kategori..."
+            class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+          />
         </div>
-        <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Cari mata pelajaran atau kategori..."
-          class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
-        />
+        <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <button
+            v-if="!isFormVisible"
+            @click="openCategoryModal"
+            class="inline-flex w-full sm:w-auto items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-lg shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors shrink-0"
+          >
+            <PhList class="w-5 h-5 mr-2" />
+            Kelola Kategori
+          </button>
+          <button
+            v-if="!isFormVisible"
+            @click="showAddForm"
+            class="inline-flex w-full sm:w-auto items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors shrink-0"
+          >
+            <PhPlusCircle class="w-5 h-5 mr-2" />
+            Tambah Mata Pelajaran
+          </button>
+        </div>
       </div>
 
       <!-- Empty State -->
@@ -835,6 +912,94 @@ const getMajorName = (id) => {
         </div>
       </div>
     </div>
+
+    <!-- Modal Kelola Kategori -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isCategoryModalVisible"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="closeCategoryModal"
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden transform transition-all"
+          @click.stop
+        >
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+              Kelola Kategori Kurikulum
+            </h3>
+            <button
+              @click="closeCategoryModal"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
+          </div>
+
+          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
+            <form @submit.prevent="addCategory" class="flex gap-2 mb-6">
+              <input
+                type="text"
+                v-model="newCategoryName"
+                placeholder="Nama kategori baru..."
+                class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 text-sm"
+              />
+              <button
+                type="submit"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center shrink-0"
+              >
+                <PhPlusCircle class="w-5 h-5 mr-1" /> Tambah
+              </button>
+            </form>
+
+            <div class="space-y-2">
+              <div
+                v-for="(cat, index) in categories"
+                :key="index"
+                class="flex justify-between items-center p-3 bg-gray-50 dark:bg-slate-700/30 rounded-lg border border-gray-200 dark:border-slate-600"
+              >
+                <span class="text-sm font-medium text-gray-800 dark:text-gray-200">{{
+                  cat
+                }}</span>
+                <button
+                  @click="removeCategory(index)"
+                  class="text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors p-1.5 hover:bg-red-50 dark:hover:bg-red-900/30 rounded"
+                  title="Hapus Kategori"
+                >
+                  <PhTrash class="w-4 h-4" />
+                </button>
+              </div>
+              <div
+                v-if="categories.length === 0"
+                class="text-center text-sm text-gray-500 py-4 border-2 border-dashed border-gray-200 dark:border-slate-600 rounded-lg"
+              >
+                Belum ada kategori yang ditambahkan.
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end"
+          >
+            <button
+              @click="closeCategoryModal"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            >
+              Tutup
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
 
     <!-- Modal Konfirmasi Hapus -->
     <ConfirmModal
