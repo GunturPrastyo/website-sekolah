@@ -11,17 +11,18 @@ import {
   PhEye,
   PhTag,
   PhX,
+  PhList,
 } from "@phosphor-icons/vue";
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
-const categories = [
+const categories = ref([
   { id: "akademik", name: "Akademik" },
   { id: "kegiatan", name: "Kegiatan" },
   { id: "prestasi", name: "Prestasi" },
   { id: "pengumuman", name: "Pengumuman" },
-];
+]);
 
 const newsList = ref([
   {
@@ -195,8 +196,39 @@ const filteredNews = computed(() => {
   return newsList.value.filter((item) => item.title.toLowerCase().includes(query));
 });
 
+const isCategoryModalVisible = ref(false);
+const newCategoryName = ref("");
+
+const openCategoryModal = () => {
+  isCategoryModalVisible.value = true;
+  document.body.style.overflow = "hidden";
+};
+
+const closeCategoryModal = () => {
+  isCategoryModalVisible.value = false;
+  document.body.style.overflow = "";
+  newCategoryName.value = "";
+};
+
+const addCategory = () => {
+  if (newCategoryName.value.trim()) {
+    const name = newCategoryName.value.trim();
+    const id = name.toLowerCase().replace(/\s+/g, "-");
+    if (!categories.value.some((c) => c.id === id)) {
+      categories.value.push({ id, name });
+      newCategoryName.value = "";
+    } else {
+      triggerToast("Gagal", "Kategori tersebut sudah ada", "error");
+    }
+  }
+};
+
+const removeCategory = (index) => {
+  categories.value.splice(index, 1);
+};
+
 const getCategoryName = (id) => {
-  const cat = categories.find((c) => c.id === id);
+  const cat = categories.value.find((c) => c.id === id);
   return cat ? cat.name : id;
 };
 </script>
@@ -215,14 +247,24 @@ const getCategoryName = (id) => {
           Kelola data artikel, berita, dan pengumuman sekolah.
         </p>
       </div>
-      <button
-        v-if="!isFormVisible"
-        @click="showAddForm"
-        class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-      >
-        <PhPlusCircle class="w-5 h-5 mr-2" />
-        Tambah Berita
-      </button>
+      <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+        <button
+          v-if="!isFormVisible"
+          @click="openCategoryModal"
+          class="inline-flex w-full sm:w-auto items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-lg shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors shrink-0"
+        >
+          <PhList class="w-5 h-5 mr-2" />
+          Kelola Kategori
+        </button>
+        <button
+          v-if="!isFormVisible"
+          @click="showAddForm"
+          class="inline-flex w-full sm:w-auto items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors shrink-0"
+        >
+          <PhPlusCircle class="w-5 h-5 mr-2" />
+          Tambah Berita
+        </button>
+      </div>
     </div>
 
     <!-- Form Tambah/Edit Data -->
@@ -538,6 +580,94 @@ const getCategoryName = (id) => {
         </div>
       </div>
     </div>
+
+    <!-- Modal Kelola Kategori -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isCategoryModalVisible"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="closeCategoryModal"
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden transform transition-all"
+          @click.stop
+        >
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+              Kelola Kategori Berita
+            </h3>
+            <button
+              @click="closeCategoryModal"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
+          </div>
+
+          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
+            <form @submit.prevent="addCategory" class="flex gap-2 mb-6">
+              <input
+                type="text"
+                v-model="newCategoryName"
+                placeholder="Nama kategori baru..."
+                class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 text-sm"
+              />
+              <button
+                type="submit"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center shrink-0"
+              >
+                <PhPlusCircle class="w-5 h-5 mr-1" /> Tambah
+              </button>
+            </form>
+
+            <div class="space-y-2">
+              <div
+                v-for="(cat, index) in categories"
+                :key="index"
+                class="flex justify-between items-center p-3 bg-gray-50 dark:bg-slate-700/30 rounded-lg border border-gray-200 dark:border-slate-600"
+              >
+                <span class="text-sm font-medium text-gray-800 dark:text-gray-200">{{
+                  cat.name
+                }}</span>
+                <button
+                  @click="removeCategory(index)"
+                  class="text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors p-1.5 hover:bg-red-50 dark:hover:bg-red-900/30 rounded"
+                  title="Hapus Kategori"
+                >
+                  <PhTrash class="w-4 h-4" />
+                </button>
+              </div>
+              <div
+                v-if="categories.length === 0"
+                class="text-center text-sm text-gray-500 py-4 border-2 border-dashed border-gray-200 dark:border-slate-600 rounded-lg"
+              >
+                Belum ada kategori yang ditambahkan.
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end"
+          >
+            <button
+              @click="closeCategoryModal"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            >
+              Tutup
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
 
     <ConfirmModal
       :isOpen="isDeleteModalOpen"

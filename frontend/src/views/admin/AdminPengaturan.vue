@@ -70,7 +70,7 @@ const saveSettings = () => {
 </script>
 
 <template>
-  <main class="flex-1 overflow-y-auto px-6 md:px-10 py-8 bg-gray-100 dark:bg-slate-900">
+  <main class="flex-1 overflow-y-auto px-6 md:px-10 py-8">
     <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
         <h2
