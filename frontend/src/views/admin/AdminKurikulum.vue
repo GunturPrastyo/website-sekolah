@@ -66,6 +66,21 @@ const getIconComponent = (iconName) => {
   return fallbackIcons[iconName] || PhBookOpen;
 };
 
+const getDarkColorClass = (colorClass) => {
+  const colorMap = {
+    "text-blue-500": "bg-blue-600 dark:bg-blue-500 text-white",
+    "text-red-500": "bg-red-600 dark:bg-red-500 text-white",
+    "text-green-500": "bg-green-600 dark:bg-green-500 text-white",
+    "text-yellow-500": "bg-yellow-500 dark:bg-yellow-600 text-white",
+    "text-purple-500": "bg-purple-600 dark:bg-purple-500 text-white",
+    "text-orange-500": "bg-orange-500 dark:bg-orange-600 text-white",
+    "text-pink-500": "bg-pink-600 dark:bg-pink-500 text-white",
+    "text-teal-500": "bg-teal-600 dark:bg-teal-500 text-white",
+    "text-gray-500": "bg-gray-600 dark:bg-gray-500 text-white",
+  };
+  return colorMap[colorClass] || "bg-blue-600 dark:bg-blue-500 text-white";
+};
+
 // State Profil Pelajar Pancasila
 const pppData = ref({
   title: "Profil Pelajar Pancasila",
@@ -78,7 +93,7 @@ const pppData = ref({
       desc:
         "Membentuk siswa yang religius dan memiliki etika baik dalam kehidupan sehari-hari.",
       icon: "PhHeart",
-      bg: "bg-red-600 dark:bg-red-500",
+      color: "text-red-500",
     },
     {
       id: 2,
@@ -86,7 +101,7 @@ const pppData = ref({
       desc:
         "Menghargai keberagaman budaya, toleran, dan berwawasan luas di kancah internasional.",
       icon: "PhGlobeHemisphereWest",
-      bg: "bg-yellow-500",
+      color: "text-yellow-500",
     },
     {
       id: 3,
@@ -94,7 +109,7 @@ const pppData = ref({
       desc:
         "Mampu berkolaborasi, peduli terhadap sesama, dan berbagi dalam menyelesaikan masalah.",
       icon: "PhUsers",
-      bg: "bg-green-600 dark:bg-green-500",
+      color: "text-green-500",
     },
     {
       id: 4,
@@ -102,7 +117,7 @@ const pppData = ref({
       desc:
         "Bertanggung jawab atas proses dan hasil belajarnya sendiri dengan kesadaran tinggi.",
       icon: "PhUserCheck",
-      bg: "bg-blue-600 dark:bg-blue-500",
+      color: "text-blue-500",
     },
     {
       id: 5,
@@ -110,7 +125,7 @@ const pppData = ref({
       desc:
         "Mampu memproses informasi secara objektif, mengevaluasi, dan menyimpulkan dengan baik.",
       icon: "PhLightbulb",
-      bg: "bg-purple-600 dark:bg-purple-500",
+      color: "text-purple-500",
     },
     {
       id: 6,
@@ -118,7 +133,7 @@ const pppData = ref({
       desc:
         "Mampu memodifikasi dan menghasilkan gagasan, karya, atau tindakan yang orisinal.",
       icon: "PhPalette",
-      bg: "bg-pink-600 dark:bg-pink-500",
+      color: "text-pink-500",
     },
   ],
 });
@@ -134,6 +149,7 @@ const subjectList = ref([
     category: "Muatan Nasional (Wajib)",
     name: "Pendidikan Agama dan Budi Pekerti",
     icon: "PhBook",
+    color: "text-blue-500",
     desc:
       "Mempelajari nilai-nilai spiritual, toleransi, dan pembentukan karakter akhlak mulia.",
     topics:
@@ -146,6 +162,7 @@ const subjectList = ref([
     category: "Kelompok Mata Pelajaran Pilihan (Sains & Teknologi)",
     name: "Fisika Lanjutan",
     icon: "PhLightning",
+    color: "text-blue-500",
     desc: "Pendalaman mekanika, termodinamika, dan gelombang.",
     topics:
       "Dinamika Rotasi dan Kesetimbangan, Elastisitas Bahan, Fluida Statis dan Dinamis, Suhu dan Kalor",
@@ -159,6 +176,7 @@ const form = ref({
   category: "Muatan Nasional (Wajib)",
   name: "",
   icon: "PhBook",
+  color: "text-blue-500",
   desc: "",
   topics: "",
 });
@@ -209,6 +227,7 @@ const resetForm = () => {
     category: "Muatan Nasional (Wajib)",
     name: "",
     icon: "PhBook",
+    color: "text-blue-500",
     desc: "",
     topics: "",
   };
@@ -374,8 +393,8 @@ const getMajorName = (id) => {
           class="p-4 rounded-xl border border-gray-100 dark:border-slate-700 flex items-start gap-4 hover:shadow-md transition-shadow bg-gray-50 dark:bg-slate-700/30"
         >
           <div
-            :class="dim.bg"
-            class="w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-white shadow-sm"
+            :class="getDarkColorClass(dim.color)"
+            class="w-10 h-10 shrink-0 rounded-full flex items-center justify-center shadow-sm"
           >
             <component :is="getIconComponent(dim.icon)" class="w-5 h-5" />
           </div>
@@ -472,7 +491,7 @@ const getMajorName = (id) => {
                         class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
                         >Ikon</label
                       >
-                      <IconPicker v-model="dim.icon" />
+                      <IconPicker v-model="dim.icon" v-model:color-value="dim.color" />
                     </div>
                     <div class="md:col-span-9">
                       <label
@@ -608,7 +627,7 @@ const getMajorName = (id) => {
                   >
                     Ikon Representasi
                   </label>
-                  <IconPicker v-model="form.icon" />
+                  <IconPicker v-model="form.icon" v-model:color-value="form.color" />
                 </div>
 
                 <div class="md:col-span-2">
@@ -761,7 +780,8 @@ const getMajorName = (id) => {
           <!-- Info -->
           <div class="flex items-center gap-3 mb-3">
             <div
-              class="w-10 h-10 shrink-0 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center"
+              class="w-10 h-10 shrink-0 rounded-full flex items-center justify-center shadow-sm"
+              :class="getDarkColorClass(subject.color)"
             >
               <component :is="getIconComponent(subject.icon)" class="w-5 h-5" />
             </div>

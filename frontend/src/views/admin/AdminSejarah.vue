@@ -592,7 +592,7 @@ const filteredTimeline = computed(() => {
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                   >Ikon Representasi</label
                 >
-                <IconPicker v-model="form.icon" v-model:colorValue="form.color" />
+                <IconPicker v-model="form.icon" v-model:color-value="form.color" />
               </div>
 
               <div class="mb-2">

@@ -97,7 +97,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:modelValue", "update:colorValue"]);
+const emit = defineEmits(["update:modelValue", "update:colorValue", "update:color-value"]);
 
 const searchQuery = ref("");
 
@@ -118,6 +118,7 @@ const selectIcon = (name) => {
 
 const selectColor = (colorClass) => {
   emit("update:colorValue", colorClass);
+  emit("update:color-value", colorClass);
 };
 
 const colors = [
@@ -186,12 +187,12 @@ const colors = [
   },
 ];
 
-const getActiveClasses = () => {
+const activeClasses = computed(() => {
   const found = colors.find((c) => c.text === props.colorValue);
   return found
     ? found.active
     : "bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 ring-blue-500 border-blue-500";
-};
+});
 
 const selectedIconComponent = computed(() => educationIcons[props.modelValue]);
 </script>
@@ -203,7 +204,7 @@ const selectedIconComponent = computed(() => educationIcons[props.modelValue]);
       <div
         :class="[
           'w-14 h-14 rounded-xl flex items-center justify-center shrink-0 shadow-sm border transition-all duration-300',
-          getActiveClasses(),
+          activeClasses,
         ]"
       >
         <component
@@ -223,9 +224,9 @@ const selectedIconComponent = computed(() => educationIcons[props.modelValue]);
             type="button"
             @click="selectColor(color.text)"
             :class="[
-              'w-6 h-6 rounded-full transition-all duration-200 shadow-sm border border-white/20',
+              'w-6 h-6 rounded-full transition-all duration-200 shadow-sm border border-white/20 cursor-pointer',
               color.bg,
-              colorValue === color.text
+              props.colorValue === color.text
                 ? 'ring-2 ring-offset-2 ring-offset-white dark:ring-offset-slate-800 ring-gray-400 dark:ring-gray-300 scale-110'
                 : 'hover:scale-110',
             ]"
@@ -265,7 +266,7 @@ const selectedIconComponent = computed(() => educationIcons[props.modelValue]);
           :class="[
             'p-2.5 rounded-lg border transition-all flex items-center justify-center group shadow-sm',
             modelValue === name
-              ? `scale-105 ring-1 ${getActiveClasses()}`
+              ? `scale-105 ring-1 ${activeClasses}`
               : 'border-transparent bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:bg-slate-800 dark:text-gray-400 dark:hover:bg-slate-700 dark:hover:border-slate-600 dark:hover:text-white',
           ]"
           :title="name"
