@@ -1,13 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
-import {
-  PhGear,
-  PhImage,
-  PhTag,
-  PhFloppyDisk,
-  PhPlus,
-  PhTrash,
-} from "@phosphor-icons/vue";
+import { PhGear, PhImage, PhFloppyDisk } from "@phosphor-icons/vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
@@ -57,38 +50,6 @@ const appearanceSettings = ref({
     "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600",
 });
 
-// State Kategori
-const categorySettings = ref({
-  berita: ["Akademik", "Prestasi", "Pengumuman", "Kegiatan"],
-  galeri: ["Fasilitas", "Ekstrakurikuler", "Acara Sekolah", "Lomba"],
-  jabatan: [
-    "Kepala Sekolah",
-    "Wakil Kepala Sekolah",
-    "Guru Mata Pelajaran",
-    "Staf Tata Usaha",
-    "Pustakawan",
-  ],
-});
-
-const newCategory = ref({
-  berita: "",
-  galeri: "",
-  jabatan: "",
-});
-
-const addCategory = (type) => {
-  if (newCategory.value[type].trim()) {
-    categorySettings.value[type].push(newCategory.value[type].trim());
-    newCategory.value[type] = "";
-    triggerToast("Berhasil", "Kategori baru ditambahkan", "success");
-  }
-};
-
-const removeCategory = (type, index) => {
-  categorySettings.value[type].splice(index, 1);
-  triggerToast("Dihapus", "Kategori dihapus", "info");
-};
-
 const isMapUrlValid = computed(() => {
   const url = generalSettings.value.embedMap;
   if (!url) return true;
@@ -119,7 +80,7 @@ const saveSettings = () => {
           Pengaturan Sistem
         </h2>
         <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
-          Kelola konfigurasi umum, tampilan, dan data kategori website.
+          Kelola konfigurasi umum dan tampilan website.
         </p>
       </div>
       <button
@@ -156,17 +117,6 @@ const saveSettings = () => {
         "
       >
         <PhImage class="w-5 h-5" /> Tampilan (Header)
-      </button>
-      <button
-        @click="activeTab = 'kategori'"
-        class="px-6 py-4 text-sm font-medium transition-colors flex items-center gap-2 whitespace-nowrap border-b-2"
-        :class="
-          activeTab === 'kategori'
-            ? 'text-blue-600 border-blue-600 dark:text-blue-400 dark:border-blue-400 bg-blue-50/50 dark:bg-slate-700/50'
-            : 'text-gray-500 border-transparent hover:text-gray-700 hover:bg-gray-50 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:bg-slate-700'
-        "
-      >
-        <PhTag class="w-5 h-5" /> Data Kategori
       </button>
     </div>
 
@@ -435,146 +385,6 @@ const saveSettings = () => {
                 label="Halaman Ekstrakurikuler"
                 containerClass="w-full aspect-[21/9]"
               />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tab Kategori -->
-      <div v-show="activeTab === 'kategori'" class="space-y-8 animate-fade-in">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <!-- Kategori Berita -->
-          <div
-            class="border border-gray-200 dark:border-slate-600 p-6 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
-          >
-            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-              Kategori Berita
-            </h3>
-            <div class="flex gap-2 mb-4">
-              <input
-                type="text"
-                v-model="newCategory.berita"
-                @keyup.enter="addCategory('berita')"
-                placeholder="Tambah kategori berita..."
-                class="flex-1 px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
-              />
-              <button
-                @click="addCategory('berita')"
-                class="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                <PhPlus class="w-5 h-5" />
-              </button>
-            </div>
-            <ul class="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
-              <li
-                v-for="(item, index) in categorySettings.berita"
-                :key="index"
-                class="flex justify-between items-center bg-white dark:bg-slate-800 p-3 rounded-lg border border-gray-100 dark:border-slate-600 shadow-sm text-sm"
-              >
-                <span class="dark:text-gray-200 font-medium">{{ item }}</span>
-                <button
-                  @click="removeCategory('berita', index)"
-                  class="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 p-1.5 rounded"
-                >
-                  <PhTrash class="w-4 h-4" />
-                </button>
-              </li>
-              <li
-                v-if="categorySettings.berita.length === 0"
-                class="text-sm text-gray-500 text-center py-4"
-              >
-                Belum ada kategori
-              </li>
-            </ul>
-          </div>
-
-          <!-- Kategori Galeri -->
-          <div
-            class="border border-gray-200 dark:border-slate-600 p-6 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
-          >
-            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-              Kategori Galeri
-            </h3>
-            <div class="flex gap-2 mb-4">
-              <input
-                type="text"
-                v-model="newCategory.galeri"
-                @keyup.enter="addCategory('galeri')"
-                placeholder="Tambah kategori galeri..."
-                class="flex-1 px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
-              />
-              <button
-                @click="addCategory('galeri')"
-                class="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                <PhPlus class="w-5 h-5" />
-              </button>
-            </div>
-            <ul class="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
-              <li
-                v-for="(item, index) in categorySettings.galeri"
-                :key="index"
-                class="flex justify-between items-center bg-white dark:bg-slate-800 p-3 rounded-lg border border-gray-100 dark:border-slate-600 shadow-sm text-sm"
-              >
-                <span class="dark:text-gray-200 font-medium">{{ item }}</span>
-                <button
-                  @click="removeCategory('galeri', index)"
-                  class="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 p-1.5 rounded"
-                >
-                  <PhTrash class="w-4 h-4" />
-                </button>
-              </li>
-              <li
-                v-if="categorySettings.galeri.length === 0"
-                class="text-sm text-gray-500 text-center py-4"
-              >
-                Belum ada kategori
-              </li>
-            </ul>
-          </div>
-
-          <!-- Jabatan Guru & Staf -->
-          <div
-            class="border border-gray-200 dark:border-slate-600 p-6 rounded-xl bg-gray-50/50 dark:bg-slate-700/30 lg:col-span-2"
-          >
-            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-              Jabatan Guru & Staf
-            </h3>
-            <div class="flex gap-2 mb-4 max-w-md">
-              <input
-                type="text"
-                v-model="newCategory.jabatan"
-                @keyup.enter="addCategory('jabatan')"
-                placeholder="Tambah posisi/jabatan..."
-                class="flex-1 px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
-              />
-              <button
-                @click="addCategory('jabatan')"
-                class="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                <PhPlus class="w-5 h-5" />
-              </button>
-            </div>
-            <div class="flex flex-wrap gap-3">
-              <div
-                v-for="(item, index) in categorySettings.jabatan"
-                :key="index"
-                class="flex items-center gap-2 bg-white dark:bg-slate-800 px-3 py-2 rounded-lg border border-gray-100 dark:border-slate-600 shadow-sm text-sm"
-              >
-                <span class="dark:text-gray-200 font-medium">{{ item }}</span>
-                <button
-                  @click="removeCategory('jabatan', index)"
-                  class="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 p-1 rounded-full transition-colors"
-                >
-                  <PhTrash class="w-3.5 h-3.5" />
-                </button>
-              </div>
-              <div
-                v-if="categorySettings.jabatan.length === 0"
-                class="text-sm text-gray-500 text-center py-2 w-full"
-              >
-                Belum ada posisi
-              </div>
             </div>
           </div>
         </div>
