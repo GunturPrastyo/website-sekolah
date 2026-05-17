@@ -165,6 +165,11 @@ const router = createRouter({
           component: () => import('../views/admin/AdminUnduhan.vue')
         },
         {
+          path: 'validasi-konten',
+          name: 'admin-validasi-konten',
+          component: () => import('../views/admin/AdminValidasiKonten.vue')
+        },
+        {
           path: 'info-ppdb',
           name: 'admin-info-ppdb',
           component: () => import('../views/admin/AdminInfoPPDB.vue')

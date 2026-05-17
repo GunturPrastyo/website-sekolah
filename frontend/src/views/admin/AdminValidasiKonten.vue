@@ -1,0 +1,369 @@
+<script setup>
+import { ref } from "vue";
+import {
+  PhCheckCircle,
+  PhXCircle,
+  PhEye,
+  PhNewspaper,
+  PhImage,
+  PhX,
+} from "@phosphor-icons/vue";
+import ConfirmModal from "@/components/admin/ConfirmModal.vue";
+import ToastNotification from "@/components/admin/ToastNotification.vue";
+
+const activeTab = ref("berita");
+
+// Data dummy untuk Berita yang menunggu persetujuan
+const pendingBerita = ref([
+  {
+    id: 1,
+    title: "Siswa SMAN 1 Meraih Medali Emas OSN",
+    category: "Prestasi",
+    author: "Bapak Rudi (Admin Guru)",
+    date: "17 Mei 2026",
+    status: "pending",
+  },
+  {
+    id: 2,
+    title: "Kegiatan Pramuka Persami Berjalan Lancar",
+    category: "Kegiatan",
+    author: "Rizky (Admin Ekskul)",
+    date: "16 Mei 2026",
+    status: "pending",
+  },
+]);
+
+// Data dummy untuk Galeri yang menunggu persetujuan
+const pendingGaleri = ref([
+  {
+    id: 1,
+    title: "Upacara Hari Kemerdekaan RI Ke-80",
+    author: "Dian (Admin Fotografi)",
+    date: "17 Agustus 2025",
+    status: "pending",
+    imagesCount: 15,
+  },
+]);
+
+const showToast = ref(false);
+const toastData = ref({ title: "", message: "", type: "success" });
+
+const isConfirmModalOpen = ref(false);
+const confirmActionType = ref(""); // 'approve' | 'reject'
+const selectedItem = ref(null);
+
+const isRejectModalOpen = ref(false);
+const rejectionNote = ref("");
+
+const triggerToast = (title, message, type = "success") => {
+  toastData.value = { title, message, type };
+  showToast.value = true;
+  setTimeout(() => {
+    showToast.value = false;
+  }, 4000);
+};
+
+const openConfirm = (type, item) => {
+  if (type === "reject") {
+    selectedItem.value = item;
+    rejectionNote.value = "";
+    isRejectModalOpen.value = true;
+  } else {
+    confirmActionType.value = type;
+    selectedItem.value = item;
+    isConfirmModalOpen.value = true;
+  }
+};
+
+const handleConfirm = () => {
+  if (selectedItem.value) {
+    const list = activeTab.value === "berita" ? pendingBerita : pendingGaleri;
+    const index = list.value.findIndex((i) => i.id === selectedItem.value.id);
+
+    if (index !== -1) {
+      if (confirmActionType.value === "approve") {
+        list.value.splice(index, 1);
+        triggerToast(
+          "Berhasil Disetujui",
+          "Konten berhasil disetujui dan telah dipublikasikan.",
+          "success"
+        );
+      }
+    }
+  }
+  isConfirmModalOpen.value = false;
+  selectedItem.value = null;
+};
+
+const handleCancel = () => {
+  isConfirmModalOpen.value = false;
+  selectedItem.value = null;
+};
+
+const handleReject = () => {
+  if (selectedItem.value) {
+    const list = activeTab.value === "berita" ? pendingBerita : pendingGaleri;
+    const index = list.value.findIndex((i) => i.id === selectedItem.value.id);
+
+    if (index !== -1) {
+      list.value.splice(index, 1);
+      triggerToast(
+        "Konten Ditolak",
+        rejectionNote.value.trim()
+          ? `Konten dikembalikan dengan catatan: "${rejectionNote.value}"`
+          : "Konten telah ditolak dan dikembalikan.",
+        "error"
+      );
+    }
+  }
+  closeRejectModal();
+};
+
+const closeRejectModal = () => {
+  isRejectModalOpen.value = false;
+  selectedItem.value = null;
+  rejectionNote.value = "";
+};
+</script>
+
+<template>
+  <main class="flex-1 overflow-y-auto px-6 md:px-10 py-8">
+    <div class="mb-8">
+      <h2
+        class="text-3xl font-bold text-gray-800 dark:text-white"
+        style="font-family: 'Oswald', sans-serif"
+      >
+        Validasi Konten
+      </h2>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+        Tinjau dan setujui berita atau foto galeri yang diunggah oleh admin (guru/staf)
+        sebelum dipublikasikan ke halaman utama.
+      </p>
+    </div>
+
+    <!-- Sistem Tabs -->
+    <div class="flex gap-4 border-b border-gray-200 dark:border-slate-700 mb-6">
+      <button
+        @click="activeTab = 'berita'"
+        class="pb-3 px-2 text-sm font-semibold transition-colors relative"
+        :class="
+          activeTab === 'berita'
+            ? 'text-blue-600 dark:text-blue-400'
+            : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+        "
+      >
+        <div class="flex items-center gap-2">
+          <PhNewspaper class="w-5 h-5" />
+          Berita & Artikel
+          <span
+            v-if="pendingBerita.length > 0"
+            class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full"
+          >
+            {{ pendingBerita.length }}
+          </span>
+        </div>
+        <div
+          v-if="activeTab === 'berita'"
+          class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 dark:bg-blue-400 rounded-t-full"
+        ></div>
+      </button>
+
+      <button
+        @click="activeTab = 'galeri'"
+        class="pb-3 px-2 text-sm font-semibold transition-colors relative"
+        :class="
+          activeTab === 'galeri'
+            ? 'text-blue-600 dark:text-blue-400'
+            : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+        "
+      >
+        <div class="flex items-center gap-2">
+          <PhImage class="w-5 h-5" />
+          Galeri Foto
+          <span
+            v-if="pendingGaleri.length > 0"
+            class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full"
+          >
+            {{ pendingGaleri.length }}
+          </span>
+        </div>
+        <div
+          v-if="activeTab === 'galeri'"
+          class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 dark:bg-blue-400 rounded-t-full"
+        ></div>
+      </button>
+    </div>
+
+    <!-- Daftar Tabel Universal untuk Kedua Tab -->
+    <div
+      class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden"
+    >
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr
+              class="bg-gray-50 dark:bg-slate-700/50 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
+              <th class="px-6 py-4">Judul Konten</th>
+              <th class="px-6 py-4">Penulis / Pengunggah</th>
+              <th class="px-6 py-4">Info Ekstra</th>
+              <th class="px-6 py-4">Tanggal Diunggah</th>
+              <th class="px-6 py-4 text-right">Aksi</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
+            <tr
+              v-if="(activeTab === 'berita' ? pendingBerita : pendingGaleri).length === 0"
+            >
+              <td
+                colspan="5"
+                class="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
+              >
+                <PhCheckCircle class="w-12 h-12 mx-auto text-green-500/50 mb-3" />
+                <p>
+                  Bagus! Semua daftar
+                  {{ activeTab === "berita" ? "berita" : "galeri foto" }} sudah divalidasi
+                  dan bersih.
+                </p>
+              </td>
+            </tr>
+            <tr
+              v-for="item in activeTab === 'berita' ? pendingBerita : pendingGaleri"
+              :key="item.id"
+              class="hover:bg-blue-50/50 dark:hover:bg-slate-700/30 transition-colors"
+            >
+              <td
+                class="px-6 py-4 text-sm font-semibold text-gray-800 dark:text-gray-200"
+              >
+                {{ item.title }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                {{ item.author }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                <span
+                  v-if="activeTab === 'berita'"
+                  class="px-2 py-1 bg-gray-100 dark:bg-slate-700 rounded text-xs"
+                  >{{ item.category }}</span
+                >
+                <span v-else class="text-xs font-medium"
+                  >{{ item.imagesCount }} Foto</span
+                >
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                {{ item.date }}
+              </td>
+              <td class="px-6 py-4 text-right">
+                <div class="flex items-center justify-end gap-2">
+                  <button
+                    class="p-1.5 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-md transition-colors"
+                    title="Lihat Pratinjau"
+                  >
+                    <PhEye class="w-4 h-4" />
+                  </button>
+                  <button
+                    @click="openConfirm('approve', item)"
+                    class="p-1.5 text-green-600 hover:bg-green-100 dark:hover:bg-green-900/50 rounded-md transition-colors"
+                    title="Setujui (Publikasi)"
+                  >
+                    <PhCheckCircle class="w-4 h-4" />
+                  </button>
+                  <button
+                    @click="openConfirm('reject', item)"
+                    class="p-1.5 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-md transition-colors"
+                    title="Tolak Konten"
+                  >
+                    <PhXCircle class="w-4 h-4" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Komponen Modal & Notifikasi -->
+    <ConfirmModal
+      :isOpen="isConfirmModalOpen"
+      title="Setujui & Publikasikan"
+      message="Apakah Anda yakin ingin menyetujui konten ini? Setelah disetujui, konten akan langsung tampil di halaman depan website."
+      @confirm="handleConfirm"
+      @cancel="handleCancel"
+    />
+
+    <!-- Modal Catatan Penolakan -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isRejectModalOpen"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="closeRejectModal"
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all"
+          @click.stop
+        >
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-red-50 dark:bg-red-900/20"
+          >
+            <h3
+              class="text-xl font-bold text-red-600 dark:text-red-400 flex items-center"
+            >
+              <PhXCircle class="w-6 h-6 mr-2" />
+              Berikan Catatan Penolakan
+            </h3>
+            <button
+              @click="closeRejectModal"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
+          </div>
+          <div class="p-6">
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+              Beritahu penulis mengapa konten ini ditolak agar dapat diperbaiki:
+            </p>
+            <textarea
+              v-model="rejectionNote"
+              rows="4"
+              class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-red-500 focus:border-red-500 transition-colors"
+              placeholder="Contoh: Kualitas foto kurang bagus, atau judul terlalu provokatif..."
+            ></textarea>
+          </div>
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+          >
+            <button
+              @click="closeRejectModal"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
+            >
+              Batal
+            </button>
+            <button
+              @click="handleReject"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 transition-colors"
+            >
+              <PhXCircle class="w-5 h-5 mr-2" />
+              Tolak Konten
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
+    <ToastNotification
+      :isOpen="showToast"
+      :title="toastData.title"
+      :message="toastData.message"
+      :type="toastData.type"
+      @close="showToast = false"
+    />
+  </main>
+</template>

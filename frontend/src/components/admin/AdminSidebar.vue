@@ -84,6 +84,7 @@ const menu = ref([
       { name: "Berita & Artikel", link: "/admin/berita" },
       { name: "Galeri Foto & Video", link: "/admin/galeri" },
       { name: "Unduhan File", link: "/admin/unduhan" },
+      { name: "Validasi Konten", link: "/admin/validasi-konten" },
     ],
   },
 

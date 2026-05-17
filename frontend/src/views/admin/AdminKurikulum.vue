@@ -37,16 +37,7 @@ const majors = [
   { id: "bahasa", name: "Bahasa" },
 ];
 
-const categories = ref([
-  "Muatan Nasional (Wajib)",
-  "Muatan Pilihan (Fase E)",
-  "Kelompok Mata Pelajaran Pilihan (Sains & Teknologi)",
-  "Kelompok Mata Pelajaran Pilihan (Sosiologi & Humaniora)",
-  "Kelompok Mata Pelajaran Pilihan (Bahasa & Budaya)",
-  "Kelompok Persiapan UTBK (Sains & Teknologi)",
-  "Kelompok Persiapan UTBK (Soshum)",
-  "Kelompok Persiapan Ujian Lanjutan (Sastra)",
-]);
+const categories = ref(["Muatan Nasional (Wajib)", "Muatan Pilihan (Fase E)"]);
 
 // Konfigurasi Ikon Cadangan (jika tidak ada di IconPicker)
 const fallbackIcons = {
@@ -190,6 +181,8 @@ const itemToDelete = ref(null);
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
+const filterGrade = ref("semua");
+const filterMajor = ref("semua");
 
 const isCategoryModalVisible = ref(false);
 const newCategoryName = ref("");
@@ -355,14 +348,30 @@ const cancelDelete = () => {
   isDeleteModalOpen.value = false;
 };
 
-const filteredSubjects = computed(() => {
-  if (!searchQuery.value) return subjectList.value;
-  const query = searchQuery.value.toLowerCase();
-  return subjectList.value.filter(
-    (subject) =>
-      subject.name.toLowerCase().includes(query) ||
-      subject.category.toLowerCase().includes(query)
-  );
+const filteredAndGroupedSubjects = computed(() => {
+  let filtered = subjectList.value;
+
+  if (filterGrade.value !== "semua") {
+    filtered = filtered.filter((s) => s.grade === filterGrade.value);
+  }
+  if (filterMajor.value !== "semua") {
+    filtered = filtered.filter((s) => s.major === filterMajor.value);
+  }
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase();
+    filtered = filtered.filter(
+      (s) =>
+        s.name.toLowerCase().includes(query) || s.category.toLowerCase().includes(query)
+    );
+  }
+
+  const grouped = {};
+  filtered.forEach((s) => {
+    if (!grouped[s.category]) grouped[s.category] = [];
+    grouped[s.category].push(s);
+  });
+
+  return grouped;
 });
 
 const getGradeName = (id) => {
@@ -779,24 +788,44 @@ const getMajorName = (id) => {
     <div
       class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
     >
-      <!-- Kolom Pencarian & Tombol Tambah -->
+      <!-- Kolom Pencarian, Filter & Tombol Tambah -->
       <div
-        class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+        class="mb-8 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4"
       >
-        <div class="relative w-full max-w-md">
-          <div
-            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-          >
-            <PhMagnifyingGlass class="w-5 h-5 text-gray-400" />
+        <div class="flex flex-col md:flex-row gap-3 w-full xl:w-auto">
+          <div class="relative w-full md:w-64 shrink-0">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <PhMagnifyingGlass class="w-5 h-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              v-model="searchQuery"
+              placeholder="Cari mata pelajaran..."
+              class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+            />
           </div>
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Cari mata pelajaran atau kategori..."
-            class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
-          />
+          <select
+            v-model="filterGrade"
+            class="w-full md:w-auto px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors cursor-pointer"
+          >
+            <option value="semua">Semua Kelas</option>
+            <option v-for="grade in grades" :key="grade.id" :value="grade.id">
+              {{ grade.name }}
+            </option>
+          </select>
+          <select
+            v-model="filterMajor"
+            class="w-full md:w-auto px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors cursor-pointer"
+          >
+            <option value="semua">Semua Peminatan</option>
+            <option v-for="major in majors" :key="major.id" :value="major.id">
+              {{ major.name }}
+            </option>
+          </select>
         </div>
-        <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+        <div class="flex flex-col sm:flex-row gap-3 w-full xl:w-auto shrink-0">
           <button
             v-if="!isFormVisible"
             @click="openCategoryModal"
@@ -818,95 +847,104 @@ const getMajorName = (id) => {
 
       <!-- Empty State -->
       <div
-        v-if="filteredSubjects.length === 0"
+        v-if="Object.keys(filteredAndGroupedSubjects).length === 0"
         class="py-12 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
       >
-        <p v-if="searchQuery">
-          Tidak ada mata pelajaran yang cocok dengan "{{ searchQuery }}".
+        <p v-if="searchQuery || filterGrade !== 'semua' || filterMajor !== 'semua'">
+          Tidak ada mata pelajaran yang cocok dengan pencarian atau filter yang dipilih.
         </p>
         <p v-else>Belum ada data mata pelajaran yang ditambahkan.</p>
       </div>
 
       <!-- List Cards -->
-      <div v-else class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        <div
-          v-for="subject in filteredSubjects"
-          :key="subject.id"
-          class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-shadow p-5 flex flex-col relative group"
-        >
-          <!-- Dropdown Aksi -->
-          <div
-            class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-slate-800/90 backdrop-blur p-1 rounded-lg border border-gray-100 dark:border-slate-700 z-10"
-          >
-            <button
-              @click="startEdit(subject)"
-              class="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-md transition-colors"
-              title="Edit"
+      <div v-else class="space-y-8">
+        <div v-for="(subjects, category) in filteredAndGroupedSubjects" :key="category">
+          <div class="flex items-center gap-3 mb-4">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-white">
+              {{ category }}
+            </h3>
+            <div class="h-px bg-gray-200 dark:bg-slate-700 flex-1"></div>
+            <span
+              class="text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-slate-700 px-2.5 py-1 rounded-full"
+              >{{ subjects.length }} Pelajaran</span
             >
-              <PhPencilSimple class="w-4 h-4" />
-            </button>
-            <button
-              @click="deleteEntry(subject.id)"
-              class="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-slate-700 rounded-md transition-colors"
-              title="Hapus"
-            >
-              <PhTrash class="w-4 h-4" />
-            </button>
           </div>
-
-          <!-- Info -->
-          <div class="flex items-center gap-3 mb-3">
+          <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             <div
-              class="w-10 h-10 shrink-0 rounded-full flex items-center justify-center shadow-sm"
-              :class="getDarkColorClass(subject.color)"
+              v-for="subject in subjects"
+              :key="subject.id"
+              class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-shadow p-5 flex flex-col relative group"
             >
-              <component :is="getIconComponent(subject.icon)" class="w-5 h-5" />
-            </div>
-            <div>
-              <h4
-                class="font-bold text-gray-900 dark:text-white line-clamp-1"
-                :title="subject.name"
+              <!-- Dropdown Aksi -->
+              <div
+                class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-slate-800/90 backdrop-blur p-1 rounded-lg border border-gray-100 dark:border-slate-700 z-10"
               >
-                {{ subject.name }}
-              </h4>
-              <p class="text-xs font-medium text-blue-600 dark:text-blue-400">
-                {{ getGradeName(subject.grade) }} &bull; {{ getMajorName(subject.major) }}
+                <button
+                  @click="startEdit(subject)"
+                  class="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-md transition-colors"
+                  title="Edit"
+                >
+                  <PhPencilSimple class="w-4 h-4" />
+                </button>
+                <button
+                  @click="deleteEntry(subject.id)"
+                  class="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-slate-700 rounded-md transition-colors"
+                  title="Hapus"
+                >
+                  <PhTrash class="w-4 h-4" />
+                </button>
+              </div>
+
+              <!-- Info -->
+              <div class="flex items-center gap-3 mb-3">
+                <div
+                  class="w-10 h-10 shrink-0 rounded-full flex items-center justify-center shadow-sm"
+                  :class="getDarkColorClass(subject.color)"
+                >
+                  <component :is="getIconComponent(subject.icon)" class="w-5 h-5" />
+                </div>
+                <div>
+                  <h4
+                    class="font-bold text-gray-900 dark:text-white line-clamp-1"
+                    :title="subject.name"
+                  >
+                    {{ subject.name }}
+                  </h4>
+                  <p class="text-xs font-medium text-blue-600 dark:text-blue-400">
+                    {{ getGradeName(subject.grade) }} &bull;
+                    {{ getMajorName(subject.major) }}
+                  </p>
+                </div>
+              </div>
+
+              <p
+                class="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-3 flex-1 mt-1"
+                :title="subject.desc"
+              >
+                {{ subject.desc }}
               </p>
-            </div>
-          </div>
 
-          <p
-            class="text-xs text-gray-500 dark:text-gray-400 mb-3 bg-gray-50 dark:bg-slate-700/50 p-2 rounded"
-          >
-            <strong>Kategori:</strong> {{ subject.category }}
-          </p>
-
-          <p
-            class="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-3 flex-1"
-            :title="subject.desc"
-          >
-            {{ subject.desc }}
-          </p>
-
-          <div class="mt-auto border-t border-gray-100 dark:border-slate-700 pt-3">
-            <p class="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
-              Topik Pembelajaran:
-            </p>
-            <div class="flex flex-wrap gap-1">
-              <span
-                v-for="(topic, idx) in subject.topics.split(',').slice(0, 3)"
-                :key="idx"
-                class="inline-block px-2 py-1 text-[10px] bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 rounded-sm truncate max-w-[120px]"
-                :title="topic.trim()"
-              >
-                {{ topic.trim() }}
-              </span>
-              <span
-                v-if="subject.topics.split(',').length > 3"
-                class="inline-block px-2 py-1 text-[10px] bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 rounded-sm"
-              >
-                +{{ subject.topics.split(",").length - 3 }}
-              </span>
+              <div class="mt-auto border-t border-gray-100 dark:border-slate-700 pt-3">
+                <p class="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                  Topik Pembelajaran:
+                </p>
+                <div class="flex flex-wrap gap-1">
+                  <span
+                    v-for="(topic, idx) in subject.topics.split(',').slice(0, 3)"
+                    :key="idx"
+                    class="inline-block px-2 py-1 text-[10px] bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 rounded-sm truncate max-w-[120px]"
+                    :title="topic.trim()"
+                  >
+                    {{ topic.trim() }}
+                  </span>
+                  <span
+                    v-if="subject.topics.split(',').length > 3"
+                    class="inline-block px-2 py-1 text-[10px] bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 rounded-sm"
+                  >
+                    +{{ subject.topics.split(",").length - 3 }}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
