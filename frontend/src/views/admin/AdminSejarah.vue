@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import axios from "axios";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -16,78 +17,15 @@ import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
-// Dummy data, in a real app this would come from an API
-const timeline = ref([
-  {
-    id: 1,
-    year: "1985",
-    title: "Pendirian & Peresmian SMAN 1",
-    icon: "PhBuildings",
-    color: "text-blue-500",
-    image: "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?q=80&w=800",
-    description:
-      "Sekolah ini resmi didirikan pada tanggal 17 Agustus 1985 berdasarkan SK Menteri Pendidikan. Pada awalnya, sekolah hanya memiliki 3 ruang kelas dengan 120 siswa angkatan pertama dan menumpang di gedung SMP terdekat selama proses pembangunan gedung utama berlangsung.",
-  },
-  {
-    id: 2,
-    year: "1992",
-    title: "Pembangunan Gedung Utama",
-    icon: "PhHammer",
-    color: "text-orange-500",
-    image: "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=800",
-    description:
-      "Pembangunan gedung sekolah mandiri akhirnya selesai dan diresmikan oleh Gubernur. Di tahun ini, SMAN 1 mulai menempati lokasi saat ini dengan fasilitas yang diperluas, meliputi 12 ruang kelas, ruang guru, dan lapangan olahraga serbaguna.",
-  },
-  {
-    id: 3,
-    year: "2005",
-    title: "Akreditasi A & Prestasi Nasional",
-    icon: "PhMedal",
-    color: "text-yellow-500",
-    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800",
-    description:
-      "Berkat dedikasi seluruh civitas akademika, SMAN 1 berhasil meraih akreditasi A (Sangat Baik). Pada tahun yang sama, tim cerdas cermat sekolah berhasil membawa pulang piala Juara 1 tingkat Nasional untuk pertama kalinya.",
-  },
-  {
-    id: 4,
-    year: "2015",
-    title: "Era Transformasi Digital",
-    icon: "PhMonitor",
-    color: "text-teal-500",
-    image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800",
-    description:
-      "Menjawab tantangan abad 21, sekolah mulai mengintegrasikan teknologi ke dalam pembelajaran. Pembangunan laboratorium komputer modern, perpustakaan digital, serta pengadaan proyektor dan Wi-Fi di seluruh area sekolah mulai direalisasikan.",
-  },
-  {
-    id: 5,
-    year: "2021",
-    title: "Sekolah Adiwiyata & Peduli Lingkungan",
-    icon: "PhLeaf",
-    color: "text-green-500",
-    image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e736?q=80&w=800",
-    description:
-      "Berkomitmen pada lingkungan yang asri, sekolah memenangkan penghargaan Sekolah Adiwiyata tingkat Provinsi. Program bank sampah, taman hidroponik, dan ruang hijau terpadu menjadi identitas baru SMAN 1.",
-  },
-  {
-    id: 6,
-    year: "2026",
-    title: "Pelopor Kurikulum Merdeka",
-    icon: "PhRocket",
-    color: "text-purple-500",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800",
-    description:
-      "Hari ini, SMAN 1 Nogosari terus melesat menjadi sekolah percontohan dalam implementasi Kurikulum Merdeka. Dengan lebih dari 1100 siswa, kami terus melahirkan lulusan yang cerdas, berkarakter, dan berdaya saing global.",
-  },
-]);
+const timeline = ref([]);
 
 const schoolProfile = ref({
-  description:
-    "SMA Negeri 1 Nogosari adalah lembaga pendidikan menengah atas yang berdedikasi tinggi dalam mencetak generasi penerus bangsa yang unggul, cerdas, dan berkarakter. Berada di lingkungan yang asri, kami senantiasa berupaya memberikan suasana belajar yang kondusif, didukung oleh tenaga pendidik profesional dan fasilitas yang terus berkembang mengikuti zaman.",
-  npsn: "20301234",
-  accreditation: "A (Sangat Baik)",
-  location: "Nogosari, Kab. Boyolali",
-  status: "Sekolah Negeri",
-  image: "/img/gedung.jpg",
+  description: "",
+  npsn: "",
+  accreditation: "",
+  location: "",
+  status: "",
+  image: "",
 });
 
 const isProfileModalVisible = ref(false);
@@ -118,6 +56,26 @@ const triggerToast = (title, message, type = "success") => {
   }, 4000);
 };
 
+const fetchData = async () => {
+  try {
+    // Mengambil data secara paralel untuk profil dan sejarah
+    const [profileRes, timelineRes] = await Promise.all([
+      axios.get("/api/profil-sekolah"),
+      axios.get("/api/sejarah"),
+    ]);
+
+    if (profileRes.data?.data) schoolProfile.value = profileRes.data.data;
+    if (timelineRes.data?.data) timeline.value = timelineRes.data.data;
+  } catch (error) {
+    console.error("Gagal mengambil data dari API:", error);
+    triggerToast("Gagal Memuat", "Tidak dapat memuat data dari server.", "error");
+  }
+};
+
+onMounted(() => {
+  fetchData();
+});
+
 const resetForm = () => {
   form.value = {
     id: null,
@@ -136,7 +94,7 @@ const showAddForm = () => {
   document.body.style.overflow = "hidden";
 };
 
-const addEntry = () => {
+const addEntry = async () => {
   const plainDesc = form.value.description.replace(/<[^>]*>?/gm, "").trim();
   if (!form.value.year || !form.value.title || !plainDesc) {
     triggerToast(
@@ -146,19 +104,25 @@ const addEntry = () => {
     );
     return;
   }
-  const newId =
-    timeline.value.length > 0 ? Math.max(...timeline.value.map((e) => e.id)) + 1 : 1;
-  timeline.value.push({
-    ...form.value,
-    id: newId,
-  });
-  isFormVisible.value = false; // Hide form after adding
-  document.body.style.overflow = "";
-  triggerToast(
-    "Berhasil Ditambahkan",
-    "Entri lini masa baru telah ditambahkan ke sistem."
-  );
-  resetForm();
+
+  try {
+    const response = await axios.post("/api/sejarah", form.value);
+    timeline.value.push(response.data.data); // Asumsikan API me-return resource yang baru disimpan
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast(
+      "Berhasil Ditambahkan",
+      "Entri lini masa baru telah ditambahkan ke sistem."
+    );
+    resetForm();
+  } catch (error) {
+    console.error(error);
+    triggerToast(
+      "Gagal Menyimpan",
+      "Terjadi kesalahan pada server saat menambahkan data.",
+      "error"
+    );
+  }
 };
 
 const openProfileModal = () => {
@@ -172,11 +136,19 @@ const closeProfileModal = () => {
   document.body.style.overflow = "";
 };
 
-const saveProfile = () => {
-  schoolProfile.value = { ...tempProfile.value };
-  isProfileModalVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast("Profil Disimpan", "Data profil singkat sekolah berhasil diperbarui.");
+const saveProfile = async () => {
+  try {
+    // Menggunakan langsung method PUT via axios dengan payload JSON
+    const response = await axios.put("/api/profil-sekolah", tempProfile.value);
+
+    schoolProfile.value = response.data.data;
+    isProfileModalVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast("Profil Disimpan", "Data profil singkat sekolah berhasil diperbarui.");
+  } catch (error) {
+    console.error(error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat menyimpan profil.", "error");
+  }
 };
 
 const startEdit = (entry) => {
@@ -189,7 +161,7 @@ const startEdit = (entry) => {
   document.body.style.overflow = "hidden";
 };
 
-const saveEntry = () => {
+const saveEntry = async () => {
   const plainDesc = form.value.description.replace(/<[^>]*>?/gm, "").trim();
   if (!form.value.year || !form.value.title || !plainDesc) {
     triggerToast(
@@ -199,16 +171,21 @@ const saveEntry = () => {
     );
     return;
   }
-  const index = timeline.value.findIndex((e) => e.id === form.value.id);
-  if (index !== -1) {
-    timeline.value[index] = {
-      ...form.value,
-    };
+
+  try {
+    const response = await axios.put(`/api/sejarah/${form.value.id}`, form.value);
+    const index = timeline.value.findIndex((e) => e.id === form.value.id);
+    if (index !== -1) {
+      timeline.value[index] = response.data.data;
+    }
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast("Perubahan Disimpan", "Entri lini masa berhasil diperbarui.");
+    resetForm();
+  } catch (error) {
+    console.error(error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat memperbarui entri.", "error");
   }
-  isFormVisible.value = false; // Hide form after saving
-  document.body.style.overflow = "";
-  triggerToast("Perubahan Disimpan", "Entri lini masa berhasil diperbarui.");
-  resetForm();
 };
 
 const hideForm = () => {
@@ -222,11 +199,17 @@ const deleteEntry = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
-    timeline.value = timeline.value.filter((e) => e.id !== itemToDelete.value);
-    itemToDelete.value = null;
-    triggerToast("Data Dihapus", "Satu entri lini masa berhasil dihapus.", "info");
+    try {
+      await axios.delete(`/api/sejarah/${itemToDelete.value}`);
+      timeline.value = timeline.value.filter((e) => e.id !== itemToDelete.value);
+      itemToDelete.value = null;
+      triggerToast("Data Dihapus", "Satu entri lini masa berhasil dihapus.", "info");
+    } catch (error) {
+      console.error(error);
+      triggerToast("Gagal Menghapus", "Terjadi kesalahan saat menghapus data.", "error");
+    }
   }
   isDeleteModalOpen.value = false;
 };
@@ -244,7 +227,7 @@ const handleDragStart = (entry, event) => {
   event.dataTransfer.effectAllowed = "move";
 };
 
-const handleDrop = (entry) => {
+const handleDrop = async (entry) => {
   if (draggedItemIndex.value === null) return;
   const targetIndex = timeline.value.findIndex((e) => e.id === entry.id);
   if (draggedItemIndex.value === targetIndex) return; // Mencegah drop pada dirinya sendiri
@@ -252,6 +235,15 @@ const handleDrop = (entry) => {
   const draggedItem = timeline.value.splice(draggedItemIndex.value, 1)[0];
   timeline.value.splice(targetIndex, 0, draggedItem);
   draggedItemIndex.value = null;
+
+  try {
+    // Menyimpan urutan baru ke database
+    const orders = timeline.value.map((item, index) => ({ id: item.id, order: index }));
+    await axios.post("/api/sejarah/reorder", { orders });
+  } catch (error) {
+    console.error("Gagal menyimpan urutan baru:", error);
+    triggerToast("Gagal", "Terjadi kesalahan saat memperbarui urutan timeline.", "error");
+  }
 };
 
 const searchQuery = ref("");

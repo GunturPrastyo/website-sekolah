@@ -6,13 +6,6 @@ import { PhEnvelopeSimple, PhLockKey, PhSpinner, PhSignIn } from "@phosphor-icon
 
 const router = useRouter();
 
-// Konfigurasi default axios untuk Laravel Sanctum (Sebaiknya letakkan ini di file konfigurasi terpisah / plugin)
-axios.defaults.withCredentials = true;
-axios.defaults.withXSRFToken = true;
-axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
-axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-axios.defaults.headers.common["Accept"] = "application/json";
-
 const form = ref({
   email: "",
   password: "",

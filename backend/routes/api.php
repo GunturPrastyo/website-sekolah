@@ -1,8 +1,26 @@
 <?php
 
+use App\Http\Controllers\SchoolProfileController;
+use App\Http\Controllers\TimelineController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    // API Profil Sekolah
+    Route::get('/profil-sekolah', [SchoolProfileController::class, 'show']);
+    // Rute untuk update profil. Dikirim sebagai POST dari frontend dengan _method 'PUT' untuk menangani upload file.
+    Route::put('/profil-sekolah', [SchoolProfileController::class, 'update']);
+
+    // API Sejarah (Lini Masa Timeline)
+    Route::get('/sejarah', [TimelineController::class, 'index']);
+    Route::post('/sejarah', [TimelineController::class, 'store']);
+    Route::put('/sejarah/{timeline}', [TimelineController::class, 'update']);
+    Route::delete('/sejarah/{timeline}', [TimelineController::class, 'destroy']);
+
+    // API khusus untuk memperbarui urutan timeline lewat drag & drop
+    Route::post('/sejarah/reorder', [TimelineController::class, 'reorder']);
 });
