@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Timeline;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TimelineController extends Controller
 {
@@ -26,6 +27,26 @@ class TimelineController extends Controller
             'description' => 'required|string',
             'order' => 'nullable|integer',
         ]);
+
+        // Handle Base64 images embedded in the description
+        if (str_contains($validatedData['description'], 'data:image')) {
+            $description = $validatedData['description'];
+            $dom = new \DOMDocument();
+            // Menggunakan @ untuk menekan warning dari HTML yang mungkin tidak well-formed
+            @$dom->loadHTML($description, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            $images = $dom->getElementsByTagName('img');
+            foreach ($images as $img) {
+                $src = $img->getAttribute('src');
+                if (str_starts_with($src, 'data:image')) {
+                    preg_match('/data:image\/(\w+);base64,/', $src, $type);
+                    $imageData = base64_decode(substr($src, strpos($src, ',') + 1));
+                    $filename = 'timeline/content/' . time() . '_' . uniqid() . '.' . ($type[1] ?? 'jpg');
+                    Storage::disk('public')->put($filename, $imageData);
+                    $img->setAttribute('src', asset('storage/' . $filename));
+                }
+            }
+            $validatedData['description'] = $dom->saveHTML();
+        }
 
         if (!isset($validatedData['order'])) {
             $validatedData['order'] = Timeline::max('order') + 1;
@@ -50,6 +71,25 @@ class TimelineController extends Controller
             'description' => 'required|string',
             'order' => 'nullable|integer',
         ]);
+
+        // Handle Base64 images embedded in the description (juga untuk update)
+        if (str_contains($validatedData['description'], 'data:image')) {
+            $description = $validatedData['description'];
+            $dom = new \DOMDocument();
+            @$dom->loadHTML($description, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            $images = $dom->getElementsByTagName('img');
+            foreach ($images as $img) {
+                $src = $img->getAttribute('src');
+                if (str_starts_with($src, 'data:image')) {
+                    preg_match('/data:image\/(\w+);base64,/', $src, $type);
+                    $imageData = base64_decode(substr($src, strpos($src, ',') + 1));
+                    $filename = 'timeline/content/' . time() . '_' . uniqid() . '.' . ($type[1] ?? 'jpg');
+                    Storage::disk('public')->put($filename, $imageData);
+                    $img->setAttribute('src', asset('storage/' . $filename));
+                }
+            }
+            $validatedData['description'] = $dom->saveHTML();
+        }
 
         $timeline->update($validatedData);
 
