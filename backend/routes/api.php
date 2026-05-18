@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\VisionMissionController;
 use App\Http\Controllers\SchoolProfileController;
 use App\Http\Controllers\TimelineController;
@@ -28,4 +29,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // API Visi & Misi
     Route::get('/vision-mission', [VisionMissionController::class, 'index']);
     Route::post('/vision-mission', [VisionMissionController::class, 'update']);
+
+    // API Fasilitas
+    Route::get('/fasilitas', [FacilityController::class, 'index']);
+    Route::post('/fasilitas', [FacilityController::class, 'store']);
+    Route::put('/fasilitas/{facility}', [FacilityController::class, 'update']);
+    Route::delete('/fasilitas/{facility}', [FacilityController::class, 'destroy']);
 });

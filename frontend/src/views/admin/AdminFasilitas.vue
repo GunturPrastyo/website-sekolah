@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -12,26 +13,8 @@ import RichTextEditor from "@/components/RichTextEditor.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
-const facilities = ref([
-  {
-    id: 1,
-    category: "Ruang Kelas",
-    content: `Ruang kelas dirancang untuk menciptakan suasana belajar yang nyaman, interaktif, dan mendukung konsentrasi siswa dalam mengikuti pembelajaran.<br><br><img src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px;"><img src="https://images.unsplash.com/photo-1594434533439-04c3a735d359?q=80&w=800" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px;"><img src="https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px;"><img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px;"><img src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px;">`,
-    images: [
-      "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800",
-      "https://images.unsplash.com/photo-1594434533439-04c3a735d359?q=80&w=800",
-      "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800",
-      "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800",
-      "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800",
-    ],
-  },
-  {
-    id: 2,
-    category: "Laboratorium",
-    content: `Laboratorium menjadi sarana penting dalam mendukung pembelajaran berbasis praktik dan eksperimen dengan fasilitas lengkap.<br><br><img src="https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px;">`,
-    images: ["https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800"],
-  },
-]);
+const facilities = ref([]);
+const isLoading = ref(false);
 
 // State Toast & Modal Delete
 const showToast = ref(false);
@@ -44,6 +27,25 @@ const triggerToast = (title, message, type = "success") => {
   showToast.value = true;
   setTimeout(() => (showToast.value = false), 4000);
 };
+
+const fetchData = async () => {
+  isLoading.value = true;
+  try {
+    const response = await axios.get("/api/fasilitas");
+    facilities.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal memuat data", error);
+    triggerToast(
+      "Gagal Memuat",
+      "Tidak dapat mengambil data fasilitas dari server.",
+      "error"
+    );
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(fetchData);
 
 // Form State
 const isFormVisible = ref(false);
@@ -80,7 +82,7 @@ const extractImages = (html) => {
   return images;
 };
 
-const saveFacility = () => {
+const saveFacility = async () => {
   if (!form.value.category.trim()) {
     triggerToast("Gagal", "Kategori fasilitas wajib diisi!", "error");
     return;
@@ -93,26 +95,35 @@ const saveFacility = () => {
 
   const extractedImages = extractImages(form.value.content);
 
-  if (isEditing.value) {
-    const idx = facilities.value.findIndex((f) => f.id === form.value.id);
-    if (idx !== -1) {
-      facilities.value[idx] = {
-        ...form.value,
-        images: extractedImages,
-      };
+  const payload = {
+    category: form.value.category,
+    content: form.value.content,
+    images: extractedImages,
+  };
+
+  try {
+    if (isEditing.value) {
+      const response = await axios.put(`/api/fasilitas/${form.value.id}`, payload);
+      const idx = facilities.value.findIndex((f) => f.id === form.value.id);
+      if (idx !== -1) {
+        facilities.value[idx] = response.data.data;
+      }
+      triggerToast("Disimpan", "Data fasilitas berhasil diperbarui.");
+    } else {
+      const response = await axios.post("/api/fasilitas", payload);
+      facilities.value.unshift(response.data.data);
+      triggerToast("Ditambahkan", "Fasilitas baru berhasil ditambahkan.");
     }
-    triggerToast("Disimpan", "Data fasilitas berhasil diperbarui.");
-  } else {
-    facilities.value.push({
-      id: Date.now(),
-      category: form.value.category,
-      content: form.value.content,
-      images: extractedImages,
-    });
-    triggerToast("Ditambahkan", "Fasilitas baru berhasil ditambahkan.");
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+  } catch (error) {
+    console.error(error);
+    triggerToast(
+      "Gagal Menyimpan",
+      error.response?.data?.message || "Terjadi kesalahan pada server.",
+      "error"
+    );
   }
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
 };
 
 // Hapus Data
@@ -121,10 +132,16 @@ const deleteFacility = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
-  facilities.value = facilities.value.filter((f) => f.id !== itemToDeleteId.value);
-  triggerToast("Dihapus", "Fasilitas berhasil dihapus.", "info");
-  isDeleteModalOpen.value = false;
+const confirmDelete = async () => {
+  try {
+    await axios.delete(`/api/fasilitas/${itemToDeleteId.value}`);
+    facilities.value = facilities.value.filter((f) => f.id !== itemToDeleteId.value);
+    triggerToast("Dihapus", "Fasilitas berhasil dihapus.", "info");
+    isDeleteModalOpen.value = false;
+  } catch (error) {
+    console.error(error);
+    triggerToast("Gagal Menghapus", "Terjadi kesalahan saat menghapus data.", "error");
+  }
 };
 </script>
 
@@ -239,8 +256,17 @@ const confirmDelete = () => {
       </div>
     </Transition>
 
+    <!-- Loading Skeleton -->
+    <div v-if="isLoading" class="space-y-6">
+      <div
+        v-for="i in 3"
+        :key="i"
+        class="bg-gray-200 dark:bg-slate-700 h-32 rounded-lg animate-pulse"
+      ></div>
+    </div>
+
     <!-- Daftar Fasilitas -->
-    <div class="space-y-6">
+    <div v-else class="space-y-6">
       <div
         v-for="facility in facilities"
         :key="facility.id"
