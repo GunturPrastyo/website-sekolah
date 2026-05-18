@@ -8,7 +8,10 @@ const router = useRouter();
 
 // Konfigurasi default axios untuk Laravel Sanctum (Sebaiknya letakkan ini di file konfigurasi terpisah / plugin)
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:8000"; // Ganti sesuai port backend Laravel Anda
+axios.defaults.withXSRFToken = true;
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
+axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+axios.defaults.headers.common["Accept"] = "application/json";
 
 const form = ref({
   email: "",
@@ -44,9 +47,14 @@ const handleLogin = async () => {
     // Tangkap validasi error dari Laravel (kode 422)
     if (error.response && error.response.status === 422) {
       errorMessage.value = error.response.data.message || "Email atau password salah.";
-    } else {
+    } else if (error.response && error.response.status === 419) {
       errorMessage.value =
-        "Terjadi kesalahan pada server. Pastikan backend Laravel sedang berjalan.";
+        "Sesi kadaluarsa (CSRF token mismatch). Silakan refresh halaman dan coba lagi.";
+    } else {
+      console.error("Detail Error Login:", error.response || error);
+      errorMessage.value =
+        error.response?.data?.message ||
+        "Terjadi kesalahan pada server. Silakan cek console browser (F12) untuk detailnya.";
     }
   } finally {
     isLoading.value = false;
