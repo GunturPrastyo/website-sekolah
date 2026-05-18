@@ -13,6 +13,18 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/login',
+      name: 'login',
+      // Menggunakan lazy-loading agar komponen hanya dimuat saat rute diakses
+      component: () => import('../views/auth/Login.vue'),
+      meta: {
+        // (Opsional) Jika Anda menggunakan middleware/auth guard nantinya
+        requiresGuest: true,
+        title: 'Login Administrator'
+      }
+    },
+
+    {
       path: '/',
       // name: 'home', // Removed duplicate name
       component: PublicLayout, // Use PublicLayout for public routes
@@ -204,7 +216,7 @@ const router = createRouter({
           name: 'admin-pengaturan',
           component: () => import('../views/admin/AdminPengaturan.vue')
         }
-        
+
       ]
     }
 
