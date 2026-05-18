@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\VisionMissionController;
 use App\Http\Controllers\SchoolProfileController;
 use App\Http\Controllers\TimelineController;
 use Illuminate\Http\Request;
@@ -23,4 +24,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API khusus untuk memperbarui urutan timeline lewat drag & drop
     Route::post('/sejarah/reorder', [TimelineController::class, 'reorder']);
+
+    // API Visi & Misi
+    Route::get('/vision-mission', [VisionMissionController::class, 'index']);
+    Route::post('/vision-mission', [VisionMissionController::class, 'update']);
 });

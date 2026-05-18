@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -12,42 +13,11 @@ import {
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
-// View State
-const visi = ref(
-  "Terwujudnya Lulusan yang Bertaqwa, Berkarakter, Cerdas, Terampil, dan Berbudaya Lingkungan serta Mampu Bersaing di Era Global."
-);
-
-const misi = ref([
-  {
-    id: 1,
-    text:
-      "Menumbuhkembangkan keimanan dan ketaqwaan melalui pembiasaan kegiatan keagamaan di lingkungan sekolah.",
-  },
-  {
-    id: 2,
-    text:
-      "Melaksanakan proses pembelajaran dan bimbingan secara efektif, inovatif, dan berpusat pada peserta didik.",
-  },
-  {
-    id: 3,
-    text:
-      "Membina peserta didik untuk mengembangkan minat, bakat, dan potensi yang dimiliki melalui kegiatan ekstrakurikuler.",
-  },
-  {
-    id: 4,
-    text:
-      "Mewujudkan lingkungan sekolah yang bersih, asri, aman, dan nyaman sebagai pilar utama pendukung proses belajar mengajar.",
-  },
-  {
-    id: 5,
-    text:
-      "Meningkatkan kemampuan pemanfaatan teknologi informasi dan komunikasi untuk siap bersaing di tingkat global.",
-  },
-]);
-
-const sambutan = ref(
-  `<p>"Selamat datang di website resmi SMA Negeri 1 Nogosari. Kami berkomitmen untuk memberikan pendidikan berkualitas yang tidak hanya berfokus pada kecerdasan akademis, tetapi juga pembentukan karakter peserta didik yang berakhlak mulia dan berbudaya lingkungan."</p><br><p>Di era digital dan globalisasi saat ini, lembaga pendidikan memiliki tanggung jawab besar. Oleh karena itu, kami terus berinovasi dalam metode pembelajaran serta melengkapi berbagai fasilitas guna memastikan anak-anak kita siap menghadapi tantangan masa depan dengan bekal ilmu dan iman yang seimbang.</p><br><p>Kolaborasi yang erat antara guru, siswa, komite sekolah, dan masyarakat adalah kunci utama dari kesuksesan yang kita raih bersama. Melalui visi dan misi yang jelas, kami berharap dapat mewujudkan sekolah sebagai tempat yang menyenangkan untuk belajar dan bertumbuh.</p><br><p>Terima kasih atas dukungan dan kepercayaan Bapak/Ibu sekalian terhadap sekolah kami. Mari kita bersama-sama mewujudkan generasi penerus yang cerdas, terampil, dan siap berkontribusi bagi nusa dan bangsa.</p>`
-);
+// Data State
+const visi = ref("");
+const misi = ref([]);
+const sambutan = ref("");
+const isLoading = ref(true);
 
 // Edit State
 const isModalOpen = ref(false);
@@ -57,7 +27,7 @@ const tempSambutan = ref("");
 
 const openEditModal = () => {
   tempVisi.value = visi.value;
-  tempMisi.value = misi.value.map((m) => ({ ...m }));
+  tempMisi.value = JSON.parse(JSON.stringify(misi.value || [])); // Deep copy
   tempSambutan.value = sambutan.value;
   isModalOpen.value = true;
   document.body.style.overflow = "hidden";
@@ -105,23 +75,59 @@ const triggerToast = (title, message, type = "success") => {
   }, 4000); // Otomatis hilang setelah 4 detik
 };
 
-const saveChanges = () => {
+const fetchData = async () => {
+  isLoading.value = true;
+  try {
+    const response = await axios.get("/api/vision-mission");
+    const data = response.data.data;
+    visi.value = data.vision || "";
+    misi.value = data.missions || [];
+    sambutan.value = data.principal_speech || "";
+  } catch (error) {
+    console.error("Gagal mengambil data Visi & Misi:", error);
+    triggerToast("Gagal Memuat", "Tidak dapat memuat data dari server.", "error");
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(fetchData);
+
+const saveChanges = async () => {
   // Validate
   if (!tempVisi.value.trim()) {
     triggerToast("Gagal Menyimpan", "Visi tidak boleh kosong!", "error");
     return;
   }
 
-  // Filter empty misi
-  tempMisi.value = tempMisi.value.filter((m) => m.text.trim() !== "");
+  const payload = {
+    vision: tempVisi.value,
+    missions: tempMisi.value.filter((m) => m.text.trim() !== ""), // Filter out empty missions
+    principal_speech: tempSambutan.value,
+  };
 
-  // Update original state
-  visi.value = tempVisi.value;
-  misi.value = tempMisi.value.map((m) => ({ ...m }));
-  sambutan.value = tempSambutan.value;
+  try {
+    const response = await axios.post("/api/vision-mission", payload);
 
-  closeEditModal();
-  triggerToast("Berhasil Disimpan", "Data Visi, Misi, dan Sambutan berhasil diperbarui.");
+    // Update local state with data from server response
+    const data = response.data.data;
+    visi.value = data.vision;
+    misi.value = data.missions;
+    sambutan.value = data.principal_speech;
+
+    closeEditModal();
+    triggerToast(
+      "Berhasil Disimpan",
+      "Data Visi, Misi, dan Sambutan berhasil diperbarui."
+    );
+  } catch (error) {
+    console.error("Gagal menyimpan perubahan:", error);
+    triggerToast(
+      "Gagal Menyimpan",
+      error.response?.data?.message || "Terjadi kesalahan pada server.",
+      "error"
+    );
+  }
 };
 </script>
 
@@ -148,8 +154,17 @@ const saveChanges = () => {
       </button>
     </div>
 
+    <!-- Skeleton Loader -->
+    <div v-if="isLoading" class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+      <div class="xl:col-span-2 space-y-8">
+        <div class="bg-gray-200 dark:bg-slate-700 rounded-lg h-48 animate-pulse"></div>
+        <div class="bg-gray-200 dark:bg-slate-700 rounded-lg h-64 animate-pulse"></div>
+      </div>
+      <div class="bg-gray-200 dark:bg-slate-700 rounded-lg h-96 animate-pulse"></div>
+    </div>
+
     <!-- View Mode -->
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+    <div v-else class="grid grid-cols-1 xl:grid-cols-3 gap-8">
       <!-- Kolom Kiri: Visi & Misi -->
       <div class="xl:col-span-2 space-y-8">
         <!-- Tampilan Visi -->
@@ -162,7 +177,7 @@ const saveChanges = () => {
           <p
             class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg italic border-l-4 border-blue-500 pl-4 py-2 bg-blue-50/50 dark:bg-blue-900/20 rounded-r-lg"
           >
-            "{{ visi }}"
+            "{{ visi || "Visi belum diatur." }}"
           </p>
         </div>
 
@@ -174,7 +189,11 @@ const saveChanges = () => {
             Misi Sekolah
           </h3>
           <ul class="space-y-4">
-            <li v-for="(item, index) in misi" :key="item.id" class="flex items-start">
+            <li
+              v-for="(item, index) in misi"
+              :key="item.id || index"
+              class="flex items-start"
+            >
               <span
                 class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm mr-4 mt-0.5"
               >
@@ -186,7 +205,7 @@ const saveChanges = () => {
             </li>
           </ul>
           <div
-            v-if="misi.length === 0"
+            v-if="!misi || misi.length === 0"
             class="text-gray-500 dark:text-gray-400 py-4 text-center"
           >
             Belum ada data misi.
@@ -204,7 +223,7 @@ const saveChanges = () => {
           </h3>
           <div
             class="prose dark:prose-invert max-w-none text-sm text-gray-700 dark:text-gray-300 leading-relaxed editor-content-preview custom-scrollbar overflow-y-auto max-h-[600px] pr-2"
-            v-html="sambutan"
+            v-html="sambutan || '<p class=\'text-gray-500\'>Sambutan belum diatur.</p>'"
           ></div>
         </div>
       </div>
