@@ -110,6 +110,9 @@ const router = createRouter({
       path: '/admin', // Parent route for admin section
       name: 'admin',
       component: AdminLayout, // Use the new AdminLayout
+      meta: {
+        requiresAuth: true
+      },
       children: [
         {
           path: 'dashboard', // Child route for the dashboard
@@ -223,5 +226,28 @@ const router = createRouter({
 
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  // Ambil status login dari localStorage (atau bisa dari Pinia/Vuex jika ada)
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+  // Cek apakah rute memerlukan autentikasi (seperti halaman admin)
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!isLoggedIn) {
+      // Jika belum login, arahkan kembali ke halaman login
+      next({ name: 'login' });
+    } else {
+      next(); // Lanjutkan ke halaman admin
+    }
+  } else if (to.matched.some(record => record.meta.requiresGuest)) {
+    if (isLoggedIn) {
+      next({ name: 'dashboard' }); // Jika sudah login, jangan izinkan akses halaman login lagi
+    } else {
+      next();
+    }
+  } else {
+    next(); // Untuk rute publik seperti beranda, fasiltias, dll
+  }
+});
 
 export default router

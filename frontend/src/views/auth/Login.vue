@@ -41,6 +41,9 @@ const handleLogin = async () => {
     // const { data } = await axios.get('/api/user');
     // localStorage.setItem('user_role', data.role); // misalnya untuk mengecek 'superadmin' atau 'admin'
 
+    // Simpan penanda bahwa pengguna sudah terautentikasi
+    localStorage.setItem("isLoggedIn", "true");
+
     // 4. Redirect ke dashboard admin (sementara default masuk ke superadmin view)
     router.push("/admin/dashboard");
   } catch (error) {

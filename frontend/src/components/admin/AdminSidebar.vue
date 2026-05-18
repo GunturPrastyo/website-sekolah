@@ -1,6 +1,6 @@
 <script setup>
 import { ref, markRaw, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import {
   PhHouse,
   PhUsers,
@@ -18,6 +18,7 @@ import {
 } from "@phosphor-icons/vue";
 
 const route = useRoute();
+const router = useRouter();
 
 const props = defineProps({
   isOpen: {
@@ -105,6 +106,14 @@ const checkActiveMenu = () => {
 
 onMounted(checkActiveMenu);
 watch(() => route.path, checkActiveMenu);
+
+const handleLogout = () => {
+  // Hapus status login dan data user lainnya dari localStorage jika ada
+  localStorage.removeItem("isLoggedIn");
+  
+  // Kembalikan pengguna ke halaman login
+  router.push("/login");
+};
 </script>
 
 <template>
@@ -178,13 +187,13 @@ watch(() => route.path, checkActiveMenu);
       </div>
     </nav>
     <div class="absolute bottom-0 w-full border-t border-gray-100 dark:border-slate-700">
-      <a
-        href="#"
-        class="flex items-center px-6 py-4 text-gray-600 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+      <button
+        @click="handleLogout"
+        class="w-full flex items-center px-6 py-4 text-gray-600 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-colors"
       >
         <PhSignOut :size="20" class="mr-3" />
         <span>Keluar</span>
-      </a>
+      </button>
     </div>
   </aside>
 </template>
