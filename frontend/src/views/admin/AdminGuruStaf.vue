@@ -11,6 +11,8 @@ import {
   PhEnvelopeSimple,
   PhLinkedinLogo,
   PhX,
+  PhCaretDown,
+  PhCheck,
 } from "@phosphor-icons/vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
@@ -105,6 +107,7 @@ const searchQuery = ref("");
 
 const showNewRoleInput = ref(false);
 const newRoleName = ref("");
+const isRoleDropdownOpen = ref(false);
 
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };
@@ -128,6 +131,7 @@ const resetForm = () => {
   isEditing.value = false;
   showNewRoleInput.value = false;
   newRoleName.value = "";
+  isRoleDropdownOpen.value = false;
 };
 
 const showAddForm = () => {
@@ -224,11 +228,14 @@ const getCategoryName = (id) => {
   return category ? category.name : id;
 };
 
-const handleRoleChange = () => {
-  if (form.value.role === "ADD_NEW") {
+const selectRole = (role) => {
+  if (role === "ADD_NEW") {
     showNewRoleInput.value = true;
     form.value.role = "";
+  } else {
+    form.value.role = role;
   }
+  isRoleDropdownOpen.value = false;
 };
 
 const addNewRole = () => {
@@ -249,6 +256,83 @@ const cancelNewRole = () => {
   showNewRoleInput.value = false;
   newRoleName.value = "";
   form.value.role = "";
+};
+
+const editingRoleIndex = ref(null);
+const editingRoleName = ref("");
+
+const startEditRole = (index, role) => {
+  editingRoleIndex.value = index;
+  editingRoleName.value = role;
+};
+
+const saveEditRole = (index) => {
+  const newName = editingRoleName.value.trim();
+  if (newName) {
+    const oldName = commonRoles.value[index];
+    staffList.value.forEach((staff) => {
+      if (staff.role === oldName) {
+        staff.role = newName;
+      }
+    });
+    if (form.value.role === oldName) {
+      form.value.role = newName;
+    }
+    commonRoles.value[index] = newName;
+    editingRoleIndex.value = null;
+    editingRoleName.value = "";
+    triggerToast("Berhasil", "Nama jabatan berhasil diperbarui.", "success");
+  } else {
+    triggerToast("Gagal", "Nama jabatan tidak boleh kosong!", "error");
+  }
+};
+
+const cancelEditRole = () => {
+  editingRoleIndex.value = null;
+  editingRoleName.value = "";
+};
+
+const isDeleteRoleModalOpen = ref(false);
+const roleToDeleteIndex = ref(null);
+const roleToDeleteName = ref("");
+
+const deleteRole = (index) => {
+  const roleToDelete = commonRoles.value[index];
+  const isInUse = staffList.value.some((s) => s.role === roleToDelete);
+
+  if (isInUse) {
+    triggerToast(
+      "Gagal",
+      `Jabatan "${roleToDelete}" sedang digunakan oleh staf!`,
+      "error"
+    );
+    return;
+  }
+
+  roleToDeleteIndex.value = index;
+  roleToDeleteName.value = roleToDelete;
+  isDeleteRoleModalOpen.value = true;
+  isRoleDropdownOpen.value = false;
+};
+
+const confirmDeleteRole = () => {
+  if (roleToDeleteIndex.value !== null) {
+    const role = commonRoles.value[roleToDeleteIndex.value];
+    commonRoles.value.splice(roleToDeleteIndex.value, 1);
+    if (form.value.role === role) {
+      form.value.role = "";
+    }
+    triggerToast("Jabatan Dihapus", `Jabatan "${role}" berhasil dihapus.`, "info");
+  }
+  isDeleteRoleModalOpen.value = false;
+  roleToDeleteIndex.value = null;
+  roleToDeleteName.value = "";
+};
+
+const cancelDeleteRole = () => {
+  isDeleteRoleModalOpen.value = false;
+  roleToDeleteIndex.value = null;
+  roleToDeleteName.value = "";
 };
 </script>
 
@@ -287,193 +371,291 @@ const cancelNewRole = () => {
     >
       <div
         v-if="isFormVisible"
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        class="fixed inset-0 z-[100] overflow-y-auto bg-black/50 backdrop-blur-sm"
         @click="hideForm"
       >
-        <div
-          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden transform transition-all"
-          @click.stop
-        >
-          <!-- Modal Header -->
+        <div class="flex items-center justify-center min-h-screen p-4 sm:p-6">
           <div
-            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+            class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl flex flex-col transform transition-all relative"
+            @click.stop
           >
-            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
-              {{ isEditing ? "Edit Data Staf" : "Tambah Data Staf Baru" }}
-            </h3>
-            <button
-              @click="hideForm"
-              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            <!-- Modal Header -->
+            <div
+              class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 rounded-t-xl"
             >
-              <PhX class="w-6 h-6" />
-            </button>
-          </div>
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+                {{ isEditing ? "Edit Data Staf" : "Tambah Data Staf Baru" }}
+              </h3>
+              <button
+                @click="hideForm"
+                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              >
+                <PhX class="w-6 h-6" />
+              </button>
+            </div>
 
-          <!-- Modal Body -->
-          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
-            <form id="staffForm" @submit.prevent="isEditing ? saveEntry() : addEntry()">
-              <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Kolom Kiri: Foto -->
-                <div class="lg:col-span-1">
-                  <ImageUploader
-                    v-model="form.image"
-                    label="Foto Profil"
-                    :isCircular="true"
-                    containerClass="w-full max-w-[240px] mx-auto lg:mx-0"
-                    imageClass="object-cover object-top"
-                  />
-                  <p
-                    class="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center lg:text-left max-w-[240px] mx-auto lg:mx-0"
-                  >
-                    Rasio foto terbaik adalah 1:1 (persegi).
-                  </p>
-                </div>
-
-                <!-- Kolom Kanan: Form Fields -->
-                <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div class="md:col-span-2">
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                      >Nama Lengkap & Gelar</label
-                    >
-                    <input
-                      type="text"
-                      v-model="form.name"
-                      required
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Contoh: Budi Santoso, S.Pd"
+            <!-- Modal Body -->
+            <div class="p-6 flex-1">
+              <form id="staffForm" @submit.prevent="isEditing ? saveEntry() : addEntry()">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  <!-- Kolom Kiri: Foto -->
+                  <div class="lg:col-span-1">
+                    <ImageUploader
+                      v-model="form.image"
+                      label="Foto Profil"
+                      :isCircular="true"
+                      containerClass="w-full max-w-[240px] mx-auto lg:mx-0"
+                      imageClass="object-cover object-top"
                     />
+                    <p
+                      class="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center lg:text-left max-w-[240px] mx-auto lg:mx-0"
+                    >
+                      Rasio foto terbaik adalah 1:1 (persegi).
+                    </p>
                   </div>
 
-                  <div>
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                      >Nomor Induk Pegawai (NIP)</label
-                    >
-                    <input
-                      type="text"
-                      v-model="form.nip"
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Kosongkan jika tidak ada"
-                    />
-                  </div>
+                  <!-- Kolom Kanan: Form Fields -->
+                  <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >Nama Lengkap & Gelar</label
+                      >
+                      <input
+                        type="text"
+                        v-model="form.name"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Contoh: Budi Santoso, S.Pd"
+                      />
+                    </div>
 
-                  <div>
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                      >Kategori</label
-                    >
-                    <select
-                      v-model="form.category"
-                      required
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-                        {{ cat.name }}
-                      </option>
-                    </select>
-                  </div>
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >Nomor Induk Pegawai (NIP)</label
+                      >
+                      <input
+                        type="text"
+                        v-model="form.nip"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Kosongkan jika tidak ada"
+                      />
+                    </div>
 
-                  <div class="md:col-span-2">
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                      >Jabatan / Posisi</label
-                    >
-                    <div v-if="!showNewRoleInput">
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >Kategori</label
+                      >
                       <select
-                        v-model="form.role"
-                        @change="handleRoleChange"
+                        v-model="form.category"
                         required
                         class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                       >
-                        <option disabled value="">Pilih jabatan...</option>
-                        <option v-for="role in commonRoles" :key="role" :value="role">
-                          {{ role }}
-                        </option>
-                        <option
-                          value="ADD_NEW"
-                          class="font-semibold text-blue-600 dark:text-blue-400"
-                        >
-                          + Tambah Jabatan Baru...
+                        <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                          {{ cat.name }}
                         </option>
                       </select>
                     </div>
-                    <div v-else class="flex gap-2">
+
+                    <div class="md:col-span-2">
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >Jabatan / Posisi</label
+                      >
+                      <div v-if="!showNewRoleInput" class="relative">
+                        <!-- Custom Dropdown Button -->
+                        <button
+                          type="button"
+                          @click="isRoleDropdownOpen = !isRoleDropdownOpen"
+                          class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-left focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex justify-between items-center transition-colors"
+                          :class="
+                            form.role
+                              ? 'text-gray-900 dark:text-white'
+                              : 'text-gray-500 dark:text-gray-400'
+                          "
+                        >
+                          <span class="truncate">{{
+                            form.role || "Pilih jabatan..."
+                          }}</span>
+                          <PhCaretDown
+                            class="w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200"
+                            :class="{ 'rotate-180': isRoleDropdownOpen }"
+                          />
+                        </button>
+
+                        <!-- Overlay untuk menutup dropdown jika klik di luar -->
+                        <div
+                          v-if="isRoleDropdownOpen"
+                          @click="isRoleDropdownOpen = false"
+                          class="fixed inset-0 z-40"
+                        ></div>
+
+                        <!-- Custom Dropdown List -->
+                        <Transition
+                          enter-active-class="transition ease-out duration-100"
+                          enter-from-class="opacity-0 translate-y-[-10px]"
+                          enter-to-class="opacity-100 translate-y-0"
+                          leave-active-class="transition ease-in duration-100"
+                          leave-from-class="opacity-100 translate-y-0"
+                          leave-to-class="opacity-0 translate-y-[-10px]"
+                        >
+                          <div
+                            v-if="isRoleDropdownOpen"
+                            class="absolute top-full z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl max-h-60 overflow-y-auto custom-scrollbar"
+                          >
+                            <ul class="py-1 text-sm">
+                              <li
+                                v-for="(role, index) in commonRoles"
+                                :key="index"
+                                class="hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 transition-colors group"
+                              >
+                                <div
+                                  v-if="editingRoleIndex === index"
+                                  class="flex items-center gap-2 w-full px-4 py-2"
+                                  @click.stop
+                                >
+                                  <input
+                                    type="text"
+                                    v-model="editingRoleName"
+                                    class="flex-1 px-2 py-1 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 focus:ring-blue-500 focus:border-blue-500"
+                                    @keydown.enter.prevent="saveEditRole(index)"
+                                    @keydown.esc.prevent="cancelEditRole()"
+                                  />
+                                  <button
+                                    type="button"
+                                    @click="saveEditRole(index)"
+                                    class="p-1 text-green-600 hover:bg-green-100 rounded"
+                                    title="Simpan"
+                                  >
+                                    <PhCheck class="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    @click="cancelEditRole()"
+                                    class="p-1 text-gray-500 hover:bg-gray-200 rounded"
+                                    title="Batal"
+                                  >
+                                    <PhX class="w-4 h-4" />
+                                  </button>
+                                </div>
+                                <div
+                                  v-else
+                                  class="flex items-center justify-between w-full px-4 py-2.5 cursor-pointer"
+                                  @click="selectRole(role)"
+                                >
+                                  <span class="truncate pr-2">{{ role }}</span>
+                                  <div
+                                    class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 shrink-0"
+                                    @click.stop
+                                  >
+                                    <button
+                                      type="button"
+                                      @click="startEditRole(index, role)"
+                                      class="p-1 text-blue-600 hover:bg-blue-100 rounded transition-colors"
+                                      title="Edit Jabatan"
+                                    >
+                                      <PhPencilSimple class="w-4 h-4" />
+                                    </button>
+                                    <button
+                                      type="button"
+                                      @click="deleteRole(index)"
+                                      class="p-1 text-red-600 hover:bg-red-100 rounded transition-colors"
+                                      title="Hapus Jabatan"
+                                    >
+                                      <PhTrash class="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                </div>
+                              </li>
+                              <li
+                                @click="selectRole('ADD_NEW')"
+                                class="px-4 py-2.5 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer font-semibold text-blue-600 dark:text-blue-400 border-t border-gray-100 dark:border-slate-700 transition-colors sticky bottom-0 bg-white dark:bg-slate-800"
+                              >
+                                + Tambah Jabatan Baru...
+                              </li>
+                            </ul>
+                          </div>
+                        </Transition>
+                      </div>
+                      <div v-else class="flex gap-2">
+                        <input
+                          type="text"
+                          v-model="newRoleName"
+                          class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="Ketik nama jabatan baru..."
+                          @keydown.enter.prevent="addNewRole"
+                        />
+                        <button
+                          type="button"
+                          @click="addNewRole"
+                          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                        >
+                          Simpan
+                        </button>
+                        <button
+                          type="button"
+                          @click="cancelNewRole"
+                          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 dark:bg-slate-600 dark:text-gray-300 dark:hover:bg-slate-500 transition-colors text-sm font-medium"
+                        >
+                          Batal
+                        </button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >Email (Opsional)</label
+                      >
                       <input
-                        type="text"
-                        v-model="newRoleName"
-                        class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Ketik nama jabatan baru..."
-                        @keydown.enter.prevent="addNewRole"
+                        type="email"
+                        v-model="form.email"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Contoh: guru@sekolah.sch.id"
                       />
-                      <button
-                        type="button"
-                        @click="addNewRole"
-                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                    </div>
+
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >Profil LinkedIn (Opsional)</label
                       >
-                        Simpan
-                      </button>
-                      <button
-                        type="button"
-                        @click="cancelNewRole"
-                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 dark:bg-slate-600 dark:text-gray-300 dark:hover:bg-slate-500 transition-colors text-sm font-medium"
-                      >
-                        Batal
-                      </button>
+                      <input
+                        type="url"
+                        v-model="form.linkedin"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Contoh: https://linkedin.com/in/username"
+                      />
                     </div>
                   </div>
-
-                  <div>
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                      >Email (Opsional)</label
-                    >
-                    <input
-                      type="email"
-                      v-model="form.email"
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Contoh: guru@sekolah.sch.id"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                      >Profil LinkedIn (Opsional)</label
-                    >
-                    <input
-                      type="url"
-                      v-model="form.linkedin"
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Contoh: https://linkedin.com/in/username"
-                    />
-                  </div>
                 </div>
-              </div>
-            </form>
-          </div>
+              </form>
+            </div>
 
-          <!-- Modal Footer -->
-          <div
-            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
-          >
-            <button
-              type="button"
-              @click="hideForm"
-              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            <!-- Modal Footer -->
+            <div
+              class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3 rounded-b-xl"
             >
-              <PhXCircle class="w-5 h-5 mr-2" />
-              Batal
-            </button>
-            <button
-              form="staffForm"
-              type="submit"
-              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-            >
-              <PhFloppyDisk v-if="isEditing" class="w-5 h-5 mr-2" />
-              <PhPlusCircle v-else class="w-5 h-5 mr-2" />
-              {{ isEditing ? "Simpan Perubahan" : "Simpan Data" }}
-            </button>
+              <button
+                type="button"
+                @click="hideForm"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              >
+                <PhXCircle class="w-5 h-5 mr-2" />
+                Batal
+              </button>
+              <button
+                form="staffForm"
+                type="submit"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              >
+                <PhFloppyDisk v-if="isEditing" class="w-5 h-5 mr-2" />
+                <PhPlusCircle v-else class="w-5 h-5 mr-2" />
+                {{ isEditing ? "Simpan Perubahan" : "Simpan Data" }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -630,6 +812,15 @@ const cancelNewRole = () => {
       @cancel="cancelDelete"
     />
 
+    <!-- Modal Konfirmasi Hapus Jabatan -->
+    <ConfirmModal
+      :isOpen="isDeleteRoleModalOpen"
+      title="Hapus Jabatan"
+      :message="`Apakah Anda yakin ingin menghapus jabatan '${roleToDeleteName}'?`"
+      @confirm="confirmDeleteRole"
+      @cancel="cancelDeleteRole"
+    />
+
     <!-- Notifikasi Toast -->
     <ToastNotification
       :isOpen="showToast"
@@ -640,10 +831,3 @@ const cancelNewRole = () => {
     />
   </main>
 </template>
-
-<style scoped>
-/* Transisi form */
-.transition-all {
-  overflow: hidden;
-}
-</style>
