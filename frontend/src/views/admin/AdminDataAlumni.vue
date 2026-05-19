@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -11,42 +11,151 @@ import {
   PhX,
   PhMapPin,
   PhMapTrifold,
+  PhCaretDown,
+  PhCheck,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
+import api from "@/api/index.js";
 
 const statusAlumniList = ["Kuliah", "Bekerja", "Wirausaha", "Lainnya"];
 
-// Simulasi Data Master Siswa (Hanya yang berstatus Alumni di Data Siswa)
-const masterSiswaAlumni = ref([
-  { nisn: "0059876543", name: "Budi Santoso", year: "2023" },
-  { nisn: "0061234567", name: "Siti Rahma", year: "2022" },
-  { nisn: "0071112223", name: "Ahmad Dahlan", year: "2023" },
-  { nisn: "0089998887", name: "Putri Larasati", year: "2023" },
-]);
+const alumniList = ref([]);
+const unassignedAlumni = ref([]);
 
-// Dummy data simulasi alumni
-const alumniList = ref([
-  {
-    id: 1,
-    nisn: "0059876543",
-    name: "Budi Santoso",
-    year: "2023",
-    status: "Kuliah",
-    instansi: "Universitas Gadjah Mada",
-  },
-  {
-    id: 2,
-    nisn: "0061234567",
-    name: "Siti Rahma",
-    year: "2022",
-    status: "Bekerja",
-    instansi: "PT Pertamina",
-  },
-]);
+const fetchAlumnis = async () => {
+  try {
+    const response = await api.get("/api/alumnis");
+    alumniList.value = response.data.data;
+    mergeInstitutions();
+  } catch (error) {
+    console.error("Gagal memuat data alumni", error);
+    triggerToast(
+      "Gagal Memuat",
+      "Tidak dapat mengambil data alumni dari server.",
+      "error"
+    );
+  }
+};
+
+const fetchUnassignedStudents = async () => {
+  try {
+    const response = await api.get("/api/alumnis/unassigned-students");
+    unassignedAlumni.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal mengambil data siswa unassigned:", error);
+  }
+};
+
+onMounted(() => {
+  fetchAlumnis();
+  fetchUnassignedStudents();
+});
+
+// State dan Logic untuk Dropdown CRUD Instansi
+const institutionList = ref([]);
+
+const mergeInstitutions = () => {
+  const unique = new Set(institutionList.value);
+  alumniList.value.forEach((a) => {
+    if (a.instansi && a.instansi.trim()) {
+      unique.add(a.instansi.trim());
+    }
+  });
+  institutionList.value = Array.from(unique).sort();
+};
+
+const showNewInstansiInput = ref(false);
+const newInstansiName = ref("");
+const isInstansiDropdownOpen = ref(false);
+const editingInstansiIndex = ref(null);
+const editingInstansiName = ref("");
+
+const selectInstansi = (name) => {
+  if (name === "ADD_NEW") {
+    showNewInstansiInput.value = true;
+    form.value.instansi = "";
+  } else {
+    form.value.instansi = name;
+  }
+  isInstansiDropdownOpen.value = false;
+};
+
+const addNewInstansi = () => {
+  const name = newInstansiName.value.trim();
+  if (name) {
+    if (!institutionList.value.includes(name)) {
+      institutionList.value.push(name);
+      institutionList.value.sort();
+    }
+    form.value.instansi = name;
+    showNewInstansiInput.value = false;
+    newInstansiName.value = "";
+  } else {
+    triggerToast("Gagal", "Nama instansi tidak boleh kosong!", "error");
+  }
+};
+
+const cancelNewInstansi = () => {
+  showNewInstansiInput.value = false;
+  newInstansiName.value = "";
+  form.value.instansi = "";
+};
+
+const startEditInstansi = (index, name) => {
+  editingInstansiIndex.value = index;
+  editingInstansiName.value = name;
+};
+
+const saveEditInstansi = (index) => {
+  const newName = editingInstansiName.value.trim();
+  if (newName) {
+    const oldName = institutionList.value[index];
+    alumniList.value.forEach((a) => {
+      if (a.instansi === oldName) {
+        a.instansi = newName;
+      }
+    });
+    if (form.value.instansi === oldName) form.value.instansi = newName;
+    institutionList.value[index] = newName;
+    institutionList.value.sort();
+    editingInstansiIndex.value = null;
+    editingInstansiName.value = "";
+    triggerToast("Berhasil", "Nama instansi berhasil diperbarui.", "success");
+  } else {
+    triggerToast("Gagal", "Nama instansi tidak boleh kosong!", "error");
+  }
+};
+
+const cancelEditInstansi = () => {
+  editingInstansiIndex.value = null;
+  editingInstansiName.value = "";
+};
+
+const handleDeleteInstansi = (index) => {
+  const instToDelete = institutionList.value[index];
+  const isInUse = alumniList.value.some((a) => a.instansi === instToDelete);
+
+  if (isInUse) {
+    triggerToast(
+      "Gagal",
+      `Instansi "${instToDelete}" sedang digunakan oleh alumni!`,
+      "error"
+    );
+    return;
+  }
+
+  if (window.confirm(`Apakah Anda yakin ingin menghapus instansi '${instToDelete}'?`)) {
+    institutionList.value.splice(index, 1);
+    if (form.value.instansi === instToDelete) form.value.instansi = "";
+    triggerToast("Dihapus", `Instansi "${instToDelete}" berhasil dihapus.`, "info");
+  }
+  isInstansiDropdownOpen.value = false;
+};
 
 const form = ref({
   id: null,
+  student_id: null,
   nisn: "",
   name: "",
   year: new Date().getFullYear().toString(),
@@ -55,65 +164,7 @@ const form = ref({
 });
 
 // Data Peta Persebaran (Untuk Home View)
-const mapLocations = ref([
-  {
-    id: 1,
-    name: "Jabodetabek & Sekitarnya",
-    type: "mixed",
-    totalAlumni: 194,
-    top: "73%",
-    left: "27%",
-    institutions: [
-      { name: "Universitas Indonesia", type: "ptn", alumni: 45, logo: "/img/ui.png" },
-      {
-        name: "Politeknik Keuangan Negara STAN",
-        type: "kedinasan",
-        alumni: 64,
-        logo: "https://img.icons8.com/color/96/bank-building.png",
-      },
-      {
-        name: "Instansi BUMN & Kementerian",
-        type: "instansi",
-        alumni: 85,
-        logo: "https://img.icons8.com/color/96/city-buildings.png",
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: "Jawa Barat",
-    type: "ptn",
-    totalAlumni: 70,
-    top: "77%",
-    left: "31%",
-    institutions: [
-      { name: "Institut Pertanian Bogor", type: "ptn", alumni: 38, logo: "/img/ipb.png" },
-      {
-        name: "Institut Teknologi Bandung",
-        type: "ptn",
-        alumni: 32,
-        logo: "/img/itb.png",
-      },
-    ],
-  },
-  {
-    id: 3,
-    name: "Jawa Tengah & DIY",
-    type: "mixed",
-    totalAlumni: 175,
-    top: "80%",
-    left: "38%",
-    institutions: [
-      { name: "Universitas Gadjah Mada", type: "ptn", alumni: 50, logo: "/img/ugm.png" },
-      {
-        name: "Akademi Kepolisian (AKPOL)",
-        type: "kedinasan",
-        alumni: 125,
-        logo: "https://img.icons8.com/color/96/police-badge.png",
-      },
-    ],
-  },
-]);
+const mapLocations = ref([]);
 
 const isMapModalOpen = ref(false);
 const isMapEditing = ref(false);
@@ -231,12 +282,6 @@ const filterStatus = ref("semua");
 const searchStudent = ref("");
 const isDropdownOpen = ref(false);
 
-// Memfilter agar siswa yang sudah dilacak tidak muncul lagi di dropdown
-const unassignedAlumni = computed(() => {
-  const trackedNisn = alumniList.value.map((a) => a.nisn);
-  return masterSiswaAlumni.value.filter((s) => !trackedNisn.includes(s.nisn));
-});
-
 const filteredUnassignedAlumni = computed(() => {
   if (!searchStudent.value) return unassignedAlumni.value;
   const q = searchStudent.value.toLowerCase();
@@ -246,9 +291,10 @@ const filteredUnassignedAlumni = computed(() => {
 });
 
 const selectStudent = (siswa) => {
+  form.value.student_id = siswa.id;
   form.value.nisn = siswa.nisn;
   form.value.name = siswa.name;
-  form.value.year = siswa.year;
+  if (siswa.year) form.value.year = siswa.year;
   searchStudent.value = `${siswa.nisn} - ${siswa.name}`;
   isDropdownOpen.value = false;
 };
@@ -270,6 +316,7 @@ const triggerToast = (title, message, type = "success") => {
 const resetForm = () => {
   form.value = {
     id: null,
+    student_id: null,
     nisn: "",
     name: "",
     year: new Date().getFullYear().toString(),
@@ -279,6 +326,9 @@ const resetForm = () => {
   searchStudent.value = "";
   isDropdownOpen.value = false;
   isEditing.value = false;
+  showNewInstansiInput.value = false;
+  newInstansiName.value = "";
+  isInstansiDropdownOpen.value = false;
 };
 
 const hideForm = () => {
@@ -293,26 +343,26 @@ const showAddForm = () => {
   document.body.style.overflow = "hidden";
 };
 
-const addEntry = () => {
-  if (!form.value.name || !form.value.nisn) {
-    triggerToast("Gagal Menyimpan", "Nama dan NISN wajib diisi!", "error");
+const addEntry = async () => {
+  if (!form.value.student_id || !form.value.year) {
+    triggerToast("Gagal Menyimpan", "Siswa dan Tahun Lulus wajib diisi!", "error");
     return;
   }
 
-  const newId =
-    alumniList.value.length > 0 ? Math.max(...alumniList.value.map((s) => s.id)) + 1 : 1;
-
-  alumniList.value.unshift({
-    id: newId,
-    nisn: form.value.nisn,
-    name: form.value.name,
-    year: form.value.year,
-    status: form.value.status,
-    instansi: form.value.instansi,
-  });
-
-  hideForm();
-  triggerToast("Berhasil Ditambahkan", "Data alumni baru berhasil ditambahkan.");
+  try {
+    const response = await api.post("/api/alumnis", form.value);
+    alumniList.value.unshift(response.data.data);
+    hideForm();
+    fetchUnassignedStudents();
+    triggerToast("Berhasil Ditambahkan", "Data alumni baru berhasil ditambahkan.");
+  } catch (error) {
+    console.error(error);
+    triggerToast(
+      "Gagal Menambahkan",
+      error.response?.data?.message || "Terjadi kesalahan",
+      "error"
+    );
+  }
 };
 
 const startEdit = (item) => {
@@ -323,19 +373,28 @@ const startEdit = (item) => {
   document.body.style.overflow = "hidden";
 };
 
-const saveEntry = () => {
-  if (!form.value.name || !form.value.nisn) {
-    triggerToast("Gagal Menyimpan", "Nama dan NISN wajib diisi!", "error");
+const saveEntry = async () => {
+  if (!form.value.year) {
+    triggerToast("Gagal Menyimpan", "Tahun Lulus wajib diisi!", "error");
     return;
   }
 
-  const index = alumniList.value.findIndex((s) => s.id === form.value.id);
-  if (index !== -1) {
-    alumniList.value[index] = { ...form.value };
+  try {
+    const response = await api.put(`/api/alumnis/${form.value.id}`, form.value);
+    const index = alumniList.value.findIndex((s) => s.id === form.value.id);
+    if (index !== -1) {
+      alumniList.value[index] = response.data.data;
+    }
+    hideForm();
+    triggerToast("Perubahan Disimpan", "Data alumni berhasil diperbarui.");
+  } catch (error) {
+    console.error(error);
+    triggerToast(
+      "Gagal Memperbarui",
+      error.response?.data?.message || "Terjadi kesalahan",
+      "error"
+    );
   }
-
-  hideForm();
-  triggerToast("Perubahan Disimpan", "Data alumni berhasil diperbarui.");
 };
 
 const deleteEntry = (id) => {
@@ -343,11 +402,22 @@ const deleteEntry = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
-    alumniList.value = alumniList.value.filter((s) => s.id !== itemToDelete.value);
-    itemToDelete.value = null;
-    triggerToast("Data Dihapus", "Data alumni berhasil dihapus dari sistem.", "info");
+    try {
+      await api.delete(`/api/alumnis/${itemToDelete.value}`);
+      alumniList.value = alumniList.value.filter((s) => s.id !== itemToDelete.value);
+      itemToDelete.value = null;
+      fetchUnassignedStudents();
+      triggerToast("Data Dihapus", "Data alumni berhasil dihapus dari sistem.", "info");
+    } catch (error) {
+      console.error(error);
+      triggerToast(
+        "Gagal Menghapus",
+        error.response?.data?.message || "Terjadi kesalahan",
+        "error"
+      );
+    }
   }
   isDeleteModalOpen.value = false;
 };
@@ -410,154 +480,288 @@ const filteredAlumni = computed(() => {
     >
       <div
         v-if="isFormVisible"
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        class="fixed inset-0 z-[100] overflow-y-auto bg-black/50 backdrop-blur-sm"
         @click="hideForm"
       >
-        <div
-          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all"
-          @click.stop
-        >
+        <div class="flex items-center justify-center min-h-screen p-4 sm:p-6">
           <div
-            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+            class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl flex flex-col transform transition-all relative"
+            @click.stop
           >
-            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
-              {{ isEditing ? "Edit Data Alumni" : "Tambah Alumni Baru" }}
-            </h3>
-            <button
-              @click="hideForm"
-              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            <div
+              class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 rounded-t-xl"
             >
-              <PhX class="w-6 h-6" />
-            </button>
-          </div>
-          <div class="p-6 overflow-y-auto custom-scrollbar max-h-[70vh]">
-            <form id="alumniForm" @submit.prevent="isEditing ? saveEntry() : addEntry()">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div v-if="!isEditing" class="md:col-span-2 relative">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >
-                    Cari Siswa (Dari Data Siswa Berstatus Alumni)
-                  </label>
-                  <input
-                    type="text"
-                    v-model="searchStudent"
-                    @focus="isDropdownOpen = true"
-                    @blur="closeDropdown"
-                    placeholder="Ketik NISN atau Nama Siswa..."
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                  />
-                  <div
-                    v-if="isDropdownOpen"
-                    class="absolute z-10 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg max-h-48 overflow-y-auto"
-                  >
-                    <div
-                      v-if="filteredUnassignedAlumni.length === 0"
-                      class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400"
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+                {{ isEditing ? "Edit Data Alumni" : "Tambah Alumni Baru" }}
+              </h3>
+              <button
+                @click="hideForm"
+                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              >
+                <PhX class="w-6 h-6" />
+              </button>
+            </div>
+            <div class="p-6 flex-1">
+              <form
+                id="alumniForm"
+                @submit.prevent="isEditing ? saveEntry() : addEntry()"
+              >
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div v-if="!isEditing" class="md:col-span-2 relative">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                     >
-                      Siswa tidak ditemukan
+                      Cari Siswa (Dari Data Siswa Berstatus Alumni)
+                    </label>
+                    <input
+                      type="text"
+                      v-model="searchStudent"
+                      @focus="isDropdownOpen = true"
+                      @blur="closeDropdown"
+                      placeholder="Ketik NISN atau Nama Siswa..."
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <div
+                      v-if="isDropdownOpen"
+                      class="absolute z-10 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg max-h-48 overflow-y-auto"
+                    >
+                      <div
+                        v-if="filteredUnassignedAlumni.length === 0"
+                        class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400"
+                      >
+                        Siswa tidak ditemukan
+                      </div>
+                      <div
+                        v-for="siswa in filteredUnassignedAlumni"
+                        :key="siswa.nisn"
+                        @click="selectStudent(siswa)"
+                        class="px-4 py-2 text-sm cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-800 dark:text-gray-200"
+                      >
+                        {{ siswa.nisn }} - {{ siswa.name }}
+                      </div>
                     </div>
-                    <div
-                      v-for="siswa in filteredUnassignedAlumni"
-                      :key="siswa.nisn"
-                      @click="selectStudent(siswa)"
-                      class="px-4 py-2 text-sm cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-800 dark:text-gray-200"
+                  </div>
+                  <div class="md:col-span-1">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      >NISN</label
                     >
-                      {{ siswa.nisn }} - {{ siswa.name }}
+                    <input
+                      type="text"
+                      v-model="form.nisn"
+                      disabled
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                      placeholder="005XXXXXXX"
+                    />
+                  </div>
+                  <div class="md:col-span-1">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      >Nama Lengkap</label
+                    >
+                    <input
+                      type="text"
+                      v-model="form.name"
+                      disabled
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                      placeholder="Nama alumni"
+                    />
+                  </div>
+                  <div class="md:col-span-1">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      >Tahun Lulus</label
+                    >
+                    <input
+                      type="text"
+                      v-model="form.year"
+                      required
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="2023"
+                    />
+                  </div>
+                  <div class="md:col-span-1">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      >Status</label
+                    >
+                    <select
+                      v-model="form.status"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option
+                        v-for="status in statusAlumniList"
+                        :key="status"
+                        :value="status"
+                      >
+                        {{ status }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="md:col-span-2">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      >Instansi / Tempat (Kampus / Perusahaan)</label
+                    >
+                    <div v-if="!showNewInstansiInput" class="relative">
+                      <button
+                        type="button"
+                        @click="isInstansiDropdownOpen = !isInstansiDropdownOpen"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-left focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex justify-between items-center transition-colors"
+                        :class="
+                          form.instansi
+                            ? 'text-gray-900 dark:text-white'
+                            : 'text-gray-500 dark:text-gray-400'
+                        "
+                      >
+                        <span class="truncate">{{
+                          form.instansi || "Pilih Instansi..."
+                        }}</span>
+                        <PhCaretDown
+                          class="w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200"
+                          :class="{ 'rotate-180': isInstansiDropdownOpen }"
+                        />
+                      </button>
+
+                      <div
+                        v-if="isInstansiDropdownOpen"
+                        @click="isInstansiDropdownOpen = false"
+                        class="fixed inset-0 z-40"
+                      ></div>
+
+                      <Transition
+                        enter-active-class="transition ease-out duration-100"
+                        enter-from-class="opacity-0 translate-y-[-10px]"
+                        enter-to-class="opacity-100 translate-y-0"
+                        leave-active-class="transition ease-in duration-100"
+                        leave-from-class="opacity-100 translate-y-0"
+                        leave-to-class="opacity-0 translate-y-[-10px]"
+                      >
+                        <div
+                          v-if="isInstansiDropdownOpen"
+                          class="absolute top-full z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl max-h-60 overflow-y-auto custom-scrollbar"
+                        >
+                          <ul class="py-1 text-sm">
+                            <li
+                              v-for="(inst, index) in institutionList"
+                              :key="index"
+                              class="hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 transition-colors group"
+                            >
+                              <div
+                                v-if="editingInstansiIndex === index"
+                                class="flex items-center gap-2 w-full px-4 py-2"
+                                @click.stop
+                              >
+                                <input
+                                  type="text"
+                                  v-model="editingInstansiName"
+                                  class="flex-1 px-2 py-1 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 focus:ring-blue-500 focus:border-blue-500"
+                                  @keydown.enter.prevent="saveEditInstansi(index)"
+                                  @keydown.esc.prevent="cancelEditInstansi()"
+                                />
+                                <button
+                                  type="button"
+                                  @click="saveEditInstansi(index)"
+                                  class="p-1 text-green-600 hover:bg-green-100 rounded"
+                                  title="Simpan"
+                                >
+                                  <PhCheck class="w-4 h-4" />
+                                </button>
+                                <button
+                                  type="button"
+                                  @click="cancelEditInstansi()"
+                                  class="p-1 text-gray-500 hover:bg-gray-200 rounded"
+                                  title="Batal"
+                                >
+                                  <PhX class="w-4 h-4" />
+                                </button>
+                              </div>
+                              <div
+                                v-else
+                                class="flex items-center justify-between w-full px-4 py-2.5 cursor-pointer"
+                                @click="selectInstansi(inst)"
+                              >
+                                <span class="truncate pr-2">{{ inst }}</span>
+                                <div
+                                  class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 shrink-0"
+                                  @click.stop
+                                >
+                                  <button
+                                    type="button"
+                                    @click="startEditInstansi(index, inst)"
+                                    class="p-1 text-blue-600 hover:bg-blue-100 rounded transition-colors"
+                                    title="Edit Instansi"
+                                  >
+                                    <PhPencilSimple class="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    @click="handleDeleteInstansi(index)"
+                                    class="p-1 text-red-600 hover:bg-red-100 rounded transition-colors"
+                                    title="Hapus Instansi"
+                                  >
+                                    <PhTrash class="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+                            </li>
+                            <li
+                              @click="selectInstansi('ADD_NEW')"
+                              class="px-4 py-2.5 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer font-semibold text-blue-600 dark:text-blue-400 border-t border-gray-100 dark:border-slate-700 transition-colors sticky bottom-0 bg-white dark:bg-slate-800"
+                            >
+                              + Tambah Instansi Baru...
+                            </li>
+                          </ul>
+                        </div>
+                      </Transition>
+                    </div>
+                    <div v-else class="flex gap-2">
+                      <input
+                        type="text"
+                        v-model="newInstansiName"
+                        class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Ketik nama instansi baru..."
+                        @keydown.enter.prevent="addNewInstansi"
+                      />
+                      <button
+                        type="button"
+                        @click="addNewInstansi"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                      >
+                        Simpan
+                      </button>
+                      <button
+                        type="button"
+                        @click="cancelNewInstansi"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 dark:bg-slate-600 dark:text-gray-300 dark:hover:bg-slate-500 transition-colors text-sm font-medium"
+                      >
+                        Batal
+                      </button>
                     </div>
                   </div>
                 </div>
-                <div class="md:col-span-1">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >NISN</label
-                  >
-                  <input
-                    type="text"
-                    v-model="form.nisn"
-                    disabled
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                    placeholder="005XXXXXXX"
-                  />
-                </div>
-                <div class="md:col-span-1">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >Nama Lengkap</label
-                  >
-                  <input
-                    type="text"
-                    v-model="form.name"
-                    disabled
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                    placeholder="Nama alumni"
-                  />
-                </div>
-                <div class="md:col-span-1">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >Tahun Lulus</label
-                  >
-                  <input
-                    type="text"
-                    v-model="form.year"
-                    required
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="2023"
-                  />
-                </div>
-                <div class="md:col-span-1">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >Status</label
-                  >
-                  <select
-                    v-model="form.status"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option
-                      v-for="status in statusAlumniList"
-                      :key="status"
-                      :value="status"
-                    >
-                      {{ status }}
-                    </option>
-                  </select>
-                </div>
-                <div class="md:col-span-2">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >Instansi / Tempat (Kampus / Perusahaan)</label
-                  >
-                  <input
-                    type="text"
-                    v-model="form.instansi"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Contoh: Universitas Gadjah Mada"
-                  />
-                </div>
-              </div>
-            </form>
-          </div>
-          <div
-            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
-          >
-            <button
-              type="button"
-              @click="hideForm"
-              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              </form>
+            </div>
+            <div
+              class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3 rounded-b-xl"
             >
-              <PhXCircle class="w-5 h-5 mr-2" /> Batal
-            </button>
-            <button
-              form="alumniForm"
-              type="submit"
-              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              <PhFloppyDisk v-if="isEditing" class="w-5 h-5 mr-2" />
-              <PhPlusCircle v-else class="w-5 h-5 mr-2" />
-              {{ isEditing ? "Simpan Perubahan" : "Simpan Data" }}
-            </button>
+              <button
+                type="button"
+                @click="hideForm"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                <PhXCircle class="w-5 h-5 mr-2" /> Batal
+              </button>
+              <button
+                form="alumniForm"
+                type="submit"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                <PhFloppyDisk v-if="isEditing" class="w-5 h-5 mr-2" />
+                <PhPlusCircle v-else class="w-5 h-5 mr-2" />
+                {{ isEditing ? "Simpan Perubahan" : "Simpan Data" }}
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ use App\Http\Controllers\TimelineController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\SchoolClassController;
+use App\Http\Controllers\AlumniController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -47,4 +48,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API Data Kelas
     Route::apiResource('school-classes', SchoolClassController::class);
+
+    // API Data Alumni
+    Route::get('/alumnis/unassigned-students', [AlumniController::class, 'unassignedStudents']);
+    Route::apiResource('/alumnis', AlumniController::class);
 });
