@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import axios from "axios";
+import api from "@/api/index.js";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -60,8 +60,8 @@ const fetchData = async () => {
   try {
     // Mengambil data secara paralel untuk profil dan sejarah
     const [profileRes, timelineRes] = await Promise.all([
-      axios.get("/api/profil-sekolah"),
-      axios.get("/api/sejarah"),
+      api.get("/api/profil-sekolah"),
+      api.get("/api/sejarah"),
     ]);
 
     if (profileRes.data?.data) schoolProfile.value = profileRes.data.data;
@@ -106,7 +106,7 @@ const addEntry = async () => {
   }
 
   try {
-    const response = await axios.post("/api/sejarah", form.value);
+    const response = await api.post("/api/sejarah", form.value);
     timeline.value.push(response.data.data); // Asumsikan API me-return resource yang baru disimpan
     isFormVisible.value = false;
     document.body.style.overflow = "";
@@ -139,7 +139,7 @@ const closeProfileModal = () => {
 const saveProfile = async () => {
   try {
     // Menggunakan langsung method PUT via axios dengan payload JSON
-    const response = await axios.put("/api/profil-sekolah", tempProfile.value);
+    const response = await api.put("/api/profil-sekolah", tempProfile.value);
 
     schoolProfile.value = response.data.data;
     isProfileModalVisible.value = false;
@@ -173,7 +173,7 @@ const saveEntry = async () => {
   }
 
   try {
-    const response = await axios.put(`/api/sejarah/${form.value.id}`, form.value);
+    const response = await api.put(`/api/sejarah/${form.value.id}`, form.value);
     const index = timeline.value.findIndex((e) => e.id === form.value.id);
     if (index !== -1) {
       timeline.value[index] = response.data.data;
@@ -202,7 +202,7 @@ const deleteEntry = (id) => {
 const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
     try {
-      await axios.delete(`/api/sejarah/${itemToDelete.value}`);
+      await api.delete(`/api/sejarah/${itemToDelete.value}`);
       timeline.value = timeline.value.filter((e) => e.id !== itemToDelete.value);
       itemToDelete.value = null;
       triggerToast("Data Dihapus", "Satu entri lini masa berhasil dihapus.", "info");
@@ -239,7 +239,7 @@ const handleDrop = async (entry) => {
   try {
     // Menyimpan urutan baru ke database
     const orders = timeline.value.map((item, index) => ({ id: item.id, order: index }));
-    await axios.post("/api/sejarah/reorder", { orders });
+    await api.post("/api/sejarah/reorder", { orders });
   } catch (error) {
     console.error("Gagal menyimpan urutan baru:", error);
     triggerToast("Gagal", "Terjadi kesalahan saat memperbarui urutan timeline.", "error");
