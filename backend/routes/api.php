@@ -8,6 +8,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\AlumniController;
+use App\Http\Controllers\MapLocationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -52,4 +53,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // API Data Alumni
     Route::get('/alumnis/unassigned-students', [AlumniController::class, 'unassignedStudents']);
     Route::apiResource('/alumnis', AlumniController::class);
+
+    // API Data Persebaran Peta Alumni
+    Route::apiResource('/map-locations', MapLocationController::class);
 });

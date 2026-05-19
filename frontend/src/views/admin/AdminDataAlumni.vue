@@ -48,9 +48,19 @@ const fetchUnassignedStudents = async () => {
   }
 };
 
+const fetchMapLocations = async () => {
+  try {
+    const response = await api.get("/api/map-locations");
+    mapLocations.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal memuat data peta:", error);
+  }
+};
+
 onMounted(() => {
   fetchAlumnis();
   fetchUnassignedStudents();
+  fetchMapLocations();
 });
 
 // State dan Logic untuk Dropdown CRUD Instansi
@@ -252,31 +262,43 @@ const openEditMap = (loc) => {
   document.body.style.overflow = "hidden";
 };
 
-const saveMapLocation = () => {
+const saveMapLocation = async () => {
   if (!mapForm.value.name) {
     triggerToast("Gagal", "Nama wilayah harus diisi!", "error");
     return;
   }
-  mapForm.value.totalAlumni = mapForm.value.institutions.reduce(
-    (sum, inst) => sum + (Number(inst.alumni) || 0),
-    0
-  );
-  if (isMapEditing.value) {
-    const idx = mapLocations.value.findIndex((l) => l.id === mapForm.value.id);
-    if (idx !== -1) mapLocations.value[idx] = JSON.parse(JSON.stringify(mapForm.value));
-  } else {
-    mapForm.value.id = Date.now();
-    mapLocations.value.push(JSON.parse(JSON.stringify(mapForm.value)));
+
+  try {
+    if (isMapEditing.value) {
+      const response = await api.put(
+        `/api/map-locations/${mapForm.value.id}`,
+        mapForm.value
+      );
+      const idx = mapLocations.value.findIndex((l) => l.id === mapForm.value.id);
+      if (idx !== -1) mapLocations.value[idx] = response.data.data;
+    } else {
+      const response = await api.post("/api/map-locations", mapForm.value);
+      mapLocations.value.push(response.data.data);
+    }
+    isMapModalOpen.value = false;
+    document.body.style.overflow = "";
+    triggerToast("Disimpan", "Data persebaran alumni berhasil disimpan.");
+  } catch (error) {
+    console.error(error);
+    triggerToast("Gagal", error.response?.data?.message || "Terjadi kesalahan.", "error");
   }
-  isMapModalOpen.value = false;
-  document.body.style.overflow = "";
-  triggerToast("Disimpan", "Data persebaran alumni berhasil disimpan.");
 };
 
-const deleteMapLocation = (id) => {
+const deleteMapLocation = async (id) => {
   if (confirm("Hapus lokasi ini dari peta?")) {
-    mapLocations.value = mapLocations.value.filter((l) => l.id !== id);
-    triggerToast("Dihapus", "Lokasi berhasil dihapus.", "info");
+    try {
+      await api.delete(`/api/map-locations/${id}`);
+      mapLocations.value = mapLocations.value.filter((l) => l.id !== id);
+      triggerToast("Dihapus", "Lokasi berhasil dihapus.", "info");
+    } catch (error) {
+      console.error(error);
+      triggerToast("Gagal", "Terjadi kesalahan saat menghapus data.", "error");
+    }
   }
 };
 
@@ -936,7 +958,7 @@ const filteredAlumni = computed(() => {
       >
         <div>
           <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center">
-            <PhMapTrifold class="w-6 h-6 mr-2 text-blue-600" />
+            <PhMapTrifold class="w-6 h-6 mr-2 text-gray-800 dark:text-white" />
             Manajemen Peta Persebaran Alumni
           </h3>
           <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
