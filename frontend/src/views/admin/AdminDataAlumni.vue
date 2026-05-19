@@ -981,7 +981,7 @@ const filteredAlumni = computed(() => {
       >
         <img
           src="/img/indonesia.svg"
-          class="absolute inset-0 w-full h-full object-fill opacity-50 pointer-events-none"
+          class="absolute inset-0 w-full h-full object-fill opacity-50 dark:opacity-80 dark:invert pointer-events-none"
         />
 
         <div
@@ -1133,7 +1133,7 @@ const filteredAlumni = computed(() => {
                 >
                   <img
                     src="/img/indonesia.svg"
-                    class="absolute inset-0 w-full h-full object-fill opacity-60 pointer-events-none"
+                    class="absolute inset-0 w-full h-full object-fill opacity-60 dark:opacity-80 dark:invert pointer-events-none"
                   />
                   <div
                     class="absolute flex justify-center items-end w-6 h-8 -translate-x-1/2 -translate-y-full pointer-events-none"
