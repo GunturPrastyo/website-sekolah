@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import axios from "axios";
+import api from "../../api/index.js";
 import { PhEnvelopeSimple, PhLockKey, PhSpinner, PhSignIn } from "@phosphor-icons/vue";
 
 const router = useRouter();
@@ -21,17 +21,17 @@ const handleLogin = async () => {
 
   try {
     // 1. Request CSRF Cookie dari Laravel Sanctum
-    await axios.get("/sanctum/csrf-cookie");
+    await api.get("/sanctum/csrf-cookie");
 
     // 2. Request Login ke endpoint Breeze
-    await axios.post("/login", {
+    await api.post("/login", {
       email: form.value.email,
       password: form.value.password,
       remember: form.value.remember,
     });
 
     // 3. Opsional: Fetch data user untuk mengecek role
-    // const { data } = await axios.get('/api/user');
+    // const { data } = await api.get('/api/user');
     // localStorage.setItem('user_role', data.role); // misalnya untuk mengecek 'superadmin' atau 'admin'
 
     // Simpan penanda bahwa pengguna sudah terautentikasi
