@@ -4,6 +4,7 @@ use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\VisionMissionController;
 use App\Http\Controllers\SchoolProfileController;
 use App\Http\Controllers\TimelineController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,4 +36,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/fasilitas', [FacilityController::class, 'store']);
     Route::put('/fasilitas/{facility}', [FacilityController::class, 'update']);
     Route::delete('/fasilitas/{facility}', [FacilityController::class, 'destroy']);
+
+    // API Data Siswa
+    Route::apiResource('students', StudentController::class);
 });

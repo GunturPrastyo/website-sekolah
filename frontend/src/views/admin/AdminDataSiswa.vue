@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import api from "@/api/index.js";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -17,36 +18,8 @@ import ToastNotification from "@/components/admin/ToastNotification.vue";
 const grades = ["X", "XI", "XII"];
 const majors = ["MIPA", "IPS", "Bahasa"];
 
-// Data dummy untuk simulasi
-const studentsList = ref([
-  {
-    id: 1,
-    nisn: "0051234567",
-    name: "Andi Saputra",
-    gender: "L",
-    grade: "X",
-    major: "MIPA",
-    status: "aktif",
-  },
-  {
-    id: 2,
-    nisn: "0057654321",
-    name: "Siti Aminah",
-    gender: "P",
-    grade: "XI",
-    major: "IPS",
-    status: "aktif",
-  },
-  {
-    id: 3,
-    nisn: "0059876543",
-    name: "Budi Santoso",
-    gender: "L",
-    grade: "XII",
-    major: "Bahasa",
-    status: "alumni",
-  },
-]);
+// State Data Siswa
+const studentsList = ref([]);
 
 const form = ref({
   id: null,
@@ -55,6 +28,7 @@ const form = ref({
   gender: "L",
   grade: "X",
   major: "MIPA",
+  rombel: "1",
   status: "aktif",
 });
 
@@ -82,6 +56,23 @@ const triggerToast = (title, message, type = "success") => {
   }, 4000);
 };
 
+// Mengambil data siswa dari API
+const fetchData = async () => {
+  try {
+    const response = await api.get("/api/students");
+    studentsList.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal memuat data siswa", error);
+    triggerToast(
+      "Gagal Memuat",
+      "Tidak dapat mengambil data siswa dari server.",
+      "error"
+    );
+  }
+};
+
+onMounted(fetchData);
+
 const resetForm = () => {
   form.value = {
     id: null,
@@ -90,6 +81,7 @@ const resetForm = () => {
     gender: "L",
     grade: "X",
     major: "MIPA",
+    rombel: "1",
     status: "aktif",
   };
   isEditing.value = false;
@@ -145,7 +137,8 @@ const handleFileUpload = async (event) => {
       name: row['Nama Peserta Didik'] || row['nama'] || '',
       gender: (row['L/P'] || row['jenis_kelamin']) === 'L' ? 'L' : 'P',
       grade: row['Tingkat Kelas'] || row['kelas'] || 'X',
-      major: row['Jurusan'] || row['rombel'] || 'MIPA',
+      major: row['Jurusan'] || row['peminatan'] || 'MIPA',
+      rombel: row['Rombel'] || row['rombel'] || '1',
       status: row['Status'] || row['status'] || 'aktif'
     }));
     
@@ -162,6 +155,7 @@ const handleFileUpload = async (event) => {
         gender: Math.random() > 0.5 ? "L" : "P",
         grade: grades[Math.floor(Math.random() * grades.length)],
         major: majors[Math.floor(Math.random() * majors.length)],
+        rombel: "1",
         status: "aktif",
       });
       isImporting.value = false;
@@ -181,29 +175,25 @@ const handleFileUpload = async (event) => {
   }
 };
 
-const addEntry = () => {
+const addEntry = async () => {
   if (!form.value.name || !form.value.nisn) {
     triggerToast("Gagal Menyimpan", "Nama dan NISN wajib diisi!", "error");
     return;
   }
 
-  const newId =
-    studentsList.value.length > 0
-      ? Math.max(...studentsList.value.map((s) => s.id)) + 1
-      : 1;
-
-  studentsList.value.unshift({
-    id: newId,
-    nisn: form.value.nisn,
-    name: form.value.name,
-    gender: form.value.gender,
-    grade: form.value.grade,
-    major: form.value.major,
-    status: form.value.status,
-  });
-
-  hideForm();
-  triggerToast("Berhasil Ditambahkan", "Data siswa baru berhasil ditambahkan.");
+  try {
+    const response = await api.post("/api/students", form.value);
+    studentsList.value.unshift(response.data.data);
+    hideForm();
+    triggerToast("Berhasil Ditambahkan", "Data siswa baru berhasil ditambahkan.");
+  } catch (error) {
+    console.error(error);
+    triggerToast(
+      "Gagal Menambahkan",
+      error.response?.data?.message || "Terjadi kesalahan pada server",
+      "error"
+    );
+  }
 };
 
 const startEdit = (item) => {
@@ -213,19 +203,28 @@ const startEdit = (item) => {
   document.body.style.overflow = "hidden";
 };
 
-const saveEntry = () => {
+const saveEntry = async () => {
   if (!form.value.name || !form.value.nisn) {
     triggerToast("Gagal Menyimpan", "Nama dan NISN wajib diisi!", "error");
     return;
   }
 
-  const index = studentsList.value.findIndex((s) => s.id === form.value.id);
-  if (index !== -1) {
-    studentsList.value[index] = { ...form.value };
+  try {
+    const response = await api.put(`/api/students/${form.value.id}`, form.value);
+    const index = studentsList.value.findIndex((s) => s.id === form.value.id);
+    if (index !== -1) {
+      studentsList.value[index] = response.data.data;
+    }
+    hideForm();
+    triggerToast("Perubahan Disimpan", "Data siswa berhasil diperbarui.");
+  } catch (error) {
+    console.error(error);
+    triggerToast(
+      "Gagal Memperbarui",
+      error.response?.data?.message || "Terjadi kesalahan pada server",
+      "error"
+    );
   }
-
-  hideForm();
-  triggerToast("Perubahan Disimpan", "Data siswa berhasil diperbarui.");
 };
 
 const deleteEntry = (id) => {
@@ -233,13 +232,24 @@ const deleteEntry = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
-    studentsList.value = studentsList.value.filter((s) => s.id !== itemToDelete.value);
-    itemToDelete.value = null;
-    triggerToast("Data Dihapus", "Data siswa berhasil dihapus dari sistem.", "info");
+    try {
+      await api.delete(`/api/students/${itemToDelete.value}`);
+      studentsList.value = studentsList.value.filter((s) => s.id !== itemToDelete.value);
+      triggerToast("Data Dihapus", "Data siswa berhasil dihapus dari sistem.", "info");
+    } catch (error) {
+      console.error(error);
+      triggerToast("Gagal Menghapus", "Terjadi kesalahan saat menghapus data.", "error");
+    }
   }
   isDeleteModalOpen.value = false;
+  itemToDelete.value = null;
+};
+
+const cancelDelete = () => {
+  isDeleteModalOpen.value = false;
+  itemToDelete.value = null;
 };
 
 const filteredStudents = computed(() => {
@@ -500,6 +510,19 @@ const filteredStudents = computed(() => {
                 <div class="md:col-span-1">
                   <label
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Rombel / Grup</label
+                  >
+                  <input
+                    type="text"
+                    v-model="form.rombel"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Contoh: 1, 2, A, B"
+                  />
+                </div>
+                <div class="md:col-span-1">
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                     >Jurusan / Peminatan</label
                   >
                   <select
@@ -612,6 +635,7 @@ const filteredStudents = computed(() => {
               <th class="px-6 py-4">L/P</th>
               <th class="px-6 py-4">Kelas</th>
               <th class="px-6 py-4">Jurusan</th>
+              <th class="px-6 py-4">Rombel</th>
               <th class="px-6 py-4">Status</th>
               <th class="px-6 py-4 text-right">Aksi</th>
             </tr>
@@ -667,6 +691,11 @@ const filteredStudents = computed(() => {
                 >
                   {{ student.major }}
                 </span>
+              </td>
+              <td
+                class="px-6 py-4 text-sm font-semibold text-gray-700 dark:text-gray-300"
+              >
+                {{ student.rombel }}
               </td>
               <td class="px-6 py-4">
                 <span
