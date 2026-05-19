@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
+import api from "@/api/index.js";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -78,7 +78,7 @@ const triggerToast = (title, message, type = "success") => {
 const fetchData = async () => {
   isLoading.value = true;
   try {
-    const response = await axios.get("/api/vision-mission");
+    const response = await api.get("/api/vision-mission");
     const data = response.data.data;
     visi.value = data.vision || "";
     misi.value = data.missions || [];
@@ -107,7 +107,7 @@ const saveChanges = async () => {
   };
 
   try {
-    const response = await axios.post("/api/vision-mission", payload);
+    const response = await api.post("/api/vision-mission", payload);
 
     // Update local state with data from server response
     const data = response.data.data;
