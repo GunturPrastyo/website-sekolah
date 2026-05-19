@@ -13,7 +13,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('grade');
             $table->string('major');
-            $table->string('homeroom');
+            
+            // Menambahkan kolom homeroom_id yang bisa bernilai NULL
+            $table->unsignedBigInteger('homeroom_id')->nullable();
+            $table->foreign('homeroom_id')->references('id')->on('staff')->nullOnDelete();
+            
             $table->integer('capacity');
             $table->timestamps();
         });

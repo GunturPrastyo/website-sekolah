@@ -13,7 +13,12 @@ class SchoolClass extends Model
         'name',
         'grade',
         'major',
-        'homeroom',
+        'homeroom_id',
         'capacity',
     ];
+
+    public function homeroom()
+    {
+        return $this->belongsTo(Staff::class, 'homeroom_id');
+    }
 }

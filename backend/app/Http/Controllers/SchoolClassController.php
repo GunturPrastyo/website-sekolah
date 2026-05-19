@@ -9,7 +9,8 @@ class SchoolClassController extends Controller
 {
     public function index()
     {
-        $classes = SchoolClass::all();
+        // Mengambil data kelas beserta relasi detail wali kelasnya
+        $classes = SchoolClass::with('homeroom')->get();
         
         // Untuk inisialisasi tambahan properti currentStudents (misalnya belum ada relasi ke tabel siswa)
         $classes->transform(function ($item) {
@@ -26,7 +27,7 @@ class SchoolClassController extends Controller
             'name' => 'required|string|max:255',
             'grade' => 'required|string|max:255',
             'major' => 'required|string|max:255',
-            'homeroom' => 'required|string|max:255',
+            'homeroom_id' => 'nullable|integer|exists:staff,id',
             'capacity' => 'required|integer|min:1',
         ]);
 
@@ -42,7 +43,7 @@ class SchoolClassController extends Controller
             'name' => 'required|string|max:255',
             'grade' => 'required|string|max:255',
             'major' => 'required|string|max:255',
-            'homeroom' => 'required|string|max:255',
+            'homeroom_id' => 'nullable|integer|exists:staff,id',
             'capacity' => 'required|integer|min:1',
         ]);
 

@@ -17,6 +17,7 @@ import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
 const classList = ref([]);
+const staffList = ref([]);
 
 const grades = ["X", "XI", "XII"];
 const majors = ["MIPA", "IPS", "Bahasa"];
@@ -26,7 +27,7 @@ const form = ref({
   name: "",
   grade: "X",
   major: "MIPA",
-  homeroom: "",
+  homeroom_id: "",
   capacity: 36,
 });
 
@@ -51,8 +52,18 @@ const fetchClasses = async () => {
   }
 };
 
+const fetchStaff = async () => {
+  try {
+    const response = await api.get("/api/staff");
+    staffList.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal mengambil data staf:", error);
+  }
+};
+
 onMounted(() => {
   fetchClasses();
+  fetchStaff();
 });
 
 const triggerToast = (title, message, type = "success") => {
@@ -69,7 +80,7 @@ const resetForm = () => {
     name: "",
     grade: "X",
     major: "MIPA",
-    homeroom: "",
+    homeroom_id: "",
     capacity: 36,
   };
   isEditing.value = false;
@@ -88,7 +99,7 @@ const showAddForm = () => {
 };
 
 const addEntry = async () => {
-  if (!form.value.name || !form.value.homeroom) {
+  if (!form.value.name || !form.value.homeroom_id) {
     triggerToast("Gagal Menyimpan", "Nama Kelas dan Wali Kelas wajib diisi!", "error");
     return;
   }
@@ -112,7 +123,7 @@ const startEdit = (item) => {
 };
 
 const saveEntry = async () => {
-  if (!form.value.name || !form.value.homeroom) {
+  if (!form.value.name || !form.value.homeroom_id) {
     triggerToast("Gagal Menyimpan", "Nama Kelas dan Wali Kelas wajib diisi!", "error");
     return;
   }
@@ -166,7 +177,7 @@ const filteredClasses = computed(() => {
     result = result.filter(
       (item) =>
         item.name.toLowerCase().includes(query) ||
-        item.homeroom.toLowerCase().includes(query)
+        (item.homeroom && item.homeroom.name.toLowerCase().includes(query))
     );
   }
   return result;
@@ -290,13 +301,16 @@ const filteredClasses = computed(() => {
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                     >Wali Kelas</label
                   >
-                  <input
-                    type="text"
-                    v-model="form.homeroom"
+                  <select
+                    v-model="form.homeroom_id"
                     required
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Nama lengkap wali kelas"
-                  />
+                  >
+                    <option value="" disabled>Pilih Wali Kelas</option>
+                    <option v-for="staff in staffList" :key="staff.id" :value="staff.id">
+                      {{ staff.name }} ({{ staff.role }})
+                    </option>
+                  </select>
                 </div>
               </div>
             </form>
@@ -421,7 +435,7 @@ const filteredClasses = computed(() => {
               <td class="px-6 py-4">
                 <div class="flex items-center text-sm text-gray-700 dark:text-gray-300">
                   <PhUser class="w-4 h-4 mr-1.5 text-gray-400" />
-                  {{ cls.homeroom }}
+                  {{ cls.homeroom ? cls.homeroom.name : "Belum Ditentukan" }}
                 </div>
               </td>
               <td class="px-6 py-4">
