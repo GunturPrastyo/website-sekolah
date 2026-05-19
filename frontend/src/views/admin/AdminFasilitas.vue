@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
+import api from "@/api/index.js";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -31,7 +31,7 @@ const triggerToast = (title, message, type = "success") => {
 const fetchData = async () => {
   isLoading.value = true;
   try {
-    const response = await axios.get("/api/fasilitas");
+    const response = await api.get("/api/fasilitas");
     facilities.value = response.data.data;
   } catch (error) {
     console.error("Gagal memuat data", error);
@@ -103,14 +103,14 @@ const saveFacility = async () => {
 
   try {
     if (isEditing.value) {
-      const response = await axios.put(`/api/fasilitas/${form.value.id}`, payload);
+      const response = await api.put(`/api/fasilitas/${form.value.id}`, payload);
       const idx = facilities.value.findIndex((f) => f.id === form.value.id);
       if (idx !== -1) {
         facilities.value[idx] = response.data.data;
       }
       triggerToast("Disimpan", "Data fasilitas berhasil diperbarui.");
     } else {
-      const response = await axios.post("/api/fasilitas", payload);
+      const response = await api.post("/api/fasilitas", payload);
       facilities.value.unshift(response.data.data);
       triggerToast("Ditambahkan", "Fasilitas baru berhasil ditambahkan.");
     }
@@ -134,7 +134,7 @@ const deleteFacility = (id) => {
 
 const confirmDelete = async () => {
   try {
-    await axios.delete(`/api/fasilitas/${itemToDeleteId.value}`);
+    await api.delete(`/api/fasilitas/${itemToDeleteId.value}`);
     facilities.value = facilities.value.filter((f) => f.id !== itemToDeleteId.value);
     triggerToast("Dihapus", "Fasilitas berhasil dihapus.", "info");
     isDeleteModalOpen.value = false;
