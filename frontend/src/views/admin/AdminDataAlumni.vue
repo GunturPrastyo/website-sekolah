@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, nextTick } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -16,6 +16,7 @@ import {
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
+import ImageUploader from "@/components/admin/ImageUploader.vue";
 import api from "@/api/index.js";
 
 const statusAlumniList = ["Kuliah", "Bekerja", "Wirausaha", "Lainnya"];
@@ -178,6 +179,8 @@ const mapForm = ref({
   institutions: [],
 });
 
+const mapInstDropdownOpen = ref(null);
+
 // Hitung daftar instansi unik yang ada di daftar alumni beserta jumlah alumninya
 const availableInstitutions = computed(() => {
   const counts = {};
@@ -192,14 +195,27 @@ const availableInstitutions = computed(() => {
     .sort((a, b) => a.name.localeCompare(b.name));
 });
 
-const autoFillCount = (inst) => {
+const autoFillInstansi = (inst) => {
   const found = availableInstitutions.value.find((i) => i.name === inst.name);
   if (found) {
     inst.alumni = found.count;
+  } else {
+    inst.alumni = 0;
+  }
+
+  // Secara otomatis mengisi jenis instansi dan logo jika sebelumnya pernah diatur di titik peta lain
+  for (const loc of mapLocations.value) {
+    const existingInst = loc.institutions.find((i) => i.name === inst.name);
+    if (existingInst) {
+      inst.type = existingInst.type || "ptn";
+      inst.logo = existingInst.logo || "";
+      break;
+    }
   }
 };
 
 const mapContainerRef = ref(null);
+const instansiListContainer = ref(null);
 
 const handleMapClick = (e) => {
   if (!mapContainerRef.value) return;
@@ -223,6 +239,7 @@ const openAddMap = () => {
     institutions: [],
   };
   isMapEditing.value = false;
+  mapInstDropdownOpen.value = null;
   isMapModalOpen.value = true;
   document.body.style.overflow = "hidden";
 };
@@ -230,6 +247,7 @@ const openAddMap = () => {
 const openEditMap = (loc) => {
   mapForm.value = JSON.parse(JSON.stringify(loc));
   isMapEditing.value = true;
+  mapInstDropdownOpen.value = null;
   isMapModalOpen.value = true;
   document.body.style.overflow = "hidden";
 };
@@ -264,10 +282,25 @@ const deleteMapLocation = (id) => {
 
 const addInstitution = () => {
   mapForm.value.institutions.push({ name: "", type: "ptn", alumni: 0, logo: "" });
+  nextTick(() => {
+    if (instansiListContainer.value) {
+      instansiListContainer.value.scrollTop = instansiListContainer.value.scrollHeight;
+    }
+  });
 };
 
 const removeInstitution = (idx) => {
   mapForm.value.institutions.splice(idx, 1);
+};
+
+const handleLogoUpload = (e, inst) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    inst.logo = event.target.result;
+  };
+  reader.readAsDataURL(file);
 };
 
 const isFormVisible = ref(false);
@@ -1124,11 +1157,14 @@ const filteredAlumni = computed(() => {
                 </button>
               </div>
 
-              <div class="space-y-3 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
+              <div
+                class="space-y-4 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar"
+                ref="instansiListContainer"
+              >
                 <div
                   v-for="(inst, idx) in mapForm.institutions"
                   :key="idx"
-                  class="p-4 border border-gray-200 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700/30 relative group"
+                  class="p-4 border-2 border-gray-200 dark:border-slate-600 rounded-xl bg-gray-50 dark:bg-slate-700/30 relative group shadow-sm"
                 >
                   <button
                     @click="removeInstitution(idx)"
@@ -1138,29 +1174,80 @@ const filteredAlumni = computed(() => {
                   </button>
                   <div class="space-y-3 pr-6">
                     <div>
-                      <label class="text-xs text-gray-500">Nama Instansi</label>
-                      <input
-                        type="text"
-                        v-model="inst.name"
-                        @input="autoFillCount(inst)"
-                        list="available-instansi"
-                        placeholder="Universitas / Instansi"
-                        class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500"
-                      />
-                      <datalist id="available-instansi">
-                        <option
-                          v-for="item in availableInstitutions"
-                          :key="item.name"
-                          :value="item.name"
-                        ></option>
-                      </datalist>
+                      <label class="text-xs text-gray-500 mb-1 block"
+                        >Nama Instansi</label
+                      >
+                      <div class="relative">
+                        <button
+                          type="button"
+                          @click="
+                            mapInstDropdownOpen = mapInstDropdownOpen === idx ? null : idx
+                          "
+                          class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 flex justify-between items-center text-left transition-colors"
+                        >
+                          <span class="truncate">{{
+                            inst.name || "Pilih Instansi..."
+                          }}</span>
+                          <PhCaretDown
+                            class="w-4 h-4 text-gray-400 shrink-0 transition-transform"
+                            :class="{ 'rotate-180': mapInstDropdownOpen === idx }"
+                          />
+                        </button>
+                        <div
+                          v-if="mapInstDropdownOpen === idx"
+                          @click="mapInstDropdownOpen = null"
+                          class="fixed inset-0 z-40"
+                        ></div>
+                        <Transition
+                          enter-active-class="transition ease-out duration-100"
+                          enter-from-class="opacity-0 translate-y-[-10px]"
+                          enter-to-class="opacity-100 translate-y-0"
+                          leave-active-class="transition ease-in duration-100"
+                          leave-from-class="opacity-100 translate-y-0"
+                          leave-to-class="opacity-0 translate-y-[-10px]"
+                        >
+                          <div
+                            v-if="mapInstDropdownOpen === idx"
+                            class="absolute top-full z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl max-h-48 overflow-y-auto custom-scrollbar"
+                          >
+                            <ul class="py-1 text-sm">
+                              <li
+                                v-for="(item, i) in availableInstitutions"
+                                :key="i"
+                                class="hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 transition-colors"
+                              >
+                                <div
+                                  class="px-4 py-2 cursor-pointer flex justify-between items-center"
+                                  @click="
+                                    inst.name = item.name;
+                                    autoFillInstansi(inst);
+                                    mapInstDropdownOpen = null;
+                                  "
+                                >
+                                  <span class="truncate pr-2">{{ item.name }}</span>
+                                  <span
+                                    class="text-[10px] bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 px-1.5 py-0.5 rounded font-bold shrink-0"
+                                    >{{ item.count }} Alumni</span
+                                  >
+                                </div>
+                              </li>
+                              <li
+                                v-if="availableInstitutions.length === 0"
+                                class="px-4 py-3 text-gray-500 text-center"
+                              >
+                                Belum ada instansi yang terdaftar di data alumni
+                              </li>
+                            </ul>
+                          </div>
+                        </Transition>
+                      </div>
                     </div>
                     <div class="flex gap-3">
                       <div class="flex-1">
-                        <label class="text-xs text-gray-500">Jenis</label>
+                        <label class="text-xs text-gray-500 mb-1 block">Jenis</label>
                         <select
                           v-model="inst.type"
-                          class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500"
+                          class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500"
                         >
                           <option value="ptn">PTN</option>
                           <option value="kedinasan">Kedinasan</option>
@@ -1168,23 +1255,51 @@ const filteredAlumni = computed(() => {
                         </select>
                       </div>
                       <div class="w-24">
-                        <label class="text-xs text-gray-500">Jml Alumni</label>
+                        <label class="text-xs text-gray-500 mb-1 block">Jml Alumni</label>
                         <input
                           type="number"
                           v-model="inst.alumni"
                           placeholder="0"
-                          class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500"
+                          class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500"
                         />
                       </div>
                     </div>
-                    <div>
-                      <label class="text-xs text-gray-500">URL Logo (Opsional)</label>
-                      <input
-                        type="text"
-                        v-model="inst.logo"
-                        placeholder="/img/logo.png"
-                        class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500"
-                      />
+                    <div class="mt-1">
+                      <label class="text-xs text-gray-500 block mb-1"
+                        >Logo Instansi (Opsional)</label
+                      >
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="w-12 h-12 border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden relative group"
+                        >
+                          <img
+                            v-if="inst.logo"
+                            :src="inst.logo"
+                            class="w-full h-full object-contain p-1"
+                          />
+                          <span v-else class="text-[10px] text-gray-400">Logo</span>
+                          <div
+                            v-if="inst.logo"
+                            class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer"
+                            @click="inst.logo = ''"
+                          >
+                            <PhTrash class="w-4 h-4 text-white" />
+                          </div>
+                        </div>
+                        <div class="flex-1">
+                          <label
+                            class="cursor-pointer inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-slate-600 rounded shadow-sm text-xs font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
+                          >
+                            Pilih Gambar
+                            <input
+                              type="file"
+                              accept="image/*"
+                              class="sr-only"
+                              @change="(e) => handleLogoUpload(e, inst)"
+                            />
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
