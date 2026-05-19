@@ -10,7 +10,7 @@ class StudentController extends Controller
 {
     public function index()
     {
-        $students = Student::orderBy('id', 'desc')->get();
+        $students = Student::with('schoolClass')->orderBy('id', 'desc')->get();
         
         return response()->json([
             'success' => true,
@@ -26,11 +26,12 @@ class StudentController extends Controller
             'gender' => 'required|in:L,P',
             'grade'  => 'required|string',
             'major'  => 'required|string',
-            'rombel' => 'required|string',
+            'school_class_id' => 'nullable|exists:school_classes,id',
             'status' => 'required|in:aktif,alumni',
         ]);
 
         $student = Student::create($validated);
+        $student->load('schoolClass');
 
         return response()->json([
             'success' => true,
@@ -46,11 +47,12 @@ class StudentController extends Controller
             'gender' => 'required|in:L,P',
             'grade'  => 'required|string',
             'major'  => 'required|string',
-            'rombel' => 'required|string',
+            'school_class_id' => 'nullable|exists:school_classes,id',
             'status' => 'required|in:aktif,alumni',
         ]);
 
         $student->update($validated);
+        $student->load('schoolClass');
 
         return response()->json([
             'success' => true,

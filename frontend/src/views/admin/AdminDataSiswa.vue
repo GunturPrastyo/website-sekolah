@@ -20,6 +20,7 @@ const majors = ["MIPA", "IPS", "Bahasa"];
 
 // State Data Siswa
 const studentsList = ref([]);
+const classesList = ref([]);
 
 const form = ref({
   id: null,
@@ -28,7 +29,7 @@ const form = ref({
   gender: "L",
   grade: "X",
   major: "MIPA",
-  rombel: "1",
+  school_class_id: null,
   status: "aktif",
 });
 
@@ -71,7 +72,19 @@ const fetchData = async () => {
   }
 };
 
-onMounted(fetchData);
+const fetchClasses = async () => {
+  try {
+    const response = await api.get("/api/school-classes");
+    classesList.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal memuat data kelas", error);
+  }
+};
+
+onMounted(() => {
+  fetchData();
+  fetchClasses();
+});
 
 const resetForm = () => {
   form.value = {
@@ -81,7 +94,7 @@ const resetForm = () => {
     gender: "L",
     grade: "X",
     major: "MIPA",
-    rombel: "1",
+    school_class_id: null,
     status: "aktif",
   };
   isEditing.value = false;
@@ -138,7 +151,7 @@ const handleFileUpload = async (event) => {
       gender: (row['L/P'] || row['jenis_kelamin']) === 'L' ? 'L' : 'P',
       grade: row['Tingkat Kelas'] || row['kelas'] || 'X',
       major: row['Jurusan'] || row['peminatan'] || 'MIPA',
-      rombel: row['Rombel'] || row['rombel'] || '1',
+      school_class_id: null,
       status: row['Status'] || row['status'] || 'aktif'
     }));
     
@@ -155,7 +168,8 @@ const handleFileUpload = async (event) => {
         gender: Math.random() > 0.5 ? "L" : "P",
         grade: grades[Math.floor(Math.random() * grades.length)],
         major: majors[Math.floor(Math.random() * majors.length)],
-        rombel: "1",
+        school_class_id: null,
+        school_class: null,
         status: "aktif",
       });
       isImporting.value = false;
@@ -512,13 +526,15 @@ const filteredStudents = computed(() => {
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                     >Rombel / Grup</label
                   >
-                  <input
-                    type="text"
-                    v-model="form.rombel"
-                    required
+                  <select
+                    v-model="form.school_class_id"
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Contoh: 1, 2, A, B"
-                  />
+                  >
+                    <option :value="null">Pilih Kelas (Opsional)</option>
+                    <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
+                      {{ cls.grade }} {{ cls.major }} - {{ cls.name }}
+                    </option>
+                  </select>
                 </div>
                 <div class="md:col-span-1">
                   <label
@@ -695,7 +711,7 @@ const filteredStudents = computed(() => {
               <td
                 class="px-6 py-4 text-sm font-semibold text-gray-700 dark:text-gray-300"
               >
-                {{ student.rombel }}
+                {{ student.school_class ? student.school_class.name : '-' }}
               </td>
               <td class="px-6 py-4">
                 <span

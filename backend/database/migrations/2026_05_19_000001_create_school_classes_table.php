@@ -21,10 +21,19 @@ return new class extends Migration
             $table->integer('capacity');
             $table->timestamps();
         });
+
+        Schema::table('students', function (Blueprint $table) {
+            $table->unsignedBigInteger('school_class_id')->nullable()->after('major');
+            $table->foreign('school_class_id')->references('id')->on('school_classes')->nullOnDelete();
+        });
     }
 
     public function down(): void
     {
+        Schema::table('students', function (Blueprint $table) {
+            $table->dropForeign(['school_class_id']);
+            $table->dropColumn('school_class_id');
+        });
         Schema::dropIfExists('school_classes');
     }
 };

@@ -10,6 +10,11 @@ class Student extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nisn', 'name', 'gender', 'grade', 'major', 'rombel', 'status'
+        'nisn', 'name', 'gender', 'grade', 'major', 'school_class_id', 'status'
     ];
+
+    public function schoolClass()
+    {
+        return $this->belongsTo(SchoolClass::class, 'school_class_id');
+    }
 }

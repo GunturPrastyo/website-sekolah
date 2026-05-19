@@ -18,7 +18,6 @@ return new class extends Migration
             $table->enum('gender', ['L', 'P']);
             $table->string('grade'); // X, XI, XII
             $table->string('major'); // MIPA, IPS, Bahasa
-            $table->string('rombel'); // 1, 2, 3, A, B
             $table->enum('status', ['aktif', 'alumni'])->default('aktif');
             $table->timestamps();
         });
