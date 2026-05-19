@@ -292,11 +292,7 @@ const cancelEditRole = () => {
   editingRoleName.value = "";
 };
 
-const isDeleteRoleModalOpen = ref(false);
-const roleToDeleteIndex = ref(null);
-const roleToDeleteName = ref("");
-
-const deleteRole = (index) => {
+const handleDeleteRole = (index) => {
   const roleToDelete = commonRoles.value[index];
   const isInUse = staffList.value.some((s) => s.role === roleToDelete);
 
@@ -309,30 +305,20 @@ const deleteRole = (index) => {
     return;
   }
 
-  roleToDeleteIndex.value = index;
-  roleToDeleteName.value = roleToDelete;
-  isDeleteRoleModalOpen.value = true;
-  isRoleDropdownOpen.value = false;
-};
-
-const confirmDeleteRole = () => {
-  if (roleToDeleteIndex.value !== null) {
-    const role = commonRoles.value[roleToDeleteIndex.value];
-    commonRoles.value.splice(roleToDeleteIndex.value, 1);
-    if (form.value.role === role) {
+  // Alert konfirmasi bawaan browser (native confirm)
+  if (window.confirm(`Apakah Anda yakin ingin menghapus jabatan '${roleToDelete}'?`)) {
+    commonRoles.value.splice(index, 1);
+    if (form.value.role === roleToDelete) {
       form.value.role = "";
     }
-    triggerToast("Jabatan Dihapus", `Jabatan "${role}" berhasil dihapus.`, "info");
+    triggerToast(
+      "Jabatan Dihapus",
+      `Jabatan "${roleToDelete}" berhasil dihapus.`,
+      "info"
+    );
   }
-  isDeleteRoleModalOpen.value = false;
-  roleToDeleteIndex.value = null;
-  roleToDeleteName.value = "";
-};
 
-const cancelDeleteRole = () => {
-  isDeleteRoleModalOpen.value = false;
-  roleToDeleteIndex.value = null;
-  roleToDeleteName.value = "";
+  isRoleDropdownOpen.value = false;
 };
 </script>
 
@@ -560,7 +546,7 @@ const cancelDeleteRole = () => {
                                     </button>
                                     <button
                                       type="button"
-                                      @click="deleteRole(index)"
+                                      @click="handleDeleteRole(index)"
                                       class="p-1 text-red-600 hover:bg-red-100 rounded transition-colors"
                                       title="Hapus Jabatan"
                                     >
@@ -810,15 +796,6 @@ const cancelDeleteRole = () => {
       message="Apakah Anda yakin ingin menghapus data staf ini? Tindakan ini tidak dapat dikembalikan."
       @confirm="confirmDelete"
       @cancel="cancelDelete"
-    />
-
-    <!-- Modal Konfirmasi Hapus Jabatan -->
-    <ConfirmModal
-      :isOpen="isDeleteRoleModalOpen"
-      title="Hapus Jabatan"
-      :message="`Apakah Anda yakin ingin menghapus jabatan '${roleToDeleteName}'?`"
-      @confirm="confirmDeleteRole"
-      @cancel="cancelDeleteRole"
     />
 
     <!-- Notifikasi Toast -->
