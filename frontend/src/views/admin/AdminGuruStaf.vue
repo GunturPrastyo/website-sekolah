@@ -23,8 +23,8 @@ const categories = [
   { id: "kependidikan", name: "Tenaga Kependidikan" },
 ];
 
-// Saran Jabatan/Posisi Umum (Datalist Autocomplete)
-const commonRoles = [
+// Saran Jabatan/Posisi Umum
+const commonRoles = ref([
   "Kepala Sekolah",
   "Wakil Kepala Sekolah",
   "Guru Matematika",
@@ -44,7 +44,7 @@ const commonRoles = [
   "Laboran",
   "Petugas Keamanan",
   "Petugas Kebersihan",
-];
+]);
 
 // Dummy Data
 const staffList = ref([
@@ -103,6 +103,9 @@ const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
 
+const showNewRoleInput = ref(false);
+const newRoleName = ref("");
+
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };
   showToast.value = true;
@@ -123,6 +126,8 @@ const resetForm = () => {
     image: "",
   };
   isEditing.value = false;
+  showNewRoleInput.value = false;
+  newRoleName.value = "";
 };
 
 const showAddForm = () => {
@@ -217,6 +222,33 @@ const groupedStaff = computed(() => {
 const getCategoryName = (id) => {
   const category = categories.find((c) => c.id === id);
   return category ? category.name : id;
+};
+
+const handleRoleChange = () => {
+  if (form.value.role === "ADD_NEW") {
+    showNewRoleInput.value = true;
+    form.value.role = "";
+  }
+};
+
+const addNewRole = () => {
+  const role = newRoleName.value.trim();
+  if (role) {
+    if (!commonRoles.value.includes(role)) {
+      commonRoles.value.push(role);
+    }
+    form.value.role = role;
+    showNewRoleInput.value = false;
+    newRoleName.value = "";
+  } else {
+    triggerToast("Gagal", "Nama jabatan baru tidak boleh kosong!", "error");
+  }
+};
+
+const cancelNewRole = () => {
+  showNewRoleInput.value = false;
+  newRoleName.value = "";
+  form.value.role = "";
 };
 </script>
 
@@ -347,16 +379,48 @@ const getCategoryName = (id) => {
                       class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                       >Jabatan / Posisi</label
                     >
-                    <select
-                      v-model="form.role"
-                      required
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option disabled value="">Pilih jabatan...</option>
-                      <option v-for="role in commonRoles" :key="role" :value="role">
-                        {{ role }}
-                      </option>
-                    </select>
+                    <div v-if="!showNewRoleInput">
+                      <select
+                        v-model="form.role"
+                        @change="handleRoleChange"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option disabled value="">Pilih jabatan...</option>
+                        <option v-for="role in commonRoles" :key="role" :value="role">
+                          {{ role }}
+                        </option>
+                        <option
+                          value="ADD_NEW"
+                          class="font-semibold text-blue-600 dark:text-blue-400"
+                        >
+                          + Tambah Jabatan Baru...
+                        </option>
+                      </select>
+                    </div>
+                    <div v-else class="flex gap-2">
+                      <input
+                        type="text"
+                        v-model="newRoleName"
+                        class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Ketik nama jabatan baru..."
+                        @keydown.enter.prevent="addNewRole"
+                      />
+                      <button
+                        type="button"
+                        @click="addNewRole"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                      >
+                        Simpan
+                      </button>
+                      <button
+                        type="button"
+                        @click="cancelNewRole"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 dark:bg-slate-600 dark:text-gray-300 dark:hover:bg-slate-500 transition-colors text-sm font-medium"
+                      >
+                        Batal
+                      </button>
+                    </div>
                   </div>
 
                   <div>
