@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -17,6 +17,7 @@ import {
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
+import api from "@/api/index.js";
 
 // Kategori Staf
 const categories = [
@@ -26,64 +27,23 @@ const categories = [
 ];
 
 // Saran Jabatan/Posisi Umum
-const commonRoles = ref([
-  "Kepala Sekolah",
-  "Wakil Kepala Sekolah",
-  "Guru Matematika",
-  "Guru Bahasa Indonesia",
-  "Guru Bahasa Inggris",
-  "Guru Fisika",
-  "Guru Kimia",
-  "Guru Biologi",
-  "Guru Pendidikan Agama",
-  "Guru Penjasorkes",
-  "Guru Seni Budaya",
-  "Guru Informatika",
-  "Guru Bimbingan Konseling (BK)",
-  "Kepala Tata Usaha",
-  "Staf Tata Usaha",
-  "Pustakawan",
-  "Laboran",
-  "Petugas Keamanan",
-  "Petugas Kebersihan",
-]);
+const commonRoles = ref([]);
 
-// Dummy Data
-const staffList = ref([
-  {
-    id: 1,
-    name: "Dr. H. Budi Santoso, M.Pd",
-    role: "Kepala Sekolah",
-    category: "pimpinan",
-    image:
-      "https://ui-avatars.com/api/?name=Budi+Santoso&background=0D8ABC&color=fff&size=256",
-    nip: "19750817 200003 1 004",
-    email: "budi.santoso@sman1nogosari.sch.id",
-    linkedin: "https://linkedin.com/in/budisantoso",
-  },
-  {
-    id: 2,
-    name: "Siti Aminah, M.Pd",
-    role: "Wakil Kepala Sekolah",
-    category: "pimpinan",
-    image:
-      "https://ui-avatars.com/api/?name=Siti+Aminah&background=0D8ABC&color=fff&size=256",
-    nip: "19800512 200501 2 001",
-    email: "siti.aminah@sman1nogosari.sch.id",
-    linkedin: "",
-  },
-  {
-    id: 3,
-    name: "Ahmad Fauzi, S.Kom",
-    role: "Guru Informatika",
-    category: "pendidik",
-    image:
-      "https://ui-avatars.com/api/?name=Ahmad+Fauzi&background=0D8ABC&color=fff&size=256",
-    nip: "19900215 201504 1 003",
-    email: "",
-    linkedin: "https://linkedin.com/in/ahmadfauzi",
-  },
-]);
+const staffList = ref([]);
+
+const fetchStaff = async () => {
+  try {
+    const response = await api.get("/api/staff");
+    staffList.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal mengambil data staf:", error);
+    triggerToast("Gagal", "Gagal mengambil data staf dari server.", "error");
+  }
+};
+
+onMounted(() => {
+  fetchStaff();
+});
 
 const form = ref({
   id: null,
@@ -140,19 +100,23 @@ const showAddForm = () => {
   document.body.style.overflow = "hidden";
 };
 
-const addEntry = () => {
+const addEntry = async () => {
   if (!form.value.name || !form.value.role || !form.value.category) {
     triggerToast("Gagal Menyimpan", "Nama, Jabatan, dan Kategori wajib diisi!", "error");
     return;
   }
-  const newId =
-    staffList.value.length > 0 ? Math.max(...staffList.value.map((s) => s.id)) + 1 : 1;
-  staffList.value.push({ ...form.value, id: newId });
 
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast("Berhasil Ditambahkan", "Data staf baru telah ditambahkan ke sistem.");
-  resetForm();
+  try {
+    await api.post("/api/staff", form.value);
+    await fetchStaff();
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast("Berhasil Ditambahkan", "Data staf baru telah ditambahkan ke sistem.");
+    resetForm();
+  } catch (error) {
+    console.error(error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat menyimpan data.", "error");
+  }
 };
 
 const startEdit = (staff) => {
@@ -162,20 +126,23 @@ const startEdit = (staff) => {
   document.body.style.overflow = "hidden";
 };
 
-const saveEntry = () => {
+const saveEntry = async () => {
   if (!form.value.name || !form.value.role || !form.value.category) {
     triggerToast("Gagal Menyimpan", "Nama, Jabatan, dan Kategori wajib diisi!", "error");
     return;
   }
-  const index = staffList.value.findIndex((s) => s.id === form.value.id);
-  if (index !== -1) {
-    staffList.value[index] = { ...form.value };
-  }
 
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast("Perubahan Disimpan", "Data staf berhasil diperbarui.");
-  resetForm();
+  try {
+    await api.put(`/api/staff/${form.value.id}`, form.value);
+    await fetchStaff();
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast("Perubahan Disimpan", "Data staf berhasil diperbarui.");
+    resetForm();
+  } catch (error) {
+    console.error(error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat memperbarui data.", "error");
+  }
 };
 
 const hideForm = () => {
@@ -189,11 +156,17 @@ const deleteEntry = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
-    staffList.value = staffList.value.filter((s) => s.id !== itemToDelete.value);
-    itemToDelete.value = null;
-    triggerToast("Data Dihapus", "Data staf berhasil dihapus dari sistem.", "info");
+    try {
+      await api.delete(`/api/staff/${itemToDelete.value}`);
+      await fetchStaff();
+      itemToDelete.value = null;
+      triggerToast("Data Dihapus", "Data staf berhasil dihapus dari sistem.", "info");
+    } catch (error) {
+      console.error(error);
+      triggerToast("Gagal Menghapus", "Terjadi kesalahan saat menghapus data.", "error");
+    }
   }
   isDeleteModalOpen.value = false;
 };
