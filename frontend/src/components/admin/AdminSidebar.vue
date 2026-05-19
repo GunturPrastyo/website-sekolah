@@ -52,10 +52,10 @@ const menu = ref([
     name: "Data Master",
     icon: markRaw(PhDatabase),
     children: [
-      { name: "Data Siswa", link: "/admin/data-siswa" },
       { name: "Data Guru & Staf", link: "/admin/guru-staf" },
-      { name: "Data Alumni", link: "/admin/data-alumni" },
       { name: "Data Kelas", link: "/admin/data-kelas" },
+      { name: "Data Siswa", link: "/admin/data-siswa" },
+      { name: "Data Alumni", link: "/admin/data-alumni" },
     ],
   },
   {
@@ -110,7 +110,7 @@ watch(() => route.path, checkActiveMenu);
 const handleLogout = () => {
   // Hapus status login dan data user lainnya dari localStorage jika ada
   localStorage.removeItem("isLoggedIn");
-  
+
   // Kembalikan pengguna ke halaman login
   router.push("/login");
 };
