@@ -11,18 +11,20 @@ import {
   PhUser,
   PhCalendar,
   PhMedal,
+  PhCaretDown,
+  PhCheck,
   PhX,
 } from "@phosphor-icons/vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
-const categories = [
+const categories = ref([
   { id: "akademik", name: "Akademik / Sains" },
   { id: "olahraga", name: "Olahraga" },
   { id: "seni", name: "Seni & Budaya" },
   { id: "lainnya", name: "Lainnya" },
-];
+]);
 
 const levels = [
   { id: "sekolah", name: "Tingkat Sekolah" },
@@ -88,6 +90,97 @@ const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
 
+const showNewCategoryInput = ref(false);
+const newCategoryName = ref("");
+const isCategoryDropdownOpen = ref(false);
+const editingCategoryIndex = ref(null);
+const editingCategoryName = ref("");
+
+const selectCategory = (id) => {
+  if (id === "ADD_NEW") {
+    showNewCategoryInput.value = true;
+    form.value.category = "";
+  } else {
+    form.value.category = id;
+  }
+  isCategoryDropdownOpen.value = false;
+};
+
+const addNewCategory = () => {
+  const name = newCategoryName.value.trim();
+  if (name) {
+    const newId = name.toLowerCase().replace(/\s+/g, "-");
+    if (!categories.value.some((c) => c.id === newId)) {
+      categories.value.push({ id: newId, name: name });
+    }
+    form.value.category = newId;
+    showNewCategoryInput.value = false;
+    newCategoryName.value = "";
+  } else {
+    triggerToast("Gagal", "Nama kategori baru tidak boleh kosong!", "error");
+  }
+};
+
+const cancelNewCategory = () => {
+  showNewCategoryInput.value = false;
+  newCategoryName.value = "";
+  form.value.category = "";
+};
+
+const startEditCategory = (index, name) => {
+  editingCategoryIndex.value = index;
+  editingCategoryName.value = name;
+};
+
+const saveEditCategory = (index) => {
+  const newName = editingCategoryName.value.trim();
+  if (newName) {
+    categories.value[index].name = newName;
+    editingCategoryIndex.value = null;
+    editingCategoryName.value = "";
+    triggerToast("Berhasil", "Nama kategori berhasil diperbarui.", "success");
+  } else {
+    triggerToast("Gagal", "Nama kategori tidak boleh kosong!", "error");
+  }
+};
+
+const cancelEditCategory = () => {
+  editingCategoryIndex.value = null;
+  editingCategoryName.value = "";
+};
+
+const handleDeleteCategory = (index) => {
+  const categoryToDelete = categories.value[index];
+  const isInUse = prestasiList.value.some((s) => s.category === categoryToDelete.id);
+
+  if (isInUse) {
+    triggerToast(
+      "Gagal",
+      `Kategori "${categoryToDelete.name}" sedang digunakan oleh data prestasi!`,
+      "error"
+    );
+    return;
+  }
+
+  if (
+    window.confirm(
+      `Apakah Anda yakin ingin menghapus kategori '${categoryToDelete.name}'?`
+    )
+  ) {
+    categories.value.splice(index, 1);
+    if (form.value.category === categoryToDelete.id) {
+      form.value.category = "";
+    }
+    triggerToast(
+      "Kategori Dihapus",
+      `Kategori "${categoryToDelete.name}" berhasil dihapus.`,
+      "info"
+    );
+  }
+
+  isCategoryDropdownOpen.value = false;
+};
+
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };
   showToast.value = true;
@@ -108,6 +201,9 @@ const resetForm = () => {
     image: "",
   };
   isEditing.value = false;
+  showNewCategoryInput.value = false;
+  newCategoryName.value = "";
+  isCategoryDropdownOpen.value = false;
 };
 
 const showAddForm = () => {
@@ -201,7 +297,7 @@ const filteredPrestasi = computed(() => {
 });
 
 const getCategoryName = (id) => {
-  const cat = categories.find((c) => c.id === id);
+  const cat = categories.value.find((c) => c.id === id);
   return cat ? cat.name : id;
 };
 
@@ -326,15 +422,141 @@ const getLevelName = (id) => {
                       class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                       >Kategori</label
                     >
-                    <select
-                      v-model="form.category"
-                      required
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-                        {{ cat.name }}
-                      </option>
-                    </select>
+                    <div v-if="!showNewCategoryInput" class="relative">
+                      <button
+                        type="button"
+                        @click="isCategoryDropdownOpen = !isCategoryDropdownOpen"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-left focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex justify-between items-center transition-colors"
+                        :class="
+                          form.category
+                            ? 'text-gray-900 dark:text-white'
+                            : 'text-gray-500 dark:text-gray-400'
+                        "
+                      >
+                        <span class="truncate">{{
+                          getCategoryName(form.category) || "Pilih kategori..."
+                        }}</span>
+                        <PhCaretDown
+                          class="w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200"
+                          :class="{ 'rotate-180': isCategoryDropdownOpen }"
+                        />
+                      </button>
+
+                      <div
+                        v-if="isCategoryDropdownOpen"
+                        @click="isCategoryDropdownOpen = false"
+                        class="fixed inset-0 z-40"
+                      ></div>
+
+                      <Transition
+                        enter-active-class="transition ease-out duration-100"
+                        enter-from-class="opacity-0 translate-y-[-10px]"
+                        enter-to-class="opacity-100 translate-y-0"
+                        leave-active-class="transition ease-in duration-100"
+                        leave-from-class="opacity-100 translate-y-0"
+                        leave-to-class="opacity-0 translate-y-[-10px]"
+                      >
+                        <div
+                          v-if="isCategoryDropdownOpen"
+                          class="absolute top-full z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl max-h-60 overflow-y-auto custom-scrollbar"
+                        >
+                          <ul class="py-1 text-sm">
+                            <li
+                              v-for="(cat, index) in categories"
+                              :key="cat.id"
+                              class="hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 transition-colors group"
+                            >
+                              <div
+                                v-if="editingCategoryIndex === index"
+                                class="flex items-center gap-2 w-full px-4 py-2"
+                                @click.stop
+                              >
+                                <input
+                                  type="text"
+                                  v-model="editingCategoryName"
+                                  class="flex-1 px-2 py-1 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 focus:ring-blue-500 focus:border-blue-500"
+                                  @keydown.enter.prevent="saveEditCategory(index)"
+                                  @keydown.esc.prevent="cancelEditCategory()"
+                                />
+                                <button
+                                  type="button"
+                                  @click="saveEditCategory(index)"
+                                  class="p-1 text-green-600 hover:bg-green-100 rounded"
+                                  title="Simpan"
+                                >
+                                  <PhCheck class="w-4 h-4" />
+                                </button>
+                                <button
+                                  type="button"
+                                  @click="cancelEditCategory()"
+                                  class="p-1 text-gray-500 hover:bg-gray-200 rounded"
+                                  title="Batal"
+                                >
+                                  <PhX class="w-4 h-4" />
+                                </button>
+                              </div>
+                              <div
+                                v-else
+                                class="flex items-center justify-between w-full px-4 py-2.5 cursor-pointer"
+                                @click="selectCategory(cat.id)"
+                              >
+                                <span class="truncate pr-2">{{ cat.name }}</span>
+                                <div
+                                  class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 shrink-0"
+                                  @click.stop
+                                >
+                                  <button
+                                    type="button"
+                                    @click="startEditCategory(index, cat.name)"
+                                    class="p-1 text-blue-600 hover:bg-blue-100 rounded transition-colors"
+                                    title="Edit Kategori"
+                                  >
+                                    <PhPencilSimple class="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    @click="handleDeleteCategory(index)"
+                                    class="p-1 text-red-600 hover:bg-red-100 rounded transition-colors"
+                                    title="Hapus Kategori"
+                                  >
+                                    <PhTrash class="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+                            </li>
+                            <li
+                              @click="selectCategory('ADD_NEW')"
+                              class="px-4 py-2.5 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer font-semibold text-blue-600 dark:text-blue-400 border-t border-gray-100 dark:border-slate-700 transition-colors sticky bottom-0 bg-white dark:bg-slate-800"
+                            >
+                              + Tambah Kategori Baru...
+                            </li>
+                          </ul>
+                        </div>
+                      </Transition>
+                    </div>
+                    <div v-else class="flex gap-2">
+                      <input
+                        type="text"
+                        v-model="newCategoryName"
+                        class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Ketik nama kategori..."
+                        @keydown.enter.prevent="addNewCategory"
+                      />
+                      <button
+                        type="button"
+                        @click="addNewCategory"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                      >
+                        Simpan
+                      </button>
+                      <button
+                        type="button"
+                        @click="cancelNewCategory"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 dark:bg-slate-600 dark:text-gray-300 dark:hover:bg-slate-500 transition-colors text-sm font-medium"
+                      >
+                        Batal
+                      </button>
+                    </div>
                   </div>
 
                   <div class="md:col-span-1">
