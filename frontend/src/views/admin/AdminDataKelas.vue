@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -10,19 +10,13 @@ import {
   PhChalkboard,
   PhX,
   PhUsers,
-  PhUser
+  PhUser,
 } from "@phosphor-icons/vue";
+import api from "@/api/index.js";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
-const classList = ref([
-  { id: 1, name: "X MIPA 1", grade: "X", major: "MIPA", homeroom: "Budi Santoso, S.Pd", capacity: 36, currentStudents: 35 },
-  { id: 2, name: "X MIPA 2", grade: "X", major: "MIPA", homeroom: "Siti Aminah, M.Pd", capacity: 36, currentStudents: 36 },
-  { id: 3, name: "X IPS 1", grade: "X", major: "IPS", homeroom: "Ahmad Fauzi, S.Sos", capacity: 36, currentStudents: 34 },
-  { id: 4, name: "XI MIPA 1", grade: "XI", major: "MIPA", homeroom: "Rina Wulandari, S.Pd", capacity: 36, currentStudents: 35 },
-  { id: 5, name: "XI MIPA 2", grade: "XI", major: "MIPA", homeroom: "Dwi Saputra, S.Or", capacity: 36, currentStudents: 34 },
-  { id: 6, name: "XI IPS 1", grade: "XI", major: "IPS", homeroom: "Maya Indah, S.Sn", capacity: 36, currentStudents: 36 },
-]);
+const classList = ref([]);
 
 const grades = ["X", "XI", "XII"];
 const majors = ["MIPA", "IPS", "Bahasa"];
@@ -46,6 +40,20 @@ const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
 const filterGrade = ref("semua");
 const filterMajor = ref("semua");
+
+const fetchClasses = async () => {
+  try {
+    const response = await api.get("/api/school-classes");
+    classList.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal mengambil data kelas:", error);
+    triggerToast("Gagal", "Gagal mengambil data kelas dari server.", "error");
+  }
+};
+
+onMounted(() => {
+  fetchClasses();
+});
 
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };
@@ -79,15 +87,21 @@ const showAddForm = () => {
   document.body.style.overflow = "hidden";
 };
 
-const addEntry = () => {
+const addEntry = async () => {
   if (!form.value.name || !form.value.homeroom) {
     triggerToast("Gagal Menyimpan", "Nama Kelas dan Wali Kelas wajib diisi!", "error");
     return;
   }
-  const newId = classList.value.length > 0 ? Math.max(...classList.value.map((c) => c.id)) + 1 : 1;
-  classList.value.push({ ...form.value, id: newId, currentStudents: 0 });
-  hideForm();
-  triggerToast("Berhasil Ditambahkan", "Data kelas baru berhasil ditambahkan.");
+
+  try {
+    await api.post("/api/school-classes", form.value);
+    await fetchClasses();
+    hideForm();
+    triggerToast("Berhasil Ditambahkan", "Data kelas baru berhasil ditambahkan.");
+  } catch (error) {
+    console.error(error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat menyimpan data.", "error");
+  }
 };
 
 const startEdit = (item) => {
@@ -97,17 +111,21 @@ const startEdit = (item) => {
   document.body.style.overflow = "hidden";
 };
 
-const saveEntry = () => {
+const saveEntry = async () => {
   if (!form.value.name || !form.value.homeroom) {
     triggerToast("Gagal Menyimpan", "Nama Kelas dan Wali Kelas wajib diisi!", "error");
     return;
   }
-  const index = classList.value.findIndex((c) => c.id === form.value.id);
-  if (index !== -1) {
-    classList.value[index] = { ...classList.value[index], ...form.value };
+
+  try {
+    await api.put(`/api/school-classes/${form.value.id}`, form.value);
+    await fetchClasses();
+    hideForm();
+    triggerToast("Perubahan Disimpan", "Data kelas berhasil diperbarui.");
+  } catch (error) {
+    console.error(error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat memperbarui data.", "error");
   }
-  hideForm();
-  triggerToast("Perubahan Disimpan", "Data kelas berhasil diperbarui.");
 };
 
 const deleteEntry = (id) => {
@@ -115,11 +133,17 @@ const deleteEntry = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
-    classList.value = classList.value.filter((c) => c.id !== itemToDelete.value);
-    itemToDelete.value = null;
-    triggerToast("Data Dihapus", "Data kelas berhasil dihapus dari sistem.", "info");
+    try {
+      await api.delete(`/api/school-classes/${itemToDelete.value}`);
+      await fetchClasses();
+      itemToDelete.value = null;
+      triggerToast("Data Dihapus", "Data kelas berhasil dihapus dari sistem.", "info");
+    } catch (error) {
+      console.error(error);
+      triggerToast("Gagal Menghapus", "Terjadi kesalahan saat menghapus data.", "error");
+    }
   }
   isDeleteModalOpen.value = false;
 };
@@ -207,25 +231,38 @@ const filteredClasses = computed(() => {
             <form id="classForm" @submit.prevent="isEditing ? saveEntry() : addEntry()">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="md:col-span-1">
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tingkat Kelas</label>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Tingkat Kelas</label
+                  >
                   <select
                     v-model="form.grade"
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option v-for="grade in grades" :key="grade" :value="grade">{{ grade }}</option>
+                    <option v-for="grade in grades" :key="grade" :value="grade">
+                      {{ grade }}
+                    </option>
                   </select>
                 </div>
                 <div class="md:col-span-1">
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jurusan</label>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Jurusan</label
+                  >
                   <select
                     v-model="form.major"
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option v-for="major in majors" :key="major" :value="major">{{ major }}</option>
+                    <option v-for="major in majors" :key="major" :value="major">
+                      {{ major }}
+                    </option>
                   </select>
                 </div>
                 <div class="md:col-span-1">
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama Kelas (Rombel)</label>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Nama Kelas (Rombel)</label
+                  >
                   <input
                     type="text"
                     v-model="form.name"
@@ -235,7 +272,10 @@ const filteredClasses = computed(() => {
                   />
                 </div>
                 <div class="md:col-span-1">
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kapasitas Siswa</label>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Kapasitas Siswa</label
+                  >
                   <input
                     type="number"
                     v-model="form.capacity"
@@ -246,7 +286,10 @@ const filteredClasses = computed(() => {
                   />
                 </div>
                 <div class="md:col-span-2">
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Wali Kelas</label>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Wali Kelas</label
+                  >
                   <input
                     type="text"
                     v-model="form.homeroom"
@@ -258,7 +301,9 @@ const filteredClasses = computed(() => {
               </div>
             </form>
           </div>
-          <div class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3">
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+          >
             <button
               type="button"
               @click="hideForm"
@@ -281,11 +326,17 @@ const filteredClasses = computed(() => {
     </Transition>
 
     <!-- Data Table & Filters -->
-    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
-      <div class="p-6 border-b border-gray-100 dark:border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div
+      class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden"
+    >
+      <div
+        class="p-6 border-b border-gray-100 dark:border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+      >
         <div class="flex flex-col md:flex-row gap-4 w-full">
           <div class="relative flex-1 md:max-w-xs">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
               <PhMagnifyingGlass class="w-5 h-5 text-gray-400" />
             </div>
             <input
@@ -319,7 +370,9 @@ const filteredClasses = computed(() => {
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-gray-50 dark:bg-slate-700/50 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <tr
+              class="bg-gray-50 dark:bg-slate-700/50 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
               <th class="px-6 py-4">Nama Kelas</th>
               <th class="px-6 py-4">Tingkat</th>
               <th class="px-6 py-4">Jurusan</th>
@@ -330,22 +383,38 @@ const filteredClasses = computed(() => {
           </thead>
           <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
             <tr v-if="filteredClasses.length === 0">
-              <td colspan="6" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
-                <PhChalkboard class="w-12 h-12 mx-auto text-gray-300 dark:text-gray-500 mb-3" />
+              <td
+                colspan="6"
+                class="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
+              >
+                <PhChalkboard
+                  class="w-12 h-12 mx-auto text-gray-300 dark:text-gray-500 mb-3"
+                />
                 <p>Tidak ada data kelas yang ditemukan.</p>
               </td>
             </tr>
-            <tr v-for="cls in filteredClasses" :key="cls.id" class="hover:bg-blue-50/50 dark:hover:bg-slate-700/30 transition-colors group">
+            <tr
+              v-for="cls in filteredClasses"
+              :key="cls.id"
+              class="hover:bg-blue-50/50 dark:hover:bg-slate-700/30 transition-colors group"
+            >
               <td class="px-6 py-4">
-                <span class="block text-sm font-semibold text-gray-800 dark:text-gray-200">{{ cls.name }}</span>
+                <span
+                  class="block text-sm font-semibold text-gray-800 dark:text-gray-200"
+                  >{{ cls.name }}</span
+                >
               </td>
               <td class="px-6 py-4">
-                <span class="inline-flex items-center justify-center w-8 h-8 rounded-md text-xs font-bold bg-blue-50 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400">
+                <span
+                  class="inline-flex items-center justify-center w-8 h-8 rounded-md text-xs font-bold bg-blue-50 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400"
+                >
                   {{ cls.grade }}
                 </span>
               </td>
               <td class="px-6 py-4">
-                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-slate-700 dark:text-gray-300">
+                <span
+                  class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-slate-700 dark:text-gray-300"
+                >
                   {{ cls.major }}
                 </span>
               </td>
@@ -362,11 +431,21 @@ const filteredClasses = computed(() => {
                 </div>
               </td>
               <td class="px-6 py-4 text-right">
-                <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button @click="startEdit(cls)" class="p-1.5 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-md transition-colors" title="Edit Data">
+                <div
+                  class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <button
+                    @click="startEdit(cls)"
+                    class="p-1.5 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-md transition-colors"
+                    title="Edit Data"
+                  >
                     <PhPencilSimple class="w-4 h-4" />
                   </button>
-                  <button @click="deleteEntry(cls.id)" class="p-1.5 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-md transition-colors" title="Hapus Data">
+                  <button
+                    @click="deleteEntry(cls.id)"
+                    class="p-1.5 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-md transition-colors"
+                    title="Hapus Data"
+                  >
                     <PhTrash class="w-4 h-4" />
                   </button>
                 </div>

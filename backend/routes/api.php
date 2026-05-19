@@ -6,6 +6,7 @@ use App\Http\Controllers\SchoolProfileController;
 use App\Http\Controllers\TimelineController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\SchoolClassController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,4 +44,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API Data Guru & Staf
     Route::apiResource('staff', StaffController::class);
+
+    // API Data Kelas
+    Route::apiResource('school-classes', SchoolClassController::class);
 });
