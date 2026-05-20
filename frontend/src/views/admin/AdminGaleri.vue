@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed, nextTick, watch } from "vue";
+import { ref, computed, nextTick, watch, onMounted } from "vue";
+import api from "@/api/index.js";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -24,32 +25,7 @@ const categories = ref([
   { id: "hut-ri", name: "HUT RI" },
 ]);
 
-const galleryList = ref([
-  {
-    id: 1,
-    title: "Gedung Utama Sekolah",
-    category: "fasilitas",
-    image:
-      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800&h=1000&fit=crop",
-    likes: 120,
-  },
-  {
-    id: 2,
-    title: "Upacara Bendera HUT RI",
-    category: "hut-ri",
-    image:
-      "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&h=800&fit=crop",
-    likes: 540,
-  },
-  {
-    id: 3,
-    title: "Praktikum Laboratorium Kimia",
-    category: "fasilitas",
-    image:
-      "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&h=1200&fit=crop",
-    likes: 85,
-  },
-]);
+const galleryList = ref([]);
 
 const form = ref({
   id: null,
@@ -75,6 +51,19 @@ const newCategoryName = ref("");
 const isCategoryDropdownOpen = ref(false);
 const editingCategoryIndex = ref(null);
 const editingCategoryName = ref("");
+
+const fetchGallery = async () => {
+  try {
+    const response = await api.get("/api/galleries");
+    galleryList.value = response.data.data;
+  } catch (error) {
+    triggerToast("Error", "Gagal memuat data galeri", "error");
+  }
+};
+
+onMounted(() => {
+  fetchGallery();
+});
 
 const selectCategory = (id) => {
   if (id === "ADD_NEW") {
@@ -251,35 +240,26 @@ const showAddForm = () => {
   document.body.style.overflow = "hidden";
 };
 
-const addEntry = () => {
+const addEntry = async () => {
   if (!form.value.title || form.value.images.length === 0) {
     triggerToast("Gagal Menyimpan", "Judul Foto dan Gambar wajib diisi!", "error");
     return;
   }
 
-  let currentId =
-    galleryList.value.length > 0 ? Math.max(...galleryList.value.map((s) => s.id)) : 0;
+  try {
+    const response = await api.post("/api/galleries", form.value);
+    galleryList.value.unshift(...response.data.data);
 
-  const newEntries = form.value.images.map((img) => {
-    currentId++;
-    return {
-      id: currentId,
-      title: form.value.title,
-      category: form.value.category,
-      image: img,
-      likes: 0,
-    };
-  });
-
-  galleryList.value.unshift(...newEntries);
-
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast(
-    "Berhasil Ditambahkan",
-    `${newEntries.length} foto baru telah ditambahkan ke galeri.`
-  );
-  resetForm();
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast(
+      "Berhasil Ditambahkan",
+      `${response.data.data.length} foto baru telah ditambahkan ke galeri.`
+    );
+    resetForm();
+  } catch (error) {
+    triggerToast("Gagal", "Terjadi kesalahan saat menyimpan data", "error");
+  }
 };
 
 const startEdit = async (item) => {
@@ -294,40 +274,32 @@ const startEdit = async (item) => {
   document.body.style.overflow = "hidden";
 };
 
-const saveEntry = () => {
+const saveEntry = async () => {
   if (!form.value.title || form.value.images.length === 0) {
     triggerToast("Gagal Menyimpan", "Judul Foto dan Gambar wajib diisi!", "error");
     return;
   }
-  const index = galleryList.value.findIndex((s) => s.id === form.value.id);
-  if (index !== -1) {
-    galleryList.value[index] = {
-      ...galleryList.value[index],
-      title: form.value.title,
-      category: form.value.category,
-      image: form.value.images[0],
-    };
 
-    if (form.value.images.length > 1) {
-      let currentId = Math.max(...galleryList.value.map((s) => s.id));
-      const newEntries = form.value.images.slice(1).map((img) => {
-        currentId++;
-        return {
-          id: currentId,
-          title: form.value.title,
-          category: form.value.category,
-          image: img,
-          likes: 0,
-        };
-      });
-      galleryList.value.unshift(...newEntries);
+  try {
+    const response = await api.put(`/api/galleries/${form.value.id}`, form.value);
+    const newItems = response.data.data;
+
+    const index = galleryList.value.findIndex((s) => s.id === form.value.id);
+    if (index !== -1) {
+      galleryList.value[index] = newItems[0];
     }
-  }
 
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast("Perubahan Disimpan", "Data foto berhasil diperbarui.");
-  resetForm();
+    if (newItems.length > 1) {
+      galleryList.value.unshift(...newItems.slice(1));
+    }
+
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast("Perubahan Disimpan", "Data foto berhasil diperbarui.");
+    resetForm();
+  } catch (error) {
+    triggerToast("Gagal", "Terjadi kesalahan saat memperbarui data", "error");
+  }
 };
 
 const hideForm = () => {
@@ -341,11 +313,16 @@ const deleteEntry = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
-    galleryList.value = galleryList.value.filter((s) => s.id !== itemToDelete.value);
-    itemToDelete.value = null;
-    triggerToast("Data Dihapus", "Data foto berhasil dihapus dari galeri.", "info");
+    try {
+      await api.delete(`/api/galleries/${itemToDelete.value}`);
+      galleryList.value = galleryList.value.filter((s) => s.id !== itemToDelete.value);
+      itemToDelete.value = null;
+      triggerToast("Data Dihapus", "Data foto berhasil dihapus dari galeri.", "info");
+    } catch (error) {
+      triggerToast("Gagal", "Terjadi kesalahan saat menghapus data", "error");
+    }
   }
   isDeleteModalOpen.value = false;
 };
@@ -372,17 +349,23 @@ const selectAll = () => {
   }
 };
 
-const confirmBulkDelete = () => {
-  galleryList.value = galleryList.value.filter(
-    (item) => !selectedItems.value.includes(item.id)
-  );
-  triggerToast(
-    "Data Dihapus",
-    `${selectedItems.value.length} foto berhasil dihapus dari galeri.`,
-    "info"
-  );
-  selectedItems.value = [];
-  isBulkDeleteModalOpen.value = false;
+const confirmBulkDelete = async () => {
+  if (selectedItems.value.length === 0) return;
+  try {
+    await api.post("/api/galleries/bulk-delete", { ids: selectedItems.value });
+    galleryList.value = galleryList.value.filter(
+      (item) => !selectedItems.value.includes(item.id)
+    );
+    triggerToast(
+      "Data Dihapus",
+      `${selectedItems.value.length} foto berhasil dihapus dari galeri.`,
+      "info"
+    );
+    selectedItems.value = [];
+    isBulkDeleteModalOpen.value = false;
+  } catch (error) {
+    triggerToast("Gagal", "Terjadi kesalahan saat menghapus data", "error");
+  }
 };
 
 watch(activeCategory, () => {

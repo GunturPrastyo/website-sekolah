@@ -8,6 +8,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\AlumniController;
+use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\MapLocationController;
 use Illuminate\Http\Request;
@@ -60,4 +61,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API Data Persebaran Peta Alumni
     Route::apiResource('/map-locations', MapLocationController::class);
+
+    // API Galeri
+    Route::get('/galleries', [GalleryController::class, 'index']);
+    Route::post('/galleries', [GalleryController::class, 'store']);
+    Route::put('/galleries/{gallery}', [GalleryController::class, 'update']);
+    Route::delete('/galleries/{gallery}', [GalleryController::class, 'destroy']);
+    Route::post('/galleries/bulk-delete', [GalleryController::class, 'bulkDelete']);
 });
