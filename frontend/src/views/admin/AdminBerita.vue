@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed, nextTick } from "vue";
+import { ref, computed, nextTick, onMounted } from "vue";
+import api from "@/api/index.js";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -25,28 +26,7 @@ const categories = ref([
   { id: "pengumuman", name: "Pengumuman" },
 ]);
 
-const newsList = ref([
-  {
-    id: 1,
-    title: "Peringatan Hari Guru Nasional Berlangsung Meriah",
-    category: "kegiatan",
-    images: ["https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800"],
-    views: 1250,
-    content:
-      "<p>Seluruh siswa dan staf pengajar berpartisipasi dalam rangkaian acara yang dimeriahkan dengan berbagai penampilan pentas seni dan penghargaan bagi guru berprestasi.</p>",
-    tags: "Guru, Acara, Sekolah",
-  },
-  {
-    id: 2,
-    title: "Siswa SMAN 1 Meraih Juara 1 Olimpiade Sains Tingkat Nasional",
-    category: "prestasi",
-    images: ["https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800"],
-    views: 3420,
-    content:
-      "<p>Prestasi membanggakan kembali ditorehkan oleh siswa-siswi kita di kancah nasional dalam bidang sains terapan, mengalahkan ratusan peserta dari sekolah lain.</p>",
-    tags: "Olimpiade, Sains, Prestasi",
-  },
-]);
+const newsList = ref([]);
 
 const form = ref({
   id: null,
@@ -65,6 +45,19 @@ const itemToDelete = ref(null);
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
+
+const fetchNews = async () => {
+  try {
+    const response = await api.get("/api/news");
+    newsList.value = response.data.data || [];
+  } catch (error) {
+    triggerToast("Error", "Gagal mengambil data berita", "error");
+  }
+};
+
+onMounted(() => {
+  fetchNews();
+});
 
 const showNewCategoryInput = ref(false);
 const newCategoryName = ref("");
@@ -211,18 +204,22 @@ const showAddForm = () => {
   });
 };
 
-const addEntry = () => {
+const addEntry = async () => {
   if (!form.value.title) {
     triggerToast("Gagal Menyimpan", "Judul Berita wajib diisi!", "error");
     return;
   }
-  const newId =
-    newsList.value.length > 0 ? Math.max(...newsList.value.map((s) => s.id)) + 1 : 1;
-  newsList.value.unshift({ ...form.value, id: newId, views: 0 });
 
-  isFormVisible.value = false;
-  triggerToast("Berhasil Ditambahkan", "Data berita baru telah ditambahkan ke sistem.");
-  resetForm();
+  try {
+    const response = await api.post("/api/news", form.value);
+    newsList.value.unshift(response.data.data);
+
+    isFormVisible.value = false;
+    triggerToast("Berhasil Ditambahkan", "Data berita baru telah ditambahkan ke sistem.");
+    resetForm();
+  } catch (error) {
+    triggerToast("Gagal", "Terjadi kesalahan saat menyimpan data", "error");
+  }
 };
 
 const startEdit = (item) => {
@@ -234,19 +231,25 @@ const startEdit = (item) => {
   });
 };
 
-const saveEntry = () => {
+const saveEntry = async () => {
   if (!form.value.title) {
     triggerToast("Gagal Menyimpan", "Judul Berita wajib diisi!", "error");
     return;
   }
-  const index = newsList.value.findIndex((s) => s.id === form.value.id);
-  if (index !== -1) {
-    newsList.value[index] = { ...newsList.value[index], ...form.value };
-  }
 
-  isFormVisible.value = false;
-  triggerToast("Perubahan Disimpan", "Data berita berhasil diperbarui.");
-  resetForm();
+  try {
+    const response = await api.put(`/api/news/${form.value.id}`, form.value);
+    const index = newsList.value.findIndex((s) => s.id === form.value.id);
+    if (index !== -1) {
+      newsList.value[index] = response.data.data;
+    }
+
+    isFormVisible.value = false;
+    triggerToast("Perubahan Disimpan", "Data berita berhasil diperbarui.");
+    resetForm();
+  } catch (error) {
+    triggerToast("Gagal", "Terjadi kesalahan saat memperbarui data", "error");
+  }
 };
 
 const hideForm = () => {
@@ -259,11 +262,16 @@ const deleteEntry = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
-    newsList.value = newsList.value.filter((s) => s.id !== itemToDelete.value);
-    itemToDelete.value = null;
-    triggerToast("Data Dihapus", "Data berita berhasil dihapus dari sistem.", "info");
+    try {
+      await api.delete(`/api/news/${itemToDelete.value}`);
+      newsList.value = newsList.value.filter((s) => s.id !== itemToDelete.value);
+      itemToDelete.value = null;
+      triggerToast("Data Dihapus", "Data berita berhasil dihapus dari sistem.", "info");
+    } catch (error) {
+      triggerToast("Gagal", "Terjadi kesalahan saat menghapus data.", "error");
+    }
   }
   isDeleteModalOpen.value = false;
 };
@@ -286,9 +294,10 @@ const handleImageDrop = (index) => {
 };
 
 const filteredNews = computed(() => {
-  if (!searchQuery.value) return newsList.value;
+  const list = newsList.value || [];
+  if (!searchQuery.value) return list;
   const query = searchQuery.value.toLowerCase();
-  return newsList.value.filter((item) => item.title.toLowerCase().includes(query));
+  return list.filter((item) => item.title.toLowerCase().includes(query));
 });
 
 const getCategoryName = (id) => {
@@ -365,7 +374,7 @@ const getCategoryName = (id) => {
                   Gambar Berita
                 </label>
 
-                <div v-if="form.images.length > 0" class="mb-4">
+                <div v-if="form.images?.length > 0" class="mb-4">
                   <!-- Gambar Utama (Index 0) -->
                   <div
                     class="relative w-full aspect-[4/3] rounded-lg overflow-hidden mb-2 group cursor-move shadow-sm"
@@ -393,7 +402,7 @@ const getCategoryName = (id) => {
                   <!-- Grid Gambar Lainnya -->
                   <div class="grid grid-cols-3 gap-2">
                     <div
-                      v-for="(img, index) in form.images.slice(1)"
+                      v-for="(img, index) in (form.images || []).slice(1)"
                       :key="index + 1"
                       class="relative aspect-square rounded-md overflow-hidden group cursor-move shadow-sm"
                       draggable="true"
@@ -672,7 +681,7 @@ const getCategoryName = (id) => {
       </div>
 
       <div
-        v-if="filteredNews.length === 0"
+        v-if="!filteredNews || filteredNews.length === 0"
         class="py-12 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
       >
         <div
@@ -712,7 +721,7 @@ const getCategoryName = (id) => {
           <!-- Image Thumbnail -->
           <div class="w-full aspect-[16/9] bg-gray-100 dark:bg-slate-700 relative">
             <img
-              v-if="news.images && news.images.length > 0"
+              v-if="news.images?.length > 0"
               :src="news.images[0]"
               class="w-full h-full object-cover"
             />
@@ -731,10 +740,10 @@ const getCategoryName = (id) => {
                 {{ getCategoryName(news.category) }}
               </span>
               <span
-                v-if="news.images && news.images.length > 1"
+                v-if="news.images?.length > 1"
                 class="bg-gray-900/80 backdrop-blur-sm px-2 py-1 text-white text-[10px] font-bold rounded flex items-center shadow-sm"
               >
-                +{{ news.images.length - 1 }} Foto
+                +{{ news.images?.length - 1 }} Foto
               </span>
             </div>
           </div>
