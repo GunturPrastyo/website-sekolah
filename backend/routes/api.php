@@ -12,7 +12,8 @@ use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\SchoolVideoController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\MapLocationController;
-use App\Http\Controllers\Api\DownloadController;
+use App\Http\Controllers\DownloadController;
+use App\Http\Controllers\ProgramController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -78,4 +79,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API Unduhan
     Route::apiResource('downloads', DownloadController::class);
+
+    // API Program Jurusan
+    Route::apiResource('programs', ProgramController::class);
 });

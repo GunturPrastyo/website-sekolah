@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import api from "@/api/index.js";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -16,29 +17,7 @@ import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
-const programList = ref([
-  {
-    id: 1,
-    title: "Ilmu Pengetahuan Alam (IPA)",
-    badge: "Sains & Teknologi",
-    description:
-      "Program peminatan IPA berfokus pada ilmu-ilmu eksakta dan alam. Siswa akan diajak untuk berpikir logis, analitis, dan sistematis dalam memecahkan berbagai fenomena alam dan teknologi.",
-    subjects: "Fisika Lanjutan, Kimia Terapan, Biologi Terpadu, Matematika Peminatan",
-    careers: "Dokter / Tenaga Medis, Insinyur / Engineer, Ilmuwan / Peneliti, Apoteker",
-    image: "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800",
-  },
-  {
-    id: 2,
-    title: "Ilmu Pengetahuan Sosial (IPS)",
-    badge: "Sosial & Humaniora",
-    description:
-      "Peminatan IPS membekali siswa dengan pemahaman mendalam tentang dinamika sosial, ekonomi, dan sejarah. Program ini sangat cocok bagi siswa yang memiliki minat pada hubungan antar manusia dan kebijakan publik.",
-    subjects: "Ekonomi & Akuntansi, Sosiologi, Geografi, Sejarah Peminatan",
-    careers:
-      "Ekonom / Akuntan, Pengacara / Diplomat, Pengusaha / Entrepreneur, Psikolog Sosial",
-    image: "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=800",
-  },
-]);
+const programList = ref([]);
 
 const form = ref({
   id: null,
@@ -58,6 +37,19 @@ const itemToDelete = ref(null);
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
+
+const fetchPrograms = async () => {
+  try {
+    const response = await api.get("/api/programs");
+    programList.value = response.data.data;
+  } catch (error) {
+    triggerToast("Error", "Gagal memuat data program jurusan", "error");
+  }
+};
+
+onMounted(() => {
+  fetchPrograms();
+});
 
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };
@@ -86,24 +78,26 @@ const showAddForm = () => {
   document.body.style.overflow = "hidden";
 };
 
-const addEntry = () => {
+const addEntry = async () => {
   if (!form.value.title || !form.value.badge) {
     triggerToast("Gagal Menyimpan", "Nama Program dan Kategori wajib diisi!", "error");
     return;
   }
-  const newId =
-    programList.value.length > 0
-      ? Math.max(...programList.value.map((s) => s.id)) + 1
-      : 1;
-  programList.value.push({ ...form.value, id: newId });
 
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast(
-    "Berhasil Ditambahkan",
-    "Data program jurusan baru telah ditambahkan ke sistem."
-  );
-  resetForm();
+  try {
+    const response = await api.post("/api/programs", form.value);
+    programList.value.push(response.data.data);
+
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast(
+      "Berhasil Ditambahkan",
+      "Data program jurusan baru telah ditambahkan ke sistem."
+    );
+    resetForm();
+  } catch (error) {
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat menyimpan data", "error");
+  }
 };
 
 const startEdit = (program) => {
@@ -113,20 +107,26 @@ const startEdit = (program) => {
   document.body.style.overflow = "hidden";
 };
 
-const saveEntry = () => {
+const saveEntry = async () => {
   if (!form.value.title || !form.value.badge) {
     triggerToast("Gagal Menyimpan", "Nama Program dan Kategori wajib diisi!", "error");
     return;
   }
-  const index = programList.value.findIndex((s) => s.id === form.value.id);
-  if (index !== -1) {
-    programList.value[index] = { ...form.value };
-  }
 
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast("Perubahan Disimpan", "Data program jurusan berhasil diperbarui.");
-  resetForm();
+  try {
+    const response = await api.put(`/api/programs/${form.value.id}`, form.value);
+    const index = programList.value.findIndex((s) => s.id === form.value.id);
+    if (index !== -1) {
+      programList.value[index] = response.data.data;
+    }
+
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast("Perubahan Disimpan", "Data program jurusan berhasil diperbarui.");
+    resetForm();
+  } catch (error) {
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat memperbarui data", "error");
+  }
 };
 
 const hideForm = () => {
@@ -140,15 +140,20 @@ const deleteEntry = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
-    programList.value = programList.value.filter((s) => s.id !== itemToDelete.value);
-    itemToDelete.value = null;
-    triggerToast(
-      "Data Dihapus",
-      "Data program jurusan berhasil dihapus dari sistem.",
-      "info"
-    );
+    try {
+      await api.delete(`/api/programs/${itemToDelete.value}`);
+      programList.value = programList.value.filter((s) => s.id !== itemToDelete.value);
+      itemToDelete.value = null;
+      triggerToast(
+        "Data Dihapus",
+        "Data program jurusan berhasil dihapus dari sistem.",
+        "info"
+      );
+    } catch (error) {
+      triggerToast("Gagal", "Terjadi kesalahan saat menghapus data", "error");
+    }
   }
   isDeleteModalOpen.value = false;
 };
