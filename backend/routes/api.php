@@ -12,6 +12,7 @@ use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\SchoolVideoController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\MapLocationController;
+use App\Http\Controllers\Api\DownloadController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -74,4 +75,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/school-video', [SchoolVideoController::class, 'show']);
     Route::post('/school-video', [SchoolVideoController::class, 'update']);
     Route::delete('/school-video', [SchoolVideoController::class, 'destroy']);
+
+    // API Unduhan
+    Route::apiResource('downloads', DownloadController::class);
 });

@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import api from "@/api/index.js";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -26,72 +27,7 @@ const categories = ref([
   { id: "umum", name: "Dokumen Umum" },
 ]);
 
-const filesList = ref([
-  {
-    id: 1,
-    name: "Kalender_Akademik_2025_2026.pdf",
-    type: "pdf",
-    size: "2.4 MB",
-    date: "15 Jan 2026",
-    category: "akademik",
-  },
-  {
-    id: 2,
-    name: "Brosur_PPDB_SMAN1_Nogosari.pdf",
-    type: "pdf",
-    size: "5.1 MB",
-    date: "10 Feb 2026",
-    category: "ppdb",
-  },
-  {
-    id: 3,
-    name: "Formulir_Pendaftaran_Ekskul.docx",
-    type: "docx",
-    size: "1.2 MB",
-    date: "05 Feb 2026",
-    category: "kesiswaan",
-  },
-  {
-    id: 4,
-    name: "SOP_Tata_Tertib_Siswa_Rev.pdf",
-    type: "pdf",
-    size: "3.5 MB",
-    date: "20 Jan 2026",
-    category: "umum",
-  },
-  {
-    id: 5,
-    name: "Modul_Latihan_UTBK_Saintek.zip",
-    type: "zip",
-    size: "15.8 MB",
-    date: "12 Jan 2026",
-    category: "akademik",
-  },
-  {
-    id: 6,
-    name: "Buku_Panduan_OSIS_2026.pdf",
-    type: "pdf",
-    size: "4.2 MB",
-    date: "02 Feb 2026",
-    category: "kesiswaan",
-  },
-  {
-    id: 7,
-    name: "Logo_Resmi_SMAN1_Nogosari.png",
-    type: "image",
-    size: "1.8 MB",
-    date: "25 Jan 2026",
-    category: "umum",
-  },
-  {
-    id: 8,
-    name: "Juknis_Pelaksanaan_PPDB.docx",
-    type: "docx",
-    size: "850 KB",
-    date: "11 Feb 2026",
-    category: "ppdb",
-  },
-]);
+const filesList = ref([]);
 
 const form = ref({
   id: null,
@@ -116,6 +52,19 @@ const newCategoryName = ref("");
 const isCategoryDropdownOpen = ref(false);
 const editingCategoryIndex = ref(null);
 const editingCategoryName = ref("");
+
+const fetchFiles = async () => {
+  try {
+    const response = await api.get("/api/downloads");
+    filesList.value = response.data.data;
+  } catch (error) {
+    triggerToast("Error", "Gagal memuat data file unduhan", "error");
+  }
+};
+
+onMounted(() => {
+  fetchFiles();
+});
 
 const selectCategory = (id) => {
   if (id === "ADD_NEW") {
@@ -281,47 +230,33 @@ const extractFileType = (fileName) => {
   return ext;
 };
 
-const addEntry = () => {
+const addEntry = async () => {
   if (!form.value.name) {
     triggerToast("Gagal Menyimpan", "Nama File wajib diisi!", "error");
     return;
   }
-
-  let type = "unknown";
-  let size = "Unknown Size";
-  let name = form.value.name;
-
-  if (form.value.file) {
-    type = extractFileType(form.value.file.name);
-    const sizeInMB = (form.value.file.size / (1024 * 1024)).toFixed(1);
-    const sizeInKB = (form.value.file.size / 1024).toFixed(0);
-    size = form.value.file.size > 1024 * 1024 ? `${sizeInMB} MB` : `${sizeInKB} KB`;
-  } else {
-    type = extractFileType(name);
-    size = "0 KB";
+  if (!form.value.file) {
+    triggerToast("Gagal Menyimpan", "File wajib dipilih!", "error");
+    return;
   }
 
-  const newId =
-    filesList.value.length > 0 ? Math.max(...filesList.value.map((s) => s.id)) + 1 : 1;
+  const formData = new FormData();
+  formData.append("name", form.value.name);
+  formData.append("category", form.value.category);
+  formData.append("file", form.value.file);
 
-  const today = new Date();
-  const dateStr = `${today.getDate()} ${today.toLocaleString("id-ID", {
-    month: "short",
-  })} ${today.getFullYear()}`;
-
-  filesList.value.unshift({
-    id: newId,
-    name: name,
-    category: form.value.category,
-    type: type,
-    size: size,
-    date: dateStr,
-  });
-
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast("Berhasil Ditambahkan", "Data file baru telah ditambahkan ke sistem.");
-  resetForm();
+  try {
+    const response = await api.post("/api/downloads", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    filesList.value.unshift(response.data.data);
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast("Berhasil Ditambahkan", "Data file baru telah ditambahkan ke sistem.");
+    resetForm();
+  } catch (error) {
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat mengunggah file.", "error");
+  }
 };
 
 const startEdit = (item) => {
@@ -336,40 +271,37 @@ const startEdit = (item) => {
   document.body.style.overflow = "hidden";
 };
 
-const saveEntry = () => {
+const saveEntry = async () => {
   if (!form.value.name) {
     triggerToast("Gagal Menyimpan", "Nama File wajib diisi!", "error");
     return;
   }
-  const index = filesList.value.findIndex((s) => s.id === form.value.id);
-  if (index !== -1) {
-    const item = filesList.value[index];
-    let newType = item.type;
-    let newSize = item.size;
-    let newName = form.value.name;
 
-    if (form.value.file) {
-      newType = extractFileType(form.value.file.name);
-      const sizeInMB = (form.value.file.size / (1024 * 1024)).toFixed(1);
-      const sizeInKB = (form.value.file.size / 1024).toFixed(0);
-      newSize = form.value.file.size > 1024 * 1024 ? `${sizeInMB} MB` : `${sizeInKB} KB`;
-    } else {
-      newType = extractFileType(newName);
-    }
-
-    filesList.value[index] = {
-      ...item,
-      name: newName,
-      category: form.value.category,
-      type: newType,
-      size: newSize,
-    };
+  const formData = new FormData();
+  formData.append("_method", "PUT");
+  formData.append("name", form.value.name);
+  formData.append("category", form.value.category);
+  if (form.value.file) {
+    formData.append("file", form.value.file);
   }
 
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast("Perubahan Disimpan", "Data file berhasil diperbarui.");
-  resetForm();
+  try {
+    const response = await api.post(`/api/downloads/${form.value.id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    
+    const index = filesList.value.findIndex((s) => s.id === form.value.id);
+    if (index !== -1) {
+      filesList.value[index] = response.data.data;
+    }
+
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast("Perubahan Disimpan", "Data file berhasil diperbarui.");
+    resetForm();
+  } catch (error) {
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat memperbarui file.", "error");
+  }
 };
 
 const hideForm = () => {
@@ -383,11 +315,16 @@ const deleteEntry = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
-    filesList.value = filesList.value.filter((s) => s.id !== itemToDelete.value);
-    itemToDelete.value = null;
-    triggerToast("Data Dihapus", "File berhasil dihapus dari sistem.", "info");
+    try {
+      await api.delete(`/api/downloads/${itemToDelete.value}`);
+      filesList.value = filesList.value.filter((s) => s.id !== itemToDelete.value);
+      itemToDelete.value = null;
+      triggerToast("Data Dihapus", "File berhasil dihapus dari sistem.", "info");
+    } catch (error) {
+      triggerToast("Gagal", "Terjadi kesalahan saat menghapus data", "error");
+    }
   }
   isDeleteModalOpen.value = false;
 };
@@ -788,6 +725,15 @@ const getCategoryName = (id) => {
                 <div
                   class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
                 >
+                  <a
+                    v-if="file.file_url"
+                    :href="file.file_url"
+                    target="_blank"
+                    class="p-1.5 text-emerald-600 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 rounded-md transition-colors"
+                    title="Unduh File"
+                  >
+                    <PhDownloadSimple class="w-4 h-4" />
+                  </a>
                   <button
                     @click="startEdit(file)"
                     class="p-1.5 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-md transition-colors"
