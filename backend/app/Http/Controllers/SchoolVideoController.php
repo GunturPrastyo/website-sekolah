@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\SchoolVideo;
+use Illuminate\Http\Request;
+
+class SchoolVideoController extends Controller
+{
+    public function show()
+    {
+        $video = SchoolVideo::first();
+        return response()->json(['data' => $video]);
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'url' => 'required|url'
+        ]);
+
+        $video = SchoolVideo::first() ?? new SchoolVideo();
+        $video->url = $request->url;
+        $video->save();
+
+        return response()->json([
+            'message' => 'Video profil berhasil diperbarui', 
+            'data' => $video
+        ]);
+    }
+
+    public function destroy()
+    {
+        $video = SchoolVideo::first();
+        if ($video) $video->delete();
+        
+        return response()->json(['message' => 'Video profil berhasil dihapus']);
+    }
+}

@@ -9,6 +9,7 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\AlumniController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\SchoolVideoController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\MapLocationController;
 use Illuminate\Http\Request;
@@ -68,4 +69,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/galleries/{gallery}', [GalleryController::class, 'update']);
     Route::delete('/galleries/{gallery}', [GalleryController::class, 'destroy']);
     Route::post('/galleries/bulk-delete', [GalleryController::class, 'bulkDelete']);
+
+    // API Video Profil Sekolah
+    Route::get('/school-video', [SchoolVideoController::class, 'show']);
+    Route::post('/school-video', [SchoolVideoController::class, 'update']);
+    Route::delete('/school-video', [SchoolVideoController::class, 'destroy']);
 });

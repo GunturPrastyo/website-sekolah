@@ -61,8 +61,20 @@ const fetchGallery = async () => {
   }
 };
 
+const fetchVideo = async () => {
+  try {
+    const response = await api.get("/api/school-video");
+    if (response.data.data && response.data.data.url) {
+      videoUrl.value = response.data.data.url;
+    }
+  } catch (error) {
+    console.error("Gagal memuat video profil", error);
+  }
+};
+
 onMounted(() => {
   fetchGallery();
+  fetchVideo();
 });
 
 const selectCategory = (id) => {
@@ -153,7 +165,7 @@ const handleDeleteCategory = (index) => {
 const fileInput = ref(null);
 
 // Video Profil State
-const videoUrl = ref("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+const videoUrl = ref("");
 const tempVideoUrl = ref("");
 const isEditingVideo = ref(false);
 
@@ -178,19 +190,37 @@ const cancelEditVideo = () => {
   tempVideoUrl.value = "";
 };
 
-const saveVideo = () => {
+const saveVideo = async () => {
   if (!tempVideoUrl.value) {
     triggerToast("Gagal Menyimpan", "Tautan video tidak boleh kosong!", "error");
     return;
   }
-  videoUrl.value = tempVideoUrl.value;
-  isEditingVideo.value = false;
-  triggerToast("Perubahan Disimpan", "Tautan video profil berhasil diperbarui.");
+  try {
+    await api.post("/api/school-video", { url: tempVideoUrl.value });
+    videoUrl.value = tempVideoUrl.value;
+    isEditingVideo.value = false;
+    triggerToast("Perubahan Disimpan", "Tautan video profil berhasil diperbarui.");
+  } catch (error) {
+    triggerToast(
+      "Gagal Menyimpan",
+      "Terjadi kesalahan saat menyimpan tautan video.",
+      "error"
+    );
+  }
 };
 
-const deleteVideo = () => {
-  videoUrl.value = "";
-  triggerToast("Data Dihapus", "Tautan video profil berhasil dihapus.", "info");
+const deleteVideo = async () => {
+  try {
+    await api.delete("/api/school-video");
+    videoUrl.value = "";
+    triggerToast("Data Dihapus", "Tautan video profil berhasil dihapus.", "info");
+  } catch (error) {
+    triggerToast(
+      "Gagal Menghapus",
+      "Terjadi kesalahan saat menghapus tautan video.",
+      "error"
+    );
+  }
 };
 
 const triggerFileInput = () => {
