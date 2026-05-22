@@ -14,6 +14,8 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\MapLocationController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\CurriculumSubjectController;
+use App\Http\Controllers\PancasilaProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -82,4 +84,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API Program Jurusan
     Route::apiResource('programs', ProgramController::class);
+
+    // API Kurikulum (Mata Pelajaran)
+    Route::apiResource('curriculum-subjects', CurriculumSubjectController::class);
+
+    // API Profil Pelajar Pancasila
+    Route::get('/pancasila-profile', [PancasilaProfileController::class, 'show']);
+    Route::post('/pancasila-profile', [PancasilaProfileController::class, 'update']);
 });

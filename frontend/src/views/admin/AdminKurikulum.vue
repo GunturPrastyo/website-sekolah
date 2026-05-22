@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -24,6 +24,7 @@ import {
 import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
+import api from "@/api/index.js";
 
 const grades = [
   { id: "10", name: "Kelas X (Fase E)" },
@@ -265,88 +266,13 @@ const pppData = ref({
   title: "Profil Pelajar Pancasila",
   description:
     "Kurikulum kami berfokus pada pembentukan karakter siswa yang berlandaskan 6 dimensi Profil Pelajar Pancasila.",
-  dimensions: [
-    {
-      id: 1,
-      name: "Beriman & Berakhlak",
-      desc:
-        "Membentuk siswa yang religius dan memiliki etika baik dalam kehidupan sehari-hari.",
-      icon: "PhHeart",
-      color: "text-red-500",
-    },
-    {
-      id: 2,
-      name: "Berkebinekaan Global",
-      desc:
-        "Menghargai keberagaman budaya, toleran, dan berwawasan luas di kancah internasional.",
-      icon: "PhGlobeHemisphereWest",
-      color: "text-yellow-500",
-    },
-    {
-      id: 3,
-      name: "Bergotong Royong",
-      desc:
-        "Mampu berkolaborasi, peduli terhadap sesama, dan berbagi dalam menyelesaikan masalah.",
-      icon: "PhUsers",
-      color: "text-green-500",
-    },
-    {
-      id: 4,
-      name: "Mandiri",
-      desc:
-        "Bertanggung jawab atas proses dan hasil belajarnya sendiri dengan kesadaran tinggi.",
-      icon: "PhUserCheck",
-      color: "text-blue-500",
-    },
-    {
-      id: 5,
-      name: "Bernalar Kritis",
-      desc:
-        "Mampu memproses informasi secara objektif, mengevaluasi, dan menyimpulkan dengan baik.",
-      icon: "PhLightbulb",
-      color: "text-purple-500",
-    },
-    {
-      id: 6,
-      name: "Kreatif",
-      desc:
-        "Mampu memodifikasi dan menghasilkan gagasan, karya, atau tindakan yang orisinal.",
-      icon: "PhPalette",
-      color: "text-pink-500",
-    },
-  ],
+  dimensions: [],
 });
 
 const isPPPModalVisible = ref(false);
 const tempPPPData = ref({});
 
-const subjectList = ref([
-  {
-    id: 1,
-    grade: "10",
-    major: "umum",
-    category: "Muatan Nasional (Wajib)",
-    name: "Pendidikan Agama dan Budi Pekerti",
-    icon: "PhBook",
-    color: "text-blue-500",
-    desc:
-      "Mempelajari nilai-nilai spiritual, toleransi, dan pembentukan karakter akhlak mulia.",
-    topics:
-      "Hakikat Penciptaan Manusia, Toleransi Beragama di Indonesia, Sejarah Perkembangan Agama, Etika dan Budi Pekerti Abad 21",
-  },
-  {
-    id: 2,
-    grade: "11",
-    major: "ipa",
-    category: "Kelompok Mata Pelajaran Pilihan (Sains & Teknologi)",
-    name: "Fisika Lanjutan",
-    icon: "PhLightning",
-    color: "text-blue-500",
-    desc: "Pendalaman mekanika, termodinamika, dan gelombang.",
-    topics:
-      "Dinamika Rotasi dan Kesetimbangan, Elastisitas Bahan, Fluida Statis dan Dinamis, Suhu dan Kalor",
-  },
-]);
+const subjectList = ref([]);
 
 const form = ref({
   id: null,
@@ -396,14 +322,42 @@ const addDimension = () => {
   });
 };
 
-const savePPPData = () => {
+const fetchData = async () => {
+  try {
+    const [subjectsRes, pppRes] = await Promise.all([
+      api.get("/api/curriculum-subjects"),
+      api.get("/api/pancasila-profile"),
+    ]);
+    subjectList.value = subjectsRes.data.data;
+    pppData.value = pppRes.data.data;
+  } catch (error) {
+    console.error("Gagal mengambil data kurikulum:", error);
+    triggerToast(
+      "Gagal Memuat Data",
+      "Terjadi kesalahan saat memuat data dari server.",
+      "error"
+    );
+  }
+};
+
+onMounted(() => {
+  fetchData();
+});
+
+const savePPPData = async () => {
   if (!tempPPPData.value.title.trim() || !tempPPPData.value.description.trim()) {
     triggerToast("Gagal Menyimpan", "Judul dan deskripsi utama wajib diisi!", "error");
     return;
   }
-  pppData.value = JSON.parse(JSON.stringify(tempPPPData.value));
-  closePPPModal();
-  triggerToast("Profil Disimpan", "Data Profil Pelajar Pancasila berhasil diperbarui.");
+  try {
+    await api.post("/api/pancasila-profile", tempPPPData.value);
+    await fetchData();
+    closePPPModal();
+    triggerToast("Profil Disimpan", "Data Profil Pelajar Pancasila berhasil diperbarui.");
+  } catch (error) {
+    console.error("Gagal menyimpan Profil Pelajar Pancasila:", error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat menyimpan data.", "error");
+  }
 };
 
 const triggerToast = (title, message, type = "success") => {
@@ -441,24 +395,26 @@ const showAddForm = () => {
   document.body.style.overflow = "hidden";
 };
 
-const addEntry = () => {
+const addEntry = async () => {
   if (!form.value.name || !form.value.category) {
     triggerToast("Gagal Menyimpan", "Nama dan Kategori wajib diisi!", "error");
     return;
   }
-  const newId =
-    subjectList.value.length > 0
-      ? Math.max(...subjectList.value.map((s) => s.id)) + 1
-      : 1;
-  subjectList.value.push({ ...form.value, id: newId });
 
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast(
-    "Berhasil Ditambahkan",
-    "Data mata pelajaran baru telah ditambahkan ke sistem."
-  );
-  resetForm();
+  try {
+    await api.post("/api/curriculum-subjects", form.value);
+    await fetchData();
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast(
+      "Berhasil Ditambahkan",
+      "Data mata pelajaran baru telah ditambahkan ke sistem."
+    );
+    resetForm();
+  } catch (error) {
+    console.error("Gagal menambahkan mata pelajaran:", error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat menyimpan data.", "error");
+  }
 };
 
 const startEdit = (subject) => {
@@ -468,20 +424,23 @@ const startEdit = (subject) => {
   document.body.style.overflow = "hidden";
 };
 
-const saveEntry = () => {
+const saveEntry = async () => {
   if (!form.value.name || !form.value.category) {
     triggerToast("Gagal Menyimpan", "Nama dan Kategori wajib diisi!", "error");
     return;
   }
-  const index = subjectList.value.findIndex((s) => s.id === form.value.id);
-  if (index !== -1) {
-    subjectList.value[index] = { ...form.value };
-  }
 
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast("Perubahan Disimpan", "Data mata pelajaran berhasil diperbarui.");
-  resetForm();
+  try {
+    await api.put(`/api/curriculum-subjects/${form.value.id}`, form.value);
+    await fetchData();
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast("Perubahan Disimpan", "Data mata pelajaran berhasil diperbarui.");
+    resetForm();
+  } catch (error) {
+    console.error("Gagal mengupdate mata pelajaran:", error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat memperbarui data.", "error");
+  }
 };
 
 const hideForm = () => {
@@ -495,15 +454,21 @@ const deleteEntry = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
-    subjectList.value = subjectList.value.filter((s) => s.id !== itemToDelete.value);
-    itemToDelete.value = null;
-    triggerToast(
-      "Data Dihapus",
-      "Data mata pelajaran berhasil dihapus dari sistem.",
-      "info"
-    );
+    try {
+      await api.delete(`/api/curriculum-subjects/${itemToDelete.value}`);
+      await fetchData();
+      itemToDelete.value = null;
+      triggerToast(
+        "Data Dihapus",
+        "Data mata pelajaran berhasil dihapus dari sistem.",
+        "info"
+      );
+    } catch (error) {
+      console.error("Gagal menghapus mata pelajaran:", error);
+      triggerToast("Gagal Menghapus", "Terjadi kesalahan saat menghapus data.", "error");
+    }
   }
   isDeleteModalOpen.value = false;
 };
