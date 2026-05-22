@@ -32,7 +32,7 @@ const grades = [
   { id: "12", name: "Kelas XII (Fase F)" },
 ];
 
-const majors = ref([{ id: "umum", name: "Umum (Fase E)" }]);
+const majors = ref([{ id: null, name: "Umum (Fase E)" }]);
 
 const categories = ref(["Muatan Nasional (Wajib)", "Muatan Pilihan (Fase E)"]);
 
@@ -183,7 +183,7 @@ const subjectList = ref([]);
 const form = ref({
   id: null,
   grade: "10",
-  major: "umum",
+  program_id: null,
   category: "Muatan Nasional (Wajib)",
   name: "",
   icon: "PhBook",
@@ -239,10 +239,10 @@ const fetchData = async () => {
     pppData.value = pppRes.data.data;
 
     const programsData = programsRes.data.data.map((p) => ({
-      id: p.id.toString(),
+      id: p.id,
       name: p.title,
     }));
-    majors.value = [{ id: "umum", name: "Umum (Fase E)" }, ...programsData];
+    majors.value = [{ id: null, name: "Umum (Fase E)" }, ...programsData];
   } catch (error) {
     console.error("Gagal mengambil data kurikulum:", error);
     triggerToast(
@@ -285,7 +285,7 @@ const resetForm = () => {
   form.value = {
     id: null,
     grade: "10",
-    major: "umum",
+    program_id: null,
     category: "Muatan Nasional (Wajib)",
     name: "",
     icon: "PhBook",
@@ -395,7 +395,7 @@ const filteredAndGroupedSubjects = computed(() => {
     filtered = filtered.filter((s) => s.grade === filterGrade.value);
   }
   if (filterMajor.value !== "semua") {
-    filtered = filtered.filter((s) => s.major === filterMajor.value);
+    filtered = filtered.filter((s) => s.program_id === filterMajor.value);
   }
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
@@ -714,8 +714,7 @@ const getMajorName = (id) => {
                     Peminatan / Jurusan
                   </label>
                   <select
-                    v-model="form.major"
-                    required
+                    v-model="form.program_id"
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option v-for="major in majors" :key="major.id" :value="major.id">
@@ -1069,7 +1068,7 @@ const getMajorName = (id) => {
                   </h4>
                   <p class="text-xs font-medium text-blue-600 dark:text-blue-400">
                     {{ getGradeName(subject.grade) }} &bull;
-                    {{ getMajorName(subject.major) }}
+                    {{ getMajorName(subject.program_id) }}
                   </p>
                 </div>
               </div>
