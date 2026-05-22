@@ -16,6 +16,7 @@ use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\CurriculumSubjectController;
 use App\Http\Controllers\PancasilaProfileController;
+use App\Http\Controllers\LessonScheduleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -91,4 +92,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // API Profil Pelajar Pancasila
     Route::get('/pancasila-profile', [PancasilaProfileController::class, 'show']);
     Route::post('/pancasila-profile', [PancasilaProfileController::class, 'update']);
+
+    // API Jadwal Pelajaran
+    Route::apiResource('lesson-schedules', LessonScheduleController::class);
 });
