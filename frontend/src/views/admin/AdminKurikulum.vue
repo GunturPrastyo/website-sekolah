@@ -32,103 +32,9 @@ const grades = [
   { id: "12", name: "Kelas XII (Fase F)" },
 ];
 
-const majors = ref([
-  { id: "umum", name: "Umum (Fase E)" },
-  { id: "ipa", name: "MIPA" },
-  { id: "ips", name: "IPS" },
-  { id: "bahasa", name: "Bahasa" },
-]);
+const majors = ref([{ id: "umum", name: "Umum (Fase E)" }]);
 
 const categories = ref(["Muatan Nasional (Wajib)", "Muatan Pilihan (Fase E)"]);
-
-const showNewMajorInput = ref(false);
-const newMajorName = ref("");
-const isMajorDropdownOpen = ref(false);
-const editingMajorIndex = ref(null);
-const editingMajorName = ref("");
-
-const selectMajor = (id) => {
-  if (id === "ADD_NEW") {
-    showNewMajorInput.value = true;
-    form.value.major = "";
-  } else {
-    form.value.major = id;
-  }
-  isMajorDropdownOpen.value = false;
-};
-
-const addNewMajor = () => {
-  const name = newMajorName.value.trim();
-  if (name) {
-    const newId = name.toLowerCase().replace(/\s+/g, "-");
-    if (!majors.value.some((m) => m.id === newId)) {
-      majors.value.push({ id: newId, name: name });
-    }
-    form.value.major = newId;
-    showNewMajorInput.value = false;
-    newMajorName.value = "";
-  } else {
-    triggerToast("Gagal", "Nama peminatan baru tidak boleh kosong!", "error");
-  }
-};
-
-const cancelNewMajor = () => {
-  showNewMajorInput.value = false;
-  newMajorName.value = "";
-  form.value.major = "";
-};
-
-const startEditMajor = (index, name) => {
-  editingMajorIndex.value = index;
-  editingMajorName.value = name;
-};
-
-const saveEditMajor = (index) => {
-  const newName = editingMajorName.value.trim();
-  if (newName) {
-    majors.value[index].name = newName;
-    editingMajorIndex.value = null;
-    editingMajorName.value = "";
-    triggerToast("Berhasil", "Nama peminatan berhasil diperbarui.", "success");
-  } else {
-    triggerToast("Gagal", "Nama peminatan tidak boleh kosong!", "error");
-  }
-};
-
-const cancelEditMajor = () => {
-  editingMajorIndex.value = null;
-  editingMajorName.value = "";
-};
-
-const handleDeleteMajor = (index) => {
-  const majorToDelete = majors.value[index];
-  const isInUse = subjectList.value.some((s) => s.major === majorToDelete.id);
-
-  if (isInUse) {
-    triggerToast(
-      "Gagal",
-      `Peminatan "${majorToDelete.name}" sedang digunakan oleh mata pelajaran!`,
-      "error"
-    );
-    return;
-  }
-
-  if (
-    window.confirm(`Apakah Anda yakin ingin menghapus peminatan '${majorToDelete.name}'?`)
-  ) {
-    majors.value.splice(index, 1);
-    if (form.value.major === majorToDelete.id) {
-      form.value.major = "";
-    }
-    triggerToast(
-      "Peminatan Dihapus",
-      `Peminatan "${majorToDelete.name}" berhasil dihapus.`,
-      "info"
-    );
-  }
-
-  isMajorDropdownOpen.value = false;
-};
 
 const showNewCategoryInput = ref(false);
 const newCategoryName = ref("");
@@ -324,12 +230,19 @@ const addDimension = () => {
 
 const fetchData = async () => {
   try {
-    const [subjectsRes, pppRes] = await Promise.all([
+    const [subjectsRes, pppRes, programsRes] = await Promise.all([
       api.get("/api/curriculum-subjects"),
       api.get("/api/pancasila-profile"),
+      api.get("/api/programs"),
     ]);
     subjectList.value = subjectsRes.data.data;
     pppData.value = pppRes.data.data;
+
+    const programsData = programsRes.data.data.map((p) => ({
+      id: p.id.toString(),
+      name: p.title,
+    }));
+    majors.value = [{ id: "umum", name: "Umum (Fase E)" }, ...programsData];
   } catch (error) {
     console.error("Gagal mengambil data kurikulum:", error);
     triggerToast(
@@ -381,9 +294,6 @@ const resetForm = () => {
     topics: "",
   };
   isEditing.value = false;
-  showNewMajorInput.value = false;
-  newMajorName.value = "";
-  isMajorDropdownOpen.value = false;
   showNewCategoryInput.value = false;
   newCategoryName.value = "";
   isCategoryDropdownOpen.value = false;
@@ -803,141 +713,15 @@ const getMajorName = (id) => {
                   >
                     Peminatan / Jurusan
                   </label>
-                  <div v-if="!showNewMajorInput" class="relative">
-                    <button
-                      type="button"
-                      @click="isMajorDropdownOpen = !isMajorDropdownOpen"
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-left focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex justify-between items-center transition-colors"
-                      :class="
-                        form.major
-                          ? 'text-gray-900 dark:text-white'
-                          : 'text-gray-500 dark:text-gray-400'
-                      "
-                    >
-                      <span class="truncate">{{
-                        getMajorName(form.major) || "Pilih peminatan..."
-                      }}</span>
-                      <PhCaretDown
-                        class="w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200"
-                        :class="{ 'rotate-180': isMajorDropdownOpen }"
-                      />
-                    </button>
-
-                    <div
-                      v-if="isMajorDropdownOpen"
-                      @click="isMajorDropdownOpen = false"
-                      class="fixed inset-0 z-40"
-                    ></div>
-
-                    <Transition
-                      enter-active-class="transition ease-out duration-100"
-                      enter-from-class="opacity-0 translate-y-[-10px]"
-                      enter-to-class="opacity-100 translate-y-0"
-                      leave-active-class="transition ease-in duration-100"
-                      leave-from-class="opacity-100 translate-y-0"
-                      leave-to-class="opacity-0 translate-y-[-10px]"
-                    >
-                      <div
-                        v-if="isMajorDropdownOpen"
-                        class="absolute top-full z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl max-h-60 overflow-y-auto custom-scrollbar"
-                      >
-                        <ul class="py-1 text-sm">
-                          <li
-                            v-for="(major, index) in majors"
-                            :key="major.id"
-                            class="hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 transition-colors group"
-                          >
-                            <div
-                              v-if="editingMajorIndex === index"
-                              class="flex items-center gap-2 w-full px-4 py-2"
-                              @click.stop
-                            >
-                              <input
-                                type="text"
-                                v-model="editingMajorName"
-                                class="flex-1 px-2 py-1 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 focus:ring-blue-500 focus:border-blue-500"
-                                @keydown.enter.prevent="saveEditMajor(index)"
-                                @keydown.esc.prevent="cancelEditMajor()"
-                              />
-                              <button
-                                type="button"
-                                @click="saveEditMajor(index)"
-                                class="p-1 text-green-600 hover:bg-green-100 rounded"
-                                title="Simpan"
-                              >
-                                <PhCheck class="w-4 h-4" />
-                              </button>
-                              <button
-                                type="button"
-                                @click="cancelEditMajor()"
-                                class="p-1 text-gray-500 hover:bg-gray-200 rounded"
-                                title="Batal"
-                              >
-                                <PhX class="w-4 h-4" />
-                              </button>
-                            </div>
-                            <div
-                              v-else
-                              class="flex items-center justify-between w-full px-4 py-2.5 cursor-pointer"
-                              @click="selectMajor(major.id)"
-                            >
-                              <span class="truncate pr-2">{{ major.name }}</span>
-                              <div
-                                class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 shrink-0"
-                                @click.stop
-                              >
-                                <button
-                                  type="button"
-                                  @click="startEditMajor(index, major.name)"
-                                  class="p-1 text-blue-600 hover:bg-blue-100 rounded transition-colors"
-                                  title="Edit Peminatan"
-                                >
-                                  <PhPencilSimple class="w-4 h-4" />
-                                </button>
-                                <button
-                                  type="button"
-                                  @click="handleDeleteMajor(index)"
-                                  class="p-1 text-red-600 hover:bg-red-100 rounded transition-colors"
-                                  title="Hapus Peminatan"
-                                >
-                                  <PhTrash class="w-4 h-4" />
-                                </button>
-                              </div>
-                            </div>
-                          </li>
-                          <li
-                            @click="selectMajor('ADD_NEW')"
-                            class="px-4 py-2.5 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer font-semibold text-blue-600 dark:text-blue-400 border-t border-gray-100 dark:border-slate-700 transition-colors sticky bottom-0 bg-white dark:bg-slate-800"
-                          >
-                            + Tambah Peminatan Baru...
-                          </li>
-                        </ul>
-                      </div>
-                    </Transition>
-                  </div>
-                  <div v-else class="flex gap-2">
-                    <input
-                      type="text"
-                      v-model="newMajorName"
-                      class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Ketik nama peminatan..."
-                      @keydown.enter.prevent="addNewMajor"
-                    />
-                    <button
-                      type="button"
-                      @click="addNewMajor"
-                      class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                    >
-                      Simpan
-                    </button>
-                    <button
-                      type="button"
-                      @click="cancelNewMajor"
-                      class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 dark:bg-slate-600 dark:text-gray-300 dark:hover:bg-slate-500 transition-colors text-sm font-medium"
-                    >
-                      Batal
-                    </button>
-                  </div>
+                  <select
+                    v-model="form.major"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option v-for="major in majors" :key="major.id" :value="major.id">
+                      {{ major.name }}
+                    </option>
+                  </select>
                 </div>
 
                 <div class="md:col-span-2">
