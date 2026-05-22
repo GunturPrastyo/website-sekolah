@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import api from "@/api/index.js";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -20,63 +21,51 @@ import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
 const days = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-const classes = [
-  "X MIPA 1",
-  "X MIPA 2",
-  "X IPS 1",
-  "X IPS 2",
-  "XI MIPA 1",
-  "XI MIPA 2",
-  "XI IPS 1",
-  "XI IPS 2",
-  "XII MIPA 1",
-  "XII MIPA 2",
-  "XII IPS 1",
-  "XII IPS 2",
-];
+const classesList = ref([]);
+const subjectsList = ref([]);
+const teachersList = ref([]);
+const scheduleList = ref([]);
 
-const scheduleList = ref([
-  {
-    id: 1,
-    className: "X MIPA 1",
-    day: "Senin",
-    startTime: "07:00",
-    endTime: "08:30",
-    subject: "Matematika Peminatan",
-    teacher: "Budi Santoso, S.Pd",
-  },
-  {
-    id: 2,
-    className: "X MIPA 1",
-    day: "Senin",
-    startTime: "08:30",
-    endTime: "10:00",
-    subject: "Fisika Dasar",
-    teacher: "Siti Aminah, M.Pd",
-  },
-  {
-    id: 3,
-    className: "XI IPS 1",
-    day: "Selasa",
-    startTime: "10:15",
-    endTime: "11:45",
-    subject: "Sosiologi Masyarakat",
-    teacher: "Ahmad Fauzi, S.Sos",
-  },
-]);
+const fetchData = async () => {
+  try {
+    const [classesRes, subjectsRes, teachersRes, schedulesRes] = await Promise.all([
+      api.get("/api/school-classes"),
+      api.get("/api/curriculum-subjects"),
+      api.get("/api/staff"),
+      api.get("/api/lesson-schedules"),
+    ]);
+
+    classesList.value = classesRes.data.data;
+    subjectsList.value = subjectsRes.data.data;
+    teachersList.value = teachersRes.data.data;
+    scheduleList.value = schedulesRes.data.data;
+
+    // Set default active class jika null dan data tersedia
+    if (!activeClassId.value && classesList.value.length > 0) {
+      activeClassId.value = classesList.value[0].id;
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data:", error);
+    triggerToast("Error", "Gagal memuat data jadwal pelajaran", "error");
+  }
+};
+
+onMounted(() => {
+  fetchData();
+});
 
 const form = ref({
   id: null,
-  className: "X MIPA 1",
+  school_class_id: null,
   day: "Senin",
-  startTime: "07:00",
-  endTime: "08:30",
-  subject: "",
-  teacher: "",
+  start_time: "07:00",
+  end_time: "08:30",
+  curriculum_subject_id: null,
+  staff_id: null,
 });
 
 const viewMode = ref("timeline"); // 'timeline' or 'table'
-const activeClass = ref("X MIPA 1");
+const activeClassId = ref(null);
 
 const isFormVisible = ref(false);
 const isEditing = ref(false);
@@ -97,34 +86,34 @@ const hours = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"));
 const minutes = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, "0"));
 
 const formStartHour = computed({
-  get: () => (form.value.startTime ? form.value.startTime.split(":")[0] : "07"),
+  get: () => (form.value.start_time ? form.value.start_time.split(":")[0] : "07"),
   set: (val) => {
-    const currentM = form.value.startTime ? form.value.startTime.split(":")[1] : "00";
-    form.value.startTime = `${val}:${currentM}`;
+    const currentM = form.value.start_time ? form.value.start_time.split(":")[1] : "00";
+    form.value.start_time = `${val}:${currentM}`;
   },
 });
 
 const formStartMinute = computed({
-  get: () => (form.value.startTime ? form.value.startTime.split(":")[1] : "00"),
+  get: () => (form.value.start_time ? form.value.start_time.split(":")[1] : "00"),
   set: (val) => {
-    const currentH = form.value.startTime ? form.value.startTime.split(":")[0] : "07";
-    form.value.startTime = `${currentH}:${val}`;
+    const currentH = form.value.start_time ? form.value.start_time.split(":")[0] : "07";
+    form.value.start_time = `${currentH}:${val}`;
   },
 });
 
 const formEndHour = computed({
-  get: () => (form.value.endTime ? form.value.endTime.split(":")[0] : "08"),
+  get: () => (form.value.end_time ? form.value.end_time.split(":")[0] : "08"),
   set: (val) => {
-    const currentM = form.value.endTime ? form.value.endTime.split(":")[1] : "30";
-    form.value.endTime = `${val}:${currentM}`;
+    const currentM = form.value.end_time ? form.value.end_time.split(":")[1] : "30";
+    form.value.end_time = `${val}:${currentM}`;
   },
 });
 
 const formEndMinute = computed({
-  get: () => (form.value.endTime ? form.value.endTime.split(":")[1] : "30"),
+  get: () => (form.value.end_time ? form.value.end_time.split(":")[1] : "30"),
   set: (val) => {
-    const currentH = form.value.endTime ? form.value.endTime.split(":")[0] : "08";
-    form.value.endTime = `${currentH}:${val}`;
+    const currentH = form.value.end_time ? form.value.end_time.split(":")[0] : "08";
+    form.value.end_time = `${currentH}:${val}`;
   },
 });
 
@@ -139,12 +128,12 @@ const triggerToast = (title, message, type = "success") => {
 const resetForm = () => {
   form.value = {
     id: null,
-    className: "X MIPA 1",
+    school_class_id: classesList.value.length > 0 ? classesList.value[0].id : null,
     day: "Senin",
-    startTime: "07:00",
-    endTime: "08:30",
-    subject: "",
-    teacher: "",
+    start_time: "07:00",
+    end_time: "08:30",
+    curriculum_subject_id: null,
+    staff_id: null,
   };
   isEditing.value = false;
   isStartDropdownOpen.value = false;
@@ -179,12 +168,12 @@ const normalizeTime = (timeStr) => {
 const checkConflict = (schedule) => {
   return scheduleList.value.some((s) => {
     if (schedule.id && s.id === schedule.id) return false;
-    if (s.className !== schedule.className || s.day !== schedule.day) return false;
+    if (s.class_id !== schedule.school_class_id || s.day !== schedule.day) return false;
 
     const start1 = timeToMinutes(s.startTime);
     const end1 = timeToMinutes(s.endTime);
-    const start2 = timeToMinutes(schedule.startTime);
-    const end2 = timeToMinutes(schedule.endTime);
+    const start2 = timeToMinutes(schedule.start_time);
+    const end2 = timeToMinutes(schedule.end_time);
 
     return start1 < end2 && end1 > start2;
   });
@@ -193,7 +182,7 @@ const checkConflict = (schedule) => {
 const hasConflict = (schedule) => {
   return scheduleList.value.some((s) => {
     if (s.id === schedule.id) return false;
-    if (s.className !== schedule.className || s.day !== schedule.day) return false;
+    if (s.class_id !== schedule.class_id || s.day !== schedule.day) return false;
 
     const start1 = timeToMinutes(s.startTime);
     const end1 = timeToMinutes(s.endTime);
@@ -204,19 +193,19 @@ const hasConflict = (schedule) => {
   });
 };
 
-const addEntry = () => {
+const addEntry = async () => {
   if (
-    !form.value.subject ||
-    !form.value.teacher ||
-    !form.value.startTime ||
-    !form.value.endTime
+    !form.value.curriculum_subject_id ||
+    !form.value.staff_id ||
+    !form.value.start_time ||
+    !form.value.end_time
   ) {
     triggerToast("Gagal Menyimpan", "Mohon lengkapi semua kolom form!", "error");
     return;
   }
 
-  form.value.startTime = normalizeTime(form.value.startTime);
-  form.value.endTime = normalizeTime(form.value.endTime);
+  form.value.start_time = normalizeTime(form.value.start_time);
+  form.value.end_time = normalizeTime(form.value.end_time);
 
   if (checkConflict(form.value)) {
     triggerToast(
@@ -226,42 +215,48 @@ const addEntry = () => {
     );
     return;
   }
-  const newId =
-    scheduleList.value.length > 0
-      ? Math.max(...scheduleList.value.map((s) => s.id)) + 1
-      : 1;
-  scheduleList.value.push({ ...form.value, id: newId });
 
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast("Berhasil Ditambahkan", "Data jadwal pelajaran baru telah ditambahkan.");
-  resetForm();
+  try {
+    await api.post("/api/lesson-schedules", form.value);
+    await fetchData();
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast("Berhasil Ditambahkan", "Data jadwal pelajaran baru telah ditambahkan.");
+    resetForm();
+  } catch (error) {
+    console.error(error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan pada server.", "error");
+  }
 };
 
 const startEdit = (item) => {
   isEditing.value = true;
   form.value = {
-    ...item,
-    startTime: item.startTime,
-    endTime: item.endTime,
+    id: item.id,
+    school_class_id: item.class_id,
+    day: item.day,
+    start_time: item.startTime,
+    end_time: item.endTime,
+    curriculum_subject_id: item.subject_id,
+    staff_id: item.teacher_id,
   };
   isFormVisible.value = true;
   document.body.style.overflow = "hidden";
 };
 
-const saveEntry = () => {
+const saveEntry = async () => {
   if (
-    !form.value.subject ||
-    !form.value.teacher ||
-    !form.value.startTime ||
-    !form.value.endTime
+    !form.value.curriculum_subject_id ||
+    !form.value.staff_id ||
+    !form.value.start_time ||
+    !form.value.end_time
   ) {
     triggerToast("Gagal Menyimpan", "Mohon lengkapi semua kolom form!", "error");
     return;
   }
 
-  form.value.startTime = normalizeTime(form.value.startTime);
-  form.value.endTime = normalizeTime(form.value.endTime);
+  form.value.start_time = normalizeTime(form.value.start_time);
+  form.value.end_time = normalizeTime(form.value.end_time);
 
   if (checkConflict(form.value)) {
     triggerToast(
@@ -271,15 +266,18 @@ const saveEntry = () => {
     );
     return;
   }
-  const index = scheduleList.value.findIndex((s) => s.id === form.value.id);
-  if (index !== -1) {
-    scheduleList.value[index] = { ...form.value };
-  }
 
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast("Perubahan Disimpan", "Data jadwal pelajaran berhasil diperbarui.");
-  resetForm();
+  try {
+    await api.put(`/api/lesson-schedules/${form.value.id}`, form.value);
+    await fetchData();
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast("Perubahan Disimpan", "Data jadwal pelajaran berhasil diperbarui.");
+    resetForm();
+  } catch (error) {
+    console.error(error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan pada server.", "error");
+  }
 };
 
 const deleteEntry = (id) => {
@@ -287,15 +285,21 @@ const deleteEntry = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
-    scheduleList.value = scheduleList.value.filter((s) => s.id !== itemToDelete.value);
-    itemToDelete.value = null;
-    triggerToast(
-      "Data Dihapus",
-      "Jadwal pelajaran berhasil dihapus dari sistem.",
-      "info"
-    );
+    try {
+      await api.delete(`/api/lesson-schedules/${itemToDelete.value}`);
+      await fetchData();
+      itemToDelete.value = null;
+      triggerToast(
+        "Data Dihapus",
+        "Jadwal pelajaran berhasil dihapus dari sistem.",
+        "info"
+      );
+    } catch (error) {
+      console.error(error);
+      triggerToast("Gagal Menghapus", "Terjadi kesalahan saat menghapus data.", "error");
+    }
   }
   isDeleteModalOpen.value = false;
 };
@@ -305,16 +309,11 @@ const cancelDelete = () => {
   isDeleteModalOpen.value = false;
 };
 
-const uniqueTeachers = computed(() => {
-  const teachers = new Set(scheduleList.value.map((s) => s.teacher));
-  return Array.from(teachers).sort();
-});
-
 const filteredSchedule = computed(() => {
   let result = scheduleList.value;
 
   if (filterClass.value !== "semua") {
-    result = result.filter((item) => item.className === filterClass.value);
+    result = result.filter((item) => item.class_id === filterClass.value);
   }
 
   if (filterDay.value !== "semua") {
@@ -322,24 +321,26 @@ const filteredSchedule = computed(() => {
   }
 
   if (filterTeacher.value !== "semua") {
-    result = result.filter((item) => item.teacher === filterTeacher.value);
+    result = result.filter((item) => item.teacher_id === filterTeacher.value);
   }
 
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
     result = result.filter(
       (item) =>
-        item.subject.toLowerCase().includes(query) ||
-        item.teacher.toLowerCase().includes(query)
+        (item.subject && item.subject.toLowerCase().includes(query)) ||
+        (item.teacher && item.teacher.toLowerCase().includes(query))
     );
   }
 
   // Sortir berdasarkan Kelas -> Hari -> Waktu Mulai
   const dayIndex = (day) => days.indexOf(day);
   result.sort((a, b) => {
-    if (a.className !== b.className) return a.className.localeCompare(b.className);
+    if (a.className !== b.className) {
+      return (a.className || "").localeCompare(b.className || "");
+    }
     if (a.day !== b.day) return dayIndex(a.day) - dayIndex(b.day);
-    return a.startTime.localeCompare(b.startTime);
+    return (a.startTime || "").localeCompare(b.startTime || "");
   });
 
   return result;
@@ -367,7 +368,7 @@ const getBlockStyle = (startTime, endTime) => {
 };
 
 const groupedSchedule = computed(() => {
-  const filtered = scheduleList.value.filter((s) => s.className === activeClass.value);
+  const filtered = scheduleList.value.filter((s) => s.class_id === activeClassId.value);
 
   // Palet analogous (berdekatan) untuk estetika teori warna yang harmonis dan modern
   const colors = [
@@ -510,11 +511,13 @@ const groupedSchedule = computed(() => {
                     Kelas / Rombel
                   </label>
                   <select
-                    v-model="form.className"
+                    v-model="form.school_class_id"
                     required
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option v-for="c in classes" :key="c" :value="c">{{ c }}</option>
+                    <option v-for="c in classesList" :key="c.id" :value="c.id">
+                      {{ c.name }}
+                    </option>
                   </select>
                 </div>
 
@@ -755,13 +758,15 @@ const groupedSchedule = computed(() => {
                   >
                     Mata Pelajaran
                   </label>
-                  <input
-                    type="text"
-                    v-model="form.subject"
+                  <select
+                    v-model="form.curriculum_subject_id"
                     required
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Contoh: Matematika Peminatan"
-                  />
+                  >
+                    <option v-for="s in subjectsList" :key="s.id" :value="s.id">
+                      {{ s.name }}
+                    </option>
+                  </select>
                 </div>
 
                 <div class="md:col-span-2">
@@ -770,13 +775,15 @@ const groupedSchedule = computed(() => {
                   >
                     Guru Pengampu
                   </label>
-                  <input
-                    type="text"
-                    v-model="form.teacher"
+                  <select
+                    v-model="form.staff_id"
                     required
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Contoh: Budi Santoso, S.Pd"
-                  />
+                  >
+                    <option v-for="t in teachersList" :key="t.id" :value="t.id">
+                      {{ t.name }}
+                    </option>
+                  </select>
                 </div>
               </div>
             </form>
@@ -813,17 +820,17 @@ const groupedSchedule = computed(() => {
     >
       <div class="flex gap-2 mb-8 overflow-x-auto pb-2 custom-scrollbar">
         <button
-          v-for="className in classes"
-          :key="className"
-          @click="activeClass = className"
+          v-for="c in classesList"
+          :key="c.id"
+          @click="activeClassId = c.id"
           class="px-5 py-2.5 rounded-lg font-semibold whitespace-nowrap transition-colors border text-sm"
           :class="
-            activeClass === className
+            activeClassId === c.id
               ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
               : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100 hover:text-blue-600 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-600 dark:hover:text-blue-400'
           "
         >
-          {{ className }}
+          {{ c.name }}
         </button>
       </div>
 
@@ -952,7 +959,9 @@ const groupedSchedule = computed(() => {
             class="block w-full sm:w-40 px-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm cursor-pointer"
           >
             <option value="semua">Semua Kelas</option>
-            <option v-for="c in classes" :key="c" :value="c">{{ c }}</option>
+            <option v-for="c in classesList" :key="c.id" :value="c.id">
+              {{ c.name }}
+            </option>
           </select>
           <select
             v-model="filterDay"
@@ -966,8 +975,8 @@ const groupedSchedule = computed(() => {
             class="block w-full sm:w-48 px-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm cursor-pointer"
           >
             <option value="semua">Semua Guru</option>
-            <option v-for="teacher in uniqueTeachers" :key="teacher" :value="teacher">
-              {{ teacher }}
+            <option v-for="teacher in teachersList" :key="teacher.id" :value="teacher.id">
+              {{ teacher.name }}
             </option>
           </select>
         </div>
