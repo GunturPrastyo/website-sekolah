@@ -11,7 +11,8 @@ return new class extends Migration
         Schema::create('curriculum_subjects', function (Blueprint $table) {
             $table->id();
             $table->string('grade');
-            $table->string('major');
+            $table->unsignedBigInteger('program_id')->nullable();
+            $table->foreign('program_id')->references('id')->on('programs')->cascadeOnDelete();
             $table->string('category');
             $table->string('name');
             $table->string('icon')->nullable();

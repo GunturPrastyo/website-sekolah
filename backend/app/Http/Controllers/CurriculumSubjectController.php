@@ -9,7 +9,7 @@ class CurriculumSubjectController extends Controller
 {
     public function index()
     {
-        $subjects = CurriculumSubject::all();
+        $subjects = CurriculumSubject::with('program')->get();
         return response()->json(['data' => $subjects]);
     }
 
@@ -17,7 +17,7 @@ class CurriculumSubjectController extends Controller
     {
         $validated = $request->validate([
             'grade' => 'required|string|max:255',
-            'major' => 'required|string|max:255',
+            'program_id' => 'nullable|exists:programs,id',
             'category' => 'required|string|max:255',
             'name' => 'required|string|max:255',
             'icon' => 'nullable|string|max:255',
@@ -27,6 +27,7 @@ class CurriculumSubjectController extends Controller
         ]);
 
         $subject = CurriculumSubject::create($validated);
+        $subject->load('program');
 
         return response()->json([
             'message' => 'Data mata pelajaran berhasil ditambahkan',
@@ -40,7 +41,7 @@ class CurriculumSubjectController extends Controller
         
         $validated = $request->validate([
             'grade' => 'required|string|max:255',
-            'major' => 'required|string|max:255',
+            'program_id' => 'nullable|exists:programs,id',
             'category' => 'required|string|max:255',
             'name' => 'required|string|max:255',
             'icon' => 'nullable|string|max:255',
@@ -50,6 +51,7 @@ class CurriculumSubjectController extends Controller
         ]);
 
         $subject->update($validated);
+        $subject->load('program');
 
         return response()->json(['message' => 'Data mata pelajaran berhasil diperbarui', 'data' => $subject]);
     }

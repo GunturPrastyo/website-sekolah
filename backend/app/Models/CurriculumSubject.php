@@ -11,7 +11,7 @@ class CurriculumSubject extends Model
 
     protected $fillable = [
         'grade',
-        'major',
+        'program_id',
         'category',
         'name',
         'icon',
@@ -19,4 +19,9 @@ class CurriculumSubject extends Model
         'desc',
         'topics',
     ];
+
+    public function program()
+    {
+        return $this->belongsTo(Program::class);
+    }
 }
