@@ -16,6 +16,6 @@ class Agenda extends Model
         'time',
         'location',
         'color',
-        'description',
+        'attachment',
     ];
 }

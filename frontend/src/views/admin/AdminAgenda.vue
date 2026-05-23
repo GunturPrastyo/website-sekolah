@@ -13,6 +13,7 @@ import {
   PhX,
   PhCaretLeft,
   PhCaretRight,
+  PhUploadSimple,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -28,8 +29,9 @@ const form = ref({
   time: "",
   location: "",
   color: "blue",
-  description: "",
+  attachment: "",
 });
+const fileInputRef = ref(null);
 
 const isFormVisible = ref(false);
 const isEditing = ref(false);
@@ -91,6 +93,30 @@ const triggerToast = (title, message, type = "success") => {
   }, 4000);
 };
 
+const triggerFileInput = () => {
+  if (fileInputRef.value) fileInputRef.value.click();
+};
+
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      form.value.attachment = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  } else {
+    form.value.attachment = "";
+  }
+};
+
+const removeAttachment = () => {
+  form.value.attachment = "";
+  if (fileInputRef.value) {
+    fileInputRef.value.value = "";
+  }
+};
+
 const fetchData = async () => {
   try {
     const response = await api.get("/api/agendas");
@@ -113,9 +139,12 @@ const resetForm = () => {
     time: "",
     location: "",
     color: "blue",
-    description: "",
+    attachment: "",
   };
   isEditing.value = false;
+  if (fileInputRef.value) {
+    fileInputRef.value.value = "";
+  }
 };
 
 const showAddForm = () => {
@@ -200,9 +229,8 @@ const filteredAgendas = computed(() => {
     const query = searchQuery.value.toLowerCase();
     result = result.filter(
       (item) =>
-        item.title.toLowerCase().includes(query) ||
-        item.location.toLowerCase().includes(query) ||
-        item.description.toLowerCase().includes(query)
+        (item.title && item.title.toLowerCase().includes(query)) ||
+        (item.location && item.location.toLowerCase().includes(query))
     );
   }
   return result;
@@ -503,14 +531,69 @@ const calendarBlocks = computed(() => {
                   <label
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                   >
-                    Deskripsi Singkat
+                    Lampiran (Gambar / PDF)
                   </label>
-                  <textarea
-                    v-model="form.description"
-                    rows="3"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 resize-none"
-                    placeholder="Masukkan detail keterangan agenda..."
-                  ></textarea>
+                  <input
+                    type="file"
+                    ref="fileInputRef"
+                    accept="image/*,application/pdf"
+                    @change="handleFileUpload"
+                    class="hidden"
+                  />
+                  <button
+                    v-if="!form.attachment"
+                    type="button"
+                    @click="triggerFileInput"
+                    class="w-full py-6 border-2 border-dashed border-gray-300 dark:border-slate-500 rounded-lg flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors"
+                  >
+                    <PhUploadSimple class="w-8 h-8 mb-2 text-gray-400" />
+                    <span class="text-sm font-medium"
+                      >Klik untuk mengunggah lampiran</span
+                    >
+                    <span class="text-xs text-gray-400 dark:text-gray-500 mt-1"
+                      >Mendukung format JPG, PNG, atau PDF</span
+                    >
+                  </button>
+                  <div
+                    v-if="
+                      form.attachment &&
+                      (form.attachment.startsWith('data:image') ||
+                        form.attachment.match(/\.(jpeg|jpg|png|gif|webp)$/i))
+                    "
+                    class="mt-3 relative inline-block"
+                  >
+                    <img
+                      :src="form.attachment"
+                      class="h-24 w-auto rounded-lg border border-gray-200 dark:border-slate-600 shadow-sm object-cover"
+                      alt="Preview Lampiran"
+                    />
+                    <button
+                      type="button"
+                      @click="removeAttachment"
+                      class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow hover:bg-red-600 transition-colors"
+                      title="Hapus"
+                    >
+                      <PhX class="w-3 h-3" />
+                    </button>
+                  </div>
+                  <div
+                    v-else-if="form.attachment"
+                    class="mt-3 flex items-center justify-between p-3 bg-blue-50 dark:bg-slate-700/50 rounded-lg border border-blue-100 dark:border-slate-600"
+                  >
+                    <span
+                      class="text-sm font-medium text-blue-600 dark:text-blue-400 flex items-center"
+                    >
+                      📄 File telah dilampirkan
+                    </span>
+                    <button
+                      type="button"
+                      @click="removeAttachment"
+                      class="text-red-500 hover:text-red-600 transition-colors p-1"
+                      title="Hapus"
+                    >
+                      <PhX class="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </form>

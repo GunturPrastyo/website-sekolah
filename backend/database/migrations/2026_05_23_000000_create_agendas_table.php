@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('time')->nullable();
             $table->string('location')->nullable();
             $table->string('color')->default('blue');
-            $table->text('description')->nullable();
+            $table->string('attachment')->nullable();
             $table->timestamps();
         });
     }
