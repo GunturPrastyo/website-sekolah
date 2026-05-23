@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -18,6 +18,7 @@ import {
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
+import api from "@/api/index.js";
 
 const categories = ref([
   { id: "akademik", name: "Akademik / Sains" },
@@ -34,41 +35,7 @@ const levels = [
   { id: "internasional", name: "Tingkat Internasional" },
 ];
 
-const prestasiList = ref([
-  {
-    id: 1,
-    title: "Juara 1 Olimpiade Sains Nasional (OSN) Fisika",
-    studentName: "Ahmad Faisal & Tim",
-    category: "akademik",
-    level: "nasional",
-    year: "2025",
-    description:
-      "Meraih medali emas pada ajang OSN bidang Fisika yang diselenggarakan di Jakarta, bersaing dengan ratusan siswa dari seluruh Indonesia.",
-    image: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800",
-  },
-  {
-    id: 2,
-    title: "Juara 2 Turnamen Bola Basket Pelajar",
-    studentName: "Tim Basket SMAN 1",
-    category: "olahraga",
-    level: "provinsi",
-    year: "2024",
-    description:
-      "Berhasil menjadi runner-up dalam kejuaraan bola basket antar pelajar SMA se-Provinsi Jawa Tengah.",
-    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=800",
-  },
-  {
-    id: 3,
-    title: "Juara Harapan 1 Lomba Tari Kreasi",
-    studentName: "Sanggar Tari Nusantara",
-    category: "seni",
-    level: "nasional",
-    year: "2024",
-    description:
-      "Mendapatkan penghargaan sebagai penampil dengan kostum dan koreografi terbaik pada FLS2N di Bali.",
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800",
-  },
-]);
+const prestasiList = ref([]);
 
 const form = ref({
   id: null,
@@ -95,6 +62,19 @@ const newCategoryName = ref("");
 const isCategoryDropdownOpen = ref(false);
 const editingCategoryIndex = ref(null);
 const editingCategoryName = ref("");
+
+const fetchData = async () => {
+  try {
+    const response = await api.get("/api/achievements");
+    prestasiList.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal mengambil data prestasi:", error);
+  }
+};
+
+onMounted(() => {
+  fetchData();
+});
 
 const selectCategory = (id) => {
   if (id === "ADD_NEW") {
@@ -212,7 +192,7 @@ const showAddForm = () => {
   document.body.style.overflow = "hidden";
 };
 
-const addEntry = () => {
+const addEntry = async () => {
   if (!form.value.title || !form.value.studentName) {
     triggerToast(
       "Gagal Menyimpan",
@@ -221,16 +201,20 @@ const addEntry = () => {
     );
     return;
   }
-  const newId =
-    prestasiList.value.length > 0
-      ? Math.max(...prestasiList.value.map((s) => s.id)) + 1
-      : 1;
-  prestasiList.value.unshift({ ...form.value, id: newId }); // Add to beginning of array
-
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast("Berhasil Ditambahkan", "Data prestasi baru telah ditambahkan ke sistem.");
-  resetForm();
+  try {
+    const response = await api.post("/api/achievements", form.value);
+    prestasiList.value.unshift(response.data.data);
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast(
+      "Berhasil Ditambahkan",
+      "Data prestasi baru telah ditambahkan ke sistem."
+    );
+    resetForm();
+  } catch (error) {
+    console.error("Gagal menambahkan prestasi:", error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat menyimpan data.", "error");
+  }
 };
 
 const startEdit = (item) => {
@@ -240,7 +224,7 @@ const startEdit = (item) => {
   document.body.style.overflow = "hidden";
 };
 
-const saveEntry = () => {
+const saveEntry = async () => {
   if (!form.value.title || !form.value.studentName) {
     triggerToast(
       "Gagal Menyimpan",
@@ -249,15 +233,20 @@ const saveEntry = () => {
     );
     return;
   }
-  const index = prestasiList.value.findIndex((s) => s.id === form.value.id);
-  if (index !== -1) {
-    prestasiList.value[index] = { ...form.value };
+  try {
+    const response = await api.put(`/api/achievements/${form.value.id}`, form.value);
+    const index = prestasiList.value.findIndex((s) => s.id === form.value.id);
+    if (index !== -1) {
+      prestasiList.value[index] = response.data.data;
+    }
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast("Perubahan Disimpan", "Data prestasi berhasil diperbarui.");
+    resetForm();
+  } catch (error) {
+    console.error("Gagal mengupdate prestasi:", error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat memperbarui data.", "error");
   }
-
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast("Perubahan Disimpan", "Data prestasi berhasil diperbarui.");
-  resetForm();
 };
 
 const hideForm = () => {
@@ -271,11 +260,17 @@ const deleteEntry = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
-    prestasiList.value = prestasiList.value.filter((s) => s.id !== itemToDelete.value);
-    itemToDelete.value = null;
-    triggerToast("Data Dihapus", "Data prestasi berhasil dihapus dari sistem.", "info");
+    try {
+      await api.delete(`/api/achievements/${itemToDelete.value}`);
+      prestasiList.value = prestasiList.value.filter((s) => s.id !== itemToDelete.value);
+      itemToDelete.value = null;
+      triggerToast("Data Dihapus", "Data prestasi berhasil dihapus dari sistem.", "info");
+    } catch (error) {
+      console.error("Gagal menghapus prestasi:", error);
+      triggerToast("Gagal Menghapus", "Terjadi kesalahan saat menghapus data.", "error");
+    }
   }
   isDeleteModalOpen.value = false;
 };

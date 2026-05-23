@@ -18,6 +18,7 @@ use App\Http\Controllers\CurriculumSubjectController;
 use App\Http\Controllers\PancasilaProfileController;
 use App\Http\Controllers\LessonScheduleController;
 use App\Http\Controllers\ExtracurricularController;
+use App\Http\Controllers\AchievementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -99,4 +100,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API Ekstrakurikuler
     Route::apiResource('extracurriculars', ExtracurricularController::class);
+
+    // API Prestasi
+    Route::apiResource('achievements', AchievementController::class);
 });
