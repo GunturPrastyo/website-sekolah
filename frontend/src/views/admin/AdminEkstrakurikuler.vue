@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -14,6 +14,7 @@ import {
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
+import api from "@/api/index.js";
 
 const categories = [
   { id: "olahraga", name: "Olahraga" },
@@ -22,40 +23,7 @@ const categories = [
   { id: "kepemimpinan", name: "Kepemimpinan" },
 ];
 
-const ekskulList = ref([
-  {
-    id: 1,
-    name: "Pramuka",
-    category: "kepemimpinan",
-    image: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800",
-    schedule: "Jumat, 15.00 - 17.00",
-    desc:
-      "Membentuk karakter disiplin, mandiri, tangguh, dan berjiwa kepemimpinan melalui kegiatan kepramukaan.",
-    story:
-      "Pramuka SMAN 1 Nogosari bukan sekadar ekstrakurikuler biasa. Di sini, kami adalah keluarga yang saling mendukung dan tumbuh bersama...",
-    pembina: "Bapak Rudi Hermawan, S.Pd",
-    members: 124,
-    socials: {
-      ig: "@pramuka_sman1",
-      yt: "Pramuka SMAN 1",
-      email: "pramuka@sman1nogosari.sch.id",
-    },
-  },
-  {
-    id: 2,
-    name: "Bola Basket",
-    category: "olahraga",
-    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=800",
-    schedule: "Senin & Rabu, 15.30 - 17.30",
-    desc:
-      "Mengembangkan bakat olahraga bola basket, melatih kerjasama tim, dan menjaga kebugaran fisik.",
-    story:
-      "Di lapangan ini, keringat dan kerja keras diubah menjadi prestasi gemilang...",
-    pembina: "Bapak Dwi Saputra, S.Or",
-    members: 32,
-    socials: { ig: "@basket_sman1", yt: "Basket SMAN 1", email: "" },
-  },
-]);
+const ekskulList = ref([]);
 
 const form = ref({
   id: null,
@@ -82,6 +50,24 @@ const itemToDelete = ref(null);
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
+
+const fetchData = async () => {
+  try {
+    const response = await api.get("/api/extracurriculars");
+    ekskulList.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal mengambil data ekstrakurikuler:", error);
+    triggerToast(
+      "Gagal Memuat Data",
+      "Terjadi kesalahan saat memuat data dari server.",
+      "error"
+    );
+  }
+};
+
+onMounted(() => {
+  fetchData();
+});
 
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };
@@ -113,23 +99,26 @@ const showAddForm = () => {
   document.body.style.overflow = "hidden";
 };
 
-const addEntry = () => {
+const addEntry = async () => {
   if (!form.value.name || !form.value.category) {
     triggerToast("Gagal Menyimpan", "Nama dan Kategori wajib diisi!", "error");
     return;
   }
-  const newId =
-    ekskulList.value.length > 0 ? Math.max(...ekskulList.value.map((s) => s.id)) + 1 : 1;
-  const newEntry = { ...form.value, id: newId, socials: { ...form.value.socials } };
-  ekskulList.value.push(newEntry);
 
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast(
-    "Berhasil Ditambahkan",
-    "Data ekstrakurikuler baru telah ditambahkan ke sistem."
-  );
-  resetForm();
+  try {
+    await api.post("/api/extracurriculars", form.value);
+    await fetchData();
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast(
+      "Berhasil Ditambahkan",
+      "Data ekstrakurikuler baru telah ditambahkan ke sistem."
+    );
+    resetForm();
+  } catch (error) {
+    console.error("Gagal menambahkan ekstrakurikuler:", error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat menyimpan data.", "error");
+  }
 };
 
 const startEdit = (item) => {
@@ -142,20 +131,23 @@ const startEdit = (item) => {
   document.body.style.overflow = "hidden";
 };
 
-const saveEntry = () => {
+const saveEntry = async () => {
   if (!form.value.name || !form.value.category) {
     triggerToast("Gagal Menyimpan", "Nama dan Kategori wajib diisi!", "error");
     return;
   }
-  const index = ekskulList.value.findIndex((s) => s.id === form.value.id);
-  if (index !== -1) {
-    ekskulList.value[index] = { ...form.value, socials: { ...form.value.socials } };
-  }
 
-  isFormVisible.value = false;
-  document.body.style.overflow = "";
-  triggerToast("Perubahan Disimpan", "Data ekstrakurikuler berhasil diperbarui.");
-  resetForm();
+  try {
+    await api.put(`/api/extracurriculars/${form.value.id}`, form.value);
+    await fetchData();
+    isFormVisible.value = false;
+    document.body.style.overflow = "";
+    triggerToast("Perubahan Disimpan", "Data ekstrakurikuler berhasil diperbarui.");
+    resetForm();
+  } catch (error) {
+    console.error("Gagal mengupdate ekstrakurikuler:", error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat memperbarui data.", "error");
+  }
 };
 
 const hideForm = () => {
@@ -169,15 +161,21 @@ const deleteEntry = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
-    ekskulList.value = ekskulList.value.filter((s) => s.id !== itemToDelete.value);
-    itemToDelete.value = null;
-    triggerToast(
-      "Data Dihapus",
-      "Data ekstrakurikuler berhasil dihapus dari sistem.",
-      "info"
-    );
+    try {
+      await api.delete(`/api/extracurriculars/${itemToDelete.value}`);
+      await fetchData();
+      itemToDelete.value = null;
+      triggerToast(
+        "Data Dihapus",
+        "Data ekstrakurikuler berhasil dihapus dari sistem.",
+        "info"
+      );
+    } catch (error) {
+      console.error("Gagal menghapus ekstrakurikuler:", error);
+      triggerToast("Gagal Menghapus", "Terjadi kesalahan saat menghapus data.", "error");
+    }
   }
   isDeleteModalOpen.value = false;
 };

@@ -17,6 +17,7 @@ use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\CurriculumSubjectController;
 use App\Http\Controllers\PancasilaProfileController;
 use App\Http\Controllers\LessonScheduleController;
+use App\Http\Controllers\ExtracurricularController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -95,4 +96,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API Jadwal Pelajaran
     Route::apiResource('lesson-schedules', LessonScheduleController::class);
+
+    // API Ekstrakurikuler
+    Route::apiResource('extracurriculars', ExtracurricularController::class);
 });
