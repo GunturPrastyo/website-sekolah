@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import api from "@/api/index.js";
 import { PhGear, PhImage, PhFloppyDisk } from "@phosphor-icons/vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -56,7 +57,37 @@ const isMapUrlValid = computed(() => {
   return url.startsWith("https://www.google.com/maps/embed");
 });
 
-const saveSettings = () => {
+const fetchSettings = async () => {
+  try {
+    const response = await api.get("/api/settings");
+    const data = response.data.data;
+
+    if (data) {
+      // Memperbarui State General Settings
+      Object.keys(generalSettings.value).forEach((key) => {
+        if (data[key] !== undefined) {
+          generalSettings.value[key] = data[key];
+        }
+      });
+
+      // Memperbarui State Appearance Settings
+      Object.keys(appearanceSettings.value).forEach((key) => {
+        if (data[key] !== undefined) {
+          appearanceSettings.value[key] = data[key];
+        }
+      });
+    }
+  } catch (error) {
+    console.error("Gagal mengambil pengaturan:", error);
+    triggerToast("Gagal Memuat", "Gagal memuat pengaturan dari server", "error");
+  }
+};
+
+onMounted(() => {
+  fetchSettings();
+});
+
+const saveSettings = async () => {
   if (!isMapUrlValid.value) {
     triggerToast(
       "Gagal Menyimpan",
@@ -65,7 +96,20 @@ const saveSettings = () => {
     );
     return;
   }
-  triggerToast("Tersimpan", "Pengaturan berhasil disimpan", "success");
+
+  try {
+    // Menggabungkan kedua state menjadi 1 object
+    const payload = { ...generalSettings.value, ...appearanceSettings.value };
+    await api.post("/api/settings", payload);
+    triggerToast("Tersimpan", "Pengaturan berhasil disimpan", "success");
+  } catch (error) {
+    console.error("Gagal menyimpan pengaturan:", error);
+    triggerToast(
+      "Gagal Menyimpan",
+      "Terjadi kesalahan saat menyimpan pengaturan",
+      "error"
+    );
+  }
 };
 </script>
 

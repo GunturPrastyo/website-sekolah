@@ -21,11 +21,15 @@ use App\Http\Controllers\ExtracurricularController;
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\PpdbInfoController;
+use App\Http\Controllers\Api\SettingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // API Info PPDB (Akses Publik untuk halaman pendaftaran)
 Route::get('/ppdb-info', [PpdbInfoController::class, 'index']);
+
+// API Pengaturan Umum (Akses Publik untuk mengambil data konfigurasi dan tampilan)
+Route::get('/settings', [SettingController::class, 'index']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
@@ -116,4 +120,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/ppdb-info', [PpdbInfoController::class, 'update']);
     Route::post('/ppdb-info/brosur', [PpdbInfoController::class, 'uploadBrosur']);
     Route::delete('/ppdb-info/brosur', [PpdbInfoController::class, 'deleteBrosur']);
+
+    // API Pengaturan Umum (Akses Admin untuk menyimpan)
+    Route::post('/settings', [SettingController::class, 'update']);
 });
