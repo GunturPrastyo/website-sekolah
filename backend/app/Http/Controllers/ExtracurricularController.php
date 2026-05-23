@@ -11,7 +11,12 @@ class ExtracurricularController extends Controller
 {
     public function index()
     {
-        $extracurriculars = Extracurricular::all();
+        $extracurriculars = Extracurricular::all()->map(function ($item) {
+            if ($item->image && !str_starts_with($item->image, 'http') && !str_starts_with($item->image, 'data:')) {
+                $item->image = asset($item->image);
+            }
+            return $item;
+        });
         return response()->json([
             'data' => $extracurriculars
         ]);
@@ -36,6 +41,10 @@ class ExtracurricularController extends Controller
         }
 
         $extracurricular = Extracurricular::create($validated);
+
+        if ($extracurricular->image && !str_starts_with($extracurricular->image, 'http') && !str_starts_with($extracurricular->image, 'data:')) {
+            $extracurricular->image = asset($extracurricular->image);
+        }
 
         return response()->json([
             'message' => 'Data ekstrakurikuler berhasil ditambahkan.',
@@ -64,6 +73,10 @@ class ExtracurricularController extends Controller
         }
 
         $extracurricular->update($validated);
+
+        if ($extracurricular->image && !str_starts_with($extracurricular->image, 'http') && !str_starts_with($extracurricular->image, 'data:')) {
+            $extracurricular->image = asset($extracurricular->image);
+        }
 
         return response()->json([
             'message' => 'Data ekstrakurikuler berhasil diperbarui.',

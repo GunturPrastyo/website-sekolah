@@ -16,19 +16,19 @@ import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 import api from "@/api/index.js";
 
-const categories = [
-  { id: "olahraga", name: "Olahraga" },
-  { id: "seni", name: "Seni & Budaya" },
-  { id: "akademik", name: "Akademik & Sains" },
-  { id: "kepemimpinan", name: "Kepemimpinan" },
-];
-
 const ekskulList = ref([]);
+
+const dynamicCategories = computed(() => {
+  const defaultCats = ["Olahraga", "Seni & Budaya", "Akademik & Sains", "Kepemimpinan"];
+  const currentCats = ekskulList.value.map((e) => e.category);
+  const uniqueCats = new Set([...defaultCats, ...currentCats]);
+  return Array.from(uniqueCats).filter(Boolean);
+});
 
 const form = ref({
   id: null,
   name: "",
-  category: "olahraga",
+  category: "",
   image: "",
   schedule: "",
   desc: "",
@@ -81,7 +81,7 @@ const resetForm = () => {
   form.value = {
     id: null,
     name: "",
-    category: "olahraga",
+    category: "",
     image: "",
     schedule: "",
     desc: "",
@@ -196,8 +196,7 @@ const filteredEkskul = computed(() => {
 });
 
 const getCategoryName = (id) => {
-  const cat = categories.find((c) => c.id === id);
-  return cat ? cat.name : id;
+  return id;
 };
 </script>
 
@@ -295,15 +294,16 @@ const getCategoryName = (id) => {
                       class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                       >Kategori</label
                     >
-                    <select
+                    <input
+                      list="category-options"
                       v-model="form.category"
                       required
                       class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-                        {{ cat.name }}
-                      </option>
-                    </select>
+                      placeholder="Pilih atau ketik kategori baru"
+                    />
+                    <datalist id="category-options">
+                      <option v-for="cat in dynamicCategories" :key="cat" :value="cat"></option>
+                    </datalist>
                   </div>
 
                   <div class="md:col-span-1">
