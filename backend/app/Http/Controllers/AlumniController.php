@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Alumni;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use App\Http\Resources\AlumniResource;
 
 class AlumniController extends Controller
 {
@@ -12,19 +13,9 @@ class AlumniController extends Controller
     {
         $alumnis = Alumni::with('student')->orderBy('created_at', 'desc')->get();
         
-        $alumnis->transform(function ($item) {
-            return [
-                'id' => $item->id,
-                'student_id' => $item->student_id,
-                'nisn' => $item->student->nisn ?? '',
-                'name' => $item->student->name ?? '',
-                'year' => $item->graduation_year,
-                'status' => $item->career_status,
-                'instansi' => $item->institution,
-            ];
-        });
-
-        return response()->json(['data' => $alumnis]);
+        return response()->json([
+            'data' => AlumniResource::collection($alumnis)
+        ]);
     }
 
     public function unassignedStudents()
@@ -55,7 +46,12 @@ class AlumniController extends Controller
             'institution' => $validated['instansi'],
         ]);
 
-        return $this->formatResponse($alumni, 'Data alumni berhasil ditambahkan', 201);
+        $alumni->load('student');
+
+        return response()->json([
+            'message' => 'Data alumni berhasil ditambahkan',
+            'data' => new AlumniResource($alumni)
+        ], 201);
     }
 
     public function update(Request $request, $id)
@@ -73,30 +69,17 @@ class AlumniController extends Controller
             'institution' => $validated['instansi'],
         ]);
 
-        return $this->formatResponse($alumni, 'Data alumni berhasil diperbarui', 200);
+        $alumni->load('student');
+
+        return response()->json([
+            'message' => 'Data alumni berhasil diperbarui',
+            'data' => new AlumniResource($alumni)
+        ], 200);
     }
 
     public function destroy($id)
     {
         Alumni::findOrFail($id)->delete();
         return response()->json(['message' => 'Data alumni berhasil dihapus']);
-    }
-
-    private function formatResponse($alumni, $message, $statusCode = 200)
-    {
-        $alumni->load('student');
-        
-        return response()->json([
-            'message' => $message,
-            'data' => [
-                'id' => $alumni->id,
-                'student_id' => $alumni->student_id,
-                'nisn' => $alumni->student->nisn ?? '',
-                'name' => $alumni->student->name ?? '',
-                'year' => $alumni->graduation_year,
-                'status' => $alumni->career_status,
-                'instansi' => $alumni->institution,
-            ]
-        ], $statusCode);
     }
 }
