@@ -4,42 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Achievement;
+use App\Http\Resources\AchievementResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class AchievementController extends Controller
 {
-    private function formatData($achievement)
-    {
-        $image = $achievement->image;
-        if ($image && !Str::startsWith($image, ['http://', 'https://'])) {
-            $image = url('storage/' . $image);
-        }
-
-        return [
-            'id' => $achievement->id,
-            'title' => $achievement->title,
-            'studentName' => $achievement->student_name,
-            'category' => $achievement->category,
-            'level' => $achievement->level,
-            'year' => $achievement->year,
-            'description' => $achievement->description,
-            'image' => $image,
-        ];
-    }
-
     public function index()
     {
         $achievements = Achievement::orderBy('created_at', 'desc')->get();
         
-        $formatted = $achievements->map(function ($achievement) {
-            return $this->formatData($achievement);
-        });
-
         return response()->json([
             'success' => true,
-            'data' => $formatted
+            'data' => AchievementResource::collection($achievements)
         ]);
     }
 
@@ -83,7 +61,7 @@ class AchievementController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Prestasi berhasil ditambahkan',
-            'data' => $this->formatData($achievement)
+            'data' => new AchievementResource($achievement)
         ], 201);
     }
 
@@ -144,7 +122,7 @@ class AchievementController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Prestasi berhasil diperbarui',
-            'data' => $this->formatData($achievement)
+            'data' => new AchievementResource($achievement)
         ]);
     }
 
