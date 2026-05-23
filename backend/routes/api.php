@@ -20,8 +20,12 @@ use App\Http\Controllers\LessonScheduleController;
 use App\Http\Controllers\ExtracurricularController;
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\AgendaController;
+use App\Http\Controllers\Api\PpdbInfoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+// API Info PPDB (Akses Publik untuk halaman pendaftaran)
+Route::get('/ppdb-info', [PpdbInfoController::class, 'index']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
@@ -107,4 +111,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API Agenda
     Route::apiResource('agendas', AgendaController::class);
+
+    // API Manajemen Info PPDB (Akses Admin)
+    Route::put('/ppdb-info', [PpdbInfoController::class, 'update']);
+    Route::post('/ppdb-info/brosur', [PpdbInfoController::class, 'uploadBrosur']);
+    Route::delete('/ppdb-info/brosur', [PpdbInfoController::class, 'deleteBrosur']);
 });

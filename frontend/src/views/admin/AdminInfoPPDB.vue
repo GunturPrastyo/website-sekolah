@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
+import api from "@/api/index.js";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -21,105 +22,22 @@ import {
   PhQuestion,
   PhFilePdf,
   PhUploadSimple,
+  PhClock,
+  PhCalendarBlank,
 } from "@phosphor-icons/vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
 // State Data
-const syarat = ref([
-  { id: 1, text: "Lulusan SMP/MTs sederajat tahun 2024, 2025, atau 2026." },
-  { id: 2, text: "Memiliki Nomor Induk Siswa Nasional (NISN) yang valid." },
-  { id: 3, text: "Menyiapkan berkas digital (Scan KK, Akta Kelahiran, dan Ijazah/SKL)." },
-  { id: 4, text: "Pas foto terbaru ukuran 3x4 berwarna (pakaian seragam asal)." },
-]);
+const syarat = ref([]);
+const alur = ref([]);
+const jalur = ref([]);
+const faqs = ref([]);
 
-const alur = ref([
-  {
-    id: 1,
-    step: 1,
-    title: "Isi Formulir Online",
-    description: "Lengkapi data diri, asal sekolah, dan jurusan di bawah ini.",
-  },
-  {
-    id: 2,
-    step: 2,
-    title: "Cetak Bukti Daftar",
-    description: "Setelah submit, simpan dan cetak bukti pendaftaran otomatis.",
-  },
-  {
-    id: 3,
-    step: 3,
-    title: "Verifikasi Berkas",
-    description: "Bawa dokumen fisik ke sekolah sesuai jadwal yang tertera.",
-  },
-  {
-    id: 4,
-    step: 4,
-    title: "Pengumuman",
-    description: "Hasil kelulusan akan diinformasikan di portal resmi.",
-  },
-]);
-
-const jalur = ref([
-  {
-    id: 1,
-    name: "Jalur Zonasi",
-    kuota: "50%",
-    icon: "PhMapPin",
-    description:
-      "Diperuntukkan bagi calon peserta didik yang berdomisili di dalam wilayah zonasi yang telah ditetapkan berdasarkan jarak titik koordinat terdekat dari sekolah.",
-  },
-  {
-    id: 2,
-    name: "Jalur Prestasi",
-    kuota: "30%",
-    icon: "PhMedal",
-    description:
-      "Penerimaan berdasarkan akumulasi nilai rapor semester 1-5 atau sertifikat prestasi kejuaraan akademik maupun non-akademik.",
-  },
-  {
-    id: 3,
-    name: "Jalur Afirmasi",
-    kuota: "15%",
-    icon: "PhHandshake",
-    description:
-      "Khusus ditujukan bagi calon peserta didik dari keluarga ekonomi tidak mampu (dibuktikan dengan KIP/PKH) dan penyandang disabilitas.",
-  },
-  {
-    id: 4,
-    name: "Pindah Tugas",
-    kuota: "5%",
-    icon: "PhBriefcase",
-    description:
-      "Diperuntukkan bagi peserta didik yang mengikuti kepindahan tugas orang tua/wali dari instansi, atau anak kandung dari guru.",
-  },
-]);
-
-const faqs = ref([
-  {
-    id: 1,
-    q: "Kapan pendaftaran PPDB SMAN 1 Nogosari dibuka?",
-    a:
-      "Pendaftaran PPDB tahun ajaran 2026/2027 akan dibuka pada minggu pertama bulan Juni 2026 secara online melalui portal resmi kami.",
-  },
-  {
-    id: 2,
-    q: "Apa saja jalur pendaftaran yang tersedia?",
-    a:
-      "Kami membuka 4 jalur pendaftaran: Jalur Zonasi (50%), Afirmasi (15%), Perpindahan Tugas Orang Tua (5%), dan Prestasi Akademik/Non-Akademik (30%).",
-  },
-  {
-    id: 3,
-    q: "Bagaimana cara mendaftar secara online?",
-    a:
-      "Pendaftaran dapat dilakukan dengan membuat akun di menu Pendaftaran, mengisi formulir data diri, dan mengunggah berkas persyaratan sesuai jalur yang dipilih.",
-  },
-  {
-    id: 4,
-    q: "Berapa biaya pendaftaran dan SPP bulanan?",
-    a:
-      "Sebagai sekolah negeri binaan pemerintah, seluruh proses pendaftaran PPDB dan biaya pendidikan (SPP bulanan) adalah GRATIS tanpa dipungut biaya.",
-  },
-]);
+const openingDate = ref("");
+const countdown = ref({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+const isOpeningDateModalOpen = ref(false);
+const tempOpeningDate = ref("");
+let timerInterval = null;
 
 const iconMap = {
   PhMapPin,
@@ -143,6 +61,85 @@ const triggerToast = (title, message, type = "success") => {
   setTimeout(() => {
     showToast.value = false;
   }, 4000);
+};
+
+const fetchPpdbInfo = async () => {
+  try {
+    const response = await api.get('/api/ppdb-info');
+    const data = response.data.data;
+    if (data) {
+      if (data.syarat) syarat.value = data.syarat;
+      if (data.alur) alur.value = data.alur;
+      if (data.jalur) jalur.value = data.jalur;
+      if (data.faqs) faqs.value = data.faqs;
+      if (data.opening_date) {
+        openingDate.value = data.opening_date;
+        startCountdown();
+      }
+      if (data.brosur_url) {
+        fileBrosur.value = { name: "Brosur PPDB.pdf", url: data.brosur_url, isUploaded: true };
+      }
+    }
+  } catch (error) {
+    console.error("Gagal mengambil info PPDB", error);
+  }
+};
+
+onMounted(() => {
+  fetchPpdbInfo();
+});
+
+onUnmounted(() => {
+  if (timerInterval) clearInterval(timerInterval);
+});
+
+const startCountdown = () => {
+  if (timerInterval) clearInterval(timerInterval);
+  
+  if (!openingDate.value) return;
+
+  const targetDate = new Date(openingDate.value).getTime();
+  
+  timerInterval = setInterval(() => {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+    
+    if (distance < 0) {
+      clearInterval(timerInterval);
+      countdown.value = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+      return;
+    }
+    
+    countdown.value = {
+      days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+      minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+      seconds: Math.floor((distance % (1000 * 60)) / 1000)
+    };
+  }, 1000);
+};
+
+const openOpeningDateModal = () => {
+  tempOpeningDate.value = openingDate.value ? new Date(openingDate.value).toISOString().slice(0, 16) : "";
+  isOpeningDateModalOpen.value = true;
+  document.body.style.overflow = "hidden";
+};
+
+const closeOpeningDateModal = () => {
+  isOpeningDateModalOpen.value = false;
+  document.body.style.overflow = "";
+};
+
+const saveOpeningDate = async () => {
+  try {
+    await api.put('/api/ppdb-info', { opening_date: tempOpeningDate.value });
+    openingDate.value = tempOpeningDate.value;
+    startCountdown();
+    closeOpeningDateModal();
+    triggerToast("Berhasil Disimpan", "Waktu pembukaan PPDB berhasil diperbarui.");
+  } catch (error) {
+    triggerToast("Gagal", "Terjadi kesalahan saat menyimpan waktu pembukaan.", "error");
+  }
 };
 
 // Drag and Drop Generic
@@ -172,10 +169,16 @@ const closeSyaratModal = () => {
   isSyaratModalOpen.value = false;
   document.body.style.overflow = "";
 };
-const saveSyarat = () => {
-  syarat.value = tempSyarat.value.filter((s) => s.text.trim() !== "");
-  closeSyaratModal();
-  triggerToast("Berhasil Disimpan", "Data Syarat Pendaftaran berhasil diperbarui.");
+const saveSyarat = async () => {
+  try {
+    const newData = tempSyarat.value.filter((s) => s.text.trim() !== "");
+    await api.put('/api/ppdb-info', { syarat: newData });
+    syarat.value = newData;
+    closeSyaratModal();
+    triggerToast("Berhasil Disimpan", "Data Syarat Pendaftaran berhasil diperbarui.");
+  } catch(error) {
+    triggerToast("Gagal", "Terjadi kesalahan saat menyimpan.", "error");
+  }
 };
 const addSyarat = () => tempSyarat.value.push({ id: Date.now(), text: "" });
 const removeSyarat = (index) => tempSyarat.value.splice(index, 1);
@@ -193,10 +196,16 @@ const closeAlurModal = () => {
   isAlurModalOpen.value = false;
   document.body.style.overflow = "";
 };
-const saveAlur = () => {
-  alur.value = tempAlur.value.map((a, index) => ({ ...a, step: index + 1 }));
-  closeAlurModal();
-  triggerToast("Berhasil Disimpan", "Data Alur Pendaftaran berhasil diperbarui.");
+const saveAlur = async () => {
+  try {
+    const newData = tempAlur.value.map((a, index) => ({ ...a, step: index + 1 }));
+    await api.put('/api/ppdb-info', { alur: newData });
+    alur.value = newData;
+    closeAlurModal();
+    triggerToast("Berhasil Disimpan", "Data Alur Pendaftaran berhasil diperbarui.");
+  } catch(error) {
+    triggerToast("Gagal", "Terjadi kesalahan saat menyimpan.", "error");
+  }
 };
 const addAlur = () =>
   tempAlur.value.push({ id: Date.now(), step: 0, title: "", description: "" });
@@ -215,10 +224,16 @@ const closeJalurModal = () => {
   isJalurModalOpen.value = false;
   document.body.style.overflow = "";
 };
-const saveJalur = () => {
-  jalur.value = tempJalur.value.filter((j) => j.name.trim() !== "");
-  closeJalurModal();
-  triggerToast("Berhasil Disimpan", "Data Jalur Pendaftaran berhasil diperbarui.");
+const saveJalur = async () => {
+  try {
+    const newData = tempJalur.value.filter((j) => j.name.trim() !== "");
+    await api.put('/api/ppdb-info', { jalur: newData });
+    jalur.value = newData;
+    closeJalurModal();
+    triggerToast("Berhasil Disimpan", "Data Jalur Pendaftaran berhasil diperbarui.");
+  } catch(error) {
+    triggerToast("Gagal", "Terjadi kesalahan saat menyimpan.", "error");
+  }
 };
 const addJalur = () =>
   tempJalur.value.push({
@@ -243,43 +258,104 @@ const closeFaqModal = () => {
   isFaqModalOpen.value = false;
   document.body.style.overflow = "";
 };
-const saveFaq = () => {
-  faqs.value = tempFaq.value.filter((f) => f.q.trim() !== "" && f.a.trim() !== "");
-  closeFaqModal();
-  triggerToast("Berhasil Disimpan", "Data FAQ berhasil diperbarui.");
+const saveFaq = async () => {
+  try {
+    const newData = tempFaq.value.filter((f) => f.q.trim() !== "" && f.a.trim() !== "");
+    await api.put('/api/ppdb-info', { faqs: newData });
+    faqs.value = newData;
+    closeFaqModal();
+    triggerToast("Berhasil Disimpan", "Data FAQ berhasil diperbarui.");
+  } catch(error) {
+    triggerToast("Gagal", "Terjadi kesalahan saat menyimpan.", "error");
+  }
 };
 const addFaq = () => tempFaq.value.push({ id: Date.now(), q: "", a: "" });
 const removeFaq = (index) => tempFaq.value.splice(index, 1);
 
 // Upload Brosur
-const handleFileUpload = (event) => {
+const handleFileUpload = async (event) => {
   const file = event.target.files[0];
   if (file) {
     if (file.type === "application/pdf") {
-      fileBrosur.value = file;
-      triggerToast("Berhasil Diunggah", `File ${file.name} berhasil dipilih.`);
+      try {
+        const formData = new FormData();
+        formData.append('brosur', file);
+        const response = await api.post('/api/ppdb-info/brosur', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        
+        fileBrosur.value = { name: file.name, url: response.data.url, isUploaded: true, size: file.size };
+        triggerToast("Berhasil Diunggah", `File ${file.name} berhasil diunggah.`);
+      } catch (error) {
+        triggerToast("Gagal Diunggah", "Terjadi kesalahan saat mengunggah file.", "error");
+      }
     } else {
       triggerToast("Gagal Diunggah", "Harap unggah file dengan format PDF.", "error");
     }
   }
 };
-const removeBrosur = () => {
-  fileBrosur.value = null;
+const removeBrosur = async () => {
+  try {
+    await api.delete('/api/ppdb-info/brosur');
+    fileBrosur.value = null;
+    triggerToast("Berhasil Dihapus", "Brosur berhasil dihapus.", "info");
+  } catch (error) {
+    triggerToast("Gagal Dihapus", "Terjadi kesalahan saat menghapus brosur.", "error");
+  }
 };
 </script>
 
 <template>
   <main class="flex-1 overflow-y-auto px-6 md:px-10 py-8">
-    <div class="mb-8">
-      <h2
-        class="text-3xl font-bold text-gray-800 dark:text-white"
-        style="font-family: 'Oswald', sans-serif"
-      >
-        Manajemen Info PPDB
-      </h2>
-      <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
-        Kelola informasi Syarat, Alur, dan Jalur Pendaftaran
-      </p>
+    <div class="mb-8 flex flex-col lg:flex-row justify-between lg:items-center gap-6">
+      <div>
+        <h2
+          class="text-3xl font-bold text-gray-800 dark:text-white"
+          style="font-family: 'Oswald', sans-serif"
+        >
+          Manajemen Info PPDB
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+          Kelola informasi Syarat, Alur, dan Jalur Pendaftaran
+        </p>
+      </div>
+
+      <!-- Waktu Pembukaan & Countdown -->
+      <div class="bg-gradient-to-r from-blue-600 to-blue-800 p-4 rounded-xl shadow-lg text-white shrink-0 min-w-[300px]">
+        <div class="flex justify-between items-start mb-3">
+          <h3 class="font-bold flex items-center text-sm uppercase tracking-wider text-blue-100">
+            <PhCalendarBlank class="w-4 h-4 mr-2" /> Waktu Pembukaan PPDB
+          </h3>
+          <button @click="openOpeningDateModal" class="p-1 bg-white/20 hover:bg-white/30 rounded transition-colors text-white" title="Edit Waktu">
+            <PhPencilSimple class="w-4 h-4" />
+          </button>
+        </div>
+        
+        <div v-if="openingDate" class="text-center">
+          <p class="text-sm font-medium mb-2">{{ new Date(openingDate).toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' }) }}</p>
+          <div class="flex justify-center gap-2 text-center mt-2">
+            <div class="bg-black/20 rounded-lg p-2 w-16">
+              <span class="block text-xl font-bold">{{ countdown.days }}</span>
+              <span class="text-[10px] uppercase text-blue-200">Hari</span>
+            </div>
+            <div class="bg-black/20 rounded-lg p-2 w-16">
+              <span class="block text-xl font-bold">{{ countdown.hours }}</span>
+              <span class="text-[10px] uppercase text-blue-200">Jam</span>
+            </div>
+            <div class="bg-black/20 rounded-lg p-2 w-16">
+              <span class="block text-xl font-bold">{{ countdown.minutes }}</span>
+              <span class="text-[10px] uppercase text-blue-200">Menit</span>
+            </div>
+            <div class="bg-black/20 rounded-lg p-2 w-16">
+              <span class="block text-xl font-bold">{{ countdown.seconds }}</span>
+              <span class="text-[10px] uppercase text-blue-200">Detik</span>
+            </div>
+          </div>
+        </div>
+        <div v-else class="text-center py-2 text-blue-200 text-sm">
+          Waktu pembukaan belum diatur.
+        </div>
+      </div>
     </div>
 
     <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
@@ -444,9 +520,12 @@ const removeBrosur = () => {
                 >
                   {{ fileBrosur.name }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">
+                <p v-if="fileBrosur.size" class="text-xs text-gray-500 dark:text-gray-400">
                   {{ (fileBrosur.size / 1024 / 1024).toFixed(2) }} MB
                 </p>
+                <a v-if="fileBrosur.url" :href="fileBrosur.url" target="_blank" class="text-xs text-blue-600 hover:underline">
+                  Lihat File
+                </a>
               </div>
             </div>
             <button
@@ -996,6 +1075,66 @@ const removeBrosur = () => {
               class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
             >
               <PhFloppyDisk class="w-5 h-5 mr-2" /> Simpan Perubahan
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Modal Waktu Pembukaan -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isOpeningDateModalOpen"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="closeOpeningDateModal"
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md flex flex-col overflow-hidden"
+          @click.stop
+        >
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="text-lg font-bold text-gray-800 dark:text-white">
+              Edit Waktu Pembukaan PPDB
+            </h3>
+            <button
+              @click="closeOpeningDateModal"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
+          </div>
+          <div class="p-6">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tanggal & Waktu</label>
+            <input 
+              type="datetime-local" 
+              v-model="tempOpeningDate"
+              class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+            />
+            <p class="text-xs text-gray-500 mt-2">Countdown akan dihitung mundur menuju waktu ini.</p>
+          </div>
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+          >
+            <button
+              @click="closeOpeningDateModal"
+              class="px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600"
+            >
+              Batal
+            </button>
+            <button
+              @click="saveOpeningDate"
+              class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+            >
+              <PhFloppyDisk class="w-5 h-5 mr-2" /> Simpan
             </button>
           </div>
         </div>
