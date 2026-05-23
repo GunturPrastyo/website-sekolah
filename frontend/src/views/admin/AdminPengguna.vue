@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import api from "@/api/index.js";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -11,6 +12,7 @@ import {
   PhShieldCheck,
   PhEnvelopeSimple,
   PhX,
+  PhGoogleLogo,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -20,32 +22,14 @@ const roles = [
   { id: "admin", name: "Admin" },
 ];
 
-const usersList = ref([
-  {
-    id: 1,
-    name: "Admin Utama",
-    email: "admin@sman1nogosari.sch.id",
-    role: "super_admin",
-  },
-  {
-    id: 2,
-    name: "Staf Humas",
-    email: "humas@sman1nogosari.sch.id",
-    role: "admin",
-  },
-  {
-    id: 3,
-    name: "Staf Kesiswaan",
-    email: "kesiswaan@sman1nogosari.sch.id",
-    role: "admin",
-  },
-]);
+const usersList = ref([]);
 
 const form = ref({
   id: null,
   name: "",
   email: "",
   role: "admin",
+  provider: "local",
 });
 
 const isFormVisible = ref(false);
@@ -66,12 +50,27 @@ const triggerToast = (title, message, type = "success") => {
   }, 4000);
 };
 
+const fetchUsers = async () => {
+  try {
+    const response = await api.get("/api/users");
+    usersList.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal mengambil data pengguna:", error);
+    triggerToast("Error", "Gagal memuat data pengguna.", "error");
+  }
+};
+
+onMounted(() => {
+  fetchUsers();
+});
+
 const resetForm = () => {
   form.value = {
     id: null,
     name: "",
     email: "",
     role: "admin",
+    provider: "local",
   };
   isEditing.value = false;
 };
@@ -88,27 +87,30 @@ const showAddForm = () => {
   document.body.style.overflow = "hidden";
 };
 
-const addEntry = () => {
+const addEntry = async () => {
   if (!form.value.name || !form.value.email) {
     triggerToast("Gagal Menyimpan", "Nama dan Email wajib diisi!", "error");
     return;
   }
 
-  const newId =
-    usersList.value.length > 0 ? Math.max(...usersList.value.map((s) => s.id)) + 1 : 1;
-
-  usersList.value.unshift({
-    id: newId,
-    name: form.value.name,
-    email: form.value.email,
-    role: form.value.role,
-  });
-
-  hideForm();
-  triggerToast(
-    "Berhasil Ditambahkan",
-    "Pengguna baru ditambahkan dengan sandi: password123"
-  );
+  try {
+    await api.post("/api/users", form.value);
+    await fetchUsers(); // Muat ulang tabel
+    hideForm();
+    triggerToast(
+      "Berhasil Ditambahkan",
+      form.value.provider === "google"
+        ? "Pengguna akun Google berhasil didaftarkan."
+        : "Pengguna baru ditambahkan dengan sandi: password123"
+    );
+  } catch (error) {
+    console.error(error);
+    triggerToast(
+      "Gagal Menyimpan",
+      error.response?.data?.message || "Terjadi kesalahan pada server.",
+      "error"
+    );
+  }
 };
 
 const startEdit = (item) => {
@@ -118,31 +120,31 @@ const startEdit = (item) => {
     name: item.name,
     email: item.email,
     role: item.role,
+    provider: item.provider || "local",
   };
   isFormVisible.value = true;
   document.body.style.overflow = "hidden";
 };
 
-const saveEntry = () => {
+const saveEntry = async () => {
   if (!form.value.name || !form.value.email) {
     triggerToast("Gagal Menyimpan", "Nama dan Email wajib diisi!", "error");
     return;
   }
 
-  const index = usersList.value.findIndex((s) => s.id === form.value.id);
-  if (index !== -1) {
-    const item = usersList.value[index];
-
-    usersList.value[index] = {
-      ...item,
-      name: form.value.name,
-      email: form.value.email,
-      role: form.value.role,
-    };
+  try {
+    await api.put(`/api/users/${form.value.id}`, form.value);
+    await fetchUsers();
+    hideForm();
+    triggerToast("Perubahan Disimpan", "Data pengguna berhasil diperbarui.");
+  } catch (error) {
+    console.error(error);
+    triggerToast(
+      "Gagal Menyimpan",
+      error.response?.data?.message || "Terjadi kesalahan pada server.",
+      "error"
+    );
   }
-
-  hideForm();
-  triggerToast("Perubahan Disimpan", "Data pengguna berhasil diperbarui.");
 };
 
 const deleteEntry = (id) => {
@@ -150,11 +152,17 @@ const deleteEntry = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
-    usersList.value = usersList.value.filter((s) => s.id !== itemToDelete.value);
-    itemToDelete.value = null;
-    triggerToast("Data Dihapus", "Pengguna berhasil dihapus dari sistem.", "info");
+    try {
+      await api.delete(`/api/users/${itemToDelete.value}`);
+      await fetchUsers();
+      itemToDelete.value = null;
+      triggerToast("Data Dihapus", "Pengguna berhasil dihapus dari sistem.", "info");
+    } catch (error) {
+      console.error(error);
+      triggerToast("Gagal Menghapus", "Terjadi kesalahan saat menghapus data.", "error");
+    }
   }
   isDeleteModalOpen.value = false;
 };
@@ -297,6 +305,21 @@ const getRoleName = (id) => {
                 <div class="md:col-span-1">
                   <label
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Metode Login</label
+                  >
+                  <select
+                    v-model="form.provider"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="local">Email & Kata Sandi</option>
+                    <option value="google">Akun Google (SSO)</option>
+                  </select>
+                </div>
+
+                <div class="md:col-span-1" v-if="form.provider === 'local'">
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                   >
                     Kata Sandi
                   </label>
@@ -309,6 +332,24 @@ const getRoleName = (id) => {
                   <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
                     * Kata sandi diatur otomatis menjadi
                     <strong class="text-gray-700 dark:text-gray-300">password123</strong>.
+                  </p>
+                </div>
+
+                <div class="md:col-span-1" v-else>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
+                    Kata Sandi
+                  </label>
+                  <div
+                    class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-lg bg-blue-50 dark:bg-slate-800/50 text-blue-700 dark:text-blue-400 flex items-center cursor-not-allowed"
+                  >
+                    <PhGoogleLogo class="w-5 h-5 mr-2" />
+                    <span class="font-medium text-sm">Login via Google Workspace</span>
+                  </div>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                    * Pengguna akan masuk melalui akun Google miliknya. Tidak memerlukan
+                    kata sandi.
                   </p>
                 </div>
               </div>
@@ -411,11 +452,21 @@ const getRoleName = (id) => {
                       class="block text-sm font-semibold text-gray-800 dark:text-gray-200"
                       >{{ user.name }}</span
                     >
-                    <span class="block text-xs text-gray-400 dark:text-gray-500 mt-0.5"
-                      ><PhEnvelopeSimple class="w-3.5 h-3.5 inline mr-1" />{{
-                        user.email
-                      }}</span
-                    >
+                    <div class="flex items-center gap-2 mt-0.5">
+                      <span
+                        class="text-xs text-gray-400 dark:text-gray-500 flex items-center"
+                      >
+                        <PhEnvelopeSimple class="w-3.5 h-3.5 mr-1" />
+                        {{ user.email }}
+                      </span>
+                      <span
+                        v-if="user.provider === 'google'"
+                        class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                        title="Login menggunakan Akun Google"
+                      >
+                        <PhGoogleLogo class="w-3 h-3 mr-1" /> Google
+                      </span>
+                    </div>
                   </div>
                 </div>
               </td>

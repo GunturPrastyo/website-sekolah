@@ -2,7 +2,14 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import api from "../../api/index.js";
-import { PhEnvelopeSimple, PhLockKey, PhSpinner, PhSignIn } from "@phosphor-icons/vue";
+import {
+  PhEnvelopeSimple,
+  PhLockKey,
+  PhSpinner,
+  PhSignIn,
+  PhGoogleLogo,
+  PhGraduationCap,
+} from "@phosphor-icons/vue";
 
 const router = useRouter();
 
@@ -14,6 +21,13 @@ const form = ref({
 
 const isLoading = ref(false);
 const errorMessage = ref("");
+
+const handleGoogleLogin = () => {
+  // Arahkan browser langsung ke endpoint backend Laravel Socialite.
+  // Anda bisa mengganti URL di bawah sesuai dengan domain production/development Anda.
+  const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  window.location.href = `${backendUrl}/api/auth/google/redirect`;
+};
 
 const handleLogin = async () => {
   isLoading.value = true;
@@ -59,134 +73,263 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <div
-    class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900 px-4 sm:px-6 lg:px-8"
-  >
+  <div class="min-h-screen flex bg-white dark:bg-slate-900">
+    <!-- Bagian Kiri: Gambar & Branding (Hanya tampil di layar besar) -->
     <div
-      class="max-w-md w-full space-y-8 bg-white dark:bg-slate-800 p-8 sm:p-10 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700"
+      class="hidden lg:flex lg:w-1/2 relative bg-blue-900 overflow-hidden items-center justify-center"
     >
-      <!-- Header Info -->
-      <div>
-        <div
-          class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg"
-        >
-          <PhLockKey class="w-8 h-8 text-white" />
+      <!-- Background Image with Overlay -->
+      <img
+        src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1600&auto=format&fit=crop"
+        alt="School Background"
+        class="absolute inset-0 w-full h-full object-cover opacity-30"
+      />
+      <!-- Gradient Overlay -->
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-blue-900/90 to-blue-600/90 mix-blend-multiply"
+      ></div>
+
+      <!-- Content Kiri -->
+      <div class="relative z-10 p-12 text-white max-w-lg">
+        <div class="mb-8">
+          <div
+            class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/30 shadow-lg transform -rotate-3"
+          >
+            <PhGraduationCap class="w-10 h-10 text-white rotate-3" />
+          </div>
         </div>
-        <h2
-          class="text-center text-3xl font-extrabold text-blue-950 dark:text-white"
+        <h1
+          class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight"
           style="font-family: 'Oswald', sans-serif"
         >
-          Login Portal Admin
-        </h2>
-        <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-          Masuk ke sistem manajemen SMAN 1 Nogosari
+          Portal Admin<br /><span class="text-blue-200">SMAN 1 Nogosari</span>
+        </h1>
+        <p class="text-lg text-blue-100/80 leading-relaxed">
+          Sistem informasi manajemen terpadu untuk mengelola konten website, data
+          akademik, dan administrasi sekolah.
         </p>
+
+        <div class="mt-12 flex items-center gap-4 text-sm text-blue-200/60">
+          <span
+            >&copy; {{ new Date().getFullYear() }} SMAN 1 Nogosari. All rights
+            reserved.</span
+          >
+        </div>
       </div>
 
-      <!-- Form Login -->
-      <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
-        <div class="rounded-md space-y-4">
-          <!-- Email Field -->
-          <div>
-            <label
-              for="email"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >Alamat Email</label
-            >
-            <div class="relative">
-              <div
-                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-              >
-                <PhEnvelopeSimple class="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autocomplete="email"
-                required
-                v-model="form.email"
-                class="appearance-none rounded-lg relative block w-full pl-10 px-3 py-2.5 border border-gray-300 dark:border-slate-600 placeholder-gray-400 text-gray-900 dark:text-white bg-gray-50 dark:bg-slate-700 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-colors"
-                placeholder="admin@sman1nogosari.sch.id"
-              />
-            </div>
-          </div>
+      <!-- Ornamen Blobs Animasi -->
+      <div
+        class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-50 animate-blob"
+      ></div>
+      <div
+        class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-50 animate-blob animation-delay-2000"
+      ></div>
+    </div>
 
-          <!-- Password Field -->
-          <div>
-            <label
-              for="password"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >Kata Sandi</label
-            >
-            <div class="relative">
-              <div
-                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-              >
-                <PhLockKey class="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autocomplete="current-password"
-                required
-                v-model="form.password"
-                class="appearance-none rounded-lg relative block w-full pl-10 px-3 py-2.5 border border-gray-300 dark:border-slate-600 placeholder-gray-400 text-gray-900 dark:text-white bg-gray-50 dark:bg-slate-700 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-colors"
-                placeholder="••••••••"
-              />
-            </div>
-          </div>
-        </div>
-
-        <!-- Pilihan Lanjut -->
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <input
-              id="remember-me"
-              name="remember-me"
-              type="checkbox"
-              v-model="form.remember"
-              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded dark:border-slate-600 dark:bg-slate-700"
-            />
-            <label
-              for="remember-me"
-              class="ml-2 block text-sm text-gray-900 dark:text-gray-300"
-            >
-              Ingat saya
-            </label>
-          </div>
-        </div>
-
-        <!-- Pesan Error -->
+    <!-- Bagian Kanan: Form Login -->
+    <div
+      class="w-full lg:w-1/2 flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-slate-900 relative"
+    >
+      <!-- Background versi Mobile -->
+      <div class="absolute inset-0 lg:hidden">
+        <img
+          src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1600&auto=format&fit=crop"
+          alt="School Background"
+          class="absolute inset-0 w-full h-full object-cover opacity-10 dark:opacity-5"
+        />
         <div
-          v-if="errorMessage"
-          class="p-3 rounded-md bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800"
-        >
-          <p class="text-sm text-red-600 dark:text-red-400 text-center font-medium">
-            {{ errorMessage }}
+          class="absolute inset-0 bg-white/80 dark:bg-slate-900/90 backdrop-blur-md"
+        ></div>
+      </div>
+
+      <div
+        class="max-w-md w-full space-y-8 p-8 sm:p-10 bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-700 relative z-10"
+      >
+        <!-- Header Form -->
+        <div class="text-center">
+          <div
+            class="lg:hidden w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/30 transform rotate-3"
+          >
+            <PhGraduationCap class="w-8 h-8 text-white -rotate-3" />
+          </div>
+          <div
+            class="hidden lg:flex w-16 h-16 bg-blue-50 dark:bg-slate-700/50 rounded-2xl items-center justify-center mx-auto mb-6 border border-blue-100 dark:border-slate-600"
+          >
+            <PhLockKey class="w-8 h-8 text-blue-600 dark:text-blue-400" />
+          </div>
+
+          <h2
+            class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight"
+            style="font-family: 'Oswald', sans-serif"
+          >
+            Selamat Datang!
+          </h2>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            Silakan masuk untuk melanjutkan ke dashboard.
           </p>
         </div>
 
-        <!-- Tombol Submit -->
-        <div>
-          <button
-            type="submit"
-            :disabled="isLoading"
-            class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+        <!-- Form Login -->
+        <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
+          <div class="space-y-5">
+            <!-- Email Field -->
+            <div>
+              <label
+                for="email"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                >Alamat Email</label
+              >
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none"
+                >
+                  <PhEnvelopeSimple class="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  required
+                  v-model="form.email"
+                  class="appearance-none rounded-xl relative block w-full pl-11 px-4 py-3 border border-gray-200 dark:border-slate-600 placeholder-gray-400 text-gray-900 dark:text-white bg-gray-50 dark:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200 shadow-sm"
+                  placeholder="admin@sman1nogosari.sch.id"
+                />
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div>
+              <label
+                for="password"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                >Kata Sandi</label
+              >
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none"
+                >
+                  <PhLockKey class="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                </div>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  required
+                  v-model="form.password"
+                  class="appearance-none rounded-xl relative block w-full pl-11 px-4 py-3 border border-gray-200 dark:border-slate-600 placeholder-gray-400 text-gray-900 dark:text-white bg-gray-50 dark:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200 shadow-sm"
+                  placeholder="••••••••"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Pilihan Lanjut -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                v-model="form.remember"
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded dark:border-slate-600 dark:bg-slate-700 cursor-pointer"
+              />
+              <label
+                for="remember-me"
+                class="ml-2 block text-sm text-gray-600 dark:text-gray-300 cursor-pointer"
+              >
+                Ingat saya
+              </label>
+            </div>
+
+            <div class="text-sm">
+              <a
+                href="#"
+                class="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+              >
+                Lupa sandi?
+              </a>
+            </div>
+          </div>
+
+          <!-- Pesan Error -->
+          <div
+            v-if="errorMessage"
+            class="p-3 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-100 dark:border-red-800"
           >
-            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+            <p class="text-sm text-red-600 dark:text-red-400 text-center font-medium">
+              {{ errorMessage }}
+            </p>
+          </div>
+
+          <!-- Tombol Submit -->
+          <div>
+            <button
+              type="submit"
+              :disabled="isLoading"
+              class="group relative w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:shadow-md"
+            >
               <PhSignIn
                 v-if="!isLoading"
-                class="h-5 w-5 text-blue-300 group-hover:text-white transition-colors"
+                class="h-5 w-5 mr-2 text-blue-200 group-hover:text-white transition-colors"
                 aria-hidden="true"
               />
-              <PhSpinner v-else class="h-5 w-5 text-white animate-spin" />
+              <PhSpinner v-else class="h-5 w-5 mr-2 text-white animate-spin" />
+              {{ isLoading ? "Memverifikasi..." : "Masuk ke Dashboard" }}
+            </button>
+          </div>
+
+          <!-- Garis Pemisah (Divider) -->
+          <div class="mt-6 flex items-center justify-center">
+            <div class="w-full border-t border-gray-200 dark:border-slate-700"></div>
+            <span
+              class="px-4 text-xs uppercase tracking-wider font-semibold text-gray-400 dark:text-gray-500 bg-white dark:bg-slate-800 whitespace-nowrap"
+            >
+              Atau masuk dengan
             </span>
-            {{ isLoading ? "Memverifikasi..." : "Masuk ke Dashboard" }}
-          </button>
-        </div>
-      </form>
+            <div class="w-full border-t border-gray-200 dark:border-slate-700"></div>
+          </div>
+
+          <!-- Tombol Login Google -->
+          <div>
+            <button
+              type="button"
+              @click="handleGoogleLogin"
+              class="w-full flex justify-center items-center py-3 px-4 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm bg-white dark:bg-slate-700 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-all duration-200"
+            >
+              <PhGoogleLogo class="w-5 h-5 mr-2 text-red-500" weight="bold" />
+              Google Workspace
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Keyframes untuk efek dekorasi latar belakang animasi (blobs) */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+</style>
