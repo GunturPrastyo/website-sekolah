@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -16,50 +16,9 @@ import {
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
+import api from "@/api/index.js";
 
-const agendaList = ref([
-  {
-    id: 1,
-    title: "Ujian Tengah Semester (UTS)",
-    startDate: "2026-04-02",
-    endDate: "2026-04-08",
-    time: "07:30 - Selesai",
-    location: "Ruang Kelas",
-    color: "yellow",
-    description: "Pelaksanaan Ujian Tengah Semester Genap Tahun Ajaran 2025/2026.",
-  },
-  {
-    id: 2,
-    title: "Rapat Evaluasi Guru & Staf",
-    startDate: "2026-04-09",
-    endDate: "",
-    time: "13:00 - 15:00",
-    location: "Ruang Guru",
-    color: "red",
-    description: "Rapat evaluasi bulanan untuk seluruh tenaga pendidik dan kependidikan.",
-  },
-  {
-    id: 3,
-    title: "Peringatan Hari Bumi (Kerja Bakti)",
-    startDate: "2026-04-15",
-    endDate: "",
-    time: "08:00 - 11:00",
-    location: "Lingkungan Sekolah",
-    color: "green",
-    description:
-      "Kerja bakti massal membersihkan lingkungan sekolah dalam rangka Hari Bumi.",
-  },
-  {
-    id: 4,
-    title: "Seminar Persiapan Kuliah Kelas XII",
-    startDate: "2026-04-20",
-    endDate: "",
-    time: "09:00 - 12:00",
-    location: "Aula Utama",
-    color: "blue",
-    description: "Seminar motivasi dan persiapan SNBT untuk siswa-siswi kelas XII.",
-  },
-]);
+const agendaList = ref([]);
 
 const form = ref({
   id: null,
@@ -132,6 +91,19 @@ const triggerToast = (title, message, type = "success") => {
   }, 4000);
 };
 
+const fetchData = async () => {
+  try {
+    const response = await api.get("/api/agendas");
+    agendaList.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal mengambil data agenda:", error);
+  }
+};
+
+onMounted(() => {
+  fetchData();
+});
+
 const resetForm = () => {
   form.value = {
     id: null,
@@ -158,20 +130,21 @@ const hideForm = () => {
   document.body.style.overflow = "";
 };
 
-const addEntry = () => {
+const addEntry = async () => {
   if (!form.value.title || !form.value.startDate) {
     triggerToast("Gagal Menyimpan", "Judul dan Tanggal Mulai wajib diisi!", "error");
     return;
   }
 
-  const newId =
-    agendaList.value.length > 0 ? Math.max(...agendaList.value.map((a) => a.id)) + 1 : 1;
-
-  agendaList.value.push({ ...form.value, id: newId });
-  agendaList.value.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-
-  hideForm();
-  triggerToast("Berhasil Ditambahkan", "Data agenda baru berhasil ditambahkan.");
+  try {
+    await api.post("/api/agendas", form.value);
+    await fetchData();
+    hideForm();
+    triggerToast("Berhasil Ditambahkan", "Data agenda baru berhasil ditambahkan.");
+  } catch (error) {
+    console.error("Gagal menambahkan agenda:", error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat menyimpan data.", "error");
+  }
 };
 
 const startEdit = (item) => {
@@ -246,7 +219,7 @@ const getColorConfig = (colorId) => {
 };
 
 // Logika Kalender Dinamis
-const currentDate = ref(new Date(2026, 3, 1)); // Diatur default ke April 2026 sesuai data dummy
+const currentDate = ref(new Date());
 
 const currentMonthName = computed(() => {
   const options = { month: "long", year: "numeric" };

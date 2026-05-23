@@ -19,6 +19,7 @@ use App\Http\Controllers\PancasilaProfileController;
 use App\Http\Controllers\LessonScheduleController;
 use App\Http\Controllers\ExtracurricularController;
 use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\AgendaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -103,4 +104,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API Prestasi
     Route::apiResource('achievements', AchievementController::class);
+
+    // API Agenda
+    Route::apiResource('agendas', AgendaController::class);
 });
