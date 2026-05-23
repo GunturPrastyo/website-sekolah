@@ -65,7 +65,7 @@ const triggerToast = (title, message, type = "success") => {
 
 const fetchPpdbInfo = async () => {
   try {
-    const response = await api.get('/api/ppdb-info');
+    const response = await api.get("/api/ppdb-info");
     const data = response.data.data;
     if (data) {
       if (data.syarat) syarat.value = data.syarat;
@@ -77,7 +77,11 @@ const fetchPpdbInfo = async () => {
         startCountdown();
       }
       if (data.brosur_url) {
-        fileBrosur.value = { name: "Brosur PPDB.pdf", url: data.brosur_url, isUploaded: true };
+        fileBrosur.value = {
+          name: "Brosur PPDB.pdf",
+          url: data.brosur_url,
+          isUploaded: true,
+        };
       }
     }
   } catch (error) {
@@ -95,32 +99,34 @@ onUnmounted(() => {
 
 const startCountdown = () => {
   if (timerInterval) clearInterval(timerInterval);
-  
+
   if (!openingDate.value) return;
 
   const targetDate = new Date(openingDate.value).getTime();
-  
+
   timerInterval = setInterval(() => {
     const now = new Date().getTime();
     const distance = targetDate - now;
-    
+
     if (distance < 0) {
       clearInterval(timerInterval);
       countdown.value = { days: 0, hours: 0, minutes: 0, seconds: 0 };
       return;
     }
-    
+
     countdown.value = {
       days: Math.floor(distance / (1000 * 60 * 60 * 24)),
       hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
       minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-      seconds: Math.floor((distance % (1000 * 60)) / 1000)
+      seconds: Math.floor((distance % (1000 * 60)) / 1000),
     };
   }, 1000);
 };
 
 const openOpeningDateModal = () => {
-  tempOpeningDate.value = openingDate.value ? new Date(openingDate.value).toISOString().slice(0, 16) : "";
+  tempOpeningDate.value = openingDate.value
+    ? new Date(openingDate.value).toISOString().slice(0, 16)
+    : "";
   isOpeningDateModalOpen.value = true;
   document.body.style.overflow = "hidden";
 };
@@ -132,7 +138,7 @@ const closeOpeningDateModal = () => {
 
 const saveOpeningDate = async () => {
   try {
-    await api.put('/api/ppdb-info', { opening_date: tempOpeningDate.value });
+    await api.put("/api/ppdb-info", { opening_date: tempOpeningDate.value });
     openingDate.value = tempOpeningDate.value;
     startCountdown();
     closeOpeningDateModal();
@@ -172,11 +178,11 @@ const closeSyaratModal = () => {
 const saveSyarat = async () => {
   try {
     const newData = tempSyarat.value.filter((s) => s.text.trim() !== "");
-    await api.put('/api/ppdb-info', { syarat: newData });
+    await api.put("/api/ppdb-info", { syarat: newData });
     syarat.value = newData;
     closeSyaratModal();
     triggerToast("Berhasil Disimpan", "Data Syarat Pendaftaran berhasil diperbarui.");
-  } catch(error) {
+  } catch (error) {
     triggerToast("Gagal", "Terjadi kesalahan saat menyimpan.", "error");
   }
 };
@@ -199,11 +205,11 @@ const closeAlurModal = () => {
 const saveAlur = async () => {
   try {
     const newData = tempAlur.value.map((a, index) => ({ ...a, step: index + 1 }));
-    await api.put('/api/ppdb-info', { alur: newData });
+    await api.put("/api/ppdb-info", { alur: newData });
     alur.value = newData;
     closeAlurModal();
     triggerToast("Berhasil Disimpan", "Data Alur Pendaftaran berhasil diperbarui.");
-  } catch(error) {
+  } catch (error) {
     triggerToast("Gagal", "Terjadi kesalahan saat menyimpan.", "error");
   }
 };
@@ -227,11 +233,11 @@ const closeJalurModal = () => {
 const saveJalur = async () => {
   try {
     const newData = tempJalur.value.filter((j) => j.name.trim() !== "");
-    await api.put('/api/ppdb-info', { jalur: newData });
+    await api.put("/api/ppdb-info", { jalur: newData });
     jalur.value = newData;
     closeJalurModal();
     triggerToast("Berhasil Disimpan", "Data Jalur Pendaftaran berhasil diperbarui.");
-  } catch(error) {
+  } catch (error) {
     triggerToast("Gagal", "Terjadi kesalahan saat menyimpan.", "error");
   }
 };
@@ -261,11 +267,11 @@ const closeFaqModal = () => {
 const saveFaq = async () => {
   try {
     const newData = tempFaq.value.filter((f) => f.q.trim() !== "" && f.a.trim() !== "");
-    await api.put('/api/ppdb-info', { faqs: newData });
+    await api.put("/api/ppdb-info", { faqs: newData });
     faqs.value = newData;
     closeFaqModal();
     triggerToast("Berhasil Disimpan", "Data FAQ berhasil diperbarui.");
-  } catch(error) {
+  } catch (error) {
     triggerToast("Gagal", "Terjadi kesalahan saat menyimpan.", "error");
   }
 };
@@ -279,15 +285,24 @@ const handleFileUpload = async (event) => {
     if (file.type === "application/pdf") {
       try {
         const formData = new FormData();
-        formData.append('brosur', file);
-        const response = await api.post('/api/ppdb-info/brosur', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
+        formData.append("brosur", file);
+        const response = await api.post("/api/ppdb-info/brosur", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
         });
-        
-        fileBrosur.value = { name: file.name, url: response.data.url, isUploaded: true, size: file.size };
+
+        fileBrosur.value = {
+          name: file.name,
+          url: response.data.url,
+          isUploaded: true,
+          size: file.size,
+        };
         triggerToast("Berhasil Diunggah", `File ${file.name} berhasil diunggah.`);
       } catch (error) {
-        triggerToast("Gagal Diunggah", "Terjadi kesalahan saat mengunggah file.", "error");
+        triggerToast(
+          "Gagal Diunggah",
+          "Terjadi kesalahan saat mengunggah file.",
+          "error"
+        );
       }
     } else {
       triggerToast("Gagal Diunggah", "Harap unggah file dengan format PDF.", "error");
@@ -296,7 +311,7 @@ const handleFileUpload = async (event) => {
 };
 const removeBrosur = async () => {
   try {
-    await api.delete('/api/ppdb-info/brosur');
+    await api.delete("/api/ppdb-info/brosur");
     fileBrosur.value = null;
     triggerToast("Berhasil Dihapus", "Brosur berhasil dihapus.", "info");
   } catch (error) {
@@ -307,54 +322,102 @@ const removeBrosur = async () => {
 
 <template>
   <main class="flex-1 overflow-y-auto px-6 md:px-10 py-8">
-    <div class="mb-8 flex flex-col lg:flex-row justify-between lg:items-center gap-6">
-      <div>
-        <h2
-          class="text-3xl font-bold text-gray-800 dark:text-white"
-          style="font-family: 'Oswald', sans-serif"
+    <div class="mb-8">
+      <h2
+        class="text-3xl font-bold text-gray-800 dark:text-white"
+        style="font-family: 'Oswald', sans-serif"
+      >
+        Manajemen Info PPDB
+      </h2>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+        Kelola informasi Syarat, Alur, dan Jalur Pendaftaran
+      </p>
+    </div>
+
+    <!-- Waktu Pembukaan & Countdown Banner -->
+    <div
+      class="mb-8 bg-gradient-to-r from-blue-600 to-blue-800 p-6 rounded-2xl shadow-lg text-white flex flex-col lg:flex-row items-center justify-between gap-6 relative overflow-hidden"
+    >
+      <!-- Ornamen Dekorasi -->
+      <div
+        class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none"
+      ></div>
+      <div
+        class="absolute bottom-0 left-0 w-64 h-64 bg-blue-400 opacity-20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4 pointer-events-none"
+      ></div>
+
+      <div
+        class="flex flex-col items-center lg:items-start text-center lg:text-left z-10"
+      >
+        <h3
+          class="font-bold flex items-center text-lg uppercase tracking-wider text-blue-100 mb-2"
         >
-          Manajemen Info PPDB
-        </h2>
-        <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
-          Kelola informasi Syarat, Alur, dan Jalur Pendaftaran
+          <PhCalendarBlank class="w-5 h-5 mr-2" /> Waktu Pembukaan PPDB
+        </h3>
+        <p v-if="openingDate" class="text-sm md:text-base font-medium text-blue-50">
+          {{
+            new Date(openingDate).toLocaleString("id-ID", {
+              dateStyle: "full",
+              timeStyle: "short",
+            })
+          }}
+        </p>
+        <p v-else class="text-sm md:text-base text-blue-200">
+          Waktu pembukaan belum diatur.
         </p>
       </div>
 
-      <!-- Waktu Pembukaan & Countdown -->
-      <div class="bg-gradient-to-r from-blue-600 to-blue-800 p-4 rounded-xl shadow-lg text-white shrink-0 min-w-[300px]">
-        <div class="flex justify-between items-start mb-3">
-          <h3 class="font-bold flex items-center text-sm uppercase tracking-wider text-blue-100">
-            <PhCalendarBlank class="w-4 h-4 mr-2" /> Waktu Pembukaan PPDB
-          </h3>
-          <button @click="openOpeningDateModal" class="p-1 bg-white/20 hover:bg-white/30 rounded transition-colors text-white" title="Edit Waktu">
-            <PhPencilSimple class="w-4 h-4" />
-          </button>
+      <div v-if="openingDate" class="flex justify-center gap-2 sm:gap-3 text-center z-10">
+        <div
+          class="bg-black/20 rounded-xl p-3 w-16 sm:w-20 backdrop-blur-sm border border-white/10 shadow-inner"
+        >
+          <span class="block text-2xl sm:text-3xl font-bold">{{ countdown.days }}</span>
+          <span
+            class="text-[10px] sm:text-xs uppercase text-blue-200 font-semibold tracking-wider"
+            >Hari</span
+          >
         </div>
-        
-        <div v-if="openingDate" class="text-center">
-          <p class="text-sm font-medium mb-2">{{ new Date(openingDate).toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' }) }}</p>
-          <div class="flex justify-center gap-2 text-center mt-2">
-            <div class="bg-black/20 rounded-lg p-2 w-16">
-              <span class="block text-xl font-bold">{{ countdown.days }}</span>
-              <span class="text-[10px] uppercase text-blue-200">Hari</span>
-            </div>
-            <div class="bg-black/20 rounded-lg p-2 w-16">
-              <span class="block text-xl font-bold">{{ countdown.hours }}</span>
-              <span class="text-[10px] uppercase text-blue-200">Jam</span>
-            </div>
-            <div class="bg-black/20 rounded-lg p-2 w-16">
-              <span class="block text-xl font-bold">{{ countdown.minutes }}</span>
-              <span class="text-[10px] uppercase text-blue-200">Menit</span>
-            </div>
-            <div class="bg-black/20 rounded-lg p-2 w-16">
-              <span class="block text-xl font-bold">{{ countdown.seconds }}</span>
-              <span class="text-[10px] uppercase text-blue-200">Detik</span>
-            </div>
-          </div>
+        <div
+          class="bg-black/20 rounded-xl p-3 w-16 sm:w-20 backdrop-blur-sm border border-white/10 shadow-inner"
+        >
+          <span class="block text-2xl sm:text-3xl font-bold">{{ countdown.hours }}</span>
+          <span
+            class="text-[10px] sm:text-xs uppercase text-blue-200 font-semibold tracking-wider"
+            >Jam</span
+          >
         </div>
-        <div v-else class="text-center py-2 text-blue-200 text-sm">
-          Waktu pembukaan belum diatur.
+        <div
+          class="bg-black/20 rounded-xl p-3 w-16 sm:w-20 backdrop-blur-sm border border-white/10 shadow-inner"
+        >
+          <span class="block text-2xl sm:text-3xl font-bold">{{
+            countdown.minutes
+          }}</span>
+          <span
+            class="text-[10px] sm:text-xs uppercase text-blue-200 font-semibold tracking-wider"
+            >Menit</span
+          >
         </div>
+        <div
+          class="bg-black/20 rounded-xl p-3 w-16 sm:w-20 backdrop-blur-sm border border-white/10 shadow-inner"
+        >
+          <span class="block text-2xl sm:text-3xl font-bold">{{
+            countdown.seconds
+          }}</span>
+          <span
+            class="text-[10px] sm:text-xs uppercase text-blue-200 font-semibold tracking-wider"
+            >Detik</span
+          >
+        </div>
+      </div>
+
+      <div class="shrink-0 z-10 w-full lg:w-auto flex justify-center mt-2 lg:mt-0">
+        <button
+          @click="openOpeningDateModal"
+          class="flex items-center justify-center w-full sm:w-auto px-5 py-3 bg-white/20 hover:bg-white/30 rounded-xl transition-all duration-300 text-white font-medium border border-white/20 shadow-sm hover:shadow-md"
+          title="Edit Waktu"
+        >
+          <PhPencilSimple class="w-4 h-4 mr-2" /> Atur Waktu
+        </button>
       </div>
     </div>
 
@@ -520,10 +583,18 @@ const removeBrosur = async () => {
                 >
                   {{ fileBrosur.name }}
                 </p>
-                <p v-if="fileBrosur.size" class="text-xs text-gray-500 dark:text-gray-400">
+                <p
+                  v-if="fileBrosur.size"
+                  class="text-xs text-gray-500 dark:text-gray-400"
+                >
                   {{ (fileBrosur.size / 1024 / 1024).toFixed(2) }} MB
                 </p>
-                <a v-if="fileBrosur.url" :href="fileBrosur.url" target="_blank" class="text-xs text-blue-600 hover:underline">
+                <a
+                  v-if="fileBrosur.url"
+                  :href="fileBrosur.url"
+                  target="_blank"
+                  class="text-xs text-blue-600 hover:underline"
+                >
                   Lihat File
                 </a>
               </div>
@@ -1113,13 +1184,17 @@ const removeBrosur = async () => {
             </button>
           </div>
           <div class="p-6">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tanggal & Waktu</label>
-            <input 
-              type="datetime-local" 
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >Tanggal & Waktu</label
+            >
+            <input
+              type="datetime-local"
               v-model="tempOpeningDate"
               class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
             />
-            <p class="text-xs text-gray-500 mt-2">Countdown akan dihitung mundur menuju waktu ini.</p>
+            <p class="text-xs text-gray-500 mt-2">
+              Countdown akan dihitung mundur menuju waktu ini.
+            </p>
           </div>
           <div
             class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
