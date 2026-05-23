@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Extracurricular;
+use App\Http\Resources\ExtracurricularResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,14 +12,8 @@ class ExtracurricularController extends Controller
 {
     public function index()
     {
-        $extracurriculars = Extracurricular::all()->map(function ($item) {
-            if ($item->image && !str_starts_with($item->image, 'http') && !str_starts_with($item->image, 'data:')) {
-                $item->image = asset($item->image);
-            }
-            return $item;
-        });
         return response()->json([
-            'data' => $extracurriculars
+            'data' => ExtracurricularResource::collection(Extracurricular::all())
         ]);
     }
 
@@ -42,13 +37,9 @@ class ExtracurricularController extends Controller
 
         $extracurricular = Extracurricular::create($validated);
 
-        if ($extracurricular->image && !str_starts_with($extracurricular->image, 'http') && !str_starts_with($extracurricular->image, 'data:')) {
-            $extracurricular->image = asset($extracurricular->image);
-        }
-
         return response()->json([
             'message' => 'Data ekstrakurikuler berhasil ditambahkan.',
-            'data' => $extracurricular
+            'data' => new ExtracurricularResource($extracurricular)
         ], 201);
     }
 
@@ -74,13 +65,9 @@ class ExtracurricularController extends Controller
 
         $extracurricular->update($validated);
 
-        if ($extracurricular->image && !str_starts_with($extracurricular->image, 'http') && !str_starts_with($extracurricular->image, 'data:')) {
-            $extracurricular->image = asset($extracurricular->image);
-        }
-
         return response()->json([
             'message' => 'Data ekstrakurikuler berhasil diperbarui.',
-            'data' => $extracurricular
+            'data' => new ExtracurricularResource($extracurricular)
         ]);
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Timeline;
+use App\Http\Resources\TimelineResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,7 +14,7 @@ class TimelineController extends Controller
     {
         // Get all timelines sorted by order and then year
         $timelines = Timeline::orderBy('order', 'asc')->orderBy('year', 'asc')->get();
-        return response()->json(['data' => $timelines]);
+        return response()->json(['data' => TimelineResource::collection($timelines)]);
     }
 
     public function store(Request $request)
@@ -56,7 +57,7 @@ class TimelineController extends Controller
 
         return response()->json([
             'message' => 'Timeline created successfully',
-            'data' => $timeline
+            'data' => new TimelineResource($timeline)
         ], 201);
     }
 
@@ -95,7 +96,7 @@ class TimelineController extends Controller
 
         return response()->json([
             'message' => 'Timeline updated successfully',
-            'data' => $timeline
+            'data' => new TimelineResource($timeline)
         ]);
     }
 

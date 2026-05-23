@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\SchoolProfile;
+use App\Http\Resources\SchoolProfileResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,7 +18,7 @@ class SchoolProfileController extends Controller
             return response()->json(['message' => 'Profile not found'], 404);
         }
 
-        return response()->json(['data' => $profile]);
+        return response()->json(['data' => new SchoolProfileResource($profile)]);
     }
 
     public function update(Request $request)
@@ -60,7 +61,7 @@ class SchoolProfileController extends Controller
 
         return response()->json([
             'message' => 'Profile updated successfully',
-            'data' => $profile
+            'data' => new SchoolProfileResource($profile)
         ]);
     }
 }

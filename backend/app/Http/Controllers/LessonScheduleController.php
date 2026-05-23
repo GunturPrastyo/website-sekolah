@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LessonSchedule;
+use App\Http\Resources\LessonScheduleResource;
 use Illuminate\Http\Request;
 
 class LessonScheduleController extends Controller
@@ -13,20 +14,7 @@ class LessonScheduleController extends Controller
         $schedules = LessonSchedule::with(['schoolClass', 'staff', 'curriculumSubject'])->get();
         
         return response()->json([
-            'data' => $schedules->map(function ($schedule) {
-                return [
-                    'id' => $schedule->id,
-                    'class_id' => $schedule->school_class_id,
-                    'className' => $schedule->schoolClass->name ?? 'Tidak Diketahui',
-                    'day' => $schedule->day,
-                    'startTime' => substr($schedule->start_time, 0, 5), // Ambil format H:i
-                    'endTime' => substr($schedule->end_time, 0, 5),
-                    'subject_id' => $schedule->curriculum_subject_id,
-                    'subject' => $schedule->curriculumSubject->name ?? 'Tidak Diketahui',
-                    'teacher_id' => $schedule->staff_id,
-                    'teacher' => $schedule->staff->name ?? 'Tidak Diketahui',
-                ];
-            })
+            'data' => LessonScheduleResource::collection($schedules)
         ]);
     }
 
@@ -45,7 +33,7 @@ class LessonScheduleController extends Controller
 
         return response()->json([
             'message' => 'Jadwal pelajaran berhasil ditambahkan',
-            'data' => $schedule
+            'data' => new LessonScheduleResource($schedule)
         ], 201);
     }
 

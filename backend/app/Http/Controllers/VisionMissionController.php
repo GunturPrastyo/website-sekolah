@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\VisionMission;
+use App\Http\Resources\VisionMissionResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -28,7 +29,7 @@ class VisionMissionController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $visionMission,
+            'data' => new VisionMissionResource($visionMission),
         ]);
     }
 
@@ -64,7 +65,7 @@ class VisionMissionController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Data Visi, Misi, dan Sambutan berhasil diperbarui.',
-            'data' => $visionMission,
+            'data' => new VisionMissionResource($visionMission),
         ]);
     }
 }

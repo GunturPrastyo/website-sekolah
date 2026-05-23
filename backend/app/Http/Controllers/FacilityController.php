@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Facility;
+use App\Http\Resources\FacilityResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,7 +16,7 @@ class FacilityController extends Controller
         
         return response()->json([
             'success' => true,
-            'data' => $facilities
+            'data' => FacilityResource::collection($facilities)
         ]);
     }
 
@@ -41,7 +42,7 @@ class FacilityController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Fasilitas berhasil ditambahkan',
-            'data' => $facility
+            'data' => new FacilityResource($facility)
         ], 201);
     }
 
@@ -67,7 +68,7 @@ class FacilityController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Fasilitas berhasil diperbarui',
-            'data' => $facility
+            'data' => new FacilityResource($facility)
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Program;
+use App\Http\Resources\ProgramResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -12,7 +13,7 @@ class ProgramController extends Controller
     public function index()
     {
         $programs = Program::orderBy('created_at', 'desc')->get();
-        return response()->json(['data' => $programs]);
+        return response()->json(['data' => ProgramResource::collection($programs)]);
     }
 
     public function store(Request $request)
@@ -32,7 +33,7 @@ class ProgramController extends Controller
 
         $program = Program::create($validated);
 
-        return response()->json(['data' => $program], 201);
+        return response()->json(['data' => new ProgramResource($program)], 201);
     }
 
     public function update(Request $request, $id)
@@ -61,7 +62,7 @@ class ProgramController extends Controller
 
         $program->update($validated);
 
-        return response()->json(['data' => $program]);
+        return response()->json(['data' => new ProgramResource($program)]);
     }
 
     public function destroy($id)

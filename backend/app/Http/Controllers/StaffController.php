@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Staff;
+use App\Http\Resources\StaffResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,15 +12,7 @@ class StaffController extends Controller
     public function index()
     {
         $staff = Staff::all();
-        
-        $staff->transform(function ($item) {
-            if ($item->image && !str_starts_with($item->image, 'http') && !str_starts_with($item->image, 'data:image')) {
-                $item->image = asset('storage/' . $item->image);
-            }
-            return $item;
-        });
-        
-        return response()->json(['data' => $staff]);
+        return response()->json(['data' => StaffResource::collection($staff)]);
     }
 
     public function store(Request $request)
@@ -45,11 +38,7 @@ class StaffController extends Controller
 
         $staff = Staff::create($validatedData);
 
-        if ($staff->image && !str_starts_with($staff->image, 'http') && !str_starts_with($staff->image, 'data:image')) {
-            $staff->image = asset('storage/' . $staff->image);
-        }
-
-        return response()->json(['message' => 'Data staf berhasil ditambahkan', 'data' => $staff], 201);
+        return response()->json(['message' => 'Data staf berhasil ditambahkan', 'data' => new StaffResource($staff)], 201);
     }
 
     public function update(Request $request, Staff $staff)
@@ -83,11 +72,7 @@ class StaffController extends Controller
 
         $staff->update($validatedData);
 
-        if ($staff->image && !str_starts_with($staff->image, 'http') && !str_starts_with($staff->image, 'data:image')) {
-            $staff->image = asset('storage/' . $staff->image);
-        }
-
-        return response()->json(['message' => 'Data staf berhasil diperbarui', 'data' => $staff]);
+        return response()->json(['message' => 'Data staf berhasil diperbarui', 'data' => new StaffResource($staff)]);
     }
 
     public function destroy(Staff $staff)

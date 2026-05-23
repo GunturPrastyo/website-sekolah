@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use App\Http\Resources\NewsResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,7 +12,7 @@ class NewsController extends Controller
     public function index()
     {
         $news = News::orderBy('created_at', 'desc')->get();
-        return response()->json(['data' => $news]);
+        return response()->json(['data' => NewsResource::collection($news)]);
     }
 
     public function store(Request $request)
@@ -30,7 +31,7 @@ class NewsController extends Controller
 
         $news = News::create($validated);
 
-        return response()->json(['message' => 'Berita berhasil ditambahkan', 'data' => $news], 201);
+        return response()->json(['message' => 'Berita berhasil ditambahkan', 'data' => new NewsResource($news)], 201);
     }
 
     public function update(Request $request, $id)
@@ -49,7 +50,7 @@ class NewsController extends Controller
         $validated['images'] = $this->handleBase64Images($validated['images'] ?? []);
         $news->update($validated);
 
-        return response()->json(['message' => 'Berita berhasil diperbarui', 'data' => $news]);
+        return response()->json(['message' => 'Berita berhasil diperbarui', 'data' => new NewsResource($news)]);
     }
 
     public function destroy($id)

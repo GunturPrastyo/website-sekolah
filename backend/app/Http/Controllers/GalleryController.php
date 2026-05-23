@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gallery;
+use App\Http\Resources\GalleryResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,14 +12,7 @@ class GalleryController extends Controller
     public function index()
     {
         $galleries = Gallery::orderBy('created_at', 'desc')->get();
-        
-        foreach($galleries as $gallery) {
-            if ($gallery->image && !str_starts_with($gallery->image, 'http') && !str_starts_with($gallery->image, 'data:image')) {
-                $gallery->image = asset('storage/' . $gallery->image);
-            }
-        }
-        
-        return response()->json(['data' => $galleries]);
+        return response()->json(['data' => GalleryResource::collection($galleries)]);
     }
 
     public function store(Request $request)
@@ -50,14 +44,10 @@ class GalleryController extends Controller
                 'likes' => 0
             ]);
 
-            if (!str_starts_with($gallery->image, 'http') && !str_starts_with($gallery->image, 'data:image')) {
-                $gallery->image = asset('storage/' . $gallery->image);
-            }
-
             $createdGalleries[] = $gallery;
         }
 
-        return response()->json(['data' => $createdGalleries], 201);
+        return response()->json(['data' => GalleryResource::collection($createdGalleries)], 201);
     }
 
     public function update(Request $request, Gallery $gallery)
@@ -100,10 +90,6 @@ class GalleryController extends Controller
                     'category' => $validatedData['category'],
                     'image' => $imagePath
                 ]);
-
-                if (!str_starts_with($gallery->image, 'http') && !str_starts_with($gallery->image, 'data:image')) {
-                    $gallery->image = asset('storage/' . $gallery->image);
-                }
                 
                 $createdGalleries[] = $gallery;
             } else {
@@ -114,15 +100,11 @@ class GalleryController extends Controller
                     'likes' => 0
                 ]);
                 
-                if (!str_starts_with($newGallery->image, 'http') && !str_starts_with($newGallery->image, 'data:image')) {
-                    $newGallery->image = asset('storage/' . $newGallery->image);
-                }
-                
                 $createdGalleries[] = $newGallery;
             }
         }
 
-        return response()->json(['data' => $createdGalleries]);
+        return response()->json(['data' => GalleryResource::collection($createdGalleries)]);
     }
 
     public function destroy(Gallery $gallery)

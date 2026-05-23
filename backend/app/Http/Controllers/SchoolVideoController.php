@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SchoolVideo;
+use App\Http\Resources\SchoolVideoResource;
 use Illuminate\Http\Request;
 
 class SchoolVideoController extends Controller
@@ -10,7 +11,7 @@ class SchoolVideoController extends Controller
     public function show()
     {
         $video = SchoolVideo::first();
-        return response()->json(['data' => $video]);
+        return response()->json(['data' => $video ? new SchoolVideoResource($video) : null]);
     }
 
     public function update(Request $request)
@@ -25,7 +26,7 @@ class SchoolVideoController extends Controller
 
         return response()->json([
             'message' => 'Video profil berhasil diperbarui', 
-            'data' => $video
+            'data' => new SchoolVideoResource($video)
         ]);
     }
 

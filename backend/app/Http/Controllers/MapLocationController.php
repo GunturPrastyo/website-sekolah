@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MapLocation;
+use App\Http\Resources\MapLocationResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,7 +12,7 @@ class MapLocationController extends Controller
     public function index()
     {
         $locations = MapLocation::all();
-        return response()->json(['data' => $locations]);
+        return response()->json(['data' => MapLocationResource::collection($locations)]);
     }
 
     public function store(Request $request)
@@ -27,7 +28,7 @@ class MapLocationController extends Controller
 
         $location = MapLocation::create($validated);
 
-        return response()->json(['message' => 'Lokasi berhasil disimpan', 'data' => $location], 201);
+        return response()->json(['message' => 'Lokasi berhasil disimpan', 'data' => new MapLocationResource($location)], 201);
     }
 
     public function update(Request $request, MapLocation $mapLocation)
@@ -43,7 +44,7 @@ class MapLocationController extends Controller
 
         $mapLocation->update($validated);
 
-        return response()->json(['message' => 'Lokasi berhasil diperbarui', 'data' => $mapLocation]);
+        return response()->json(['message' => 'Lokasi berhasil diperbarui', 'data' => new MapLocationResource($mapLocation)]);
     }
 
     public function destroy(MapLocation $mapLocation)

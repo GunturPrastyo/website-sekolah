@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PancasilaProfile;
+use App\Http\Resources\PancasilaProfileResource;
 use Illuminate\Http\Request;
 
 class PancasilaProfileController extends Controller
@@ -20,7 +21,7 @@ class PancasilaProfileController extends Controller
             ]]);
         }
         
-        return response()->json(['data' => $profile]);
+        return response()->json(['data' => new PancasilaProfileResource($profile)]);
     }
 
     public function update(Request $request)
@@ -41,7 +42,7 @@ class PancasilaProfileController extends Controller
 
         return response()->json([
             'message' => 'Profil Pelajar Pancasila berhasil diperbarui',
-            'data' => $profile
+            'data' => new PancasilaProfileResource($profile)
         ]);
     }
 }

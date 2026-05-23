@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Download;
+use App\Http\Resources\DownloadResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -10,21 +11,10 @@ class DownloadController extends Controller
 {
     public function index()
     {
-        $downloads = Download::orderBy('created_at', 'desc')->get()->map(function ($download) {
-            return [
-                'id' => $download->id,
-                'name' => $download->name,
-                'category' => $download->category,
-                'type' => $download->type,
-                'size' => $download->size,
-                'date' => $download->created_at->format('d M Y'),
-                'file_url' => asset('storage/' . $download->file_path),
-            ];
-        });
-
+        $downloads = Download::orderBy('created_at', 'desc')->get();
         return response()->json([
             'success' => true,
-            'data' => $downloads
+            'data' => DownloadResource::collection($downloads)
         ]);
     }
 
@@ -55,15 +45,7 @@ class DownloadController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => [
-                'id' => $download->id,
-                'name' => $download->name,
-                'category' => $download->category,
-                'type' => $download->type,
-                'size' => $download->size,
-                'date' => $download->created_at->format('d M Y'),
-                'file_url' => asset('storage/' . $download->file_path),
-            ]
+            'data' => new DownloadResource($download)
         ], 201);
     }
 
@@ -103,15 +85,7 @@ class DownloadController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => [
-                'id' => $download->id,
-                'name' => $download->name,
-                'category' => $download->category,
-                'type' => $download->type,
-                'size' => $download->size,
-                'date' => $download->created_at->format('d M Y'),
-                'file_url' => asset('storage/' . $download->file_path),
-            ]
+            'data' => new DownloadResource($download)
         ]);
     }
 

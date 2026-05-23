@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Student;
+use App\Http\Resources\StudentResource;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -14,7 +15,7 @@ class StudentController extends Controller
         
         return response()->json([
             'success' => true,
-            'data'    => $students
+            'data'    => StudentResource::collection($students)
         ]);
     }
 
@@ -35,7 +36,7 @@ class StudentController extends Controller
 
         return response()->json([
             'success' => true,
-            'data'    => $student
+            'data'    => new StudentResource($student)
         ], 201);
     }
 
@@ -56,7 +57,7 @@ class StudentController extends Controller
 
         return response()->json([
             'success' => true,
-            'data'    => $student
+            'data'    => new StudentResource($student)
         ]);
     }
 

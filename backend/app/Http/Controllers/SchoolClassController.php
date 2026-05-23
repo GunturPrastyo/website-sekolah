@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SchoolClass;
+use App\Http\Resources\SchoolClassResource;
 use Illuminate\Http\Request;
 
 class SchoolClassController extends Controller
@@ -11,14 +12,8 @@ class SchoolClassController extends Controller
     {
         // Mengambil data kelas beserta relasi detail wali kelasnya
         $classes = SchoolClass::with('homeroom')->get();
-        
-        // Untuk inisialisasi tambahan properti currentStudents (misalnya belum ada relasi ke tabel siswa)
-        $classes->transform(function ($item) {
-            $item->currentStudents = 0; // Anda dapat menggantinya dengan count() relasi students nanti
-            return $item;
-        });
 
-        return response()->json(['data' => $classes]);
+        return response()->json(['data' => SchoolClassResource::collection($classes)]);
     }
 
     public function store(Request $request)
@@ -33,7 +28,7 @@ class SchoolClassController extends Controller
 
         $schoolClass = SchoolClass::create($validated);
 
-        return response()->json(['message' => 'Data kelas berhasil ditambahkan', 'data' => $schoolClass], 201);
+        return response()->json(['message' => 'Data kelas berhasil ditambahkan', 'data' => new SchoolClassResource($schoolClass)], 201);
     }
 
     public function update(Request $request, $id)
@@ -48,7 +43,7 @@ class SchoolClassController extends Controller
         ]);
 
         $schoolClass->update($validated);
-        return response()->json(['message' => 'Data kelas berhasil diperbarui', 'data' => $schoolClass]);
+        return response()->json(['message' => 'Data kelas berhasil diperbarui', 'data' => new SchoolClassResource($schoolClass)]);
     }
 
     public function destroy($id)
