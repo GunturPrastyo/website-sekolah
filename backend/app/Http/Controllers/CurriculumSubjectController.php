@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\CurriculumSubject;
 use Illuminate\Http\Request;
+use App\Http\Resources\CurriculumSubjectResource;
 
 class CurriculumSubjectController extends Controller
 {
     public function index()
     {
         $subjects = CurriculumSubject::with('program')->get();
-        return response()->json(['data' => $subjects]);
+        return response()->json([
+            'data' => CurriculumSubjectResource::collection($subjects)
+        ]);
     }
 
     public function store(Request $request)
@@ -31,7 +34,7 @@ class CurriculumSubjectController extends Controller
 
         return response()->json([
             'message' => 'Data mata pelajaran berhasil ditambahkan',
-            'data' => $subject
+            'data' => new CurriculumSubjectResource($subject)
         ], 201);
     }
 
@@ -53,7 +56,10 @@ class CurriculumSubjectController extends Controller
         $subject->update($validated);
         $subject->load('program');
 
-        return response()->json(['message' => 'Data mata pelajaran berhasil diperbarui', 'data' => $subject]);
+        return response()->json([
+            'message' => 'Data mata pelajaran berhasil diperbarui',
+            'data' => new CurriculumSubjectResource($subject)
+        ]);
     }
 
     public function destroy($id)
