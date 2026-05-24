@@ -20,35 +20,38 @@ const triggerToast = (title, message, type = "success") => {
 
 // State Umum
 const generalSettings = ref({
-  namaSekolah: "SMAN 1 Nogosari",
-  deskripsi: "Pendidikan berkualitas berfokus pada pembentukan karakter",
-  alamat: "Nogosari, Kab. Boyolali, Jawa Tengah",
-  embedMap:
-    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.5103639967265!2d110.79379!3d-7.4682055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMjgnMDUuNSJTIDExMMKwNDcnMzcuNiJF!5e0!3m2!1sen!2sid!4v1620000000000!5m2!1sen!2sid",
-  email: "info@sman1nogosari.sch.id",
-  telepon: "(0276) 123456",
-  instagram: "@sman1nogosari",
-  youtube: "SMAN 1 Nogosari Official",
-  facebook: "SMAN 1 Nogosari",
-  x: "@sman1nogosari",
-  tiktok: "@sman1nogosari",
+  namaSekolah: "",
+  deskripsi: "",
+  alamat: "",
+  embedMap: "",
+  email: "",
+  telepon: "",
+  instagram: "",
+  youtube: "",
+  facebook: "",
+  x: "",
+  tiktok: "",
   logo: "",
   favicon: "",
 });
 
 // State Tampilan
 const appearanceSettings = ref({
-  headerBeranda: "/img/footage.webm",
-  headerSejarah:
-    "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?q=80&w=1600",
-  headerVisiMisi:
-    "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1600",
-  headerFasilitas:
-    "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=1600",
-  headerGuruStaf:
-    "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1600",
-  headerEkskul:
-    "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600",
+  headerBeranda: "",
+  headerSejarah: "",
+  headerVisiMisi: "",
+  headerFasilitas: "",
+  headerGuruStaf: "",
+  headerEkskul: "",
+  headerKurikulum: "",
+  headerAlumni: "",
+  headerProgramJurusan: "",
+  headerPrestasi: "",
+  headerPendaftaran: "",
+  headerBerita: "",
+  headerGaleri: "",
+  headerArtikel: "",
+  headerUnduhan: "",
 });
 
 const isMapUrlValid = computed(() => {
@@ -427,6 +430,87 @@ const saveSettings = async () => {
               <ImageUploader
                 v-model="appearanceSettings.headerEkskul"
                 label="Halaman Ekstrakurikuler"
+                containerClass="w-full aspect-[21/9]"
+              />
+            </div>
+            <div
+              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
+            >
+              <ImageUploader
+                v-model="appearanceSettings.headerKurikulum"
+                label="Halaman Kurikulum"
+                containerClass="w-full aspect-[21/9]"
+              />
+            </div>
+            <div
+              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
+            >
+              <ImageUploader
+                v-model="appearanceSettings.headerAlumni"
+                label="Halaman Alumni"
+                containerClass="w-full aspect-[21/9]"
+              />
+            </div>
+            <div
+              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
+            >
+              <ImageUploader
+                v-model="appearanceSettings.headerProgramJurusan"
+                label="Halaman Program Jurusan"
+                containerClass="w-full aspect-[21/9]"
+              />
+            </div>
+            <div
+              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
+            >
+              <ImageUploader
+                v-model="appearanceSettings.headerPrestasi"
+                label="Halaman Prestasi"
+                containerClass="w-full aspect-[21/9]"
+              />
+            </div>
+            <div
+              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
+            >
+              <ImageUploader
+                v-model="appearanceSettings.headerPendaftaran"
+                label="Halaman Pendaftaran"
+                containerClass="w-full aspect-[21/9]"
+              />
+            </div>
+            <div
+              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
+            >
+              <ImageUploader
+                v-model="appearanceSettings.headerBerita"
+                label="Halaman Berita"
+                containerClass="w-full aspect-[21/9]"
+              />
+            </div>
+            <div
+              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
+            >
+              <ImageUploader
+                v-model="appearanceSettings.headerGaleri"
+                label="Halaman Galeri"
+                containerClass="w-full aspect-[21/9]"
+              />
+            </div>
+            <div
+              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
+            >
+              <ImageUploader
+                v-model="appearanceSettings.headerArtikel"
+                label="Halaman Artikel"
+                containerClass="w-full aspect-[21/9]"
+              />
+            </div>
+            <div
+              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
+            >
+              <ImageUploader
+                v-model="appearanceSettings.headerUnduhan"
+                label="Halaman Unduhan"
                 containerClass="w-full aspect-[21/9]"
               />
             </div>

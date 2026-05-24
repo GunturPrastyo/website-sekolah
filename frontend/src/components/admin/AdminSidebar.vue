@@ -73,7 +73,6 @@ const menu = ref([
     children: [
       { name: "Ekstrakurikuler", link: "/admin/ekstrakurikuler" },
       { name: "Prestasi Siswa", link: "/admin/prestasi" },
-      { name: "Pelanggaran & Tatib", link: "/admin/pelanggaran" },
     ],
   },
   { name: "Agenda Sekolah", icon: markRaw(PhCalendar), link: "/admin/agenda" },
