@@ -24,7 +24,6 @@ class SettingController extends Controller
         $data = $request->all();
         
         // List key yang berpotensi menyimpan media (gambar/video) base64
-        $fileKeys = ['logo', 'favicon', 'headerBeranda', 'headerSejarah', 'headerVisiMisi', 'headerFasilitas', 'headerGuruStaf', 'headerEkskul'];
         $fileKeys = [
             'logo', 'favicon', 'headerBeranda', 'headerSejarah', 'headerVisiMisi', 
             'headerFasilitas', 'headerGuruStaf', 'headerEkskul', 'headerKurikulum',
