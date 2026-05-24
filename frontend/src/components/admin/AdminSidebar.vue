@@ -123,14 +123,14 @@ const handleLogout = () => {
 <template>
   <aside
     :class="props.isOpen ? 'translate-x-0' : '-translate-x-full'"
-    class="fixed inset-y-0 left-0 z-30 w-64 bg-white dark:bg-slate-800 shadow-lg transform transition-transform duration-300 ease-in-out"
+    class="fixed inset-y-0 left-0 z-30 w-64 bg-white dark:bg-slate-800 shadow-lg transform transition-transform duration-300 ease-in-out flex flex-col"
   >
     <div
-      class="flex items-center justify-center h-20 border-b border-gray-100 dark:border-slate-700"
+      class="flex items-center justify-center h-20 shrink-0 border-b border-gray-100 dark:border-slate-700"
     >
       <h1 class="text-xl font-bold text-blue-600 dark:text-blue-400">Admin Panel</h1>
     </div>
-    <nav class="mt-2 pb-20 flex-1 overflow-y-auto text-sm custom-scrollbar">
+    <nav class="py-2 flex-1 overflow-y-auto text-sm custom-scrollbar">
       <div v-for="(item, index) in menu" :key="index" class="mb-1">
         <!-- Category Heading -->
         <div
@@ -198,7 +198,9 @@ const handleLogout = () => {
         </router-link>
       </div>
     </nav>
-    <div class="absolute bottom-0 w-full border-t border-gray-100 dark:border-slate-700">
+    <div
+      class="w-full mt-auto shrink-0 border-t border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800"
+    >
       <button
         @click="handleLogout"
         class="w-full flex items-center px-6 py-4 text-gray-600 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-colors"
