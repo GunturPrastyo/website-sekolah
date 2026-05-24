@@ -38,7 +38,10 @@ const toggleDropdown = (menuName) => {
 };
 
 const menu = ref([
+  { heading: "Menu Utama" },
   { name: "Dashboard", icon: markRaw(PhHouse), link: "/admin/dashboard" },
+
+  { heading: "Manajemen Sekolah" },
   {
     name: "Profil Sekolah",
     icon: markRaw(PhBuildings),
@@ -75,6 +78,8 @@ const menu = ref([
       { name: "Prestasi Siswa", link: "/admin/prestasi" },
     ],
   },
+
+  { heading: "Informasi & Publikasi" },
   { name: "Agenda Sekolah", icon: markRaw(PhCalendar), link: "/admin/agenda" },
   { name: "Informasi PPDB", icon: markRaw(PhClipboardText), link: "/admin/info-ppdb" },
   {
@@ -88,6 +93,7 @@ const menu = ref([
     ],
   },
 
+  { heading: "Sistem & Pengaturan" },
   { name: "Pengguna Sistem", icon: markRaw(PhUsers), link: "/admin/pengguna" },
   { name: "Pengaturan Umum", icon: markRaw(PhGear), link: "/admin/pengaturan" },
 ]);
@@ -125,10 +131,18 @@ const handleLogout = () => {
     >
       <h1 class="text-xl font-bold text-blue-600 dark:text-blue-400">Admin Panel</h1>
     </div>
-    <nav class="mt-6 flex-1 overflow-y-auto text-sm">
-      <div v-for="item in menu" :key="item.name" class="mb-1">
+    <nav class="mt-2 pb-20 flex-1 overflow-y-auto text-sm custom-scrollbar">
+      <div v-for="(item, index) in menu" :key="index" class="mb-1">
+        <!-- Category Heading -->
+        <div
+          v-if="item.heading"
+          class="px-6 pt-4 pb-2 text-[11px] font-bold tracking-wider text-gray-400 dark:text-gray-500 uppercase"
+        >
+          {{ item.heading }}
+        </div>
+
         <!-- Item with children (dropdown) -->
-        <div v-if="item.children">
+        <div v-else-if="item.children">
           <button
             @click="toggleDropdown(item.name)"
             class="w-full flex items-center justify-between px-6 py-3 text-sm transition-colors border-l-4"
@@ -171,7 +185,7 @@ const handleLogout = () => {
         </div>
         <!-- Item without children (link) -->
         <router-link
-          v-else
+          v-else-if="item.link"
           :to="item.link"
           class="flex items-center px-6 py-3 border-l-4"
           :class="
@@ -196,3 +210,16 @@ const handleLogout = () => {
     </div>
   </aside>
 </template>
+
+<style scoped>
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 10px;
+}
+</style>
