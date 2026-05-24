@@ -1,7 +1,15 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import api from "@/api/index.js";
-import { PhGear, PhImage, PhFloppyDisk } from "@phosphor-icons/vue";
+import {
+  PhGear,
+  PhImage,
+  PhFloppyDisk,
+  PhHouse,
+  PhBuildings,
+  PhGraduationCap,
+  PhMegaphone,
+} from "@phosphor-icons/vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
@@ -367,152 +375,202 @@ const saveSettings = async () => {
       <div v-show="activeTab === 'tampilan'" class="space-y-8 animate-fade-in">
         <div>
           <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">
-            Page Header Halaman Publik
+            Pengaturan Header Halaman
           </h3>
           <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
-            Atur gambar banner/header untuk masing-masing halaman website utama.
+            Kelola gambar latar (banner) untuk setiap halaman pada website publik.
           </p>
 
-          <div
-            class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30 mb-6"
-          >
-            <ImageUploader
-              v-model="appearanceSettings.headerBeranda"
-              label="Banner Beranda Utama"
-              accept="image/*,video/mp4,video/webm"
-              containerClass="w-full aspect-[16/9] md:aspect-[21/9]"
-            />
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-              Mendukung format gambar (JPG/PNG) dan video (MP4/WebM).
-            </p>
+          <!-- Group: Beranda -->
+          <div class="mb-8">
+            <div
+              class="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200 dark:border-slate-700"
+            >
+              <PhHouse class="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <h4 class="font-semibold text-gray-800 dark:text-white">Halaman Utama</h4>
+            </div>
+            <div
+              class="bg-gray-50/50 dark:bg-slate-700/30 p-5 rounded-xl border border-gray-200 dark:border-slate-600"
+            >
+              <ImageUploader
+                v-model="appearanceSettings.headerBeranda"
+                label="Banner Beranda Utama"
+                accept="image/*,video/mp4,video/webm"
+                containerClass="w-full aspect-[21/9] md:aspect-[24/9]"
+              />
+              <p
+                class="text-xs text-gray-500 dark:text-gray-400 mt-3 flex items-center gap-1"
+              >
+                <span class="font-semibold text-blue-600 dark:text-blue-400">Info:</span>
+                Mendukung format gambar (JPG/PNG) dan video (MP4/WebM). Disarankan
+                resolusi lanskap lebar.
+              </p>
+            </div>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <!-- Group: Profil Sekolah -->
+          <div class="mb-8">
             <div
-              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
+              class="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200 dark:border-slate-700"
             >
-              <ImageUploader
-                v-model="appearanceSettings.headerSejarah"
-                label="Halaman Sejarah"
-                containerClass="w-full aspect-[21/9]"
-              />
+              <PhBuildings class="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <h4 class="font-semibold text-gray-800 dark:text-white">Profil Sekolah</h4>
             </div>
-            <div
-              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
-            >
-              <ImageUploader
-                v-model="appearanceSettings.headerVisiMisi"
-                label="Halaman Visi & Misi"
-                containerClass="w-full aspect-[21/9]"
-              />
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.headerSejarah"
+                  label="Sejarah"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.headerVisiMisi"
+                  label="Visi & Misi"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.headerFasilitas"
+                  label="Fasilitas"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.headerGuruStaf"
+                  label="Guru & Staf"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
             </div>
+          </div>
+
+          <!-- Group: Akademik & Kesiswaan -->
+          <div class="mb-8">
             <div
-              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
+              class="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200 dark:border-slate-700"
             >
-              <ImageUploader
-                v-model="appearanceSettings.headerFasilitas"
-                label="Halaman Fasilitas"
-                containerClass="w-full aspect-[21/9]"
-              />
+              <PhGraduationCap class="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <h4 class="font-semibold text-gray-800 dark:text-white">
+                Akademik & Kesiswaan
+              </h4>
             </div>
-            <div
-              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
-            >
-              <ImageUploader
-                v-model="appearanceSettings.headerGuruStaf"
-                label="Halaman Guru & Staf"
-                containerClass="w-full aspect-[21/9]"
-              />
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.headerKurikulum"
+                  label="Kurikulum"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.headerProgramJurusan"
+                  label="Program Jurusan"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.headerEkskul"
+                  label="Ekstrakurikuler"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.headerPrestasi"
+                  label="Prestasi Siswa"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.headerAlumni"
+                  label="Data Alumni"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
             </div>
+          </div>
+
+          <!-- Group: Publikasi & Media -->
+          <div class="mb-4">
             <div
-              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
+              class="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200 dark:border-slate-700"
             >
-              <ImageUploader
-                v-model="appearanceSettings.headerEkskul"
-                label="Halaman Ekstrakurikuler"
-                containerClass="w-full aspect-[21/9]"
-              />
+              <PhMegaphone class="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <h4 class="font-semibold text-gray-800 dark:text-white">
+                Publikasi & Media
+              </h4>
             </div>
-            <div
-              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
-            >
-              <ImageUploader
-                v-model="appearanceSettings.headerKurikulum"
-                label="Halaman Kurikulum"
-                containerClass="w-full aspect-[21/9]"
-              />
-            </div>
-            <div
-              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
-            >
-              <ImageUploader
-                v-model="appearanceSettings.headerAlumni"
-                label="Halaman Alumni"
-                containerClass="w-full aspect-[21/9]"
-              />
-            </div>
-            <div
-              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
-            >
-              <ImageUploader
-                v-model="appearanceSettings.headerProgramJurusan"
-                label="Halaman Program Jurusan"
-                containerClass="w-full aspect-[21/9]"
-              />
-            </div>
-            <div
-              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
-            >
-              <ImageUploader
-                v-model="appearanceSettings.headerPrestasi"
-                label="Halaman Prestasi"
-                containerClass="w-full aspect-[21/9]"
-              />
-            </div>
-            <div
-              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
-            >
-              <ImageUploader
-                v-model="appearanceSettings.headerPendaftaran"
-                label="Halaman Pendaftaran"
-                containerClass="w-full aspect-[21/9]"
-              />
-            </div>
-            <div
-              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
-            >
-              <ImageUploader
-                v-model="appearanceSettings.headerBerita"
-                label="Halaman Berita"
-                containerClass="w-full aspect-[21/9]"
-              />
-            </div>
-            <div
-              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
-            >
-              <ImageUploader
-                v-model="appearanceSettings.headerGaleri"
-                label="Halaman Galeri"
-                containerClass="w-full aspect-[21/9]"
-              />
-            </div>
-            <div
-              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
-            >
-              <ImageUploader
-                v-model="appearanceSettings.headerArtikel"
-                label="Halaman Artikel"
-                containerClass="w-full aspect-[21/9]"
-              />
-            </div>
-            <div
-              class="border border-gray-200 dark:border-slate-600 p-4 rounded-xl bg-gray-50/50 dark:bg-slate-700/30"
-            >
-              <ImageUploader
-                v-model="appearanceSettings.headerUnduhan"
-                label="Halaman Unduhan"
-                containerClass="w-full aspect-[21/9]"
-              />
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.headerPendaftaran"
+                  label="Info PPDB"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.headerBerita"
+                  label="Berita"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.headerArtikel"
+                  label="Artikel"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.headerGaleri"
+                  label="Galeri Foto & Video"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.headerUnduhan"
+                  label="Unduhan File"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
             </div>
           </div>
         </div>
