@@ -22,6 +22,8 @@ use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\PpdbInfoController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\VisitorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,10 +33,16 @@ Route::get('/ppdb-info', [PpdbInfoController::class, 'index']);
 // API Pengaturan Umum (Akses Publik untuk mengambil data konfigurasi dan tampilan)
 Route::get('/settings', [SettingController::class, 'index']);
 
+// API Tracking Pengunjung
+Route::post('/track-visitor', [VisitorController::class, 'track']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+    // API Dashboard
+    Route::get('/dashboard/stats', [DashboardController::class, 'getStats']);
 
     // API Profil Sekolah
     Route::get('/profil-sekolah', [SchoolProfileController::class, 'show']);

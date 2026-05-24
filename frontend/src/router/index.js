@@ -5,9 +5,11 @@ import Fasilitas from '@/views/FasilitasView.vue'
 import GuruStaf from '@/views/GuruStaf.vue'
 import Kurikulum from '@/views/KurikulumView.vue'
 import Alumni from '@/views/AlumniView.vue'
-import AdminLayout from '@/layouts/AdminLayout.vue' // Import the new AdminLayout
+import AdminLayout from '@/layouts/AdminLayout.vue' // Import the new AdminLayoutuse Illuminate\Database\Migrations\Migration;
+
 
 import PublicLayout from '@/layouts/PublicLayout.vue' // Import PublicLayout
+import api from '@/api/index.js' // Import instance api untuk tracking
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -247,6 +249,17 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     next(); // Untuk rute publik seperti beranda, fasiltias, dll
+  }
+});
+
+// Global after hook untuk tracking pengunjung
+router.afterEach((to, from) => {
+  // Catat kunjungan jika mengakses rute publik (bukan halaman admin)
+  if (!to.path.startsWith('/admin') && to.path !== '/login') {
+    // Panggil API secara asinkron tanpa perlu menunggu respon (fire and forget)
+    api.post('/api/track-visitor').catch(err => {
+      console.error('Gagal mencatat pengunjung:', err);
+    });
   }
 });
 

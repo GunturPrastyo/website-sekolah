@@ -1,5 +1,6 @@
 <script setup>
-import { ref, markRaw } from "vue";
+import { ref, markRaw, onMounted } from "vue";
+import api from "@/api/index.js";
 import {
   PhUsers,
   PhChalkboardTeacher,
@@ -11,34 +12,57 @@ import {
 
 const stats = ref([
   {
+    id: "total_siswa",
     title: "Total Siswa",
-    value: "1,123",
+    value: "0",
     icon: markRaw(PhUsers),
     color: "text-blue-500",
     bgColor: "bg-blue-100 dark:bg-blue-900/40",
   },
   {
+    id: "total_guru",
     title: "Total Guru",
-    value: "75",
+    value: "0",
     icon: markRaw(PhChalkboardTeacher),
     color: "text-emerald-500",
     bgColor: "bg-emerald-100 dark:bg-emerald-900/40",
   },
   {
+    id: "total_artikel",
     title: "Artikel Diterbitkan",
-    value: "48",
+    value: "0",
     icon: markRaw(PhNewspaper),
     color: "text-amber-500",
     bgColor: "bg-amber-100 dark:bg-amber-900/40",
   },
   {
+    id: "pengunjung_hari_ini",
     title: "Pengunjung Hari Ini",
-    value: "2,456",
+    value: "0",
     icon: markRaw(PhEye),
     color: "text-indigo-500",
     bgColor: "bg-indigo-100 dark:bg-indigo-900/40",
   },
 ]);
+
+const fetchDashboardStats = async () => {
+  try {
+    const response = await api.get("/api/dashboard/stats");
+    const data = response.data.data;
+
+    stats.value.forEach((stat) => {
+      if (data[stat.id] !== undefined) {
+        stat.value = data[stat.id].toLocaleString();
+      }
+    });
+  } catch (error) {
+    console.error("Gagal mengambil data statistik dashboard:", error);
+  }
+};
+
+onMounted(() => {
+  fetchDashboardStats();
+});
 </script>
 
 <template>
