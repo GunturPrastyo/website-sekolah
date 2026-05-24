@@ -21,7 +21,7 @@ use App\Http\Controllers\ExtracurricularController;
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\PpdbInfoController;
-use App\Http\Controllers\Api\SettingController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
