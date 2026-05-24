@@ -58,14 +58,19 @@ const triggerToast = (title, message, type = "success") => {
 
 const fetchData = async () => {
   try {
-    // Mengambil data secara paralel untuk profil dan sejarah
-    const [profileRes, timelineRes] = await Promise.all([
-      api.get("/api/profil-sekolah"),
-      api.get("/api/sejarah"),
-    ]);
-
-    if (profileRes.data?.data) schoolProfile.value = profileRes.data.data;
-    if (timelineRes.data?.data) timeline.value = timelineRes.data.data;
+    // Dipisah menggunakan try-catch individu agar jika salah satu API 404, yang lain tetap jalan
+    try {
+      const profileRes = await api.get("/api/profil-sekolah");
+      if (profileRes.data?.data) schoolProfile.value = profileRes.data.data;
+    } catch (err) {
+      console.warn("API profil-sekolah gagal dimuat atau belum tersedia (404).", err);
+    }
+    try {
+      const timelineRes = await api.get("/api/sejarah");
+      if (timelineRes.data?.data) timeline.value = timelineRes.data.data;
+    } catch (err) {
+      console.warn("API sejarah gagal dimuat atau belum tersedia (404).", err);
+    }
   } catch (error) {
     console.error("Gagal mengambil data dari API:", error);
     triggerToast("Gagal Memuat", "Tidak dapat memuat data dari server.", "error");

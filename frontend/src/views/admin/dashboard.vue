@@ -1,11 +1,11 @@
 <script setup>
 import { ref, markRaw } from "vue";
 import {
-  PhStudent,
+  PhUsers,
   PhChalkboardTeacher,
   PhEye,
   PhChartLine,
-  PhClockClockwise,
+  PhClock,
   PhNewspaper,
 } from "@phosphor-icons/vue";
 
@@ -13,7 +13,7 @@ const stats = ref([
   {
     title: "Total Siswa",
     value: "1,123",
-    icon: markRaw(PhStudent),
+    icon: markRaw(PhUsers),
     color: "text-blue-500",
     bgColor: "bg-blue-100 dark:bg-blue-900/40",
   },
@@ -167,7 +167,7 @@ const stats = ref([
       >
         <div class="flex items-center justify-between mb-6">
           <h3 class="font-bold text-gray-800 dark:text-white flex items-center text-lg">
-            <PhClockClockwise :size="20" class="mr-2 text-gray-500" />
+            <PhClock :size="20" class="mr-2 text-gray-500" />
             Aktivitas Terbaru
           </h3>
           <button

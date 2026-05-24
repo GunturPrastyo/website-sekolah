@@ -8,7 +8,6 @@ import {
   PhSignOut,
   PhCaretDown,
   PhBuildings,
-  PhChalkboard,
   PhMegaphone,
   PhClipboardText,
   PhDatabase,
