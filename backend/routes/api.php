@@ -24,6 +24,7 @@ use App\Http\Controllers\PpdbInfoController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\VisitorController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -131,4 +132,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API Pengaturan Umum (Akses Admin untuk menyimpan)
     Route::post('/settings', [SettingController::class, 'update']);
+
+    // API Manajemen Pengguna
+    Route::apiResource('users', UserController::class);
 });
