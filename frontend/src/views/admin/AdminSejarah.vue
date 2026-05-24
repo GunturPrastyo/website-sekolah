@@ -10,6 +10,8 @@ import {
   PhDotsSixVertical,
   PhMagnifyingGlass,
   PhX,
+  PhClockCounterClockwise,
+  PhBuildings,
 } from "@phosphor-icons/vue";
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
@@ -301,7 +303,10 @@ const filteredTimeline = computed(() => {
           Edit Profil
         </button>
       </div>
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div
+        v-if="schoolProfile.description || schoolProfile.npsn"
+        class="grid grid-cols-1 lg:grid-cols-3 gap-8"
+      >
         <div class="lg:col-span-2 space-y-4">
           <div>
             <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
@@ -360,6 +365,23 @@ const filteredTimeline = computed(() => {
             />
           </div>
         </div>
+      </div>
+      <div
+        v-else
+        class="py-12 mt-4 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
+      >
+        <div
+          class="mx-auto w-16 h-16 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-4"
+        >
+          <PhBuildings class="w-8 h-8 text-gray-400 dark:text-gray-500" />
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">
+          Belum Ada Data Profil Sekolah
+        </h3>
+        <p class="text-sm">
+          Silakan klik tombol "Edit Profil" untuk mulai melengkapi informasi singkat
+          sekolah.
+        </p>
       </div>
     </div>
 
@@ -719,12 +741,22 @@ const filteredTimeline = computed(() => {
         </div>
         <div
           v-if="filteredTimeline.length === 0"
-          class="text-center py-8 text-gray-500 dark:text-gray-400"
+          class="py-12 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
         >
+          <div
+            class="mx-auto w-16 h-16 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-4"
+          >
+            <PhClockCounterClockwise class="w-8 h-8 text-gray-400 dark:text-gray-500" />
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">
+            Belum Ada Entri Sejarah
+          </h3>
           <p v-if="searchQuery">
             Tidak ada entri yang cocok dengan pencarian "{{ searchQuery }}".
           </p>
-          <p v-else>Belum ada entri timeline.</p>
+          <p v-else class="text-sm">
+            Silakan tambahkan entri timeline baru untuk mulai melengkapi sejarah sekolah.
+          </p>
         </div>
       </div>
     </div>
