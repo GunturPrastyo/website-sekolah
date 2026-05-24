@@ -442,17 +442,25 @@ const removeBrosur = async () => {
             <PhPencilSimple class="w-4 h-4 mr-1.5" /> Edit
           </button>
         </div>
-        <ul class="space-y-4 flex-1">
+        <ul v-if="syarat.length > 0" class="space-y-4 flex-1">
           <li v-for="item in syarat" :key="item.id" class="flex items-start">
             <PhCheckCircle class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5" />
             <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{{
               item.text
             }}</span>
           </li>
-          <li v-if="syarat.length === 0" class="text-gray-500 text-sm italic">
-            Belum ada syarat pendaftaran.
-          </li>
         </ul>
+        <div
+          v-else
+          class="py-8 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl flex-1 flex flex-col items-center justify-center"
+        >
+          <div
+            class="mx-auto w-12 h-12 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-3"
+          >
+            <PhListChecks class="w-6 h-6 text-gray-400 dark:text-gray-500" />
+          </div>
+          <p class="text-sm font-medium">Belum ada syarat pendaftaran.</p>
+        </div>
       </div>
 
       <!-- Alur Pendaftaran -->
@@ -476,6 +484,7 @@ const removeBrosur = async () => {
           </button>
         </div>
         <div
+          v-if="alur.length > 0"
           class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-blue-200 before:via-blue-200 dark:before:via-slate-600 before:to-transparent"
         >
           <div
@@ -497,9 +506,17 @@ const removeBrosur = async () => {
               </p>
             </div>
           </div>
-          <div v-if="alur.length === 0" class="text-gray-500 text-sm italic ml-12">
-            Belum ada alur pendaftaran.
+        </div>
+        <div
+          v-else
+          class="py-8 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl flex-1 flex flex-col items-center justify-center"
+        >
+          <div
+            class="mx-auto w-12 h-12 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-3"
+          >
+            <PhGitMerge class="w-6 h-6 text-gray-400 dark:text-gray-500" />
           </div>
+          <p class="text-sm font-medium">Belum ada alur pendaftaran.</p>
         </div>
       </div>
 
@@ -523,7 +540,10 @@ const removeBrosur = async () => {
             <PhPencilSimple class="w-4 h-4 mr-1.5" /> Edit
           </button>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div
+          v-if="jalur.length > 0"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
           <div
             v-for="item in jalur"
             :key="item.id"
@@ -548,10 +568,15 @@ const removeBrosur = async () => {
           </div>
         </div>
         <div
-          v-if="jalur.length === 0"
-          class="text-gray-500 text-sm italic text-center py-4"
+          v-else
+          class="py-12 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
         >
-          Belum ada jalur pendaftaran.
+          <div
+            class="mx-auto w-16 h-16 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-4"
+          >
+            <PhSignpost class="w-8 h-8 text-gray-400 dark:text-gray-500" />
+          </div>
+          <p class="text-sm font-medium">Belum ada jalur pendaftaran.</p>
         </div>
       </div>
 
@@ -652,7 +677,7 @@ const removeBrosur = async () => {
             <PhPencilSimple class="w-4 h-4 mr-1.5" /> Edit
           </button>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div v-if="faqs.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div
             v-for="item in faqs"
             :key="item.id"
@@ -663,12 +688,17 @@ const removeBrosur = async () => {
               {{ item.a }}
             </p>
           </div>
+        </div>
+        <div
+          v-else
+          class="py-12 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
+        >
           <div
-            v-if="faqs.length === 0"
-            class="md:col-span-2 text-gray-500 text-sm italic text-center py-4"
+            class="mx-auto w-16 h-16 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-4"
           >
-            Belum ada data FAQ.
+            <PhQuestion class="w-8 h-8 text-gray-400 dark:text-gray-500" />
           </div>
+          <p class="text-sm font-medium">Belum ada data FAQ.</p>
         </div>
       </div>
     </div>
