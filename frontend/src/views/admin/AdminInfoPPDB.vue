@@ -336,7 +336,7 @@ const removeBrosur = async () => {
 
     <!-- Waktu Pembukaan & Countdown Banner -->
     <div
-      class="mb-8 bg-gradient-to-r from-blue-600 to-blue-800 p-6 rounded-2xl shadow-lg text-white flex flex-col lg:flex-row items-center justify-between gap-6 relative overflow-hidden"
+      class="mb-8 bg-gradient-to-r from-blue-600 to-blue-800 p-6 rounded-lg shadow-lg text-white flex flex-col lg:flex-row items-center justify-between gap-6 relative overflow-hidden"
     >
       <!-- Ornamen Dekorasi -->
       <div
@@ -350,7 +350,7 @@ const removeBrosur = async () => {
         class="flex flex-col items-center lg:items-start text-center lg:text-left z-10"
       >
         <h3
-          class="font-bold flex items-center text-lg uppercase tracking-wider text-blue-100 mb-2"
+          class="font-bold flex items-center text-lg uppercase tracking-wider text-white mb-2"
         >
           <PhCalendarBlank class="w-5 h-5 mr-2" /> Waktu Pembukaan PPDB
         </h3>
@@ -432,7 +432,7 @@ const removeBrosur = async () => {
           <h3
             class="text-xl font-semibold text-gray-800 dark:text-white flex items-center"
           >
-            <PhListChecks class="w-6 h-6 mr-2 text-blue-600" />
+            <PhListChecks class="w-6 h-6 mr-2 text-gray-800" />
             Syarat Pendaftaran
           </h3>
           <button
@@ -473,7 +473,7 @@ const removeBrosur = async () => {
           <h3
             class="text-xl font-semibold text-gray-800 dark:text-white flex items-center"
           >
-            <PhGitMerge class="w-6 h-6 mr-2 text-blue-600" />
+            <PhGitMerge class="w-6 h-6 mr-2 text-gray-800" />
             Alur Pendaftaran
           </h3>
           <button
@@ -530,7 +530,7 @@ const removeBrosur = async () => {
           <h3
             class="text-xl font-semibold text-gray-800 dark:text-white flex items-center"
           >
-            <PhSignpost class="w-6 h-6 mr-2 text-blue-600" />
+            <PhSignpost class="w-6 h-6 mr-2 text-gray-800" />
             Jalur Pendaftaran
           </h3>
           <button
@@ -590,7 +590,7 @@ const removeBrosur = async () => {
           <h3
             class="text-xl font-semibold text-gray-800 dark:text-white flex items-center"
           >
-            <PhFilePdf class="w-6 h-6 mr-2 text-red-600" />
+            <PhFilePdf class="w-6 h-6 mr-2 text-gray-800" />
             Brosur PPDB
           </h3>
         </div>
@@ -667,7 +667,7 @@ const removeBrosur = async () => {
           <h3
             class="text-xl font-semibold text-gray-800 dark:text-white flex items-center"
           >
-            <PhQuestion class="w-6 h-6 mr-2 text-blue-600" />
+            <PhQuestion class="w-6 h-6 mr-2 text-gray-800" />
             Pertanyaan Seputar PPDB (FAQ)
           </h3>
           <button
