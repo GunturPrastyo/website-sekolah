@@ -8,6 +8,7 @@ import {
   PhFloppyDisk,
   PhX,
   PhXCircle,
+  PhBuildings,
 } from "@phosphor-icons/vue";
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
@@ -304,9 +305,19 @@ const confirmDelete = async () => {
 
       <div
         v-if="facilities.length === 0"
-        class="py-20 text-center border-2 border-dashed rounded-lg dark:border-slate-700 bg-white dark:bg-slate-800"
+        class="py-16 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800"
       >
-        <p class="text-gray-500 dark:text-gray-400">Belum ada data fasilitas.</p>
+        <div
+          class="mx-auto w-16 h-16 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-4"
+        >
+          <PhBuildings class="w-8 h-8 text-gray-400 dark:text-gray-500" />
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">
+          Belum Ada Data Fasilitas
+        </h3>
+        <p class="text-sm">
+          Silakan tambahkan data kategori dan fasilitas unggulan sekolah.
+        </p>
       </div>
     </div>
 

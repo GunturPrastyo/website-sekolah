@@ -9,6 +9,9 @@ import {
   PhFloppyDisk,
   PhDotsSixVertical,
   PhX,
+  PhEye,
+  PhTarget,
+  PhMegaphone,
 } from "@phosphor-icons/vue";
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -175,10 +178,22 @@ const saveChanges = async () => {
             Visi Sekolah
           </h3>
           <p
+            v-if="visi"
             class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg italic border-l-4 border-blue-500 pl-4 py-2 bg-blue-50/50 dark:bg-blue-900/20 rounded-r-lg"
           >
-            "{{ visi || "Visi belum diatur." }}"
+            "{{ visi }}"
           </p>
+          <div
+            v-else
+            class="py-8 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
+          >
+            <div
+              class="mx-auto w-12 h-12 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-3"
+            >
+              <PhEye class="w-6 h-6 text-gray-400 dark:text-gray-500" />
+            </div>
+            <p class="text-sm font-medium">Visi sekolah belum diatur.</p>
+          </div>
         </div>
 
         <!-- Tampilan Misi -->
@@ -188,7 +203,7 @@ const saveChanges = async () => {
           <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
             Misi Sekolah
           </h3>
-          <ul class="space-y-4">
+          <ul v-if="misi && misi.length > 0" class="space-y-4">
             <li
               v-for="(item, index) in misi"
               :key="item.id || index"
@@ -205,10 +220,15 @@ const saveChanges = async () => {
             </li>
           </ul>
           <div
-            v-if="!misi || misi.length === 0"
-            class="text-gray-500 dark:text-gray-400 py-4 text-center"
+            v-else
+            class="py-8 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
           >
-            Belum ada data misi.
+            <div
+              class="mx-auto w-12 h-12 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-3"
+            >
+              <PhTarget class="w-6 h-6 text-gray-400 dark:text-gray-500" />
+            </div>
+            <p class="text-sm font-medium">Misi sekolah belum diatur.</p>
           </div>
         </div>
       </div>
@@ -222,9 +242,21 @@ const saveChanges = async () => {
             Sambutan Kepala Sekolah
           </h3>
           <div
+            v-if="sambutan"
             class="prose dark:prose-invert max-w-none text-sm text-gray-700 dark:text-gray-300 leading-relaxed editor-content-preview custom-scrollbar overflow-y-auto max-h-[600px] pr-2"
-            v-html="sambutan || '<p class=\'text-gray-500\'>Sambutan belum diatur.</p>'"
+            v-html="sambutan"
           ></div>
+          <div
+            v-else
+            class="py-12 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
+          >
+            <div
+              class="mx-auto w-16 h-16 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-4"
+            >
+              <PhMegaphone class="w-8 h-8 text-gray-400 dark:text-gray-500" />
+            </div>
+            <p class="text-sm font-medium">Sambutan kepala sekolah belum diatur.</p>
+          </div>
         </div>
       </div>
     </div>
