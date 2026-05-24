@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, markRaw } from "vue";
 import { useRouter } from "vue-router";
 import {
   PhMagnifyingGlass,
@@ -8,6 +8,36 @@ import {
   PhList,
   PhSun,
   PhMoon,
+  PhHouse,
+  PhClockCounterClockwise,
+  PhBuildings,
+  PhTarget,
+  PhMegaphone,
+  PhChalkboardTeacher,
+  PhChalkboard,
+  PhGraduationCap,
+  PhBriefcase,
+  PhMapPin,
+  PhBooks,
+  PhStar,
+  PhBookBookmark,
+  PhCalendar,
+  PhActivity,
+  PhTrophy,
+  PhCalendarCheck,
+  PhClipboardText,
+  PhHourglass,
+  PhListChecks,
+  PhSignpost,
+  PhQuestion,
+  PhNewspaper,
+  PhImages,
+  PhDownloadSimple,
+  PhCheckCircle,
+  PhUsers,
+  PhGear,
+  PhShareNetwork,
+  PhImageSquare,
 } from "@phosphor-icons/vue";
 
 const emit = defineEmits(["toggle-sidebar"]);
@@ -27,6 +57,7 @@ const adminMenus = [
     link: "/admin/dashboard",
     desc: "Ringkasan data & aktivitas sistem",
     keywords: ["home", "beranda", "statistik", "grafik pengunjung"],
+    icon: markRaw(PhHouse),
   },
 
   // Profil Sekolah
@@ -35,6 +66,7 @@ const adminMenus = [
     link: "/admin/sejarah",
     desc: "Manajemen profil, sejarah, & lini masa",
     keywords: ["sejarah", "lini masa", "timeline", "tahun berdiri"],
+    icon: markRaw(PhClockCounterClockwise),
   },
   {
     name: "Profil Singkat Sekolah",
@@ -42,12 +74,14 @@ const adminMenus = [
     desc: "NPSN, Akreditasi, Lokasi, Status, Foto Gedung",
     parent: "Sejarah",
     keywords: ["profil", "npsn", "akreditasi", "lokasi"],
+    icon: markRaw(PhBuildings),
   },
   {
     name: "Visi & Misi",
     link: "/admin/visi-misi",
     desc: "Manajemen visi & misi utama sekolah",
     keywords: ["visi", "misi", "tujuan"],
+    icon: markRaw(PhTarget),
   },
   {
     name: "Sambutan Kepala Sekolah",
@@ -55,12 +89,14 @@ const adminMenus = [
     desc: "Teks sambutan kepala sekolah",
     parent: "Visi & Misi",
     keywords: ["sambutan", "kepala sekolah", "kepsek", "pidato"],
+    icon: markRaw(PhMegaphone),
   },
   {
     name: "Fasilitas",
     link: "/admin/fasilitas",
     desc: "Manajemen fasilitas sekolah",
     keywords: ["fasilitas", "sarana", "prasarana", "gedung", "lab", "perpustakaan"],
+    icon: markRaw(PhBuildings),
   },
 
   // Master Data
@@ -69,24 +105,28 @@ const adminMenus = [
     link: "/admin/guru-staf",
     desc: "Manajemen tenaga pendidik & kependidikan",
     keywords: ["guru", "staf", "pegawai", "pendidik", "kependidikan", "nip", "jabatan"],
+    icon: markRaw(PhChalkboardTeacher),
   },
   {
     name: "Data Kelas",
     link: "/admin/data-kelas",
     desc: "Manajemen data kelas siswa",
     keywords: ["kelas", "rombel", "ruang"],
+    icon: markRaw(PhChalkboard),
   },
   {
     name: "Data Siswa",
     link: "/admin/data-siswa",
     desc: "Manajemen data peserta didik",
     keywords: ["siswa", "murid", "peserta didik", "nisn"],
+    icon: markRaw(PhGraduationCap),
   },
   {
     name: "Tracking Alumni",
     link: "/admin/data-alumni",
     desc: "Data status karir/kuliah lulusan",
     keywords: ["alumni", "lulusan", "tracer study", "kuliah", "kerja"],
+    icon: markRaw(PhBriefcase),
   },
   {
     name: "Peta Persebaran Alumni",
@@ -94,6 +134,7 @@ const adminMenus = [
     desc: "Titik lokasi kampus/instansi lulusan",
     parent: "Data Alumni",
     keywords: ["peta", "persebaran", "lokasi alumni", "kampus", "ptn", "universitas"],
+    icon: markRaw(PhMapPin),
   },
 
   // Akademik & Kesiswaan
@@ -102,6 +143,7 @@ const adminMenus = [
     link: "/admin/kurikulum",
     desc: "Manajemen silabus & mata pelajaran",
     keywords: ["kurikulum", "mata pelajaran", "mapel", "silabus"],
+    icon: markRaw(PhBooks),
   },
   {
     name: "Profil Pelajar Pancasila",
@@ -109,30 +151,35 @@ const adminMenus = [
     desc: "Manajemen pilar karakter pendidikan",
     parent: "Kurikulum",
     keywords: ["profil pelajar pancasila", "pancasila", "karakter", "pilar"],
+    icon: markRaw(PhStar),
   },
   {
     name: "Program Jurusan",
     link: "/admin/program-jurusan",
     desc: "Manajemen program jurusan",
     keywords: ["jurusan", "program", "peminatan", "ipa", "ips", "bahasa"],
+    icon: markRaw(PhBookBookmark),
   },
   {
     name: "Jadwal Pelajaran",
     link: "/admin/jadwal-pelajaran",
     desc: "Manajemen jadwal kelas",
     keywords: ["jadwal", "pelajaran", "roster"],
+    icon: markRaw(PhCalendar),
   },
   {
     name: "Ekstrakurikuler",
     link: "/admin/ekstrakurikuler",
     desc: "Manajemen ekstrakurikuler & klub",
     keywords: ["ekskul", "ekstrakurikuler", "klub", "kegiatan", "pramuka"],
+    icon: markRaw(PhActivity),
   },
   {
     name: "Prestasi Siswa",
     link: "/admin/prestasi",
     desc: "Manajemen pencapaian & penghargaan",
     keywords: ["prestasi", "penghargaan", "juara", "lomba", "piala"],
+    icon: markRaw(PhTrophy),
   },
 
   // Informasi & Publikasi
@@ -141,12 +188,14 @@ const adminMenus = [
     link: "/admin/agenda",
     desc: "Manajemen jadwal agenda & acara",
     keywords: ["agenda", "kalender", "kegiatan", "acara", "event"],
+    icon: markRaw(PhCalendarCheck),
   },
   {
     name: "Informasi PPDB",
     link: "/admin/info-ppdb",
     desc: "Manajemen pendaftaran siswa baru",
     keywords: ["ppdb", "pendaftaran", "siswa baru", "penerimaan"],
+    icon: markRaw(PhClipboardText),
   },
   {
     name: "Waktu Pembukaan PPDB",
@@ -154,6 +203,7 @@ const adminMenus = [
     desc: "Countdown/Waktu PPDB",
     parent: "Info PPDB",
     keywords: ["waktu", "pembukaan", "countdown", "jadwal ppdb"],
+    icon: markRaw(PhHourglass),
   },
   {
     name: "Syarat & Alur PPDB",
@@ -161,6 +211,7 @@ const adminMenus = [
     desc: "Syarat dan langkah daftar",
     parent: "Info PPDB",
     keywords: ["syarat", "alur", "langkah", "pendaftaran"],
+    icon: markRaw(PhListChecks),
   },
   {
     name: "Jalur Pendaftaran PPDB",
@@ -168,6 +219,7 @@ const adminMenus = [
     desc: "Kuota & jalur daftar",
     parent: "Info PPDB",
     keywords: ["jalur", "kuota", "zonasi", "prestasi", "afirmasi"],
+    icon: markRaw(PhSignpost),
   },
   {
     name: "FAQ & Brosur PPDB",
@@ -175,6 +227,7 @@ const adminMenus = [
     desc: "Pertanyaan umum & dokumen pendaftaran",
     parent: "Info PPDB",
     keywords: ["faq", "tanya jawab", "brosur", "dokumen"],
+    icon: markRaw(PhQuestion),
   },
 
   {
@@ -182,24 +235,28 @@ const adminMenus = [
     link: "/admin/berita",
     desc: "Manajemen publikasi berita",
     keywords: ["berita", "artikel", "pengumuman", "publikasi", "blog", "post"],
+    icon: markRaw(PhNewspaper),
   },
   {
     name: "Galeri Foto & Video",
     link: "/admin/galeri",
     desc: "Manajemen media publikasi",
     keywords: ["galeri", "foto", "video", "album", "dokumentasi"],
+    icon: markRaw(PhImages),
   },
   {
     name: "Unduhan File",
     link: "/admin/unduhan",
     desc: "Manajemen dokumen dan file publik",
     keywords: ["unduhan", "file", "download", "dokumen", "pdf"],
+    icon: markRaw(PhDownloadSimple),
   },
   {
     name: "Validasi Konten",
     link: "/admin/validasi-konten",
     desc: "Validasi konten menunggu persetujuan",
     keywords: ["validasi", "konten", "persetujuan", "approval", "draft"],
+    icon: markRaw(PhCheckCircle),
   },
 
   // Sistem & Pengaturan
@@ -208,6 +265,7 @@ const adminMenus = [
     link: "/admin/pengguna",
     desc: "Manajemen akses & pengguna sistem",
     keywords: ["pengguna", "user", "admin", "akun", "akses", "password", "role"],
+    icon: markRaw(PhUsers),
   },
   {
     name: "Pengaturan Umum",
@@ -226,6 +284,7 @@ const adminMenus = [
       "telepon",
       "email",
     ],
+    icon: markRaw(PhGear),
   },
   {
     name: "Sosial Media",
@@ -242,6 +301,7 @@ const adminMenus = [
       "twitter",
       "x",
     ],
+    icon: markRaw(PhShareNetwork),
   },
   {
     name: "Tampilan Banner / Header",
@@ -249,6 +309,7 @@ const adminMenus = [
     desc: "Gambar latar tiap halaman",
     parent: "Pengaturan Umum",
     keywords: ["tampilan", "banner", "header", "gambar latar", "background", "cover"],
+    icon: markRaw(PhImageSquare),
   },
 ];
 
@@ -392,36 +453,51 @@ const toggleDarkMode = () => {
                     : 'hover:bg-gray-50 dark:hover:bg-slate-700/50'
                 "
               >
-                <div
-                  class="text-sm font-semibold"
-                  :class="
-                    highlightedIndex === index
-                      ? 'text-blue-600 dark:text-blue-400'
-                      : 'text-gray-800 dark:text-gray-200'
-                  "
-                >
-                  {{ result.name }}
-                </div>
-                <div
-                  class="text-xs mt-0.5"
-                  :class="
-                    highlightedIndex === index
-                      ? 'text-blue-500 dark:text-blue-300'
-                      : 'text-gray-500 dark:text-gray-400'
-                  "
-                >
-                  <span
-                    v-if="result.parent"
-                    class="font-semibold"
+                <div class="flex items-center gap-3">
+                  <div
+                    class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg transition-colors"
                     :class="
                       highlightedIndex === index
-                        ? 'text-blue-600 dark:text-blue-400'
-                        : 'text-blue-500 dark:text-blue-400'
+                        ? 'bg-blue-100 dark:bg-slate-600 text-blue-600 dark:text-blue-400'
+                        : 'bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400'
                     "
                   >
-                    [{{ result.parent }}]
-                  </span>
-                  {{ result.desc }}
+                    <component v-if="result.icon" :is="result.icon" :size="18" />
+                    <PhMagnifyingGlass v-else :size="18" />
+                  </div>
+                  <div>
+                    <div
+                      class="text-sm font-semibold"
+                      :class="
+                        highlightedIndex === index
+                          ? 'text-blue-600 dark:text-blue-400'
+                          : 'text-gray-800 dark:text-gray-200'
+                      "
+                    >
+                      {{ result.name }}
+                    </div>
+                    <div
+                      class="text-xs mt-0.5 line-clamp-1"
+                      :class="
+                        highlightedIndex === index
+                          ? 'text-blue-500 dark:text-blue-300'
+                          : 'text-gray-500 dark:text-gray-400'
+                      "
+                    >
+                      <span
+                        v-if="result.parent"
+                        class="font-semibold mr-1"
+                        :class="
+                          highlightedIndex === index
+                            ? 'text-blue-600 dark:text-blue-400'
+                            : 'text-blue-500 dark:text-blue-400'
+                        "
+                      >
+                        [{{ result.parent }}]
+                      </span>
+                      {{ result.desc }}
+                    </div>
+                  </div>
                 </div>
               </button>
             </li>
