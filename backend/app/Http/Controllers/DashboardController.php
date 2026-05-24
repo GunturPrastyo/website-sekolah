@@ -25,12 +25,25 @@ class DashboardController extends Controller
         // Menghitung jumlah pengunjung unik hari ini
         $pengunjungHariIni = Visitor::whereDate('visited_date', Carbon::today())->count(); 
 
+        // Menyiapkan data chart pengunjung untuk 7 hari terakhir
+        $chartLabels = [];
+        $chartData = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::today()->subDays($i);
+            $chartLabels[] = $date->format('d M'); // Format misal: "18 May"
+            $chartData[] = Visitor::whereDate('visited_date', $date->toDateString())->count();
+        }
+
         return response()->json([
             'data' => [
                 'total_siswa' => $totalSiswa,
                 'total_guru' => $totalGuru,
                 'total_artikel' => $totalArtikel,
                 'pengunjung_hari_ini' => $pengunjungHariIni,
+                'chart' => [
+                    'labels' => $chartLabels,
+                    'data' => $chartData
+                ]
             ]
         ]);
     }

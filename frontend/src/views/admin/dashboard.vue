@@ -9,6 +9,27 @@ import {
   PhClock,
   PhNewspaper,
 } from "@phosphor-icons/vue";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Filler,
+} from "chart.js";
+import { Line } from "vue-chartjs";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Filler
+);
 
 const stats = ref([
   {
@@ -45,9 +66,62 @@ const stats = ref([
   },
 ]);
 
+const chartPeriod = ref("30_days");
+const isChartLoading = ref(false);
+
+const chartData = ref({
+  labels: [],
+  datasets: [
+    {
+      label: "Pengunjung",
+      backgroundColor: "rgba(37, 99, 235, 0.1)",
+      borderColor: "rgba(37, 99, 235, 1)",
+      borderWidth: 2,
+      pointBackgroundColor: "rgba(37, 99, 235, 1)",
+      pointBorderColor: "#fff",
+      pointHoverBackgroundColor: "#fff",
+      pointHoverBorderColor: "rgba(37, 99, 235, 1)",
+      fill: true,
+      tension: 0.4,
+      data: [],
+    },
+  ],
+});
+
+const chartOptions = ref({
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      display: false,
+    },
+    tooltip: {
+      mode: "index",
+      intersect: false,
+    },
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: {
+        precision: 0,
+      },
+      grid: {
+        color: "rgba(0, 0, 0, 0.05)",
+      },
+    },
+    x: {
+      grid: {
+        display: false,
+      },
+    },
+  },
+});
+
 const fetchDashboardStats = async () => {
+  isChartLoading.value = true;
   try {
-    const response = await api.get("/api/dashboard/stats");
+    const response = await api.get(`/api/dashboard/stats?period=${chartPeriod.value}`);
     const data = response.data.data;
 
     stats.value.forEach((stat) => {
@@ -55,8 +129,23 @@ const fetchDashboardStats = async () => {
         stat.value = data[stat.id].toLocaleString();
       }
     });
+
+    if (data.chart) {
+      chartData.value = {
+        ...chartData.value,
+        labels: data.chart.labels,
+        datasets: [
+          {
+            ...chartData.value.datasets[0],
+            data: data.chart.data,
+          },
+        ],
+      };
+    }
   } catch (error) {
     console.error("Gagal mengambil data statistik dashboard:", error);
+  } finally {
+    isChartLoading.value = false;
   }
 };
 
@@ -88,11 +177,6 @@ onMounted(() => {
           class="px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
         >
           Unduh Laporan
-        </button>
-        <button
-          class="px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 transition-colors shadow-sm"
-        >
-          Buat Pengumuman
         </button>
       </div>
     </div>
@@ -164,24 +248,34 @@ onMounted(() => {
             </p>
           </div>
           <select
+            v-model="chartPeriod"
+            @change="fetchDashboardStats"
             class="text-sm border-gray-200 dark:border-slate-700 rounded-lg bg-gray-50 dark:bg-slate-800 dark:text-gray-300 focus:ring-blue-500 focus:border-blue-500 py-2 pl-3 pr-8"
           >
-            <option>Bulan Ini</option>
-            <option>Bulan Lalu</option>
-            <option>Tahun Ini</option>
+            <option value="7_days">7 Hari Terakhir</option>
+            <option value="30_days">30 Hari Terakhir</option>
+            <option value="this_year">Tahun Ini</option>
           </select>
         </div>
 
         <div
-          class="flex-1 min-h-[300px] rounded-lg border border-dashed border-gray-200 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-800/50 flex flex-col items-center justify-center"
+          class="flex-1 min-h-[300px] w-full rounded-lg border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 flex flex-col justify-center relative"
         >
-          <PhChartLine :size="48" class="text-gray-300 dark:text-slate-600 mb-2" />
-          <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">
-            Grafik pengunjung akan tampil di sini
-          </p>
-          <p class="text-gray-400 dark:text-gray-500 text-xs mt-1">
-            Integrasikan dengan Google Analytics atau Chart.js
-          </p>
+          <div
+            v-if="isChartLoading"
+            class="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-slate-800/50 z-10"
+          >
+            <div
+              class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+            ></div>
+          </div>
+          <div class="h-full w-full p-2">
+            <Line
+              v-if="chartData.labels.length > 0"
+              :data="chartData"
+              :options="chartOptions"
+            />
+          </div>
         </div>
       </div>
 
