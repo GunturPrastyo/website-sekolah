@@ -14,6 +14,9 @@ import {
   PhGraduationCap,
   PhBooks,
   PhCalendar,
+  PhNewspaper,
+  PhImages,
+  PhPencilSimple,
 } from "@phosphor-icons/vue";
 import api from "@/api/index.js";
 
@@ -113,14 +116,12 @@ const menu = computed(() => {
     { name: "Dashboard", icon: markRaw(PhHouse), link: "/admin/dashboard" },
 
     { heading: "Informasi & Publikasi" },
+    { name: "Berita & Artikel", icon: markRaw(PhNewspaper), link: "/admin/berita" },
+    { name: "Galeri Foto & Video", icon: markRaw(PhImages), link: "/admin/galeri" },
     {
-      name: "Publikasi & Media",
-      icon: markRaw(PhMegaphone),
-      children: [
-        { name: "Berita & Artikel", link: "/admin/berita" },
-        { name: "Galeri Foto & Video", link: "/admin/galeri" },
-        { name: "Draft & Revisi", link: "/admin/draft-berita" },
-      ],
+      name: "Draft & Revisi",
+      icon: markRaw(PhPencilSimple),
+      link: "/admin/draft-berita",
     },
 
     { heading: "Sistem & Pengaturan" },
