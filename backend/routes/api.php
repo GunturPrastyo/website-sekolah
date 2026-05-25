@@ -25,6 +25,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\VisitorController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\CheckRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +46,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // API Dashboard
     Route::get('/dashboard/stats', [DashboardController::class, 'getStats']);
 
+    // Rute yang BISA diakses oleh admin biasa (Berita, Galeri, Pengaturan, Profil)
+    Route::apiResource('news', NewsController::class);
+    
+    // API Galeri
+    Route::get('/galleries', [GalleryController::class, 'index']);
+    Route::post('/galleries', [GalleryController::class, 'store']);
+    Route::put('/galleries/{gallery}', [GalleryController::class, 'update']);
+    Route::delete('/galleries/{gallery}', [GalleryController::class, 'destroy']);
+    Route::post('/galleries/bulk-delete', [GalleryController::class, 'bulkDelete']);
+
+  // Group untuk Rute yang HANYA BOLEH diakses oleh Super Admin
+  Route::middleware([CheckRole::class . ':super_admin'])->group(function () {
     // API Profil Sekolah
     Route::get('/profil-sekolah', [SchoolProfileController::class, 'show']);
     // Rute untuk update profil. Dikirim sebagai POST dari frontend dengan _method 'PUT' untuk menangani upload file.
@@ -78,22 +91,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // API Data Kelas
     Route::apiResource('school-classes', SchoolClassController::class);
 
-    // API Berita / Pengumuman
-    Route::apiResource('news', NewsController::class);
-
     // API Data Alumni
     Route::get('/alumnis/unassigned-students', [AlumniController::class, 'unassignedStudents']);
     Route::apiResource('/alumnis', AlumniController::class);
 
     // API Data Persebaran Peta Alumni
     Route::apiResource('/map-locations', MapLocationController::class);
-
-    // API Galeri
-    Route::get('/galleries', [GalleryController::class, 'index']);
-    Route::post('/galleries', [GalleryController::class, 'store']);
-    Route::put('/galleries/{gallery}', [GalleryController::class, 'update']);
-    Route::delete('/galleries/{gallery}', [GalleryController::class, 'destroy']);
-    Route::post('/galleries/bulk-delete', [GalleryController::class, 'bulkDelete']);
 
     // API Video Profil Sekolah
     Route::get('/school-video', [SchoolVideoController::class, 'show']);
@@ -135,4 +138,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API Manajemen Pengguna
     Route::apiResource('users', UserController::class);
+  });
 });

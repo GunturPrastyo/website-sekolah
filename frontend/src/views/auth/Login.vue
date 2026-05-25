@@ -44,9 +44,9 @@ const handleLogin = async () => {
       remember: form.value.remember,
     });
 
-    // 3. Opsional: Fetch data user untuk mengecek role
-    // const { data } = await api.get('/api/user');
-    // localStorage.setItem('user_role', data.role); // misalnya untuk mengecek 'superadmin' atau 'admin'
+    // 3. Fetch data user untuk mengecek role
+    const { data } = await api.get('/api/user');
+    localStorage.setItem('user_role', data.role); // Simpan role untuk validasi route
 
     // Simpan penanda bahwa pengguna sudah terautentikasi
     localStorage.setItem("isLoggedIn", "true");
