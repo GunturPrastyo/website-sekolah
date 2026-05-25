@@ -746,10 +746,25 @@ const getCategoryName = (id) => {
                 +{{ news.images?.length - 1 }} Foto
               </span>
             </div>
+            <!-- Status Badge -->
+            <div class="absolute top-3 left-3 flex flex-wrap gap-2">
+              <span v-if="news.status === 'pending'" class="bg-yellow-500/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded shadow-sm">
+                Menunggu Persetujuan
+              </span>
+              <span v-else-if="news.status === 'rejected'" class="bg-red-500/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded shadow-sm">
+                Ditolak
+              </span>
+              <span v-else-if="news.status === 'approved'" class="bg-green-500/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded shadow-sm">
+                Disetujui
+              </span>
+            </div>
           </div>
 
           <!-- Content Info -->
           <div class="p-5 flex flex-col flex-1">
+            <div v-if="news.status === 'rejected' && news.rejection_note" class="mb-3 p-3 bg-red-50 border border-red-100 rounded-lg text-xs text-red-600 dark:bg-red-900/20 dark:border-red-800/30 dark:text-red-400">
+              <span class="font-bold">Alasan Ditolak:</span> {{ news.rejection_note }}
+            </div>
             <h4
               class="font-bold text-gray-900 dark:text-white text-lg mb-2 leading-tight"
             >

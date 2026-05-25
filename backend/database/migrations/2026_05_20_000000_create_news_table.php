@@ -16,6 +16,9 @@ return new class extends Migration
             $table->longText('content');
             $table->string('tags')->nullable();
             $table->integer('views')->default(0);
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('status')->default('pending');
+            $table->text('rejection_note')->nullable();
             $table->timestamps();
         });
     }

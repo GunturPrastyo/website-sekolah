@@ -1,5 +1,5 @@
 <script setup>
-import { ref, markRaw, onMounted, watch } from "vue";
+import { ref, computed, markRaw, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import {
   PhHouse,
@@ -37,66 +37,95 @@ const toggleDropdown = (menuName) => {
   }
 };
 
-const menu = ref([
-  { heading: "Menu Utama" },
-  { name: "Dashboard", icon: markRaw(PhHouse), link: "/admin/dashboard" },
+const userRole = localStorage.getItem("user_role") || "admin";
 
-  { heading: "Manajemen Sekolah" },
-  {
-    name: "Profil Sekolah",
-    icon: markRaw(PhBuildings),
-    children: [
-      { name: "Sejarah", link: "/admin/sejarah" }, // Link ke halaman admin sejarah
-      { name: "Visi & Misi", link: "/admin/visi-misi" },
-      { name: "Fasilitas", link: "/admin/fasilitas" },
-    ],
-  },
-  {
-    name: "Data Master",
-    icon: markRaw(PhDatabase),
-    children: [
-      { name: "Data Guru & Staf", link: "/admin/guru-staf" },
-      { name: "Data Kelas", link: "/admin/data-kelas" },
-      { name: "Data Siswa", link: "/admin/data-siswa" },
-      { name: "Data Alumni", link: "/admin/data-alumni" },
-    ],
-  },
-  {
-    name: "Akademik",
-    icon: markRaw(PhBooks),
-    children: [
-      { name: "Kurikulum", link: "/admin/kurikulum" },
-      { name: "Program Jurusan", link: "/admin/program-jurusan" },
-      { name: "Jadwal Pelajaran", link: "/admin/jadwal-pelajaran" },
-    ],
-  },
-  {
-    name: "Kesiswaan",
-    icon: markRaw(PhGraduationCap),
-    children: [
-      { name: "Ekstrakurikuler", link: "/admin/ekstrakurikuler" },
-      { name: "Prestasi Siswa", link: "/admin/prestasi" },
-    ],
-  },
+const menu = computed(() => {
+  if (userRole === "super_admin") {
+    return [
+      { heading: "Menu Utama" },
+      { name: "Dashboard", icon: markRaw(PhHouse), link: "/admin/dashboard" },
 
-  { heading: "Informasi & Publikasi" },
-  { name: "Agenda Sekolah", icon: markRaw(PhCalendar), link: "/admin/agenda" },
-  { name: "Informasi PPDB", icon: markRaw(PhClipboardText), link: "/admin/info-ppdb" },
-  {
-    name: "Publikasi & Media",
-    icon: markRaw(PhMegaphone),
-    children: [
-      { name: "Berita & Artikel", link: "/admin/berita" },
-      { name: "Galeri Foto & Video", link: "/admin/galeri" },
-      { name: "Unduhan File", link: "/admin/unduhan" },
-      { name: "Validasi Konten", link: "/admin/validasi-konten" },
-    ],
-  },
+      { heading: "Manajemen Sekolah" },
+      {
+        name: "Profil Sekolah",
+        icon: markRaw(PhBuildings),
+        children: [
+          { name: "Sejarah", link: "/admin/sejarah" },
+          { name: "Visi & Misi", link: "/admin/visi-misi" },
+          { name: "Fasilitas", link: "/admin/fasilitas" },
+        ],
+      },
+      {
+        name: "Data Master",
+        icon: markRaw(PhDatabase),
+        children: [
+          { name: "Data Guru & Staf", link: "/admin/guru-staf" },
+          { name: "Data Kelas", link: "/admin/data-kelas" },
+          { name: "Data Siswa", link: "/admin/data-siswa" },
+          { name: "Data Alumni", link: "/admin/data-alumni" },
+        ],
+      },
+      {
+        name: "Akademik",
+        icon: markRaw(PhBooks),
+        children: [
+          { name: "Kurikulum", link: "/admin/kurikulum" },
+          { name: "Program Jurusan", link: "/admin/program-jurusan" },
+          { name: "Jadwal Pelajaran", link: "/admin/jadwal-pelajaran" },
+        ],
+      },
+      {
+        name: "Kesiswaan",
+        icon: markRaw(PhGraduationCap),
+        children: [
+          { name: "Ekstrakurikuler", link: "/admin/ekstrakurikuler" },
+          { name: "Prestasi Siswa", link: "/admin/prestasi" },
+        ],
+      },
 
-  { heading: "Sistem & Pengaturan" },
-  { name: "Pengguna Sistem", icon: markRaw(PhUsers), link: "/admin/pengguna" },
-  { name: "Pengaturan Umum", icon: markRaw(PhGear), link: "/admin/pengaturan" },
-]);
+      { heading: "Informasi & Publikasi" },
+      { name: "Agenda Sekolah", icon: markRaw(PhCalendar), link: "/admin/agenda" },
+      {
+        name: "Informasi PPDB",
+        icon: markRaw(PhClipboardText),
+        link: "/admin/info-ppdb",
+      },
+      {
+        name: "Publikasi & Media",
+        icon: markRaw(PhMegaphone),
+        children: [
+          { name: "Berita & Artikel", link: "/admin/berita" },
+          { name: "Galeri Foto & Video", link: "/admin/galeri" },
+          { name: "Unduhan File", link: "/admin/unduhan" },
+          { name: "Validasi Konten", link: "/admin/validasi-konten" },
+        ],
+      },
+
+      { heading: "Sistem & Pengaturan" },
+      { name: "Pengguna Sistem", icon: markRaw(PhUsers), link: "/admin/pengguna" },
+      { name: "Pengaturan Umum", icon: markRaw(PhGear), link: "/admin/pengaturan" },
+    ];
+  }
+
+  // Tampilan menu untuk role admin biasa (bukan super_admin)
+  return [
+    { heading: "Menu Utama" },
+    { name: "Dashboard", icon: markRaw(PhHouse), link: "/admin/dashboard" },
+
+    { heading: "Informasi & Publikasi" },
+    {
+      name: "Publikasi & Media",
+      icon: markRaw(PhMegaphone),
+      children: [
+        { name: "Berita & Artikel", link: "/admin/berita" },
+        { name: "Galeri Foto & Video", link: "/admin/galeri" },
+      ],
+    },
+
+    { heading: "Sistem & Pengaturan" },
+    { name: "Pengaturan Akun", icon: markRaw(PhGear), link: "/admin/pengaturan" },
+  ];
+});
 
 const checkActiveMenu = () => {
   for (const item of menu.value) {

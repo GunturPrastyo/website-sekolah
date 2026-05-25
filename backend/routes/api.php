@@ -138,5 +138,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API Manajemen Pengguna
     Route::apiResource('users', UserController::class);
+
+    // API Validasi Konten (Berita)
+    Route::get('/validasi-konten/berita', [NewsController::class, 'pendingNews']);
+    Route::put('/validasi-konten/berita/{news}/status', [NewsController::class, 'updateStatus']);
   });
 });

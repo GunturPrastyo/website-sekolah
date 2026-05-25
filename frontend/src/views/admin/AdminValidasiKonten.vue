@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import api from "@/api/index.js";
 import {
   PhCheckCircle,
   PhXCircle,
@@ -14,24 +15,7 @@ import ToastNotification from "@/components/admin/ToastNotification.vue";
 const activeTab = ref("berita");
 
 // Data dummy untuk Berita yang menunggu persetujuan
-const pendingBerita = ref([
-  {
-    id: 1,
-    title: "Siswa SMAN 1 Meraih Medali Emas OSN",
-    category: "Prestasi",
-    author: "Bapak Rudi (Admin Guru)",
-    date: "17 Mei 2026",
-    status: "pending",
-  },
-  {
-    id: 2,
-    title: "Kegiatan Pramuka Persami Berjalan Lancar",
-    category: "Kegiatan",
-    author: "Rizky (Admin Ekskul)",
-    date: "16 Mei 2026",
-    status: "pending",
-  },
-]);
+const pendingBerita = ref([]);
 
 // Data dummy untuk Galeri yang menunggu persetujuan
 const pendingGaleri = ref([
@@ -57,6 +41,19 @@ const rejectionNote = ref("");
 
 const isPreviewModalOpen = ref(false);
 const previewItem = ref(null);
+
+const fetchPendingBerita = async () => {
+  try {
+    const response = await api.get("/api/validasi-konten/berita");
+    pendingBerita.value = response.data.data || [];
+  } catch (error) {
+    console.error("Gagal mengambil data validasi berita:", error);
+  }
+};
+
+onMounted(() => {
+  fetchPendingBerita();
+});
 
 const openPreview = (item) => {
   previewItem.value = item;
@@ -88,19 +85,28 @@ const openConfirm = (type, item) => {
   }
 };
 
-const handleConfirm = () => {
+const handleConfirm = async () => {
   if (selectedItem.value) {
     const list = activeTab.value === "berita" ? pendingBerita : pendingGaleri;
     const index = list.value.findIndex((i) => i.id === selectedItem.value.id);
 
     if (index !== -1) {
       if (confirmActionType.value === "approve") {
-        list.value[index].status = "approved";
-        triggerToast(
-          "Berhasil Disetujui",
-          "Konten berhasil disetujui dan telah dipublikasikan.",
-          "success"
-        );
+        try {
+          if (activeTab.value === "berita") {
+            await api.put(`/api/validasi-konten/berita/${selectedItem.value.id}/status`, {
+              status: "approved",
+            });
+          }
+          list.value.splice(index, 1);
+          triggerToast(
+            "Berhasil Disetujui",
+            "Konten berhasil disetujui dan telah dipublikasikan.",
+            "success"
+          );
+        } catch (error) {
+          triggerToast("Gagal", "Terjadi kesalahan pada server", "error");
+        }
       }
     }
   }
@@ -113,20 +119,30 @@ const handleCancel = () => {
   selectedItem.value = null;
 };
 
-const handleReject = () => {
+const handleReject = async () => {
   if (selectedItem.value) {
     const list = activeTab.value === "berita" ? pendingBerita : pendingGaleri;
     const index = list.value.findIndex((i) => i.id === selectedItem.value.id);
 
     if (index !== -1) {
-      list.value[index].status = "rejected";
-      triggerToast(
-        "Konten Ditolak",
-        rejectionNote.value.trim()
-          ? `Konten dikembalikan dengan catatan: "${rejectionNote.value}"`
-          : "Konten telah ditolak dan dikembalikan.",
-        "error"
-      );
+      try {
+        if (activeTab.value === "berita") {
+          await api.put(`/api/validasi-konten/berita/${selectedItem.value.id}/status`, {
+            status: "rejected",
+            rejection_note: rejectionNote.value,
+          });
+        }
+        list.value.splice(index, 1);
+        triggerToast(
+          "Konten Ditolak",
+          rejectionNote.value.trim()
+            ? `Konten dikembalikan dengan catatan: "${rejectionNote.value}"`
+            : "Konten telah ditolak dan dikembalikan.",
+          "error"
+        );
+      } catch (error) {
+        triggerToast("Gagal", "Terjadi kesalahan pada server", "error");
+      }
     }
   }
   closeRejectModal();
@@ -274,12 +290,12 @@ const closeRejectModal = () => {
                 </span>
               </td>
               <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                {{ item.author }}
+                {{ item.author?.name || item.author || "Admin" }}
               </td>
               <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
                 <span
                   v-if="activeTab === 'berita'"
-                  class="px-2 py-1 bg-gray-100 dark:bg-slate-700 rounded text-xs"
+                  class="px-2 py-1 bg-gray-100 dark:bg-slate-700 rounded text-xs uppercase"
                   >{{ item.category }}</span
                 >
                 <span v-else class="text-xs font-medium"
@@ -287,7 +303,7 @@ const closeRejectModal = () => {
                 >
               </td>
               <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                {{ item.date }}
+                {{ item.date || new Date(item.created_at).toLocaleDateString("id-ID") }}
               </td>
               <td class="px-6 py-4 text-right">
                 <div class="flex items-center justify-end gap-2">

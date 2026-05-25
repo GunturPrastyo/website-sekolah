@@ -11,8 +11,15 @@ class NewsController extends Controller
 {
     public function index()
     {
-        $news = News::orderBy('created_at', 'desc')->get();
+        // Menambahkan relasi author agar nama penulis bisa ditampilkan di tabel/daftar
+        $news = News::with('author')->orderBy('created_at', 'desc')->get();
         return response()->json(['data' => NewsResource::collection($news)]);
+    }
+
+    public function show($id)
+    {
+        $news = News::with('author')->findOrFail($id);
+        return response()->json(['data' => new NewsResource($news)]);
     }
 
     public function store(Request $request)
@@ -28,6 +35,10 @@ class NewsController extends Controller
 
         $validated['images'] = $this->handleBase64Images($validated['images'] ?? []);
         $validated['views'] = 0;
+        $validated['user_id'] = auth()->id();
+        
+        // Super admin langsung approved, sedangkan admin biasa menunggu persetujuan
+        $validated['status'] = auth()->user()->role === 'super_admin' ? 'approved' : 'pending';
 
         $news = News::create($validated);
 
@@ -37,6 +48,11 @@ class NewsController extends Controller
     public function update(Request $request, $id)
     {
         $news = News::findOrFail($id);
+        
+        // Mencegah admin mengubah berita milik akun lain (Super admin bebas mengubah)
+        if (auth()->user()->role !== 'super_admin' && $news->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Anda tidak memiliki hak akses untuk mengubah berita ini.'], 403);
+        }
         
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -48,6 +64,13 @@ class NewsController extends Controller
         ]);
 
         $validated['images'] = $this->handleBase64Images($validated['images'] ?? []);
+        
+        // Jika admin biasa mengedit berita yang ditolak atau telah disetujui, kembalikan ke pending
+        if (auth()->user()->role !== 'super_admin') {
+            $validated['status'] = 'pending';
+            $validated['rejection_note'] = null;
+        }
+        
         $news->update($validated);
 
         return response()->json(['message' => 'Berita berhasil diperbarui', 'data' => new NewsResource($news)]);
@@ -56,8 +79,34 @@ class NewsController extends Controller
     public function destroy($id)
     {
         $news = News::findOrFail($id);
+
+        // Mencegah admin menghapus berita milik akun lain
+        if (auth()->user()->role !== 'super_admin' && $news->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Anda tidak memiliki hak akses untuk menghapus berita ini.'], 403);
+        }
+        
         $news->delete();
         return response()->json(['message' => 'Berita berhasil dihapus']);
+    }
+
+    public function pendingNews()
+    {
+        $news = News::with('author')->where('status', 'pending')->orderBy('created_at', 'desc')->get();
+        return response()->json(['data' => NewsResource::collection($news)]);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $news = News::findOrFail($id);
+        
+        $validated = $request->validate([
+            'status' => 'required|in:approved,rejected',
+            'rejection_note' => 'nullable|string'
+        ]);
+
+        $news->update($validated);
+
+        return response()->json(['message' => 'Status berita berhasil diperbarui', 'data' => new NewsResource($news)]);
     }
 
     private function handleBase64Images(array $images)
