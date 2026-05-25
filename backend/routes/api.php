@@ -38,6 +38,10 @@ Route::get('/settings', [SettingController::class, 'index']);
 // API Tracking Pengunjung
 Route::post('/track-visitor', [VisitorController::class, 'track']);
 
+// API Berita (Akses Publik)
+Route::get('/public-news', [NewsController::class, 'publicIndex']);
+Route::get('/public-news/{id}', [NewsController::class, 'publicShow']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -48,6 +52,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Rute yang BISA diakses oleh admin biasa (Berita, Galeri, Pengaturan, Profil)
     Route::apiResource('news', NewsController::class);
+    Route::get('/my-pending-news', [NewsController::class, 'myPendingNews']);
     
     // API Galeri
     Route::get('/galleries', [GalleryController::class, 'index']);

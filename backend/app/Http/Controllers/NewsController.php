@@ -11,9 +11,33 @@ class NewsController extends Controller
 {
     public function index()
     {
-        // Menambahkan relasi author agar nama penulis bisa ditampilkan di tabel/daftar
-        $news = News::with('author')->orderBy('created_at', 'desc')->get();
+        // Hanya tampilkan berita yang sudah disetujui di halaman utama Admin Berita
+        $news = News::with('author')->where('status', 'approved')->orderBy('created_at', 'desc')->get();
         return response()->json(['data' => NewsResource::collection($news)]);
+    }
+
+    public function myPendingNews()
+    {
+        // Mengambil berita yang pending/rejected milik user yang sedang login (Admin biasa)
+        $news = News::with('author')->where('user_id', auth()->id())
+            ->whereIn('status', ['pending', 'rejected'])
+            ->orderBy('created_at', 'desc')->get();
+        return response()->json(['data' => NewsResource::collection($news)]);
+    }
+
+    public function publicIndex()
+    {
+        // Hanya mengambil berita yang sudah disetujui (approved) untuk halaman publik
+        $news = News::with('author')->where('status', 'approved')->orderBy('created_at', 'desc')->get();
+        return response()->json(['data' => NewsResource::collection($news)]);
+    }
+
+    public function publicShow($id)
+    {
+        // Menampilkan detail berita publik hanya jika statusnya approved
+        $news = News::with('author')->where('status', 'approved')->findOrFail($id);
+        $news->increment('views'); // Update view count ketika dibaca dari halaman publik
+        return response()->json(['data' => new NewsResource($news)]);
     }
 
     public function show($id)

@@ -212,10 +212,18 @@ const addEntry = async () => {
 
   try {
     const response = await api.post("/api/news", form.value);
-    newsList.value.unshift(response.data.data);
+
+    if (response.data.data.status === "approved") {
+      newsList.value.unshift(response.data.data);
+    }
 
     isFormVisible.value = false;
-    triggerToast("Berhasil Ditambahkan", "Data berita baru telah ditambahkan ke sistem.");
+    triggerToast(
+      "Berhasil Ditambahkan",
+      response.data.data.status === "pending"
+        ? "Berita berhasil ditambahkan dan menunggu persetujuan (masuk ke Draft)."
+        : "Data berita baru telah ditambahkan ke sistem."
+    );
     resetForm();
   } catch (error) {
     triggerToast("Gagal", "Terjadi kesalahan saat menyimpan data", "error");
@@ -239,13 +247,22 @@ const saveEntry = async () => {
 
   try {
     const response = await api.put(`/api/news/${form.value.id}`, form.value);
-    const index = newsList.value.findIndex((s) => s.id === form.value.id);
-    if (index !== -1) {
-      newsList.value[index] = response.data.data;
+
+    if (response.data.data.status !== "approved") {
+      newsList.value = newsList.value.filter((s) => s.id !== form.value.id);
+      triggerToast(
+        "Perubahan Disimpan",
+        "Berita kembali ke status Draft/Pending karena telah diedit."
+      );
+    } else {
+      const index = newsList.value.findIndex((s) => s.id === form.value.id);
+      if (index !== -1) {
+        newsList.value[index] = response.data.data;
+      }
+      triggerToast("Perubahan Disimpan", "Data berita berhasil diperbarui.");
     }
 
     isFormVisible.value = false;
-    triggerToast("Perubahan Disimpan", "Data berita berhasil diperbarui.");
     resetForm();
   } catch (error) {
     triggerToast("Gagal", "Terjadi kesalahan saat memperbarui data", "error");
@@ -748,13 +765,22 @@ const getCategoryName = (id) => {
             </div>
             <!-- Status Badge -->
             <div class="absolute top-3 left-3 flex flex-wrap gap-2">
-              <span v-if="news.status === 'pending'" class="bg-yellow-500/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded shadow-sm">
+              <span
+                v-if="news.status === 'pending'"
+                class="bg-yellow-500/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded shadow-sm"
+              >
                 Menunggu Persetujuan
               </span>
-              <span v-else-if="news.status === 'rejected'" class="bg-red-500/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded shadow-sm">
+              <span
+                v-else-if="news.status === 'rejected'"
+                class="bg-red-500/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded shadow-sm"
+              >
                 Ditolak
               </span>
-              <span v-else-if="news.status === 'approved'" class="bg-green-500/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded shadow-sm">
+              <span
+                v-else-if="news.status === 'approved'"
+                class="bg-green-500/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded shadow-sm"
+              >
                 Disetujui
               </span>
             </div>
@@ -762,7 +788,10 @@ const getCategoryName = (id) => {
 
           <!-- Content Info -->
           <div class="p-5 flex flex-col flex-1">
-            <div v-if="news.status === 'rejected' && news.rejection_note" class="mb-3 p-3 bg-red-50 border border-red-100 rounded-lg text-xs text-red-600 dark:bg-red-900/20 dark:border-red-800/30 dark:text-red-400">
+            <div
+              v-if="news.status === 'rejected' && news.rejection_note"
+              class="mb-3 p-3 bg-red-50 border border-red-100 rounded-lg text-xs text-red-600 dark:bg-red-900/20 dark:border-red-800/30 dark:text-red-400"
+            >
               <span class="font-bold">Alasan Ditolak:</span> {{ news.rejection_note }}
             </div>
             <h4

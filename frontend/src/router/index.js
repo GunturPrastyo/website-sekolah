@@ -183,6 +183,11 @@ const router = createRouter({
           // Admin biasa diizinkan akses
         },
         {
+          path: 'draft-berita',
+          name: 'admin-draft-berita',
+          component: () => import('../views/admin/AdminDraftBerita.vue')
+        },
+        {
           path: 'galeri',
           name: 'admin-galeri',
           component: () => import('../views/admin/AdminGaleri.vue')

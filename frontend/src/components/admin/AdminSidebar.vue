@@ -119,6 +119,7 @@ const menu = computed(() => {
       children: [
         { name: "Berita & Artikel", link: "/admin/berita" },
         { name: "Galeri Foto & Video", link: "/admin/galeri" },
+        { name: "Draft & Revisi", link: "/admin/draft-berita" },
       ],
     },
 
