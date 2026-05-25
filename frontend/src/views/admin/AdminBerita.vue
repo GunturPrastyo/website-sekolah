@@ -42,6 +42,8 @@ const isEditing = ref(false);
 const isDeleteModalOpen = ref(false);
 const itemToDelete = ref(null);
 
+const currentUserId = ref(null);
+const currentUserRole = ref(localStorage.getItem("user_role") || "admin");
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
@@ -55,8 +57,14 @@ const fetchNews = async () => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   fetchNews();
+  try {
+    const { data } = await api.get("/api/user");
+    currentUserId.value = data.id;
+  } catch (error) {
+    console.error("Gagal mengambil data profil user", error);
+  }
 });
 
 const showNewCategoryInput = ref(false);
@@ -265,7 +273,11 @@ const saveEntry = async () => {
     isFormVisible.value = false;
     resetForm();
   } catch (error) {
-    triggerToast("Gagal", "Terjadi kesalahan saat memperbarui data", "error");
+    triggerToast(
+      "Gagal",
+      error.response?.data?.message || "Terjadi kesalahan saat memperbarui data",
+      "error"
+    );
   }
 };
 
@@ -287,7 +299,11 @@ const confirmDelete = async () => {
       itemToDelete.value = null;
       triggerToast("Data Dihapus", "Data berita berhasil dihapus dari sistem.", "info");
     } catch (error) {
-      triggerToast("Gagal", "Terjadi kesalahan saat menghapus data.", "error");
+      triggerToast(
+        "Gagal",
+        error.response?.data?.message || "Terjadi kesalahan saat menghapus data.",
+        "error"
+      );
     }
   }
   isDeleteModalOpen.value = false;
@@ -720,6 +736,10 @@ const getCategoryName = (id) => {
             class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-slate-800/90 p-1 rounded-lg border border-gray-100 dark:border-slate-700 z-10"
           >
             <button
+              v-if="
+                news.user_id === currentUserId ||
+                (news.author && news.author.id === currentUserId)
+              "
               @click="startEdit(news)"
               class="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-md"
               title="Edit"
@@ -727,6 +747,11 @@ const getCategoryName = (id) => {
               <PhPencilSimple class="w-4 h-4" />
             </button>
             <button
+              v-if="
+                news.user_id === currentUserId ||
+                (news.author && news.author.id === currentUserId) ||
+                currentUserRole === 'super_admin'
+              "
               @click="deleteEntry(news.id)"
               class="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-slate-700 rounded-md"
               title="Hapus"
@@ -761,27 +786,6 @@ const getCategoryName = (id) => {
                 class="bg-gray-900/80 backdrop-blur-sm px-2 py-1 text-white text-[10px] font-bold rounded flex items-center shadow-sm"
               >
                 +{{ news.images?.length - 1 }} Foto
-              </span>
-            </div>
-            <!-- Status Badge -->
-            <div class="absolute top-3 left-3 flex flex-wrap gap-2">
-              <span
-                v-if="news.status === 'pending'"
-                class="bg-yellow-500/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded shadow-sm"
-              >
-                Menunggu Persetujuan
-              </span>
-              <span
-                v-else-if="news.status === 'rejected'"
-                class="bg-red-500/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded shadow-sm"
-              >
-                Ditolak
-              </span>
-              <span
-                v-else-if="news.status === 'approved'"
-                class="bg-green-500/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded shadow-sm"
-              >
-                Disetujui
               </span>
             </div>
           </div>

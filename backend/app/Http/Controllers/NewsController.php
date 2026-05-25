@@ -73,8 +73,8 @@ class NewsController extends Controller
     {
         $news = News::findOrFail($id);
         
-        // Mencegah admin mengubah berita milik akun lain (Super admin bebas mengubah)
-        if (auth()->user()->role !== 'super_admin' && $news->user_id !== auth()->id()) {
+        // Mencegah SEMUA user (termasuk super admin) mengubah berita milik akun lain
+        if ($news->user_id !== auth()->id()) {
             return response()->json(['message' => 'Anda tidak memiliki hak akses untuk mengubah berita ini.'], 403);
         }
         
