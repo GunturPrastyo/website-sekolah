@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, markRaw } from "vue";
 import { useRouter } from "vue-router";
+import api from "@/api/index.js";
 import {
   PhMagnifyingGlass,
   PhBell,
@@ -409,6 +410,18 @@ const toggleDarkMode = () => {
     localStorage.setItem("color-theme", "light");
   }
 };
+
+const handleLogout = async () => {
+  try {
+    await api.post("/logout");
+  } catch (error) {
+    console.error("Gagal logout:", error);
+  } finally {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("user_role");
+    router.push("/login");
+  }
+};
 </script>
 
 <template>
@@ -550,6 +563,7 @@ const toggleDarkMode = () => {
           >
           <a
             href="#"
+            @click.prevent="handleLogout"
             class="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/50"
             >Keluar</a
           >

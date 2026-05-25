@@ -15,6 +15,7 @@ import {
   PhBooks,
   PhCalendar,
 } from "@phosphor-icons/vue";
+import api from "@/api/index.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -111,12 +112,18 @@ const checkActiveMenu = () => {
 onMounted(checkActiveMenu);
 watch(() => route.path, checkActiveMenu);
 
-const handleLogout = () => {
-  // Hapus status login dan data user lainnya dari localStorage jika ada
-  localStorage.removeItem("isLoggedIn");
-
-  // Kembalikan pengguna ke halaman login
-  router.push("/login");
+const handleLogout = async () => {
+  try {
+    await api.post("/logout");
+  } catch (error) {
+    console.error("Gagal logout:", error);
+  } finally {
+    // Hapus status login dan data user lainnya dari localStorage jika ada
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("user_role");
+    // Kembalikan pengguna ke halaman login
+    router.push("/login");
+  }
 };
 </script>
 
