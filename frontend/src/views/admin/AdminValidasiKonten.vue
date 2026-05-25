@@ -437,7 +437,7 @@ const closeRejectModal = () => {
           @click.stop
         >
           <div
-            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 shrink-0"
           >
             <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center">
               <PhEye class="w-6 h-6 mr-2 text-blue-600" />
@@ -451,34 +451,184 @@ const closeRejectModal = () => {
             </button>
           </div>
 
-          <div class="p-6 overflow-y-auto custom-scrollbar" v-if="previewItem">
-            <div class="mb-6">
-              <span
-                class="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400"
-                >{{ previewItem.category || "Galeri" }}</span
-              >
-              <h2 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">
-                {{ previewItem.title }}
-              </h2>
-              <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                Oleh: {{ previewItem.author }} &bull; {{ previewItem.date }}
-              </p>
-            </div>
+          <div
+            class="p-0 flex-1 overflow-y-auto custom-scrollbar relative bg-white dark:bg-slate-800"
+            v-if="previewItem"
+          >
+            <!-- Hero Image (Jika Ada) -->
             <div
-              class="bg-gray-100 dark:bg-slate-700/50 rounded-lg p-8 flex items-center justify-center border-2 border-dashed border-gray-200 dark:border-slate-600 min-h-[200px]"
+              v-if="previewItem.images && previewItem.images.length > 0"
+              class="relative w-full h-64 sm:h-80 bg-gray-100 dark:bg-slate-700 shrink-0"
             >
-              <p class="text-gray-500 dark:text-gray-400 text-center">
-                [Area Pratinjau Gambar/Isi Berita Lengkap]<br />
-                <span class="text-sm"
-                  >Di mode produksi, detail isi konten penuh akan ditampilkan di
-                  sini.</span
+              <img :src="previewItem.images[0]" class="w-full h-full object-cover" />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
+              ></div>
+              <div class="absolute bottom-0 left-0 p-6 sm:p-8 w-full">
+                <span
+                  class="inline-block px-3 py-1 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider rounded-full mb-3 shadow-sm"
                 >
-              </p>
+                  {{
+                    previewItem.category || (activeTab === "berita" ? "Berita" : "Galeri")
+                  }}
+                </span>
+                <h2
+                  class="text-2xl sm:text-3xl font-bold text-white leading-tight drop-shadow-md"
+                >
+                  {{ previewItem.title }}
+                </h2>
+              </div>
+            </div>
+
+            <!-- Area Konten -->
+            <div class="p-6 sm:p-8">
+              <!-- Info Header (Jika tidak ada gambar hero) -->
+              <div
+                v-if="!previewItem.images || previewItem.images.length === 0"
+                class="mb-6 border-b border-gray-100 dark:border-slate-700 pb-6"
+              >
+                <span
+                  class="inline-block px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wider rounded-full mb-3"
+                >
+                  {{
+                    previewItem.category || (activeTab === "berita" ? "Berita" : "Galeri")
+                  }}
+                </span>
+                <h2
+                  class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white leading-tight mb-4"
+                >
+                  {{ previewItem.title }}
+                </h2>
+                <div
+                  class="flex items-center text-sm text-gray-500 dark:text-gray-400 gap-3"
+                >
+                  <div
+                    class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-700 dark:text-blue-300 font-bold shrink-0"
+                  >
+                    {{
+                      (previewItem.author?.name || previewItem.author || "A")
+                        .charAt(0)
+                        .toUpperCase()
+                    }}
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="font-medium text-gray-900 dark:text-white"
+                      >Ditulis oleh
+                      {{
+                        previewItem.author?.name || previewItem.author || "Admin"
+                      }}</span
+                    >
+                    <span class="text-xs">{{
+                      previewItem.date ||
+                      new Date(
+                        previewItem.created_at || Date.now()
+                      ).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Info Penulis (Jika hero image ada) -->
+              <div
+                v-else
+                class="flex items-center text-sm text-gray-500 dark:text-gray-400 gap-3 mb-8 border-b border-gray-100 dark:border-slate-700 pb-6"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-700 dark:text-blue-300 font-bold shrink-0 shadow-sm border border-blue-200 dark:border-blue-800/50"
+                >
+                  {{
+                    (previewItem.author?.name || previewItem.author || "A")
+                      .charAt(0)
+                      .toUpperCase()
+                  }}
+                </div>
+                <div class="flex flex-col">
+                  <span class="font-medium text-gray-900 dark:text-white"
+                    >Ditulis oleh
+                    {{ previewItem.author?.name || previewItem.author || "Admin" }}</span
+                  >
+                  <span class="text-xs">{{
+                    previewItem.date ||
+                    new Date(
+                      previewItem.created_at || Date.now()
+                    ).toLocaleDateString("id-ID", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })
+                  }}</span>
+                </div>
+              </div>
+
+              <!-- Konten Berita -->
+              <div
+                v-if="activeTab === 'berita'"
+                class="text-gray-700 dark:text-gray-300 leading-relaxed space-y-4"
+              >
+                <div
+                  v-if="previewItem.content"
+                  v-html="previewItem.content"
+                  class="content-preview"
+                ></div>
+                <div
+                  v-else
+                  class="py-12 text-center text-gray-400 italic border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
+                >
+                  Tidak ada detail isi konten yang dilampirkan.
+                </div>
+
+                <div
+                  v-if="previewItem.tags"
+                  class="mt-8 pt-6 border-t border-gray-100 dark:border-slate-700 flex flex-wrap gap-2"
+                >
+                  <span
+                    v-for="tag in typeof previewItem.tags === 'string'
+                      ? previewItem.tags.split(',')
+                      : previewItem.tags"
+                    :key="tag"
+                    class="px-3 py-1.5 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 text-xs font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors cursor-default"
+                  >
+                    #{{ tag.trim() }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Konten Galeri -->
+              <div v-if="activeTab === 'galeri'">
+                <div
+                  v-if="previewItem.images && previewItem.images.length > 1"
+                  class="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 mt-2"
+                >
+                  <div
+                    v-for="(img, idx) in previewItem.images.slice(1)"
+                    :key="idx"
+                    class="aspect-square rounded-xl overflow-hidden bg-gray-100 dark:bg-slate-700 shadow-sm relative group cursor-pointer"
+                  >
+                    <img
+                      :src="img"
+                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div
+                      class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"
+                    ></div>
+                  </div>
+                </div>
+                <div
+                  v-else-if="!previewItem.images || previewItem.images.length <= 1"
+                  class="py-12 text-center text-gray-400 italic border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
+                >
+                  Tidak ada foto tambahan di galeri ini.
+                </div>
+              </div>
             </div>
           </div>
 
           <div
-            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3 shrink-0"
           >
             <button
               @click="closePreview"
@@ -510,3 +660,35 @@ const closeRejectModal = () => {
     />
   </main>
 </template>
+
+<style scoped>
+/* Basic styling untuk v-html content supaya teks rapi tanpa harus menginstall Tailwind Typography */
+:deep(.content-preview p) {
+  margin-bottom: 1rem;
+}
+:deep(.content-preview h1),
+:deep(.content-preview h2),
+:deep(.content-preview h3) {
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: inherit;
+}
+:deep(.content-preview ul) {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+:deep(.content-preview ol) {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+:deep(.content-preview img) {
+  border-radius: 0.5rem;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+</style>
