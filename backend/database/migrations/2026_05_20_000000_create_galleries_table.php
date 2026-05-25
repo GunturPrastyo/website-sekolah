@@ -14,6 +14,9 @@ return new class extends Migration
             $table->string('category');
             $table->string('image');
             $table->integer('likes')->default(0);
+            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
+            $table->string('status')->default('pending');
+            $table->text('rejection_note')->nullable();
             $table->timestamps();
         });
     }

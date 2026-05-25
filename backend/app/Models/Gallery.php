@@ -14,5 +14,13 @@ class Gallery extends Model
         'category',
         'image',
         'likes',
+        'status',
+        'user_id',
+        'rejection_note',
     ];
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

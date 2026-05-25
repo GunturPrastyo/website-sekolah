@@ -11,7 +11,31 @@ class GalleryController extends Controller
 {
     public function index()
     {
-        $galleries = Gallery::orderBy('created_at', 'desc')->get();
+        // Hanya tampilkan galeri yang sudah disetujui di halaman utama Admin Galeri
+        $galleries = Gallery::with('author')->where('status', 'approved')->orderBy('created_at', 'desc')->get();
+        return response()->json(['data' => GalleryResource::collection($galleries)]);
+    }
+
+    public function publicIndex()
+    {
+        // Untuk halaman publik
+        $galleries = Gallery::with('author')->where('status', 'approved')->orderBy('created_at', 'desc')->get();
+        return response()->json(['data' => GalleryResource::collection($galleries)]);
+    }
+
+    public function myPendingGalleries()
+    {
+        // Mengambil galeri yang pending/rejected milik user yang sedang login (Admin biasa)
+        $galleries = Gallery::with('author')->where('user_id', auth()->id())
+            ->whereIn('status', ['pending', 'rejected'])
+            ->orderBy('created_at', 'desc')->get();
+        return response()->json(['data' => GalleryResource::collection($galleries)]);
+    }
+
+    public function pendingGalleries()
+    {
+        // Galeri pending yang butuh di-approve oleh Super Admin
+        $galleries = Gallery::with('author')->where('status', 'pending')->orderBy('created_at', 'desc')->get();
         return response()->json(['data' => GalleryResource::collection($galleries)]);
     }
 
@@ -25,6 +49,9 @@ class GalleryController extends Controller
         ]);
 
         $createdGalleries = [];
+        
+        $userId = auth()->id();
+        $status = auth()->user()->role === 'super_admin' ? 'approved' : 'pending';
 
         foreach ($validatedData['images'] as $imgData) {
             $imagePath = $imgData;
@@ -41,7 +68,9 @@ class GalleryController extends Controller
                 'title' => $validatedData['title'],
                 'category' => $validatedData['category'],
                 'image' => $imagePath,
-                'likes' => 0
+                'likes' => 0,
+                'status' => $status,
+                'user_id' => $userId
             ]);
 
             $createdGalleries[] = $gallery;
@@ -52,12 +81,26 @@ class GalleryController extends Controller
 
     public function update(Request $request, Gallery $gallery)
     {
+        // Mencegah admin menghapus/mengubah galeri milik akun lain (kecuali super_admin)
+        if ($gallery->user_id !== auth()->id() && auth()->user()->role !== 'super_admin') {
+            return response()->json(['message' => 'Anda tidak memiliki hak akses untuk mengubah galeri ini.'], 403);
+        }
+        
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'category' => 'required|string|max:255',
             'images' => 'required|array|min:1',
             'images.*' => 'required|string',
         ]);
+
+        $status = $gallery->status;
+        $rejectionNote = $gallery->rejection_note;
+        
+        // Jika admin biasa mengedit galeri yang ditolak atau telah disetujui, kembalikan ke pending
+        if (auth()->user()->role !== 'super_admin') {
+            $status = 'pending';
+            $rejectionNote = null;
+        }
 
         $createdGalleries = [];
 
@@ -88,7 +131,9 @@ class GalleryController extends Controller
                 $gallery->update([
                     'title' => $validatedData['title'],
                     'category' => $validatedData['category'],
-                    'image' => $imagePath
+                    'image' => $imagePath,
+                    'status' => $status,
+                    'rejection_note' => $rejectionNote
                 ]);
                 
                 $createdGalleries[] = $gallery;
@@ -97,7 +142,9 @@ class GalleryController extends Controller
                     'title' => $validatedData['title'],
                     'category' => $validatedData['category'],
                     'image' => $imagePath,
-                    'likes' => 0
+                    'likes' => 0,
+                    'status' => $status,
+                    'user_id' => auth()->id()
                 ]);
                 
                 $createdGalleries[] = $newGallery;
@@ -109,6 +156,11 @@ class GalleryController extends Controller
 
     public function destroy(Gallery $gallery)
     {
+        // Mencegah admin menghapus galeri milik akun lain
+        if (auth()->user()->role !== 'super_admin' && $gallery->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Anda tidak memiliki hak akses untuk menghapus galeri ini.'], 403);
+        }
+
         if ($gallery->image && !str_starts_with($gallery->image, 'http')) {
             Storage::disk('public')->delete($gallery->image);
         }
@@ -127,6 +179,11 @@ class GalleryController extends Controller
         $galleries = Gallery::whereIn('id', $validated['ids'])->get();
 
         foreach ($galleries as $gallery) {
+            // Melewati galeri yang bukan miliknya untuk Admin biasa
+            if (auth()->user()->role !== 'super_admin' && $gallery->user_id !== auth()->id()) {
+                continue;
+            }
+
             if ($gallery->image && !str_starts_with($gallery->image, 'http')) {
                 Storage::disk('public')->delete($gallery->image);
             }
@@ -134,5 +191,19 @@ class GalleryController extends Controller
         }
 
         return response()->json(['message' => 'Galleries deleted successfully']);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $gallery = Gallery::findOrFail($id);
+        
+        $validated = $request->validate([
+            'status' => 'required|in:approved,rejected',
+            'rejection_note' => 'nullable|string'
+        ]);
+
+        $gallery->update($validated);
+
+        return response()->json(['message' => 'Status galeri berhasil diperbarui', 'data' => new GalleryResource($gallery)]);
     }
 }
