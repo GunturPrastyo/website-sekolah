@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed, onBeforeUnmount } from "vue";
 import api from "@/api/index.js";
 import {
   PhCheckCircle,
@@ -36,6 +36,66 @@ const previewItem = ref(null);
 const selectedGalleries = ref([]);
 const isBulkAction = ref(false);
 
+// Filter dan Lazy Loading untuk Galeri
+const selectedCategory = ref("Semua");
+const itemsPerPage = 8;
+const visibleCount = ref(itemsPerPage);
+const isLoadingMore = ref(false);
+
+const observerTarget = ref(null);
+let observer = null;
+
+const galleryCategories = computed(() => {
+  const cats = new Set(pendingGaleri.value.map((item) => item.category));
+  return Array.from(cats).sort();
+});
+
+const filteredGaleri = computed(() => {
+  if (selectedCategory.value === "Semua") return pendingGaleri.value;
+  return pendingGaleri.value.filter((item) => item.category === selectedCategory.value);
+});
+
+const visibleGaleri = computed(() => {
+  return filteredGaleri.value.slice(0, visibleCount.value);
+});
+
+const loadMore = () => {
+  if (isLoadingMore.value) return;
+  isLoadingMore.value = true;
+
+  // Jeda buatan (500ms) untuk memberikan transisi halus seperti sedang memuat data
+  setTimeout(() => {
+    visibleCount.value += itemsPerPage;
+    isLoadingMore.value = false;
+  }, 500);
+};
+
+const setupObserver = () => {
+  if (observer) observer.disconnect();
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting && visibleCount.value < filteredGaleri.value.length) {
+        loadMore();
+      }
+    },
+    { rootMargin: "0px 0px 150px 0px" }
+  ); // Terpicu 150px sebelum benar-benar mencapai bawah
+
+  if (observerTarget.value) {
+    observer.observe(observerTarget.value);
+  }
+};
+
+watch(selectedCategory, () => {
+  visibleCount.value = itemsPerPage;
+  selectedGalleries.value = [];
+});
+
+watch(observerTarget, (newTarget) => {
+  if (newTarget) setupObserver();
+  else if (observer) observer.disconnect();
+});
+
 const fetchPendingBerita = async () => {
   try {
     const response = await api.get("/api/validasi-konten/berita");
@@ -63,6 +123,10 @@ onMounted(() => {
   fetchPendingGalleries();
 });
 
+onBeforeUnmount(() => {
+  if (observer) observer.disconnect();
+});
+
 const openPreview = (item) => {
   previewItem.value = item;
   isPreviewModalOpen.value = true;
@@ -83,12 +147,12 @@ const triggerToast = (title, message, type = "success") => {
 
 const selectAllGalleries = () => {
   if (
-    selectedGalleries.value.length === pendingGaleri.value.length &&
-    pendingGaleri.value.length > 0
+    selectedGalleries.value.length === filteredGaleri.value.length &&
+    filteredGaleri.value.length > 0
   ) {
     selectedGalleries.value = [];
   } else {
-    selectedGalleries.value = pendingGaleri.value.map((g) => g.id);
+    selectedGalleries.value = filteredGaleri.value.map((g) => g.id);
   }
 };
 
@@ -416,9 +480,40 @@ const closeRejectModal = () => {
 
     <!-- Grid Galeri -->
     <div v-else>
+      <!-- Filter Kategori -->
+      <div
+        v-if="pendingGaleri.length > 0 && galleryCategories.length > 1"
+        class="flex flex-wrap gap-2 mb-4"
+      >
+        <button
+          @click="selectedCategory = 'Semua'"
+          class="px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors border"
+          :class="
+            selectedCategory === 'Semua'
+              ? 'bg-blue-600 text-white border-blue-600'
+              : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-700 hover:text-blue-600'
+          "
+        >
+          Semua
+        </button>
+        <button
+          v-for="cat in galleryCategories"
+          :key="cat"
+          @click="selectedCategory = cat"
+          class="px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors border"
+          :class="
+            selectedCategory === cat
+              ? 'bg-blue-600 text-white border-blue-600'
+              : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-700 hover:text-blue-600'
+          "
+        >
+          {{ cat }}
+        </button>
+      </div>
+
       <!-- Action Bar untuk Galeri -->
       <div
-        v-if="pendingGaleri.length > 0"
+        v-if="filteredGaleri.length > 0"
         class="flex justify-between items-center mb-6 bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm"
       >
         <div class="flex items-center gap-3">
@@ -429,8 +524,8 @@ const closeRejectModal = () => {
               type="checkbox"
               class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer"
               :checked="
-                selectedGalleries.length === pendingGaleri.length &&
-                pendingGaleri.length > 0
+                selectedGalleries.length === filteredGaleri.length &&
+                filteredGaleri.length > 0
               "
               @change="selectAllGalleries"
             />
@@ -470,11 +565,11 @@ const closeRejectModal = () => {
 
       <!-- Masonry Grid -->
       <div
-        v-else
+        v-else-if="filteredGaleri.length > 0"
         class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 md:gap-6 w-full transform-gpu"
       >
         <div
-          v-for="item in pendingGaleri"
+          v-for="item in visibleGaleri"
           :key="item.id"
           class="group relative overflow-hidden rounded-xl shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-200 dark:bg-slate-800 block break-inside-avoid mb-4 md:mb-6 transform-gpu"
           :class="{
@@ -552,6 +647,37 @@ const closeRejectModal = () => {
               </span>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Infinite Scroll Sentinel & Loading Indicator -->
+      <div
+        v-if="visibleCount < filteredGaleri.length"
+        ref="observerTarget"
+        class="mt-10 mb-4 flex justify-center items-center h-10"
+      >
+        <div class="flex items-center text-gray-400 dark:text-gray-500 gap-2">
+          <svg
+            class="animate-spin w-5 h-5"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          <span class="text-sm font-medium tracking-wide"> Memuat foto lainnya... </span>
         </div>
       </div>
     </div>
