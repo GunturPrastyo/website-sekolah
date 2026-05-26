@@ -24,10 +24,13 @@ class GalleryController extends Controller
         return response()->json(['data' => GalleryResource::collection($galleries)]);
     }
 
-    public function myPendingGalleries()
+    public function myPendingGalleries(Request $request)
     {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
         // Mengambil galeri yang pending/rejected milik user yang sedang login (Admin biasa)
-        $galleries = Gallery::with('author')->where('user_id', auth()->id())
+        $galleries = Gallery::with('author')->where('user_id', $user->id)
             ->whereIn('status', ['pending', 'rejected'])
             ->orderBy('created_at', 'desc')->get();
         return response()->json(['data' => GalleryResource::collection($galleries)]);
@@ -51,8 +54,9 @@ class GalleryController extends Controller
 
         $createdGalleries = [];
         
-        $userId = auth()->id();
-        $status = auth()->user()->role === 'super_admin' ? 'approved' : 'pending';
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+        $status = $user->role === 'super_admin' ? 'approved' : 'pending';
 
         foreach ($validatedData['images'] as $imgData) {
             $imagePath = $imgData;
@@ -71,7 +75,7 @@ class GalleryController extends Controller
                 'image' => $imagePath,
                 'likes' => 0,
                 'status' => $status,
-                'user_id' => $userId
+                'user_id' => $user->id
             ]);
 
             $createdGalleries[] = $gallery;
@@ -86,8 +90,11 @@ class GalleryController extends Controller
 
     public function update(Request $request, Gallery $gallery)
     {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
         // Mencegah admin menghapus/mengubah galeri milik akun lain (kecuali super_admin)
-        if ($gallery->user_id !== auth()->id() && auth()->user()->role !== 'super_admin') {
+        if ($gallery->user_id !== $user->id && $user->role !== 'super_admin') {
             return response()->json(['message' => 'Anda tidak memiliki hak akses untuk mengubah galeri ini.'], 403);
         }
         
@@ -102,7 +109,7 @@ class GalleryController extends Controller
         $rejectionNote = $gallery->rejection_note;
         
         // Jika admin biasa mengedit galeri yang ditolak atau telah disetujui, kembalikan ke pending
-        if (auth()->user()->role !== 'super_admin') {
+        if ($user->role !== 'super_admin') {
             $status = 'pending';
             $rejectionNote = null;
         }
@@ -149,7 +156,7 @@ class GalleryController extends Controller
                     'image' => $imagePath,
                     'likes' => 0,
                     'status' => $status,
-                    'user_id' => auth()->id()
+                    'user_id' => $user->id
                 ]);
                 
                 $createdGalleries[] = $newGallery;
@@ -163,10 +170,13 @@ class GalleryController extends Controller
         return response()->json(['data' => GalleryResource::collection($createdGalleries)]);
     }
 
-    public function destroy(Gallery $gallery)
+    public function destroy(Request $request, Gallery $gallery)
     {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
         // Mencegah admin menghapus galeri milik akun lain
-        if (auth()->user()->role !== 'super_admin' && $gallery->user_id !== auth()->id()) {
+        if ($user->role !== 'super_admin' && $gallery->user_id !== $user->id) {
             return response()->json(['message' => 'Anda tidak memiliki hak akses untuk menghapus galeri ini.'], 403);
         }
 
@@ -185,11 +195,15 @@ class GalleryController extends Controller
             'ids.*' => 'exists:galleries,id'
         ]);
 
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
         $galleries = Gallery::whereIn('id', $validated['ids'])->get();
 
+        /** @var \App\Models\Gallery $gallery */
         foreach ($galleries as $gallery) {
             // Melewati galeri yang bukan miliknya untuk Admin biasa
-            if (auth()->user()->role !== 'super_admin' && $gallery->user_id !== auth()->id()) {
+            if ($user->role !== 'super_admin' && $gallery->user_id !== $user->id) {
                 continue;
             }
 
@@ -202,7 +216,7 @@ class GalleryController extends Controller
         return response()->json(['message' => 'Galleries deleted successfully']);
     }
 
-    public function updateStatus(Request $request, $id)
+    public function updateStatus(Request $request, string $id)
     {
         $gallery = Gallery::findOrFail($id);
         
