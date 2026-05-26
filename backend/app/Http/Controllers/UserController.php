@@ -60,4 +60,34 @@ class UserController extends Controller
         $user->delete();
         return response()->json(['message' => 'Pengguna berhasil dihapus']);
     }
+
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $rules = [
+            'name' => 'required|string|max:255',
+            // Hapus komentar di bawah ini jika sudah memiliki kolom avatar pada tabel users:
+            // 'avatar' => 'nullable|image|max:2048',
+        ];
+
+        // Jika pengguna menggunakan provider local (bukan Google), izinkan ubah password
+        if ($user->provider === 'local') {
+            $rules['password'] = 'nullable|string|min:8';
+        }
+
+        $request->validate($rules);
+
+        $user->name = $request->name;
+
+        if ($request->filled('password') && $user->provider === 'local') {
+            $user->password = Hash::make($request->password);
+        }
+
+        // Untuk memproses unggahan foto profil (avatar) Anda dapat menambahkan logika upload file menggunakan Storage di sini.
+        
+        $user->save();
+
+        return response()->json(['message' => 'Profil akun berhasil diperbarui', 'data' => $user]);
+    }
 }

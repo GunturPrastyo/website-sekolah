@@ -51,6 +51,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // API Dashboard
     Route::get('/dashboard/stats', [DashboardController::class, 'getStats']);
 
+    // API Pengaturan Akun Profil (Bisa diakses Super Admin & Admin Biasa)
+    Route::post('/profile', [UserController::class, 'updateProfile']);
+
     // Rute yang BISA diakses oleh admin biasa (Berita, Galeri, Pengaturan, Profil)
     Route::apiResource('news', NewsController::class);
     Route::get('/my-pending-news', [NewsController::class, 'myPendingNews']);

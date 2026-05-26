@@ -9,11 +9,13 @@ import {
   PhBuildings,
   PhGraduationCap,
   PhMegaphone,
+  PhUser,
 } from "@phosphor-icons/vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
-const activeTab = ref("umum");
+const userRole = ref(localStorage.getItem("user_role") || "admin");
+const activeTab = ref(userRole.value === "super_admin" ? "umum" : "akun");
 
 // Toast
 const showToast = ref(false);
@@ -62,6 +64,19 @@ const appearanceSettings = ref({
   headerUnduhan: "",
 });
 
+// State Akun
+const currentUser = ref({
+  name: "",
+  provider: "",
+  avatar: "",
+});
+
+const profileForm = ref({
+  name: "",
+  password: "",
+  avatar: "",
+});
+
 const isMapUrlValid = computed(() => {
   const url = generalSettings.value.embedMap;
   if (!url) return true;
@@ -94,8 +109,22 @@ const fetchSettings = async () => {
   }
 };
 
+const fetchProfile = async () => {
+  try {
+    const response = await api.get("/api/user");
+    currentUser.value = response.data;
+    profileForm.value.name = response.data.name;
+    profileForm.value.avatar = response.data.avatar || "";
+  } catch (error) {
+    console.error("Gagal mengambil profil:", error);
+  }
+};
+
 onMounted(() => {
-  fetchSettings();
+  if (userRole.value === "super_admin") {
+    fetchSettings();
+  }
+  fetchProfile();
 });
 
 const saveSettings = async () => {
@@ -122,6 +151,31 @@ const saveSettings = async () => {
     );
   }
 };
+
+const updateProfile = async () => {
+  try {
+    const payload = { name: profileForm.value.name };
+
+    // Jika ada perubahan pada foto profil
+    if (profileForm.value.avatar !== currentUser.value.avatar) {
+      payload.avatar = profileForm.value.avatar;
+    }
+
+    if (currentUser.value.provider === "local" && profileForm.value.password) {
+      payload.password = profileForm.value.password;
+    }
+
+    await api.post("/api/profile", payload);
+    triggerToast("Profil Tersimpan", "Profil akun berhasil diperbarui", "success");
+    profileForm.value.password = ""; // Reset form password setelah tersimpan
+
+    // Sinkronisasikan foto pada state (sehingga tidak diupload berulang)
+    currentUser.value.avatar = payload.avatar;
+  } catch (error) {
+    console.error("Gagal menyimpan profil:", error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat memperbarui profil", "error");
+  }
+};
 </script>
 
 <template>
@@ -132,13 +186,18 @@ const saveSettings = async () => {
           class="text-3xl font-bold text-gray-800 dark:text-white"
           style="font-family: 'Oswald', sans-serif"
         >
-          Pengaturan Sistem
+          {{ userRole === "super_admin" ? "Pengaturan Sistem" : "Pengaturan Akun" }}
         </h2>
         <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
-          Kelola konfigurasi umum dan tampilan website.
+          {{
+            userRole === "super_admin"
+              ? "Kelola konfigurasi umum, tampilan website, dan profil akun."
+              : "Kelola profil dan keamanan akun Anda."
+          }}
         </p>
       </div>
       <button
+        v-if="activeTab !== 'akun'"
         @click="saveSettings"
         class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors shrink-0"
       >
@@ -152,6 +211,7 @@ const saveSettings = async () => {
       class="bg-white dark:bg-slate-800 rounded-t-xl border-b border-gray-200 dark:border-slate-700 flex overflow-x-auto custom-scrollbar"
     >
       <button
+        v-if="userRole === 'super_admin'"
         @click="activeTab = 'umum'"
         class="px-6 py-4 text-sm font-medium transition-colors flex items-center gap-2 whitespace-nowrap border-b-2"
         :class="
@@ -163,6 +223,7 @@ const saveSettings = async () => {
         <PhGear class="w-5 h-5" /> Pengaturan Umum
       </button>
       <button
+        v-if="userRole === 'super_admin'"
         @click="activeTab = 'tampilan'"
         class="px-6 py-4 text-sm font-medium transition-colors flex items-center gap-2 whitespace-nowrap border-b-2"
         :class="
@@ -172,6 +233,17 @@ const saveSettings = async () => {
         "
       >
         <PhImage class="w-5 h-5" /> Tampilan (Header)
+      </button>
+      <button
+        @click="activeTab = 'akun'"
+        class="px-6 py-4 text-sm font-medium transition-colors flex items-center gap-2 whitespace-nowrap border-b-2"
+        :class="
+          activeTab === 'akun'
+            ? 'text-blue-600 border-blue-600 dark:text-blue-400 dark:border-blue-400 bg-blue-50/50 dark:bg-slate-700/50'
+            : 'text-gray-500 border-transparent hover:text-gray-700 hover:bg-gray-50 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:bg-slate-700'
+        "
+      >
+        <PhUser class="w-5 h-5" /> Pengaturan Akun
       </button>
     </div>
 
@@ -574,6 +646,65 @@ const saveSettings = async () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Tab Akun -->
+      <div v-show="activeTab === 'akun'" class="space-y-8 animate-fade-in">
+        <form @submit.prevent="updateProfile" class="max-w-2xl space-y-6">
+          <div
+            class="bg-gray-50 dark:bg-slate-700/50 p-6 rounded-xl border border-gray-100 dark:border-slate-600 flex flex-col items-center"
+          >
+            <ImageUploader
+              v-model="profileForm.avatar"
+              label="Foto Profil"
+              :isCircular="true"
+              containerClass="w-32 mx-auto"
+            />
+            <p class="text-xs text-center text-gray-500 mt-3">
+              Format PNG/JPG disarankan, rasio 1:1. Maksimal 2MB.
+            </p>
+          </div>
+
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Nama Lengkap
+            </label>
+            <input
+              type="text"
+              v-model="profileForm.name"
+              required
+              class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            />
+          </div>
+
+          <div v-if="currentUser.provider === 'local'">
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Kata Sandi Baru (Opsional)
+            </label>
+            <input
+              type="password"
+              v-model="profileForm.password"
+              minlength="8"
+              placeholder="Kosongkan jika tidak ingin mengubah kata sandi"
+              class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            />
+            <p class="text-xs text-gray-500 mt-2">Minimal 8 karakter.</p>
+          </div>
+
+          <div class="pt-4">
+            <button
+              type="submit"
+              class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors shrink-0"
+            >
+              <PhFloppyDisk class="w-5 h-5 mr-2" />
+              Simpan Profil
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 
