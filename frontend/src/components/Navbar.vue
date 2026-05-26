@@ -135,16 +135,16 @@
               class="absolute left-0 z-10 mt-2 w-48 origin-top-left rounded-md bg-white dark:bg-slate-800 py-2 text-gray-800 dark:text-gray-200 shadow-lg"
             >
               <router-link
-                to="/kurikulum"
-                @click="closeDropdowns"
-                class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
-                >Kurikulum</router-link
-              >
-              <router-link
                 to="/program-jurusan"
                 @click="closeDropdowns"
                 class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
                 >Program Jurusan</router-link
+              >
+              <router-link
+                to="/kurikulum"
+                @click="closeDropdowns"
+                class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
+                >Kurikulum</router-link
               >
               <router-link
                 to="/ekstrakurikuler"
@@ -443,16 +443,16 @@
             class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4 pr-2 space-y-1"
           >
             <router-link
-              to="/kurikulum"
-              @click="closeMobileMenu"
-              class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
-              >Kurikulum</router-link
-            >
-            <router-link
               to="/program-jurusan"
               @click="closeMobileMenu"
               class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
               >Program Jurusan</router-link
+            >
+            <router-link
+              to="/kurikulum"
+              @click="closeMobileMenu"
+              class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
+              >Kurikulum</router-link
             >
             <router-link
               to="/ekstrakurikuler"
@@ -557,15 +557,6 @@
               >Info PPDB</router-link
             >
           </div>
-        </div>
-
-        <div class="pt-2 mt-2 border-t border-gray-100 dark:border-slate-700/50">
-          <router-link
-            to="/pendaftaran"
-            @click="closeMobileMenu"
-            class="block w-full rounded-xl bg-blue-600 px-4 py-3 text-center font-semibold text-white shadow-md shadow-blue-500/30 transition-colors hover:bg-blue-700 active:scale-[0.98]"
-            >Pendaftaran</router-link
-          >
         </div>
       </div>
     </div>

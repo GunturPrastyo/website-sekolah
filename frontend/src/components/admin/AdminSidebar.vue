@@ -72,8 +72,8 @@ const menu = computed(() => {
         name: "Akademik",
         icon: markRaw(PhBooks),
         children: [
-          { name: "Kurikulum", link: "/admin/kurikulum" },
           { name: "Program Jurusan", link: "/admin/program-jurusan" },
+          { name: "Kurikulum", link: "/admin/kurikulum" },
           { name: "Jadwal Pelajaran", link: "/admin/jadwal-pelajaran" },
         ],
       },
