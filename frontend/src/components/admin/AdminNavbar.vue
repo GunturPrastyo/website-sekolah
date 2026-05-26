@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, markRaw } from "vue";
+import { ref, onMounted, onBeforeUnmount, markRaw } from "vue";
 import { useRouter } from "vue-router";
 import api from "@/api/index.js";
 import {
@@ -39,6 +39,8 @@ import {
   PhGear,
   PhShareNetwork,
   PhImageSquare,
+  PhWarningCircle,
+  PhX,
 } from "@phosphor-icons/vue";
 
 const emit = defineEmits(["toggle-sidebar"]);
@@ -50,6 +52,55 @@ const searchQuery = ref("");
 const searchResults = ref([]);
 const isSearchOpen = ref(false);
 const highlightedIndex = ref(-1);
+
+const currentUser = ref({
+  name: "Memuat...",
+  role: "admin",
+  avatar: null,
+});
+
+const isNotificationOpen = ref(false);
+const notifications = ref([]);
+const notifDropdown = ref(null);
+const dismissedNotifications = ref(new Set());
+
+const fetchNotifications = async () => {
+  try {
+    const response = await api.get('/api/notifications');
+    const newNotifications = response.data.data || [];
+    
+    // Saring notifikasi yang sudah di-dismiss/dihapus oleh pengguna
+    notifications.value = newNotifications.filter(
+      (n) => !dismissedNotifications.value.has(n.id)
+    );
+  } catch (error) {
+    console.error("Gagal mengambil notifikasi:", error);
+  }
+};
+
+const toggleNotification = () => {
+  isNotificationOpen.value = !isNotificationOpen.value;
+  if (isNotificationOpen.value) {
+    fetchNotifications();
+  }
+};
+
+const markAllRead = () => {
+  notifications.value.forEach((n) => dismissedNotifications.value.add(n.id));
+  notifications.value = [];
+  isNotificationOpen.value = false;
+};
+
+const dismissNotification = (id) => {
+  dismissedNotifications.value.add(id);
+  notifications.value = notifications.value.filter((n) => n.id !== id);
+};
+
+const closeNotificationOutside = (e) => {
+  if (notifDropdown.value && !notifDropdown.value.contains(e.target)) {
+    isNotificationOpen.value = false;
+  }
+};
 
 const adminMenus = [
   // Dashboard
@@ -388,6 +439,16 @@ const handleKeyDown = (e) => {
   }
 };
 
+const fetchProfile = async () => {
+  try {
+    const response = await api.get("/api/user");
+    currentUser.value = response.data;
+    fetchNotifications();
+  } catch (error) {
+    console.error("Gagal mengambil profil:", error);
+  }
+};
+
 onMounted(() => {
   if (
     localStorage.getItem("color-theme") === "dark" ||
@@ -398,6 +459,13 @@ onMounted(() => {
   } else {
     isDarkMode.value = false;
   }
+
+  document.addEventListener("click", closeNotificationOutside);
+  fetchProfile();
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", closeNotificationOutside);
 });
 
 const toggleDarkMode = () => {
@@ -533,23 +601,107 @@ const handleLogout = async () => {
         <PhMoon v-if="!isDarkMode" :size="20" />
         <PhSun v-else :size="20" />
       </button>
-      <button
-        class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
-      >
-        <PhBell :size="20" />
-      </button>
+      <div class="relative" ref="notifDropdown">
+        <button
+          @click="toggleNotification"
+          class="relative p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors focus:outline-none"
+        >
+          <PhBell :size="20" />
+          <span
+            v-if="notifications.length > 0"
+            class="absolute top-1 right-1 flex items-center justify-center w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full border-2 border-white dark:border-slate-800"
+          >
+            {{ notifications.length }}
+          </span>
+        </button>
+
+        <!-- Dropdown Notifications -->
+        <div
+          v-if="isNotificationOpen"
+          class="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 z-50 overflow-hidden flex flex-col"
+        >
+          <div
+            class="p-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="font-bold text-gray-800 dark:text-white">Notifikasi</h3>
+            <button
+              v-if="notifications.length > 0"
+              @click="markAllRead"
+              class="text-xs text-blue-600 dark:text-blue-400 hover:underline focus:outline-none"
+            >
+              Tandai sudah dibaca
+            </button>
+          </div>
+
+          <div class="overflow-y-auto max-h-80 custom-scrollbar">
+            <template v-if="notifications.length > 0">
+              <div
+                v-for="notif in notifications"
+                :key="notif.id"
+                @click="
+                  isNotificationOpen = false;
+                  $router.push(notif.link);
+                "
+                class="relative flex items-start p-4 border-b border-gray-50 dark:border-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer group"
+              >
+                <div
+                  class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mt-1 mr-3"
+                  :class="
+                    notif.type === 'error'
+                      ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
+                      : 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400'
+                  "
+                >
+                  <PhCheckCircle v-if="notif.type === 'warning'" class="w-4 h-4" />
+                  <PhWarningCircle v-else class="w-4 h-4" />
+                </div>
+                <div class="pr-6">
+                  <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                    {{ notif.title }}
+                  </h4>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+                    {{ notif.message }}
+                  </p>
+                  <span class="text-[10px] text-gray-400 mt-2 block">{{
+                    notif.time
+                  }}</span>
+                </div>
+                <button
+                  @click.stop="dismissNotification(notif.id)"
+                  class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                  title="Hapus Notifikasi"
+                >
+                  <PhX class="w-4 h-4" />
+                </button>
+              </div>
+            </template>
+            <div v-else class="p-6 text-center text-sm text-gray-500 dark:text-gray-400">
+              Tidak ada notifikasi baru.
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="relative group">
         <button class="flex items-center gap-2">
           <img
-            src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop"
+            :src="
+              currentUser.avatar ||
+              'https://ui-avatars.com/api/?name=' +
+                encodeURIComponent(
+                  currentUser.name === 'Memuat...' ? 'Admin' : currentUser.name
+                ) +
+                '&background=0D8ABC&color=fff'
+            "
             alt="Admin"
             class="w-10 h-10 rounded-full object-cover border-2 border-blue-500"
           />
           <div class="hidden md:block text-left">
             <div class="font-semibold text-sm text-gray-800 dark:text-white">
-              Budi Santoso
+              {{ currentUser.name }}
             </div>
-            <div class="text-xs text-gray-500 dark:text-gray-400">Admin Utama</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">
+              {{ currentUser.role === "super_admin" ? "Super Admin" : "Admin Biasa" }}
+            </div>
           </div>
           <PhCaretDown :size="16" class="text-gray-500 hidden md:block" />
         </button>

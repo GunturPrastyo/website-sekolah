@@ -24,6 +24,7 @@ use App\Http\Controllers\PpdbInfoController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\VisitorController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Http\Request;
@@ -50,6 +51,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API Dashboard
     Route::get('/dashboard/stats', [DashboardController::class, 'getStats']);
+
+    // API Notifications
+    Route::get('/notifications', [NotificationController::class, 'index']);
 
     // API Pengaturan Akun Profil (Bisa diakses Super Admin & Admin Biasa)
     Route::post('/profile', [UserController::class, 'updateProfile']);
