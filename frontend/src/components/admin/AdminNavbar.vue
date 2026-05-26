@@ -62,17 +62,11 @@ const currentUser = ref({
 const isNotificationOpen = ref(false);
 const notifications = ref([]);
 const notifDropdown = ref(null);
-const dismissedNotifications = ref(new Set());
 
 const fetchNotifications = async () => {
   try {
-    const response = await api.get('/api/notifications');
-    const newNotifications = response.data.data || [];
-    
-    // Saring notifikasi yang sudah di-dismiss/dihapus oleh pengguna
-    notifications.value = newNotifications.filter(
-      (n) => !dismissedNotifications.value.has(n.id)
-    );
+    const response = await api.get("/api/notifications");
+    notifications.value = response.data.data || [];
   } catch (error) {
     console.error("Gagal mengambil notifikasi:", error);
   }
@@ -85,15 +79,23 @@ const toggleNotification = () => {
   }
 };
 
-const markAllRead = () => {
-  notifications.value.forEach((n) => dismissedNotifications.value.add(n.id));
-  notifications.value = [];
-  isNotificationOpen.value = false;
+const markAllRead = async () => {
+  try {
+    await api.post("/api/notifications/mark-all-read");
+    notifications.value = [];
+    isNotificationOpen.value = false;
+  } catch (error) {
+    console.error("Gagal menandai semua notifikasi telah dibaca:", error);
+  }
 };
 
-const dismissNotification = (id) => {
-  dismissedNotifications.value.add(id);
-  notifications.value = notifications.value.filter((n) => n.id !== id);
+const dismissNotification = async (id) => {
+  try {
+    await api.post(`/api/notifications/${id}/mark-read`);
+    notifications.value = notifications.value.filter((n) => n.id !== id);
+  } catch (error) {
+    console.error("Gagal menghapus notifikasi:", error);
+  }
 };
 
 const closeNotificationOutside = (e) => {

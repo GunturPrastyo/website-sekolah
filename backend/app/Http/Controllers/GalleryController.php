@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gallery;
+use App\Models\DismissedNotification;
 use App\Http\Resources\GalleryResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -74,6 +75,10 @@ class GalleryController extends Controller
             ]);
 
             $createdGalleries[] = $gallery;
+        }
+
+        if ($status === 'pending') {
+            DismissedNotification::where('notification_id', 'val_gallery')->delete();
         }
 
         return response()->json(['data' => GalleryResource::collection($createdGalleries)], 201);
@@ -151,6 +156,10 @@ class GalleryController extends Controller
             }
         }
 
+        if ($status === 'pending') {
+            DismissedNotification::where('notification_id', 'val_gallery')->delete();
+        }
+
         return response()->json(['data' => GalleryResource::collection($createdGalleries)]);
     }
 
@@ -203,6 +212,11 @@ class GalleryController extends Controller
         ]);
 
         $gallery->update($validated);
+
+        // Hapus status dibaca agar admin pengunggah mendapatkan kembali notifikasi penolakan
+        if ($validated['status'] === 'rejected') {
+            DismissedNotification::where('user_id', $gallery->user_id)->where('notification_id', 'rej_gallery')->delete();
+        }
 
         return response()->json(['message' => 'Status galeri berhasil diperbarui', 'data' => new GalleryResource($gallery)]);
     }

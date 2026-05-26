@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\News;
 use App\Models\Gallery;
+use App\Models\DismissedNotification;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
@@ -12,13 +13,15 @@ class NotificationController extends Controller
     {
         $user = $request->user();
         $notifications = [];
+        
+        $dismissed = DismissedNotification::where('user_id', $user->id)->pluck('notification_id')->toArray();
 
         // Logika Notifikasi Super Admin
         if ($user->role === 'super_admin') {
             $pendingNewsCount = News::where('status', 'pending')->count();
             $pendingGalleryCount = Gallery::where('status', 'pending')->count();
 
-            if ($pendingNewsCount > 0) {
+            if ($pendingNewsCount > 0 && !in_array('val_news', $dismissed)) {
                 $notifications[] = [
                     'id' => 'val_news',
                     'title' => 'Validasi Berita',
@@ -29,7 +32,7 @@ class NotificationController extends Controller
                 ];
             }
 
-            if ($pendingGalleryCount > 0) {
+            if ($pendingGalleryCount > 0 && !in_array('val_gallery', $dismissed)) {
                 $notifications[] = [
                     'id' => 'val_gallery',
                     'title' => 'Validasi Galeri',
@@ -49,7 +52,7 @@ class NotificationController extends Controller
                 ->where('status', 'rejected')
                 ->count();
 
-            if ($rejectedNewsCount > 0) {
+            if ($rejectedNewsCount > 0 && !in_array('rej_news', $dismissed)) {
                 $notifications[] = [
                     'id' => 'rej_news',
                     'title' => 'Revisi Berita',
@@ -60,7 +63,7 @@ class NotificationController extends Controller
                 ];
             }
 
-            if ($rejectedGalleryCount > 0) {
+            if ($rejectedGalleryCount > 0 && !in_array('rej_gallery', $dismissed)) {
                 $notifications[] = [
                     'id' => 'rej_gallery',
                     'title' => 'Revisi Galeri',
@@ -73,5 +76,36 @@ class NotificationController extends Controller
         }
 
         return response()->json(['data' => $notifications]);
+    }
+
+    public function markRead(Request $request, $id)
+    {
+        DismissedNotification::firstOrCreate([
+            'user_id' => $request->user()->id,
+            'notification_id' => $id
+        ]);
+
+        return response()->json(['message' => 'Notifikasi berhasil ditandai dibaca']);
+    }
+
+    public function markAllRead(Request $request)
+    {
+        $user = $request->user();
+        $notificationIds = [];
+
+        if ($user->role === 'super_admin') {
+            $notificationIds = ['val_news', 'val_gallery'];
+        } else {
+            $notificationIds = ['rej_news', 'rej_gallery'];
+        }
+
+        foreach ($notificationIds as $id) {
+            DismissedNotification::firstOrCreate([
+                'user_id' => $user->id,
+                'notification_id' => $id
+            ]);
+        }
+
+        return response()->json(['message' => 'Semua notifikasi berhasil ditandai dibaca']);
     }
 }

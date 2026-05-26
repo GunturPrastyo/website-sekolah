@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use App\Models\DismissedNotification;
 use App\Http\Resources\NewsResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -66,6 +67,10 @@ class NewsController extends Controller
 
         $news = News::create($validated);
 
+        if ($validated['status'] === 'pending') {
+            DismissedNotification::where('notification_id', 'val_news')->delete();
+        }
+
         return response()->json(['message' => 'Berita berhasil ditambahkan', 'data' => new NewsResource($news)], 201);
     }
 
@@ -96,6 +101,10 @@ class NewsController extends Controller
         }
         
         $news->update($validated);
+
+        if (isset($validated['status']) && $validated['status'] === 'pending') {
+            DismissedNotification::where('notification_id', 'val_news')->delete();
+        }
 
         return response()->json(['message' => 'Berita berhasil diperbarui', 'data' => new NewsResource($news)]);
     }
@@ -129,6 +138,11 @@ class NewsController extends Controller
         ]);
 
         $news->update($validated);
+
+        // Hapus status dibaca agar admin penulis berita mendapatkan kembali notifikasi bahwa beritanya ditolak
+        if ($validated['status'] === 'rejected') {
+            DismissedNotification::where('user_id', $news->user_id)->where('notification_id', 'rej_news')->delete();
+        }
 
         return response()->json(['message' => 'Status berita berhasil diperbarui', 'data' => new NewsResource($news)]);
     }

@@ -54,6 +54,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API Notifications
     Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead']);
+    Route::post('/notifications/{id}/mark-read', [NotificationController::class, 'markRead']);
 
     // API Pengaturan Akun Profil (Bisa diakses Super Admin & Admin Biasa)
     Route::post('/profile', [UserController::class, 'updateProfile']);
