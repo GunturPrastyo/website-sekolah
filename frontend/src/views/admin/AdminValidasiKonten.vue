@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import api from "@/api/index.js";
 import {
   PhCheckCircle,
@@ -18,16 +18,7 @@ const activeTab = ref("berita");
 const pendingBerita = ref([]);
 
 // Data dummy untuk Galeri yang menunggu persetujuan
-const pendingGaleri = ref([
-  {
-    id: 1,
-    title: "Upacara Hari Kemerdekaan RI Ke-80",
-    author: "Dian (Admin Fotografi)",
-    date: "17 Agustus 2025",
-    status: "pending",
-    imagesCount: 15,
-  },
-]);
+const pendingGaleri = ref([]);
 
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
@@ -42,17 +33,34 @@ const rejectionNote = ref("");
 const isPreviewModalOpen = ref(false);
 const previewItem = ref(null);
 
+const selectedGalleries = ref([]);
+const isBulkAction = ref(false);
+
 const fetchPendingBerita = async () => {
   try {
     const response = await api.get("/api/validasi-konten/berita");
     pendingBerita.value = response.data.data || [];
   } catch (error) {
-    console.error("Gagal mengambil data validasi berita:", error);
+    triggerToast("Gagal", "Gagal memuat data validasi berita.", "error");
   }
 };
 
+const fetchPendingGalleries = async () => {
+  try {
+    const response = await api.get("/api/validasi-konten/galeri");
+    pendingGaleri.value = response.data.data || [];
+  } catch (error) {
+    triggerToast("Gagal", "Gagal memuat data validasi galeri.", "error");
+  }
+};
+
+watch(activeTab, () => {
+  selectedGalleries.value = [];
+});
+
 onMounted(() => {
   fetchPendingBerita();
+  fetchPendingGalleries();
 });
 
 const openPreview = (item) => {
@@ -73,7 +81,31 @@ const triggerToast = (title, message, type = "success") => {
   }, 4000);
 };
 
+const selectAllGalleries = () => {
+  if (
+    selectedGalleries.value.length === pendingGaleri.value.length &&
+    pendingGaleri.value.length > 0
+  ) {
+    selectedGalleries.value = [];
+  } else {
+    selectedGalleries.value = pendingGaleri.value.map((g) => g.id);
+  }
+};
+
+const openBulkConfirm = (type) => {
+  if (selectedGalleries.value.length === 0) return;
+  isBulkAction.value = true;
+  if (type === "reject") {
+    rejectionNote.value = "";
+    isRejectModalOpen.value = true;
+  } else {
+    confirmActionType.value = type;
+    isConfirmModalOpen.value = true;
+  }
+};
+
 const openConfirm = (type, item) => {
+  isBulkAction.value = false;
   if (type === "reject") {
     selectedItem.value = item;
     rejectionNote.value = "";
@@ -86,59 +118,106 @@ const openConfirm = (type, item) => {
 };
 
 const handleConfirm = async () => {
-  if (selectedItem.value) {
-    const list = activeTab.value === "berita" ? pendingBerita : pendingGaleri;
+  if (isBulkAction.value) {
+    if (confirmActionType.value === "approve") {
+      try {
+        await Promise.all(
+          selectedGalleries.value.map((id) =>
+            api.put(`/api/validasi-konten/galeri/${id}/status`, { status: "approved" })
+          )
+        );
+        pendingGaleri.value = pendingGaleri.value.filter(
+          (item) => !selectedGalleries.value.includes(item.id)
+        );
+        triggerToast(
+          "Berhasil Disetujui",
+          `${selectedGalleries.value.length} foto berhasil disetujui dan dipublikasikan.`,
+          "success"
+        );
+        selectedGalleries.value = [];
+      } catch (error) {
+        triggerToast("Gagal", "Terjadi kesalahan saat menyetujui galeri", "error");
+      }
+    }
+  } else if (selectedItem.value) {
+    const isBerita = activeTab.value === "berita";
+    const list = isBerita ? pendingBerita : pendingGaleri;
+    const endpoint = isBerita
+      ? `/api/validasi-konten/berita/${selectedItem.value.id}/status`
+      : `/api/validasi-konten/galeri/${selectedItem.value.id}/status`;
+
     const index = list.value.findIndex((i) => i.id === selectedItem.value.id);
 
-    if (index !== -1) {
-      if (confirmActionType.value === "approve") {
-        try {
-          if (activeTab.value === "berita") {
-            await api.put(`/api/validasi-konten/berita/${selectedItem.value.id}/status`, {
-              status: "approved",
-            });
-          }
-          list.value.splice(index, 1);
-          triggerToast(
-            "Berhasil Disetujui",
-            "Konten berhasil disetujui dan telah dipublikasikan.",
-            "success"
-          );
-        } catch (error) {
-          triggerToast("Gagal", "Terjadi kesalahan pada server", "error");
-        }
+    if (index !== -1 && confirmActionType.value === "approve") {
+      try {
+        await api.put(endpoint, { status: "approved" });
+        list.value.splice(index, 1);
+        triggerToast(
+          "Berhasil Disetujui",
+          "Konten berhasil disetujui dan telah dipublikasikan.",
+          "success"
+        );
+      } catch (error) {
+        triggerToast("Gagal", "Terjadi kesalahan pada server", "error");
       }
     }
   }
   isConfirmModalOpen.value = false;
   selectedItem.value = null;
+  isBulkAction.value = false;
 };
 
 const handleCancel = () => {
   isConfirmModalOpen.value = false;
   selectedItem.value = null;
+  isBulkAction.value = false;
 };
 
 const handleReject = async () => {
-  if (selectedItem.value) {
-    const list = activeTab.value === "berita" ? pendingBerita : pendingGaleri;
+  if (isBulkAction.value) {
+    try {
+      await Promise.all(
+        selectedGalleries.value.map((id) =>
+          api.put(`/api/validasi-konten/galeri/${id}/status`, {
+            status: "rejected",
+            rejection_note: rejectionNote.value,
+          })
+        )
+      );
+      pendingGaleri.value = pendingGaleri.value.filter(
+        (item) => !selectedGalleries.value.includes(item.id)
+      );
+      triggerToast(
+        "Berhasil Ditolak",
+        `${selectedGalleries.value.length} foto berhasil dikembalikan dengan catatan.`,
+        "info"
+      );
+      selectedGalleries.value = [];
+    } catch (error) {
+      triggerToast("Gagal", "Terjadi kesalahan saat menolak galeri", "error");
+    }
+  } else if (selectedItem.value) {
+    const isBerita = activeTab.value === "berita";
+    const list = isBerita ? pendingBerita : pendingGaleri;
+    const endpoint = isBerita
+      ? `/api/validasi-konten/berita/${selectedItem.value.id}/status`
+      : `/api/validasi-konten/galeri/${selectedItem.value.id}/status`;
+
     const index = list.value.findIndex((i) => i.id === selectedItem.value.id);
 
     if (index !== -1) {
       try {
-        if (activeTab.value === "berita") {
-          await api.put(`/api/validasi-konten/berita/${selectedItem.value.id}/status`, {
-            status: "rejected",
-            rejection_note: rejectionNote.value,
-          });
-        }
+        await api.put(endpoint, {
+          status: "rejected",
+          rejection_note: rejectionNote.value,
+        });
         list.value.splice(index, 1);
         triggerToast(
           "Konten Ditolak",
           rejectionNote.value.trim()
             ? `Konten dikembalikan dengan catatan: "${rejectionNote.value}"`
             : "Konten telah ditolak dan dikembalikan.",
-          "error"
+          "info"
         );
       } catch (error) {
         triggerToast("Gagal", "Terjadi kesalahan pada server", "error");
@@ -152,6 +231,7 @@ const closeRejectModal = () => {
   isRejectModalOpen.value = false;
   selectedItem.value = null;
   rejectionNote.value = "";
+  isBulkAction.value = false;
 };
 </script>
 
@@ -223,8 +303,9 @@ const closeRejectModal = () => {
       </button>
     </div>
 
-    <!-- Daftar Tabel Universal untuk Kedua Tab -->
+    <!-- Daftar Tabel Berita -->
     <div
+      v-if="activeTab === 'berita'"
       class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden"
     >
       <div class="overflow-x-auto">
@@ -241,23 +322,17 @@ const closeRejectModal = () => {
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
-            <tr
-              v-if="(activeTab === 'berita' ? pendingBerita : pendingGaleri).length === 0"
-            >
+            <tr v-if="pendingBerita.length === 0">
               <td
                 colspan="5"
                 class="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
               >
                 <PhCheckCircle class="w-12 h-12 mx-auto text-green-500/50 mb-3" />
-                <p>
-                  Bagus! Semua daftar
-                  {{ activeTab === "berita" ? "berita" : "galeri foto" }} sudah divalidasi
-                  dan bersih.
-                </p>
+                <p>Bagus! Semua daftar berita sudah divalidasi dan bersih.</p>
               </td>
             </tr>
             <tr
-              v-for="item in activeTab === 'berita' ? pendingBerita : pendingGaleri"
+              v-for="item in pendingBerita"
               :key="item.id"
               class="transition-colors"
               :class="{
@@ -294,12 +369,8 @@ const closeRejectModal = () => {
               </td>
               <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
                 <span
-                  v-if="activeTab === 'berita'"
                   class="px-2 py-1 bg-gray-100 dark:bg-slate-700 rounded text-xs uppercase"
                   >{{ item.category }}</span
-                >
-                <span v-else class="text-xs font-medium"
-                  >{{ item.imagesCount }} Foto</span
                 >
               </td>
               <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
@@ -343,11 +414,157 @@ const closeRejectModal = () => {
       </div>
     </div>
 
+    <!-- Grid Galeri -->
+    <div v-else>
+      <!-- Action Bar untuk Galeri -->
+      <div
+        v-if="pendingGaleri.length > 0"
+        class="flex justify-between items-center mb-6 bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm"
+      >
+        <div class="flex items-center gap-3">
+          <label
+            class="flex items-center gap-2 cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
+            <input
+              type="checkbox"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer"
+              :checked="
+                selectedGalleries.length === pendingGaleri.length &&
+                pendingGaleri.length > 0
+              "
+              @change="selectAllGalleries"
+            />
+            Pilih Semua
+          </label>
+          <span
+            v-if="selectedGalleries.length > 0"
+            class="text-sm text-gray-500 dark:text-gray-400"
+          >
+            ({{ selectedGalleries.length }} dipilih)
+          </span>
+        </div>
+        <div class="flex gap-2" v-if="selectedGalleries.length > 0">
+          <button
+            @click="openBulkConfirm('approve')"
+            class="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors flex items-center shadow-sm"
+          >
+            <PhCheckCircle class="w-4 h-4 mr-1.5" /> Setujui
+          </button>
+          <button
+            @click="openBulkConfirm('reject')"
+            class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-semibold transition-colors flex items-center shadow-sm"
+          >
+            <PhXCircle class="w-4 h-4 mr-1.5" /> Revisi / Tolak
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div
+        v-if="pendingGaleri.length === 0"
+        class="py-12 text-center text-gray-500 dark:text-gray-400 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
+      >
+        <PhCheckCircle class="w-12 h-12 mx-auto text-green-500/50 mb-3" />
+        <p>Bagus! Semua daftar galeri foto sudah divalidasi dan bersih.</p>
+      </div>
+
+      <!-- Masonry Grid -->
+      <div
+        v-else
+        class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 md:gap-6 w-full transform-gpu"
+      >
+        <div
+          v-for="item in pendingGaleri"
+          :key="item.id"
+          class="group relative overflow-hidden rounded-xl shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-200 dark:bg-slate-800 block break-inside-avoid mb-4 md:mb-6 transform-gpu"
+          :class="{
+            'ring-2 ring-blue-500 shadow-md': selectedGalleries.includes(item.id),
+          }"
+        >
+          <!-- Checkbox Multiple Select -->
+          <label
+            class="absolute top-3 left-3 z-40 cursor-pointer flex items-center justify-center w-8 h-8 rounded-full bg-white/90 dark:bg-slate-800/90 shadow-sm border border-gray-200 dark:border-slate-600 opacity-0 group-hover:opacity-100 transition-opacity"
+            :class="{
+              'opacity-100 !border-blue-500': selectedGalleries.includes(item.id),
+            }"
+          >
+            <input
+              type="checkbox"
+              :value="item.id"
+              v-model="selectedGalleries"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer"
+            />
+          </label>
+
+          <!-- Floating Actions -->
+          <div
+            class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-slate-800/90 p-1 rounded-lg border border-gray-100 dark:border-slate-700 z-40"
+          >
+            <button
+              @click="openPreview(item)"
+              class="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-md transition-colors"
+              title="Lihat Pratinjau"
+            >
+              <PhEye class="w-4 h-4" />
+            </button>
+            <button
+              @click="openConfirm('approve', item)"
+              class="p-1.5 text-green-600 hover:bg-green-50 dark:hover:bg-slate-700 rounded-md transition-colors"
+              title="Setujui"
+            >
+              <PhCheckCircle class="w-4 h-4" />
+            </button>
+            <button
+              @click="openConfirm('reject', item)"
+              class="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-slate-700 rounded-md transition-colors"
+              title="Tolak"
+            >
+              <PhXCircle class="w-4 h-4" />
+            </button>
+          </div>
+
+          <img
+            v-if="item.image"
+            :src="item.image"
+            class="w-full h-auto block transition-all duration-700 group-hover:scale-105"
+          />
+
+          <div
+            class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+          ></div>
+
+          <div
+            class="absolute bottom-0 left-0 p-3 md:p-5 w-full z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
+          >
+            <h4
+              class="text-white font-bold text-sm md:text-base leading-snug drop-shadow-md mb-1 line-clamp-2"
+            >
+              {{ item.title }}
+            </h4>
+            <div class="flex items-center justify-between mt-1">
+              <span
+                class="bg-blue-600/90 backdrop-blur-sm px-2 py-0.5 text-white text-[10px] font-bold uppercase tracking-wider rounded"
+              >
+                {{ item.category }}
+              </span>
+              <span class="text-gray-300 text-[10px] font-medium tracking-wide">
+                {{ item.author?.name || "Admin" }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Komponen Modal & Notifikasi -->
     <ConfirmModal
       :isOpen="isConfirmModalOpen"
       title="Setujui & Publikasikan"
-      message="Apakah Anda yakin ingin menyetujui konten ini? Setelah disetujui, konten akan langsung tampil di halaman depan website."
+      :message="
+        isBulkAction
+          ? `Apakah Anda yakin ingin menyetujui ${selectedGalleries.length} foto galeri ini? Konten akan langsung dipublikasikan dan tampil di halaman depan website.`
+          : 'Apakah Anda yakin ingin menyetujui konten ini? Setelah disetujui, konten akan langsung tampil di halaman depan website.'
+      "
       @confirm="handleConfirm"
       @cancel="handleCancel"
     />
@@ -388,7 +605,11 @@ const closeRejectModal = () => {
           </div>
           <div class="p-6">
             <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
-              Beritahu penulis mengapa konten ini ditolak agar dapat diperbaiki:
+              {{
+                isBulkAction
+                  ? `Berikan catatan mengapa ${selectedGalleries.length} foto galeri ini ditolak agar dapat diperbaiki:`
+                  : "Beritahu penulis mengapa konten ini ditolak agar dapat diperbaiki:"
+              }}
             </p>
             <textarea
               v-model="rejectionNote"
@@ -451,52 +672,83 @@ const closeRejectModal = () => {
             </button>
           </div>
 
-          <div
-            class="p-0 flex-1 overflow-y-auto custom-scrollbar relative bg-white dark:bg-slate-800"
-            v-if="previewItem"
-          >
-            <!-- Hero Image (Jika Ada) -->
-            <div
-              v-if="previewItem.images && previewItem.images.length > 0"
-              class="relative w-full h-64 sm:h-80 bg-gray-100 dark:bg-slate-700 shrink-0"
-            >
-              <img :src="previewItem.images[0]" class="w-full h-full object-cover" />
+          <div class="flex-1 overflow-y-auto custom-scrollbar" v-if="previewItem">
+            <!-- BERITA PREVIEW -->
+            <template v-if="activeTab === 'berita'">
               <div
-                class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
-              ></div>
-              <div class="absolute bottom-0 left-0 p-6 sm:p-8 w-full">
-                <span
-                  class="inline-block px-3 py-1 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider rounded-full mb-3 shadow-sm"
-                >
-                  {{
-                    previewItem.category || (activeTab === "berita" ? "Berita" : "Galeri")
-                  }}
-                </span>
-                <h2
-                  class="text-2xl sm:text-3xl font-bold text-white leading-tight drop-shadow-md"
-                >
-                  {{ previewItem.title }}
-                </h2>
-              </div>
-            </div>
-
-            <!-- Area Konten -->
-            <div class="p-6 sm:p-8">
-              <!-- Info Header (Jika tidak ada gambar hero) -->
-              <div
-                v-if="!previewItem.images || previewItem.images.length === 0"
-                class="mb-6 border-b border-gray-100 dark:border-slate-700 pb-6"
+                v-if="previewItem.images?.length > 0"
+                class="relative w-full h-64 sm:h-80 bg-gray-100 dark:bg-slate-700 shrink-0"
               >
+                <img :src="previewItem.images[0]" class="w-full h-full object-cover" />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
+                ></div>
+                <div class="absolute bottom-0 left-0 p-6 sm:p-8 w-full">
+                  <span
+                    class="inline-block px-3 py-1 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider rounded-full mb-3 shadow-sm"
+                  >
+                    {{ previewItem.category }}
+                  </span>
+                  <h2
+                    class="text-2xl sm:text-3xl font-bold text-white leading-tight drop-shadow-md"
+                  >
+                    {{ previewItem.title }}
+                  </h2>
+                </div>
+              </div>
+              <div class="p-6 sm:p-8">
+                <div
+                  class="flex items-center text-sm text-gray-500 dark:text-gray-400 gap-3 mb-8 border-b border-gray-100 dark:border-slate-700 pb-6"
+                >
+                  <div
+                    class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-700 dark:text-blue-300 font-bold shrink-0"
+                  >
+                    {{ (previewItem.author?.name || "A").charAt(0).toUpperCase() }}
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="font-medium text-gray-900 dark:text-white"
+                      >Ditulis oleh {{ previewItem.author?.name || "Admin" }}</span
+                    >
+                    <span class="text-xs">{{
+                      new Date(previewItem.created_at).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })
+                    }}</span>
+                  </div>
+                </div>
+                <div v-html="previewItem.content" class="content-preview"></div>
+                <div
+                  v-if="previewItem.tags"
+                  class="mt-8 pt-6 border-t border-gray-100 dark:border-slate-700 flex flex-wrap gap-2"
+                >
+                  <span
+                    v-for="tag in previewItem.tags.split(',')"
+                    :key="tag"
+                    class="px-3 py-1.5 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 text-xs font-medium rounded-lg"
+                  >
+                    #{{ tag.trim() }}
+                  </span>
+                </div>
+              </div>
+            </template>
+
+            <!-- GALERI PREVIEW -->
+            <template v-if="activeTab === 'galeri'">
+              <div class="relative w-full aspect-video bg-gray-100 dark:bg-slate-900">
+                <img
+                  :src="previewItem.image"
+                  class="w-full h-full object-contain"
+                  alt="Pratinjau Galeri"
+                />
+              </div>
+              <div class="p-6 sm:p-8">
                 <span
-                  class="inline-block px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wider rounded-full mb-3"
+                  class="inline-block px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wider rounded-full"
+                  >{{ previewItem.category }}</span
                 >
-                  {{
-                    previewItem.category || (activeTab === "berita" ? "Berita" : "Galeri")
-                  }}
-                </span>
-                <h2
-                  class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white leading-tight mb-4"
-                >
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mt-3 mb-4">
                   {{ previewItem.title }}
                 </h2>
                 <div
@@ -505,24 +757,14 @@ const closeRejectModal = () => {
                   <div
                     class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-700 dark:text-blue-300 font-bold shrink-0"
                   >
-                    {{
-                      (previewItem.author?.name || previewItem.author || "A")
-                        .charAt(0)
-                        .toUpperCase()
-                    }}
+                    {{ (previewItem.author?.name || "A").charAt(0).toUpperCase() }}
                   </div>
-                  <div class="flex flex-col">
+                  <div>
                     <span class="font-medium text-gray-900 dark:text-white"
-                      >Ditulis oleh
-                      {{
-                        previewItem.author?.name || previewItem.author || "Admin"
-                      }}</span
+                      >Diunggah oleh {{ previewItem.author?.name || "Admin" }}</span
                     >
-                    <span class="text-xs">{{
-                      previewItem.date ||
-                      new Date(
-                        previewItem.created_at || Date.now()
-                      ).toLocaleDateString("id-ID", {
+                    <span class="text-xs block">{{
+                      new Date(previewItem.created_at).toLocaleDateString("id-ID", {
                         day: "numeric",
                         month: "long",
                         year: "numeric",
@@ -531,100 +773,7 @@ const closeRejectModal = () => {
                   </div>
                 </div>
               </div>
-
-              <!-- Info Penulis (Jika hero image ada) -->
-              <div
-                v-else
-                class="flex items-center text-sm text-gray-500 dark:text-gray-400 gap-3 mb-8 border-b border-gray-100 dark:border-slate-700 pb-6"
-              >
-                <div
-                  class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-700 dark:text-blue-300 font-bold shrink-0 shadow-sm border border-blue-200 dark:border-blue-800/50"
-                >
-                  {{
-                    (previewItem.author?.name || previewItem.author || "A")
-                      .charAt(0)
-                      .toUpperCase()
-                  }}
-                </div>
-                <div class="flex flex-col">
-                  <span class="font-medium text-gray-900 dark:text-white"
-                    >Ditulis oleh
-                    {{ previewItem.author?.name || previewItem.author || "Admin" }}</span
-                  >
-                  <span class="text-xs">{{
-                    previewItem.date ||
-                    new Date(
-                      previewItem.created_at || Date.now()
-                    ).toLocaleDateString("id-ID", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })
-                  }}</span>
-                </div>
-              </div>
-
-              <!-- Konten Berita -->
-              <div
-                v-if="activeTab === 'berita'"
-                class="text-gray-700 dark:text-gray-300 leading-relaxed space-y-4"
-              >
-                <div
-                  v-if="previewItem.content"
-                  v-html="previewItem.content"
-                  class="content-preview"
-                ></div>
-                <div
-                  v-else
-                  class="py-12 text-center text-gray-400 italic border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
-                >
-                  Tidak ada detail isi konten yang dilampirkan.
-                </div>
-
-                <div
-                  v-if="previewItem.tags"
-                  class="mt-8 pt-6 border-t border-gray-100 dark:border-slate-700 flex flex-wrap gap-2"
-                >
-                  <span
-                    v-for="tag in typeof previewItem.tags === 'string'
-                      ? previewItem.tags.split(',')
-                      : previewItem.tags"
-                    :key="tag"
-                    class="px-3 py-1.5 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 text-xs font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors cursor-default"
-                  >
-                    #{{ tag.trim() }}
-                  </span>
-                </div>
-              </div>
-
-              <!-- Konten Galeri -->
-              <div v-if="activeTab === 'galeri'">
-                <div
-                  v-if="previewItem.images && previewItem.images.length > 1"
-                  class="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 mt-2"
-                >
-                  <div
-                    v-for="(img, idx) in previewItem.images.slice(1)"
-                    :key="idx"
-                    class="aspect-square rounded-xl overflow-hidden bg-gray-100 dark:bg-slate-700 shadow-sm relative group cursor-pointer"
-                  >
-                    <img
-                      :src="img"
-                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div
-                      class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"
-                    ></div>
-                  </div>
-                </div>
-                <div
-                  v-else-if="!previewItem.images || previewItem.images.length <= 1"
-                  class="py-12 text-center text-gray-400 italic border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
-                >
-                  Tidak ada foto tambahan di galeri ini.
-                </div>
-              </div>
-            </div>
+            </template>
           </div>
 
           <div
