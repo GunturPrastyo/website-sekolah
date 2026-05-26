@@ -185,7 +185,7 @@ const router = createRouter({
         {
           path: 'draft-berita',
           name: 'admin-draft-berita',
-          component: () => import('../views/admin/AdminDraftBerita.vue')
+          component: () => import('../views/admin/AdminDraft.vue')
         },
         {
           path: 'galeri',
