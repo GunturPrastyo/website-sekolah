@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from "vue";
-import { PhUploadSimple, PhImage, PhTrash } from "@phosphor-icons/vue";
+import { PhUploadSimple, PhImage, PhTrash, PhArrowsOut } from "@phosphor-icons/vue";
 
 const props = defineProps({
   modelValue: {
@@ -274,47 +274,46 @@ const removeImage = () => {
         :style="{ objectPosition: `${posX}% ${posY}%` }"
       />
 
-      <!-- Tombol Aksi (disembunyikan saat sedang didrag) -->
+      <!-- Overlay Aksi & Keterangan (disembunyikan saat sedang didrag) -->
       <div
-        class="absolute inset-0 bg-black/50 transition-opacity flex items-center justify-center gap-3 backdrop-blur-sm"
+        class="absolute inset-0 bg-black/50 transition-opacity flex flex-col items-center justify-center gap-4 backdrop-blur-sm"
         :class="
           isDraggingImage
             ? 'opacity-0 pointer-events-none'
             : 'opacity-0 group-hover:opacity-100'
         "
       >
-        <button
-          type="button"
-          @mousedown.stop
-          @touchstart.stop
-          @click.stop="triggerInput"
-          class="p-2.5 bg-white/20 hover:bg-blue-600 text-white rounded-full transition-colors pointer-events-auto"
-          title="Ubah Media"
-        >
-          <PhImage class="w-5 h-5" />
-        </button>
-        <button
-          type="button"
-          @mousedown.stop
-          @touchstart.stop
-          @click.stop="removeImage"
-          class="p-2.5 bg-white/20 hover:bg-red-600 text-white rounded-full transition-colors pointer-events-auto"
-          title="Hapus Media"
-        >
-          <PhTrash class="w-5 h-5" />
-        </button>
-      </div>
+        <div class="flex items-center gap-3">
+          <button
+            type="button"
+            @mousedown.stop
+            @touchstart.stop
+            @click.stop="triggerInput"
+            class="p-2.5 bg-white/20 hover:bg-blue-600 text-white rounded-full transition-colors pointer-events-auto shadow-sm"
+            title="Ubah Media"
+          >
+            <PhImage class="w-5 h-5" />
+          </button>
+          <button
+            type="button"
+            @mousedown.stop
+            @touchstart.stop
+            @click.stop="removeImage"
+            class="p-2.5 bg-white/20 hover:bg-red-600 text-white rounded-full transition-colors pointer-events-auto shadow-sm"
+            title="Hapus Media"
+          >
+            <PhTrash class="w-5 h-5" />
+          </button>
+        </div>
 
-      <!-- Keterangan Bantu (hanya muncul jika file baru diupload) -->
-      <div
-        class="absolute bottom-4 left-0 right-0 text-center pointer-events-none transition-opacity"
-        :class="isDraggingImage ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'"
-      >
+        <!-- Keterangan Bantu (hanya muncul jika file baru diupload) -->
         <span
           v-if="rawImage && rawImage.startsWith('data:') && !isVideo"
-          class="bg-black/60 text-white text-[10px] px-2.5 py-1 rounded-md backdrop-blur-sm border border-white/10 shadow-sm"
-          >Geser gambar untuk menyesuaikan</span
+          class="bg-black/60 text-white text-[10px] font-medium px-2.5 py-1.5 rounded-full backdrop-blur-md border border-white/20 shadow-lg flex items-center gap-1.5 pointer-events-none max-w-[90%] text-center"
         >
+          <PhArrowsOut class="w-3.5 h-3.5 shrink-0" />
+          <span class="truncate">Geser untuk menyesuaikan</span>
+        </span>
       </div>
     </div>
 

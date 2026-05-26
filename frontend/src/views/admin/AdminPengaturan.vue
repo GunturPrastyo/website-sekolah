@@ -650,59 +650,67 @@ const updateProfile = async () => {
 
       <!-- Tab Akun -->
       <div v-show="activeTab === 'akun'" class="space-y-8 animate-fade-in">
-        <form @submit.prevent="updateProfile" class="max-w-2xl space-y-6">
-          <div
-            class="bg-gray-50 dark:bg-slate-700/50 p-6 rounded-xl border border-gray-100 dark:border-slate-600 flex flex-col items-center"
-          >
-            <ImageUploader
-              v-model="profileForm.avatar"
-              label="Foto Profil"
-              :isCircular="true"
-              containerClass="w-32 mx-auto"
-            />
-            <p class="text-xs text-center text-gray-500 mt-3">
-              Format PNG/JPG disarankan, rasio 1:1. Maksimal 2MB.
-            </p>
-          </div>
+        <form @submit.prevent="updateProfile" class="max-w-4xl">
+          <div class="flex flex-col md:flex-row gap-8">
+            <!-- Kolom Kiri: Avatar -->
+            <div class="w-full md:w-1/3">
+              <div
+                class="bg-gray-50 dark:bg-slate-700/50 p-6 rounded-xl border border-gray-100 dark:border-slate-600 flex flex-col items-center sticky top-6"
+              >
+                <ImageUploader
+                  v-model="profileForm.avatar"
+                  label="Foto Profil"
+                  :isCircular="true"
+                  containerClass="w-32 mx-auto"
+                />
+                <p class="text-xs text-center text-gray-500 mt-4 leading-relaxed">
+                  Format PNG/JPG disarankan, rasio 1:1. Maksimal 2MB.
+                </p>
+              </div>
+            </div>
 
-          <div>
-            <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >
-              Nama Lengkap
-            </label>
-            <input
-              type="text"
-              v-model="profileForm.name"
-              required
-              class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-            />
-          </div>
+            <!-- Kolom Kanan: Data Form -->
+            <div class="w-full md:w-2/3 space-y-6">
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
+                  Nama Lengkap
+                </label>
+                <input
+                  type="text"
+                  v-model="profileForm.name"
+                  required
+                  class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                />
+              </div>
 
-          <div v-if="currentUser.provider === 'local'">
-            <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >
-              Kata Sandi Baru (Opsional)
-            </label>
-            <input
-              type="password"
-              v-model="profileForm.password"
-              minlength="8"
-              placeholder="Kosongkan jika tidak ingin mengubah kata sandi"
-              class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-            />
-            <p class="text-xs text-gray-500 mt-2">Minimal 8 karakter.</p>
-          </div>
+              <div v-if="currentUser.provider === 'local'">
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
+                  Kata Sandi Baru (Opsional)
+                </label>
+                <input
+                  type="password"
+                  v-model="profileForm.password"
+                  minlength="8"
+                  placeholder="Kosongkan jika tidak ingin mengubah kata sandi"
+                  class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                />
+                <p class="text-xs text-gray-500 mt-2">Minimal 8 karakter.</p>
+              </div>
 
-          <div class="pt-4">
-            <button
-              type="submit"
-              class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors shrink-0"
-            >
-              <PhFloppyDisk class="w-5 h-5 mr-2" />
-              Simpan Profil
-            </button>
+              <div class="pt-2">
+                <button
+                  type="submit"
+                  class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors shrink-0"
+                >
+                  <PhFloppyDisk class="w-5 h-5 mr-2" />
+                  Simpan Profil
+                </button>
+              </div>
+            </div>
           </div>
         </form>
       </div>
