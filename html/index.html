@@ -1288,6 +1288,24 @@
 
     </main>
 
+    <!-- Floating Action Buttons -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+        <!-- Dark Mode Toggle -->
+        <button @click="toggleDarkMode"
+            class="w-10 h-10 md:w-12 md:h-12 bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 rounded-full shadow-lg border border-gray-200 dark:border-slate-700 flex items-center justify-center transition-all hover:scale-110 focus:outline-none"
+            title="Ganti Tema">
+            <span v-show="!isDarkMode" class="flex items-center justify-center"><i data-lucide="moon" class="w-5 h-5 md:w-6 md:h-6"></i></span>
+            <span v-show="isDarkMode" class="flex items-center justify-center"><i data-lucide="sun" class="w-5 h-5 md:w-6 md:h-6"></i></span>
+        </button>
+
+        <!-- Scroll to Top -->
+        <button v-show="isNavbarScrolled" @click="scrollToTop"
+            class="w-10 h-10 md:w-12 md:h-12 bg-blue-600/90 hover:bg-blue-700 text-white rounded-full shadow-lg backdrop-blur-sm flex items-center justify-center transition-all hover:-translate-y-1 focus:outline-none"
+            title="Kembali ke Atas" style="display: none;">
+            <i data-lucide="chevron-up" class="w-5 h-5 md:w-6 md:h-6"></i>
+        </button>
+    </div>
+
     <!-- Footer Section -->
     <footer class="bg-slate-800 text-slate-300 pt-16 pb-8 border-t border-slate-900 px-6 md:px-10">
         <div class="container mx-auto">
@@ -1428,6 +1446,13 @@
                             mobileDropdowns[key] = false;
                         }
                     }
+                };
+
+                const scrollToTop = () => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
                 };
 
                 const themeClasses = {
@@ -1575,6 +1600,7 @@
                     closeShareModal,
                     isDarkMode,
                     toggleDarkMode,
+                    scrollToTop,
                     themeClasses,
                     agendas,
                     ptnData

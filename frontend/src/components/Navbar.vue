@@ -278,44 +278,10 @@
       </div>
 
       <div class="hidden items-center lg:flex">
-        <!-- Dark Mode Toggle -->
-        <button
-          @click="toggleDarkMode"
-          class="ml-2 p-2 rounded-full focus:outline-none transition-colors"
-          :class="[
-            isNavbarScrolled || isMobileMenuOpen
-              ? 'text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-slate-700'
-              : 'text-white hover:bg-white/10',
-          ]"
-        >
-          <span v-show="!isDarkMode" class="flex items-center justify-center">
-            <PhMoon class="w-5 h-5" />
-          </span>
-          <span v-show="isDarkMode" class="flex items-center justify-center">
-            <PhSun class="w-5 h-5" />
-          </span>
-        </button>
       </div>
 
       <!-- Mobile Menu Button -->
       <div class="flex items-center gap-2 lg:hidden">
-        <!-- Dark Mode Toggle -->
-        <button
-          @click="toggleDarkMode"
-          class="p-2 rounded-full focus:outline-none transition-colors"
-          :class="[
-            isNavbarScrolled || isMobileMenuOpen
-              ? 'text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-slate-700'
-              : 'text-white hover:bg-white/10',
-          ]"
-        >
-          <span v-show="!isDarkMode" class="flex items-center justify-center">
-            <PhMoon class="w-5 h-5" />
-          </span>
-          <span v-show="isDarkMode" class="flex items-center justify-center">
-            <PhSun class="w-5 h-5" />
-          </span>
-        </button>
         <button
           @click="toggleMobileMenu"
           :class="[
@@ -561,15 +527,52 @@
       </div>
     </div>
   </nav>
+
+  <!-- Floating Action Buttons -->
+  <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+    <!-- Dark Mode Toggle -->
+    <button
+      @click="toggleDarkMode"
+      class="w-10 h-10 md:w-12 md:h-12 bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 rounded-full shadow-lg border border-gray-200 dark:border-slate-700 flex items-center justify-center transition-all hover:scale-110 focus:outline-none"
+      title="Ganti Tema"
+    >
+      <span v-show="!isDarkMode" class="flex items-center justify-center">
+        <PhMoon class="w-5 h-5 md:w-6 md:h-6" />
+      </span>
+      <span v-show="isDarkMode" class="flex items-center justify-center">
+        <PhSun class="w-5 h-5 md:w-6 md:h-6" />
+      </span>
+    </button>
+
+    <!-- Scroll to Top -->
+    <transition
+      enter-active-class="transition-all duration-300 ease-out"
+      enter-from-class="opacity-0 translate-y-4"
+      enter-to-class="opacity-100 translate-y-0"
+      leave-active-class="transition-all duration-300 ease-in"
+      leave-from-class="opacity-100 translate-y-0"
+      leave-to-class="opacity-0 translate-y-4"
+    >
+      <button
+        v-show="showScrollTop"
+        @click="scrollToTop"
+        class="w-10 h-10 md:w-12 md:h-12 bg-blue-600/90 hover:bg-blue-700 text-white rounded-full shadow-lg backdrop-blur-sm flex items-center justify-center transition-all hover:-translate-y-1 focus:outline-none"
+        title="Kembali ke Atas"
+      >
+        <PhCaretUp class="w-5 h-5 md:w-6 md:h-6" />
+      </button>
+    </transition>
+  </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, reactive, watch } from "vue";
 import { useRoute } from "vue-router";
-import { PhCaretDown, PhMoon, PhSun, PhList, PhX } from "@phosphor-icons/vue";
+import { PhCaretDown, PhMoon, PhSun, PhList, PhX, PhCaretUp } from "@phosphor-icons/vue";
 
 const navRef = ref(null);
 const isNavbarScrolled = ref(false);
+const showScrollTop = ref(false);
 const isMobileMenuOpen = ref(false);
 const isDarkMode = ref(false);
 const activeDropdown = ref(null);
@@ -586,6 +589,7 @@ const mobileDropdowns = reactive({
 const handleScroll = () => {
   const forceSolid = route.path.startsWith("/artikel");
   isNavbarScrolled.value = window.scrollY > 50 || forceSolid;
+  showScrollTop.value = window.scrollY > 300;
 };
 
 const handleResize = () => {
@@ -628,6 +632,13 @@ const handleClickOutside = (event) => {
   if (navRef.value && !navRef.value.contains(event.target)) {
     closeDropdowns();
   }
+};
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
 };
 
 const setDarkMode = (dark) => {
