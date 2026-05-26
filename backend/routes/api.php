@@ -62,6 +62,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/galleries/{gallery}', [GalleryController::class, 'update']);
     Route::delete('/galleries/{gallery}', [GalleryController::class, 'destroy']);
     Route::post('/galleries/bulk-delete', [GalleryController::class, 'bulkDelete']);
+    
+    // API Video Profil Sekolah (Akses baca untuk admin biasa dan super_admin)
+    Route::get('/school-video', [SchoolVideoController::class, 'show']);
 
   // Group untuk Rute yang HANYA BOLEH diakses oleh Super Admin
   Route::middleware([CheckRole::class . ':super_admin'])->group(function () {
@@ -106,7 +109,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('/map-locations', MapLocationController::class);
 
     // API Video Profil Sekolah
-    Route::get('/school-video', [SchoolVideoController::class, 'show']);
     Route::post('/school-video', [SchoolVideoController::class, 'update']);
     Route::delete('/school-video', [SchoolVideoController::class, 'destroy']);
 

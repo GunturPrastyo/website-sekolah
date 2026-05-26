@@ -52,6 +52,8 @@ const isCategoryDropdownOpen = ref(false);
 const editingCategoryIndex = ref(null);
 const editingCategoryName = ref("");
 
+const userRole = ref(localStorage.getItem("user_role") || "admin");
+
 const fetchGallery = async () => {
   try {
     const response = await api.get("/api/galleries");
@@ -724,13 +726,14 @@ const getCategoryName = (id) => {
 
     <!-- Pengaturan Video Profil -->
     <div
+      v-if="userRole === 'super_admin'"
       class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm mb-8"
     >
       <div
         class="flex items-center justify-between mb-4 border-b border-gray-100 dark:border-slate-700 pb-4"
       >
         <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center">
-          <PhVideoCamera class="w-6 h-6 mr-2 text-blue-600" />
+          <PhVideoCamera class="w-6 h-6 mr-2 text-gray-800" />
           Video Profil Sekolah
         </h3>
         <div class="flex items-center gap-3">
