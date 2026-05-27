@@ -51,6 +51,9 @@ Route::get('/vision-mission', [VisionMissionController::class, 'index']);
 Route::get('/profil-sekolah', [SchoolProfileController::class, 'show']);
 Route::get('/sejarah', [TimelineController::class, 'index']);
 
+// API Fasilitas (Akses Publik)
+Route::get('/fasilitas', [FacilityController::class, 'index']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -100,7 +103,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/vision-mission', [VisionMissionController::class, 'update']);
 
     // API Fasilitas
-    Route::get('/fasilitas', [FacilityController::class, 'index']);
     Route::post('/fasilitas', [FacilityController::class, 'store']);
     Route::put('/fasilitas/{facility}', [FacilityController::class, 'update']);
     Route::delete('/fasilitas/{facility}', [FacilityController::class, 'destroy']);
