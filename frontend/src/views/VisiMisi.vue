@@ -69,30 +69,20 @@
               </h2>
             </div>
 
-            <div
-              class="text-gray-700 dark:text-gray-300 space-y-4 md:space-y-5 text-sm sm:text-base md:text-lg leading-relaxed text-justify"
-              ref="textContainerRef"
-            >
-              <p
-                v-for="(paragraph, pIdx) in sambutanParagraphs"
-                :key="pIdx"
-                :class="{
-                  'relative z-10 font-medium text-gray-800 dark:text-gray-200':
-                    pIdx === 0,
-                }"
-              >
-                <PhQuotes
-                  v-if="pIdx === 0"
-                  class="absolute -top-4 -left-4 md:-top-6 md:-left-6 w-8 h-8 md:w-12 md:h-12 text-blue-100 dark:text-slate-800 -z-10 rotate-180"
-                />
-                <span
-                  v-for="(sentence, sIdx) in splitSentences(paragraph)"
-                  :key="sIdx"
-                  class="fade-sentence opacity-0 transition-opacity duration-1000 ease-in-out"
-                >
-                  {{ sentence }}
-                </span>
-              </p>
+            <div v-if="isLoading" class="animate-pulse space-y-4 mt-6">
+              <div class="h-4 bg-gray-200 dark:bg-slate-700 rounded w-full"></div>
+              <div class="h-4 bg-gray-200 dark:bg-slate-700 rounded w-5/6"></div>
+              <div class="h-4 bg-gray-200 dark:bg-slate-700 rounded w-4/6"></div>
+            </div>
+            <div v-else class="relative z-10 mt-6">
+              <PhQuotes
+                class="absolute -top-4 -left-4 md:-top-6 md:-left-6 w-8 h-8 md:w-12 md:h-12 text-blue-100 dark:text-slate-800 -z-10 rotate-180"
+              />
+              <div
+                class="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed text-justify opacity-0 translate-y-4 transition-all duration-1000 ease-in-out editor-content"
+                ref="textContainerRef"
+                v-html="sambutan"
+              ></div>
             </div>
 
             <div
@@ -132,11 +122,15 @@
             >
               Visi
             </h3>
+            <div
+              v-if="isLoading"
+              class="animate-pulse h-12 bg-white/20 rounded w-full"
+            ></div>
             <p
+              v-else
               class="text-lg sm:text-xl md:text-2xl font-medium leading-relaxed text-blue-50"
             >
-              "Terwujudnya Lulusan yang Bertaqwa, Berkarakter, Cerdas, Terampil, dan
-              Berbudaya Lingkungan serta Mampu Bersaing di Era Global."
+              "{{ visi }}"
             </p>
           </div>
         </div>
@@ -159,65 +153,21 @@
             </h3>
           </div>
 
-          <ul class="relative z-10 space-y-4 md:space-y-6">
-            <li class="flex items-start group">
+          <div v-if="isLoading" class="relative z-10 animate-pulse space-y-4">
+            <div class="h-12 bg-white/10 rounded w-full"></div>
+            <div class="h-12 bg-white/10 rounded w-full"></div>
+            <div class="h-12 bg-white/10 rounded w-full"></div>
+          </div>
+          <ul v-else class="relative z-10 space-y-4 md:space-y-6">
+            <li v-for="(item, index) in misi" :key="index" class="flex items-start group">
               <span
                 class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-slate-800 text-blue-200 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-white/20 dark:border-slate-700"
-                >1</span
+                >{{ index + 1 }}</span
               >
               <p
                 class="text-blue-50 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
               >
-                Menumbuhkembangkan keimanan dan ketaqwaan melalui pembiasaan kegiatan
-                keagamaan di lingkungan sekolah.
-              </p>
-            </li>
-            <li class="flex items-start group">
-              <span
-                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-slate-800 text-blue-200 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-white/20 dark:border-slate-700"
-                >2</span
-              >
-              <p
-                class="text-blue-50 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
-              >
-                Melaksanakan proses pembelajaran dan bimbingan secara efektif, inovatif,
-                dan berpusat pada peserta didik.
-              </p>
-            </li>
-            <li class="flex items-start group">
-              <span
-                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-slate-800 text-blue-200 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-white/20 dark:border-slate-700"
-                >3</span
-              >
-              <p
-                class="text-blue-50 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
-              >
-                Membina peserta didik untuk mengembangkan minat, bakat, dan potensi yang
-                dimiliki melalui kegiatan ekstrakurikuler.
-              </p>
-            </li>
-            <li class="flex items-start group">
-              <span
-                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-slate-800 text-blue-200 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-white/20 dark:border-slate-700"
-                >4</span
-              >
-              <p
-                class="text-blue-50 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
-              >
-                Mewujudkan lingkungan sekolah yang bersih, asri, aman, dan nyaman sebagai
-                pilar utama pendukung proses belajar mengajar.
-              </p>
-            </li>
-            <li class="flex items-start group">
-              <span
-                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-slate-800 text-blue-200 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-white/20 dark:border-slate-700"
-                >5</span
-              >
-              <p
-                class="text-blue-50 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
-              >
-                Meningkatkan kemampuan pemanfaatan teknologi informasi dan komunikasi
-                untuk siap bersaing di tingkat global.
+                {{ item.text }}
               </p>
             </li>
           </ul>
@@ -231,33 +181,41 @@
 import { ref, onMounted } from "vue";
 import { PhQuotes } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
+import api from "@/api/index.js";
 
 const textContainerRef = ref(null);
 
-const sambutanParagraphs = [
-  '"Selamat datang di website resmi SMA Negeri 1 Nogosari. Kami berkomitmen untuk memberikan pendidikan berkualitas yang tidak hanya berfokus pada kecerdasan akademis, tetapi juga pembentukan karakter peserta didik yang berakhlak mulia dan berbudaya lingkungan."',
-  "Di era digital dan globalisasi saat ini, lembaga pendidikan memiliki tanggung jawab besar. Oleh karena itu, kami terus berinovasi dalam metode pembelajaran serta melengkapi berbagai fasilitas guna memastikan anak-anak kita siap menghadapi tantangan masa depan dengan bekal ilmu dan iman yang seimbang.",
-  "Kolaborasi yang erat antara guru, siswa, komite sekolah, dan masyarakat adalah kunci utama dari kesuksesan yang kita raih bersama. Melalui visi dan misi yang jelas, kami berharap dapat mewujudkan sekolah sebagai tempat yang menyenangkan untuk belajar dan bertumbuh.",
-  "Terima kasih atas dukungan dan kepercayaan Bapak/Ibu sekalian terhadap sekolah kami. Mari kita bersama-sama mewujudkan generasi penerus yang cerdas, terampil, dan siap berkontribusi bagi nusa dan bangsa.",
-];
+const visi = ref("");
+const misi = ref([]);
+const sambutan = ref("");
+const isLoading = ref(true);
 
-const splitSentences = (text) => {
-  // Memecah teks per kalimat (termasuk tanda baca dan kutip) dan mempertahankan spasi
-  return text.match(/[^.!?]+[.!?]+["']?\s*/g) || [text];
+const fetchVisionMission = async () => {
+  isLoading.value = true;
+  try {
+    const response = await api.get("/api/vision-mission");
+    const data = response.data.data;
+    visi.value = data.vision || "";
+    misi.value = data.missions || [];
+    sambutan.value = data.principal_speech || "";
+  } catch (error) {
+    console.error("Gagal mengambil data Visi & Misi:", error);
+  } finally {
+    isLoading.value = false;
+  }
 };
 
-onMounted(() => {
+onMounted(async () => {
+  await fetchVisionMission();
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const sentences = entry.target.querySelectorAll(".fade-sentence");
-          sentences.forEach((el, idx) => {
-            setTimeout(() => {
-              el.classList.add("opacity-100");
-              el.classList.remove("opacity-0");
-            }, idx * 400); // jeda 400ms per kalimat agar mulus dibaca
-          });
+          setTimeout(() => {
+            entry.target.classList.add("opacity-100", "translate-y-0");
+            entry.target.classList.remove("opacity-0", "translate-y-4");
+          }, 200);
           observer.unobserve(entry.target);
         }
       });
@@ -273,4 +231,11 @@ onMounted(() => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
+
+.editor-content :deep(p) {
+  margin-bottom: 1.25rem;
+}
+.editor-content :deep(strong) {
+  font-weight: 600;
+}
 </style>
