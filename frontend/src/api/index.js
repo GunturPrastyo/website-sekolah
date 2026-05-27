@@ -20,8 +20,8 @@ api.interceptors.response.use(
       localStorage.removeItem('user');
       localStorage.removeItem('isLoggedIn');
 
-      // Amankan routing kembali ke login (cegah duplikasi navigasi)
-      if (router.currentRoute.value.name !== 'login') {
+      // Hanya redirect ke halaman login jika pengguna sedang berada di rute admin
+      if (router.currentRoute.value.path.startsWith('/admin')) {
         router.push({ name: 'login' });
       }
     }
