@@ -2,20 +2,30 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import {
   PhBuildings,
-  PhHammer,
   PhMedal,
-  PhMonitor,
-  PhLeaf,
-  PhRocket,
   PhCheckCircle,
   PhHash,
   PhMapPin,
 } from "@phosphor-icons/vue";
+import { educationIcons } from "@/components/IconPicker.vue";
 import PageHeader from "@/components/PageHeader.vue";
+import api from "@/api/index.js";
 
 const timelineRef = ref(null);
 const lineHeight = ref("0%");
 const currentProgress = ref(0);
+
+const schoolProfile = ref({
+  description: "Memuat deskripsi...",
+  npsn: "-",
+  accreditation: "-",
+  location: "-",
+  status: "-",
+  image: "/img/gedung.jpg",
+});
+
+const timeline = ref([]);
+const isLoading = ref(true);
 
 const handleScroll = () => {
   if (!timelineRef.value) return;
@@ -33,67 +43,65 @@ const handleScroll = () => {
   currentProgress.value = progress;
 };
 
-const timeline = ref([
-  {
-    year: "1985",
-    title: "Pendirian & Peresmian SMAN 1",
-    icon: PhBuildings,
-    image: "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?q=80&w=800",
-    description:
-      "Sekolah ini resmi didirikan pada tanggal 17 Agustus 1985 berdasarkan SK Menteri Pendidikan. Pada awalnya, sekolah hanya memiliki 3 ruang kelas dengan 120 siswa angkatan pertama dan menumpang di gedung SMP terdekat selama proses pembangunan gedung utama berlangsung.",
-  },
-  {
-    year: "1992",
-    title: "Pembangunan Gedung Utama",
-    icon: PhHammer,
-    image: "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=800",
-    description:
-      "Pembangunan gedung sekolah mandiri akhirnya selesai dan diresmikan oleh Gubernur. Di tahun ini, SMAN 1 mulai menempati lokasi saat ini dengan fasilitas yang diperluas, meliputi 12 ruang kelas, ruang guru, dan lapangan olahraga serbaguna.",
-  },
-  {
-    year: "2005",
-    title: "Akreditasi A & Prestasi Nasional",
-    icon: PhMedal,
-    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800",
-    description:
-      "Berkat dedikasi seluruh civitas akademika, SMAN 1 berhasil meraih akreditasi A (Sangat Baik). Pada tahun yang sama, tim cerdas cermat sekolah berhasil membawa pulang piala Juara 1 tingkat Nasional untuk pertama kalinya.",
-  },
-  {
-    year: "2015",
-    title: "Era Transformasi Digital",
-    icon: PhMonitor,
-    image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800",
-    description:
-      "Menjawab tantangan abad 21, sekolah mulai mengintegrasikan teknologi ke dalam pembelajaran. Pembangunan laboratorium komputer modern, perpustakaan digital, serta pengadaan proyektor dan Wi-Fi di seluruh area sekolah mulai direalisasikan.",
-  },
-  {
-    year: "2021",
-    title: "Sekolah Adiwiyata & Peduli Lingkungan",
-    icon: PhLeaf,
-    image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e736?q=80&w=800",
-    description:
-      "Berkomitmen pada lingkungan yang asri, sekolah memenangkan penghargaan Sekolah Adiwiyata tingkat Provinsi. Program bank sampah, taman hidroponik, dan ruang hijau terpadu menjadi identitas baru SMAN 1.",
-  },
-  {
-    year: "2026",
-    title: "Pelopor Kurikulum Merdeka",
-    icon: PhRocket,
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800",
-    description:
-      "Hari ini, SMAN 1 Nogosari terus melesat menjadi sekolah percontohan dalam implementasi Kurikulum Merdeka. Dengan lebih dari 1100 siswa, kami terus melahirkan lulusan yang cerdas, berkarakter, dan berdaya saing global.",
-  },
-]);
-
-const splitSentences = (text) => {
-  // Memecah teks per kalimat (berdasarkan titik/tanya/seru) beserta spasi setelahnya
-  return text.match(/[^.!?]+[.!?]+\s*/g) || [text];
+const getImageUrl = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http") || path.startsWith("data:")) return path;
+  const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
 };
 
-onMounted(() => {
-  window.addEventListener("scroll", handleScroll);
-  handleScroll(); // Inisialisasi kalkulasi awal pada saat dimuat
+const fetchData = async () => {
+  try {
+    const profileRes = await api.get("/api/profil-sekolah");
+    if (profileRes.data?.data) {
+      const pd = profileRes.data.data;
+      if (pd.description) schoolProfile.value.description = pd.description;
+      if (pd.npsn) schoolProfile.value.npsn = pd.npsn;
+      if (pd.accreditation) schoolProfile.value.accreditation = pd.accreditation;
+      if (pd.location) schoolProfile.value.location = pd.location;
+      if (pd.status) schoolProfile.value.status = pd.status;
+      if (pd.image) schoolProfile.value.image = getImageUrl(pd.image);
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      // Jangan tampilkan log console jika memang datanya belum ada di database
+      schoolProfile.value.description = "Data profil sekolah belum tersedia.";
+    } else {
+      console.error("Gagal memuat profil sekolah:", error);
+    }
+  }
 
-  // Intersection Observer untuk efek pop-up kartu timeline
+  try {
+    const timelineRes = await api.get("/api/sejarah");
+    if (timelineRes.data?.data) {
+      timeline.value = timelineRes.data.data.map((item) => {
+        if (item.image) {
+          item.image = getImageUrl(item.image);
+        }
+        return item;
+      });
+    }
+  } catch (error) {
+    if (error.response && error.response.status !== 404) {
+      console.error("Gagal memuat sejarah:", error);
+    }
+  } finally {
+    isLoading.value = false;
+
+    // Panggil ulang kalkulasi posisi scroll dan inisialisasi observer setelah rendering
+    setTimeout(() => {
+      handleScroll();
+      setupObserver();
+    }, 100);
+  }
+};
+
+const getIconComponent = (iconName) => {
+  if (!iconName) return PhBuildings;
+  return educationIcons?.[iconName] || PhBuildings;
+};
+
+const setupObserver = () => {
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -101,25 +109,29 @@ onMounted(() => {
           entry.target.classList.add("opacity-100", "translate-y-0", "scale-100");
           entry.target.classList.remove("opacity-0", "translate-y-10", "scale-95");
 
-          // Animasi fade-in berurutan untuk setiap kalimat di dalam card
           const sentences = entry.target.querySelectorAll(".fade-sentence");
           sentences.forEach((el, idx) => {
             setTimeout(() => {
               el.classList.add("opacity-100");
               el.classList.remove("opacity-0");
-            }, 400 + idx * 500); // Menunggu card pop-up (400ms), lalu jeda 500ms per kalimat
+            }, 400 + idx * 500);
           });
 
           observer.unobserve(entry.target);
         }
       });
     },
-    { threshold: 0.15 } // Terpicu saat 15% elemen terlihat
+    { threshold: 0.15 }
   );
 
   document.querySelectorAll(".fade-on-scroll").forEach((el) => {
     observer.observe(el);
   });
+};
+
+onMounted(() => {
+  window.addEventListener("scroll", handleScroll);
+  fetchData();
 });
 
 onBeforeUnmount(() => {
@@ -147,7 +159,7 @@ onBeforeUnmount(() => {
             class="w-full lg:w-5/12 h-72 sm:h-80 lg:h-[450px] relative rounded-xl overflow-hidden shadow-xl border border-gray-100 dark:border-slate-700"
           >
             <img
-              src="/img/gedung.jpg"
+              :src="schoolProfile.image || '/img/gedung.jpg'"
               class="absolute inset-0 w-full h-full object-cover"
               alt="Gedung Sekolah"
             />
@@ -166,12 +178,10 @@ onBeforeUnmount(() => {
             >
               Profil Singkat Sekolah
             </h2>
-            <p class="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed text-justify">
-              SMA Negeri 1 Nogosari adalah lembaga pendidikan menengah atas yang
-              berdedikasi tinggi dalam mencetak generasi penerus bangsa yang unggul,
-              cerdas, dan berkarakter. Berada di lingkungan yang asri, kami senantiasa
-              berupaya memberikan suasana belajar yang kondusif, didukung oleh tenaga
-              pendidik profesional dan fasilitas yang terus berkembang mengikuti zaman.
+            <p
+              class="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed text-justify whitespace-pre-line"
+            >
+              {{ schoolProfile.description }}
             </p>
 
             <!-- Grid Fakta -->
@@ -184,7 +194,9 @@ onBeforeUnmount(() => {
                 </div>
                 <div>
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">NPSN</h4>
-                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">20301234</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                    {{ schoolProfile.npsn }}
+                  </p>
                 </div>
               </div>
               <div class="flex items-start group">
@@ -198,7 +210,7 @@ onBeforeUnmount(() => {
                     Akreditasi
                   </h4>
                   <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                    A (Sangat Baik)
+                    {{ schoolProfile.accreditation }}
                   </p>
                 </div>
               </div>
@@ -211,7 +223,7 @@ onBeforeUnmount(() => {
                 <div>
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">Lokasi</h4>
                   <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                    Nogosari, Kab. Boyolali
+                    {{ schoolProfile.location }}
                   </p>
                 </div>
               </div>
@@ -224,7 +236,7 @@ onBeforeUnmount(() => {
                 <div>
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">Status</h4>
                   <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                    Sekolah Negeri
+                    {{ schoolProfile.status }}
                   </p>
                 </div>
               </div>
@@ -273,7 +285,20 @@ onBeforeUnmount(() => {
           </p>
         </div>
 
-        <div class="relative wrap overflow-hidden h-full" ref="timelineRef">
+        <div v-if="isLoading" class="flex justify-center py-20">
+          <div
+            class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400"
+          ></div>
+        </div>
+
+        <div
+          v-else-if="timeline.length === 0"
+          class="text-center py-20 text-white opacity-80"
+        >
+          Belum ada data sejarah yang ditambahkan.
+        </div>
+
+        <div v-else class="relative wrap overflow-hidden h-full" ref="timelineRef">
           <!-- Garis Tengah Timeline (Latar Belakang) -->
           <div
             class="hidden min-[400px]:block absolute z-0 w-1 bg-blue-900 dark:bg-slate-800 h-full left-6 sm:left-8 transform -translate-x-1/2 rounded-full"
@@ -300,7 +325,10 @@ onBeforeUnmount(() => {
                   : 'bg-blue-900 dark:bg-slate-800 text-blue-400 dark:text-gray-400'
               "
             >
-              <component :is="item.icon" class="w-5 h-5 md:w-6 md:h-6" />
+              <component
+                :is="getIconComponent(item.icon)"
+                class="w-5 h-5 md:w-6 md:h-6"
+              />
             </div>
 
             <!-- Kartu Konten -->
@@ -335,6 +363,7 @@ onBeforeUnmount(() => {
                   <div class="clearfix">
                     <!-- Gambar mengambang ke kiri -->
                     <div
+                      v-if="item.image"
                       class="float-left w-[45%] sm:w-[40%] lg:w-[35%] max-w-[200px] sm:max-w-[240px] md:max-w-[280px] lg:max-w-[360px] mr-4 mb-2 md:mr-6 md:mb-4 lg:mr-8 lg:mb-5"
                     >
                       <div
@@ -354,17 +383,10 @@ onBeforeUnmount(() => {
                       </p>
                     </div>
 
-                    <p
-                      class="text-gray-600 dark:text-gray-400 text-sm md:text-lg leading-relaxed text-justify"
-                    >
-                      <span
-                        v-for="(sentence, sIdx) in splitSentences(item.description)"
-                        :key="sIdx"
-                        class="fade-sentence opacity-0 transition-opacity duration-1000 ease-in-out"
-                      >
-                        {{ sentence }}
-                      </span>
-                    </p>
+                    <div
+                      class="text-gray-600 dark:text-gray-400 text-sm md:text-lg leading-relaxed text-justify editor-content-preview fade-sentence opacity-0 transition-opacity duration-1000 ease-in-out"
+                      v-html="item.description"
+                    ></div>
                   </div>
                 </div>
               </div>

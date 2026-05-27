@@ -47,6 +47,10 @@ Route::get('/public-galleries', [GalleryController::class, 'publicIndex']);
 // API Visi & Misi (Akses Publik)
 Route::get('/vision-mission', [VisionMissionController::class, 'index']);
 
+// API Profil Sekolah & Sejarah (Akses Publik)
+Route::get('/profil-sekolah', [SchoolProfileController::class, 'show']);
+Route::get('/sejarah', [TimelineController::class, 'index']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -81,12 +85,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
   // Group untuk Rute yang HANYA BOLEH diakses oleh Super Admin
   Route::middleware([CheckRole::class . ':super_admin'])->group(function () {
     // API Profil Sekolah
-    Route::get('/profil-sekolah', [SchoolProfileController::class, 'show']);
     // Rute untuk update profil. Dikirim sebagai POST dari frontend dengan _method 'PUT' untuk menangani upload file.
     Route::put('/profil-sekolah', [SchoolProfileController::class, 'update']);
 
     // API Sejarah (Lini Masa Timeline)
-    Route::get('/sejarah', [TimelineController::class, 'index']);
     Route::post('/sejarah', [TimelineController::class, 'store']);
     Route::put('/sejarah/{timeline}', [TimelineController::class, 'update']);
     Route::delete('/sejarah/{timeline}', [TimelineController::class, 'destroy']);

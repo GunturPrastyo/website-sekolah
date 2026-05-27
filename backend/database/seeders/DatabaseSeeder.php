@@ -33,5 +33,8 @@ class DatabaseSeeder extends Seeder
                 'role'     => 'admin',
             ]
         );
+
+        $this->call(VisionMissionSeeder::class);
+        $this->call(SchoolProfileSeeder::class);
     }
 }
