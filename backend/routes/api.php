@@ -44,6 +44,9 @@ Route::get('/public-news', [NewsController::class, 'publicIndex']);
 Route::get('/public-news/{id}', [NewsController::class, 'publicShow']);
 Route::get('/public-galleries', [GalleryController::class, 'publicIndex']);
 
+// API Visi & Misi (Akses Publik)
+Route::get('/vision-mission', [VisionMissionController::class, 'index']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -91,8 +94,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // API khusus untuk memperbarui urutan timeline lewat drag & drop
     Route::post('/sejarah/reorder', [TimelineController::class, 'reorder']);
 
-    // API Visi & Misi
-    Route::get('/vision-mission', [VisionMissionController::class, 'index']);
+    // API Visi & Misi (Hanya Update yang butuh autentikasi Super Admin)
     Route::post('/vision-mission', [VisionMissionController::class, 'update']);
 
     // API Fasilitas
