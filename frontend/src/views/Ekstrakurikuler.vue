@@ -22,6 +22,7 @@ import {
 } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 import EkskulModal from "@/components/EkskulModal.vue";
+import api from "@/api/index.js";
 
 const activeCategory = ref("semua");
 
@@ -46,124 +47,53 @@ const days = [
   { id: "sabtu", name: "Sabtu" },
 ];
 
-const ekskulList = ref([
-  {
-    id: 1,
-    name: "Pramuka",
-    category: "kepemimpinan",
-    image: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800",
-    schedule: "Jumat, 15.00 - 17.00",
-    desc:
-      "Membentuk karakter disiplin, mandiri, tangguh, dan berjiwa kepemimpinan melalui kegiatan kepramukaan.",
-    story:
-      "Pramuka SMAN 1 Nogosari bukan sekadar ekstrakurikuler biasa. Di sini, kami adalah keluarga yang saling mendukung dan tumbuh bersama. Melalui berbagai kegiatan menantang seperti kemah bakti, penjelajahan alam, hingga pelatihan survival, setiap anggota diajak untuk keluar dari zona nyaman. Kami percaya bahwa kepemimpinan sejati lahir dari kedisiplinan dan empati terhadap sesama dan lingkungan sekitar. Mari bergabung dan ukir cerita petualanganmu bersama kami!",
-    pembina: "Bapak Rudi Hermawan, S.Pd",
-    members: 124,
-    socials: {
-      ig: "@pramuka_sman1",
-      yt: "Pramuka SMAN 1",
-      email: "pramuka@sman1nogosari.sch.id",
-    },
-  },
-  {
-    id: 2,
-    name: "Paskibra",
-    category: "kepemimpinan",
-    image: "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800",
-    schedule: "Selasa & Kamis, 15.30 - 17.00",
-    desc:
-      "Melatih kedisiplinan baris-berbaris dan memupuk rasa nasionalisme serta patriotisme cinta tanah air.",
-    story:
-      "Tegap, disiplin, dan berwibawa. Paskibra adalah tempat bagi mereka yang memiliki jiwa nasionalisme tinggi dan semangat pantang menyerah. Kami tidak hanya belajar baris-berbaris, namun juga ditempa untuk menjadi individu yang memiliki integritas dan loyalitas tinggi terhadap nusa dan bangsa. Setiap derap langkah kami adalah wujud kebanggaan, dan mengibarkan Sang Saka Merah Putih adalah kehormatan terbesar kami.",
-    pembina: "Ibu Siti Aminah, M.Pd",
-    members: 45,
-    socials: { ig: "@paskibra_sman1", yt: "Paskibra SMAN 1" },
-  },
-  {
-    id: 3,
-    name: "Bola Basket",
-    category: "olahraga",
-    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=800",
-    schedule: "Senin & Rabu, 15.30 - 17.30",
-    desc:
-      "Mengembangkan bakat olahraga bola basket, melatih kerjasama tim, dan menjaga kebugaran fisik.",
-    story:
-      "Di lapangan ini, keringat dan kerja keras diubah menjadi prestasi gemilang. Klub Basket kami berfokus pada pengembangan fundamental fisik, ketangkasan, serta yang paling utama: kerja sama tim. Menang atau kalah adalah hal biasa, namun komitmen untuk selalu memberikan yang terbaik di setiap pertandingan adalah prinsip kami. Bergabunglah, asah bakatmu, dan bersiaplah menjadi bintang lapangan!",
-    pembina: "Bapak Dwi Saputra, S.Or",
-    members: 32,
-    socials: { ig: "@basket_sman1", yt: "Basket SMAN 1" },
-  },
-  {
-    id: 4,
-    name: "Futsal",
-    category: "olahraga",
-    image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=800",
-    schedule: "Selasa & Jumat, 15.30 - 17.30",
-    desc:
-      "Bina prestasi futsal tingkat pelajar dengan latihan rutin dan persiapan partisipasi berbagai turnamen.",
-    story:
-      "Giring bola, susun strategi, dan cetak gol! Tim futsal SMAN 1 Nogosari adalah salah satu tim yang paling disegani di kancah pelajar tingkat daerah. Kami percaya bahwa kehebatan individu tidak akan bisa mengalahkan kekompakan sebuah tim. Dengan porsi latihan fisik dan taktik yang seimbang, kami selalu bersiap untuk menjuarai berbagai turnamen. Jadilah bagian dari skuad juara kami!",
-    pembina: "Bapak Dwi Saputra, S.Or",
-    members: 40,
-    socials: { ig: "@futsal_sman1" },
-  },
-  {
-    id: 5,
-    name: "Tari Tradisional",
-    category: "seni",
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800",
-    schedule: "Rabu, 15.00 - 17.00",
-    desc:
-      "Melestarikan warisan budaya nusantara melalui seni gerak tari tradisional dari berbagai daerah.",
-    story:
-      "Setiap gerakan adalah harmoni, setiap irama adalah cerita. Kami mengajak para siswa untuk menyelami keindahan warisan budaya nusantara melalui seni tari. Ekstrakurikuler Tari Tradisional bukan hanya tentang menghafal gerakan, melainkan tentang mengekspresikan jiwa dan menghidupkan kembali tradisi leluhur agar tidak lekang oleh zaman. Mari menari dan lestarikan budaya Indonesia dengan bangga.",
-    pembina: "Ibu Maya Indah, S.Sn",
-    members: 28,
-    socials: { ig: "@tari_sman1", yt: "Tari SMAN 1" },
-  },
-  {
-    id: 6,
-    name: "Paduan Suara",
-    category: "seni",
-    image: "https://images.unsplash.com/photo-1516280440502-37f8e1224f4a?q=80&w=800",
-    schedule: "Kamis, 15.00 - 17.00",
-    desc:
-      "Mengembangkan bakat tarik suara dan merajut harmonisasi vokal yang indah dalam bentuk paduan suara.",
-    story:
-      "Menyatukan berbagai warna suara menjadi satu harmoni yang menggetarkan jiwa. Di paduan suara ini, kami belajar teknik vokal, pernapasan, dan kekompakan dalam melantunkan berbagai genre lagu. Dari panggung sekolah hingga kompetisi paduan suara tingkat nasional, suara kami telah menyentuh banyak hati. Jika kamu memiliki passion bernyanyi, di sinilah tempat suaramu akan benar-benar bersinar.",
-    pembina: "Bapak Ahmad Fauzi, S.Sn",
-    members: 35,
-    socials: { ig: "@padus_sman1", yt: "Padus SMAN 1" },
-  },
-  {
-    id: 7,
-    name: "Karya Ilmiah Remaja",
-    category: "akademik",
-    image: "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800",
-    schedule: "Senin, 15.00 - 16.30",
-    desc:
-      "Wadah bagi siswa untuk melakukan penelitian, observasi, bereksperimen, dan penulisan karya ilmiah.",
-    story:
-      "Rasa ingin tahu adalah awal dari sebuah penemuan besar yang mengubah dunia. KIR SMAN 1 menjadi laboratorium ide bagi para siswa yang gemar meneliti, berinovasi, dan mencari solusi atas berbagai permasalahan di sekitar kita. Di sini, hipotesis diuji dan kreativitas diasah tanpa batas. Bersama kami, temukan jawaban dari rasa penasaranmu dan ciptakan karya ilmiah yang bermanfaat bagi masyarakat!",
-    pembina: "Ibu Rina Rahmawati, S.E",
-    members: 25,
-    socials: { ig: "@kir_sman1", email: "kir@sman1nogosari.sch.id" },
-  },
-  {
-    id: 8,
-    name: "English Club",
-    category: "akademik",
-    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800",
-    schedule: "Rabu, 15.00 - 16.30",
-    desc:
-      "Meningkatkan kemampuan berbahasa Inggris dengan asik melalui debat, pidato, dan percakapan interaktif.",
-    story:
-      "Let's speak up and conquer the world! English Club adalah wadah yang asik, interaktif, dan bebas tekanan untuk melatih kepercayaan diri dalam berbahasa Inggris. Melalui simulasi debat, pidato (speech), hingga permainan peran (roleplay), kami membuktikan bahwa belajar bahasa asing itu sangat menyenangkan. Jangan biarkan kendala bahasa menghentikan mimpimu, come join us and let's grow together!",
-    pembina: "Bapak Rudi Hermawan, S.Pd",
-    members: 42,
-    socials: { ig: "@englishclub_sman1", yt: "English Club SMAN 1" },
-  },
-]);
+const ekskulList = ref([]);
+const isFetching = ref(true);
+
+const getImageUrl = (path) => {
+  if (!path)
+    return "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800";
+  if (path.startsWith("http") || path.startsWith("data:")) return path;
+  const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
+};
+
+const parseJSON = (data) => {
+  if (!data) return {};
+  if (typeof data === "string") {
+    try {
+      return JSON.parse(data);
+    } catch (e) {
+      return {};
+    }
+  }
+  return data;
+};
+
+const fetchEkskul = async () => {
+  isFetching.value = true;
+  try {
+    const response = await api.get("/api/public-extracurriculars");
+    if (response.data && response.data.data) {
+      ekskulList.value = response.data.data.map((item) => ({
+        id: item.id,
+        name: item.name,
+        category: item.category || "semua",
+        image: getImageUrl(item.image),
+        schedule: item.schedule || "-",
+        desc: item.description || item.desc || "",
+        story: item.story || item.description || "",
+        pembina: item.pembina || item.coach || "-",
+        members: item.members || item.members_count || 0,
+        socials: parseJSON(item.socials),
+      }));
+    }
+  } catch (error) {
+    console.error("Gagal memuat data ekstrakurikuler:", error);
+  } finally {
+    isFetching.value = false;
+  }
+};
 
 const searchQuery = ref("");
 
@@ -225,7 +155,7 @@ const changePage = (page) => {
 };
 
 const skeletonCount = computed(() => {
-  if (!isLoading.value) return 0;
+  if (!isLoading.value && !isFetching.value) return 0;
   return itemsPerPage;
 });
 // ------------------------
@@ -275,6 +205,7 @@ const closeModal = () => {
 let observer;
 
 onMounted(() => {
+  fetchEkskul();
   // Intersection Observer untuk animasi fade-up
   observer = new IntersectionObserver(
     (entries) => {
@@ -357,7 +288,7 @@ onBeforeUnmount(() => {
               class="grid grid-cols-1 sm:grid-cols-2 gap-10 sm:gap-8 lg:gap-10 relative w-full"
             >
               <div
-                v-for="ekskul in isLoading ? [] : paginatedEkskul"
+                v-for="ekskul in isLoading || isFetching ? [] : paginatedEkskul"
                 :key="ekskul.id"
                 class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out relative group cursor-pointer max-w-[340px] lg:max-w-[300px] xl:max-w-[340px] mx-auto w-full"
                 @click="openModal(ekskul)"
@@ -431,7 +362,11 @@ onBeforeUnmount(() => {
                             class="inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-emerald-100 bg-emerald-900/60 border border-emerald-400/30 px-2.5 py-1 rounded backdrop-blur-md shadow-sm"
                           >
                             <PhUser class="w-3 h-3 mr-1.5" />
-                            {{ ekskul.pembina.split(",")[0] }}
+                            {{
+                              typeof ekskul.pembina === "string"
+                                ? ekskul.pembina.split(",")[0]
+                                : ekskul.pembina || "-"
+                            }}
                           </span>
                         </div>
 
@@ -456,7 +391,7 @@ onBeforeUnmount(() => {
               </div>
 
               <!-- Skeleton Loading -->
-              <template v-if="isLoading">
+              <template v-if="isLoading || isFetching">
                 <div
                   v-for="n in skeletonCount"
                   :key="'skeleton-' + n"
@@ -490,7 +425,7 @@ onBeforeUnmount(() => {
 
             <!-- Pagination Ekstrakurikuler -->
             <div
-              v-if="totalPages > 1"
+              v-if="totalPages > 1 && !isFetching"
               class="flex justify-between items-center gap-2 mt-10 mb-6 sm:mb-0 relative z-10 w-full fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
             >
               <button
@@ -544,7 +479,7 @@ onBeforeUnmount(() => {
 
             <!-- Empty State -->
             <div
-              v-if="filteredEkskul.length === 0"
+              v-if="filteredEkskul.length === 0 && !isFetching && !isLoading"
               class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out col-span-full py-20 text-center bg-gray-50 dark:bg-slate-900/50 backdrop-blur-sm rounded-3xl border-2 border-dashed border-gray-200 dark:border-slate-700 shadow-sm mt-4"
             >
               <div

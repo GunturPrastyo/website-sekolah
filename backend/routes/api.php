@@ -66,6 +66,9 @@ Route::get('/public-curriculum-subjects', [CurriculumSubjectController::class, '
 // API Profil Pelajar Pancasila (Akses Publik)
 Route::get('/public-pancasila-profile', [PancasilaProfileController::class, 'show']);
 
+// API Ekstrakurikuler (Akses Publik)
+Route::get('/public-extracurriculars', [ExtracurricularController::class, 'index']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
