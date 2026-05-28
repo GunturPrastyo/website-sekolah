@@ -95,52 +95,8 @@ const isFetching = ref(true);
 
 const pancasilaProfile = ref({
   title: "Profil Pelajar Pancasila",
-  description:
-    "Kurikulum kami berfokus pada pembentukan karakter siswa yang berlandaskan 6 dimensi Profil Pelajar Pancasila.",
-  dimensions: [
-    {
-      title: "Beriman & Berakhlak",
-      description:
-        "Membentuk siswa yang religius dan memiliki etika baik dalam kehidupan sehari-hari.",
-      icon: "PhHeart",
-      color: "bg-red-600 dark:bg-red-500",
-    },
-    {
-      title: "Berkebinekaan Global",
-      description:
-        "Menghargai keberagaman budaya, toleran, dan berwawasan luas di kancah internasional.",
-      icon: "PhGlobeHemisphereWest",
-      color: "bg-yellow-500",
-    },
-    {
-      title: "Bergotong Royong",
-      description:
-        "Mampu berkolaborasi, peduli terhadap sesama, dan berbagi dalam menyelesaikan masalah.",
-      icon: "PhUsers",
-      color: "bg-green-600 dark:bg-green-500",
-    },
-    {
-      title: "Mandiri",
-      description:
-        "Bertanggung jawab atas proses dan hasil belajarnya sendiri dengan kesadaran tinggi.",
-      icon: "PhUserCheck",
-      color: "bg-blue-600 dark:bg-blue-500",
-    },
-    {
-      title: "Bernalar Kritis",
-      description:
-        "Mampu memproses informasi secara objektif, mengevaluasi, dan menyimpulkan dengan baik.",
-      icon: "PhLightbulb",
-      color: "bg-purple-600 dark:bg-purple-500",
-    },
-    {
-      title: "Kreatif",
-      description:
-        "Mampu memodifikasi dan menghasilkan gagasan, karya, atau tindakan yang orisinal.",
-      icon: "PhPalette",
-      color: "bg-pink-600 dark:bg-pink-500",
-    },
-  ],
+  description: "Memuat deskripsi...",
+  dimensions: [],
 });
 
 const fetchCurriculum = async () => {
@@ -316,7 +272,7 @@ onMounted(() => {
                 class="h-px w-8 sm:w-12 bg-blue-600 dark:bg-blue-400 rounded-full"
               ></span>
               <span
-                class="text-blue-600 dark:text-blue-400 font-bold text-sm sm:text-base tracking-wider uppercase"
+                class="text-blue-600 dark:text-blue-400 font-bold text-base sm:text-xl"
                 style="font-family: 'Kalam', cursive"
                 >Pilar Karakter</span
               >
@@ -373,7 +329,7 @@ onMounted(() => {
         <div class="inline-flex items-center justify-center space-x-2 mb-3">
           <span class="h-px w-8 sm:w-12 bg-blue-400 rounded-full"></span>
           <span
-            class="text-blue-400 font-bold text-sm sm:text-base tracking-wider uppercase"
+            class="text-blue-400 font-bold text-base sm:text-lg"
             style="font-family: 'Kalam', cursive"
             >Struktur Kurikulum</span
           >
