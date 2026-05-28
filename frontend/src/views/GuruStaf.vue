@@ -14,40 +14,57 @@ const changeCategory = (id) => {
 };
 
 const categories = computed(() => {
-  const dynamicCategories = [];
-  // Mengambil kategori unik dari data API
+  // Mengambil jabatan/posisi unik dari data API untuk dijadikan filter
+  const uniqueRoles = [...new Set(staffList.value.map((s) => s.role).filter(Boolean))];
+
+  const dynamicCategories = uniqueRoles
+    .map((role) => ({
+      id: role,
+      name: role, // Asumsi 'role' sudah dalam format yang rapi (e.g., "Kepala Sekolah")
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  // Ubah kembali namanya menjadi "Struktur Organisasi"
+  return [{ id: "semua", name: "Struktur Organisasi" }, ...dynamicCategories];
+});
+
+// Kategori khusus untuk memisahkan struktur organisasi
+const organizationCategories = computed(() => {
   const uniqueCategories = [
     ...new Set(staffList.value.map((s) => s.category).filter(Boolean)),
   ];
 
+  const dynamicCategories = [];
   uniqueCategories.forEach((cat) => {
     let name = cat;
     const knownNames = {
       pimpinan: "Pimpinan Sekolah",
       pendidik: "Tenaga Pendidik",
       tenaga_kependidikan: "Tenaga Kependidikan",
-      informatika: "Guru Informatika",
-      matematika: "Guru Matematika",
-      olahraga: "Guru Olahraga",
-      bahasa_inggris: "Guru Bahasa Inggris",
-      pustakawan: "Pustakawan",
-      tata_usaha: "Staff Tata Usaha",
     };
 
     if (knownNames[cat]) {
       name = knownNames[cat];
     } else {
-      // Format teks fallback misal "guru_kesenian" menjadi "Guru Kesenian"
       name = String(cat)
         .split(/_|-|\s/)
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
     }
-
     dynamicCategories.push({ id: cat, name });
   });
 
-  return [{ id: "semua", name: "Struktur Organisasi" }, ...dynamicCategories];
+  const order = ["pimpinan", "pendidik", "tenaga_kependidikan"];
+  dynamicCategories.sort((a, b) => {
+    const indexA = order.indexOf(a.id);
+    const indexB = order.indexOf(b.id);
+    if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+    if (indexA !== -1) return -1;
+    if (indexB !== -1) return 1;
+    return a.name.localeCompare(b.name);
+  });
+
+  return dynamicCategories;
 });
 
 const activeCategory = ref("semua");
@@ -116,13 +133,13 @@ const baseAllStaffList = computed(() => staffList.value.filter((s) => matchesSea
 const baseFilteredStaff = computed(() => {
   if (activeCategory.value === "semua") return []; // Jika "semua", kita tangani secara terpisah di template
   return staffList.value.filter(
-    (s) => s.category === activeCategory.value && matchesSearch(s)
+    (s) => s.role === activeCategory.value && matchesSearch(s)
   );
 });
 
 const getCategoryCount = (categoryId) => {
   if (categoryId === "semua") return staffList.value.length;
-  return staffList.value.filter((s) => s.category === categoryId).length;
+  return staffList.value.filter((s) => s.role === categoryId).length;
 };
 
 // Paginated Computed properties
@@ -289,10 +306,7 @@ onMounted(() => {
               <div v-else :key="activeCategory" class="space-y-10">
                 <!-- Tampilan 'Semua' (Struktur Organisasi) -->
                 <template v-if="activeCategory === 'semua'">
-                  <template
-                    v-for="cat in categories.filter((c) => c.id !== 'semua')"
-                    :key="cat.id"
-                  >
+                  <template v-for="cat in organizationCategories" :key="cat.id">
                     <div
                       v-if="getStaffByCategoryInSemua(cat.id).length > 0"
                       class="mb-12"
