@@ -15,6 +15,8 @@ import {
   PhCertificate,
   PhArrowUpRight,
   PhUser,
+  PhCaretLeft,
+  PhCaretRight,
 } from "@phosphor-icons/vue";
 import api from "@/api/index.js";
 import PageHeader from "@/components/PageHeader.vue";
@@ -117,6 +119,30 @@ const filteredPrestasi = computed(() => {
   return filtered;
 });
 
+// Fitur Pagination
+const currentPage = ref(1);
+const itemsPerPage = 6;
+
+const totalPages = computed(() => {
+  return Math.ceil(filteredPrestasi.value.length / itemsPerPage);
+});
+
+const paginatedPrestasi = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return filteredPrestasi.value.slice(start, end);
+});
+
+const changePage = (page) => {
+  if (page < 1 || page > totalPages.value) return;
+  isLoading.value = true;
+  setTimeout(() => {
+    currentPage.value = page;
+    isLoading.value = false;
+    window.scrollTo({ top: 400, behavior: "smooth" });
+  }, 400);
+};
+
 // Hitung jumlah prestasi berdasarkan tingkat
 const counts = computed(() => ({
   internasional: prestasiList.value.filter((p) => p.level === "internasional").length,
@@ -192,6 +218,7 @@ const isLoading = ref(false);
 let filterTimeout = null;
 
 watch([activeFilter, activeType, activeYear, searchQuery], () => {
+  currentPage.value = 1;
   isLoading.value = true;
   if (filterTimeout) clearTimeout(filterTimeout);
   filterTimeout = setTimeout(() => {
@@ -447,117 +474,172 @@ onMounted(() => {
         </div>
 
         <!-- Daftar Prestasi dengan Efek Papan Penghargaan -->
-        <TransitionGroup
-          v-else-if="filteredPrestasi.length > 0"
-          name="list"
-          tag="div"
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative"
-        >
-          <div
-            v-for="prestasi in filteredPrestasi"
-            :key="prestasi.id"
-            class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col h-full cursor-default transform hover:-translate-y-2"
+        <div v-else-if="filteredPrestasi.length > 0">
+          <TransitionGroup
+            name="list"
+            tag="div"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative"
           >
-            <!-- Gambar Sertifikat / Lomba -->
             <div
-              class="relative h-48 overflow-hidden shrink-0 border-b-[6px]"
-              :class="getRankStyle(prestasi.rank).border"
+              v-for="prestasi in paginatedPrestasi"
+              :key="prestasi.id"
+              class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col h-full cursor-default transform hover:-translate-y-2"
             >
-              <img
-                :src="prestasi.image"
-                :alt="prestasi.title"
-                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-              />
+              <!-- Gambar Sertifikat / Lomba -->
               <div
-                class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"
-              ></div>
-
-              <!-- Lencana Juara Pojok Atas Kanan -->
-              <div
-                class="absolute top-4 right-4 flex flex-col items-center justify-center w-14 h-16 rounded-b-full shadow-lg z-10"
-                :class="getRankStyle(prestasi.rank).badge"
+                class="relative h-48 overflow-hidden shrink-0 border-b-[6px]"
+                :class="getRankStyle(prestasi.rank).border"
               >
-                <component
-                  :is="getRankStyle(prestasi.rank).icon"
-                  class="w-6 h-6 mt-1 mb-0.5"
-                  :class="getRankStyle(prestasi.rank).iconFill"
+                <img
+                  :src="prestasi.image"
+                  :alt="prestasi.title"
+                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <span
-                  class="text-xs font-bold tracking-wider"
-                  style="font-family: 'Kalam', cursive"
-                  >{{
-                    prestasi.rank === 1 ? "1st" : prestasi.rank === 2 ? "2nd" : "3rd"
-                  }}</span
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"
+                ></div>
+
+                <!-- Lencana Juara Pojok Atas Kanan -->
+                <div
+                  class="absolute top-4 right-4 flex flex-col items-center justify-center w-14 h-16 rounded-b-full shadow-lg z-10"
+                  :class="getRankStyle(prestasi.rank).badge"
                 >
+                  <component
+                    :is="getRankStyle(prestasi.rank).icon"
+                    class="w-6 h-6 mt-1 mb-0.5"
+                    :class="getRankStyle(prestasi.rank).iconFill"
+                  />
+                  <span
+                    class="text-xs font-bold tracking-wider"
+                    style="font-family: 'Kalam', cursive"
+                    >{{
+                      prestasi.rank === 1 ? "1st" : prestasi.rank === 2 ? "2nd" : "3rd"
+                    }}</span
+                  >
+                </div>
+
+                <!-- Kategori Tag -->
+                <div
+                  class="absolute bottom-3 left-4 px-2.5 py-1 bg-black/50 backdrop-blur-md text-white text-xs font-bold rounded capitalize tracking-wider"
+                  style="font-family: 'Kalam', cursive"
+                >
+                  Tingkat <span class="text-yellow-400">{{ prestasi.level }}</span>
+                </div>
               </div>
 
-              <!-- Kategori Tag -->
+              <!-- Konten Kartu Prestasi -->
               <div
-                class="absolute bottom-3 left-4 px-2.5 py-1 bg-black/50 backdrop-blur-md text-white text-xs font-bold rounded capitalize tracking-wider"
-                style="font-family: 'Kalam', cursive"
-              >
-                Tingkat <span class="text-yellow-400">{{ prestasi.level }}</span>
-              </div>
-            </div>
-
-            <!-- Konten Kartu Prestasi -->
-            <div
-              class="p-6 flex flex-col flex-1 relative bg-white dark:bg-slate-800 z-10"
-            >
-              <div
-                class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-3 font-semibold"
-              >
-                <span
-                  class="bg-gray-100 dark:bg-slate-700 px-2.5 py-1 rounded text-sm tracking-wide"
-                  style="font-family: 'Kalam', cursive"
-                  >{{ prestasi.type }}</span
-                >
-                <span
-                  class="flex items-center bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 px-2.5 py-1 rounded text-sm tracking-wide"
-                  style="font-family: 'Kalam', cursive"
-                  ><PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> Tahun
-                  {{ prestasi.year }}</span
-                >
-              </div>
-
-              <h3
-                class="text-lg font-bold text-gray-900 dark:text-white mb-2 leading-snug"
-              >
-                {{ prestasi.title }}
-              </h3>
-
-              <!-- Tautan Berita Terkait (Opsional) -->
-              <router-link
-                v-if="prestasi.newsLink"
-                :to="prestasi.newsLink"
-                class="inline-flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors mb-4 w-fit"
-              >
-                Baca Liputan Berita
-                <PhArrowUpRight class="w-3.5 h-3.5 ml-1" />
-              </router-link>
-
-              <div
-                class="mt-auto pt-5 border-t border-gray-100 dark:border-slate-700 flex items-center gap-3"
+                class="p-6 flex flex-col flex-1 relative bg-white dark:bg-slate-800 z-10"
               >
                 <div
-                  class="w-10 h-10 rounded-full bg-blue-100 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0"
+                  class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-3 font-semibold"
                 >
-                  <PhUser class="w-5 h-5" />
-                </div>
-                <div>
-                  <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                    Peraih Penghargaan
-                  </p>
-                  <p
-                    class="text-sm font-bold text-gray-900 dark:text-white leading-tight"
+                  <span
+                    class="bg-gray-100 dark:bg-slate-700 px-2.5 py-1 rounded text-sm tracking-wide"
+                    style="font-family: 'Kalam', cursive"
+                    >{{ prestasi.type }}</span
                   >
-                    {{ prestasi.winner }}
-                  </p>
+                  <span
+                    class="flex items-center bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 px-2.5 py-1 rounded text-sm tracking-wide"
+                    style="font-family: 'Kalam', cursive"
+                    ><PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> Tahun
+                    {{ prestasi.year }}</span
+                  >
+                </div>
+
+                <h3
+                  class="text-lg font-bold text-gray-900 dark:text-white mb-2 leading-snug"
+                >
+                  {{ prestasi.title }}
+                </h3>
+
+                <!-- Tautan Berita Terkait (Opsional) -->
+                <router-link
+                  v-if="prestasi.newsLink"
+                  :to="prestasi.newsLink"
+                  class="inline-flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors mb-4 w-fit"
+                >
+                  Baca Liputan Berita
+                  <PhArrowUpRight class="w-3.5 h-3.5 ml-1" />
+                </router-link>
+
+                <div
+                  class="mt-auto pt-5 border-t border-gray-100 dark:border-slate-700 flex items-center gap-3"
+                >
+                  <div
+                    class="w-10 h-10 rounded-full bg-blue-100 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0"
+                  >
+                    <PhUser class="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                      Peraih Penghargaan
+                    </p>
+                    <p
+                      class="text-sm font-bold text-gray-900 dark:text-white leading-tight"
+                    >
+                      {{ prestasi.winner }}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
+          </TransitionGroup>
+
+          <!-- Pagination Controls -->
+          <div
+            v-if="totalPages > 1"
+            class="flex justify-between items-center gap-2 mt-12 mb-6 sm:mb-0 relative z-10 w-full"
+          >
+            <button
+              @click="changePage(currentPage - 1)"
+              :disabled="currentPage === 1 || isLoading"
+              class="flex items-center px-4 py-2 rounded-lg text-base tracking-wide font-bold transition-colors border"
+              style="font-family: 'Kalam', cursive"
+              :class="
+                currentPage === 1
+                  ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed dark:bg-slate-800 dark:border-slate-700 dark:text-gray-500'
+                  : 'bg-white text-blue-600 border-gray-200 hover:bg-blue-50 hover:border-blue-300 dark:bg-slate-800 dark:text-blue-400 dark:border-slate-700 dark:hover:border-blue-500'
+              "
+            >
+              <PhCaretLeft class="w-4 h-4 mr-1" />
+              Sebelumnya
+            </button>
+
+            <div class="flex items-center gap-1 hidden sm:flex">
+              <button
+                v-for="page in totalPages"
+                :key="page"
+                @click="changePage(page)"
+                :disabled="isLoading"
+                class="w-10 h-10 rounded-lg text-base font-bold transition-colors flex items-center justify-center border"
+                style="font-family: 'Kalam', cursive"
+                :class="
+                  currentPage === page
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-md'
+                    : 'bg-white text-gray-600 border-gray-200 hover:bg-blue-50 hover:text-blue-600 dark:bg-slate-800 dark:text-gray-300 dark:border-slate-700 dark:hover:border-blue-500 dark:hover:text-blue-400'
+                "
+              >
+                {{ page }}
+              </button>
+            </div>
+
+            <button
+              @click="changePage(currentPage + 1)"
+              :disabled="currentPage === totalPages || isLoading"
+              class="flex items-center px-4 py-2 rounded-lg text-base tracking-wide font-bold transition-colors border"
+              style="font-family: 'Kalam', cursive"
+              :class="
+                currentPage === totalPages
+                  ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed dark:bg-slate-800 dark:border-slate-700 dark:text-gray-500'
+                  : 'bg-white text-blue-600 border-gray-200 hover:bg-blue-50 hover:border-blue-300 dark:bg-slate-800 dark:text-blue-400 dark:border-slate-700 dark:hover:border-blue-500'
+              "
+            >
+              Selanjutnya
+              <PhCaretRight class="w-4 h-4 ml-1" />
+            </button>
           </div>
-        </TransitionGroup>
+        </div>
 
         <!-- Empty State -->
         <div
