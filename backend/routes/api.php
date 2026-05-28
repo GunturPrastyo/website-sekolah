@@ -60,6 +60,12 @@ Route::get('/guru-staf', [StaffController::class, 'index']);
 // API Program Jurusan (Akses Publik)
 Route::get('/public-programs', [ProgramController::class, 'index']);
 
+// API Kurikulum (Akses Publik)
+Route::get('/public-curriculum-subjects', [CurriculumSubjectController::class, 'index']);
+
+// API Profil Pelajar Pancasila (Akses Publik)
+Route::get('/public-pancasila-profile', [PancasilaProfileController::class, 'show']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();

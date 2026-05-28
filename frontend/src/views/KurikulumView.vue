@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import PageHeader from "@/components/PageHeader.vue";
+import api from "@/api/index.js";
 import {
   PhBook,
   PhMedal,
@@ -31,6 +32,7 @@ import {
   PhCaretDown,
   PhBookmark,
   PhCheckCircle,
+  PhSpinner,
 } from "@phosphor-icons/vue";
 
 const activeGrade = ref("10");
@@ -43,11 +45,39 @@ const changeGrade = (id) => {
   expandedSubject.value = null; // Reset accordion saat ganti kelas
 };
 
-const majors = ref([
-  { id: "ipa", name: "MIPA", desc: "Matematika & Ilmu Pengetahuan Alam" },
-  { id: "ips", name: "IPS", desc: "Ilmu Pengetahuan Sosial" },
-  { id: "bahasa", name: "Bahasa", desc: "Ilmu Bahasa & Budaya" },
-]);
+const majors = ref([]);
+
+const iconMap = {
+  PhBook,
+  PhMedal,
+  PhBookOpen,
+  PhCalculator,
+  PhMonitor,
+  PhFlask,
+  PhLightning,
+  PhLeaf,
+  PhChartPieSlice,
+  PhUsers,
+  PhTranslate,
+  PhSigma,
+  PhMapTrifold,
+  PhHourglass,
+  PhGlobe,
+  PhUsersThree,
+  PhHeart,
+  PhGlobeHemisphereWest,
+  PhUserCheck,
+  PhLightbulb,
+  PhPalette,
+  PhMagnifyingGlass,
+  PhWarningCircle,
+  PhFileX,
+  PhCaretRight,
+  PhInfo,
+  PhCaretDown,
+  PhBookmark,
+  PhCheckCircle,
+};
 
 const changeMajor = (id) => {
   activeMajor.value = id;
@@ -58,335 +88,184 @@ const toggleSubject = (id) => {
   expandedSubject.value = expandedSubject.value === id ? null : id;
 };
 
-const grades = ref([
-  { id: "10", name: "Kelas X (Fase E)", desc: "Peminatan Dasar & Umum" },
-  { id: "11", name: "Kelas XI (Fase F)", desc: "Peminatan Lanjutan" },
-  { id: "12", name: "Kelas XII (Fase F)", desc: "Pendalaman & Persiapan UTBK" },
-]);
+const grades = ref([]);
 
-// Base Kurikulum Kelas 10 (Fase E - Seragam untuk semua jurusan)
-const grade10Base = [
-  {
-    category: "Muatan Nasional (Wajib)",
-    subjects: [
-      {
-        id: "10-w-1",
-        name: "Pendidikan Agama dan Budi Pekerti",
-        icon: PhBook,
-        color: "text-white",
-        bg: "bg-green-600 dark:bg-green-500 shadow-md",
-        desc:
-          "Mempelajari nilai-nilai spiritual, toleransi, dan pembentukan karakter akhlak mulia.",
-        topics: [
-          "Hakikat Penciptaan Manusia",
-          "Toleransi Beragama di Indonesia",
-          "Sejarah Perkembangan Agama",
-          "Etika dan Budi Pekerti Abad 21",
-        ],
-      },
-      {
-        id: "10-w-2",
-        name: "Pendidikan Pancasila",
-        icon: PhMedal,
-        color: "text-white",
-        bg: "bg-red-600 dark:bg-red-500 shadow-md",
-        desc: "Pendalaman ideologi negara dan pembentukan Profil Pelajar Pancasila.",
-        topics: [
-          "Sejarah Perumusan Pancasila",
-          "Konstitusi dan UUD 1945",
-          "Bhinneka Tunggal Ika dalam Praktik",
-          "Sistem Demokrasi Indonesia",
-        ],
-      },
-      {
-        id: "10-w-3",
-        name: "Bahasa Indonesia",
-        icon: PhBookOpen,
-        color: "text-white",
-        bg: "bg-blue-600 dark:bg-blue-500 shadow-md",
-        desc:
-          "Peningkatan literasi, keterampilan menulis, dan analisis literatur sastra.",
-        topics: [
-          "Menulis Teks Laporan Hasil Observasi",
-          "Menganalisis Teks Anekdot",
-          "Menulis Teks Hikayat",
-          "Negosiasi dan Debat",
-        ],
-      },
-      {
-        id: "10-w-4",
-        name: "Matematika Dasar",
-        icon: PhCalculator,
-        color: "text-white",
-        bg: "bg-purple-600 dark:bg-purple-500 shadow-md",
-        desc: "Konsep dasar matematika, aljabar, dan logika komputasional dasar.",
-        topics: [
-          "Eksponen dan Logaritma",
-          "Barisan dan Deret",
-          "Sistem Persamaan Linear",
-          "Fungsi Kuadrat dan Grafiknya",
-        ],
-      },
-    ],
-  },
-  {
-    category: "Muatan Pilihan (Fase E)",
-    subjects: [
-      {
-        id: "10-p-1",
-        name: "Informatika",
-        icon: PhMonitor,
-        color: "text-white",
-        bg: "bg-cyan-600 dark:bg-cyan-500 shadow-md",
-        desc: "Pengenalan teknologi informasi, logika pemrograman, dan literasi digital.",
-        topics: [
-          "Berpikir Komputasional",
-          "Teknologi Informasi & Komunikasi",
-          "Sistem Komputer Dasar",
-          "Jaringan Komputer dan Internet",
-        ],
-      },
-      {
-        id: "10-p-2",
-        name: "Ilmu Pengetahuan Alam & Sosial (IPAS)",
-        icon: PhFlask,
-        color: "text-white",
-        bg: "bg-emerald-600 dark:bg-emerald-500 shadow-md",
-        desc: "Integrasi dasar Fisika, Kimia, Biologi, Geografi, dan Sosiologi.",
-        topics: [
-          "Pengukuran dalam Kerja Ilmiah",
-          "Gejala Alam dan Sosial",
-          "Kimia Hijau",
-          "Interaksi Sosial",
-        ],
-      },
-    ],
-  },
-];
+const curriculumData = ref({});
+const isFetching = ref(true);
 
-// Data Dummy Silabus Digital per Kelas & Jurusan
-const curriculumData = ref({
-  10: {
-    ipa: grade10Base,
-    ips: grade10Base,
-    bahasa: grade10Base,
-  },
-  11: {
-    ipa: [
-      {
-        category: "Kelompok Mata Pelajaran Pilihan (Sains & Teknologi)",
-        subjects: [
-          {
-            id: "11-ipa-1",
-            name: "Fisika Lanjutan",
-            icon: PhLightning,
-            color: "text-white",
-            bg: "bg-amber-600 dark:bg-amber-500 shadow-md",
-            desc: "Pendalaman mekanika, termodinamika, dan gelombang.",
-            topics: [
-              "Dinamika Rotasi dan Kesetimbangan",
-              "Elastisitas Bahan",
-              "Fluida Statis dan Dinamis",
-              "Suhu dan Kalor",
-            ],
-          },
-          {
-            id: "11-ipa-2",
-            name: "Biologi Terapan",
-            icon: PhLeaf,
-            color: "text-white",
-            bg: "bg-green-600 dark:bg-green-500 shadow-md",
-            desc: "Studi anatomi, fisiologi, dan ekosistem makhluk hidup tingkat lanjut.",
-            topics: [
-              "Struktur dan Fungsi Sel",
-              "Sistem Jaringan Tumbuhan",
-              "Sistem Gerak Manusia",
-              "Sistem Peredaran Darah",
-            ],
-          },
-        ],
-      },
-    ],
-    ips: [
-      {
-        category: "Kelompok Mata Pelajaran Pilihan (Sosiologi & Humaniora)",
-        subjects: [
-          {
-            id: "11-ips-1",
-            name: "Ekonomi Pembangunan",
-            icon: PhChartPieSlice,
-            color: "text-white",
-            bg: "bg-emerald-600 dark:bg-emerald-500 shadow-md",
-            desc: "Memahami makroekonomi, kebijakan fiskal, dan pembangunan wilayah.",
-            topics: [
-              "Pendapatan Nasional",
-              "Pertumbuhan & Pembangunan Ekonomi",
-              "Ketenagakerjaan",
-              "Indeks Harga & Inflasi",
-            ],
-          },
-          {
-            id: "11-ips-2",
-            name: "Sosiologi Masyarakat",
-            icon: PhUsers,
-            color: "text-white",
-            bg: "bg-orange-600 dark:bg-orange-500 shadow-md",
-            desc: "Kajian mendalam tentang struktur masyarakat dan dinamika sosial.",
-            topics: [
-              "Kelompok Sosial",
-              "Permasalahan Sosial",
-              "Kesetaraan Sosial",
-              "Konflik dan Resolusi",
-            ],
-          },
-        ],
-      },
-    ],
-    bahasa: [
-      {
-        category: "Kelompok Mata Pelajaran Pilihan (Bahasa & Budaya)",
-        subjects: [
-          {
-            id: "11-bhs-1",
-            name: "Sastra Indonesia Lanjutan",
-            icon: PhBookOpen,
-            color: "text-white",
-            bg: "bg-rose-600 dark:bg-rose-500 shadow-md",
-            desc: "Analisis karya sastra klasik hingga modern, puisi, dan prosa.",
-            topics: [
-              "Kritik Sastra",
-              "Menulis Novel Pendek",
-              "Apresiasi Puisi",
-              "Pementasan Drama",
-            ],
-          },
-          {
-            id: "11-bhs-2",
-            name: "Bahasa Asing (Jepang/Mandarin)",
-            icon: PhTranslate,
-            color: "text-white",
-            bg: "bg-cyan-600 dark:bg-cyan-500 shadow-md",
-            desc: "Penguasaan dasar percakapan dan tata bahasa asing pilihan.",
-            topics: [
-              "Huruf Dasar (Hiragana/Katakana)",
-              "Perkenalan Diri",
-              "Keluarga & Kegiatan Sehari-hari",
-              "Budaya & Etika Berkomunikasi",
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  12: {
-    ipa: [
-      {
-        category: "Kelompok Persiapan UTBK (Sains & Teknologi)",
-        subjects: [
-          {
-            id: "12-ipa-1",
-            name: "Matematika Peminatan",
-            icon: PhSigma,
-            color: "text-white",
-            bg: "bg-indigo-600 dark:bg-indigo-500 shadow-md",
-            desc: "Kalkulus lanjutan, trigonometri kompleks, dan geometri ruang.",
-            topics: [
-              "Limit Fungsi Trigonometri",
-              "Turunan Fungsi Trigonometri",
-              "Distribusi Binomial",
-              "Geometri Ruang 3D",
-            ],
-          },
-          {
-            id: "12-ipa-2",
-            name: "Kimia Analisis",
-            icon: PhFlask,
-            color: "text-white",
-            bg: "bg-pink-600 dark:bg-pink-500 shadow-md",
-            desc: "Reaksi kimia organik, termokimia, dan elektrokimia.",
-            topics: [
-              "Sifat Koligatif Larutan",
-              "Reaksi Redoks",
-              "Sel Elektrokimia",
-              "Senyawa Karbon Organik",
-            ],
-          },
-        ],
-      },
-    ],
-    ips: [
-      {
-        category: "Kelompok Persiapan UTBK (Soshum)",
-        subjects: [
-          {
-            id: "12-ips-1",
-            name: "Geografi Regional",
-            icon: PhMapTrifold,
-            color: "text-white",
-            bg: "bg-teal-600 dark:bg-teal-500 shadow-md",
-            desc: "Pemetaan spasial, sistem informasi geografis, dan tata ruang.",
-            topics: [
-              "Konsep Wilayah dan Tata Ruang",
-              "Interaksi Desa-Kota",
-              "Pemanfaatan Peta & SIG",
-              "Kerja Sama Negara Maju & Berkembang",
-            ],
-          },
-          {
-            id: "12-ips-2",
-            name: "Sejarah Dunia Modern",
-            icon: PhHourglass,
-            color: "text-white",
-            bg: "bg-amber-600 dark:bg-amber-500 shadow-md",
-            desc: "Analisis sejarah kontemporer dan dampaknya pada geopolitik.",
-            topics: [
-              "Perang Dingin",
-              "Organisasi Global & Regional",
-              "Sejarah Kontemporer Dunia",
-              "Perkembangan IPTEK Era Globalisasi",
-            ],
-          },
-        ],
-      },
-    ],
-    bahasa: [
-      {
-        category: "Kelompok Persiapan Ujian Lanjutan (Sastra)",
-        subjects: [
-          {
-            id: "12-bhs-1",
-            name: "Bahasa Inggris Lanjut (TOEFL Prep)",
-            icon: PhGlobe,
-            color: "text-white",
-            bg: "bg-indigo-600 dark:bg-indigo-500 shadow-md",
-            desc:
-              "Penguasaan tata bahasa kompleks, reading comprehension, dan listening.",
-            topics: [
-              "Analytical Exposition Text",
-              "Explanation Text",
-              "Discussion Text",
-              "Job Application Letters",
-            ],
-          },
-          {
-            id: "12-bhs-2",
-            name: "Antropologi Budaya",
-            icon: PhUsersThree,
-            color: "text-white",
-            bg: "bg-rose-600 dark:bg-rose-500 shadow-md",
-            desc: "Kajian etnografi dan pewarisan budaya masyarakat lokal dan global.",
-            topics: [
-              "Keberagaman Budaya Lokal",
-              "Sistem Religi dan Kepercayaan",
-              "Pewarisan Nilai Budaya",
-              "Dampak Globalisasi terhadap Budaya",
-            ],
-          },
-        ],
-      },
-    ],
-  },
+const pancasilaProfile = ref({
+  title: "Profil Pelajar Pancasila",
+  description:
+    "Kurikulum kami berfokus pada pembentukan karakter siswa yang berlandaskan 6 dimensi Profil Pelajar Pancasila.",
+  dimensions: [
+    {
+      title: "Beriman & Berakhlak",
+      description:
+        "Membentuk siswa yang religius dan memiliki etika baik dalam kehidupan sehari-hari.",
+      icon: "PhHeart",
+      color: "bg-red-600 dark:bg-red-500",
+    },
+    {
+      title: "Berkebinekaan Global",
+      description:
+        "Menghargai keberagaman budaya, toleran, dan berwawasan luas di kancah internasional.",
+      icon: "PhGlobeHemisphereWest",
+      color: "bg-yellow-500",
+    },
+    {
+      title: "Bergotong Royong",
+      description:
+        "Mampu berkolaborasi, peduli terhadap sesama, dan berbagi dalam menyelesaikan masalah.",
+      icon: "PhUsers",
+      color: "bg-green-600 dark:bg-green-500",
+    },
+    {
+      title: "Mandiri",
+      description:
+        "Bertanggung jawab atas proses dan hasil belajarnya sendiri dengan kesadaran tinggi.",
+      icon: "PhUserCheck",
+      color: "bg-blue-600 dark:bg-blue-500",
+    },
+    {
+      title: "Bernalar Kritis",
+      description:
+        "Mampu memproses informasi secara objektif, mengevaluasi, dan menyimpulkan dengan baik.",
+      icon: "PhLightbulb",
+      color: "bg-purple-600 dark:bg-purple-500",
+    },
+    {
+      title: "Kreatif",
+      description:
+        "Mampu memodifikasi dan menghasilkan gagasan, karya, atau tindakan yang orisinal.",
+      icon: "PhPalette",
+      color: "bg-pink-600 dark:bg-pink-500",
+    },
+  ],
 });
+
+const fetchCurriculum = async () => {
+  isFetching.value = true;
+  try {
+    const [currRes, progRes, pancaRes] = await Promise.all([
+      api.get("/api/public-curriculum-subjects"),
+      api.get("/api/public-programs").catch(() => null),
+      api.get("/api/public-pancasila-profile").catch(() => null),
+    ]);
+
+    if (pancaRes && pancaRes.data && pancaRes.data.data) {
+      const pd = pancaRes.data.data;
+      pancasilaProfile.value.title = pd.title || pancasilaProfile.value.title;
+      pancasilaProfile.value.description =
+        pd.description || pancasilaProfile.value.description;
+      if (pd.dimensions && pd.dimensions.length > 0) {
+        let dims = pd.dimensions;
+        if (typeof dims === "string") {
+          try {
+            dims = JSON.parse(dims);
+          } catch (e) {}
+        }
+        if (Array.isArray(dims) && dims.length > 0) {
+          pancasilaProfile.value.dimensions = dims;
+        }
+      }
+    }
+
+    if (progRes && progRes.data && progRes.data.data) {
+      majors.value = progRes.data.data.map((p) => ({
+        id: p.title.toLowerCase().replace(/[^a-z0-9]/g, ""),
+        name: p.title,
+        desc: p.badge || p.description?.substring(0, 50) || "",
+      }));
+    } else {
+      majors.value = [
+        { id: "ipa", name: "MIPA", desc: "Matematika & Ilmu Pengetahuan Alam" },
+        { id: "ips", name: "IPS", desc: "Ilmu Pengetahuan Sosial" },
+        { id: "bahasa", name: "Bahasa", desc: "Ilmu Bahasa & Budaya" },
+      ];
+    }
+
+    if (currRes && currRes.data && currRes.data.data) {
+      const data = currRes.data.data;
+      const groupedData = {};
+      const uniqueGrades = new Set();
+
+      data.forEach((subject) => {
+        const grade = String(subject.grade);
+        uniqueGrades.add(grade);
+        const major = subject.major;
+        const category = subject.category;
+
+        if (!groupedData[grade]) groupedData[grade] = {};
+
+        const majorsToAdd = major === "semua" ? majors.value.map((m) => m.id) : [major];
+
+        majorsToAdd.forEach((m) => {
+          if (!groupedData[grade][m]) groupedData[grade][m] = [];
+
+          let catObj = groupedData[grade][m].find((c) => c.category === category);
+          if (!catObj) {
+            catObj = { category: category, subjects: [] };
+            groupedData[grade][m].push(catObj);
+          }
+
+          let topics = [];
+          try {
+            topics =
+              typeof subject.topics === "string"
+                ? JSON.parse(subject.topics)
+                : subject.topics;
+          } catch (e) {
+            topics = typeof subject.topics === "string" ? subject.topics.split(",") : [];
+          }
+
+          catObj.subjects.push({
+            id: subject.id || `${grade}-${m}-${category}-${subject.name}`,
+            name: subject.name,
+            desc: subject.description || subject.desc,
+            icon: iconMap[subject.icon] || iconMap.PhBook,
+            color: subject.text_color || subject.color || "text-white",
+            bg:
+              subject.bg_color || subject.bg || "bg-blue-600 dark:bg-blue-500 shadow-md",
+            topics: topics || [],
+          });
+        });
+      });
+
+      curriculumData.value = groupedData;
+
+      const gradesArray = Array.from(uniqueGrades).sort(
+        (a, b) => parseInt(a) - parseInt(b)
+      );
+      if (gradesArray.length > 0) {
+        grades.value = gradesArray.map((g) => ({
+          id: g,
+          name: `Kelas ${g === "10" ? "X" : g === "11" ? "XI" : "XII"}`,
+          desc: g === "10" ? "Fase E" : "Fase F",
+        }));
+        if (!gradesArray.includes(activeGrade.value)) {
+          activeGrade.value = gradesArray[0];
+        }
+      } else {
+        grades.value = [
+          { id: "10", name: "Kelas X (Fase E)", desc: "Peminatan Dasar & Umum" },
+          { id: "11", name: "Kelas XI (Fase F)", desc: "Peminatan Lanjutan" },
+          { id: "12", name: "Kelas XII (Fase F)", desc: "Pendalaman & Persiapan UTBK" },
+        ];
+      }
+    }
+
+    if (
+      majors.value.length > 0 &&
+      !majors.value.find((m) => m.id === activeMajor.value)
+    ) {
+      activeMajor.value = majors.value[0].id;
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data kurikulum:", error);
+  } finally {
+    isFetching.value = false;
+  }
+};
 
 const currentSyllabus = computed(() => {
   if (!curriculumData.value[activeGrade.value]) return [];
@@ -410,6 +289,10 @@ const currentSyllabus = computed(() => {
   }
 
   return syllabus;
+});
+
+onMounted(() => {
+  fetchCurriculum();
 });
 </script>
 
@@ -444,126 +327,30 @@ const currentSyllabus = computed(() => {
             <h2
               class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight"
             >
-              Profil Pelajar Pancasila
+              {{ pancasilaProfile.title }}
             </h2>
             <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Kurikulum kami berfokus pada pembentukan karakter siswa yang berlandaskan 6
-              dimensi Profil Pelajar Pancasila.
+              {{ pancasilaProfile.description }}
             </p>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Dimensi 1 -->
             <div
+              v-for="(dim, idx) in pancasilaProfile.dimensions"
+              :key="idx"
               class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 transition-transform hover:-translate-y-1"
             >
               <div
-                class="w-12 h-12 shrink-0 rounded-full bg-red-600 text-white dark:bg-red-500 flex items-center justify-center shadow-md"
+                class="w-12 h-12 shrink-0 rounded-full text-white flex items-center justify-center shadow-md"
+                :class="dim.color || 'bg-blue-600 dark:bg-blue-500'"
               >
-                <PhHeart class="w-6 h-6" />
+                <component :is="iconMap[dim.icon] || iconMap.PhHeart" class="w-6 h-6" />
               </div>
               <div>
                 <h4 class="font-bold text-gray-900 dark:text-white mb-1">
-                  Beriman & Berakhlak
+                  {{ dim.title }}
                 </h4>
                 <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                  Membentuk siswa yang religius dan memiliki etika baik dalam kehidupan
-                  sehari-hari.
-                </p>
-              </div>
-            </div>
-
-            <!-- Dimensi 2 -->
-            <div
-              class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 transition-transform hover:-translate-y-1"
-            >
-              <div
-                class="w-12 h-12 shrink-0 rounded-full bg-yellow-500 text-white flex items-center justify-center shadow-md"
-              >
-                <PhGlobeHemisphereWest class="w-6 h-6" />
-              </div>
-              <div>
-                <h4 class="font-bold text-gray-900 dark:text-white mb-1">
-                  Berkebinekaan Global
-                </h4>
-                <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                  Menghargai keberagaman budaya, toleran, dan berwawasan luas di kancah
-                  internasional.
-                </p>
-              </div>
-            </div>
-
-            <!-- Dimensi 3 -->
-            <div
-              class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 transition-transform hover:-translate-y-1"
-            >
-              <div
-                class="w-12 h-12 shrink-0 rounded-full bg-green-600 text-white dark:bg-green-500 flex items-center justify-center shadow-md"
-              >
-                <PhUsers class="w-6 h-6" />
-              </div>
-              <div>
-                <h4 class="font-bold text-gray-900 dark:text-white mb-1">
-                  Bergotong Royong
-                </h4>
-                <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                  Mampu berkolaborasi, peduli terhadap sesama, dan berbagi dalam
-                  menyelesaikan masalah.
-                </p>
-              </div>
-            </div>
-
-            <!-- Dimensi 4 -->
-            <div
-              class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 transition-transform hover:-translate-y-1"
-            >
-              <div
-                class="w-12 h-12 shrink-0 rounded-full bg-blue-600 text-white dark:bg-blue-500 flex items-center justify-center shadow-md"
-              >
-                <PhUserCheck class="w-6 h-6" />
-              </div>
-              <div>
-                <h4 class="font-bold text-gray-900 dark:text-white mb-1">Mandiri</h4>
-                <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                  Bertanggung jawab atas proses dan hasil belajarnya sendiri dengan
-                  kesadaran tinggi.
-                </p>
-              </div>
-            </div>
-
-            <!-- Dimensi 5 -->
-            <div
-              class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 transition-transform hover:-translate-y-1"
-            >
-              <div
-                class="w-12 h-12 shrink-0 rounded-full bg-purple-600 text-white dark:bg-purple-500 flex items-center justify-center shadow-md"
-              >
-                <PhLightbulb class="w-6 h-6" />
-              </div>
-              <div>
-                <h4 class="font-bold text-gray-900 dark:text-white mb-1">
-                  Bernalar Kritis
-                </h4>
-                <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                  Mampu memproses informasi secara objektif, mengevaluasi, dan
-                  menyimpulkan dengan baik.
-                </p>
-              </div>
-            </div>
-
-            <!-- Dimensi 6 -->
-            <div
-              class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 transition-transform hover:-translate-y-1"
-            >
-              <div
-                class="w-12 h-12 shrink-0 rounded-full bg-pink-600 text-white dark:bg-pink-500 flex items-center justify-center shadow-md"
-              >
-                <PhPalette class="w-6 h-6" />
-              </div>
-              <div>
-                <h4 class="font-bold text-gray-900 dark:text-white mb-1">Kreatif</h4>
-                <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                  Mampu memodifikasi dan menghasilkan gagasan, karya, atau tindakan yang
-                  orisinal.
+                  {{ dim.description }}
                 </p>
               </div>
             </div>
@@ -707,7 +494,14 @@ const currentSyllabus = computed(() => {
             leave-from-class="opacity-100 translate-x-0"
             leave-to-class="opacity-0 -translate-x-4"
           >
-            <div :key="activeGrade + '-' + activeMajor" class="space-y-8">
+            <div v-if="isFetching" class="py-16 flex justify-center items-center">
+              <div class="flex flex-col items-center">
+                <PhSpinner class="animate-spin w-10 h-10 text-blue-400 mb-4" />
+                <span class="text-blue-200 font-medium">Memuat silabus kurikulum...</span>
+              </div>
+            </div>
+
+            <div v-else :key="activeGrade + '-' + activeMajor" class="space-y-8">
               <div
                 v-for="(category, idx) in currentSyllabus"
                 :key="idx"
