@@ -54,6 +54,9 @@ Route::get('/sejarah', [TimelineController::class, 'index']);
 // API Fasilitas (Akses Publik)
 Route::get('/fasilitas', [FacilityController::class, 'index']);
 
+// API Guru & Staf (Akses Publik)
+Route::get('/guru-staf', [StaffController::class, 'index']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();

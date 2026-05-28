@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, nextTick, watch } from "vue";
 import PageHeader from "@/components/PageHeader.vue";
+import api from "@/api/index.js";
 
 const changeCategory = (id) => {
   activeCategory.value = id;
@@ -12,16 +13,42 @@ const changeCategory = (id) => {
   }
 };
 
-const categories = ref([
-  { id: "semua", name: "Struktur Organisasi" },
-  { id: "pimpinan", name: "Pimpinan Sekolah" },
-  { id: "informatika", name: "Guru Informatika" },
-  { id: "matematika", name: "Guru Matematika" },
-  { id: "olahraga", name: "Guru Olahraga" },
-  { id: "bahasa_inggris", name: "Guru Bahasa Inggris" },
-  { id: "pustakawan", name: "Pustakawan" },
-  { id: "tata_usaha", name: "Staff Tata Usaha" },
-]);
+const categories = computed(() => {
+  const dynamicCategories = [];
+  // Mengambil kategori unik dari data API
+  const uniqueCategories = [
+    ...new Set(staffList.value.map((s) => s.category).filter(Boolean)),
+  ];
+
+  uniqueCategories.forEach((cat) => {
+    let name = cat;
+    const knownNames = {
+      pimpinan: "Pimpinan Sekolah",
+      pendidik: "Tenaga Pendidik",
+      tenaga_kependidikan: "Tenaga Kependidikan",
+      informatika: "Guru Informatika",
+      matematika: "Guru Matematika",
+      olahraga: "Guru Olahraga",
+      bahasa_inggris: "Guru Bahasa Inggris",
+      pustakawan: "Pustakawan",
+      tata_usaha: "Staff Tata Usaha",
+    };
+
+    if (knownNames[cat]) {
+      name = knownNames[cat];
+    } else {
+      // Format teks fallback misal "guru_kesenian" menjadi "Guru Kesenian"
+      name = String(cat)
+        .split(/_|-|\s/)
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    }
+
+    dynamicCategories.push({ id: cat, name });
+  });
+
+  return [{ id: "semua", name: "Struktur Organisasi" }, ...dynamicCategories];
+});
 
 const activeCategory = ref("semua");
 
@@ -31,76 +58,7 @@ const matchesSearch = (staff) => {
   return staff.name.toLowerCase().includes(searchQuery.value.toLowerCase());
 };
 
-// Contoh data dummy lengkap dengan atribut 'category'
-const staffList = ref([
-  {
-    id: 1,
-    name: "Dr. H. Budi Santoso, M.Pd",
-    role: "Kepala Sekolah",
-    category: "pimpinan",
-    image:
-      "https://ui-avatars.com/api/?name=Budi+Santoso&background=0D8ABC&color=fff&size=256",
-    nip: "19750817 200003 1 004",
-    bio:
-      "Berpengalaman lebih dari 15 tahun dalam manajemen pendidikan dan memimpin sekolah menuju akreditasi A dengan program-program inovatif.",
-  },
-  {
-    id: 2,
-    name: "Siti Aminah, M.Pd",
-    role: "Wakil Kepala Sekolah",
-    category: "pimpinan",
-    image:
-      "https://ui-avatars.com/api/?name=Siti+Aminah&background=0D8ABC&color=fff&size=256",
-  },
-  {
-    id: 3,
-    name: "Ahmad Fauzi, S.Kom",
-    role: "Guru Informatika",
-    category: "informatika",
-    image:
-      "https://ui-avatars.com/api/?name=Ahmad+Fauzi&background=0D8ABC&color=fff&size=256",
-  },
-  {
-    id: 4,
-    name: "Rina Rahmawati, S.E",
-    role: "Guru Matematika",
-    category: "matematika",
-    image:
-      "https://ui-avatars.com/api/?name=Rina+Rahmawati&background=0D8ABC&color=fff&size=256",
-  },
-  {
-    id: 5,
-    name: "Dwi Saputra, S.Or",
-    role: "Guru Olahraga",
-    category: "olahraga",
-    image:
-      "https://ui-avatars.com/api/?name=Dwi+Saputra&background=0D8ABC&color=fff&size=256",
-  },
-  {
-    id: 6,
-    name: "Rudi Hermawan, S.Pd",
-    role: "Guru Bahasa Inggris",
-    category: "bahasa_inggris",
-    image:
-      "https://ui-avatars.com/api/?name=Rudi+Hermawan&background=0D8ABC&color=fff&size=256",
-  },
-  {
-    id: 7,
-    name: "Maya Indah, S.Pust",
-    role: "Pustakawan",
-    category: "pustakawan",
-    image:
-      "https://ui-avatars.com/api/?name=Maya+Indah&background=0D8ABC&color=fff&size=256",
-  },
-  {
-    id: 8,
-    name: "Joko Widodo",
-    role: "Staff Tata Usaha",
-    category: "tata_usaha",
-    image:
-      "https://ui-avatars.com/api/?name=Joko+Widodo&background=0D8ABC&color=fff&size=256",
-  },
-]);
+const staffList = ref([]);
 
 // Fitur Pagination & Loading
 const itemsPerPage = 6;
@@ -108,16 +66,40 @@ const itemsToShow = ref(itemsPerPage);
 const isFetching = ref(true);
 const isLoadingMore = ref(false);
 
-const fetchData = () => {
+const getImageUrl = (path, name) => {
+  if (!path)
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(
+      name || "User"
+    )}&background=0D8ABC&color=fff&size=256`;
+  if (path.startsWith("http") || path.startsWith("data:")) return path;
+  const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
+};
+
+const fetchData = async () => {
   isFetching.value = true;
-  setTimeout(() => {
+  try {
+    const response = await api.get("/api/guru-staf");
+    if (response.data && response.data.data) {
+      staffList.value = response.data.data.map((staff) => ({
+        ...staff,
+        image: getImageUrl(staff.image, staff.name),
+      }));
+    }
+  } catch (error) {
+    console.error("Gagal memuat data guru & staf:", error);
+  } finally {
     isFetching.value = false;
-  }, 800); // Simulasi delay memuat data 800ms
+  }
 };
 
 watch([activeCategory, searchQuery], () => {
   itemsToShow.value = itemsPerPage;
   fetchData();
+  isFetching.value = true;
+  setTimeout(() => {
+    isFetching.value = false;
+  }, 400);
 });
 
 const loadMore = () => {
@@ -129,21 +111,7 @@ const loadMore = () => {
 };
 
 // Base Computed properties
-const basePimpinanList = computed(() =>
-  staffList.value.filter((s) => s.category === "pimpinan" && matchesSearch(s))
-);
-const baseGuruList = computed(() =>
-  staffList.value.filter(
-    (s) =>
-      ["informatika", "matematika", "olahraga", "bahasa_inggris"].includes(s.category) &&
-      matchesSearch(s)
-  )
-);
-const baseStafList = computed(() =>
-  staffList.value.filter(
-    (s) => ["pustakawan", "tata_usaha"].includes(s.category) && matchesSearch(s)
-  )
-);
+const baseAllStaffList = computed(() => staffList.value.filter((s) => matchesSearch(s)));
 
 const baseFilteredStaff = computed(() => {
   if (activeCategory.value === "semua") return []; // Jika "semua", kita tangani secara terpisah di template
@@ -158,18 +126,16 @@ const getCategoryCount = (categoryId) => {
 };
 
 // Paginated Computed properties
-const pimpinanList = computed(() => basePimpinanList.value.slice(0, itemsToShow.value));
-const guruList = computed(() => baseGuruList.value.slice(0, itemsToShow.value));
-const stafList = computed(() => baseStafList.value.slice(0, itemsToShow.value));
+const allStaffList = computed(() => baseAllStaffList.value.slice(0, itemsToShow.value));
 const filteredStaff = computed(() => baseFilteredStaff.value.slice(0, itemsToShow.value));
+
+const getStaffByCategoryInSemua = (categoryId) => {
+  return allStaffList.value.filter((s) => s.category === categoryId);
+};
 
 const hasMoreItems = computed(() => {
   if (activeCategory.value === "semua") {
-    return (
-      pimpinanList.value.length < basePimpinanList.value.length ||
-      guruList.value.length < baseGuruList.value.length ||
-      stafList.value.length < baseStafList.value.length
-    );
+    return allStaffList.value.length < baseAllStaffList.value.length;
   }
   return filteredStaff.value.length < baseFilteredStaff.value.length;
 });
@@ -323,337 +289,124 @@ onMounted(() => {
               <div v-else :key="activeCategory" class="space-y-10">
                 <!-- Tampilan 'Semua' (Struktur Organisasi) -->
                 <template v-if="activeCategory === 'semua'">
-                  <!-- Pimpinan -->
-                  <div v-if="pimpinanList.length > 0" class="mb-12">
-                    <div class="flex items-center gap-4 mb-8">
-                      <h2
-                        class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white shrink-0"
-                        style="font-family: 'Oswald', sans-serif"
-                      >
-                        Pimpinan Sekolah
-                      </h2>
-                      <div class="h-px bg-gray-200 dark:bg-slate-700 flex-1"></div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      <div
-                        v-for="(staff, index) in pimpinanList"
-                        :key="staff.id"
-                        class="group bg-gray-50 dark:bg-slate-700/30 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
-                        :style="{
-                          animationDelay: `${index * 100}ms`,
-                          animationFillMode: 'both',
-                        }"
-                      >
-                        <div
-                          class="h-24 relative overflow-hidden bg-blue-600 dark:bg-slate-700"
-                        ></div>
-                        <div
-                          class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
+                  <template
+                    v-for="cat in categories.filter((c) => c.id !== 'semua')"
+                    :key="cat.id"
+                  >
+                    <div
+                      v-if="getStaffByCategoryInSemua(cat.id).length > 0"
+                      class="mb-12"
+                    >
+                      <div class="flex items-center gap-4 mb-8">
+                        <h2
+                          class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white shrink-0"
+                          style="font-family: 'Oswald', sans-serif"
                         >
-                          <div class="relative -mt-14 mb-4">
-                            <div
-                              class="w-28 h-28 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
-                            >
-                              <img
-                                :src="staff.image"
-                                class="w-full h-full object-cover rounded-full border-2 border-gray-100 dark:border-slate-700"
-                              />
-                            </div>
-                          </div>
-                          <h3
-                            class="font-bold text-gray-900 dark:text-white text-lg mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1"
-                            :title="staff.name"
-                          >
-                            {{ staff.name }}
-                          </h3>
-                          <div class="mb-3">
-                            <span
-                              class="inline-flex items-center px-3 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[13px] font-bold tracking-wide"
-                              style="font-family: 'Kalam', cursive"
-                            >
-                              {{ staff.role }}
-                            </span>
-                          </div>
-                          <p
-                            class="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-5 flex items-center justify-center gap-1.5"
-                          >
-                            <svg
-                              class="w-4 h-4 text-gray-800 dark:text-gray-200"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2.5"
-                                d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
-                              ></path>
-                            </svg>
-                            NIP. {{ staff.nip || "-" }}
-                          </p>
+                          {{ cat.name }}
+                        </h2>
+                        <div class="h-px bg-gray-200 dark:bg-slate-700 flex-1"></div>
+                      </div>
+                      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div
+                          v-for="(staff, index) in getStaffByCategoryInSemua(cat.id)"
+                          :key="staff.id"
+                          class="group bg-gray-50 dark:bg-slate-700/30 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
+                          :style="{
+                            animationDelay: `${index * 100}ms`,
+                            animationFillMode: 'both',
+                          }"
+                        >
                           <div
-                            class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
+                            class="h-24 relative overflow-hidden bg-blue-600 dark:bg-slate-700"
                           ></div>
-                          <div class="flex gap-3">
-                            <button
-                              class="w-9 h-9 rounded-full bg-white hover:bg-red-50 dark:bg-slate-800 dark:hover:bg-red-900/50 flex items-center justify-center text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors shadow-sm"
-                              title="Email"
+                          <div
+                            class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
+                          >
+                            <div class="relative -mt-14 mb-4">
+                              <div
+                                class="w-28 h-28 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
+                              >
+                                <img
+                                  :src="staff.image"
+                                  class="w-full h-full object-cover rounded-full border-2 border-gray-100 dark:border-slate-700"
+                                />
+                              </div>
+                            </div>
+                            <h3
+                              class="font-bold text-gray-900 dark:text-white text-lg mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1"
+                              :title="staff.name"
+                            >
+                              {{ staff.name }}
+                            </h3>
+                            <div class="mb-3">
+                              <span
+                                class="inline-flex items-center px-3 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[12px] font-bold tracking-wide"
+                                style="font-family: 'Kalam', cursive"
+                              >
+                                {{ staff.role }}
+                              </span>
+                            </div>
+                            <p
+                              class="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-5 flex items-center justify-center gap-1.5"
                             >
                               <svg
-                                class="w-4 h-4"
-                                fill="currentColor"
+                                class="w-4 h-4 text-gray-800 dark:text-gray-200"
+                                fill="none"
+                                stroke="currentColor"
                                 viewBox="0 0 24 24"
                               >
                                 <path
-                                  d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4.236l-8 4.882-8-4.882V6.095l8 4.882 8-4.882v2.141z"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2.5"
+                                  d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
                                 ></path>
                               </svg>
-                            </button>
-                            <button
-                              @click.stop
-                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors shadow-sm"
-                              title="LinkedIn"
-                            >
-                              <svg
-                                class="w-4 h-4"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
+                              NIP. {{ staff.nip || "-" }}
+                            </p>
+                            <div
+                              class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
+                            ></div>
+                            <div class="flex gap-3">
+                              <button
+                                class="w-9 h-9 rounded-full bg-white hover:bg-red-50 dark:bg-slate-800 dark:hover:bg-red-900/50 flex items-center justify-center text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors shadow-sm"
+                                title="Email"
                               >
-                                <path
-                                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
-                                />
-                              </svg>
-                            </button>
+                                <svg
+                                  class="w-4 h-4"
+                                  fill="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4.236l-8 4.882-8-4.882V6.095l8 4.882 8-4.882v2.141z"
+                                  ></path>
+                                </svg>
+                              </button>
+                              <button
+                                @click.stop
+                                class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors shadow-sm"
+                                title="LinkedIn"
+                              >
+                                <svg
+                                  class="w-4 h-4"
+                                  fill="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-
-                  <!-- Guru -->
-                  <div v-if="guruList.length > 0" class="mb-12">
-                    <div class="flex items-center gap-4 mb-8">
-                      <h2
-                        class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white shrink-0"
-                        style="font-family: 'Oswald', sans-serif"
-                      >
-                        Tenaga Pendidik
-                      </h2>
-                      <div class="h-px bg-gray-200 dark:bg-slate-700 flex-1"></div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      <div
-                        v-for="(staff, index) in guruList"
-                        :key="staff.id"
-                        class="group bg-gray-50 dark:bg-slate-700/30 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
-                        :style="{
-                          animationDelay: `${index * 100}ms`,
-                          animationFillMode: 'both',
-                        }"
-                      >
-                        <div
-                          class="h-24 relative overflow-hidden bg-blue-600 dark:bg-slate-700"
-                        ></div>
-                        <div
-                          class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
-                        >
-                          <div class="relative -mt-14 mb-4">
-                            <div
-                              class="w-28 h-28 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
-                            >
-                              <img
-                                :src="staff.image"
-                                class="w-full h-full object-cover rounded-full border-2 border-gray-100 dark:border-slate-700"
-                              />
-                            </div>
-                          </div>
-                          <h3
-                            class="font-bold text-gray-900 dark:text-white text-lg mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1"
-                            :title="staff.name"
-                          >
-                            {{ staff.name }}
-                          </h3>
-                          <div class="mb-3">
-                            <span
-                              class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[11px] font-bold tracking-wide"
-                              style="font-family: 'Kalam', cursive"
-                            >
-                              {{ staff.role }}
-                            </span>
-                          </div>
-                          <p
-                            class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-5 flex items-center justify-center gap-1.5"
-                          >
-                            <svg
-                              class="w-4 h-4 text-gray-800 dark:text-gray-200"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2.5"
-                                d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
-                              ></path>
-                            </svg>
-                            NIP. {{ staff.nip || "-" }}
-                          </p>
-                          <div
-                            class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
-                          ></div>
-                          <div class="flex gap-3">
-                            <button
-                              class="w-9 h-9 rounded-full bg-white hover:bg-red-50 dark:bg-slate-800 dark:hover:bg-red-900/50 flex items-center justify-center text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors shadow-sm"
-                              title="Email"
-                            >
-                              <svg
-                                class="w-4 h-4"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4.236l-8 4.882-8-4.882V6.095l8 4.882 8-4.882v2.141z"
-                                ></path>
-                              </svg>
-                            </button>
-                            <button
-                              @click.stop
-                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors shadow-sm"
-                              title="LinkedIn"
-                            >
-                              <svg
-                                class="w-4 h-4"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
-                                />
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Staf -->
-                  <div v-if="stafList.length > 0" class="mb-12">
-                    <div class="flex items-center gap-4 mb-8">
-                      <h2
-                        class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white shrink-0"
-                        style="font-family: 'Oswald', sans-serif"
-                      >
-                        Tenaga Kependidikan
-                      </h2>
-                      <div class="h-px bg-gray-200 dark:bg-slate-700 flex-1"></div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      <div
-                        v-for="(staff, index) in stafList"
-                        :key="staff.id"
-                        class="group bg-gray-50 dark:bg-slate-700/30 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
-                        :style="{
-                          animationDelay: `${index * 100}ms`,
-                          animationFillMode: 'both',
-                        }"
-                      >
-                        <div
-                          class="h-24 relative overflow-hidden bg-blue-600 dark:bg-slate-700"
-                        ></div>
-                        <div
-                          class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
-                        >
-                          <div class="relative -mt-14 mb-4">
-                            <div
-                              class="w-28 h-28 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
-                            >
-                              <img
-                                :src="staff.image"
-                                class="w-full h-full object-cover rounded-full border-2 border-gray-100 dark:border-slate-700"
-                              />
-                            </div>
-                          </div>
-                          <h3
-                            class="font-bold text-gray-900 dark:text-white text-lg mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1"
-                            :title="staff.name"
-                          >
-                            {{ staff.name }}
-                          </h3>
-                          <div class="mb-3">
-                            <span
-                              class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[11px] font-bold tracking-wide"
-                              style="font-family: 'Kalam', cursive"
-                            >
-                              {{ staff.role }}
-                            </span>
-                          </div>
-                          <p
-                            class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-5 flex items-center justify-center gap-1.5"
-                          >
-                            <svg
-                              class="w-4 h-4 text-gray-800 dark:text-gray-200"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2.5"
-                                d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
-                              ></path>
-                            </svg>
-                            NIP. {{ staff.nip || "-" }}
-                          </p>
-                          <div
-                            class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
-                          ></div>
-                          <div class="flex gap-3">
-                            <button
-                              class="w-9 h-9 rounded-full bg-white hover:bg-red-50 dark:bg-slate-800 dark:hover:bg-red-900/50 flex items-center justify-center text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors shadow-sm"
-                              title="Email"
-                            >
-                              <svg
-                                class="w-4 h-4"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4.236l-8 4.882-8-4.882V6.095l8 4.882 8-4.882v2.141z"
-                                ></path>
-                              </svg>
-                            </button>
-                            <button
-                              @click.stop
-                              class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors shadow-sm"
-                              title="LinkedIn"
-                            >
-                              <svg
-                                class="w-4 h-4"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
-                                />
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  </template>
 
                   <!-- Jika Data Kosong di Kategori 'Semua' -->
                   <div
-                    v-if="
-                      pimpinanList.length === 0 &&
-                      guruList.length === 0 &&
-                      stafList.length === 0
-                    "
+                    v-if="allStaffList.length === 0"
                     class="py-16 flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-slate-900/50 rounded-lg border-2 border-dashed border-gray-200 dark:border-slate-700"
                   >
                     <div
