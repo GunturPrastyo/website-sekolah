@@ -58,7 +58,7 @@ Route::get('/fasilitas', [FacilityController::class, 'index']);
 Route::get('/guru-staf', [StaffController::class, 'index']);
 
 // API Program Jurusan (Akses Publik)
-Route::get('/programs', [ProgramController::class, 'index']);
+Route::get('/public-programs', [ProgramController::class, 'index']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {

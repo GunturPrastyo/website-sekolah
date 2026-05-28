@@ -34,7 +34,7 @@ const parseJSON = (data) => {
 const fetchData = async () => {
   isFetching.value = true;
   try {
-    const response = await api.get("/api/programs");
+    const response = await api.get("/api/public-programs");
     if (response.data && response.data.data) {
       programs.value = response.data.data.map((program) => ({
         ...program,
