@@ -16,6 +16,7 @@ import {
   PhArrowUpRight,
   PhUser,
 } from "@phosphor-icons/vue";
+import api from "@/api/index.js";
 import PageHeader from "@/components/PageHeader.vue";
 
 const activeFilter = ref("semua");
@@ -30,13 +31,17 @@ const types = [
   { id: "Non-Akademik", name: "Non-Akademik" },
 ];
 
-const years = [
-  { id: "semua", name: "Semua Tahun" },
-  { id: 2026, name: "2026" },
-  { id: 2025, name: "2025" },
-  { id: 2024, name: "2024" },
-  { id: 2023, name: "2023" },
-];
+const years = computed(() => {
+  const yearsSet = new Set(prestasiList.value.map((p) => p.year));
+  const sortedYears = Array.from(yearsSet).sort((a, b) => b - a);
+  if (sortedYears.length === 0) {
+    return [{ id: "semua", name: "Semua Tahun" }];
+  }
+  return [
+    { id: "semua", name: "Semua Tahun" },
+    ...sortedYears.map((y) => ({ id: y, name: y.toString() })),
+  ];
+});
 
 const filters = [
   { id: "semua", name: "Semua Tingkat" },
@@ -46,72 +51,40 @@ const filters = [
   { id: "kabupaten", name: "Kabupaten/Kota" },
 ];
 
-// Data Dummy Prestasi
-const prestasiList = ref([
-  {
-    id: 1,
-    title: "Olimpiade Sains Nasional (OSN) Matematika",
-    winner: "Budi Santoso",
-    rank: 1,
-    level: "nasional",
-    year: 2025,
-    type: "Akademik",
-    image: "https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800",
-    newsLink: "/berita",
-  },
-  {
-    id: 2,
-    title: "Lomba Inovasi Robotika Pelajar Internasional",
-    winner: "Tim RoboTech SMAN 1",
-    rank: 2,
-    level: "internasional",
-    year: 2025,
-    type: "Non-Akademik",
-    image: "https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?q=80&w=800",
-    newsLink: "/berita",
-  },
-  {
-    id: 3,
-    title: "Kejuaraan Pencak Silat Tingkat Pelajar",
-    winner: "Andi Darmawan",
-    rank: 1,
-    level: "provinsi",
-    year: 2024,
-    type: "Non-Akademik",
-    image: "https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=800",
-  },
-  {
-    id: 4,
-    title: "Lomba Debat Bahasa Inggris Nasional",
-    winner: "Siti Aminah & Tim",
-    rank: 3,
-    level: "nasional",
-    year: 2024,
-    type: "Akademik",
-    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800",
-  },
-  {
-    id: 5,
-    title: "Festival Tari Tradisional Daerah",
-    winner: "Ekskul Tari Kinasih",
-    rank: 1,
-    level: "kabupaten",
-    year: 2024,
-    type: "Non-Akademik",
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800",
-  },
-  {
-    id: 6,
-    title: "Lomba Karya Tulis Ilmiah (LKIR) Nasional",
-    winner: "Dina & Risa",
-    rank: 2,
-    level: "nasional",
-    year: 2023,
-    type: "Akademik",
-    image: "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800",
-    newsLink: "/berita",
-  },
-]);
+const prestasiList = ref([]);
+const isFetching = ref(true);
+
+const getImageUrl = (path) => {
+  if (!path)
+    return "https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800";
+  if (path.startsWith("http") || path.startsWith("data:")) return path;
+  const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
+};
+
+const fetchPrestasi = async () => {
+  isFetching.value = true;
+  try {
+    const response = await api.get("/api/public-achievements");
+    if (response.data && response.data.data) {
+      prestasiList.value = response.data.data.map((item) => ({
+        id: item.id,
+        title: item.title || item.name,
+        winner: item.winner || item.student_name || "Siswa",
+        rank: parseInt(item.rank) || 1,
+        level: (item.level || "nasional").toLowerCase(),
+        year: parseInt(item.year) || new Date().getFullYear(),
+        type: item.type || "Akademik",
+        image: getImageUrl(item.image),
+        newsLink: item.newsLink || null,
+      }));
+    }
+  } catch (error) {
+    console.error("Gagal memuat data prestasi:", error);
+  } finally {
+    isFetching.value = false;
+  }
+};
 
 const filteredPrestasi = computed(() => {
   let filtered = prestasiList.value;
@@ -227,10 +200,7 @@ watch([activeFilter, activeType, activeYear, searchQuery], () => {
 });
 
 onMounted(() => {
-  animateValue("internasional", counts.value.internasional);
-  animateValue("nasional", counts.value.nasional);
-  animateValue("provinsi", counts.value.provinsi);
-  animateValue("kabupaten", counts.value.kabupaten);
+  fetchPrestasi();
 });
 </script>
 
@@ -443,7 +413,7 @@ onMounted(() => {
 
         <!-- Skeleton Loading -->
         <div
-          v-if="isLoading"
+          v-if="isLoading || isFetching"
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative"
         >
           <div
