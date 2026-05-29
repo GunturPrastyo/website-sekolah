@@ -17,82 +17,15 @@ import Breadcrumb from "@/components/Breadcrumb.vue";
 
 const activeCategory = ref("semua");
 
-const categories = [
+const categories = ref([
   { id: "semua", name: "Semua Berita" },
   { id: "akademik", name: "Akademik" },
   { id: "kegiatan", name: "Kegiatan" },
   { id: "prestasi", name: "Prestasi" },
   { id: "pengumuman", name: "Pengumuman" },
-];
-
-const newsList = ref([
-  {
-    id: 1,
-    title: "Peringatan Hari Guru Nasional Berlangsung Meriah",
-    category: "kegiatan",
-    date: "24 Nov 2025",
-    author: "Tim Redaksi",
-    image: "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800",
-    views: 1250,
-    excerpt:
-      "Seluruh siswa dan staf pengajar berpartisipasi dalam rangkaian acara yang dimeriahkan dengan berbagai penampilan pentas seni dan penghargaan bagi guru berprestasi.",
-  },
-  {
-    id: 2,
-    title: "Siswa SMAN 1 Meraih Juara 1 Olimpiade Sains Tingkat Nasional",
-    category: "prestasi",
-    date: "10 Jan 2026",
-    author: "Humas",
-    image: "https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800",
-    views: 3420,
-    excerpt:
-      "Prestasi membanggakan kembali ditorehkan oleh siswa-siswi kita di kancah nasional dalam bidang sains terapan, mengalahkan ratusan peserta dari sekolah lain.",
-  },
-  {
-    id: 3,
-    title: "Jadwal Pelaksanaan Ujian Akhir Semester Ganjil 2025/2026",
-    category: "akademik",
-    date: "01 Des 2025",
-    author: "Kurikulum",
-    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=800",
-    views: 890,
-    excerpt:
-      "Diberitahukan kepada seluruh siswa bahwa Ujian Akhir Semester (UAS) Ganjil akan dilaksanakan secara serentak mulai tanggal 10 hingga 18 Desember 2025.",
-  },
-  {
-    id: 4,
-    title: "Peresmian Laboratorium Komputer Baru untuk Menunjang Digitalisasi",
-    category: "pengumuman",
-    date: "05 Feb 2026",
-    author: "Sarpras",
-    image: "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800",
-    views: 2105,
-    excerpt:
-      "Fasilitas lab baru telah dilengkapi dengan 40 unit komputer berspesifikasi tinggi untuk mendukung pembelajaran informatika dan simulasi ujian digital.",
-  },
-  {
-    id: 5,
-    title: "Kunjungan Edukasi Sejarah ke Museum Nasional Jakarta",
-    category: "kegiatan",
-    date: "20 Mar 2026",
-    author: "Kesiswaan",
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800",
-    views: 1560,
-    excerpt:
-      "Kegiatan rutin tahunan ini diikuti oleh seluruh siswa kelas X guna mengenal lebih dekat peninggalan sejarah bangsa dan memupuk rasa nasionalisme.",
-  },
-  {
-    id: 6,
-    title: "Pendaftaran Peserta Didik Baru (PPDB) Jalur Prestasi Dibuka",
-    category: "pengumuman",
-    date: "15 Apr 2026",
-    author: "Panitia PPDB",
-    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800",
-    views: 4120,
-    excerpt:
-      "SMAN 1 Nogosari resmi membuka pendaftaran PPDB tahun ajaran baru khusus untuk jalur prestasi akademik maupun non-akademik. Simak persyaratannya di sini.",
-  },
 ]);
+
+const newsList = ref([]);
 
 const searchQuery = ref("");
 
@@ -127,7 +60,7 @@ const getCategoryCount = (categoryId) => {
 // --- Fitur Pagination ---
 const itemsPerPage = 6;
 const currentPage = ref(1);
-const isLoading = ref(false);
+const isLoading = ref(true); // Set true untuk skeleton loading saat mount
 let searchTimeout = null;
 
 const totalPages = computed(() => {
@@ -158,6 +91,56 @@ const skeletonCount = computed(() => {
   return itemsPerPage;
 });
 
+// Fungsi mengambil data dari API backend
+const fetchNews = async () => {
+  isLoading.value = true;
+  try {
+    // Mengambil Base URL dari environment variables Vite (.env) dengan fallback ke localhost
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+    const response = await fetch(`${apiUrl}/public-news`);
+    const result = await response.json();
+
+    newsList.value = result.data.map((item) => {
+      // Buat text excerpt dengan cara menghilangkan tag HTML dari konten
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = item.content;
+      const textContent = tempDiv.textContent || tempDiv.innerText || "";
+
+      // Ambil gambar pertama dari array images, atau gunakan fallback image
+      let imageUrl =
+        "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800";
+      if (item.images && item.images.length > 0) {
+        imageUrl = item.images[0];
+      }
+
+      // Pastikan kategori baru dimasukkan ke filter list jika belum ada
+      const catLower = item.category ? item.category.toLowerCase() : "pengumuman";
+      if (!categories.value.find((c) => c.id === catLower)) {
+        categories.value.push({ id: catLower, name: item.category });
+      }
+
+      return {
+        id: item.id,
+        title: item.title,
+        category: catLower,
+        date: new Date(item.created_at).toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+        author: item.author ? item.author.name : "Admin",
+        image: imageUrl,
+        views: item.views || 0,
+        excerpt: textContent.substring(0, 150) + "...",
+      };
+    });
+  } catch (error) {
+    console.error("Gagal mengambil data berita:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
 watch([searchQuery, activeCategory], () => {
   isLoading.value = true;
   currentPage.value = 1;
@@ -170,6 +153,8 @@ watch([searchQuery, activeCategory], () => {
 let observer;
 
 onMounted(() => {
+  fetchNews();
+
   observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -305,7 +290,7 @@ onBeforeUnmount(() => {
                     <h3
                       class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight"
                     >
-                      <router-link to="/artikel" class="focus:outline-none">
+                      <router-link :to="`/artikel/${news.id}`" class="focus:outline-none">
                         <span class="absolute inset-0"></span>
                         {{ news.title }}
                       </router-link>
@@ -319,7 +304,7 @@ onBeforeUnmount(() => {
 
                     <div class="mt-auto flex items-center justify-between">
                       <router-link
-                        to="/artikel"
+                        :to="`/artikel/${news.id}`"
                         class="flex items-center text-sm font-bold text-blue-600 dark:text-blue-400 group-hover:underline"
                       >
                         Baca Selengkapnya
@@ -484,7 +469,7 @@ onBeforeUnmount(() => {
             </h3>
             <div class="space-y-5">
               <router-link
-                to="/artikel"
+                :to="`/artikel/${news.id}`"
                 v-for="(news, index) in popularNews"
                 :key="'popular-' + news.id"
                 class="flex items-start gap-4 group"

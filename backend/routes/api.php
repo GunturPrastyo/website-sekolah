@@ -36,6 +36,9 @@ Route::get('/ppdb-info', [PpdbInfoController::class, 'index']);
 // API Pengaturan Umum (Akses Publik untuk mengambil data konfigurasi dan tampilan)
 Route::get('/settings', [SettingController::class, 'index']);
 
+// API Berita (Akses Publik)
+Route::get('/public-news', [NewsController::class, 'publicIndex']);
+
 // API Tracking Pengunjung
 Route::post('/track-visitor', [VisitorController::class, 'track']);
 
