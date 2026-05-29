@@ -36,16 +36,18 @@ Route::get('/ppdb-info', [PpdbInfoController::class, 'index']);
 // API Pengaturan Umum (Akses Publik untuk mengambil data konfigurasi dan tampilan)
 Route::get('/settings', [SettingController::class, 'index']);
 
-// API Berita (Akses Publik)
-Route::get('/public-news', [NewsController::class, 'publicIndex']);
-
 // API Tracking Pengunjung
 Route::get('/track-visitor', [VisitorController::class, 'track']);
 
 // API Berita (Akses Publik)
 Route::get('/public-news', [NewsController::class, 'publicIndex']);
 Route::get('/public-news/{id}', [NewsController::class, 'publicShow']);
+
+// API Galeri (Akses Publik)
 Route::get('/public-galleries', [GalleryController::class, 'publicIndex']);
+
+// API Video Profil Sekolah (Akses Publik)
+Route::get('/public-school-video', [SchoolVideoController::class, 'show']);
 
 // API Visi & Misi (Akses Publik)
 Route::get('/vision-mission', [VisionMissionController::class, 'index']);

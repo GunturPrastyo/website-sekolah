@@ -13,137 +13,82 @@ import PageHeader from "@/components/PageHeader.vue";
 const activeCategory = ref("semua");
 const activeTab = ref("terbaru"); // Status tab: 'terbaru' atau 'terpopuler'
 
-const categories = [
+// Kategori dinamis
+const categories = ref([
   {
     id: "semua",
     name: "Semua Foto",
-    count: 124,
+    count: 0,
     image:
       "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800&auto=format&fit=crop",
   },
-  {
-    id: "fasilitas",
-    name: "Fasilitas",
-    count: 42,
-    image:
-      "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: "kegiatan",
-    name: "Kegiatan",
-    count: 56,
-    image:
-      "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: "ekskul",
-    name: "Ekstrakurikuler",
-    count: 26,
-    image:
-      "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: "pentas-seni",
-    name: "Pentas Seni",
-    count: 18,
-    image:
-      "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: "hut-ri",
-    name: "HUT RI",
-    count: 32,
-    image:
-      "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800&auto=format&fit=crop",
-  },
-];
+]);
 
-// Data Dummy Galeri
-const baseGallery = [
-  {
-    id: 1,
-    title: "Gedung Utama Sekolah",
-    category: "fasilitas",
-    image:
-      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800&h=1000&fit=crop",
-    likes: 120,
-  },
-  {
-    id: 2,
-    title: "Upacara Bendera HUT RI",
-    category: "hut-ri",
-    image:
-      "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&h=800&fit=crop",
-    likes: 540,
-  },
-  {
-    id: 3,
-    title: "Praktikum Laboratorium Kimia",
-    category: "fasilitas",
-    image:
-      "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&h=1200&fit=crop",
-    likes: 85,
-  },
-  {
-    id: 4,
-    title: "Pertandingan Bola Basket",
-    category: "ekskul",
-    image:
-      "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1000&h=1000&fit=crop",
-    likes: 210,
-  },
-  {
-    id: 5,
-    title: "Perpustakaan Digital",
-    category: "fasilitas",
-    image:
-      "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800&h=1100&fit=crop",
-    likes: 150,
-  },
-  {
-    id: 6,
-    title: "Pentas Seni Tradisional",
-    category: "pentas-seni",
-    image:
-      "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&h=700&fit=crop",
-    likes: 430,
-  },
-  {
-    id: 7,
-    title: "Klub Robotika",
-    category: "ekskul",
-    image:
-      "https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?q=80&w=900&h=1200&fit=crop",
-    likes: 95,
-  },
-  {
-    id: 8,
-    title: "Ruang Kelas Modern",
-    category: "fasilitas",
-    image:
-      "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=1200&h=900&fit=crop",
-    likes: 180,
-  },
-  {
-    id: 9,
-    title: "Kegiatan Pramuka Kemah Bakti",
-    category: "ekskul",
-    image:
-      "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800&h=800&fit=crop",
-    likes: 275,
-  },
-];
+const galleryList = ref([]);
+const isLoadingGalleries = ref(true);
 
-const galleryList = ref(
-  [
-    ...baseGallery,
-    ...baseGallery.map((item) => ({
-      ...item,
-      id: item.id + 100,
-      likes: item.likes + 15,
-    })),
-  ].map((item) => ({ ...item, liked: false }))
-);
+const schoolVideoUrl = ref("");
+
+const fetchSchoolVideo = async () => {
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+    const response = await fetch(`${apiUrl}/public-school-video`);
+    const result = await response.json();
+    if (result.data && result.data.url) {
+      schoolVideoUrl.value = result.data.url;
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data video profil:", error);
+  }
+};
+
+const fetchGalleries = async () => {
+  isLoadingGalleries.value = true;
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+    const response = await fetch(`${apiUrl}/public-galleries`);
+    const result = await response.json();
+
+    const categoryMap = {};
+
+    galleryList.value = result.data.map((item) => {
+      const catLower = item.category
+        ? item.category.toLowerCase().replace(/\s+/g, "-")
+        : "lainnya";
+      const catName = item.category || "Lainnya";
+
+      if (!categoryMap[catLower]) {
+        categoryMap[catLower] = {
+          id: catLower,
+          name: catName,
+          count: 0,
+          image: item.image, // Menggunakan gambar pertama dari kategori ini sebagai cover
+        };
+      }
+      categoryMap[catLower].count++;
+
+      return {
+        id: item.id,
+        title: item.title,
+        category: catLower,
+        image: item.image,
+        likes: item.likes || 0,
+        liked: false,
+      };
+    });
+
+    categories.value[0].count = galleryList.value.length;
+
+    // Convert map to array and add to categories
+    for (const key in categoryMap) {
+      categories.value.push(categoryMap[key]);
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data galeri:", error);
+  } finally {
+    isLoadingGalleries.value = false;
+  }
+};
 
 const toggleLike = (item) => {
   if (item.liked) {
@@ -171,6 +116,19 @@ const filteredGallery = computed(() => {
   }
 
   return result;
+});
+
+// Ambil thumbnail dinamis jika URL adalah YouTube
+const videoThumbnail = computed(() => {
+  if (!schoolVideoUrl.value)
+    return "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop";
+  const url = schoolVideoUrl.value;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  if (match && match[2].length === 11) {
+    return `https://img.youtube.com/vi/${match[2]}/maxresdefault.jpg`;
+  }
+  return "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop";
 });
 
 // --- INFINITE SCROLL STATE ---
@@ -202,16 +160,19 @@ watch([activeCategory, activeTab], () => {
 
 let observer = null;
 onMounted(() => {
-  observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0].isIntersecting && hasMore.value) {
-        loadMore();
-      }
-    },
-    { rootMargin: "0px 0px 150px 0px" }
-  ); // Pemicu aktif 150px sebelum mentok ke bawah
+  fetchSchoolVideo();
+  fetchGalleries().then(() => {
+    observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore.value) {
+          loadMore();
+        }
+      },
+      { rootMargin: "0px 0px 150px 0px" }
+    ); // Pemicu aktif 150px sebelum mentok ke bawah
 
-  if (loadMoreSentinel.value) observer.observe(loadMoreSentinel.value);
+    if (loadMoreSentinel.value) observer.observe(loadMoreSentinel.value);
+  });
 });
 
 onBeforeUnmount(() => {
@@ -270,11 +231,14 @@ const onImageLoad = (id) => {
     <section class="py-4 md:py-12 px-0 md:px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
       <div class="container mx-auto max-w-full">
         <!-- Video Profil Section -->
-        <div
+        <a
+          v-if="schoolVideoUrl"
+          :href="schoolVideoUrl"
+          target="_blank"
           class="mb-4 md:mb-6 relative rounded-none sm:rounded-xl overflow-hidden shadow-xl aspect-[4/3] sm:aspect-video md:aspect-[21/9] group cursor-pointer w-full block"
         >
           <img
-            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop"
+            :src="videoThumbnail"
             class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             alt="Video Profil Sekolah"
           />
@@ -304,6 +268,22 @@ const onImageLoad = (id) => {
             >
               Company Profile SMAN 1 Nogosari 2026
             </h3>
+          </div>
+        </a>
+
+        <!-- Skeleton Video Profil -->
+        <div
+          v-else
+          class="mb-4 md:mb-6 relative rounded-none sm:rounded-xl overflow-hidden shadow-xl aspect-[4/3] sm:aspect-video md:aspect-[21/9] w-full block bg-gray-200 dark:bg-slate-800 animate-pulse flex items-center justify-center"
+        >
+          <div class="flex flex-col items-center">
+            <PhPlay
+              class="w-12 h-12 text-gray-400 dark:text-gray-500 mb-2"
+              weight="fill"
+            />
+            <span class="text-gray-500 dark:text-gray-400 font-medium"
+              >Memuat Video...</span
+            >
           </div>
         </div>
 
@@ -472,13 +452,25 @@ const onImageLoad = (id) => {
           </div>
         </TransitionGroup>
 
+        <!-- Global Skeleton / Loading Data -->
+        <div v-if="isLoadingGalleries" class="flex justify-center items-center py-20">
+          <div class="flex flex-col items-center">
+            <PhImage
+              class="w-12 h-12 text-gray-400 dark:text-gray-500 animate-pulse mb-3"
+            />
+            <span class="text-gray-500 dark:text-gray-400 font-medium"
+              >Memuat Galeri...</span
+            >
+          </div>
+        </div>
+
         <!-- Sentinel / Loading Indicator untuk Infinite Scroll -->
         <div
           ref="loadMoreSentinel"
           class="w-full flex justify-center items-center h-10 mt-8 mb-4"
         >
           <div
-            v-if="hasMore"
+            v-if="hasMore && !isLoadingGalleries"
             class="flex items-center text-gray-400 dark:text-gray-500 gap-2"
           >
             <svg
@@ -509,7 +501,7 @@ const onImageLoad = (id) => {
 
         <!-- Empty State -->
         <div
-          v-if="filteredGallery.length === 0"
+          v-if="filteredGallery.length === 0 && !isLoadingGalleries"
           class="py-20 text-center bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm mt-4"
         >
           <div
