@@ -40,7 +40,7 @@ Route::get('/settings', [SettingController::class, 'index']);
 Route::get('/public-news', [NewsController::class, 'publicIndex']);
 
 // API Tracking Pengunjung
-Route::post('/track-visitor', [VisitorController::class, 'track']);
+Route::get('/track-visitor', [VisitorController::class, 'track']);
 
 // API Berita (Akses Publik)
 Route::get('/public-news', [NewsController::class, 'publicIndex']);
