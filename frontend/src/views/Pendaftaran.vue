@@ -18,6 +18,8 @@ import {
   PhPaperPlaneRight,
   PhPrinter,
   PhX,
+  PhDownloadSimple,
+  PhLink,
 } from "@phosphor-icons/vue";
 import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.css";
@@ -56,6 +58,23 @@ const form = ref({
 
 const regNumber = ref("");
 const registrationDate = ref("");
+
+const ppdbInfo = ref(null);
+const isLoading = ref(true);
+
+const fetchPpdbInfo = async () => {
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+    const response = await fetch(`${apiUrl}/ppdb-info`);
+    const result = await response.json();
+    // Ambil object data (Bisa berbeda tergantung format respon API Controller)
+    ppdbInfo.value = result.data || result;
+  } catch (error) {
+    console.error("Gagal mengambil data PPDB:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 const nextStep = () => {
   // Validasi step saat ini sebelum bisa ke step selanjutnya
@@ -145,6 +164,8 @@ const printBukti = async () => {
 };
 
 onMounted(() => {
+  fetchPpdbInfo();
+
   nextTick(() => {
     // Inisialisasi Swiper untuk Jalur Pendaftaran
     new Swiper(".jalur-swiper", {
@@ -190,7 +211,7 @@ onMounted(() => {
           <span
             class="inline-block px-4 py-1.5 mb-5 text-xs md:text-sm font-bold text-blue-900 bg-yellow-400 rounded-full shadow-sm tracking-wide"
           >
-            TAHUN AJARAN 2026/2027
+            TAHUN AJARAN {{ new Date().getFullYear() }}/{{ new Date().getFullYear() + 1 }}
           </span>
           <h1
             class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight"
@@ -202,6 +223,40 @@ onMounted(() => {
             Bergabunglah bersama SMAN 1 Nogosari. Pelajari informasi pendaftaran dan isi
             formulir di bawah ini dengan data yang valid.
           </p>
+
+          <div
+            v-if="!isLoading && ppdbInfo"
+            class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8"
+          >
+            <a
+              v-if="ppdbInfo.registration_link && ppdbInfo.status === 'open'"
+              :href="ppdbInfo.registration_link"
+              target="_blank"
+              class="px-6 py-3 bg-yellow-400 text-blue-950 font-bold rounded-xl shadow-lg hover:bg-yellow-300 transition-all flex items-center"
+            >
+              <PhLink class="w-5 h-5 mr-2" />
+              Daftar Sekarang
+            </a>
+            <span
+              v-else-if="ppdbInfo.status !== 'open'"
+              class="px-6 py-3 bg-gray-500 text-white font-bold rounded-xl shadow-lg flex items-center"
+            >
+              Pendaftaran Sedang Ditutup
+            </span>
+
+            <a
+              v-if="ppdbInfo.brosur"
+              :href="ppdbInfo.brosur"
+              target="_blank"
+              class="px-6 py-3 bg-white/10 text-white font-semibold border border-white/30 rounded-xl shadow-lg hover:bg-white/20 transition-all flex items-center"
+            >
+              <PhDownloadSimple class="w-5 h-5 mr-2" />
+              Unduh Brosur
+            </a>
+          </div>
+          <div v-else-if="isLoading" class="flex justify-center mt-8">
+            <PhSpinner class="w-6 h-6 animate-spin text-blue-400" />
+          </div>
         </div>
       </div>
 
@@ -221,6 +276,13 @@ onMounted(() => {
               Pastikan Anda membaca ketentuan berikut sebelum mengisi formulir.
             </p>
           </div>
+
+          <!-- Menampilkan Konten yang dibuat via Rich Text Editor dari Admin -->
+          <div
+            v-if="!isLoading && ppdbInfo && (ppdbInfo.content || ppdbInfo.description)"
+            class="bg-blue-50/30 dark:bg-slate-700/30 p-6 md:p-8 rounded-xl border border-gray-200 dark:border-slate-700 mb-10 shadow-sm max-w-4xl mx-auto prose dark:prose-invert max-w-none"
+            v-html="ppdbInfo.content || ppdbInfo.description"
+          ></div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             <!-- Syarat Utama -->
