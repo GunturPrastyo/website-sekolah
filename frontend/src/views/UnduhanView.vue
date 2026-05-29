@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import PageHeader from "@/components/PageHeader.vue";
 import {
   PhFolder,
@@ -30,73 +30,50 @@ const activeCategory = ref("semua");
 const searchQuery = ref("");
 const viewMode = ref("list"); // 'list' atau 'grid'
 
-// Data Dummy Files
-const files = ref([
-  {
-    id: 1,
-    name: "Kalender_Akademik_2025_2026.pdf",
-    type: "pdf",
-    size: "2.4 MB",
-    date: "15 Jan 2026",
-    category: "akademik",
-  },
-  {
-    id: 2,
-    name: "Brosur_PPDB_SMAN1_Nogosari.pdf",
-    type: "pdf",
-    size: "5.1 MB",
-    date: "10 Feb 2026",
-    category: "ppdb",
-  },
-  {
-    id: 3,
-    name: "Formulir_Pendaftaran_Ekskul.docx",
-    type: "docx",
-    size: "1.2 MB",
-    date: "05 Feb 2026",
-    category: "kesiswaan",
-  },
-  {
-    id: 4,
-    name: "SOP_Tata_Tertib_Siswa_Rev.pdf",
-    type: "pdf",
-    size: "3.5 MB",
-    date: "20 Jan 2026",
-    category: "umum",
-  },
-  {
-    id: 5,
-    name: "Modul_Latihan_UTBK_Saintek.zip",
-    type: "zip",
-    size: "15.8 MB",
-    date: "12 Jan 2026",
-    category: "akademik",
-  },
-  {
-    id: 6,
-    name: "Buku_Panduan_OSIS_2026.pdf",
-    type: "pdf",
-    size: "4.2 MB",
-    date: "02 Feb 2026",
-    category: "kesiswaan",
-  },
-  {
-    id: 7,
-    name: "Logo_Resmi_SMAN1_Nogosari.png",
-    type: "image",
-    size: "1.8 MB",
-    date: "25 Jan 2026",
-    category: "umum",
-  },
-  {
-    id: 8,
-    name: "Juknis_Pelaksanaan_PPDB.docx",
-    type: "docx",
-    size: "850 KB",
-    date: "11 Feb 2026",
-    category: "ppdb",
-  },
-]);
+const files = ref([]);
+const isLoading = ref(true);
+
+const fetchDownloads = async () => {
+  isLoading.value = true;
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+    const response = await fetch(`${apiUrl}/public-downloads`);
+    const result = await response.json();
+
+    files.value = result.data.map((item) => {
+      let ext = "file";
+      const filePath = item.file || item.file_path;
+      if (filePath) {
+        const parts = filePath.split(".");
+        ext = parts[parts.length - 1].toLowerCase();
+      }
+
+      return {
+        id: item.id,
+        name: item.title || "Dokumen Unduhan",
+        type: ext,
+        size: item.size || "-",
+        date: new Date(item.created_at).toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+        category: item.category
+          ? item.category.toLowerCase().replace(/\s+/g, "-")
+          : "umum",
+        url: filePath,
+      };
+    });
+  } catch (error) {
+    console.error("Gagal mengambil data unduhan:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchDownloads();
+});
 
 const filteredFiles = computed(() => {
   return files.value.filter((file) => {
@@ -140,6 +117,14 @@ const getFileIconColor = (type) => {
 const activeCategoryName = computed(() => {
   return categories.value.find((c) => c.id === activeCategory.value)?.name;
 });
+
+const downloadFile = (file) => {
+  if (file.url) {
+    window.open(file.url, "_blank");
+  } else {
+    alert("URL file tidak tersedia");
+  }
+};
 </script>
 
 <template>
@@ -258,9 +243,22 @@ const activeCategoryName = computed(() => {
 
             <!-- File List Content -->
             <div class="flex-1 p-5 overflow-auto">
+              <!-- Loading State -->
+              <div
+                v-if="isLoading"
+                class="h-full flex flex-col items-center justify-center text-center py-16"
+              >
+                <div
+                  class="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-4"
+                ></div>
+                <h4 class="text-lg font-bold text-gray-800 dark:text-gray-200">
+                  Memuat Data...
+                </h4>
+              </div>
+
               <!-- Empty State -->
               <div
-                v-if="filteredFiles.length === 0"
+                v-else-if="filteredFiles.length === 0"
                 class="h-full flex flex-col items-center justify-center text-center py-16"
               >
                 <PhFileX class="w-16 h-16 text-gray-300 dark:text-gray-600 mb-4" />
@@ -324,6 +322,7 @@ const activeCategoryName = computed(() => {
                       </td>
                       <td class="py-4 text-right">
                         <button
+                          @click="downloadFile(file)"
                           class="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-full transition-all focus:outline-none"
                           title="Unduh File"
                         >
@@ -369,6 +368,7 @@ const activeCategoryName = computed(() => {
 
                   <!-- Tombol Unduh Hover -->
                   <button
+                    @click.stop="downloadFile(file)"
                     class="mt-3 w-full py-1.5 text-[11px] font-bold uppercase tracking-wider bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white transition-colors flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100"
                   >
                     <PhDownloadSimple class="w-3.5 h-3.5" /> Unduh

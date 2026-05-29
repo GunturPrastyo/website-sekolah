@@ -77,6 +77,9 @@ Route::get('/public-extracurriculars', [ExtracurricularController::class, 'index
 // API Prestasi (Akses Publik)
 Route::get('/public-achievements', [AchievementController::class, 'index']);
 
+// API Unduhan (Akses Publik)
+Route::get('/public-downloads', [DownloadController::class, 'index']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
