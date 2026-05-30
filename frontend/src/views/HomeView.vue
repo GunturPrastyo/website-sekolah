@@ -1132,14 +1132,16 @@
             >
               <div class="flex items-center justify-between mb-6">
                 <button
+                  @click="prevMonth"
                   class="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors focus:outline-none"
                 >
                   <PhCaretLeft class="w-5 h-5 text-gray-600 dark:text-gray-400" />
                 </button>
                 <h3 class="text-lg font-bold text-blue-950 dark:text-blue-200">
-                  April 2026
+                  {{ calendarData.monthName }} {{ calendarData.year }}
                 </h3>
                 <button
+                  @click="nextMonth"
                   class="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors focus:outline-none"
                 >
                   <PhCaretRight class="w-5 h-5 text-gray-600 dark:text-gray-400" />
@@ -1171,197 +1173,19 @@
               </div>
 
               <div class="grid grid-cols-7 gap-y-2 text-sm text-center">
-                <!-- Kosong (Mulai dari Rabu) -->
-                <div class="py-2"></div>
-                <div class="py-2"></div>
-                <div class="py-2"></div>
+                <!-- Offset kosong menyesuaikan hari pertama -->
+                <div
+                  v-for="n in calendarData.firstDayOffset"
+                  :key="'offset-' + n"
+                  class="py-2"
+                ></div>
 
                 <div
+                  v-for="day in calendarData.daysInMonth"
+                  :key="day"
                   class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
                 >
-                  1
-                </div>
-
-                <!-- Event Gantt Chart UTS (2-8) -->
-                <!-- Baris 1 -->
-                <div
-                  class="col-span-3 mx-0.5 relative bg-yellow-100 rounded-md overflow-hidden cursor-pointer hover:bg-yellow-200 transition-colors flex flex-col justify-between"
-                  title="Ujian Tengah Semester"
-                >
-                  <div
-                    class="bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-0.5 text-left truncate"
-                  >
-                    Ujian Tengah Semester
-                  </div>
-                  <div class="grid grid-cols-3 w-full py-1">
-                    <div class="text-yellow-800 font-bold">2</div>
-                    <div class="text-yellow-800 font-bold">3</div>
-                    <div class="text-yellow-800 font-bold">4</div>
-                  </div>
-                </div>
-
-                <!-- Baris 2 -->
-                <div
-                  class="col-span-4 mx-0.5 relative bg-yellow-100 rounded-md overflow-hidden cursor-pointer hover:bg-yellow-200 transition-colors flex flex-col justify-between"
-                  title="Ujian Tengah Semester"
-                >
-                  <div
-                    class="bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-0.5 text-left truncate"
-                  >
-                    Ujian Tengah Semester
-                  </div>
-                  <div class="grid grid-cols-4 w-full py-1">
-                    <div class="text-red-500 font-bold">5</div>
-                    <div class="text-yellow-800 font-bold">6</div>
-                    <div class="text-yellow-800 font-bold">7</div>
-                    <div class="text-yellow-800 font-bold">8</div>
-                  </div>
-                </div>
-
-                <!-- Event 2 -->
-                <div
-                  class="mx-0.5 relative bg-red-100 rounded-md overflow-hidden cursor-pointer hover:bg-red-200 transition-colors flex flex-col justify-between"
-                  title="Rapat Evaluasi Guru & Staf"
-                >
-                  <div
-                    class="bg-red-400 text-red-900 text-[10px] font-bold px-2 py-0.5 text-left truncate"
-                  >
-                    Rapat Guru
-                  </div>
-                  <div class="py-1">
-                    <div class="text-red-800 font-bold">9</div>
-                  </div>
-                </div>
-
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  10
-                </div>
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  11
-                </div>
-
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-red-500 dark:text-red-400 font-medium hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer transition-colors"
-                >
-                  12
-                </div>
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  13
-                </div>
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  14
-                </div>
-
-                <!-- Event 3 -->
-                <div
-                  class="mx-0.5 relative bg-green-100 rounded-md overflow-hidden cursor-pointer hover:bg-green-200 transition-colors flex flex-col justify-between"
-                  title="Peringatan Hari Bumi (Kerja Bakti)"
-                >
-                  <div
-                    class="bg-green-400 text-green-900 text-[10px] font-bold px-2 py-0.5 text-left truncate"
-                  >
-                    Hari Bumi
-                  </div>
-                  <div class="py-1">
-                    <div class="text-green-800 font-bold">15</div>
-                  </div>
-                </div>
-
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  16
-                </div>
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  17
-                </div>
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  18
-                </div>
-
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-red-500 dark:text-red-400 font-medium hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer transition-colors"
-                >
-                  19
-                </div>
-
-                <!-- Event 4 -->
-                <div
-                  class="mx-0.5 relative bg-blue-100 rounded-md overflow-hidden cursor-pointer hover:bg-blue-200 transition-colors flex flex-col justify-between"
-                  title="Seminar Persiapan Kuliah Kelas XII"
-                >
-                  <div
-                    class="bg-blue-400 text-blue-900 text-[10px] font-bold px-2 py-0.5 text-left truncate"
-                  >
-                    Seminar XII
-                  </div>
-                  <div class="py-1">
-                    <div class="text-blue-800 font-bold">20</div>
-                  </div>
-                </div>
-
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  21
-                </div>
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  22
-                </div>
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  23
-                </div>
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  24
-                </div>
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  25
-                </div>
-
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-red-500 dark:text-red-400 font-medium hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer transition-colors"
-                >
-                  26
-                </div>
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  27
-                </div>
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  28
-                </div>
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  29
-                </div>
-                <div
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  30
+                  {{ day }}
                 </div>
               </div>
 
@@ -1826,7 +1650,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, reactive } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, reactive } from "vue";
+import api from "@/api/index.js";
 import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.css";
 import {
@@ -1857,6 +1682,36 @@ const showSubtitle = ref(false);
 const activeFaq = ref(null);
 const toggleFaq = (index) => {
   activeFaq.value = activeFaq.value === index ? null : index;
+};
+
+// State & Logika Kalender Dinamis
+const currentDisplayedDate = ref(new Date());
+
+const calendarData = computed(() => {
+  const date = currentDisplayedDate.value;
+  const year = date.getFullYear();
+  const month = date.getMonth();
+
+  const monthName = new Intl.DateTimeFormat("id-ID", { month: "long" }).format(date);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDayOffset = new Date(year, month, 1).getDay(); // 0 (Minggu) - 6 (Sabtu)
+
+  return {
+    monthName,
+    year,
+    daysInMonth,
+    firstDayOffset,
+  };
+});
+
+const prevMonth = () => {
+  const date = currentDisplayedDate.value;
+  currentDisplayedDate.value = new Date(date.getFullYear(), date.getMonth() - 1, 1);
+};
+
+const nextMonth = () => {
+  const date = currentDisplayedDate.value;
+  currentDisplayedDate.value = new Date(date.getFullYear(), date.getMonth() + 1, 1);
 };
 
 // State Tooltip Dinamis Map
@@ -2123,65 +1978,67 @@ const themeClasses = {
   },
 };
 
-const agendas = [
-  {
-    date: "02-08",
-    month: "Apr",
-    title: "Ujian Tengah Semester (UTS)",
-    time: "07:30 - Selesai",
-    loc: "Ruang Kelas",
-    color: "yellow",
-    file: "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?q=80&w=800",
-    fileType: "image",
-    fileLabel: "Unduh Jadwal Ujian",
-  },
-  {
-    date: "09",
-    month: "Apr",
-    title: "Rapat Evaluasi Guru & Staf",
-    time: "13:00 - 15:00",
-    loc: "Ruang Guru",
-    color: "red",
-  },
-  {
-    date: "15",
-    month: "Apr",
-    title: "Peringatan Hari Bumi (Kerja Bakti)",
-    time: "08:00 - 11:00",
-    loc: "Lingkungan Sekolah",
-    color: "green",
-  },
-  {
-    date: "20",
-    month: "Apr",
-    title: "Seminar Persiapan Kuliah Kelas XII",
-    time: "09:00 - 12:00",
-    loc: "Aula Utama",
-    color: "blue",
-    file: "https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=800",
-    fileType: "image",
-    fileLabel: "Lihat Poster Acara",
-  },
-  {
-    date: "22",
-    month: "Apr",
-    title: "Lomba Olahraga Antar Kelas",
-    time: "08:00 - 15:00",
-    loc: "Lapangan Olahraga",
-    color: "green",
-    file: "https://images.unsplash.com/photo-1574629810360-7efbbcb27a4e?q=80&w=800",
-    fileType: "image",
-    fileLabel: "Unduh Juknis Lomba",
-  },
-  {
-    date: "28",
-    month: "Apr",
-    title: "Kunjungan Industri Kelas XI",
-    time: "07:00 - 16:00",
-    loc: "Kawasan Industri",
-    color: "blue",
-  },
-];
+const agendas = ref([]);
+
+const fetchAgendas = async () => {
+  try {
+    const response = await api.get("/api/public-agendas");
+    if (response.data && response.data.data && response.data.data.length > 0) {
+      agendas.value = response.data.data.map((agenda) => {
+        let dateText = "01";
+        let monthText = "Jan";
+
+        if (agenda.start_date || agenda.date) {
+          const d = new Date(agenda.start_date || agenda.date);
+          dateText = d.getDate().toString().padStart(2, "0");
+          const months = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "Mei",
+            "Jun",
+            "Jul",
+            "Agt",
+            "Sep",
+            "Okt",
+            "Nov",
+            "Des",
+          ];
+          monthText = months[d.getMonth()];
+
+          if (
+            agenda.end_date &&
+            agenda.end_date !== agenda.start_date &&
+            agenda.end_date !== agenda.date
+          ) {
+            const endD = new Date(agenda.end_date);
+            dateText = `${dateText}-${endD.getDate().toString().padStart(2, "0")}`;
+          }
+        }
+
+        let color = "blue";
+        const type = (agenda.type || agenda.kategori || "").toLowerCase();
+        if (type.includes("akademik")) color = "yellow";
+        else if (type.includes("guru") || type.includes("staf")) color = "red";
+        else if (type.includes("kegiatan") || type.includes("lomba")) color = "green";
+
+        return {
+          id: agenda.id,
+          date: dateText,
+          month: monthText,
+          title: agenda.title || agenda.nama || "Agenda Tanpa Judul",
+          time: agenda.time || agenda.waktu || "08:00 - Selesai",
+          loc: agenda.location || agenda.lokasi || "Lingkungan Sekolah",
+          color: color,
+          file: agenda.file || agenda.lampiran || null,
+        };
+      });
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data agenda:", error);
+  }
+};
 
 const faqs = [
   {
@@ -2283,6 +2140,9 @@ const alumniLocations = ref([
 ]);
 
 onMounted(() => {
+  // Fetch data dari API Backend
+  fetchAgendas();
+
   // Animasi Typing Text
   let i = 0;
   const typeWriter = setInterval(() => {

@@ -80,6 +80,9 @@ Route::get('/public-extracurriculars', [ExtracurricularController::class, 'index
 // API Prestasi (Akses Publik)
 Route::get('/public-achievements', [AchievementController::class, 'index']);
 
+// API Agenda (Akses Publik)
+Route::get('/public-agendas', [AgendaController::class, 'index']);
+
 // API Unduhan (Akses Publik)
 Route::get('/public-downloads', [DownloadController::class, 'index']);
 
