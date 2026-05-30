@@ -614,13 +614,14 @@
             <div class="lg:col-span-2 flex flex-col gap-6">
               <!-- Berita Utama (Atas - 1 Besar) -->
               <router-link
-                to="/berita"
+                v-if="mainNews"
+                :to="`/berita/${mainNews.id}`"
                 class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out group relative rounded-lg overflow-hidden shadow-lg h-[280px] sm:h-[350px] md:h-[400px] w-full block"
               >
                 <img
-                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&auto=format&fit=crop"
+                  :src="getNewsImage(mainNews.image)"
                   class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  alt="Berita Utama"
+                  :alt="mainNews.title"
                 />
                 <div
                   class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"
@@ -629,160 +630,83 @@
                   <span
                     class="inline-block px-3 py-1 mb-3 text-sm font-bold tracking-wide text-white bg-blue-600 rounded-full"
                     style="font-family: 'Kalam', cursive"
-                    >Kegiatan</span
+                    >{{ mainNews.category || "Kegiatan" }}</span
                   >
                   <h3
                     class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors"
                   >
-                    Peringatan Hari Guru Nasional Berlangsung Meriah
+                    {{ mainNews.title }}
                   </h3>
                   <p class="text-gray-200 text-sm md:text-base line-clamp-3">
-                    Seluruh siswa dan staf pengajar berpartisipasi dalam rangkaian acara
-                    yang dimeriahkan dengan berbagai penampilan pentas seni dan
-                    penghargaan bagi guru berprestasi.
+                    {{ mainNews.excerpt || stripTags(mainNews.content) }}
                   </p>
                   <div
                     class="mt-4 flex items-center justify-between text-gray-300 text-xs md:text-sm"
                   >
                     <div class="flex items-center">
-                      <PhCalendarBlank class="w-4 h-4 mr-1.5" /> 24 November 2025
+                      <PhCalendarBlank class="w-4 h-4 mr-1.5" />
+                      {{ formatDate(mainNews.created_at) }}
                     </div>
                     <span class="flex items-center font-medium">
-                      <PhEye class="w-4 h-4 mr-1.5 text-blue-400" /> 1250
+                      <PhEye class="w-4 h-4 mr-1.5 text-blue-400" />
+                      {{ mainNews.views || 0 }}
                     </span>
                   </div>
                 </div>
               </router-link>
+              <div
+                v-else
+                class="h-[280px] sm:h-[350px] md:h-[400px] w-full bg-slate-200 dark:bg-slate-700 rounded-lg animate-pulse flex items-center justify-center"
+              >
+                <span class="text-slate-400 dark:text-slate-500">Memuat Berita...</span>
+              </div>
 
               <!-- Berita Pendukung (Bawah - 3 Kecil) -->
               <div class="relative">
                 <div
                   class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
                 >
-                  <!-- Card 1 -->
                   <router-link
-                    to="/berita"
-                    class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full"
+                    v-for="(news, index) in subNews"
+                    :key="news.id"
+                    :to="`/berita/${news.id}`"
+                    class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full"
+                    :class="{ 'sm:hidden lg:flex': index === 2 }"
+                    :style="{ transitionDelay: `${(index + 1) * 100}ms` }"
                   >
                     <div class="h-40 overflow-hidden relative">
                       <img
-                        src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=600&auto=format&fit=crop"
+                        :src="getNewsImage(news.image)"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        alt="Berita 1"
+                        :alt="news.title"
                       />
                     </div>
                     <div class="p-4 flex flex-col flex-grow">
                       <span
                         class="text-sm font-bold tracking-wide text-blue-600 mb-1.5"
                         style="font-family: 'Kalam', cursive"
-                        >Prestasi</span
+                        >{{ news.category || "Berita" }}</span
                       >
                       <h4
                         class="font-bold text-blue-950 dark:text-slate-100 text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 min-h-[40px]"
                       >
-                        Siswa SMAN 1 Meraih Juara 1 Olimpiade Sains Tingkat Nasional
+                        {{ news.title }}
                       </h4>
                       <p
                         class="text-xs text-gray-500 dark:text-slate-400 line-clamp-2 mb-2 min-h-[32px]"
                       >
-                        Prestasi membanggakan kembali ditorehkan oleh siswa-siswi kita di
-                        kancah nasional dalam bidang sains terapan.
+                        {{ news.excerpt || stripTags(news.content) }}
                       </p>
                       <div
                         class="mt-auto flex items-center justify-between text-gray-500 dark:text-slate-400 text-xs pt-3"
                       >
                         <div class="flex items-center">
-                          <PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> 10 Jan 2026
+                          <PhCalendarBlank class="w-3.5 h-3.5 mr-1" />
+                          {{ formatDate(news.created_at) }}
                         </div>
                         <span class="flex items-center font-medium">
                           <PhEye class="w-4 h-4 mr-1.5 text-blue-400" />
-                          3420
-                        </span>
-                      </div>
-                    </div>
-                  </router-link>
-
-                  <!-- Card 2 -->
-                  <router-link
-                    to="/berita"
-                    class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full"
-                  >
-                    <div class="h-40 overflow-hidden relative">
-                      <img
-                        src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=600&auto=format&fit=crop"
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        alt="Berita 2"
-                      />
-                    </div>
-                    <div class="p-4 flex flex-col flex-grow">
-                      <span
-                        class="text-sm font-bold tracking-wide text-blue-600 mb-1.5"
-                        style="font-family: 'Kalam', cursive"
-                        >Fasilitas</span
-                      >
-                      <h4
-                        class="font-bold text-gray-800 dark:text-slate-100 text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 min-h-[40px]"
-                      >
-                        Peresmian Laboratorium Komputer Baru untuk Menunjang Digitalisasi
-                      </h4>
-                      <p
-                        class="text-xs text-gray-500 dark:text-slate-400 line-clamp-2 mb-2 min-h-[32px]"
-                      >
-                        Fasilitas lab baru telah dilengkapi dengan 40 unit komputer
-                        berspesifikasi tinggi untuk mendukung pembelajaran siswa.
-                      </p>
-                      <div
-                        class="mt-auto flex items-center justify-between text-gray-500 dark:text-slate-400 text-xs pt-3"
-                      >
-                        <div class="flex items-center">
-                          <PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> 05 Feb 2026
-                        </div>
-                        <span class="flex items-center font-medium">
-                          <PhEye class="w-4 h-4 mr-1.5 text-blue-400" />
-                          2105
-                        </span>
-                      </div>
-                    </div>
-                  </router-link>
-
-                  <!-- Card 3 -->
-                  <router-link
-                    to="/berita"
-                    class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full sm:hidden lg:flex"
-                  >
-                    <div class="h-40 overflow-hidden relative">
-                      <img
-                        src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600&auto=format&fit=crop"
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        alt="Berita 3"
-                      />
-                    </div>
-                    <div class="p-4 flex flex-col flex-grow">
-                      <span
-                        class="text-sm font-bold tracking-wide text-blue-600 mb-1.5"
-                        style="font-family: 'Kalam', cursive"
-                        >Kegiatan</span
-                      >
-                      <h4
-                        class="font-bold text-gray-800 dark:text-slate-100 text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 min-h-[40px]"
-                      >
-                        Kunjungan Edukasi Sejarah ke Museum Nasional Jakarta
-                      </h4>
-                      <p
-                        class="text-xs text-gray-500 dark:text-slate-400 line-clamp-2 mb-2 min-h-[32px]"
-                      >
-                        Kegiatan rutin tahunan ini diikuti oleh seluruh siswa kelas X guna
-                        mengenal lebih dekat peninggalan sejarah bangsa.
-                      </p>
-                      <div
-                        class="mt-auto flex items-center justify-between text-gray-500 dark:text-slate-400 text-xs pt-3"
-                      >
-                        <div class="flex items-center">
-                          <PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> 20 Mar 2026
-                        </div>
-                        <span class="flex items-center font-medium">
-                          <PhEye class="w-4 h-4 mr-1.5 text-blue-400" />
-                          1560
+                          {{ news.views || 0 }}
                         </span>
                       </div>
                     </div>
@@ -841,72 +765,48 @@
                     class="animate-scroll-y group-hover:[animation-play-state:paused] flex flex-col"
                   >
                     <!-- Karena butuh infinite loop, isi pengumuman akan kita duplikat 2x -->
-                    <template v-for="i in 2" :key="i">
-                      <div class="flex flex-col">
-                        <!-- Item Pengumuman -->
-                        <router-link
-                          to="/berita"
-                          class="p-5 border-b border-blue-50 dark:border-slate-700/50 hover:bg-blue-100/50 dark:hover:bg-slate-700 transition-colors flex items-start"
-                          v-for="(item, index) in [
-                            {
-                              tgl: '15',
-                              bln: 'Apr',
-                              title: 'Pengambilan Raport Semester Ganjil 2025/2026',
-                              desc:
-                                'Wajib dihadiri oleh orang tua/wali murid di ruang kelas. Harap membawa surat undangan dan datang tepat waktu sesuai jadwal.',
-                            },
-                            {
-                              tgl: '20',
-                              bln: 'Apr',
-                              title: 'Jadwal Ujian Sekolah (USBN) Kelas XII',
-                              desc:
-                                'Persiapkan diri dengan baik dan perhatikan jadwal ujian. Pastikan membawa kartu peserta serta kelengkapan alat tulis.',
-                            },
-                            {
-                              tgl: '01',
-                              bln: 'Mei',
-                              title: 'Libur Nasional Idul Fitri 1447 H',
-                              desc:
-                                'Kegiatan belajar mengajar diliburkan selama 2 minggu. Diharapkan siswa tetap menjaga kesehatan dan manfaatkan waktu bersama keluarga.',
-                            },
-                            {
-                              tgl: '10',
-                              bln: 'Mei',
-                              title: 'Pendaftaran PPDB TA 2026/2027 Dibuka',
-                              desc:
-                                'Daftarkan putra-putri Anda melalui portal pendaftaran online kami. Jangan lewatkan kesempatan menjadi bagian dari SMAN 1.',
-                            },
-                          ]"
-                          :key="index"
-                        >
-                          <!-- Date Badge -->
-                          <div
-                            class="bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 rounded-lg p-2 mr-4 text-center min-w-[60px] flex-shrink-0"
-                            style="font-family: 'Kalam', cursive"
+                    <template v-if="announcements.length > 0">
+                      <template v-for="i in 2" :key="'loop-' + i">
+                        <div class="flex flex-col">
+                          <!-- Item Pengumuman -->
+                          <router-link
+                            v-for="(item, index) in announcements"
+                            :key="item.id + '-' + i"
+                            :to="`/berita/${item.id}`"
+                            class="p-5 border-b border-blue-50 dark:border-slate-700/50 hover:bg-blue-100/50 dark:hover:bg-slate-700 transition-colors flex items-start"
                           >
-                            <span class="block text-xl font-bold leading-none">{{
-                              item.tgl
-                            }}</span>
-                            <span class="block text-xs uppercase mt-1 font-semibold">{{
-                              item.bln
-                            }}</span>
-                          </div>
-                          <!-- Content -->
-                          <div>
-                            <h4
-                              class="font-semibold text-blue-950 dark:text-slate-100 text-sm mb-1 line-clamp-2"
+                            <!-- Date Badge -->
+                            <div
+                              class="bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 rounded-lg p-2 mr-4 text-center min-w-[60px] flex-shrink-0"
+                              style="font-family: 'Kalam', cursive"
                             >
-                              {{ item.title }}
-                            </h4>
-                            <p
-                              class="text-xs text-gray-500 dark:text-slate-400 line-clamp-3 leading-relaxed"
-                            >
-                              {{ item.desc }}
-                            </p>
-                          </div>
-                        </router-link>
-                      </div>
+                              <span class="block text-xl font-bold leading-none">{{
+                                formatDay(item.created_at)
+                              }}</span>
+                              <span class="block text-xs uppercase mt-1 font-semibold">{{
+                                formatMonth(item.created_at)
+                              }}</span>
+                            </div>
+                            <!-- Content -->
+                            <div>
+                              <h4
+                                class="font-semibold text-blue-950 dark:text-slate-100 text-sm mb-1 line-clamp-2"
+                              >
+                                {{ item.title }}
+                              </h4>
+                              <p
+                                class="text-xs text-gray-500 dark:text-slate-400 line-clamp-3 leading-relaxed"
+                              >
+                                {{ item.excerpt || stripTags(item.content) }}
+                              </p>
+                            </div>
+                          </router-link>
+                        </div>
+                      </template>
                     </template>
+                    <div v-else class="p-6 text-center text-gray-500 dark:text-gray-400">
+                      Tidak ada pengumuman saat ini.
+                    </div>
                   </div>
                 </div>
 
@@ -1643,6 +1543,75 @@ const toggleFaq = (index) => {
   activeFaq.value = activeFaq.value === index ? null : index;
 };
 
+const recentNews = ref([]);
+const announcements = ref([]);
+
+const mainNews = computed(() =>
+  recentNews.value.length > 0 ? recentNews.value[0] : null
+);
+const subNews = computed(() => recentNews.value.slice(1, 4));
+
+const fetchNewsAndAnnouncements = async () => {
+  try {
+    const response = await api.get("/api/public-news");
+    if (response.data && response.data.data) {
+      const allNews = response.data.data;
+      const isPengumuman = (cat) => cat && cat.toLowerCase() === "pengumuman";
+      recentNews.value = allNews.filter((n) => !isPengumuman(n.category)).slice(0, 4);
+      announcements.value = allNews.filter((n) => isPengumuman(n.category)).slice(0, 5);
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data berita dan pengumuman:", error);
+  }
+};
+
+const formatDate = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+};
+
+const formatDay = (dateString) => {
+  if (!dateString) return "01";
+  return new Date(dateString).getDate().toString().padStart(2, "0");
+};
+
+const formatMonth = (dateString) => {
+  if (!dateString) return "Jan";
+  const date = new Date(dateString);
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "Mei",
+    "Jun",
+    "Jul",
+    "Agt",
+    "Sep",
+    "Okt",
+    "Nov",
+    "Des",
+  ];
+  return months[date.getMonth()];
+};
+
+const stripTags = (html) => {
+  if (!html) return "";
+  const tmp = document.createElement("DIV");
+  tmp.innerHTML = html;
+  return (tmp.textContent || tmp.innerText || "").substring(0, 150) + "...";
+};
+
+const getNewsImage = (image) => {
+  if (image) return image;
+  return "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=600&auto=format&fit=crop";
+};
+
 // State & Logika Kalender Dinamis
 const currentDisplayedDate = ref(new Date());
 
@@ -2167,6 +2136,7 @@ onMounted(() => {
   fetchAgendas();
   fetchGalleries();
   fetchSchoolVideo();
+  fetchNewsAndAnnouncements();
 
   // Animasi Typing Text
   let i = 0;
