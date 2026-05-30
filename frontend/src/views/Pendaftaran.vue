@@ -18,103 +18,43 @@ import "swiper/swiper-bundle.css";
 const ppdbInfo = ref(null);
 const isLoading = ref(true);
 
-const defaultSyarat = [
-  "Lulusan SMP/MTs sederajat tahun 2024, 2025, atau 2026.",
-  "Memiliki Nomor Induk Siswa Nasional (NISN) yang valid.",
-  "Menyiapkan berkas digital (Scan KK, Akta Kelahiran, dan Ijazah/SKL).",
-  "Pas foto terbaru ukuran 3x4 berwarna (pakaian seragam asal).",
-];
-
-const defaultAlur = [
-  {
-    title: "Isi Formulir Online",
-    desc: "Lengkapi data diri, asal sekolah, dan jurusan di bawah ini.",
-  },
-  {
-    title: "Cetak Bukti Daftar",
-    desc: "Setelah submit, simpan dan cetak bukti pendaftaran otomatis.",
-  },
-  {
-    title: "Verifikasi Berkas",
-    desc: "Bawa dokumen fisik ke sekolah sesuai jadwal yang tertera.",
-  },
-  { title: "Pengumuman", desc: "Hasil kelulusan akan diinformasikan di portal resmi." },
-];
-
-const defaultJalur = [
-  {
-    title: "Jalur Zonasi",
-    kuota: "50%",
-    desc:
-      "Diperuntukkan bagi calon peserta didik yang berdomisili di dalam wilayah zonasi yang telah ditetapkan berdasarkan jarak titik koordinat terdekat dari sekolah.",
-  },
-  {
-    title: "Jalur Prestasi",
-    kuota: "30%",
-    desc:
-      "Penerimaan berdasarkan akumulasi nilai rapor semester 1-5 atau sertifikat prestasi kejuaraan akademik maupun non-akademik.",
-  },
-  {
-    title: "Jalur Afirmasi",
-    kuota: "15%",
-    desc:
-      "Khusus ditujukan bagi calon peserta didik dari keluarga ekonomi tidak mampu (dibuktikan dengan KIP/PKH) dan penyandang disabilitas.",
-  },
-  {
-    title: "Pindah Tugas",
-    kuota: "5%",
-    desc:
-      "Diperuntukkan bagi peserta didik yang mengikuti kepindahan tugas orang tua/wali dari instansi, atau anak kandung dari guru.",
-  },
-];
-
 const iconMap = [PhMapPin, PhMedal, PhHandshake, PhBriefcase];
 
 const getIcon = (index) => {
   return iconMap[index % iconMap.length];
 };
 
-const parseJsonOrDefault = (data, defaultData) => {
-  if (!data) return defaultData;
+const parseJson = (data) => {
+  if (!data) return [];
   if (typeof data === "string") {
     try {
       return JSON.parse(data);
     } catch (e) {
-      if (
-        data.includes("\n") &&
-        Array.isArray(defaultData) &&
-        typeof defaultData[0] === "string"
-      ) {
+      if (data.includes("\n")) {
         return data
           .split("\n")
           .map((s) => s.trim())
           .filter((s) => s);
       }
-      return defaultData;
+      return [];
     }
   }
-  return Array.isArray(data) && data.length > 0 ? data : defaultData;
+  return Array.isArray(data) ? data : [];
 };
 
 const syaratList = computed(() => {
-  if (!ppdbInfo.value) return defaultSyarat;
-  return parseJsonOrDefault(
-    ppdbInfo.value.syarat || ppdbInfo.value.requirements,
-    defaultSyarat
-  );
+  if (!ppdbInfo.value) return [];
+  return parseJson(ppdbInfo.value.syarat || ppdbInfo.value.requirements);
 });
 
 const alurList = computed(() => {
-  if (!ppdbInfo.value) return defaultAlur;
-  return parseJsonOrDefault(ppdbInfo.value.alur || ppdbInfo.value.flow, defaultAlur);
+  if (!ppdbInfo.value) return [];
+  return parseJson(ppdbInfo.value.alur || ppdbInfo.value.flow);
 });
 
 const jalurList = computed(() => {
-  if (!ppdbInfo.value) return defaultJalur;
-  const rawJalur = parseJsonOrDefault(
-    ppdbInfo.value.jalur || ppdbInfo.value.paths,
-    defaultJalur
-  );
+  if (!ppdbInfo.value) return [];
+  const rawJalur = parseJson(ppdbInfo.value.jalur || ppdbInfo.value.paths);
   return rawJalur.map((j) => ({
     title: j.title || j.nama || "",
     kuota: j.kuota || "",
@@ -130,9 +70,11 @@ const fetchPpdbInfo = async () => {
     console.error("Gagal mengambil data PPDB:", error);
   } finally {
     isLoading.value = false;
-    nextTick(() => {
-      initSwiper();
-    });
+    if (jalurList.value.length > 0) {
+      nextTick(() => {
+        initSwiper();
+      });
+    }
   }
 };
 
@@ -242,7 +184,7 @@ onMounted(() => {
                 <PhListChecks class="w-6 h-6 mr-2 text-blue-950 dark:text-white" />
                 Syarat Pendaftaran
               </h3>
-              <ul class="space-y-4">
+              <ul v-if="syaratList.length > 0" class="space-y-4">
                 <li
                   v-for="(syarat, index) in syaratList"
                   :key="index"
@@ -257,6 +199,9 @@ onMounted(() => {
                   >
                 </li>
               </ul>
+              <p v-else class="text-sm text-gray-500 dark:text-gray-400 italic">
+                Belum ada data syarat pendaftaran.
+              </p>
             </div>
 
             <!-- Alur Pendaftaran -->
@@ -270,6 +215,7 @@ onMounted(() => {
                 Alur Pendaftaran
               </h3>
               <div
+                v-if="alurList.length > 0"
                 class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-blue-200 before:via-blue-200 dark:before:via-slate-600 before:to-transparent"
               >
                 <div
@@ -311,6 +257,9 @@ onMounted(() => {
                   </div>
                 </div>
               </div>
+              <p v-else class="text-sm text-gray-500 dark:text-gray-400 italic">
+                Belum ada data alur pendaftaran.
+              </p>
             </div>
           </div>
         </div>
@@ -355,8 +304,15 @@ onMounted(() => {
             <div
               class="lg:col-span-7 relative h-[380px] lg:h-[520px] w-full flex items-center justify-center"
             >
+              <div
+                v-if="jalurList.length === 0"
+                class="text-center w-full text-blue-200 italic"
+              >
+                Belum ada data jalur pendaftaran.
+              </div>
+
               <!-- Slider with Mask -->
-              <div class="fade-mask-slider w-full h-full absolute inset-0">
+              <div v-else class="fade-mask-slider w-full h-full absolute inset-0">
                 <div class="swiper jalur-swiper h-full w-full lg:!py-8 lg:!px-10">
                   <div class="swiper-wrapper items-stretch">
                     <!-- Card Jalur -->
