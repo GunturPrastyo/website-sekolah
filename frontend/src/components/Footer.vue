@@ -6,16 +6,20 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 md:gap-12 mb-12">
         <!-- Col 1: Brand & About -->
         <div class="lg:col-span-3">
-          <a href="#" class="text-2xl font-bold text-white mb-6 inline-block"
-            >SMAN 1 Nogosari</a
-          >
+          <a href="#" class="text-2xl font-bold text-white mb-6 inline-block">{{
+            settings.namaSekolah || "SMAN 1 Nogosari"
+          }}</a>
           <p class="text-sm text-slate-400 leading-relaxed mb-6">
-            Mencetak Generasi Unggul, Berkarakter, dan Berwawasan Global melalui
-            pendidikan berkualitas dan fasilitas modern.
+            {{
+              settings.deskripsiSekolah ||
+              "Mencetak Generasi Unggul, Berkarakter, dan Berwawasan Global melalui pendidikan berkualitas dan fasilitas modern."
+            }}
           </p>
           <div class="flex flex-wrap gap-3">
             <a
-              href="#"
+              v-if="settings.facebook"
+              :href="settings.facebook"
+              target="_blank"
               class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors"
               ><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -23,7 +27,9 @@
                 /></svg
             ></a>
             <a
-              href="#"
+              v-if="settings.twitter"
+              :href="settings.twitter"
+              target="_blank"
               class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-black hover:text-white transition-colors"
               ><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -31,7 +37,9 @@
                 /></svg
             ></a>
             <a
-              href="#"
+              v-if="settings.instagram"
+              :href="settings.instagram"
+              target="_blank"
               class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-colors"
               ><svg
                 class="w-5 h-5"
@@ -47,7 +55,9 @@
                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg
             ></a>
             <a
-              href="#"
+              v-if="settings.youtube"
+              :href="settings.youtube"
+              target="_blank"
               class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors"
               ><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -55,7 +65,9 @@
                 /></svg
             ></a>
             <a
-              href="#"
+              v-if="settings.linkedin"
+              :href="settings.linkedin"
+              target="_blank"
               class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-700 hover:text-white transition-colors"
               ><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -164,18 +176,22 @@
           <ul class="space-y-4 text-sm">
             <li class="flex items-start">
               <PhMapPin class="w-5 h-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
-              <span class="text-slate-400"
-                >Jl. Raya Nogosari No. 123, Kec. Nogosari, Kab. Boyolali, Jawa Tengah
-                57378</span
-              >
+              <span class="text-slate-400">{{
+                settings.alamat ||
+                "Jl. Raya Nogosari No. 123, Kec. Nogosari, Kab. Boyolali, Jawa Tengah 57378"
+              }}</span>
             </li>
             <li class="flex items-center">
               <PhPhone class="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />
-              <span class="text-slate-400">(0276) 1234567</span>
+              <span class="text-slate-400">{{
+                settings.telepon || "(0276) 1234567"
+              }}</span>
             </li>
             <li class="flex items-center">
               <PhEnvelope class="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />
-              <span class="text-slate-400">info@sman1nogosari.sch.id</span>
+              <span class="text-slate-400">{{
+                settings.email || "info@sman1nogosari.sch.id"
+              }}</span>
             </li>
           </ul>
         </div>
@@ -187,7 +203,10 @@
             class="h-64 rounded-xl overflow-hidden bg-slate-800/50 border border-slate-700/50"
           >
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.5103639967265!2d110.79379!3d-7.4682055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMjgnMDUuNSJTIDExMMKwNDcnMzcuNiJF!5e0!3m2!1sen!2sid!4v1620000000000!5m2!1sen!2sid"
+              :src="
+                settings.googleMapsUrl ||
+                'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.5103639967265!2d110.79379!3d-7.4682055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMjgnMDUuNSJTIDExMMKwNDcnMzcuNiJF!5e0!3m2!1sen!2sid!4v1620000000000!5m2!1sen!2sid'
+              "
               width="100%"
               height="100%"
               style="border: 0"
@@ -203,7 +222,10 @@
       <div
         class="pt-8 border-t border-slate-900 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500"
       >
-        <p>&copy; 2026 SMAN 1 Nogosari. Hak Cipta Dilindungi.</p>
+        <p>
+          &copy; {{ new Date().getFullYear() }}
+          {{ settings.namaSekolah || "SMAN 1 Nogosari" }}. Hak Cipta Dilindungi.
+        </p>
         <div class="flex gap-4">
           <router-link
             to="/kebijakan-privasi"
@@ -224,8 +246,23 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { PhCaretRight, PhMapPin, PhPhone, PhEnvelope } from "@phosphor-icons/vue";
+import api from "@/api/index.js";
 
 const footerRef = ref(null);
+
+const settings = ref({
+  namaSekolah: "",
+  deskripsiSekolah: "",
+  alamat: "",
+  telepon: "",
+  email: "",
+  facebook: "",
+  twitter: "",
+  instagram: "",
+  youtube: "",
+  linkedin: "",
+  googleMapsUrl: "",
+});
 
 const stats = ref({
   hari: 0,
@@ -234,12 +271,15 @@ const stats = ref({
   total: 0,
 });
 
-const targetStats = {
-  hari: 124,
-  bulan: 1250,
-  tahun: 14320,
-  total: 258940,
-};
+const targetStats = ref({
+  hari: 0,
+  bulan: 0,
+  tahun: 0,
+  total: 0,
+});
+
+const isIntersecting = ref(false);
+const hasAnimated = ref(false);
 
 const animateValue = (key, target, duration = 2000) => {
   if (target === 0) return;
@@ -258,19 +298,53 @@ const animateValue = (key, target, duration = 2000) => {
   window.requestAnimationFrame(step);
 };
 
+const triggerAnimation = () => {
+  if (isIntersecting.value && !hasAnimated.value && targetStats.value.total > 0) {
+    hasAnimated.value = true;
+    animateValue("hari", targetStats.value.hari);
+    animateValue("bulan", targetStats.value.bulan);
+    animateValue("tahun", targetStats.value.tahun);
+    animateValue("total", targetStats.value.total);
+  }
+};
+
 const formatNumber = (num) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
+const fetchSettings = async () => {
+  try {
+    const response = await api.get("/api/settings");
+    if (response.data && response.data.data) {
+      settings.value = { ...settings.value, ...response.data.data };
+    }
+  } catch (error) {
+    console.error("Gagal mengambil pengaturan footer:", error);
+  }
+};
+
+const fetchVisitorStats = async () => {
+  try {
+    const response = await api.get("/api/visitor-stats");
+    if (response.data && response.data.data) {
+      targetStats.value = response.data.data;
+      triggerAnimation();
+    }
+  } catch (error) {
+    console.error("Gagal mengambil statistik pengunjung:", error);
+  }
+};
+
 onMounted(() => {
+  fetchSettings();
+  fetchVisitorStats();
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          animateValue("hari", targetStats.hari);
-          animateValue("bulan", targetStats.bulan);
-          animateValue("tahun", targetStats.tahun);
-          animateValue("total", targetStats.total);
+          isIntersecting.value = true;
+          triggerAnimation();
           observer.unobserve(entry.target);
         }
       });

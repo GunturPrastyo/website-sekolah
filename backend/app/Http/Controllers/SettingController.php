@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Setting;
+use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class SettingController extends Controller
 {
@@ -16,6 +18,25 @@ class SettingController extends Controller
         return response()->json([
             'success' => true,
             'data' => $settings
+        ]);
+    }
+
+    public function visitorStats()
+    {
+        $hariIni = Visitor::whereDate('visited_date', Carbon::today())->count();
+        $bulanIni = Visitor::whereMonth('visited_date', Carbon::now()->month)
+                          ->whereYear('visited_date', Carbon::now()->year)->count();
+        $tahunIni = Visitor::whereYear('visited_date', Carbon::now()->year)->count();
+        $total = Visitor::count();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'hari' => $hariIni,
+                'bulan' => $bulanIni,
+                'tahun' => $tahunIni,
+                'total' => $total
+            ]
         ]);
     }
 
