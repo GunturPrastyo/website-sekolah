@@ -959,11 +959,13 @@
           <!-- Main Grid Layout -->
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 items-stretch">
             <!-- KIRI: Video Profil Utama -->
-            <div
+            <a
+              :href="schoolVideoUrl || '#'"
+              target="_blank"
               class="lg:col-span-2 relative group rounded-2xl overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full block cursor-pointer fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
             >
               <img
-                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop"
+                :src="videoThumbnail"
                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 alt="Video Profil Sekolah"
               />
@@ -992,81 +994,38 @@
                 <h3
                   class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors"
                 >
-                  Company Profile SMAN 1 Nogosari 2026
+                  {{ schoolVideoTitle }}
                 </h3>
                 <p class="text-gray-200 text-sm md:text-base line-clamp-2">
-                  Saksikan cuplikan fasilitas, metode pembelajaran, dan prestasi yang
-                  menjadikan kami sekolah pilihan utama.
+                  {{ schoolVideoDesc }}
                 </p>
               </div>
-            </div>
+            </a>
 
             <!-- KANAN: Grid Galeri 2x2 -->
             <div
               class="lg:col-span-1 grid grid-cols-2 gap-4 h-[300px] sm:h-[400px] md:h-[450px] fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out"
             >
-              <!-- Foto 1 -->
+              <!-- Foto 1, 2, 3 Dinamis -->
               <router-link
+                v-for="(gallery, index) in galleries"
+                :key="index"
                 to="/galeri"
                 class="group relative rounded-xl overflow-hidden shadow-sm h-full block"
               >
                 <img
-                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=600&auto=format&fit=crop"
+                  :src="gallery.image"
                   class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  alt="Kegiatan Ekstrakurikuler"
+                  :alt="gallery.title"
                 />
                 <div
                   class="absolute inset-0 bg-gradient-to-t from-blue-950/90 via-blue-950/20 to-transparent"
                 ></div>
                 <div class="absolute bottom-0 left-0 p-3 md:p-4 w-full z-10">
                   <h4
-                    class="text-white font-bold text-sm md:text-base leading-tight group-hover:text-blue-300 transition-colors"
+                    class="text-white font-bold text-sm md:text-base leading-tight group-hover:text-blue-300 transition-colors line-clamp-2"
                   >
-                    Ekstrakurikuler
-                  </h4>
-                </div>
-              </router-link>
-
-              <!-- Foto 2 -->
-              <router-link
-                to="/galeri"
-                class="group relative rounded-xl overflow-hidden shadow-sm h-full block"
-              >
-                <img
-                  src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=600&auto=format&fit=crop"
-                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  alt="HUT Sekolah"
-                />
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-blue-950/90 via-blue-950/20 to-transparent"
-                ></div>
-                <div class="absolute bottom-0 left-0 p-3 md:p-4 w-full z-10">
-                  <h4
-                    class="text-white font-bold text-sm md:text-base leading-tight group-hover:text-blue-300 transition-colors"
-                  >
-                    HUT Sekolah
-                  </h4>
-                </div>
-              </router-link>
-
-              <!-- Foto 3 -->
-              <router-link
-                to="/galeri"
-                class="group relative rounded-xl overflow-hidden shadow-sm h-full block"
-              >
-                <img
-                  src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600&auto=format&fit=crop"
-                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  alt="Pentas Seni"
-                />
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-blue-950/90 via-blue-950/20 to-transparent"
-                ></div>
-                <div class="absolute bottom-0 left-0 p-3 md:p-4 w-full z-10">
-                  <h4
-                    class="text-white font-bold text-sm md:text-base leading-tight group-hover:text-blue-300 transition-colors"
-                  >
-                    Pentas Seni
+                    {{ gallery.title }}
                   </h4>
                 </div>
               </router-link>
@@ -1980,6 +1939,70 @@ const themeClasses = {
 
 const agendas = ref([]);
 
+const defaultGalleries = [
+  {
+    title: "Ekstrakurikuler",
+    image:
+      "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=600&auto=format&fit=crop",
+  },
+  {
+    title: "HUT Sekolah",
+    image:
+      "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=600&auto=format&fit=crop",
+  },
+  {
+    title: "Pentas Seni",
+    image:
+      "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600&auto=format&fit=crop",
+  },
+];
+
+const galleries = ref([...defaultGalleries]);
+
+const fetchGalleries = async () => {
+  try {
+    const response = await api.get("/api/public-galleries");
+    if (response.data && response.data.data && response.data.data.length > 0) {
+      const fetched = response.data.data.slice(0, 3);
+      galleries.value = [...fetched, ...defaultGalleries.slice(fetched.length, 3)];
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data galeri:", error);
+  }
+};
+
+const schoolVideoUrl = ref("");
+const schoolVideoTitle = ref("Company Profile SMAN 1 Nogosari 2026");
+const schoolVideoDesc = ref(
+  "Saksikan cuplikan fasilitas, metode pembelajaran, dan prestasi yang menjadikan kami sekolah pilihan utama."
+);
+
+const videoThumbnail = computed(() => {
+  if (!schoolVideoUrl.value)
+    return "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop";
+  const url = schoolVideoUrl.value;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  if (match && match[2].length === 11) {
+    return `https://img.youtube.com/vi/${match[2]}/maxresdefault.jpg`;
+  }
+  return "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop";
+});
+
+const fetchSchoolVideo = async () => {
+  try {
+    const response = await api.get("/api/public-school-video");
+    if (response.data && response.data.data) {
+      schoolVideoUrl.value = response.data.data.url || "";
+      if (response.data.data.title) schoolVideoTitle.value = response.data.data.title;
+      if (response.data.data.description)
+        schoolVideoDesc.value = response.data.data.description;
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data video profil:", error);
+  }
+};
+
 const fetchAgendas = async () => {
   try {
     const response = await api.get("/api/public-agendas");
@@ -2142,6 +2165,8 @@ const alumniLocations = ref([
 onMounted(() => {
   // Fetch data dari API Backend
   fetchAgendas();
+  fetchGalleries();
+  fetchSchoolVideo();
 
   // Animasi Typing Text
   let i = 0;
