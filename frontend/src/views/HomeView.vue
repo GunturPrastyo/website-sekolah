@@ -424,140 +424,80 @@
                 class="swiper jurusan-swiper rounded-lg md:rounded-2xl overflow-hidden shadow-xl"
               >
                 <div class="swiper-wrapper items-stretch">
-                  <!-- IPA -->
-                  <div
-                    class="swiper-slide !h-auto relative min-h-[320px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
-                  >
+                  <template v-if="isLoadingPrograms">
+                    <!-- Skeleton Card -->
                     <div
-                      class="absolute inset-0 bg-gradient-to-br from-blue-900 to-slate-900 group-hover:from-blue-800 transition-colors duration-500"
-                    ></div>
-
-                    <!-- TEXT DI ATAS -->
-                    <div
-                      class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full text-white"
+                      v-for="i in 3"
+                      :key="'skeleton-' + i"
+                      class="swiper-slide !h-auto relative min-h-[320px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 bg-slate-800 animate-pulse"
                     >
                       <div
-                        class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
+                        class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full"
                       >
-                        <PhFlask class="w-7 h-7" />
+                        <div class="w-14 h-14 rounded-xl bg-slate-700 mb-4"></div>
+                        <div class="h-8 bg-slate-700 rounded w-1/2 mb-4"></div>
+                        <div class="space-y-2 mb-4">
+                          <div class="h-4 bg-slate-700 rounded w-full"></div>
+                          <div class="h-4 bg-slate-700 rounded w-5/6"></div>
+                          <div class="h-4 bg-slate-700 rounded w-4/6"></div>
+                        </div>
+                        <div class="mt-auto w-32 h-4 bg-slate-700 rounded"></div>
                       </div>
-                      <h3 class="text-2xl font-bold mb-2 text-white">IPA</h3>
-                      <p class="text-blue-100 text-sm md:text-base mb-4 leading-relaxed">
-                        Fokus pada sains seperti fisika, kimia, dan biologi untuk membuka
-                        peluang di bidang teknologi.
-                      </p>
-                      <router-link
-                        to="/program-jurusan"
-                        class="mt-2 inline-flex items-center text-sm font-bold text-white group-hover:text-blue-200 transition-colors w-fit"
-                      >
-                        Lihat Selengkapnya
-                        <PhCaretRight
-                          class="w-4 h-4 ml-1.5 transform group-hover:translate-x-1.5 transition-transform duration-300"
-                        />
-                      </router-link>
                     </div>
-                  </div>
-
-                  <!-- IPS -->
-                  <div
-                    class="swiper-slide !h-auto relative min-h-[320px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
-                  >
+                  </template>
+                  <template v-else-if="programs.length > 0">
+                    <!-- Actual Data -->
                     <div
-                      class="absolute inset-0 bg-gradient-to-br from-cyan-900 to-slate-900 group-hover:from-cyan-800 transition-colors duration-500"
-                    ></div>
-
-                    <div
-                      class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full text-white"
+                      v-for="(program, index) in programs"
+                      :key="program.id"
+                      class="swiper-slide !h-auto relative min-h-[320px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
                     >
                       <div
-                        class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
-                      >
-                        <PhGlobe class="w-7 h-7" />
-                      </div>
-                      <h3 class="text-2xl font-bold mb-2 text-white">IPS</h3>
-                      <p class="text-sky-100 text-sm md:text-base mb-4 leading-relaxed">
-                        Mempelajari ekonomi, sejarah, dan geografi untuk memahami
-                        masyarakat dan dunia.
-                      </p>
-                      <router-link
-                        to="/program-jurusan"
-                        class="mt-2 inline-flex items-center text-sm font-bold text-white group-hover:text-sky-200 transition-colors w-fit"
-                      >
-                        Lihat Selengkapnya
-                        <PhCaretRight
-                          class="w-4 h-4 ml-1.5 transform group-hover:translate-x-1.5 transition-transform duration-300"
-                        />
-                      </router-link>
-                    </div>
-                  </div>
-
-                  <!-- BAHASA -->
-                  <div
-                    class="swiper-slide !h-auto relative min-h-[320px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 group cursor-pointer"
-                  >
-                    <div
-                      class="absolute inset-0 bg-gradient-to-br from-sky-900 to-slate-900 group-hover:from-sky-800 transition-colors duration-500"
-                    ></div>
-
-                    <div
-                      class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full text-white"
-                    >
+                        class="absolute inset-0 bg-gradient-to-br transition-colors duration-500"
+                        :class="getProgramGradient(index)"
+                      ></div>
+                      <img
+                        v-if="program.image"
+                        :src="program.image"
+                        class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-40 group-hover:opacity-60 transition-opacity duration-500"
+                      />
                       <div
-                        class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
+                        class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full text-white"
                       >
-                        <PhTranslate class="w-7 h-7" />
+                        <div
+                          class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
+                        >
+                          <component
+                            :is="getProgramIcon(program.icon || index)"
+                            class="w-7 h-7"
+                          />
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2 text-white">
+                          {{ program.title }}
+                        </h3>
+                        <p
+                          class="text-blue-100 text-sm md:text-base mb-4 leading-relaxed line-clamp-3"
+                        >
+                          {{ program.description || stripTags(program.content) }}
+                        </p>
+                        <router-link
+                          to="/program-jurusan"
+                          class="mt-auto inline-flex items-center text-sm font-bold text-white group-hover:text-blue-200 transition-colors w-fit"
+                        >
+                          Lihat Selengkapnya
+                          <PhCaretRight
+                            class="w-4 h-4 ml-1.5 transform group-hover:translate-x-1.5 transition-transform duration-300"
+                          />
+                        </router-link>
                       </div>
-                      <h3 class="text-2xl font-bold mb-2 text-white">Bahasa</h3>
-                      <p class="text-cyan-100 text-sm md:text-base mb-4 leading-relaxed">
-                        Mendalami bahasa dan budaya untuk peluang di bidang komunikasi dan
-                        pariwisata.
-                      </p>
-                      <router-link
-                        to="/program-jurusan"
-                        class="mt-2 inline-flex items-center text-sm font-bold text-white group-hover:text-cyan-200 transition-colors w-fit"
-                      >
-                        Lihat Selengkapnya
-                        <PhCaretRight
-                          class="w-4 h-4 ml-1.5 transform group-hover:translate-x-1.5 transition-transform duration-300"
-                        />
-                      </router-link>
                     </div>
-                  </div>
-
-                  <!-- INFORMATIKA -->
-                  <div
-                    class="swiper-slide !h-auto relative min-h-[320px] overflow-hidden group cursor-pointer"
-                  >
-                    <div
-                      class="absolute inset-0 bg-gradient-to-br from-indigo-900 to-slate-900 group-hover:from-indigo-800 transition-colors duration-500"
-                    ></div>
-
-                    <div
-                      class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full text-white"
-                    >
-                      <div
-                        class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
-                      >
-                        <PhMonitor class="w-7 h-7" />
-                      </div>
-                      <h3 class="text-2xl font-bold mb-2 text-white">Informatika</h3>
-                      <p
-                        class="text-indigo-100 text-sm md:text-base mb-4 leading-relaxed"
-                      >
-                        Mendalami dunia koding, jaringan, dan pengembangan software untuk
-                        karir di industri digital.
-                      </p>
-                      <router-link
-                        to="/program-jurusan"
-                        class="mt-2 inline-flex items-center text-sm font-bold text-white group-hover:text-indigo-200 transition-colors w-fit"
-                      >
-                        Lihat Selengkapnya
-                        <PhCaretRight
-                          class="w-4 h-4 ml-1.5 transform group-hover:translate-x-1.5 transition-transform duration-300"
-                        />
-                      </router-link>
+                  </template>
+                  <template v-else>
+                    <!-- Fallback Empty State -->
+                    <div class="p-8 text-center text-white w-full">
+                      <p>Data program jurusan belum tersedia.</p>
                     </div>
-                  </div>
+                  </template>
                 </div>
 
                 <!-- Jurusan Pagination -->
@@ -1509,7 +1449,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, reactive } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, reactive, nextTick } from "vue";
 import api from "@/api/index.js";
 import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.css";
@@ -1520,6 +1460,8 @@ import {
   PhGlobe,
   PhTranslate,
   PhMonitor,
+  PhBookOpen,
+  PhGraduationCap,
   PhCaretRight,
   PhCaretLeft,
   PhCalendarBlank,
@@ -1541,6 +1483,59 @@ const showSubtitle = ref(false);
 const activeFaq = ref(null);
 const toggleFaq = (index) => {
   activeFaq.value = activeFaq.value === index ? null : index;
+};
+
+const programs = ref([]);
+const isLoadingPrograms = ref(true);
+
+const programGradients = [
+  "from-blue-900 to-slate-900 group-hover:from-blue-800",
+  "from-cyan-900 to-slate-900 group-hover:from-cyan-800",
+  "from-sky-900 to-slate-900 group-hover:from-sky-800",
+  "from-indigo-900 to-slate-900 group-hover:from-indigo-800",
+  "from-purple-900 to-slate-900 group-hover:from-purple-800",
+];
+
+const getProgramGradient = (index) => {
+  return programGradients[index % programGradients.length];
+};
+
+const iconList = [PhFlask, PhGlobe, PhTranslate, PhMonitor, PhBookOpen, PhGraduationCap];
+
+const programIconMap = {
+  PhFlask,
+  PhGlobe,
+  PhTranslate,
+  PhMonitor,
+  PhBookOpen,
+  PhGraduationCap,
+};
+
+const getProgramIcon = (iconOrIndex) => {
+  if (typeof iconOrIndex === "string" && programIconMap[iconOrIndex]) {
+    return programIconMap[iconOrIndex];
+  }
+  if (typeof iconOrIndex === "number") {
+    return iconList[iconOrIndex % iconList.length];
+  }
+  return PhGraduationCap;
+};
+
+const fetchPrograms = async () => {
+  isLoadingPrograms.value = true;
+  try {
+    const response = await api.get("/api/public-programs");
+    if (response.data && response.data.data && response.data.data.length > 0) {
+      programs.value = response.data.data;
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data program jurusan:", error);
+  } finally {
+    isLoadingPrograms.value = false;
+    nextTick(() => {
+      initJurusanSwiper();
+    });
+  }
 };
 
 const recentNews = ref([]);
@@ -2133,6 +2128,7 @@ const alumniLocations = ref([
 
 onMounted(() => {
   // Fetch data dari API Backend
+  fetchPrograms();
   fetchAgendas();
   fetchGalleries();
   fetchSchoolVideo();
@@ -2216,28 +2212,8 @@ onMounted(() => {
     },
   });
 
-  // Initialize Jurusan Swiper
-  new Swiper(".jurusan-swiper", {
-    loop: true,
-    speed: 800,
-    autoplay: {
-      delay: 3000,
-      disableOnInteraction: false,
-    },
-    slidesPerView: 1,
-    spaceBetween: 0,
-    pagination: { el: ".jurusan-pagination", clickable: true },
-    breakpoints: {
-      768: {
-        slidesPerView: 2,
-        spaceBetween: 0,
-      },
-      1024: {
-        slidesPerView: 3,
-        spaceBetween: 0,
-      },
-    },
-  });
+  // Initialize Swipers
+  initJurusanSwiper();
 
   // Initialize Alasan Swiper
   new Swiper(".alasan-swiper", {
@@ -2258,6 +2234,34 @@ onMounted(() => {
     },
   });
 });
+
+let jurusanSwiperInstance = null;
+const initJurusanSwiper = () => {
+  if (jurusanSwiperInstance) {
+    jurusanSwiperInstance.destroy(true, true);
+  }
+  jurusanSwiperInstance = new Swiper(".jurusan-swiper", {
+    loop: true,
+    speed: 800,
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false,
+    },
+    slidesPerView: 1,
+    spaceBetween: 0,
+    pagination: { el: ".jurusan-pagination", clickable: true },
+    breakpoints: {
+      768: {
+        slidesPerView: 2,
+        spaceBetween: 0,
+      },
+      1024: {
+        slidesPerView: 3,
+        spaceBetween: 0,
+      },
+    },
+  });
+};
 
 onBeforeUnmount(() => {
   if (countdownInterval) clearInterval(countdownInterval);
