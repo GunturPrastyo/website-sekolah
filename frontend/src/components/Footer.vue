@@ -6,14 +6,17 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 md:gap-12 mb-12">
         <!-- Col 1: Brand & About -->
         <div class="lg:col-span-3">
-          <a href="#" class="text-2xl font-bold text-white mb-6 inline-block">{{
-            settings.namaSekolah || "SMAN 1 Nogosari"
-          }}</a>
+          <a href="#" class="flex items-center gap-3 mb-6 inline-block">
+            <img
+              v-if="settings.logo"
+              :src="settings.logo"
+              alt="Logo Sekolah"
+              class="h-10 w-auto"
+            />
+            <span class="text-2xl font-bold text-white">{{ settings.namaSekolah }}</span>
+          </a>
           <p class="text-sm text-slate-400 leading-relaxed mb-6">
-            {{
-              settings.deskripsiSekolah ||
-              "Mencetak Generasi Unggul, Berkarakter, dan Berwawasan Global melalui pendidikan berkualitas dan fasilitas modern."
-            }}
+            {{ settings.deskripsiSekolah }}
           </p>
           <div class="flex flex-wrap gap-3">
             <a
@@ -174,39 +177,29 @@
         <div class="lg:col-span-3">
           <h4 class="text-white font-bold mb-6 text-lg">Hubungi Kami</h4>
           <ul class="space-y-4 text-sm">
-            <li class="flex items-start">
+            <li class="flex items-start" v-if="settings.alamat">
               <PhMapPin class="w-5 h-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
-              <span class="text-slate-400">{{
-                settings.alamat ||
-                "Jl. Raya Nogosari No. 123, Kec. Nogosari, Kab. Boyolali, Jawa Tengah 57378"
-              }}</span>
+              <span class="text-slate-400">{{ settings.alamat }}</span>
             </li>
-            <li class="flex items-center">
+            <li class="flex items-center" v-if="settings.telepon">
               <PhPhone class="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />
-              <span class="text-slate-400">{{
-                settings.telepon || "(0276) 1234567"
-              }}</span>
+              <span class="text-slate-400">{{ settings.telepon }}</span>
             </li>
-            <li class="flex items-center">
+            <li class="flex items-center" v-if="settings.email">
               <PhEnvelope class="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />
-              <span class="text-slate-400">{{
-                settings.email || "info@sman1nogosari.sch.id"
-              }}</span>
+              <span class="text-slate-400">{{ settings.email }}</span>
             </li>
           </ul>
         </div>
 
         <!-- Col 4: Maps -->
-        <div class="lg:col-span-4">
+        <div class="lg:col-span-4" v-if="settings.googleMapsUrl">
           <h4 class="text-white font-bold mb-6 text-lg">Lokasi Kami</h4>
           <div
             class="h-64 rounded-xl overflow-hidden bg-slate-800/50 border border-slate-700/50"
           >
             <iframe
-              :src="
-                settings.googleMapsUrl ||
-                'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.5103639967265!2d110.79379!3d-7.4682055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMjgnMDUuNSJTIDExMMKwNDcnMzcuNiJF!5e0!3m2!1sen!2sid!4v1620000000000!5m2!1sen!2sid'
-              "
+              :src="settings.googleMapsUrl"
               width="100%"
               height="100%"
               style="border: 0"
@@ -223,8 +216,8 @@
         class="pt-8 border-t border-slate-900 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500"
       >
         <p>
-          &copy; {{ new Date().getFullYear() }}
-          {{ settings.namaSekolah || "SMAN 1 Nogosari" }}. Hak Cipta Dilindungi.
+          &copy; {{ new Date().getFullYear() }} {{ settings.namaSekolah }}. Hak Cipta
+          Dilindungi.
         </p>
         <div class="flex gap-4">
           <router-link
@@ -262,6 +255,7 @@ const settings = ref({
   youtube: "",
   linkedin: "",
   googleMapsUrl: "",
+  logo: "",
 });
 
 const stats = ref({
