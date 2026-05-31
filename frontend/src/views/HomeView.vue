@@ -2094,13 +2094,17 @@ const faqs = [
 // State Koordinat Persebaran Alumni di Peta Indonesia (Pendidikan & Karir)
 const alumniLocations = ref([]);
 const isLoadingAlumniLocations = ref(true);
-const skeletonLocations = [
-  { top: "73%", left: "27%" }, // Jakarta
-  { top: "77%", left: "31%" }, // Bandung
-  { top: "80%", left: "38%" }, // Jogja
-  { top: "78%", left: "45%" }, // Surabaya
-  { top: "71%", left: "42%" }, // Riau / Sekitarnya
+
+// Ambil cache koordinat dari LocalStorage (jika ada) untuk posisi skeleton yang akurat
+const cachedMapLocations = localStorage.getItem("alumniMapCache");
+const defaultSkeletons = [
+  { top: "73%", left: "27%" }, // Jabodetabek
+  { top: "77%", left: "31%" }, // Jawa Barat
+  { top: "80%", left: "38%" }, // Jawa Tengah & DIY
 ];
+const skeletonLocations = ref(
+  cachedMapLocations ? JSON.parse(cachedMapLocations) : defaultSkeletons
+);
 
 const fetchAlumniLocations = async () => {
   isLoadingAlumniLocations.value = true;
@@ -2146,6 +2150,13 @@ const fetchAlumniLocations = async () => {
           institutions: loc.institutions || [],
         };
       });
+
+      // Simpan data koordinat ke cache agar saat loading selanjutnya, skeleton 100% akurat di titik yg sama
+      const cacheCoords = alumniLocations.value.map((loc) => ({
+        top: loc.top,
+        left: loc.left,
+      }));
+      localStorage.setItem("alumniMapCache", JSON.stringify(cacheCoords));
 
       // Update target animasi dengan data real dari API
       if (totalAlumniCount > 0) alumniStats.value.alumni.target = totalAlumniCount;
