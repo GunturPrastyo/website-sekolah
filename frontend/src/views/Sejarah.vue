@@ -6,6 +6,7 @@ import {
   PhCheckCircle,
   PhHash,
   PhMapPin,
+  PhClockCounterClockwise,
 } from "@phosphor-icons/vue";
 import { educationIcons } from "@/components/IconPicker.vue";
 import PageHeader from "@/components/PageHeader.vue";
@@ -21,7 +22,7 @@ const schoolProfile = ref({
   accreditation: "-",
   location: "-",
   status: "-",
-  image: "/img/gedung.jpg",
+  image: "",
 });
 
 const timeline = ref([]);
@@ -107,7 +108,12 @@ const setupObserver = () => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add("opacity-100", "translate-y-0", "scale-100");
-          entry.target.classList.remove("opacity-0", "translate-y-10", "scale-95");
+          entry.target.classList.remove(
+            "opacity-0",
+            "translate-y-10",
+            "scale-95",
+            "fade-on-scroll"
+          );
 
           const sentences = entry.target.querySelectorAll(".fade-sentence");
           sentences.forEach((el, idx) => {
@@ -131,6 +137,7 @@ const setupObserver = () => {
 
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
+  setupObserver(); // Panggil observer di awal untuk teks statis
   fetchData();
 });
 
@@ -158,12 +165,29 @@ onBeforeUnmount(() => {
           <div
             class="w-full lg:w-5/12 h-72 sm:h-80 lg:h-[450px] relative rounded-xl overflow-hidden shadow-xl border border-gray-100 dark:border-slate-700"
           >
-            <img
-              :src="schoolProfile.image || '/img/gedung.jpg'"
-              class="absolute inset-0 w-full h-full object-cover"
-              alt="Gedung Sekolah"
-            />
-            <div class="absolute inset-0 bg-blue-900/20 mix-blend-multiply"></div>
+            <div
+              v-if="isLoading"
+              class="absolute inset-0 bg-slate-200 dark:bg-slate-700 animate-pulse"
+            ></div>
+            <template v-else>
+              <img
+                v-if="schoolProfile.image"
+                :src="schoolProfile.image"
+                class="absolute inset-0 w-full h-full object-cover"
+                alt="Gedung Sekolah"
+              />
+              <div
+                v-else
+                class="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-800 text-gray-400 dark:text-gray-500"
+              >
+                <PhBuildings class="w-16 h-16 mb-2 opacity-50" />
+                <span class="text-sm font-medium">Foto Belum Tersedia</span>
+              </div>
+              <div
+                v-if="schoolProfile.image"
+                class="absolute inset-0 bg-blue-900/20 mix-blend-multiply"
+              ></div>
+            </template>
           </div>
 
           <!-- Info & Fakta -->
@@ -178,7 +202,15 @@ onBeforeUnmount(() => {
             >
               Profil Singkat Sekolah
             </h2>
+
+            <div v-if="isLoading" class="space-y-3 mb-8 animate-pulse">
+              <div class="w-full h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+              <div class="w-full h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+              <div class="w-5/6 h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+              <div class="w-4/5 h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+            </div>
             <p
+              v-else
               class="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed text-justify whitespace-pre-line"
             >
               {{ schoolProfile.description }}
@@ -194,7 +226,11 @@ onBeforeUnmount(() => {
                 </div>
                 <div>
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">NPSN</h4>
-                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                  <div
+                    v-if="isLoading"
+                    class="w-16 h-4 bg-slate-200 dark:bg-slate-700 rounded mt-1 animate-pulse"
+                  ></div>
+                  <p v-else class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                     {{ schoolProfile.npsn }}
                   </p>
                 </div>
@@ -209,7 +245,11 @@ onBeforeUnmount(() => {
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">
                     Akreditasi
                   </h4>
-                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                  <div
+                    v-if="isLoading"
+                    class="w-12 h-4 bg-slate-200 dark:bg-slate-700 rounded mt-1 animate-pulse"
+                  ></div>
+                  <p v-else class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                     {{ schoolProfile.accreditation }}
                   </p>
                 </div>
@@ -222,7 +262,11 @@ onBeforeUnmount(() => {
                 </div>
                 <div>
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">Lokasi</h4>
-                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                  <div
+                    v-if="isLoading"
+                    class="w-24 h-4 bg-slate-200 dark:bg-slate-700 rounded mt-1 animate-pulse"
+                  ></div>
+                  <p v-else class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                     {{ schoolProfile.location }}
                   </p>
                 </div>
@@ -235,7 +279,11 @@ onBeforeUnmount(() => {
                 </div>
                 <div>
                   <h4 class="text-sm font-bold text-gray-900 dark:text-white">Status</h4>
-                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                  <div
+                    v-if="isLoading"
+                    class="w-20 h-4 bg-slate-200 dark:bg-slate-700 rounded mt-1 animate-pulse"
+                  ></div>
+                  <p v-else class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                     {{ schoolProfile.status }}
                   </p>
                 </div>
@@ -285,17 +333,82 @@ onBeforeUnmount(() => {
           </p>
         </div>
 
-        <div v-if="isLoading" class="flex justify-center py-20">
+        <div v-if="isLoading" class="relative wrap overflow-hidden h-full">
           <div
-            class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400"
+            class="hidden min-[400px]:block absolute z-0 w-1 bg-blue-900 dark:bg-slate-800 h-full left-6 sm:left-8 transform -translate-x-1/2 rounded-full"
           ></div>
+          <div
+            v-for="i in 3"
+            :key="'skel-' + i"
+            class="relative z-10 flex items-center w-full mb-8 min-[400px]:mb-12 last:mb-0 group animate-pulse"
+          >
+            <div
+              class="hidden min-[400px]:flex absolute left-6 sm:left-8 transform -translate-x-1/2 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-blue-950 dark:border-slate-950 shadow-lg z-20 bg-slate-800"
+            >
+              <div class="w-5 h-5 bg-slate-600 rounded-full"></div>
+            </div>
+            <div class="ml-0 min-[400px]:ml-16 sm:ml-20 lg:ml-24 flex-1 w-full">
+              <div
+                class="relative z-10 flex flex-col bg-white dark:bg-slate-800 rounded-xl shadow-xl overflow-hidden p-5 min-[400px]:p-6 md:p-8 lg:p-10"
+              >
+                <div class="mb-4 min-[400px]:mb-5">
+                  <div
+                    class="w-24 h-7 min-[400px]:h-8 sm:h-9 bg-slate-200 dark:bg-slate-700 rounded-xl min-[400px]:rounded-2xl"
+                  ></div>
+                </div>
+                <div
+                  class="w-2/3 md:w-1/2 h-6 md:h-8 bg-slate-200 dark:bg-slate-700 rounded mb-4 md:mb-6"
+                ></div>
+                <div class="space-y-3 w-full">
+                  <div
+                    class="w-full h-4 md:h-5 bg-slate-200 dark:bg-slate-700 rounded"
+                  ></div>
+                  <div
+                    class="w-11/12 h-4 md:h-5 bg-slate-200 dark:bg-slate-700 rounded"
+                  ></div>
+                  <div
+                    class="w-4/5 h-4 md:h-5 bg-slate-200 dark:bg-slate-700 rounded"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div
           v-else-if="timeline.length === 0"
-          class="text-center py-20 text-white opacity-80"
+          class="relative wrap overflow-hidden h-full"
         >
-          Belum ada data sejarah yang ditambahkan.
+          <div
+            class="hidden min-[400px]:block absolute z-0 w-1 bg-blue-900 dark:bg-slate-800 h-full left-6 sm:left-8 transform -translate-x-1/2 rounded-full"
+          ></div>
+          <div
+            class="relative z-10 flex items-center w-full mb-8 min-[400px]:mb-12 group"
+          >
+            <div
+              class="hidden min-[400px]:flex absolute left-6 sm:left-8 transform -translate-x-1/2 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-blue-950 dark:border-slate-950 shadow-lg z-20 bg-blue-900 text-blue-400"
+            >
+              <PhClockCounterClockwise class="w-5 h-5 md:w-6 md:h-6" />
+            </div>
+            <div class="ml-0 min-[400px]:ml-16 sm:ml-20 lg:ml-24 flex-1 w-full">
+              <div
+                class="relative flex flex-col bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl shadow-xl p-5 min-[400px]:p-6 md:p-8 lg:p-10 text-center"
+              >
+                <div
+                  class="mx-auto w-16 h-16 bg-blue-50/10 rounded-full flex items-center justify-center mb-4"
+                >
+                  <PhClockCounterClockwise class="w-8 h-8 text-blue-200" />
+                </div>
+                <h3 class="text-xl md:text-2xl font-bold text-white mb-2">
+                  Riwayat Sejarah Belum Tersedia
+                </h3>
+                <p class="text-blue-100 text-sm md:text-base max-w-lg mx-auto">
+                  Informasi mengenai lini masa dan sejarah institusi sedang dalam tahap
+                  penyusunan. Silakan kembali lagi nanti.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div v-else class="relative wrap overflow-hidden h-full" ref="timelineRef">
