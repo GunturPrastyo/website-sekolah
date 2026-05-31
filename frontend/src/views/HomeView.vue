@@ -1771,7 +1771,8 @@ const updateCountdown = () => {
 // --- Data Animasi Statistik Header ---
 const statsArray = ref([
   {
-    value: "A",
+    key: "akreditasi",
+    value: "-",
     target: "A",
     label: "Akreditasi",
     prefix: "",
@@ -1779,6 +1780,7 @@ const statsArray = ref([
     isNumber: false,
   },
   {
+    key: "siswa",
     value: 0,
     target: 1100,
     label: "Jumlah Siswa",
@@ -1787,6 +1789,7 @@ const statsArray = ref([
     isNumber: true,
   },
   {
+    key: "guru",
     value: 0,
     target: 75,
     label: "Tenaga Pendidik",
@@ -1795,6 +1798,7 @@ const statsArray = ref([
     isNumber: true,
   },
   {
+    key: "ekskul",
     value: 0,
     target: 20,
     label: "Ekstrakurikuler",
@@ -1802,18 +1806,36 @@ const statsArray = ref([
     suffix: "+",
     isNumber: true,
   },
-  { value: 0, target: 32, label: "Ruang Kelas", prefix: "", suffix: "", isNumber: true },
-  { value: 0, target: 5, label: "Laboratorium", prefix: "", suffix: "", isNumber: true },
   {
+    key: "prestasi",
     value: 0,
-    target: 10,
-    label: "Koleksi Buku",
+    target: 50,
+    label: "Prestasi",
     prefix: "",
-    suffix: "k+",
+    suffix: "+",
     isNumber: true,
   },
-  { value: 0, target: 50, label: "Prestasi", prefix: "", suffix: "+", isNumber: true },
 ]);
+
+const fetchSchoolStats = async () => {
+  try {
+    // Panggil API endpoint untuk mengambil data statistik (Anda perlu menyiapkannya di Laravel)
+    const response = await api.get("/api/public-stats");
+    if (response.data && response.data.data) {
+      const data = response.data.data;
+      statsArray.value.forEach((stat) => {
+        if (data[stat.key] !== undefined) {
+          stat.target = data[stat.key];
+          if (!stat.isNumber) {
+            stat.value = data[stat.key]; // Langsung set nilai string untuk akreditasi
+          }
+        }
+      });
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data statistik sekolah:", error);
+  }
+};
 
 const animateStats = () => {
   const duration = 3000; // Durasi diperpanjang menjadi 3 detik agar efek naiknya lebih dramatis
@@ -2183,6 +2205,7 @@ onMounted(() => {
   fetchSchoolVideo();
   fetchNewsAndAnnouncements();
   fetchAlumniLocations();
+  fetchSchoolStats();
 
   // Animasi Typing Text
   let i = 0;
