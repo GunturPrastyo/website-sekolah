@@ -11,13 +11,20 @@
     <div class="container flex items-center justify-between max-w-6xl mx-auto">
       <router-link
         to="/"
-        class="text-2xl font-bold"
+        class="flex items-center gap-3 text-2xl font-bold transition-colors"
         :class="{
           'text-gray-800 dark:text-white': isNavbarScrolled || isMobileMenuOpen,
           'text-white': !isNavbarScrolled && !isMobileMenuOpen,
         }"
-        >SMAN 1 Nogosari</router-link
       >
+        <img
+          v-if="settings.logo"
+          :src="settings.logo"
+          alt="Logo Sekolah"
+          class="h-8 md:h-10 w-auto"
+        />
+        <span>{{ settings.namaSekolah }}</span>
+      </router-link>
 
       <!-- Desktop Menu -->
       <div class="hidden items-center space-x-2 lg:flex">
@@ -277,8 +284,7 @@
         </div>
       </div>
 
-      <div class="hidden items-center lg:flex">
-      </div>
+      <div class="hidden items-center lg:flex"></div>
 
       <!-- Mobile Menu Button -->
       <div class="flex items-center gap-2 lg:hidden">
@@ -569,6 +575,7 @@
 import { ref, onMounted, onBeforeUnmount, reactive, watch } from "vue";
 import { useRoute } from "vue-router";
 import { PhCaretDown, PhMoon, PhSun, PhList, PhX, PhCaretUp } from "@phosphor-icons/vue";
+import api from "@/api/index.js";
 
 const navRef = ref(null);
 const isNavbarScrolled = ref(false);
@@ -578,6 +585,22 @@ const isDarkMode = ref(false);
 const activeDropdown = ref(null);
 
 const route = useRoute();
+
+const settings = ref({
+  namaSekolah: "",
+  logo: "",
+});
+
+const fetchSettings = async () => {
+  try {
+    const response = await api.get("/api/settings");
+    if (response.data && response.data.data) {
+      settings.value = { ...settings.value, ...response.data.data };
+    }
+  } catch (error) {
+    console.error("Gagal mengambil pengaturan navbar:", error);
+  }
+};
 
 const mobileDropdowns = reactive({
   profil: false,
@@ -664,6 +687,7 @@ watch(
 );
 
 onMounted(() => {
+  fetchSettings();
   window.addEventListener("scroll", handleScroll);
   document.addEventListener("click", handleClickOutside);
   window.addEventListener("resize", handleResize);
