@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Setting;
 use App\Models\Visitor;
+use App\Models\SchoolProfile;
+use App\Models\Student;
+use App\Models\Staff;
+use App\Models\Extracurricular;
+use App\Models\Achievement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
@@ -42,18 +47,23 @@ class SettingController extends Controller
 
     public function publicStats()
     {
-        // Ambil data yang dibutuhkan dalam 1 kali query
-        $keys = ['akreditasi', 'jumlah_siswa', 'jumlah_guru', 'jumlah_ekskul', 'jumlah_prestasi'];
-        $settings = Setting::whereIn('key', $keys)->pluck('value', 'key')->all();
+        // Ambil data secara dinamis dari masing-masing tabel terkait
+        $schoolProfile = SchoolProfile::first();
+        $akreditasi = $schoolProfile ? $schoolProfile->accreditation : 'A';
+        
+        $siswa = Student::where('status', 'aktif')->count();
+        $guru = Staff::where('category', 'pendidik')->count();
+        $ekskul = Extracurricular::count();
+        $prestasi = Achievement::count();
 
         return response()->json([
             'success' => true,
             'data' => [
-                'akreditasi' => $settings['akreditasi'] ?? 'A',
-                'siswa'      => (int) ($settings['jumlah_siswa'] ?? 1100),
-                'guru'       => (int) ($settings['jumlah_guru'] ?? 75),
-                'ekskul'     => (int) ($settings['jumlah_ekskul'] ?? 20),
-                'prestasi'   => (int) ($settings['jumlah_prestasi'] ?? 50),
+                'akreditasi' => $akreditasi,
+                'siswa'      => $siswa,
+                'guru'       => $guru,
+                'ekskul'     => $ekskul,
+                'prestasi'   => $prestasi,
             ]
         ]);
     }
