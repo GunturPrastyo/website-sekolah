@@ -39,6 +39,9 @@ Route::get('/settings', [SettingController::class, 'index']);
 // API Statistik Pengunjung (Akses Publik)
 Route::get('/visitor-stats', [SettingController::class, 'visitorStats']);
 
+// API Statistik Sekolah (Akses Publik untuk landing page)
+Route::get('/public-stats', [SettingController::class, 'publicStats']);
+
 // API Tracking Pengunjung
 Route::get('/track-visitor', [VisitorController::class, 'track']);
 

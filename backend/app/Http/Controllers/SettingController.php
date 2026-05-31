@@ -40,6 +40,24 @@ class SettingController extends Controller
         ]);
     }
 
+    public function publicStats()
+    {
+        // Ambil data yang dibutuhkan dalam 1 kali query
+        $keys = ['akreditasi', 'jumlah_siswa', 'jumlah_guru', 'jumlah_ekskul', 'jumlah_prestasi'];
+        $settings = Setting::whereIn('key', $keys)->pluck('value', 'key')->all();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'akreditasi' => $settings['akreditasi'] ?? 'A',
+                'siswa'      => (int) ($settings['jumlah_siswa'] ?? 1100),
+                'guru'       => (int) ($settings['jumlah_guru'] ?? 75),
+                'ekskul'     => (int) ($settings['jumlah_ekskul'] ?? 20),
+                'prestasi'   => (int) ($settings['jumlah_prestasi'] ?? 50),
+            ]
+        ]);
+    }
+
     public function update(Request $request)
     {
         $data = $request->all();
