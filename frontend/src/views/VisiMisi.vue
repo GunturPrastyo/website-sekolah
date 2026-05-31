@@ -42,16 +42,23 @@
                 class="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 z-10 bg-white dark:bg-slate-800"
               >
                 <img
-                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop"
+                  v-if="principal.photo"
+                  :src="principal.photo"
                   class="w-full h-full object-cover"
-                  alt="Kepala Sekolah"
+                  :alt="principal.position"
                 />
+                <div
+                  v-else
+                  class="w-full h-full flex flex-col items-center justify-center bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500"
+                >
+                  <span class="text-sm font-medium">Foto Belum Tersedia</span>
+                </div>
                 <div
                   class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6"
                 >
-                  <h4 class="text-white font-bold text-xl">Dr. H. Budi Santoso, M.Pd</h4>
+                  <h4 class="text-white font-bold text-xl">{{ principal.name }}</h4>
                   <p class="text-blue-300 text-sm font-medium mt-1">
-                    Kepala SMAN 1 Nogosari
+                    {{ principal.position }}
                   </p>
                 </div>
               </div>
@@ -89,10 +96,10 @@
               class="mt-8 pt-6 border-t border-gray-100 dark:border-slate-800 inline-block"
             >
               <p class="font-bold text-blue-950 dark:text-white text-lg">
-                Dr. H. Budi Santoso, M.Pd
+                {{ principal.name }}
               </p>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                NIP. 19750817 200003 1 004
+                NIP. {{ principal.nip }}
               </p>
             </div>
           </div>
@@ -188,7 +195,22 @@ const textContainerRef = ref(null);
 const visi = ref("");
 const misi = ref([]);
 const sambutan = ref("");
+const principalPosition = ref("Kepala Sekolah");
 const isLoading = ref(true);
+
+const principal = ref({
+  name: "-",
+  position: "Kepala Sekolah",
+  nip: "-",
+  photo: "",
+});
+
+const getImageUrl = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http") || path.startsWith("data:")) return path;
+  const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
+};
 
 const fetchVisionMission = async () => {
   isLoading.value = true;
@@ -198,10 +220,40 @@ const fetchVisionMission = async () => {
     visi.value = data.vision || "";
     misi.value = data.missions || [];
     sambutan.value = data.principal_speech || "";
+    principalPosition.value = data.principal_position || "Kepala Sekolah";
+
+    await fetchPrincipal();
   } catch (error) {
     console.error("Gagal mengambil data Visi & Misi:", error);
   } finally {
     isLoading.value = false;
+  }
+};
+
+const fetchPrincipal = async () => {
+  try {
+    const response = await api.get("/api/guru-staf");
+    if (response.data && response.data.data) {
+      const principalStaff = response.data.data.find(
+        (staff) =>
+          staff.position &&
+          staff.position.toLowerCase() === principalPosition.value.toLowerCase()
+      );
+      if (principalStaff) {
+        principal.value.name = principalStaff.name;
+        principal.value.position = principalStaff.position;
+        principal.value.nip = principalStaff.nip || "-";
+        if (principalStaff.image || principalStaff.photo) {
+          principal.value.photo = getImageUrl(
+            principalStaff.image || principalStaff.photo
+          );
+        }
+      } else {
+        principal.value.position = principalPosition.value;
+      }
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data Kepala Sekolah:", error);
   }
 };
 
