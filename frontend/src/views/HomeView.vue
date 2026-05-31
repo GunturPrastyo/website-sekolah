@@ -1403,7 +1403,10 @@
                 <div
                   class="w-8 h-8 rounded-full bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 p-1 shrink-0 flex items-center justify-center"
                 >
-                  <img :src="inst.logo" class="w-full h-full object-contain" />
+                  <img
+                    :src="inst.logo || 'https://img.icons8.com/color/96/school.png'"
+                    class="w-full h-full object-contain"
+                  />
                 </div>
                 <div class="flex flex-col flex-1 min-w-0">
                   <div class="text-marquee-container">
@@ -2050,81 +2053,27 @@ const faqs = [
   },
 ];
 
-// Data Koordinat Persebaran Alumni di Peta Indonesia (Pendidikan & Karir)
-const alumniLocations = ref([
-  {
-    id: 1,
-    name: "Jabodetabek & Sekitarnya",
-    type: "mixed",
-    totalAlumni: 194,
-    top: "73%",
-    left: "27%",
-    institutions: [
-      {
-        name: "Universitas Indonesia",
-        type: "ptn",
-        alumni: 45,
-        logo: "/img/ui.png",
-      },
-      {
-        name: "Politeknik Keuangan Negara STAN",
-        type: "kedinasan",
-        alumni: 64,
-        logo: "https://img.icons8.com/color/96/bank-building.png",
-      },
-      {
-        name: "Instansi BUMN & Kementerian",
-        type: "instansi",
-        alumni: 85,
-        logo: "https://img.icons8.com/color/96/city-buildings.png",
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: "Jawa Barat",
-    type: "ptn",
-    totalAlumni: 70,
-    top: "77%",
-    left: "31%",
-    institutions: [
-      {
-        name: "Institut Pertanian Bogor",
-        type: "ptn",
-        alumni: 38,
-        logo: "/img/ipb.png",
-      },
-      {
-        name: "Institut Teknologi Bandung",
-        type: "ptn",
-        alumni: 32,
-        logo: "/img/itb.png",
-      },
-    ],
-  },
-  {
-    id: 3,
-    name: "Jawa Tengah & DIY",
-    type: "mixed",
-    totalAlumni: 175,
-    top: "80%",
-    left: "38%",
-    institutions: [
-      {
-        name: "Universitas Gadjah Mada",
-        type: "ptn",
-        alumni: 50,
-        logo: "/img/ugm.png",
-      },
-      {
-        name: "Akademi Kepolisian (AKPOL)",
-        type: "kedinasan",
-        alumni: 125,
-        logo: "https://img.icons8.com/color/96/police-badge.png",
-      },
-    ],
-  },
-]);
+// State Koordinat Persebaran Alumni di Peta Indonesia (Pendidikan & Karir)
+const alumniLocations = ref([]);
+
+const fetchAlumniLocations = async () => {
+  try {
+    const response = await api.get("/api/public-map-locations");
+    if (response.data && response.data.data) {
+      alumniLocations.value = response.data.data.map((loc) => ({
+        id: loc.id,
+        name: loc.name,
+        type: loc.type || "mixed",
+        totalAlumni: loc.total_alumni || loc.totalAlumni || 0,
+        top: loc.top,
+        left: loc.left,
+        institutions: loc.institutions || [],
+      }));
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data persebaran alumni:", error);
+  }
+};
 
 onMounted(() => {
   // Fetch data dari API Backend
@@ -2133,6 +2082,7 @@ onMounted(() => {
   fetchGalleries();
   fetchSchoolVideo();
   fetchNewsAndAnnouncements();
+  fetchAlumniLocations();
 
   // Animasi Typing Text
   let i = 0;
