@@ -289,7 +289,11 @@
                     class="text-2xl md:text-3xl font-bold text-yellow-400"
                     style="font-family: 'Oswald', sans-serif"
                   >
-                    {{ alumniStats.alumni.value.toFixed(1) }}k+
+                    {{
+                      alumniStats.alumni.value >= 1000
+                        ? (alumniStats.alumni.value / 1000).toFixed(1) + "k+"
+                        : Math.floor(alumniStats.alumni.value) + "+"
+                    }}
                   </h4>
                   <p class="text-[10px] sm:text-xs text-sky-200 mt-1 font-medium">
                     Alumni Sukses
@@ -340,48 +344,73 @@
                   "
                 />
 
-                <!-- Markers Alumni -->
-                <div
-                  v-for="loc in alumniLocations"
-                  :key="loc.id"
-                  tabindex="0"
-                  class="absolute flex justify-center items-end group cursor-pointer hover:z-50 focus:z-50 w-8 h-10 md:w-10 md:h-12 -translate-x-1/2 -translate-y-full focus:outline-none"
-                  :style="{ top: loc.top, left: loc.left, zIndex: 10 }"
-                  @mouseenter="showTooltip($event, loc)"
-                  @mousemove="updateTooltipPos($event)"
-                  @mouseleave="hideTooltip"
-                  @touchstart.passive="showTooltip($event, loc)"
-                  @touchmove.passive="updateTooltipPos($event)"
-                  @touchend.passive="hideTooltip"
-                >
-                  <!-- Shadow Map -->
+                <!-- Skeleton / Loading Markers -->
+                <template v-if="isLoadingAlumniLocations">
                   <div
-                    class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1.5 md:w-5 md:h-2 bg-black/40 rounded-[100%] blur-[2px] group-hover:scale-50 transition-transform duration-300"
-                  ></div>
-
-                  <!-- Pin Icon (Bounce effect on hover) -->
-                  <div
-                    class="relative drop-shadow-[0_5px_8px_rgba(0,0,0,0.4)] group-hover:-translate-y-2 transition-transform duration-300 origin-bottom"
+                    v-for="(loc, index) in skeletonLocations"
+                    :key="'skeleton-map-' + index"
+                    class="absolute flex justify-center items-end w-8 h-10 md:w-10 md:h-12 -translate-x-1/2 -translate-y-full animate-pulse opacity-60"
+                    :style="{ top: loc.top, left: loc.left, zIndex: 10 }"
                   >
-                    <PhMapPin
-                      weight="fill"
-                      class="w-8 h-8 md:w-10 md:h-10"
-                      :class="
-                        loc.type === 'ptn'
-                          ? 'text-sky-500'
-                          : loc.type === 'kedinasan'
-                          ? 'text-yellow-500'
-                          : loc.type === 'instansi'
-                          ? 'text-emerald-500'
-                          : 'text-blue-500'
-                      "
-                    />
-                    <!-- Inner Dot -->
                     <div
-                      class="absolute top-[8px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 md:top-[10px] md:w-3 md:h-3 bg-white rounded-full"
+                      class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1.5 md:w-5 md:h-2 bg-black/20 rounded-[100%] blur-[2px]"
                     ></div>
+                    <div class="relative drop-shadow-[0_5px_8px_rgba(0,0,0,0.2)]">
+                      <PhMapPin
+                        weight="fill"
+                        class="w-8 h-8 md:w-10 md:h-10 text-slate-400"
+                      />
+                      <div
+                        class="absolute top-[8px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 md:top-[10px] md:w-3 md:h-3 bg-slate-300 rounded-full"
+                      ></div>
+                    </div>
                   </div>
-                </div>
+                </template>
+
+                <!-- Actual Data Markers -->
+                <template v-else>
+                  <div
+                    v-for="loc in alumniLocations"
+                    :key="loc.id"
+                    tabindex="0"
+                    class="absolute flex justify-center items-end group cursor-pointer hover:z-50 focus:z-50 w-8 h-10 md:w-10 md:h-12 -translate-x-1/2 -translate-y-full focus:outline-none"
+                    :style="{ top: loc.top, left: loc.left, zIndex: 10 }"
+                    @mouseenter="showTooltip($event, loc)"
+                    @mousemove="updateTooltipPos($event)"
+                    @mouseleave="hideTooltip"
+                    @touchstart.passive="showTooltip($event, loc)"
+                    @touchmove.passive="updateTooltipPos($event)"
+                    @touchend.passive="hideTooltip"
+                  >
+                    <!-- Shadow Map -->
+                    <div
+                      class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1.5 md:w-5 md:h-2 bg-black/40 rounded-[100%] blur-[2px] group-hover:scale-50 transition-transform duration-300"
+                    ></div>
+
+                    <!-- Pin Icon (Bounce effect on hover) -->
+                    <div
+                      class="relative drop-shadow-[0_5px_8px_rgba(0,0,0,0.4)] group-hover:-translate-y-2 transition-transform duration-300 origin-bottom"
+                    >
+                      <PhMapPin
+                        weight="fill"
+                        class="w-8 h-8 md:w-10 md:h-10"
+                        :class="
+                          loc.type === 'ptn'
+                            ? 'text-sky-500'
+                            : loc.type === 'kedinasan'
+                            ? 'text-yellow-500'
+                            : loc.type === 'instansi'
+                            ? 'text-emerald-500'
+                            : 'text-blue-500'
+                        "
+                      />
+                      <!-- Inner Dot -->
+                      <div
+                        class="absolute top-[8px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 md:top-[10px] md:w-3 md:h-3 bg-white rounded-full"
+                      ></div>
+                    </div>
+                  </div>
+                </template>
               </div>
             </div>
           </div>
@@ -1810,24 +1839,33 @@ const animateStats = () => {
 };
 
 // --- Data Animasi Statistik Alumni ---
+const isAlumniStatsVisible = ref(false);
 const alumniStats = ref({
-  alumni: { value: 0, target: 1.2 },
-  ptn: { value: 0, target: 45 },
-  instansi: { value: 0, target: 120 },
+  alumni: { value: 0, target: 0 },
+  ptn: { value: 0, target: 0 },
+  instansi: { value: 0, target: 0 },
 });
 
 const animateAlumniStats = () => {
   const duration = 2500;
   let startTimestamp = null;
+
+  const startAlumni = alumniStats.value.alumni.value;
+  const startPtn = alumniStats.value.ptn.value;
+  const startInstansi = alumniStats.value.instansi.value;
+
   const step = (timestamp) => {
     if (!startTimestamp) startTimestamp = timestamp;
     const progress = Math.min((timestamp - startTimestamp) / duration, 1);
     const easeProgress = 1 - Math.pow(1 - progress, 4); // Efek ease-out
 
-    alumniStats.value.alumni.value = easeProgress * alumniStats.value.alumni.target;
-    alumniStats.value.ptn.value = Math.floor(easeProgress * alumniStats.value.ptn.target);
+    alumniStats.value.alumni.value =
+      startAlumni + easeProgress * (alumniStats.value.alumni.target - startAlumni);
+    alumniStats.value.ptn.value = Math.floor(
+      startPtn + easeProgress * (alumniStats.value.ptn.target - startPtn)
+    );
     alumniStats.value.instansi.value = Math.floor(
-      easeProgress * alumniStats.value.instansi.target
+      startInstansi + easeProgress * (alumniStats.value.instansi.target - startInstansi)
     );
 
     if (progress < 1) {
@@ -2055,23 +2093,74 @@ const faqs = [
 
 // State Koordinat Persebaran Alumni di Peta Indonesia (Pendidikan & Karir)
 const alumniLocations = ref([]);
+const isLoadingAlumniLocations = ref(true);
+const skeletonLocations = [
+  { top: "73%", left: "27%" }, // Jakarta
+  { top: "77%", left: "31%" }, // Bandung
+  { top: "80%", left: "38%" }, // Jogja
+  { top: "78%", left: "45%" }, // Surabaya
+  { top: "71%", left: "42%" }, // Riau / Sekitarnya
+];
 
 const fetchAlumniLocations = async () => {
+  isLoadingAlumniLocations.value = true;
   try {
     const response = await api.get("/api/public-map-locations");
     if (response.data && response.data.data) {
-      alumniLocations.value = response.data.data.map((loc) => ({
-        id: loc.id,
-        name: loc.name,
-        type: loc.type || "mixed",
-        totalAlumni: loc.total_alumni || loc.totalAlumni || 0,
-        top: loc.top,
-        left: loc.left,
-        institutions: loc.institutions || [],
-      }));
+      let totalAlumniCount = 0;
+      let totalPTNCount = 0;
+      let totalInstansiCount = 0;
+
+      alumniLocations.value = response.data.data.map((loc) => {
+        let locPTN = 0;
+        let locInstansi = 0;
+        let locAlumni = parseInt(loc.total_alumni || loc.totalAlumni) || 0;
+
+        if (loc.institutions && Array.isArray(loc.institutions)) {
+          let calcAlumni = 0;
+          loc.institutions.forEach((inst) => {
+            const count = parseInt(inst.alumni) || 0;
+            calcAlumni += count;
+            if (inst.type === "ptn") {
+              locPTN += count;
+            } else if (inst.type === "instansi" || inst.type === "kedinasan") {
+              locInstansi += count;
+            }
+          });
+          if (locAlumni < calcAlumni) {
+            locAlumni = calcAlumni;
+          }
+        }
+
+        totalAlumniCount += locAlumni;
+        totalPTNCount += locPTN;
+        totalInstansiCount += locInstansi;
+
+        return {
+          id: loc.id,
+          name: loc.name,
+          type: loc.type || "mixed",
+          totalAlumni: locAlumni,
+          top: loc.top,
+          left: loc.left,
+          institutions: loc.institutions || [],
+        };
+      });
+
+      // Update target animasi dengan data real dari API
+      if (totalAlumniCount > 0) alumniStats.value.alumni.target = totalAlumniCount;
+      if (totalPTNCount > 0) alumniStats.value.ptn.target = totalPTNCount;
+      if (totalInstansiCount > 0) alumniStats.value.instansi.target = totalInstansiCount;
+
+      // Jika container alumni sudah di view, perbarui / jalankan lagi animasinya
+      if (isAlumniStatsVisible.value) {
+        animateAlumniStats();
+      }
     }
   } catch (error) {
     console.error("Gagal mengambil data persebaran alumni:", error);
+  } finally {
+    isLoadingAlumniLocations.value = false;
   }
 };
 
@@ -2115,6 +2204,7 @@ onMounted(() => {
 
           // Jalankan animasi angka spesifik untuk area alumni
           if (entry.target.classList.contains("alumni-stats-container")) {
+            isAlumniStatsVisible.value = true;
             animateAlumniStats();
           }
           observer.unobserve(entry.target); // Animasi hanya berjalan 1x
