@@ -49,7 +49,7 @@ class SettingController extends Controller
     {
         // Ambil data secara dinamis dari masing-masing tabel terkait
         $schoolProfile = SchoolProfile::first();
-        $akreditasi = $schoolProfile ? $schoolProfile->accreditation : 'A';
+        $akreditasi = $schoolProfile ? $schoolProfile->accreditation : '-';
         
         $siswa = Student::where('status', 'aktif')->count();
         $guru = Staff::where('category', 'pendidik')->count();

@@ -1773,7 +1773,7 @@ const statsArray = ref([
   {
     key: "akreditasi",
     value: "-",
-    target: "A",
+    target: "-",
     label: "Akreditasi",
     prefix: "",
     suffix: "",
@@ -1782,7 +1782,7 @@ const statsArray = ref([
   {
     key: "siswa",
     value: 0,
-    target: 1100,
+    target: 0,
     label: "Jumlah Siswa",
     prefix: "",
     suffix: "+",
@@ -1791,7 +1791,7 @@ const statsArray = ref([
   {
     key: "guru",
     value: 0,
-    target: 75,
+    target: 0,
     label: "Tenaga Pendidik",
     prefix: "",
     suffix: "",
@@ -1800,7 +1800,7 @@ const statsArray = ref([
   {
     key: "ekskul",
     value: 0,
-    target: 20,
+    target: 0,
     label: "Ekstrakurikuler",
     prefix: "",
     suffix: "+",
@@ -1809,7 +1809,7 @@ const statsArray = ref([
   {
     key: "prestasi",
     value: 0,
-    target: 50,
+    target: 0,
     label: "Prestasi",
     prefix: "",
     suffix: "+",
