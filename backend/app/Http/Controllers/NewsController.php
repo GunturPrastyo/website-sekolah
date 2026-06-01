@@ -154,6 +154,8 @@ class NewsController extends Controller
         // Hapus status dibaca agar admin penulis berita mendapatkan kembali notifikasi bahwa beritanya ditolak
         if ($validated['status'] === 'rejected') {
             DismissedNotification::where('user_id', $news->user_id)->where('notification_id', 'rej_news')->delete();
+        } elseif ($validated['status'] === 'approved') {
+            DismissedNotification::where('user_id', $news->user_id)->where('notification_id', 'appr_news')->delete();
         }
 
         return response()->json(['message' => 'Status berita berhasil diperbarui', 'data' => new NewsResource($news)]);

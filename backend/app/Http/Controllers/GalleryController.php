@@ -230,6 +230,8 @@ class GalleryController extends Controller
         // Hapus status dibaca agar admin pengunggah mendapatkan kembali notifikasi penolakan
         if ($validated['status'] === 'rejected') {
             DismissedNotification::where('user_id', $gallery->user_id)->where('notification_id', 'rej_gallery')->delete();
+        } elseif ($validated['status'] === 'approved') {
+            DismissedNotification::where('user_id', $gallery->user_id)->where('notification_id', 'appr_gallery')->delete();
         }
 
         return response()->json(['message' => 'Status galeri berhasil diperbarui', 'data' => new GalleryResource($gallery)]);
