@@ -25,10 +25,15 @@ class ProgramController extends Controller
             'subjects' => 'nullable|string',
             'careers' => 'nullable|string',
             'image' => 'nullable|string',
+            'background_img' => 'nullable|string',
         ]);
 
         if (!empty($validated['image'])) {
             $validated['image'] = $this->handleImage($validated['image']);
+        }
+
+        if (!empty($validated['background_img'])) {
+            $validated['background_img'] = $this->handleImage($validated['background_img']);
         }
 
         $program = Program::create($validated);
@@ -47,6 +52,7 @@ class ProgramController extends Controller
             'subjects' => 'nullable|string',
             'careers' => 'nullable|string',
             'image' => 'nullable|string',
+            'background_img' => 'nullable|string',
         ]);
 
         if (!empty($validated['image']) && $validated['image'] !== $program->image) {
@@ -56,6 +62,17 @@ class ProgramController extends Controller
                 $oldPath = str_replace('/storage/', '', $program->image);
                 if (Storage::disk('public')->exists($oldPath)) {
                     Storage::disk('public')->delete($oldPath);
+                }
+            }
+        }
+
+        if (!empty($validated['background_img']) && $validated['background_img'] !== $program->background_img) {
+            $validated['background_img'] = $this->handleImage($validated['background_img']);
+            
+            if ($program->background_img && Str::startsWith($program->background_img, '/storage/')) {
+                $oldPathBg = str_replace('/storage/', '', $program->background_img);
+                if (Storage::disk('public')->exists($oldPathBg)) {
+                    Storage::disk('public')->delete($oldPathBg);
                 }
             }
         }
@@ -73,6 +90,13 @@ class ProgramController extends Controller
             $oldPath = str_replace('/storage/', '', $program->image);
             if (Storage::disk('public')->exists($oldPath)) {
                 Storage::disk('public')->delete($oldPath);
+            }
+        }
+
+        if ($program->background_img && Str::startsWith($program->background_img, '/storage/')) {
+            $oldPathBg = str_replace('/storage/', '', $program->background_img);
+            if (Storage::disk('public')->exists($oldPathBg)) {
+                Storage::disk('public')->delete($oldPathBg);
             }
         }
 

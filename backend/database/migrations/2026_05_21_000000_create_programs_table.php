@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('subjects')->nullable();
             $table->text('careers')->nullable();
             $table->longText('image')->nullable();
+            $table->longText('background_img')->nullable();
             $table->timestamps();
         });
     }
