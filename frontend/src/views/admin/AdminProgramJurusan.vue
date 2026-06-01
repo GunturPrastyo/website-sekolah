@@ -27,6 +27,7 @@ const form = ref({
   subjects: "",
   careers: "",
   image: "",
+  pattern: "",
 });
 
 const isFormVisible = ref(false);
@@ -68,6 +69,7 @@ const resetForm = () => {
     subjects: "",
     careers: "",
     image: "",
+    pattern: "",
   };
   isEditing.value = false;
 };
@@ -235,18 +237,33 @@ const filteredPrograms = computed(() => {
             <form id="programForm" @submit.prevent="isEditing ? saveEntry() : addEntry()">
               <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Kolom Kiri: Gambar -->
-                <div class="lg:col-span-1">
-                  <ImageUploader
-                    v-model="form.image"
-                    label="Gambar Utama Jurusan"
-                    containerClass="w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] mx-auto"
-                    imageClass="object-cover rounded-xl"
-                  />
-                  <p
-                    class="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center lg:text-left max-w-sm mx-auto"
-                  >
-                    Rasio gambar terbaik adalah 16:9 atau 4:3.
-                  </p>
+                <div class="lg:col-span-1 space-y-6">
+                  <div>
+                    <ImageUploader
+                      v-model="form.image"
+                      label="Gambar Utama Jurusan"
+                      containerClass="w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] mx-auto"
+                      imageClass="object-cover rounded-xl"
+                    />
+                    <p
+                      class="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center lg:text-left max-w-sm mx-auto"
+                    >
+                      Rasio gambar terbaik adalah 16:9 atau 4:3.
+                    </p>
+                  </div>
+                  <div>
+                    <ImageUploader
+                      v-model="form.pattern"
+                      label="Gambar Background (Pattern)"
+                      containerClass="w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] mx-auto"
+                      imageClass="object-cover rounded-xl"
+                    />
+                    <p
+                      class="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center lg:text-left max-w-sm mx-auto"
+                    >
+                      Gambar latar belakang (opsional). Digunakan untuk efek parallax.
+                    </p>
+                  </div>
                 </div>
 
                 <!-- Kolom Kanan: Form Data -->
