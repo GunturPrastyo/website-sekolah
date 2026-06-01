@@ -97,7 +97,7 @@ const router = createRouter({
           component: () => import('../views/Galeri.vue')
         },
         {
-          path: 'artikel',
+          path: 'artikel/:id',
           name: 'artikel',
           component: () => import('../views/Artikel.vue')
         },

@@ -1,10 +1,10 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import api from "@/api/index.js";
 import {
   PhClock,
   PhShareNetwork,
-  PhUsers,
-  PhFileText,
   PhLink,
   PhTrendUp,
   PhCalendarBlank,
@@ -13,114 +13,124 @@ import {
 import Breadcrumb from "@/components/Breadcrumb.vue";
 import ShareModal from "@/components/ShareModal.vue";
 
+const route = useRoute();
+const router = useRouter();
+
 const isShareModalOpen = ref(false);
-const articleTitle =
-  "Peringatan Hari Guru Nasional Berlangsung Meriah di SMAN 1 Nogosari";
+const article = ref(null);
+const isLoading = ref(true);
+const popularNews = ref([]);
+const relatedArticles = ref([]);
 
 const openShareModal = () => {
-  isShareModalOpen.value = true;
+  if (article.value) {
+    isShareModalOpen.value = true;
+  }
 };
 
 const closeShareModal = () => {
   isShareModalOpen.value = false;
 };
 
-const popularNews = [
-  {
-    id: 2,
-    title: "Siswa SMAN 1 Meraih Juara 1 Olimpiade Sains Tingkat Nasional",
-    date: "10 Jan 2026",
-    image: "https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800",
-    views: 3420,
-    category: "Prestasi",
-    description:
-      "Prestasi membanggakan kembali ditorehkan oleh siswa-siswi kita di kancah nasional dalam bidang sains terapan.",
-  },
-  {
-    id: 3,
-    title: "Jadwal Pelaksanaan Ujian Akhir Semester Ganjil 2025/2026",
-    date: "01 Des 2025",
-    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=800",
-    views: 890,
-    category: "Akademik",
-    description:
-      "Diberitahukan kepada seluruh siswa bahwa Ujian Akhir Semester (UAS) Ganjil akan dilaksanakan secara serentak.",
-  },
-  {
-    id: 4,
-    title: "Peresmian Laboratorium Komputer Baru",
-    date: "05 Feb 2026",
-    image: "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800",
-    views: 2105,
-    category: "Fasilitas",
-    description:
-      "Fasilitas lab baru telah dilengkapi dengan 40 unit komputer berspesifikasi tinggi untuk mendukung pembelajaran.",
-  },
-];
+const fetchArticleData = async () => {
+  isLoading.value = true;
+  try {
+    const id = route.params.id;
+    // Fetch article
+    const response = await api.get(`/api/public-news/${id}`);
+    const data = response.data.data;
 
-const relatedArticles = [
-  {
-    id: 5,
-    title: "Kunjungan Edukasi Sejarah ke Museum Nasional Jakarta",
-    date: "20 Mar 2026",
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600",
-    category: "Kegiatan",
-    description:
-      "Kegiatan rutin tahunan ini diikuti oleh seluruh siswa kelas X guna mengenal lebih dekat peninggalan sejarah bangsa.",
-    views: 1560,
-  },
-  {
-    id: 6,
-    title: "Pendaftaran Peserta Didik Baru (PPDB) Jalur Prestasi Dibuka",
-    date: "15 Apr 2026",
-    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=600",
-    category: "Pengumuman",
-    description:
-      "SMAN 1 Nogosari resmi membuka pendaftaran PPDB tahun ajaran baru khusus untuk jalur prestasi akademik maupun non-akademik.",
-    views: 4120,
-  },
-  {
-    id: 7,
-    title: "Siswa SMAN 1 Meraih Juara 1 Olimpiade Sains",
-    date: "10 Jan 2026",
-    image: "https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800",
-    category: "Prestasi",
-    description:
-      "Prestasi membanggakan kembali ditorehkan oleh siswa-siswi kita di kancah nasional dalam bidang sains terapan.",
-    views: 3420,
-  },
-];
+    let imageUrl =
+      "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200";
+    if (data.images && data.images.length > 0) {
+      imageUrl = data.images[0];
+    }
 
-const otherAuthors = [
-  {
-    id: 1,
-    name: "Bapak Ahmad Fauzi",
-    role: "Guru Bahasa Indonesia",
-    initials: "AF",
-    color: "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400",
-    articles: 12,
-  },
-  {
-    id: 2,
-    name: "Ibu Siti Aminah",
-    role: "Pembina OSIS",
-    initials: "SA",
-    color: "bg-purple-100 text-purple-600 dark:bg-purple-900/40 dark:text-purple-400",
-    articles: 8,
-  },
-  {
-    id: 3,
-    name: "Rizky Pratama",
-    role: "Ketua Ekskul Jurnalistik",
-    initials: "RP",
-    color: "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400",
-    articles: 24,
-  },
-];
+    article.value = {
+      ...data,
+      image: imageUrl,
+      date: new Date(data.created_at).toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }),
+      authorName: data.author ? data.author.name : "Admin",
+      authorInitials: data.author ? data.author.name.substring(0, 2).toUpperCase() : "AD",
+    };
+
+    // Calculate reading time roughly (words / 200)
+    const textContent = article.value.content.replace(/<[^>]+>/g, "");
+    const wordCount = textContent.split(/\s+/).length;
+    article.value.readTime = Math.max(1, Math.ceil(wordCount / 200));
+
+    fetchSideData(article.value.category);
+  } catch (error) {
+    console.error("Gagal memuat artikel", error);
+    router.push("/berita");
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const fetchSideData = async (category) => {
+  try {
+    const response = await api.get("/api/public-news");
+    const allNews = response.data.data;
+
+    const processedNews = allNews.map((item) => {
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = item.content;
+      const textContent = tempDiv.textContent || tempDiv.innerText || "";
+
+      let imageUrl =
+        "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800";
+      if (item.images && item.images.length > 0) {
+        imageUrl = item.images[0];
+      }
+
+      return {
+        id: item.id,
+        title: item.title,
+        category: item.category,
+        date: new Date(item.created_at).toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+        image: imageUrl,
+        views: item.views || 0,
+        description: textContent.substring(0, 100) + "...",
+      };
+    });
+
+    const otherNews = processedNews.filter(
+      (n) => String(n.id) !== String(route.params.id)
+    );
+
+    popularNews.value = [...otherNews].sort((a, b) => b.views - a.views).slice(0, 3);
+    relatedArticles.value = otherNews.filter((n) => n.category === category).slice(0, 3);
+    if (relatedArticles.value.length === 0) {
+      relatedArticles.value = otherNews.slice(0, 3);
+    }
+  } catch (error) {
+    console.error("Gagal memuat sidebar data", error);
+  }
+};
 
 onMounted(() => {
+  fetchArticleData();
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
+
+watch(
+  () => route.params.id,
+  (newId) => {
+    if (newId) {
+      fetchArticleData();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+);
 </script>
 
 <template>
@@ -132,12 +142,16 @@ onMounted(() => {
           :items="[
             { name: 'Beranda', link: '/', icon: 'home' },
             { name: 'Berita', link: '/berita' },
-            { name: 'Kegiatan' },
+            { name: article?.category || 'Artikel' },
           ]"
         />
       </div>
 
-      <div class="flex flex-col lg:flex-row gap-0 lg:gap-8">
+      <div v-if="isLoading" class="flex justify-center items-center py-32">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+
+      <div v-else class="flex flex-col lg:flex-row gap-0 lg:gap-8">
         <!-- KIRI: Konten Utama Artikel -->
         <main
           class="w-full lg:w-2/3 bg-white dark:bg-slate-800 rounded-none lg:rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden relative z-10"
@@ -149,10 +163,11 @@ onMounted(() => {
                 <span
                   class="px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-md uppercase tracking-wider shadow-sm"
                 >
-                  Kegiatan
+                  {{ article?.category }}
                 </span>
                 <span class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
-                  <PhClock class="w-3.5 h-3.5 mr-1.5" /> 3 menit baca
+                  <PhClock class="w-3.5 h-3.5 mr-1.5" /> {{ article?.readTime }} menit
+                  baca
                 </span>
               </div>
 
@@ -168,23 +183,23 @@ onMounted(() => {
             <h1
               class="text-2xl md:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight mb-6"
             >
-              {{ articleTitle }}
+              {{ article?.title }}
             </h1>
 
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <!-- Profil Penulis -->
               <div class="flex items-center gap-3">
                 <div
-                  class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xl shrink-0"
+                  class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xl shrink-0 uppercase"
                 >
-                  TR
+                  {{ article?.authorInitials }}
                 </div>
                 <div>
                   <div class="font-bold text-gray-900 dark:text-white text-sm">
-                    Tim Redaksi SMAN 1
+                    {{ article?.authorName }}
                   </div>
                   <div class="text-xs text-gray-500 dark:text-gray-400">
-                    24 November 2025 • 1250 Tayangan
+                    {{ article?.date }} • {{ article?.views }} Tayangan
                   </div>
                 </div>
               </div>
@@ -204,103 +219,29 @@ onMounted(() => {
           <!-- Featured Image -->
           <div class="w-full h-64 md:h-96 relative bg-gray-200 dark:bg-slate-700">
             <img
-              src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200"
-              alt="Peringatan Hari Guru"
+              :src="article?.image"
+              :alt="article?.title"
               class="w-full h-full object-cover"
             />
-            <div
-              class="absolute bottom-0 right-0 bg-black/60 backdrop-blur-sm text-white text-[10px] px-3 py-1"
-            >
-              Sumber Gambar: Dokumentasi OSIS
-            </div>
           </div>
 
           <!-- Isi Artikel -->
           <article
-            class="p-6 md:p-10 text-gray-700 dark:text-gray-300 leading-relaxed space-y-6 text-base md:text-lg text-justify"
-          >
-            <p>
-              <span
-                class="text-4xl font-bold float-left mr-2 mt-1 text-blue-600 dark:text-blue-400 font-serif"
-                >S</span
-              >MAN 1 Nogosari kembali menggelar peringatan Hari Guru Nasional dengan
-              sangat meriah dan penuh haru pada Senin (24/11). Acara yang diselenggarakan
-              di lapangan utama sekolah ini tidak hanya dihadiri oleh jajaran guru dan
-              staf, tetapi juga diikuti dengan antusias oleh seluruh siswa dari kelas X
-              hingga XII.
-            </p>
-            <p>
-              Peringatan tahun ini mengusung tema
-              <strong>"Guru Inovatif, Generasi Kreatif"</strong>. Acara dimulai dengan
-              upacara bendera yang dipimpin langsung oleh Bapak Kepala Sekolah,
-              dilanjutkan dengan prosesi pelepasan balon ke udara sebagai simbol cita-cita
-              tinggi yang harus diraih oleh para siswa melalui bimbingan para guru.
-            </p>
-
-            <blockquote
-              class="border-l-4 border-blue-500 bg-blue-50 dark:bg-slate-700/50 p-6 rounded-r-lg italic text-gray-800 dark:text-gray-200 my-8 shadow-sm"
-            >
-              "Seorang guru itu bukan sekadar mentransfer ilmu, tetapi juga menanamkan
-              karakter dan nilai kehidupan yang akan terus membekas di hati anak-anak kita
-              selamanya."
-              <footer class="mt-3 text-sm font-semibold text-blue-600 dark:text-blue-400">
-                — Dr. H. Budi Santoso, M.Pd
-              </footer>
-            </blockquote>
-
-            <p>
-              Puncak acara dimeriahkan dengan berbagai penampilan pentas seni dari
-              perwakilan masing-masing kelas. Ada yang membawakan puisi, teaterikal
-              singkat, hingga nyanyian paduan suara yang dipersembahkan khusus untuk para
-              pahlawan tanpa tanda jasa tersebut. Suasana seketika berubah haru ketika
-              beberapa perwakilan OSIS memberikan bunga mawar kepada setiap guru yang
-              hadir.
-            </p>
-
-            <!-- Galeri Inline (Beberapa Gambar Pendukung) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-8">
-              <img
-                src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=600"
-                class="rounded-lg w-full h-48 object-cover shadow-sm"
-                alt="Pentas Seni"
-              />
-              <img
-                src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600"
-                class="rounded-lg w-full h-48 object-cover shadow-sm"
-                alt="Penampilan Siswa"
-              />
-              <p class="col-span-full text-center text-xs text-gray-500 italic mt-2">
-                Keseruan penampilan pentas seni siswa SMAN 1 Nogosari.
-              </p>
-            </div>
-
-            <p>
-              Sebagai penutup, sekolah memberikan apresiasi dan piagam penghargaan kepada
-              sejumlah "Guru Favorit" dan "Guru Terinovatif" berdasarkan hasil *voting*
-              yang dilakukan oleh siswa selama sepekan terakhir. Acara kemudian ditutup
-              dengan pemotongan tumpeng dan makan bersama yang mempererat tali silaturahmi
-              seluruh warga sekolah.
-            </p>
-          </article>
+            class="p-6 md:p-10 text-gray-700 dark:text-gray-300 leading-relaxed space-y-6 text-base md:text-lg text-justify prose dark:prose-invert max-w-none"
+            v-html="article?.content"
+          ></article>
 
           <!-- Tags -->
           <div
-            class="px-6 md:px-10 pb-10 flex flex-wrap gap-2 border-b border-gray-100 dark:border-slate-700"
+            v-if="article?.tags"
+            class="px-6 md:px-10 pb-10 flex flex-wrap gap-2 border-b border-gray-100 dark:border-slate-700 mt-6"
           >
             <a
               href="#"
+              v-for="(tag, index) in article.tags.split(',')"
+              :key="index"
               class="px-3 py-1 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 text-xs font-semibold rounded hover:bg-blue-100 hover:text-blue-600 transition-colors"
-              >#HariGuru</a
-            >
-            <a
-              href="#"
-              class="px-3 py-1 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 text-xs font-semibold rounded hover:bg-blue-100 hover:text-blue-600 transition-colors"
-              >#Pendidikan</a
-            >
-            <a
-              href="#"
-              class="px-3 py-1 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 text-xs font-semibold rounded hover:bg-blue-100 hover:text-blue-600 transition-colors"
-              >#KegiatanSiswa</a
+              >#{{ tag.trim() }}</a
             >
           </div>
         </main>
@@ -314,48 +255,22 @@ onMounted(() => {
             class="bg-white dark:bg-slate-800 py-8 px-6 rounded-none lg:rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 text-center relative z-20"
           >
             <div
-              class="w-20 h-20 mx-auto rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-2xl mb-4 border-4 border-white shadow-sm"
+              class="w-20 h-20 mx-auto rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-2xl mb-4 border-4 border-white shadow-sm uppercase"
             >
-              TR
+              {{ article?.authorInitials }}
             </div>
             <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">
-              Tim Redaksi
+              {{ article?.authorName }}
             </h3>
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              Pengelola informasi dan publikasi resmi SMA Negeri 1 Nogosari.
+              Penulis Artikel di SMA Negeri 1 Nogosari.
             </p>
-            <button
-              class="w-full py-2 bg-blue-50 text-blue-600 dark:bg-slate-700 dark:text-blue-400 rounded-lg text-sm font-semibold hover:bg-blue-100 transition-colors"
+            <router-link
+              to="/berita"
+              class="block w-full py-2 bg-blue-50 text-blue-600 dark:bg-slate-700 dark:text-blue-400 rounded-lg text-sm font-semibold hover:bg-blue-100 transition-colors"
             >
               Lihat Artikel Lainnya
-            </button>
-
-            <!-- Penulis Lainnya -->
-            <div
-              class="mt-6 pt-5 border-t border-gray-100 dark:border-slate-700 text-left"
-            >
-              <h4
-                class="text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center"
-              >
-                <PhUsers class="w-4 h-4 mr-1.5 text-gray-400" /> Penulis Lainnya
-              </h4>
-              <div class="flex flex-wrap gap-2">
-                <a
-                  href="#"
-                  v-for="author in otherAuthors"
-                  :key="author.id"
-                  class="inline-flex items-center px-3 py-1.5 bg-gray-50 hover:bg-gray-100 dark:bg-slate-700/50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-medium transition-colors border border-gray-200 dark:border-slate-600 group"
-                >
-                  {{ author.name }}
-                  <span
-                    class="ml-1.5 inline-flex items-center gap-1 px-1.5 py-0.5 bg-gray-200 group-hover:bg-blue-100 dark:bg-slate-600 dark:group-hover:bg-blue-900/40 text-gray-600 group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-400 rounded-md text-[10px] font-bold transition-colors"
-                  >
-                    <PhFileText class="w-3 h-3" />
-                    {{ author.articles }}
-                  </span>
-                </a>
-              </div>
-            </div>
+            </router-link>
           </div>
 
           <!-- Artikel Terkait Widget -->
@@ -370,7 +285,7 @@ onMounted(() => {
             </h3>
             <div class="space-y-5">
               <router-link
-                to="/artikel"
+                :to="`/artikel/${article.id}`"
                 v-for="article in relatedArticles"
                 :key="article.id"
                 class="flex items-start gap-4 group"
@@ -426,9 +341,9 @@ onMounted(() => {
               <PhTrendUp class="w-5 h-5 mr-2 text-blue-500" />
               Terpopuler
             </h3>
-            <div class="space-y-5">
+            <div class="space-y-5 mt-5 md:mt-0">
               <router-link
-                to="/artikel"
+                :to="`/artikel/${news.id}`"
                 v-for="(news, index) in popularNews"
                 :key="news.id"
                 class="flex items-start gap-4 group"
@@ -480,7 +395,7 @@ onMounted(() => {
     <!-- Share Modal Component -->
     <ShareModal
       :is-open="isShareModalOpen"
-      :title="articleTitle"
+      :title="article?.title || ''"
       @close="closeShareModal"
     />
   </div>
