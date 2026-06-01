@@ -27,7 +27,7 @@ const form = ref({
   subjects: "",
   careers: "",
   image: "",
-  pattern: "",
+  background_img: "",
 });
 
 const isFormVisible = ref(false);
@@ -85,7 +85,7 @@ const resetForm = () => {
     subjects: "",
     careers: "",
     image: "",
-    pattern: "",
+    background_img: "",
   };
   isEditing.value = false;
 };
@@ -269,7 +269,7 @@ const filteredPrograms = computed(() => {
                   </div>
                   <div>
                     <ImageUploader
-                      v-model="form.pattern"
+                      v-model="form.background_img"
                       label="Gambar Background"
                       containerClass="w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] mx-auto"
                       imageClass="object-cover rounded-xl"

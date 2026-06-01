@@ -16,6 +16,6 @@ class Program extends Model
         'subjects',
         'careers',
         'image',
-        'pattern',
+        'background_img',
     ];
 }
