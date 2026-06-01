@@ -15,8 +15,13 @@ const isFetching = ref(true);
 const getImageUrl = (path, defaultUrl) => {
   if (!path) return defaultUrl;
   if (path.startsWith("http") || path.startsWith("data:")) return path;
-  const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const backendUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
   return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
+};
+
+const handleImageError = (e) => {
+  e.target.src =
+    "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800"; // fallback placeholder
 };
 
 const parseJSON = (data) => {
@@ -105,44 +110,70 @@ onMounted(() => {
     />
 
     <!-- Program Details Section -->
-    <div
-      class="min-h-screen flex flex-col relative transition-colors duration-700 bg-fixed bg-cover bg-center"
-      style="
-        background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop');
-      "
-    >
-      <!-- Base Overlay -->
-      <div
-        class="absolute inset-0 bg-white/90 dark:bg-slate-900/95 backdrop-blur-[2px] z-0 pointer-events-none"
-      ></div>
-
-      <!-- Loading State -->
-      <div v-if="isFetching" class="py-24 flex justify-center items-center z-10 relative">
-        <div class="flex flex-col items-center">
-          <svg
-            class="animate-spin h-10 w-10 text-blue-600 dark:text-blue-400 mb-4"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            ></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
-          <span class="text-slate-600 dark:text-slate-300 font-medium"
-            >Memuat data program jurusan...</span
-          >
-        </div>
+    <div class="min-h-screen flex flex-col relative transition-colors duration-700">
+      <!-- Loading Skeleton -->
+      <div v-if="isFetching" class="w-full flex flex-col z-10 relative">
+        <section
+          v-for="i in 3"
+          :key="i"
+          class="relative py-16 md:py-24 px-6 overflow-hidden z-10"
+        >
+          <div class="container relative z-10 mx-auto max-w-6xl">
+            <div
+              class="flex flex-col lg:flex-row gap-10 lg:gap-16 items-center"
+              :class="{ 'lg:flex-row-reverse': i % 2 !== 0 }"
+            >
+              <div class="w-full lg:w-1/2">
+                <div
+                  class="aspect-video md:aspect-[4/3] rounded-lg bg-slate-200 dark:bg-slate-800 animate-pulse"
+                ></div>
+              </div>
+              <div class="w-full lg:w-1/2 space-y-6">
+                <div
+                  class="h-8 w-32 bg-slate-200 dark:bg-slate-800 rounded-full animate-pulse"
+                ></div>
+                <div
+                  class="h-10 w-3/4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse"
+                ></div>
+                <div class="space-y-3 pt-4">
+                  <div
+                    class="h-4 w-full bg-slate-200 dark:bg-slate-800 rounded animate-pulse"
+                  ></div>
+                  <div
+                    class="h-4 w-5/6 bg-slate-200 dark:bg-slate-800 rounded animate-pulse"
+                  ></div>
+                  <div
+                    class="h-4 w-4/6 bg-slate-200 dark:bg-slate-800 rounded animate-pulse"
+                  ></div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4">
+                  <div class="space-y-3">
+                    <div
+                      class="h-5 w-1/2 bg-slate-200 dark:bg-slate-800 rounded animate-pulse mb-4"
+                    ></div>
+                    <div
+                      class="h-4 w-full bg-slate-200 dark:bg-slate-800 rounded animate-pulse"
+                    ></div>
+                    <div
+                      class="h-4 w-5/6 bg-slate-200 dark:bg-slate-800 rounded animate-pulse"
+                    ></div>
+                  </div>
+                  <div class="space-y-3">
+                    <div
+                      class="h-5 w-1/2 bg-slate-200 dark:bg-slate-800 rounded animate-pulse mb-4"
+                    ></div>
+                    <div
+                      class="h-4 w-full bg-slate-200 dark:bg-slate-800 rounded animate-pulse"
+                    ></div>
+                    <div
+                      class="h-4 w-5/6 bg-slate-200 dark:bg-slate-800 rounded animate-pulse"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
 
       <!-- Render Tiap Jurusan dengan Selang-seling (Alternate Layout & Background) -->
@@ -150,23 +181,18 @@ onMounted(() => {
         <section
           v-for="(program, index) in programs"
           :key="program.id"
-          class="relative py-16 md:py-24 px-6 transition-colors duration-700 ease-in-out overflow-hidden z-10"
-          :class="
-            index % 2 === 0
-              ? 'bg-transparent'
-              : program.sectionBgClass +
-                ' bg-opacity-95 dark:bg-opacity-95 backdrop-blur-md'
-          "
+          class="relative py-16 md:py-24 px-6 transition-colors duration-700 ease-in-out overflow-hidden z-10 bg-fixed bg-cover bg-center"
+          :style="{ backgroundImage: `url(${program.pattern})` }"
         >
-          <!-- Parallax Background Overlay -->
+          <!-- Background Overlay -->
           <div
-            class="absolute inset-0 z-0 bg-fixed bg-cover bg-center transition-opacity duration-700 pointer-events-none"
+            class="absolute inset-0 z-0 transition-opacity duration-700 pointer-events-none"
             :class="
               index % 2 === 0
-                ? 'opacity-5 dark:opacity-10 mix-blend-multiply dark:mix-blend-overlay'
-                : 'opacity-10 md:opacity-20 mix-blend-overlay'
+                ? 'bg-white/90 dark:bg-slate-900/95 backdrop-blur-[2px]'
+                : program.sectionBgClass +
+                  ' bg-opacity-95 dark:bg-opacity-95 backdrop-blur-md'
             "
-            :style="{ backgroundImage: `url(${program.pattern})` }"
           ></div>
 
           <div class="container relative z-10 mx-auto max-w-6xl">
@@ -188,6 +214,7 @@ onMounted(() => {
                 >
                   <img
                     :src="program.image"
+                    @error="handleImageError"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     :alt="'Jurusan ' + program.title"
                   />

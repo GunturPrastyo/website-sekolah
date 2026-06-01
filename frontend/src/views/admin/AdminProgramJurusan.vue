@@ -34,17 +34,33 @@ const isFormVisible = ref(false);
 const isEditing = ref(false);
 const isDeleteModalOpen = ref(false);
 const itemToDelete = ref(null);
+const isLoading = ref(true);
 
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
 
+const getImageUrl = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http") || path.startsWith("data:")) return path;
+  const backendUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+  return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
+};
+
+const handleImageError = (e) => {
+  e.target.src =
+    "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800"; // fallback placeholder
+};
+
 const fetchPrograms = async () => {
+  isLoading.value = true;
   try {
     const response = await api.get("/api/programs");
     programList.value = response.data.data;
   } catch (error) {
     triggerToast("Error", "Gagal memuat data program jurusan", "error");
+  } finally {
+    isLoading.value = false;
   }
 };
 
@@ -254,7 +270,7 @@ const filteredPrograms = computed(() => {
                   <div>
                     <ImageUploader
                       v-model="form.pattern"
-                      label="Gambar Background (Pattern)"
+                      label="Gambar Background"
                       containerClass="w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] mx-auto"
                       imageClass="object-cover rounded-xl"
                     />
@@ -387,8 +403,39 @@ const filteredPrograms = computed(() => {
         />
       </div>
 
+      <!-- Skeleton Loader -->
+      <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div
+          v-for="i in 4"
+          :key="i"
+          class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-600 shadow-sm flex flex-col overflow-hidden animate-pulse"
+        >
+          <div class="w-full h-40 sm:h-48 bg-gray-200 dark:bg-slate-700"></div>
+          <div class="p-5 flex flex-col flex-1 space-y-4">
+            <div class="h-6 bg-gray-200 dark:bg-slate-700 rounded w-3/4"></div>
+            <div class="space-y-2">
+              <div class="h-4 bg-gray-200 dark:bg-slate-700 rounded w-full"></div>
+              <div class="h-4 bg-gray-200 dark:bg-slate-700 rounded w-5/6"></div>
+              <div class="h-4 bg-gray-200 dark:bg-slate-700 rounded w-4/6"></div>
+            </div>
+            <div
+              class="grid grid-cols-2 gap-4 mt-auto border-t border-gray-100 dark:border-slate-700 pt-4"
+            >
+              <div class="space-y-2">
+                <div class="h-3 bg-gray-200 dark:bg-slate-700 rounded w-1/2"></div>
+                <div class="h-3 bg-gray-200 dark:bg-slate-700 rounded w-full"></div>
+              </div>
+              <div class="space-y-2">
+                <div class="h-3 bg-gray-200 dark:bg-slate-700 rounded w-1/2"></div>
+                <div class="h-3 bg-gray-200 dark:bg-slate-700 rounded w-full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div
-        v-if="filteredPrograms.length === 0"
+        v-else-if="filteredPrograms.length === 0"
         class="py-12 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
       >
         <p>Tidak ada data jurusan yang ditemukan.</p>
@@ -419,7 +466,12 @@ const filteredPrograms = computed(() => {
 
           <!-- Banner Gambar -->
           <div class="w-full h-40 sm:h-48 bg-gray-100 dark:bg-slate-700 relative">
-            <img v-if="prog.image" :src="prog.image" class="w-full h-full object-cover" />
+            <img
+              v-if="prog.image"
+              :src="getImageUrl(prog.image)"
+              @error="handleImageError"
+              class="w-full h-full object-cover"
+            />
             <div
               v-else
               class="w-full h-full flex items-center justify-center text-gray-400"
