@@ -8,6 +8,8 @@ import {
   PhChartLine,
   PhClock,
   PhNewspaper,
+  PhImage,
+  PhXCircle,
 } from "@phosphor-icons/vue";
 import {
   Chart as ChartJS,
@@ -31,7 +33,10 @@ ChartJS.register(
   Filler
 );
 
-const stats = ref([
+const userRole = ref(localStorage.getItem("user_role") || "admin");
+const stats = ref([]);
+
+const superAdminStats = [
   {
     id: "total_siswa",
     title: "Total Siswa",
@@ -64,7 +69,42 @@ const stats = ref([
     color: "text-indigo-500",
     bgColor: "bg-indigo-100 dark:bg-indigo-900/40",
   },
-]);
+];
+
+const adminStats = [
+  {
+    id: "artikel_saya",
+    title: "Artikel Saya",
+    value: "0",
+    icon: markRaw(PhNewspaper),
+    color: "text-blue-500",
+    bgColor: "bg-blue-100 dark:bg-blue-900/40",
+  },
+  {
+    id: "galeri_saya",
+    title: "Galeri Foto Saya",
+    value: "0",
+    icon: markRaw(PhImage),
+    color: "text-emerald-500",
+    bgColor: "bg-emerald-100 dark:bg-emerald-900/40",
+  },
+  {
+    id: "menunggu_validasi",
+    title: "Menunggu Validasi",
+    value: "0",
+    icon: markRaw(PhClock),
+    color: "text-amber-500",
+    bgColor: "bg-amber-100 dark:bg-amber-900/40",
+  },
+  {
+    id: "konten_ditolak",
+    title: "Perlu Revisi / Ditolak",
+    value: "0",
+    icon: markRaw(PhXCircle),
+    color: "text-red-500",
+    bgColor: "bg-red-100 dark:bg-red-900/40",
+  },
+];
 
 const chartPeriod = ref("30_days");
 const isChartLoading = ref(false);
@@ -150,6 +190,7 @@ const fetchDashboardStats = async () => {
 };
 
 onMounted(() => {
+  stats.value = userRole.value === "super_admin" ? superAdminStats : adminStats;
   fetchDashboardStats();
 });
 </script>
@@ -235,6 +276,7 @@ onMounted(() => {
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
       <!-- CHART -->
       <div
+        v-if="userRole === 'super_admin'"
         class="xl:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm flex flex-col"
       >
         <div class="flex items-center justify-between mb-6">
@@ -282,6 +324,7 @@ onMounted(() => {
       <!-- ACTIVITY -->
       <div
         class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm flex flex-col"
+        :class="userRole === 'super_admin' ? '' : 'xl:col-span-3'"
       >
         <div class="flex items-center justify-between mb-6">
           <h3 class="font-bold text-gray-800 dark:text-white flex items-center text-lg">
