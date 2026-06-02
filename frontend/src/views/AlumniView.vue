@@ -31,12 +31,12 @@
 
     <!-- Map Section -->
     <section
-      class="py-12 md:py-16 relative z-10 container mx-auto px-4 md:px-6 -mt-16 md:-mt-20"
+      class="mx-auto max-w-full px-0 lg:px-8 mt-0 md:mt-12 relative z-10 container"
     >
       <div
-        class="bg-white dark:bg-slate-800 rounded-3xl shadow-xl border border-gray-100 dark:border-slate-700 p-6 md:p-8"
+        class="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 p-0 md:p-8"
       >
-        <div class="mb-8 text-center">
+        <div class="mb-8 mt-8 text-center">
           <h2
             class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2"
             style="font-family: 'Oswald', sans-serif"
@@ -54,7 +54,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           <!-- Map Area -->
           <div
-            class="lg:col-span-2 relative aspect-[4/3] sm:aspect-[2/1] bg-blue-50/50 dark:bg-slate-900/50 rounded-2xl border border-blue-100 dark:border-slate-700 overflow-hidden flex items-center justify-center p-4"
+            class="lg:col-span-2 relative aspect-[4/3] sm:aspect-[2/1] bg-blue-50/50 dark:bg-slate-900/50 rounded-lg border border-blue-100 dark:border-slate-700 overflow-hidden flex items-center justify-center p-2"
           >
             <img
               src="/img/indonesia.svg"
@@ -105,7 +105,7 @@
 
           <!-- Location Detail Sidebar -->
           <div
-            class="lg:col-span-1 bg-gray-50 dark:bg-slate-700/30 rounded-2xl p-5 md:p-6 border border-gray-100 dark:border-slate-700 shadow-inner h-[400px] sm:h-[450px] flex flex-col transition-all duration-300"
+            class="lg:col-span-1 bg-gray-50 dark:bg-slate-700/30 rounded-lg p-5 md:p-6 border border-gray-100 dark:border-slate-700 shadow-inner h-[400px] sm:h-[450px] flex flex-col transition-all duration-300"
           >
             <template v-if="selectedLocation">
               <div class="border-b border-gray-200 dark:border-slate-600 pb-4 mb-4">
@@ -231,24 +231,6 @@
         </div>
 
         <div class="flex gap-4 w-full md:w-auto">
-          <div class="relative w-full md:w-48">
-            <select
-              v-model="selectedStatus"
-              @change="resetPagination"
-              class="w-full pl-4 pr-10 py-3 bg-gray-50 dark:bg-slate-700 border-none rounded-xl focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white text-sm appearance-none cursor-pointer"
-            >
-              <option value="">Semua Status</option>
-              <option v-for="status in statusOptions" :key="status" :value="status">
-                {{ status }}
-              </option>
-            </select>
-            <div
-              class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"
-            >
-              <PhCaretDown class="w-4 h-4 text-gray-400" />
-            </div>
-          </div>
-
           <div class="relative w-full md:w-36">
             <select
               v-model="selectedYear"
@@ -402,7 +384,6 @@
             <button
               @click="
                 searchQuery = '';
-                selectedStatus = '';
                 selectedYear = '';
                 resetPagination();
               "
@@ -440,7 +421,6 @@ const isLoadingMap = ref(true);
 const isLoadingAlumni = ref(true);
 
 const searchQuery = ref("");
-const selectedStatus = ref("");
 const selectedYear = ref("");
 const currentPage = ref(1);
 const itemsPerPage = 12;
@@ -485,20 +465,17 @@ const uniqueYears = computed(() => {
   return [...new Set(years)].sort((a, b) => b - a);
 });
 
-const statusOptions = ["Kuliah", "Bekerja", "Wirausaha", "Lainnya"];
-
 const filteredAlumni = computed(() => {
   return alumniList.value.filter((a) => {
     const q = searchQuery.value.toLowerCase();
     const matchName = a.name?.toLowerCase().includes(q);
     const matchInstansi = a.instansi?.toLowerCase().includes(q);
 
-    const matchStatus = selectedStatus.value ? a.status === selectedStatus.value : true;
     const matchYear = selectedYear.value
       ? a.year.toString() === selectedYear.value.toString()
       : true;
 
-    return (matchName || matchInstansi) && matchStatus && matchYear;
+    return (matchName || matchInstansi) && matchYear;
   });
 });
 
