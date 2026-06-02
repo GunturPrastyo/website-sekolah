@@ -108,6 +108,7 @@ const adminStats = [
 
 const chartPeriod = ref("30_days");
 const isChartLoading = ref(false);
+const recentActivities = ref([]);
 
 const chartData = ref({
   labels: [],
@@ -158,6 +159,26 @@ const chartOptions = ref({
   },
 });
 
+// Fungsi untuk menghitung waktu yang lalu (time ago) format Indonesia
+const timeAgo = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  const now = new Date();
+  const seconds = Math.floor((now - date) / 1000);
+
+  let interval = seconds / 31536000;
+  if (interval >= 1) return Math.floor(interval) + " tahun yang lalu";
+  interval = seconds / 2592000;
+  if (interval >= 1) return Math.floor(interval) + " bulan yang lalu";
+  interval = seconds / 86400;
+  if (interval >= 1) return Math.floor(interval) + " hari yang lalu";
+  interval = seconds / 3600;
+  if (interval >= 1) return Math.floor(interval) + " jam yang lalu";
+  interval = seconds / 60;
+  if (interval >= 1) return Math.floor(interval) + " menit yang lalu";
+  return "Baru saja";
+};
+
 const fetchDashboardStats = async () => {
   isChartLoading.value = true;
   try {
@@ -181,6 +202,10 @@ const fetchDashboardStats = async () => {
           },
         ],
       };
+    }
+
+    if (data.recent_activities) {
+      recentActivities.value = data.recent_activities;
     }
   } catch (error) {
     console.error("Gagal mengambil data statistik dashboard:", error);
@@ -338,84 +363,41 @@ onMounted(() => {
           </button>
         </div>
         <div class="space-y-6 flex-1">
-          <div class="flex gap-4 relative">
+          <!-- Empty State ketika belum ada aktivitas -->
+          <div
+            v-if="recentActivities.length === 0"
+            class="text-sm text-gray-500 text-center py-4"
+          >
+            Belum ada aktivitas terbaru.
+          </div>
+
+          <!-- Daftar Aktivitas Dinamis -->
+          <div
+            v-for="(activity, index) in recentActivities"
+            :key="activity.id"
+            class="flex gap-4 relative"
+          >
             <div
+              v-if="index !== recentActivities.length - 1"
               class="absolute top-8 left-4 -ml-px h-full w-0.5 bg-gray-100 dark:bg-slate-700"
             ></div>
             <div
-              class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 border-2 border-white dark:border-slate-800 flex items-center justify-center text-blue-600 text-xs font-bold z-10 shrink-0"
+              class="w-8 h-8 rounded-full border-2 border-white dark:border-slate-800 flex items-center justify-center text-xs font-bold z-10 shrink-0"
+              :class="activity.color"
             >
-              AF
+              {{ activity.user_initials }}
             </div>
             <div class="pt-1.5 pb-2">
               <p class="text-sm text-gray-800 dark:text-gray-200 leading-snug">
-                <span class="font-semibold text-gray-900 dark:text-white"
-                  >Ahmad Fauzi</span
-                >
-                menerbitkan artikel baru "Prestasi Siswa Tingkat Nasional".
+                <span class="font-semibold text-gray-900 dark:text-white">{{
+                  activity.user
+                }}</span>
+                {{ activity.action }}
+                <span class="italic font-medium">{{ activity.target }}</span
+                >.
               </p>
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center">
-                2 jam yang lalu
-              </p>
-            </div>
-          </div>
-          <div class="flex gap-4 relative">
-            <div
-              class="absolute top-8 left-4 -ml-px h-full w-0.5 bg-gray-100 dark:bg-slate-700"
-            ></div>
-            <div
-              class="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/40 border-2 border-white dark:border-slate-800 flex items-center justify-center text-emerald-600 text-xs font-bold z-10 shrink-0"
-            >
-              SA
-            </div>
-            <div class="pt-1.5 pb-2">
-              <p class="text-sm text-gray-800 dark:text-gray-200 leading-snug">
-                <span class="font-semibold text-gray-900 dark:text-white"
-                  >Siti Aminah</span
-                >
-                memperbarui halaman Sejarah Sekolah.
-              </p>
-              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center">
-                5 jam yang lalu
-              </p>
-            </div>
-          </div>
-          <div class="flex gap-4 relative">
-            <div
-              class="absolute top-8 left-4 -ml-px h-full w-0.5 bg-gray-100 dark:bg-slate-700"
-            ></div>
-            <div
-              class="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/40 border-2 border-white dark:border-slate-800 flex items-center justify-center text-amber-600 text-xs font-bold z-10 shrink-0"
-            >
-              RP
-            </div>
-            <div class="pt-1.5 pb-2">
-              <p class="text-sm text-gray-800 dark:text-gray-200 leading-snug">
-                <span class="font-semibold text-gray-900 dark:text-white"
-                  >Rizky Pratama</span
-                >
-                menambahkan 15 data siswa baru.
-              </p>
-              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center">
-                Kemarin, 14:30
-              </p>
-            </div>
-          </div>
-          <div class="flex gap-4 relative">
-            <div
-              class="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/40 border-2 border-white dark:border-slate-800 flex items-center justify-center text-purple-600 text-xs font-bold z-10 shrink-0"
-            >
-              TR
-            </div>
-            <div class="pt-1.5 pb-2">
-              <p class="text-sm text-gray-800 dark:text-gray-200 leading-snug">
-                <span class="font-semibold text-gray-900 dark:text-white"
-                  >Tim Redaksi</span
-                >
-                menghapus 2 komentar spam pada artikel.
-              </p>
-              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center">
-                2 hari yang lalu
+                {{ timeAgo(activity.created_at) }}
               </p>
             </div>
           </div>

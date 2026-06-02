@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Models\Staff;
 use App\Models\News;
+use App\Models\Gallery;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -34,6 +35,40 @@ class DashboardController extends Controller
             $chartData[] = Visitor::whereDate('visited_date', $date->toDateString())->count();
         }
 
+        // Mengambil data aktivitas terbaru dari Berita dan Galeri
+        $recentNews = News::with('author')->orderBy('created_at', 'desc')->take(5)->get()->map(function ($item) {
+            $authorName = $item->author ? $item->author->name : 'Admin';
+            return [
+                'id' => 'news_' . $item->id,
+                'user' => $authorName,
+                'user_initials' => $this->getInitials($authorName),
+                'action' => 'menerbitkan berita/artikel baru',
+                'target' => '"' . $item->title . '"',
+                'created_at' => $item->created_at,
+                'color' => 'bg-blue-100 dark:bg-blue-900/40 text-blue-600',
+            ];
+        });
+
+        $recentGalleries = Gallery::with('author')->orderBy('created_at', 'desc')->take(5)->get()->map(function ($item) {
+            $authorName = $item->author ? $item->author->name : 'Admin';
+            return [
+                'id' => 'gallery_' . $item->id,
+                'user' => $authorName,
+                'user_initials' => $this->getInitials($authorName),
+                'action' => 'mengunggah galeri foto',
+                'target' => '"' . $item->title . '"',
+                'created_at' => $item->created_at,
+                'color' => 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600',
+            ];
+        });
+
+        // Gabungkan, urutkan berdasarkan waktu terbaru, dan ambil 5 teratas
+        $recentActivities = $recentNews->concat($recentGalleries)
+            ->sortByDesc('created_at')
+            ->take(5)
+            ->values()
+            ->all();
+
         return response()->json([
             'data' => [
                 'total_siswa' => $totalSiswa,
@@ -43,8 +78,21 @@ class DashboardController extends Controller
                 'chart' => [
                     'labels' => $chartLabels,
                     'data' => $chartData
-                ]
+                ],
+                'recent_activities' => $recentActivities
             ]
         ]);
+    }
+
+    private function getInitials($name)
+    {
+        $words = explode(' ', trim($name));
+        $initials = '';
+        foreach ($words as $w) {
+            if (!empty($w)) {
+                $initials .= strtoupper($w[0]);
+            }
+        }
+        return substr($initials, 0, 2);
     }
 }
