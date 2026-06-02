@@ -1,437 +1,564 @@
-<script setup>
-import { ref, computed, onMounted } from "vue";
-import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
-import L from "leaflet";
-import PageHeader from "@/components/PageHeader.vue";
-import {
-  PhMapPin,
-  PhBriefcase,
-  PhGraduationCap,
-  PhCaretDown,
-  PhMagnifyingGlass,
-  PhUsers,
-  PhX,
-} from "@phosphor-icons/vue";
-
-// --- STATE MANAGEMENT ---
-const activeYear = ref("semua");
-const activeField = ref("semua");
-const searchQuery = ref("");
-const isModalOpen = ref(false);
-const selectedAlumnus = ref(null);
-const mapZoom = ref(2.5);
-const mapCenter = ref([20, 10]); // Center the map view initially
-
-// --- DUMMY DATA ---
-const alumniData = ref([
-  {
-    id: 1,
-    name: "Dr. Rina Wulandari",
-    year: 2010,
-    field: "Kesehatan",
-    role: "Dokter Spesialis Jantung",
-    location: "Jakarta, Indonesia",
-    latlng: [-6.2088, 106.8456],
-    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=400",
-    testimonial:
-      "Pendidikan karakter dan dasar sains yang kuat di SMAN 1 menjadi fondasi utama saya dalam menempuh pendidikan kedokteran. Jangan pernah takut bermimpi besar!",
-  },
-  {
-    id: 2,
-    name: "Budi Prasetyo, S.T.",
-    year: 2012,
-    field: "Teknologi",
-    role: "Software Engineer di Gojek",
-    location: "Jakarta, Indonesia",
-    latlng: [-6.23, 106.86], // Slightly offset for visibility
-    image: "https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=400",
-    testimonial:
-      "Klub Robotika di sekolah adalah awal mula kecintaan saya pada teknologi. Manfaatkan semua fasilitas yang ada untuk mengasah skill kalian.",
-  },
-  {
-    id: 3,
-    name: "Ahmad Fauzi, M.Eng.",
-    year: 2011,
-    field: "Teknik",
-    role: "Civil Engineer di Waskita Karya",
-    location: "Surabaya, Indonesia",
-    latlng: [-7.2575, 112.7521],
-    image: "https://images.unsplash.com/photo-1611267294114-c31820269b1e?q=80&w=400",
-    testimonial:
-      "Kemampuan problem-solving yang diajarkan para guru sangat berguna di dunia kerja. Teruslah belajar dan jangan mudah menyerah.",
-  },
-  {
-    id: 4,
-    name: "Siti Nurhaliza, Ph.D",
-    year: 2009,
-    field: "Akademisi",
-    role: "Dosen & Peneliti di UGM",
-    location: "Yogyakarta, Indonesia",
-    latlng: [-7.7956, 110.3695],
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400",
-    testimonial:
-      "Kegiatan Karya Ilmiah Remaja (KIR) membuka wawasan saya tentang dunia penelitian. Saya bangga menjadi alumni SMAN 1 Nogosari.",
-  },
-  {
-    id: 5,
-    name: "David Lee",
-    year: 2015,
-    field: "Startup",
-    role: "Founder & CEO di EduTech Pte. Ltd.",
-    location: "Singapura",
-    latlng: [1.3521, 103.8198],
-    image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=400",
-    testimonial:
-      "Jiwa kepemimpinan saya terbentuk melalui OSIS. Pengalaman organisasi di sekolah adalah modal yang sangat berharga.",
-  },
-  {
-    id: 6,
-    name: "Maria Garcia",
-    year: 2013,
-    field: "Seni",
-    role: "Animator di Pixar Animation Studios",
-    location: "California, USA",
-    latlng: [37.7749, -122.4194],
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400",
-    testimonial:
-      "Ekstrakurikuler seni rupa menjadi tempat saya berekspresi. Terima kasih kepada guru-guru yang selalu mendukung passion saya.",
-  },
-]);
-
-// --- COMPUTED PROPERTIES ---
-const years = computed(() =>
-  ["semua", ...new Set(alumniData.value.map((a) => a.year))].sort((a, b) =>
-    b === "semua" ? -1 : a === "semua" ? 1 : b - a
-  )
-);
-const fields = computed(() => [
-  "semua",
-  ...new Set(alumniData.value.map((a) => a.field)),
-]);
-
-const filteredAlumni = computed(() => {
-  return alumniData.value.filter((alumnus) => {
-    const yearMatch = activeYear.value === "semua" || alumnus.year == activeYear.value;
-    const fieldMatch =
-      activeField.value === "semua" || alumnus.field === activeField.value;
-    const searchMatch =
-      !searchQuery.value ||
-      alumnus.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      alumnus.role.toLowerCase().includes(searchQuery.value.toLowerCase());
-    return yearMatch && fieldMatch && searchMatch;
-  });
-});
-
-// --- METHODS ---
-const getPinColor = (field) => {
-  switch (field) {
-    case "Kesehatan":
-      return "#ef4444"; // red-500
-    case "Teknologi":
-      return "#3b82f6"; // blue-500
-    case "Teknik":
-      return "#f97316"; // orange-500
-    case "Akademisi":
-      return "#8b5cf6"; // violet-500
-    case "Startup":
-      return "#14b8a6"; // teal-500
-    case "Seni":
-      return "#ec4899"; // pink-500
-    default:
-      return "#eab308"; // yellow-500
-  }
-};
-
-const createPulseIcon = (field) => {
-  const color = getPinColor(field);
-  return L.divIcon({
-    html: `
-      <div class="pulse-ring" style="border-color: ${color};"></div>
-      <div class="pulse-dot" style="background-color: ${color};"></div>
-    `,
-    className: "css-pulse-icon",
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
-  });
-};
-
-// --- METHODS ---
-const openModal = (alumnus) => {
-  selectedAlumnus.value = alumnus;
-  isModalOpen.value = true;
-  document.body.style.overflow = "hidden";
-};
-
-const closeModal = () => {
-  isModalOpen.value = false;
-  document.body.style.overflow = "";
-};
-
-// --- LIFECYCLE HOOKS ---
-onMounted(() => {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("opacity-100", "translate-y-0");
-          entry.target.classList.remove("opacity-0", "translate-y-10");
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.1 }
-  );
-
-  document.querySelectorAll(".fade-on-scroll").forEach((el) => {
-    observer.observe(el);
-  });
-});
-</script>
-
 <template>
-  <div>
-    <PageHeader
-      badge="Jejak Lulusan"
-      title="Peta Persebaran Alumni"
-      description="Lihat bagaimana lulusan SMAN 1 Nogosari berkiprah dan memberikan kontribusi di berbagai belahan dunia, baik di institusi pendidikan ternama maupun dunia profesional."
-      bgImage="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1600&auto=format&fit=crop"
-    />
+  <div class="overflow-x-hidden w-full bg-gray-50 dark:bg-slate-900 min-h-screen">
+    <!-- Header / Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden bg-blue-950">
+      <!-- Pattern & Overlay -->
+      <div
+        class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop')] bg-cover bg-center opacity-20"
+      ></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-blue-950/80 to-blue-950"></div>
 
-    <section class="py-12 md:py-16 bg-gray-50 dark:bg-slate-900">
-      <div class="container mx-auto max-w-7xl px-4">
-        <!-- Filter Section -->
-        <div
-          class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out p-5 md:p-6 mb-10 bg-white dark:bg-slate-800 rounded-xl shadow-md border border-gray-100 dark:border-slate-700 flex flex-col md:flex-row gap-4"
+      <div class="container relative z-10 mx-auto px-6 text-center">
+        <span
+          class="inline-block py-1 px-3 rounded-full bg-blue-800/50 border border-blue-400/30 text-blue-200 text-sm font-semibold mb-4 tracking-wider uppercase"
         >
-          <div class="relative flex-1">
-            <PhMagnifyingGlass
-              class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-            />
-            <input
-              v-model="searchQuery"
-              type="text"
-              placeholder="Cari nama atau profesi alumni..."
-              class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-lg text-sm shadow-inner focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white placeholder-gray-400 focus:outline-none"
-            />
-          </div>
-          <div class="flex gap-4">
-            <div class="relative flex-1 md:flex-none">
-              <select
-                v-model="activeYear"
-                class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm appearance-none cursor-pointer"
-              >
-                <option v-for="year in years" :key="year" :value="year">
-                  {{ year === "semua" ? "Semua Angkatan" : `Angkatan ${year}` }}
-                </option>
-              </select>
-              <PhCaretDown
-                class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
-              />
-            </div>
-            <div class="relative flex-1 md:flex-none">
-              <select
-                v-model="activeField"
-                class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-sm appearance-none cursor-pointer"
-              >
-                <option v-for="field in fields" :key="field" :value="field">
-                  {{ field === "semua" ? "Semua Bidang" : field }}
-                </option>
-              </select>
-              <PhCaretDown
-                class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
-              />
-            </div>
-          </div>
-        </div>
+          Jejak Langkah Lulusan
+        </span>
+        <h1
+          class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6"
+          style="font-family: 'Oswald', sans-serif"
+        >
+          Direktori & Persebaran Alumni
+        </h1>
+        <p
+          class="text-blue-200 text-lg md:text-xl max-w-3xl mx-auto font-light leading-relaxed"
+        >
+          Temukan jejak sukses para alumni SMAN 1 Nogosari yang tersebar di berbagai
+          perguruan tinggi favorit dan instansi bergengsi di seluruh Indonesia.
+        </p>
+      </div>
+    </section>
 
-        <!-- Map View (Desktop) -->
-        <div
-          class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out hidden lg:block relative w-full aspect-[2/1] bg-blue-950 dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border-4 border-white dark:border-slate-800"
-        >
-          <l-map
-            v-model:zoom="mapZoom"
-            :center="mapCenter"
-            :use-global-leaflet="false"
-            :options="{ zoomControl: false }"
-            class="w-full h-full"
+    <!-- Map Section -->
+    <section
+      class="py-12 md:py-16 relative z-10 container mx-auto px-4 md:px-6 -mt-16 md:-mt-20"
+    >
+      <div
+        class="bg-white dark:bg-slate-800 rounded-3xl shadow-xl border border-gray-100 dark:border-slate-700 p-6 md:p-8"
+      >
+        <div class="mb-8 text-center">
+          <h2
+            class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2"
+            style="font-family: 'Oswald', sans-serif"
           >
-            <l-tile-layer
-              url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-              layer-type="base"
-              name="OpenStreetMap"
-            ></l-tile-layer>
-            <l-marker
-              v-for="alumnus in filteredAlumni"
-              :key="alumnus.id"
-              :lat-lng="alumnus.latlng"
-              :icon="createPulseIcon(alumnus.field)"
-              @click="openModal(alumnus)"
-            >
-              <l-tooltip>
-                <div class="text-center">
-                  <div class="font-bold text-gray-900">{{ alumnus.name }}</div>
-                  <div class="text-xs text-blue-600 font-medium mt-0.5">
-                    {{ alumnus.role }}
-                  </div>
-                </div>
-              </l-tooltip>
-            </l-marker>
-          </l-map>
+            Peta Persebaran Alumni
+          </h2>
+          <p
+            class="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto text-sm md:text-base"
+          >
+            Visualisasi interaktif lokasi studi dan karir lulusan. Klik titik pada peta
+            untuk melihat detail instansi.
+          </p>
         </div>
 
-        <!-- Card List View (Mobile) -->
-        <div class="block lg:hidden space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          <!-- Map Area -->
           <div
-            v-for="alumnus in filteredAlumni"
-            :key="alumnus.id"
-            @click="openModal(alumnus)"
-            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md border border-gray-100 dark:border-slate-700 flex items-center gap-4"
+            class="lg:col-span-2 relative aspect-[4/3] sm:aspect-[2/1] bg-blue-50/50 dark:bg-slate-900/50 rounded-2xl border border-blue-100 dark:border-slate-700 overflow-hidden flex items-center justify-center p-4"
           >
             <img
-              :src="alumnus.image"
-              class="w-16 h-16 rounded-full object-cover border-2 border-white dark:border-slate-700 shadow-sm"
+              src="/img/indonesia.svg"
+              alt="Peta Indonesia"
+              class="w-full h-full object-fill opacity-40 dark:opacity-20 pointer-events-none drop-shadow-md"
+              style="filter: invert(40%) sepia(80%) saturate(300%) hue-rotate(180deg)"
             />
-            <div class="flex-1">
-              <h4 class="font-bold text-gray-900 dark:text-white">
-                {{ alumnus.name }}
-              </h4>
-              <p class="text-sm text-blue-600 dark:text-blue-400 font-medium">
-                {{ alumnus.role }}
-              </p>
-              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Angkatan {{ alumnus.year }} • {{ alumnus.location }}
-              </p>
-            </div>
-          </div>
-        </div>
 
-        <!-- Empty State -->
-        <div
-          v-if="filteredAlumni.length === 0"
-          class="text-center py-20 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out"
-        >
-          <PhUsers class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-          <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200">
-            Alumni Tidak Ditemukan
-          </h3>
-          <p class="text-gray-500 dark:text-gray-400 mt-1">
-            Coba ubah filter atau kata kunci pencarian Anda.
-          </p>
+            <template v-if="isLoadingMap">
+              <div
+                class="absolute inset-0 flex items-center justify-center bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm z-20"
+              >
+                <div
+                  class="animate-spin rounded-full h-10 w-10 border-4 border-blue-200 border-t-blue-600"
+                ></div>
+              </div>
+            </template>
+            <template v-else>
+              <div
+                v-for="loc in mapLocations"
+                :key="loc.id"
+                class="absolute flex justify-center items-center group cursor-pointer w-8 h-8 -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 hover:scale-125 z-10"
+                :style="{ top: loc.top, left: loc.left }"
+                @click="selectedLocation = loc"
+              >
+                <!-- Radar / Ping effect -->
+                <span
+                  v-if="selectedLocation?.id === loc.id"
+                  class="absolute w-6 h-6 bg-yellow-400 rounded-full animate-ping opacity-75"
+                ></span>
+                <span
+                  v-else
+                  class="absolute w-4 h-4 bg-blue-500 rounded-full animate-ping opacity-75 group-hover:bg-blue-400"
+                ></span>
+
+                <!-- Center Dot -->
+                <div
+                  class="relative flex items-center justify-center shadow-lg rounded-full border-2 border-white dark:border-slate-800 transition-colors duration-300"
+                  :class="
+                    selectedLocation?.id === loc.id
+                      ? 'bg-yellow-400 w-4 h-4'
+                      : 'bg-blue-600 w-3 h-3 group-hover:bg-blue-500'
+                  "
+                ></div>
+              </div>
+            </template>
+          </div>
+
+          <!-- Location Detail Sidebar -->
+          <div
+            class="lg:col-span-1 bg-gray-50 dark:bg-slate-700/30 rounded-2xl p-5 md:p-6 border border-gray-100 dark:border-slate-700 shadow-inner h-[400px] sm:h-[450px] flex flex-col transition-all duration-300"
+          >
+            <template v-if="selectedLocation">
+              <div class="border-b border-gray-200 dark:border-slate-600 pb-4 mb-4">
+                <div class="flex justify-between items-start mb-2">
+                  <h3
+                    class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-tight"
+                  >
+                    {{ selectedLocation.name }}
+                  </h3>
+                  <div
+                    class="bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap"
+                  >
+                    {{ selectedLocation.totalAlumni }} Alumni
+                  </div>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  Rincian instansi dan perguruan tinggi:
+                </p>
+              </div>
+
+              <div class="flex-1 overflow-y-auto pr-2 space-y-3 custom-scrollbar">
+                <div
+                  v-for="inst in selectedLocation.institutions"
+                  :key="inst.name"
+                  class="flex items-center gap-3 p-3 rounded-xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-600 shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <div
+                    class="w-10 h-10 shrink-0 bg-gray-50 dark:bg-slate-700 rounded-lg border border-gray-100 dark:border-slate-600 flex items-center justify-center overflow-hidden p-1"
+                  >
+                    <img
+                      v-if="inst.logo"
+                      :src="inst.logo"
+                      class="w-full h-full object-contain"
+                      :alt="inst.name"
+                    />
+                    <PhBuildings v-else class="w-5 h-5 text-gray-400" />
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <h4
+                      class="font-bold text-sm text-gray-800 dark:text-gray-200 truncate"
+                      :title="inst.name"
+                    >
+                      {{ inst.name }}
+                    </h4>
+                    <p class="text-xs text-gray-500 font-medium mt-0.5">
+                      {{
+                        inst.type === "ptn"
+                          ? "PTN"
+                          : inst.type === "kedinasan"
+                          ? "Kedinasan"
+                          : "BUMN/Instansi"
+                      }}
+                      <span class="mx-1">•</span>
+                      <span class="text-blue-600 dark:text-blue-400"
+                        >{{ inst.alumni }} org</span
+                      >
+                    </p>
+                  </div>
+                </div>
+                <div
+                  v-if="
+                    !selectedLocation.institutions ||
+                    selectedLocation.institutions.length === 0
+                  "
+                  class="text-center py-8 text-sm text-gray-500"
+                >
+                  Tidak ada detail instansi.
+                </div>
+              </div>
+            </template>
+            <template v-else>
+              <div
+                class="flex-1 flex flex-col items-center justify-center text-center text-gray-400 dark:text-gray-500"
+              >
+                <div
+                  class="w-20 h-20 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-4"
+                >
+                  <PhMapTrifold class="w-10 h-10 text-gray-300 dark:text-slate-500" />
+                </div>
+                <p class="text-sm">
+                  Klik salah satu titik pada peta untuk melihat detail persebaran alumni
+                  di wilayah tersebut.
+                </p>
+              </div>
+            </template>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Modal Detail Alumni -->
-    <Transition
-      enter-active-class="transition-opacity duration-300"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition-opacity duration-300"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div
-        v-if="isModalOpen"
-        @click="closeModal"
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
-      >
-        <div
-          @click.stop
-          class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto flex flex-col"
+    <!-- Alumni Directory Section -->
+    <section class="py-10 md:py-16 container mx-auto px-4 md:px-6">
+      <div class="mb-8 md:mb-12">
+        <h2
+          class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4 pl-4 border-l-4 border-blue-600"
+          style="font-family: 'Oswald', sans-serif"
         >
+          Direktori Pencarian Alumni
+        </h2>
+        <p class="text-gray-600 dark:text-gray-400 ml-4 max-w-2xl text-sm md:text-base">
+          Cari data alumni berdasarkan nama, instansi, status, atau tahun kelulusan untuk
+          memperluas koneksi dan jaringan (networking).
+        </p>
+      </div>
+
+      <!-- Filters -->
+      <div
+        class="bg-white dark:bg-slate-800 p-4 md:p-5 rounded-2xl shadow-md border border-gray-100 dark:border-slate-700 mb-8 flex flex-col md:flex-row gap-4 items-center"
+      >
+        <div class="relative flex-1 w-full">
           <div
-            class="p-5 flex justify-between items-center border-b border-gray-100 dark:border-slate-700 sticky top-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm z-10"
+            class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
           >
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Profil Alumni</h3>
-            <button
-              @click="closeModal"
-              class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
-            >
-              <PhX class="w-5 h-5 text-gray-600 dark:text-gray-300" />
-            </button>
+            <PhMagnifyingGlass class="w-5 h-5 text-gray-400" />
           </div>
-          <div v-if="selectedAlumnus" class="flex flex-col">
-            <div class="p-6 text-center">
-              <img
-                :src="selectedAlumnus.image"
-                class="w-28 h-28 rounded-full object-cover mx-auto mb-4 border-4 border-white dark:border-slate-700 shadow-lg"
-              />
-              <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-                {{ selectedAlumnus.name }}
-              </h2>
-              <p class="text-blue-600 dark:text-blue-400 font-semibold">
-                {{ selectedAlumnus.role }}
-              </p>
-              <div
-                class="mt-2 flex justify-center items-center gap-4 text-sm text-gray-500 dark:text-gray-400"
-              >
-                <span class="flex items-center gap-1"
-                  ><PhGraduationCap /> Angkatan {{ selectedAlumnus.year }}</span
-                >
-                <span class="flex items-center gap-1"
-                  ><PhMapPin /> {{ selectedAlumnus.location }}</span
-                >
-              </div>
-            </div>
-            <div
-              class="bg-gray-50 dark:bg-slate-900/50 p-6 border-t border-gray-100 dark:border-slate-700"
+          <input
+            type="text"
+            v-model="searchQuery"
+            @input="resetPagination"
+            placeholder="Cari nama atau nama instansi..."
+            class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-slate-700 border-none rounded-xl focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white text-sm transition-shadow"
+          />
+        </div>
+
+        <div class="flex gap-4 w-full md:w-auto">
+          <div class="relative w-full md:w-48">
+            <select
+              v-model="selectedStatus"
+              @change="resetPagination"
+              class="w-full pl-4 pr-10 py-3 bg-gray-50 dark:bg-slate-700 border-none rounded-xl focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white text-sm appearance-none cursor-pointer"
             >
-              <h4 class="font-bold text-gray-900 dark:text-white mb-2">Testimoni:</h4>
-              <blockquote
-                class="italic text-gray-600 dark:text-gray-300 border-l-2 border-blue-500 pl-4"
-              >
-                "{{ selectedAlumnus.testimonial }}"
-              </blockquote>
+              <option value="">Semua Status</option>
+              <option v-for="status in statusOptions" :key="status" :value="status">
+                {{ status }}
+              </option>
+            </select>
+            <div
+              class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"
+            >
+              <PhCaretDown class="w-4 h-4 text-gray-400" />
+            </div>
+          </div>
+
+          <div class="relative w-full md:w-36">
+            <select
+              v-model="selectedYear"
+              @change="resetPagination"
+              class="w-full pl-4 pr-10 py-3 bg-gray-50 dark:bg-slate-700 border-none rounded-xl focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white text-sm appearance-none cursor-pointer"
+            >
+              <option value="">Semua Tahun</option>
+              <option v-for="year in uniqueYears" :key="year" :value="year">
+                {{ year }}
+              </option>
+            </select>
+            <div
+              class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"
+            >
+              <PhCaretDown class="w-4 h-4 text-gray-400" />
             </div>
           </div>
         </div>
       </div>
-    </Transition>
+
+      <!-- Alumni Grid -->
+      <div class="relative min-h-[300px]">
+        <template v-if="isLoadingAlumni">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div
+              class="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600"
+            ></div>
+          </div>
+        </template>
+
+        <template v-else-if="paginatedAlumni.length > 0">
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          >
+            <div
+              v-for="alumni in paginatedAlumni"
+              :key="alumni.id"
+              class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm hover:shadow-xl border border-gray-100 dark:border-slate-700 transition-all duration-300 group hover:-translate-y-1 flex flex-col h-full"
+            >
+              <div class="flex items-start gap-4 mb-4">
+                <div
+                  class="w-14 h-14 shrink-0 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/50 dark:to-blue-800/50 text-blue-700 dark:text-blue-300 flex items-center justify-center font-bold text-xl shadow-inner border border-white dark:border-slate-700 group-hover:scale-105 transition-transform"
+                >
+                  {{ getInitials(alumni.name) }}
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h3
+                    class="font-bold text-gray-900 dark:text-white text-base leading-tight truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+                    :title="alumni.name"
+                  >
+                    {{ alumni.name }}
+                  </h3>
+                  <div
+                    class="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1"
+                  >
+                    <PhGraduationCap class="w-3.5 h-3.5 mr-1" /> Lulusan {{ alumni.year }}
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="mt-auto flex flex-col gap-3 pt-4 border-t border-gray-50 dark:border-slate-700/50"
+              >
+                <div class="flex items-start text-sm">
+                  <div class="mt-0.5 mr-2 shrink-0">
+                    <component
+                      :is="getStatusIcon(alumni.status)"
+                      class="w-4 h-4 text-gray-400"
+                    />
+                  </div>
+                  <span
+                    class="font-medium text-gray-700 dark:text-gray-300 line-clamp-2"
+                    :title="alumni.instansi"
+                  >
+                    {{ alumni.instansi || "Belum ada data instansi" }}
+                  </span>
+                </div>
+                <div>
+                  <span
+                    class="inline-flex px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider"
+                    :class="getStatusColor(alumni.status)"
+                  >
+                    {{ alumni.status }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div v-if="totalPages > 1" class="mt-12 flex justify-center items-center gap-2">
+            <button
+              @click="prevPage"
+              :disabled="currentPage === 1"
+              class="p-2 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <PhCaretLeft class="w-5 h-5" />
+            </button>
+
+            <div class="flex gap-1">
+              <button
+                v-for="page in totalPages"
+                :key="page"
+                @click="currentPage = page"
+                v-show="
+                  Math.abs(page - currentPage) < 3 || page === 1 || page === totalPages
+                "
+                class="w-10 h-10 rounded-lg text-sm font-semibold transition-colors"
+                :class="
+                  currentPage === page
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800'
+                "
+              >
+                <template
+                  v-if="
+                    Math.abs(page - currentPage) === 2 &&
+                    page !== 1 &&
+                    page !== totalPages
+                  "
+                  >...</template
+                >
+                <template v-else>{{ page }}</template>
+              </button>
+            </div>
+
+            <button
+              @click="nextPage"
+              :disabled="currentPage === totalPages"
+              class="p-2 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <PhCaretRight class="w-5 h-5" />
+            </button>
+          </div>
+        </template>
+
+        <template v-else>
+          <div class="flex flex-col items-center justify-center py-16 px-4 text-center">
+            <div
+              class="w-24 h-24 bg-gray-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6"
+            >
+              <PhUsers class="w-12 h-12 text-gray-300 dark:text-slate-600" />
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              Data tidak ditemukan
+            </h3>
+            <p class="text-gray-500 dark:text-gray-400 max-w-md">
+              Maaf, kami tidak dapat menemukan data alumni yang sesuai dengan filter
+              pencarian Anda. Coba ubah kata kunci atau filter.
+            </p>
+            <button
+              @click="
+                searchQuery = '';
+                selectedStatus = '';
+                selectedYear = '';
+                resetPagination();
+              "
+              class="mt-6 text-blue-600 font-semibold hover:text-blue-700"
+            >
+              Reset Pencarian
+            </button>
+          </div>
+        </template>
+      </div>
+    </section>
   </div>
 </template>
 
+<script setup>
+import { ref, computed, onMounted } from "vue";
+import api from "@/api/index.js";
+import {
+  PhMapTrifold,
+  PhMagnifyingGlass,
+  PhBuildings,
+  PhGraduationCap,
+  PhBriefcase,
+  PhStorefront,
+  PhUsers,
+  PhCaretLeft,
+  PhCaretRight,
+  PhCaretDown,
+} from "@phosphor-icons/vue";
+
+const mapLocations = ref([]);
+const alumniList = ref([]);
+const selectedLocation = ref(null);
+const isLoadingMap = ref(true);
+const isLoadingAlumni = ref(true);
+
+const searchQuery = ref("");
+const selectedStatus = ref("");
+const selectedYear = ref("");
+const currentPage = ref(1);
+const itemsPerPage = 12;
+
+const fetchMapLocations = async () => {
+  isLoadingMap.value = true;
+  try {
+    const response = await api.get("/api/public-map-locations");
+    mapLocations.value = response.data.data;
+    if (mapLocations.value.length > 0) {
+      selectedLocation.value = [...mapLocations.value].sort(
+        (a, b) => b.totalAlumni - a.totalAlumni
+      )[0];
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data peta alumni:", error);
+  } finally {
+    isLoadingMap.value = false;
+  }
+};
+
+const fetchAlumnis = async () => {
+  isLoadingAlumni.value = true;
+  try {
+    const response = await api.get("/api/public-alumnis");
+    alumniList.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal mengambil data alumni:", error);
+  } finally {
+    isLoadingAlumni.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchMapLocations();
+  fetchAlumnis();
+  window.scrollTo(0, 0);
+});
+
+const uniqueYears = computed(() => {
+  const years = alumniList.value.map((a) => a.year);
+  return [...new Set(years)].sort((a, b) => b - a);
+});
+
+const statusOptions = ["Kuliah", "Bekerja", "Wirausaha", "Lainnya"];
+
+const filteredAlumni = computed(() => {
+  return alumniList.value.filter((a) => {
+    const q = searchQuery.value.toLowerCase();
+    const matchName = a.name?.toLowerCase().includes(q);
+    const matchInstansi = a.instansi?.toLowerCase().includes(q);
+
+    const matchStatus = selectedStatus.value ? a.status === selectedStatus.value : true;
+    const matchYear = selectedYear.value
+      ? a.year.toString() === selectedYear.value.toString()
+      : true;
+
+    return (matchName || matchInstansi) && matchStatus && matchYear;
+  });
+});
+
+const paginatedAlumni = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  return filteredAlumni.value.slice(start, start + itemsPerPage);
+});
+
+const totalPages = computed(() => Math.ceil(filteredAlumni.value.length / itemsPerPage));
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) currentPage.value++;
+};
+const prevPage = () => {
+  if (currentPage.value > 1) currentPage.value--;
+};
+const resetPagination = () => {
+  currentPage.value = 1;
+};
+
+const getInitials = (name) => {
+  if (!name) return "A";
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .substring(0, 2)
+    .toUpperCase();
+};
+
+const getStatusIcon = (status) => {
+  if (status === "Kuliah") return PhGraduationCap;
+  if (status === "Bekerja") return PhBriefcase;
+  if (status === "Wirausaha") return PhStorefront;
+  return PhUsers;
+};
+
+const getStatusColor = (status) => {
+  if (status === "Kuliah")
+    return "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400";
+  if (status === "Bekerja")
+    return "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400";
+  if (status === "Wirausaha")
+    return "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400";
+  return "bg-gray-100 text-gray-700 dark:bg-slate-700 dark:text-gray-300";
+};
+</script>
+
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
-
-.css-pulse-icon {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
 }
-
-.pulse-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  position: relative;
-  z-index: 2;
-  border: 2px solid white;
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
 }
-
-.pulse-ring {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 3px solid; /* Color will be set by style */
-  position: absolute;
-  z-index: 1;
-  animation: pulse 2s ease-out infinite;
-  opacity: 0;
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 20px;
 }
-
-@keyframes pulse {
-  0% {
-    transform: scale(0.1);
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.2);
-    opacity: 0;
-  }
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #475569;
 }
 </style>

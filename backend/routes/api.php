@@ -92,6 +92,9 @@ Route::get('/public-downloads', [DownloadController::class, 'index']);
 // API Data Persebaran Peta Alumni (Akses Publik)
 Route::get('/public-map-locations', [MapLocationController::class, 'index']);
 
+// API Data Direktori Alumni (Akses Publik)
+Route::get('/public-alumnis', [AlumniController::class, 'publicIndex']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();

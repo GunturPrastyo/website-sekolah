@@ -18,6 +18,25 @@ class AlumniController extends Controller
         ]);
     }
 
+    public function publicIndex()
+    {
+        $alumnis = Alumni::with('student:id,name')->orderBy('graduation_year', 'desc')->get();
+        
+        $mapped = $alumnis->map(function($alumni) {
+            return [
+                'id' => $alumni->id,
+                'name' => $alumni->student->name ?? 'Alumni',
+                'year' => $alumni->graduation_year,
+                'status' => $alumni->career_status,
+                'instansi' => $alumni->institution,
+            ];
+        });
+
+        return response()->json([
+            'data' => $mapped
+        ]);
+    }
+
     public function unassignedStudents()
     {
         $trackedStudentIds = Alumni::pluck('student_id')->toArray();
