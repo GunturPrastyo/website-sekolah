@@ -2314,8 +2314,19 @@ const initJurusanSwiper = () => {
   if (jurusanSwiperInstance) {
     jurusanSwiperInstance.destroy(true, true);
   }
+
+  const totalPrograms = programs.value.length;
+
+  // Hitung slide dinamis (maksimal 3 untuk desktop, 2 untuk tablet)
+  const desktopSlides = totalPrograms > 0 ? Math.min(3, totalPrograms) : 3;
+  const tabletSlides = totalPrograms > 0 ? Math.min(2, totalPrograms) : 2;
+
+  // Matikan loop jika card sedikit agar card bisa meregang (tidak diduplikasi)
+  const enableLoop = totalPrograms > 3;
+
   jurusanSwiperInstance = new Swiper(".jurusan-swiper", {
     loop: true,
+    loop: enableLoop,
     speed: 800,
     autoplay: {
       delay: 3000,
@@ -2327,10 +2338,12 @@ const initJurusanSwiper = () => {
     breakpoints: {
       768: {
         slidesPerView: 2,
+        slidesPerView: tabletSlides,
         spaceBetween: 0,
       },
       1024: {
         slidesPerView: 3,
+        slidesPerView: desktopSlides,
         spaceBetween: 0,
       },
     },
