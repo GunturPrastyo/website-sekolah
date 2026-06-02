@@ -824,7 +824,8 @@
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 items-stretch">
             <!-- KIRI: Video Profil Utama -->
             <a
-              :href="schoolVideoUrl || '#'"
+              v-if="schoolVideoUrl"
+              :href="schoolVideoUrl"
               target="_blank"
               class="lg:col-span-2 relative group rounded-2xl overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full block cursor-pointer fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
             >
@@ -858,13 +859,34 @@
                 <h3
                   class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors"
                 >
-                  {{ schoolVideoTitle }}
+                  {{ schoolVideoTitle || "Company Profile" }}
                 </h3>
                 <p class="text-gray-200 text-sm md:text-base line-clamp-2">
-                  {{ schoolVideoDesc }}
+                  {{
+                    schoolVideoDesc ||
+                    "Saksikan cuplikan fasilitas, metode pembelajaran, dan prestasi kami."
+                  }}
                 </p>
               </div>
             </a>
+            <div
+              v-else
+              class="lg:col-span-2 relative group rounded-2xl overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full flex items-center justify-center bg-blue-900/40 border border-blue-800/40 cursor-default fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
+            >
+              <div class="text-center">
+                <div
+                  class="w-16 h-16 md:w-20 md:h-20 bg-blue-800/50 rounded-full flex items-center justify-center text-blue-300 mx-auto mb-4"
+                >
+                  <PhPlay class="w-8 h-8 md:w-10 md:h-10 ml-1" weight="fill" />
+                </div>
+                <h3 class="text-xl md:text-2xl font-bold text-blue-200 mb-2">
+                  Video Profil Belum Tersedia
+                </h3>
+                <p class="text-blue-300/80 text-sm md:text-base">
+                  Video profil sekolah akan segera hadir.
+                </p>
+              </div>
+            </div>
 
             <!-- KANAN: Grid Galeri 2x2 -->
             <div
@@ -893,6 +915,16 @@
                   </h4>
                 </div>
               </router-link>
+
+              <!-- Skeleton / Empty State Jika Galeri Kurang Dari 3 -->
+              <div
+                v-for="i in 3 - galleries.length"
+                :key="'empty-' + i"
+                class="group relative rounded-xl overflow-hidden shadow-sm h-full block bg-blue-900/30 border border-blue-800/30 flex flex-col items-center justify-center text-blue-300/50"
+              >
+                <PhImage class="w-8 h-8 mb-2 opacity-50" />
+                <span class="text-xs font-semibold opacity-50">Belum ada foto</span>
+              </div>
 
               <!-- Foto 4 (Lihat Semua) -->
               <router-link
@@ -1961,32 +1993,13 @@ const themeClasses = {
 
 const agendas = ref([]);
 
-const defaultGalleries = [
-  {
-    title: "Ekstrakurikuler",
-    image:
-      "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    title: "HUT Sekolah",
-    image:
-      "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    title: "Pentas Seni",
-    image:
-      "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600&auto=format&fit=crop",
-  },
-];
-
-const galleries = ref([...defaultGalleries]);
+const galleries = ref([]);
 
 const fetchGalleries = async () => {
   try {
     const response = await api.get("/api/public-galleries");
-    if (response.data && response.data.data && response.data.data.length > 0) {
-      const fetched = response.data.data.slice(0, 3);
-      galleries.value = [...fetched, ...defaultGalleries.slice(fetched.length, 3)];
+    if (response.data && response.data.data) {
+      galleries.value = response.data.data.slice(0, 3);
     }
   } catch (error) {
     console.error("Gagal mengambil data galeri:", error);
@@ -1994,10 +2007,8 @@ const fetchGalleries = async () => {
 };
 
 const schoolVideoUrl = ref("");
-const schoolVideoTitle = ref("Company Profile SMAN 1 Nogosari 2026");
-const schoolVideoDesc = ref(
-  "Saksikan cuplikan fasilitas, metode pembelajaran, dan prestasi yang menjadikan kami sekolah pilihan utama."
-);
+const schoolVideoTitle = ref("");
+const schoolVideoDesc = ref("");
 
 const videoThumbnail = computed(() => {
   if (!schoolVideoUrl.value)
