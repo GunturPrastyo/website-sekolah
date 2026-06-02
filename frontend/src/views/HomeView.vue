@@ -485,11 +485,6 @@
                         class="absolute inset-0 bg-gradient-to-br transition-colors duration-500"
                         :class="getProgramGradient(index)"
                       ></div>
-                      <img
-                        v-if="program.image"
-                        :src="program.image"
-                        class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-40 group-hover:opacity-60 transition-opacity duration-500"
-                      />
                       <div
                         class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full text-white"
                       >
