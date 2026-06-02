@@ -1,33 +1,12 @@
 <template>
   <div class="overflow-x-hidden w-full bg-gray-50 dark:bg-slate-900 min-h-screen">
     <!-- Header / Hero Section -->
-    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden bg-blue-950">
-      <!-- Pattern & Overlay -->
-      <div
-        class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop')] bg-cover bg-center opacity-20"
-      ></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-blue-950/80 to-blue-950"></div>
-
-      <div class="container relative z-10 mx-auto px-6 text-center">
-        <span
-          class="inline-block py-1 px-3 rounded-full bg-blue-800/50 border border-blue-400/30 text-blue-200 text-sm font-semibold mb-4 tracking-wider uppercase"
-        >
-          Jejak Langkah Lulusan
-        </span>
-        <h1
-          class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6"
-          style="font-family: 'Oswald', sans-serif"
-        >
-          Direktori & Persebaran Alumni
-        </h1>
-        <p
-          class="text-blue-200 text-lg md:text-xl max-w-3xl mx-auto font-light leading-relaxed"
-        >
-          Temukan jejak sukses para alumni SMAN 1 Nogosari yang tersebar di berbagai
-          perguruan tinggi favorit dan instansi bergengsi di seluruh Indonesia.
-        </p>
-      </div>
-    </section>
+    <PageHeader
+      badge="Jejak Langkah Lulusan"
+      title="Direktori & Persebaran Alumni"
+      description="Temukan jejak sukses para alumni SMAN 1 Nogosari yang tersebar di berbagai perguruan tinggi favorit dan instansi bergengsi di seluruh Indonesia."
+      bgImage="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop"
+    />
 
     <!-- Map Section -->
     <section
@@ -54,7 +33,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           <!-- Map Area -->
           <div
-            class="lg:col-span-2 relative aspect-[4/3] sm:aspect-[2/1] bg-blue-50/50 dark:bg-slate-900/50 rounded-lg border border-blue-100 dark:border-slate-700 overflow-hidden flex items-center justify-center p-2"
+            class="lg:col-span-2 relative aspect-4/3 sm:aspect-2/1 bg-blue-50/50 dark:bg-slate-900/50 rounded-lg border border-blue-100 dark:border-slate-700 overflow-hidden flex items-center justify-center p-2"
           >
             <img
               src="/img/indonesia.svg"
@@ -105,7 +84,7 @@
 
           <!-- Location Detail Sidebar -->
           <div
-            class="lg:col-span-1 bg-gray-50 dark:bg-slate-700/30 rounded-lg p-5 md:p-6 border border-gray-100 dark:border-slate-700 shadow-inner h-[400px] sm:h-[450px] flex flex-col transition-all duration-300"
+            class="lg:col-span-1 bg-gray-50 dark:bg-slate-700/30 rounded-lg p-5 md:p-6 border border-gray-100 dark:border-slate-700 shadow-inner h-100 sm:h-112.5 flex flex-col transition-all duration-300"
           >
             <template v-if="selectedLocation">
               <div class="border-b border-gray-200 dark:border-slate-600 pb-4 mb-4">
@@ -198,61 +177,89 @@
 
     <!-- Alumni Directory Section -->
     <section class="py-10 md:py-16 container mx-auto px-4 md:px-6">
-      <div class="mb-8 md:mb-12">
-        <h2
-          class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4 pl-4 border-l-4 border-blue-600"
-          style="font-family: 'Oswald', sans-serif"
-        >
-          Direktori Pencarian Alumni
-        </h2>
-        <p class="text-gray-600 dark:text-gray-400 ml-4 max-w-2xl text-sm md:text-base">
-          Cari data alumni berdasarkan nama, instansi, status, atau tahun kelulusan untuk
-          memperluas koneksi dan jaringan (networking).
-        </p>
-      </div>
-
-      <!-- Filters -->
+      <!-- Header & Filters Combined Area -->
       <div
-        class="bg-white dark:bg-slate-800 p-4 md:p-5 rounded-2xl shadow-md border border-gray-100 dark:border-slate-700 mb-8 flex flex-col md:flex-row gap-4 items-center"
+        class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 mb-8 overflow-hidden"
       >
-        <div class="relative flex-1 w-full">
-          <div
-            class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
-          >
-            <PhMagnifyingGlass class="w-5 h-5 text-gray-400" />
+        <!-- Title Area inside the box -->
+        <div
+          class="p-6 md:p-8 border-b border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-800/50"
+        >
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h2
+                class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2"
+                style="font-family: 'Oswald', sans-serif"
+              >
+                Direktori Pencarian Alumni
+              </h2>
+              <p class="text-gray-500 dark:text-gray-400 text-sm md:text-base max-w-2xl">
+                Cari data alumni berdasarkan nama, instansi, status, atau tahun kelulusan
+                untuk memperluas koneksi dan jaringan (networking).
+              </p>
+            </div>
+            <!-- Total Alumni Badge -->
+            <div
+              class="hidden md:flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg font-semibold text-sm border border-blue-100 dark:border-blue-800/50"
+            >
+              <PhUsers class="w-5 h-5" />
+              <span>{{ filteredAlumni.length }} Alumni Ditemukan</span>
+            </div>
           </div>
-          <input
-            type="text"
-            v-model="searchQuery"
-            @input="resetPagination"
-            placeholder="Cari nama atau nama instansi..."
-            class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-slate-700 border-none rounded-xl focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white text-sm transition-shadow"
-          />
         </div>
 
-        <div class="flex gap-4 w-full md:w-auto">
-          <div class="relative w-full md:w-36">
-            <select
-              v-model="selectedYear"
-              @change="resetPagination"
-              class="w-full pl-4 pr-10 py-3 bg-gray-50 dark:bg-slate-700 border-none rounded-xl focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white text-sm appearance-none cursor-pointer"
-            >
-              <option value="">Semua Tahun</option>
-              <option v-for="year in uniqueYears" :key="year" :value="year">
-                {{ year }}
-              </option>
-            </select>
+        <!-- Filter Area -->
+        <div
+          class="p-4 md:p-6 bg-white dark:bg-slate-800 flex flex-col md:flex-row gap-4"
+        >
+          <div class="relative flex-1 group">
             <div
-              class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"
+              class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-blue-500"
             >
-              <PhCaretDown class="w-4 h-4 text-gray-400" />
+              <PhMagnifyingGlass
+                class="w-5 h-5 text-gray-400 group-focus-within:text-blue-500"
+              />
+            </div>
+            <input
+              type="text"
+              v-model="searchQuery"
+              @input="resetPagination"
+              placeholder="Cari berdasarkan nama atau instansi..."
+              class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white text-sm transition-all shadow-sm"
+            />
+          </div>
+
+          <div class="flex gap-4 w-full md:w-56 shrink-0">
+            <div class="relative w-full group">
+              <div
+                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-blue-500"
+              >
+                <PhCalendarBlank
+                  class="w-5 h-5 text-gray-400 group-focus-within:text-blue-500"
+                />
+              </div>
+              <select
+                v-model="selectedYear"
+                @change="resetPagination"
+                class="w-full pl-11 pr-10 py-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white text-sm appearance-none cursor-pointer transition-all shadow-sm"
+              >
+                <option value="">Semua Tahun Lulus</option>
+                <option v-for="year in uniqueYears" :key="year" :value="year">
+                  {{ year }}
+                </option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"
+              >
+                <PhCaretDown class="w-4 h-4 text-gray-400" />
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Alumni Grid -->
-      <div class="relative min-h-[300px]">
+      <div class="relative min-h-75">
         <template v-if="isLoadingAlumni">
           <div class="absolute inset-0 flex items-center justify-center">
             <div
@@ -268,47 +275,58 @@
             <div
               v-for="alumni in paginatedAlumni"
               :key="alumni.id"
-              class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm hover:shadow-xl border border-gray-100 dark:border-slate-700 transition-all duration-300 group hover:-translate-y-1 flex flex-col h-full"
+              class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 transition-all duration-300 hover:shadow-lg hover:border-blue-200 dark:hover:border-blue-800 flex flex-col h-full group relative overflow-hidden"
             >
-              <div class="flex items-start gap-4 mb-4">
+              <!-- Card Highlight Line -->
+              <div
+                class="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-blue-500 to-blue-400 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
+              ></div>
+
+              <div class="flex items-start gap-4 mb-5">
                 <div
-                  class="w-14 h-14 shrink-0 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/50 dark:to-blue-800/50 text-blue-700 dark:text-blue-300 flex items-center justify-center font-bold text-xl shadow-inner border border-white dark:border-slate-700 group-hover:scale-105 transition-transform"
+                  class="w-14 h-14 shrink-0 rounded-2xl bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300 flex items-center justify-center font-bold text-xl border border-gray-100 dark:border-slate-600 group-hover:bg-blue-50 group-hover:text-blue-600 group-hover:border-blue-200 dark:group-hover:bg-blue-900/30 dark:group-hover:text-blue-400 transition-colors"
                 >
                   {{ getInitials(alumni.name) }}
                 </div>
-                <div class="flex-1 min-w-0">
+                <div class="flex-1 min-w-0 pt-1">
                   <h3
-                    class="font-bold text-gray-900 dark:text-white text-base leading-tight truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+                    class="font-bold text-gray-900 dark:text-white text-lg leading-tight truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
                     :title="alumni.name"
                   >
                     {{ alumni.name }}
                   </h3>
                   <div
-                    class="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1"
+                    class="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-1.5"
                   >
-                    <PhGraduationCap class="w-3.5 h-3.5 mr-1" /> Lulusan {{ alumni.year }}
+                    <PhGraduationCap class="w-4 h-4 mr-1.5" /> Lulusan {{ alumni.year }}
                   </div>
                 </div>
               </div>
 
               <div
-                class="mt-auto flex flex-col gap-3 pt-4 border-t border-gray-50 dark:border-slate-700/50"
+                class="mt-auto pt-5 border-t border-gray-100 dark:border-slate-700 flex flex-col gap-3"
               >
-                <div class="flex items-start text-sm">
-                  <div class="mt-0.5 mr-2 shrink-0">
-                    <component
-                      :is="getStatusIcon(alumni.status)"
-                      class="w-4 h-4 text-gray-400"
-                    />
+                <div class="flex items-start">
+                  <div class="mt-0.5 mr-3 shrink-0">
+                    <div
+                      class="w-8 h-8 rounded-full bg-gray-50 dark:bg-slate-700 flex items-center justify-center border border-gray-100 dark:border-slate-600"
+                    >
+                      <component
+                        :is="getStatusIcon(alumni.status)"
+                        class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                      />
+                    </div>
                   </div>
-                  <span
-                    class="font-medium text-gray-700 dark:text-gray-300 line-clamp-2"
-                    :title="alumni.instansi"
-                  >
-                    {{ alumni.instansi || "Belum ada data instansi" }}
-                  </span>
+                  <div class="flex-1 min-w-0 flex flex-col justify-center min-h-8">
+                    <span
+                      class="font-medium text-gray-700 dark:text-gray-300 text-sm line-clamp-2 leading-snug"
+                      :title="alumni.instansi"
+                    >
+                      {{ alumni.instansi || "Belum ada data instansi" }}
+                    </span>
+                  </div>
                 </div>
-                <div>
+                <div class="flex">
                   <span
                     class="inline-flex px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider"
                     :class="getStatusColor(alumni.status)"
@@ -401,6 +419,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import api from "@/api/index.js";
+import PageHeader from "@/components/PageHeader.vue";
 import {
   PhMapTrifold,
   PhMagnifyingGlass,
@@ -412,6 +431,7 @@ import {
   PhCaretLeft,
   PhCaretRight,
   PhCaretDown,
+  PhCalendarBlank,
 } from "@phosphor-icons/vue";
 
 const mapLocations = ref([]);
