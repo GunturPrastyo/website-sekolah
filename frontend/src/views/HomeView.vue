@@ -1268,7 +1268,7 @@
                 </p>
               </div>
 
-              <div class="w-full flex flex-col gap-4">
+              <div v-if="faqs.length > 0" class="w-full flex flex-col gap-4">
                 <div
                   v-for="(faq, index) in faqs"
                   :key="index"
@@ -1278,7 +1278,9 @@
                     @click="toggleFaq(index)"
                     class="w-full text-left px-5 md:px-6 py-4 font-semibold text-gray-900 flex justify-between items-center hover:bg-gray-100 dark:hover:bg-blue-900 transition-colors rounded-xl focus:outline-none"
                   >
-                    <span class="pr-0 sm:pr-2 text-sm md:text-base">{{ faq.q }}</span>
+                    <span class="pr-0 sm:pr-2 text-sm md:text-base">{{
+                      faq.question || faq.q
+                    }}</span>
                     <svg
                       class="w-5 h-5 text-blue-800 transform transition-transform duration-300 flex-shrink-0"
                       :class="{ 'rotate-180': activeFaq === index }"
@@ -1304,10 +1306,16 @@
                     <div
                       class="border-t border-yellow-500/50 dark:border-yellow-400/50 pt-3"
                     >
-                      {{ faq.a }}
+                      {{ faq.answer || faq.a }}
                     </div>
                   </div>
                 </div>
+              </div>
+              <div
+                v-else
+                class="text-white/80 p-4 border border-white/20 rounded-lg text-center backdrop-blur-sm mt-4"
+              >
+                Belum ada informasi FAQ PPDB yang tersedia.
               </div>
             </div>
 
@@ -1326,17 +1334,16 @@
               <div class="relative z-10 w-full max-w-xl mx-auto">
                 <span
                   class="inline-block px-4 py-1.5 mb-6 text-xs md:text-sm font-semibold text-blue-950 bg-yellow-400 rounded-full shadow-sm"
-                  >TAHUN AJARAN 2026/2027</span
+                  >TAHUN AJARAN {{ ppdbInfo.academic_year }}</span
                 >
                 <h2
                   class="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6 leading-tight"
                   style="font-family: 'Oswald', sans-serif"
                 >
-                  Siap Menjadi Bagian dari Generasi Berprestasi?
+                  {{ ppdbInfo.title }}
                 </h2>
                 <p class="text-blue-100 text-sm md:text-base mb-6 max-w-md mx-auto">
-                  Pendaftaran Peserta Didik Baru (PPDB) SMAN 1 Nogosari akan segera
-                  dibuka. Siapkan berkas dan pantau informasi selengkapnya!
+                  {{ ppdbInfo.description }}
                 </p>
 
                 <!-- Countdown Timer -->
@@ -1396,14 +1403,25 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                  <a
+                    v-if="ppdbInfo.registration_link"
+                    :href="ppdbInfo.registration_link"
+                    target="_blank"
+                    class="px-6 py-3.5 bg-yellow-400 text-blue-950 font-bold rounded-xl shadow-lg hover:bg-yellow-300 hover:scale-105 transition-all text-sm md:text-base animate-float flex items-center justify-center"
+                  >
+                    Daftar Sekarang
+                  </a>
                   <router-link
+                    v-else
                     to="/pendaftaran"
                     class="px-6 py-3.5 bg-yellow-400 text-blue-950 font-bold rounded-xl shadow-lg hover:bg-yellow-300 hover:scale-105 transition-all text-sm md:text-base animate-float flex items-center justify-center"
                   >
                     Info Pendaftaran
                   </router-link>
                   <a
-                    href="#"
+                    v-if="ppdbInfo.brochure_file"
+                    :href="ppdbInfo.brochure_file"
+                    target="_blank"
                     class="px-6 py-3.5 bg-gray-50/10 text-white font-semibold rounded-xl border border-white/50 hover:bg-gray-50/20 transition-all flex items-center justify-center text-sm md:text-base"
                   >
                     <PhDownloadSimple class="w-5 h-5 mr-2" /> Unduh Brosur
@@ -1772,7 +1790,11 @@ let countdownInterval;
 
 const updateCountdown = () => {
   // Misal target buka pendaftaran: 1 Juni 2026
-  const targetDate = new Date("June 1, 2026 08:00:00").getTime();
+  let targetDate = new Date("June 1, 2026 08:00:00").getTime();
+  if (ppdbInfo.value.start_date) {
+    targetDate = new Date(ppdbInfo.value.start_date).getTime();
+  }
+
   const now = new Date().getTime();
   const distance = targetDate - now;
 
@@ -2096,28 +2118,39 @@ const fetchAgendas = async () => {
   }
 };
 
-const faqs = [
-  {
-    q: "Kapan pendaftaran PPDB SMAN 1 Nogosari dibuka?",
-    a:
-      "Pendaftaran PPDB tahun ajaran 2026/2027 akan dibuka pada minggu pertama bulan Juni 2026 secara online melalui portal resmi kami.",
-  },
-  {
-    q: "Apa saja jalur pendaftaran yang tersedia?",
-    a:
-      "Kami membuka 4 jalur pendaftaran: Jalur Zonasi (50%), Afirmasi (15%), Perpindahan Tugas Orang Tua (5%), dan Prestasi Akademik/Non-Akademik (30%).",
-  },
-  {
-    q: "Bagaimana cara mendaftar secara online?",
-    a:
-      "Pendaftaran dapat dilakukan dengan membuat akun di menu Pendaftaran, mengisi formulir data diri, dan mengunggah berkas persyaratan sesuai jalur yang dipilih.",
-  },
-  {
-    q: "Berapa biaya pendaftaran dan SPP bulanan?",
-    a:
-      "Sebagai sekolah negeri binaan pemerintah, seluruh proses pendaftaran PPDB dan biaya pendidikan (SPP bulanan) adalah GRATIS tanpa dipungut biaya.",
-  },
-];
+const ppdbInfo = ref({
+  academic_year: "2026/2027",
+  title: "Siap Menjadi Bagian dari Generasi Berprestasi?",
+  description:
+    "Pendaftaran Peserta Didik Baru (PPDB) SMAN 1 Nogosari akan segera dibuka. Siapkan berkas dan pantau informasi selengkapnya!",
+  start_date: null,
+  brochure_file: null,
+  registration_link: null,
+});
+
+const faqs = ref([]);
+
+const fetchPpdbInfo = async () => {
+  try {
+    const response = await api.get("/api/ppdb-info");
+    if (response.data && response.data.data) {
+      const data = response.data.data;
+      if (data.academic_year) ppdbInfo.value.academic_year = data.academic_year;
+      if (data.title) ppdbInfo.value.title = data.title;
+      if (data.description) ppdbInfo.value.description = data.description;
+      if (data.start_date) ppdbInfo.value.start_date = data.start_date;
+      if (data.brochure_file) ppdbInfo.value.brochure_file = data.brochure_file;
+      if (data.registration_link)
+        ppdbInfo.value.registration_link = data.registration_link;
+
+      if (data.faqs && Array.isArray(data.faqs)) {
+        faqs.value = data.faqs;
+      }
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data PPDB:", error);
+  }
+};
 
 // State Koordinat Persebaran Alumni di Peta Indonesia (Pendidikan & Karir)
 const alumniLocations = ref([]);
@@ -2212,6 +2245,7 @@ onMounted(() => {
   fetchNewsAndAnnouncements();
   fetchAlumniLocations();
   fetchSchoolStats();
+  fetchPpdbInfo();
 
   // Animasi Typing Text
   let i = 0;
