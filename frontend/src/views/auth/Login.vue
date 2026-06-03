@@ -45,8 +45,8 @@ const handleLogin = async () => {
     });
 
     // 3. Fetch data user untuk mengecek role
-    const { data } = await api.get('/api/user');
-    localStorage.setItem('user_role', data.role); // Simpan role untuk validasi route
+    const { data } = await api.get("/api/user");
+    localStorage.setItem("user_role", data.role); // Simpan role untuk validasi route
 
     // Simpan penanda bahwa pengguna sudah terautentikasi
     localStorage.setItem("isLoggedIn", "true");
@@ -128,23 +128,9 @@ const handleLogin = async () => {
 
     <!-- Bagian Kanan: Form Login -->
     <div
-      class="w-full lg:w-1/2 flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-slate-900 relative"
+      class="w-full lg:w-1/2 flex items-center justify-center px-6 sm:px-12 lg:px-20 bg-white dark:bg-slate-900 relative"
     >
-      <!-- Background versi Mobile -->
-      <div class="absolute inset-0 lg:hidden">
-        <img
-          src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1600&auto=format&fit=crop"
-          alt="School Background"
-          class="absolute inset-0 w-full h-full object-cover opacity-10 dark:opacity-5"
-        />
-        <div
-          class="absolute inset-0 bg-white/80 dark:bg-slate-900/90 backdrop-blur-md"
-        ></div>
-      </div>
-
-      <div
-        class="max-w-md w-full space-y-8 p-8 sm:p-10 bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-700 relative z-10"
-      >
+      <div class="max-w-md w-full space-y-10 relative z-10 py-12">
         <!-- Header Form -->
         <div class="text-center">
           <div
@@ -152,14 +138,9 @@ const handleLogin = async () => {
           >
             <PhGraduationCap class="w-8 h-8 text-white -rotate-3" />
           </div>
-          <div
-            class="hidden lg:flex w-16 h-16 bg-blue-50 dark:bg-slate-700/50 rounded-2xl items-center justify-center mx-auto mb-6 border border-blue-100 dark:border-slate-600"
-          >
-            <PhLockKey class="w-8 h-8 text-blue-600 dark:text-blue-400" />
-          </div>
 
           <h2
-            class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight"
+            class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight"
             style="font-family: 'Oswald', sans-serif"
           >
             Selamat Datang!
@@ -192,7 +173,7 @@ const handleLogin = async () => {
                   autocomplete="email"
                   required
                   v-model="form.email"
-                  class="appearance-none rounded-xl relative block w-full pl-11 px-4 py-3 border border-gray-200 dark:border-slate-600 placeholder-gray-400 text-gray-900 dark:text-white bg-gray-50 dark:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200 shadow-sm"
+                  class="appearance-none rounded-xl relative block w-full pl-11 px-4 py-3.5 border border-gray-200 dark:border-slate-700 placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-slate-600"
                   placeholder="admin@sman1nogosari.sch.id"
                 />
               </div>
@@ -218,7 +199,7 @@ const handleLogin = async () => {
                   autocomplete="current-password"
                   required
                   v-model="form.password"
-                  class="appearance-none rounded-xl relative block w-full pl-11 px-4 py-3 border border-gray-200 dark:border-slate-600 placeholder-gray-400 text-gray-900 dark:text-white bg-gray-50 dark:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200 shadow-sm"
+                  class="appearance-none rounded-xl relative block w-full pl-11 px-4 py-3.5 border border-gray-200 dark:border-slate-700 placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-slate-600"
                   placeholder="••••••••"
                 />
               </div>
@@ -284,7 +265,7 @@ const handleLogin = async () => {
           <div class="mt-6 flex items-center justify-center">
             <div class="w-full border-t border-gray-200 dark:border-slate-700"></div>
             <span
-              class="px-4 text-xs uppercase tracking-wider font-semibold text-gray-400 dark:text-gray-500 bg-white dark:bg-slate-800 whitespace-nowrap"
+              class="px-4 text-xs uppercase tracking-wider font-semibold text-gray-400 dark:text-gray-500 bg-white dark:bg-slate-900 whitespace-nowrap"
             >
               Atau masuk dengan
             </span>
@@ -296,7 +277,7 @@ const handleLogin = async () => {
             <button
               type="button"
               @click="handleGoogleLogin"
-              class="w-full flex justify-center items-center py-3 px-4 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm bg-white dark:bg-slate-700 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-all duration-200"
+              class="w-full flex justify-center items-center py-3 px-4 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm bg-white dark:bg-slate-800 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-all duration-200"
             >
               <PhGoogleLogo class="w-5 h-5 mr-2 text-red-500" weight="bold" />
               Google Workspace
