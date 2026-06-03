@@ -207,31 +207,20 @@ const handleLogin = async () => {
           </div>
 
           <!-- Pilihan Lanjut -->
-          <div class="flex items-center justify-between">
-            <div class="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                v-model="form.remember"
-                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded dark:border-slate-600 dark:bg-slate-700 cursor-pointer"
-              />
-              <label
-                for="remember-me"
-                class="ml-2 block text-sm text-gray-600 dark:text-gray-300 cursor-pointer"
-              >
-                Ingat saya
-              </label>
-            </div>
-
-            <div class="text-sm">
-              <a
-                href="#"
-                class="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
-              >
-                Lupa sandi?
-              </a>
-            </div>
+          <div class="flex items-center">
+            <input
+              id="remember-me"
+              name="remember-me"
+              type="checkbox"
+              v-model="form.remember"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded dark:border-slate-600 dark:bg-slate-700 cursor-pointer"
+            />
+            <label
+              for="remember-me"
+              class="ml-2 block text-sm text-gray-600 dark:text-gray-300 cursor-pointer"
+            >
+              Ingat saya
+            </label>
           </div>
 
           <!-- Pesan Error -->
@@ -257,7 +246,7 @@ const handleLogin = async () => {
                 aria-hidden="true"
               />
               <PhSpinner v-else class="h-5 w-5 mr-2 text-white animate-spin" />
-              {{ isLoading ? "Memverifikasi..." : "Masuk ke Dashboard" }}
+              {{ isLoading ? "Memverifikasi..." : "Login" }}
             </button>
           </div>
 
@@ -280,7 +269,7 @@ const handleLogin = async () => {
               class="w-full flex justify-center items-center py-3 px-4 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm bg-white dark:bg-slate-800 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-all duration-200"
             >
               <PhGoogleLogo class="w-5 h-5 mr-2 text-red-500" weight="bold" />
-              Google Workspace
+              Google
             </button>
           </div>
         </form>
