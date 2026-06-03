@@ -11,11 +11,12 @@
     <div class="container flex items-center justify-between max-w-6xl mx-auto">
       <router-link
         to="/"
-        class="flex items-center gap-3 text-2xl font-bold transition-colors"
+        class="flex items-center gap-3 text-2xl font-bold transition-colors tracking-wide"
         :class="{
           'text-gray-800 dark:text-white': isNavbarScrolled || isMobileMenuOpen,
           'text-white': !isNavbarScrolled && !isMobileMenuOpen,
         }"
+        style="font-family: 'Oswald', sans-serif"
       >
         <img
           v-if="settings.logo"
@@ -710,3 +711,7 @@ onBeforeUnmount(() => {
   window.removeEventListener("resize", handleResize);
 });
 </script>
+
+<style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap");
+</style>
