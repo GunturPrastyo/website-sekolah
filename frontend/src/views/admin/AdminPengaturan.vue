@@ -273,6 +273,18 @@ const updateProfile = async () => {
             <div>
               <label
                 class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >Slogan / Moto Sekolah (Tampil di Banner Beranda)</label
+              >
+              <input
+                type="text"
+                v-model="generalSettings.deskripsi"
+                placeholder="Contoh: Mencetak Generasi Unggul..."
+                class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                 >Alamat</label
               >
               <textarea

@@ -37,7 +37,7 @@
         >
           <span class="inline-flex items-center justify-center">
             <PhQuotes class="w-6 h-6 sm:w-8 sm:h-8 mr-2 hidden sm:block opacity-80" />
-            Mencetak Generasi Unggul, Berkarakter, dan Berwawasan Global
+            {{ slogan }}
           </span>
         </p>
         <div
@@ -1554,8 +1554,9 @@ import {
 } from "@phosphor-icons/vue";
 
 const displayedTitle = ref("");
-const fullTitle = "SMA Negeri 1 Nogosari";
+const fullTitle = ref("SMA Negeri 1 Nogosari");
 const showSubtitle = ref(false);
+const slogan = ref("Mencetak Generasi Unggul, Berkarakter, dan Berwawasan Global");
 
 const activeFaq = ref(null);
 const toggleFaq = (index) => {
@@ -2236,6 +2237,25 @@ const fetchAlumniLocations = async () => {
   }
 };
 
+const fetchSettings = async () => {
+  try {
+    const response = await api.get("/api/settings");
+    if (response.data && response.data.data) {
+      fullTitle.value = response.data.data.namaSekolah || "SMA Negeri 1 Nogosari";
+      slogan.value =
+        response.data.data.deskripsi ||
+        "Mencetak Generasi Unggul, Berkarakter, dan Berwawasan Global";
+      fullTitle.value = response.data.data.namaSekolah || "";
+      slogan.value = response.data.data.deskripsi || "";
+    }
+  } catch (error) {
+    console.error("Gagal mengambil pengaturan:", error);
+  } finally {
+    // Panggil animasi typewriter SETELAH data nama sekolah berhasil diambil
+    startTypewriter();
+  }
+};
+
 onMounted(() => {
   // Fetch data dari API Backend
   fetchPrograms();
@@ -2246,23 +2266,7 @@ onMounted(() => {
   fetchAlumniLocations();
   fetchSchoolStats();
   fetchPpdbInfo();
-
-  // Animasi Typing Text
-  let i = 0;
-  const typeWriter = setInterval(() => {
-    if (i < fullTitle.length) {
-      displayedTitle.value += fullTitle.charAt(i);
-      i++;
-    } else {
-      clearInterval(typeWriter);
-      showSubtitle.value = true;
-
-      // Jalankan animasi angka bersamaan saat kotak statistik melayang naik
-      setTimeout(() => {
-        animateStats();
-      }, 500);
-    }
-  }, 120); // Kecepatan mengetik 120ms per huruf
+  fetchSettings();
 
   // Initialize countdown
   updateCountdown();
@@ -2348,6 +2352,26 @@ onMounted(() => {
     },
   });
 });
+
+// Dipisahkan ke dalam fungsi agar bisa dipanggil setelah fetching data pengaturan
+const startTypewriter = () => {
+  let i = 0;
+  displayedTitle.value = "";
+  const typeWriter = setInterval(() => {
+    if (i < fullTitle.value.length) {
+      displayedTitle.value += fullTitle.value.charAt(i);
+      i++;
+    } else {
+      clearInterval(typeWriter);
+      showSubtitle.value = true;
+
+      // Jalankan animasi angka bersamaan saat kotak statistik melayang naik
+      setTimeout(() => {
+        animateStats();
+      }, 500);
+    }
+  }, 120); // Kecepatan mengetik 120ms per huruf
+};
 
 let jurusanSwiperInstance = null;
 const initJurusanSwiper = () => {
