@@ -1554,9 +1554,9 @@ import {
 } from "@phosphor-icons/vue";
 
 const displayedTitle = ref("");
-const fullTitle = ref("SMA Negeri 1 Nogosari");
+const fullTitle = ref("");
 const showSubtitle = ref(false);
-const slogan = ref("Mencetak Generasi Unggul, Berkarakter, dan Berwawasan Global");
+const slogan = ref("");
 
 const activeFaq = ref(null);
 const toggleFaq = (index) => {
@@ -2241,10 +2241,6 @@ const fetchSettings = async () => {
   try {
     const response = await api.get("/api/settings");
     if (response.data && response.data.data) {
-      fullTitle.value = response.data.data.namaSekolah || "SMA Negeri 1 Nogosari";
-      slogan.value =
-        response.data.data.deskripsi ||
-        "Mencetak Generasi Unggul, Berkarakter, dan Berwawasan Global";
       fullTitle.value = response.data.data.namaSekolah || "";
       slogan.value = response.data.data.deskripsi || "";
     }
