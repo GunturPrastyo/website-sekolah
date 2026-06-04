@@ -62,6 +62,10 @@ const appearanceSettings = ref({
   headerGaleri: "",
   headerArtikel: "",
   headerUnduhan: "",
+  kenapaPilihKami1: "",
+  kenapaPilihKami2: "",
+  kenapaPilihKami3: "",
+  coverJurusan: "",
 });
 
 // State Akun
@@ -473,8 +477,9 @@ const updateProfile = async () => {
               <PhHouse class="w-5 h-5 text-blue-600 dark:text-blue-400" />
               <h4 class="font-semibold text-gray-800 dark:text-white">Halaman Utama</h4>
             </div>
+
             <div
-              class="bg-gray-50/50 dark:bg-slate-700/30 p-5 rounded-xl border border-gray-200 dark:border-slate-600"
+              class="bg-gray-50/50 dark:bg-slate-700/30 p-5 rounded-xl border border-gray-200 dark:border-slate-600 mb-5"
             >
               <ImageUploader
                 v-model="appearanceSettings.headerBeranda"
@@ -489,6 +494,48 @@ const updateProfile = async () => {
                 Mendukung format gambar (JPG/PNG) dan video (MP4/WebM). Disarankan
                 resolusi lanskap lebar.
               </p>
+            </div>
+
+            <h5 class="font-semibold text-gray-700 dark:text-gray-300 mb-3 text-sm">
+              Gambar Komponen Beranda
+            </h5>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.kenapaPilihKami1"
+                  label="Kenapa Pilih Kami 1 (Fasilitas)"
+                  containerClass="w-full aspect-[4/3]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.kenapaPilihKami2"
+                  label="Kenapa Pilih Kami 2 (Kurikulum)"
+                  containerClass="w-full aspect-[4/3]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.kenapaPilihKami3"
+                  label="Kenapa Pilih Kami 3 (Prestasi)"
+                  containerClass="w-full aspect-[4/3]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.coverJurusan"
+                  label="Cover Jurusan Pilihan"
+                  containerClass="w-full aspect-[4/3]"
+                />
+              </div>
             </div>
           </div>
 
