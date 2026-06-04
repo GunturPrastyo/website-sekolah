@@ -24,7 +24,13 @@ class SettingController extends Controller
         $data = $request->all();
         
         // List key yang berpotensi menyimpan media (gambar/video)
-        $fileKeys = ['logo', 'favicon', 'headerBeranda', 'headerSejarah', 'headerVisiMisi', 'headerFasilitas', 'headerGuruStaf', 'headerEkskul'];
+        $fileKeys = [
+            'logo', 'favicon', 'headerBeranda', 'headerSejarah', 'headerVisiMisi', 
+            'headerFasilitas', 'headerGuruStaf', 'headerEkskul', 'headerKurikulum',
+            'headerAlumni', 'headerProgramJurusan', 'headerPrestasi', 'headerPendaftaran',
+            'headerBerita', 'headerGaleri', 'headerArtikel', 'headerUnduhan',
+            'benefitFasilitasImage', 'benefitGuruImage', 'benefitPrestasiImage', 'programCoverImage', 'loginBackground'
+        ];
 
         foreach ($data as $key => $value) {
             // Jika value adalah base64 string, maka konversi dan simpan ke Storage

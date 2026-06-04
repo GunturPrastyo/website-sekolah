@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import api from "../../api/index.js";
 import {
@@ -21,6 +21,28 @@ const form = ref({
 
 const isLoading = ref(false);
 const errorMessage = ref("");
+
+const settings = ref({
+  loginBackground:
+    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1600&auto=format&fit=crop",
+  namaSekolah: "SMAN 1 Nogosari",
+});
+
+const fetchSettings = async () => {
+  try {
+    const response = await api.get("/api/settings");
+    if (response.data && response.data.data) {
+      if (response.data.data.loginBackground) {
+        settings.value.loginBackground = response.data.data.loginBackground;
+      }
+      if (response.data.data.namaSekolah) {
+        settings.value.namaSekolah = response.data.data.namaSekolah;
+      }
+    }
+  } catch (error) {
+    console.error("Gagal mengambil pengaturan:", error);
+  }
+};
 
 const handleGoogleLogin = () => {
   // Arahkan browser langsung ke endpoint backend Laravel Socialite.
@@ -70,6 +92,10 @@ const handleLogin = async () => {
     isLoading.value = false;
   }
 };
+
+onMounted(() => {
+  fetchSettings();
+});
 </script>
 
 <template>
@@ -80,9 +106,9 @@ const handleLogin = async () => {
     >
       <!-- Background Image with Overlay -->
       <img
-        src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1600&auto=format&fit=crop"
+        :src="settings.loginBackground"
         alt="School Background"
-        class="absolute inset-0 w-full h-full object-cover opacity-30"
+        class="absolute inset-0 w-full h-full object-cover opacity-30 transition-all duration-1000"
       />
       <!-- Gradient Overlay -->
       <div
@@ -102,7 +128,7 @@ const handleLogin = async () => {
           class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight"
           style="font-family: 'Oswald', sans-serif"
         >
-          Portal Admin<br /><span class="text-blue-200">SMAN 1 Nogosari</span>
+          Portal Admin<br /><span class="text-blue-200">{{ settings.namaSekolah }}</span>
         </h1>
         <p class="text-lg text-blue-100/80 leading-relaxed">
           Sistem informasi manajemen terpadu untuk mengelola konten website, data
@@ -111,7 +137,7 @@ const handleLogin = async () => {
 
         <div class="mt-12 flex items-center gap-4 text-sm text-blue-200/60">
           <span
-            >&copy; {{ new Date().getFullYear() }} SMAN 1 Nogosari. All rights
+            >&copy; {{ new Date().getFullYear() }} {{ settings.namaSekolah }}. All rights
             reserved.</span
           >
         </div>

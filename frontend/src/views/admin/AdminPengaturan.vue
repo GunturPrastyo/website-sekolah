@@ -10,6 +10,7 @@ import {
   PhGraduationCap,
   PhMegaphone,
   PhUser,
+  PhLockKey,
 } from "@phosphor-icons/vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -66,6 +67,7 @@ const appearanceSettings = ref({
   benefitGuruImage: "",
   benefitPrestasiImage: "",
   programCoverImage: "",
+  loginBackground: "",
 });
 
 // State Akun
@@ -699,6 +701,29 @@ const updateProfile = async () => {
                 <ImageUploader
                   v-model="appearanceSettings.headerUnduhan"
                   label="Unduhan File"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Group: Sistem & Autentikasi -->
+          <div class="mb-4">
+            <div
+              class="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200 dark:border-slate-700"
+            >
+              <PhLockKey class="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <h4 class="font-semibold text-gray-800 dark:text-white">
+                Sistem & Autentikasi
+              </h4>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.loginBackground"
+                  label="Background Halaman Login"
                   containerClass="w-full aspect-[21/9]"
                 />
               </div>
