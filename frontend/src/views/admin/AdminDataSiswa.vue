@@ -12,6 +12,7 @@ import {
   PhUploadSimple,
   PhX,
   PhSpinner,
+  PhCaretDown,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -38,6 +39,12 @@ const isFormVisible = ref(false);
 const isEditing = ref(false);
 const isDeleteModalOpen = ref(false);
 const itemToDelete = ref(null);
+
+// State Bulk Action
+const selectedStudents = ref([]);
+const isBulkEditModalOpen = ref(false);
+const isBulkDeleteModalOpen = ref(false);
+const bulkEditForm = ref({ grade: "", major: "", school_class_id: null, status: "" });
 
 const isImportModalOpen = ref(false);
 const isImporting = ref(false);
@@ -363,6 +370,95 @@ const filteredStudents = computed(() => {
   }
   return result;
 });
+
+const selectAll = computed({
+  get: () =>
+    selectedStudents.value.length > 0 &&
+    selectedStudents.value.length === filteredStudents.value.length,
+  set: (val) => {
+    if (val) {
+      selectedStudents.value = filteredStudents.value.map((s) => s.id);
+    } else {
+      selectedStudents.value = [];
+    }
+  },
+});
+
+const openBulkEditModal = () => {
+  bulkEditForm.value = { grade: "", major: "", school_class_id: null, status: "" };
+  isBulkEditModalOpen.value = true;
+  document.body.style.overflow = "hidden";
+};
+
+const closeBulkEditModal = () => {
+  isBulkEditModalOpen.value = false;
+  document.body.style.overflow = "";
+};
+
+const executeBulkEdit = async () => {
+  const payload = {};
+  if (bulkEditForm.value.grade) payload.grade = bulkEditForm.value.grade;
+  if (bulkEditForm.value.major) payload.major = bulkEditForm.value.major;
+  if (bulkEditForm.value.school_class_id !== null)
+    payload.school_class_id = bulkEditForm.value.school_class_id;
+  if (bulkEditForm.value.status) payload.status = bulkEditForm.value.status;
+
+  if (Object.keys(payload).length === 0) {
+    triggerToast("Info", "Tidak ada perubahan yang dipilih.", "info");
+    return;
+  }
+
+  try {
+    for (const id of selectedStudents.value) {
+      const student = studentsList.value.find((s) => s.id === id);
+      if (student) {
+        const updateData = { ...student, ...payload };
+        await api.put(`/api/students/${id}`, updateData);
+        Object.assign(student, payload);
+        if (payload.school_class_id !== undefined) {
+          if (payload.school_class_id === "") {
+            student.school_class = null;
+          } else {
+            const sc = classesList.value.find((c) => c.id === payload.school_class_id);
+            if (sc) student.school_class = sc;
+          }
+        }
+      }
+    }
+    selectedStudents.value = [];
+    closeBulkEditModal();
+    triggerToast("Berhasil", "Data siswa terpilih berhasil diperbarui.", "success");
+  } catch (error) {
+    console.error(error);
+    triggerToast("Gagal", "Terjadi kesalahan saat memperbarui data massal.", "error");
+  }
+};
+
+const confirmBulkDelete = () => {
+  isBulkDeleteModalOpen.value = true;
+};
+
+const cancelBulkDelete = () => {
+  isBulkDeleteModalOpen.value = false;
+};
+
+const executeBulkDelete = async () => {
+  try {
+    await Promise.all(
+      selectedStudents.value.map((id) => api.delete(`/api/students/${id}`))
+    );
+    studentsList.value = studentsList.value.filter(
+      (s) => !selectedStudents.value.includes(s.id)
+    );
+    selectedStudents.value = [];
+    isBulkDeleteModalOpen.value = false;
+    triggerToast("Berhasil", "Data terpilih berhasil dihapus.", "success");
+  } catch (error) {
+    console.error(error);
+    triggerToast("Gagal", "Terjadi kesalahan saat menghapus data massal.", "error");
+    isBulkDeleteModalOpen.value = false;
+  }
+};
 </script>
 
 <template>
@@ -788,9 +884,128 @@ const filteredStudents = computed(() => {
       </div>
     </Transition>
 
+    <!-- Form Bulk Edit -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isBulkEditModalOpen"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="closeBulkEditModal"
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all"
+          @click.stop
+        >
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+              Edit Massal ({{ selectedStudents.length }} Siswa)
+            </h3>
+            <button
+              @click="closeBulkEditModal"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
+          </div>
+          <div class="p-6">
+            <p class="text-sm text-gray-500 mb-4">
+              Pilih data yang ingin diubah. Kosongkan jika tidak ingin mengubah.
+            </p>
+            <div class="space-y-4">
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Tingkat Kelas</label
+                >
+                <select
+                  v-model="bulkEditForm.grade"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Tetap --</option>
+                  <option v-for="grade in grades" :key="grade" :value="grade">
+                    {{ grade }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Rombel / Grup</label
+                >
+                <select
+                  v-model="bulkEditForm.school_class_id"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option :value="null">-- Tetap --</option>
+                  <option value="">Hapus Rombel (Kosongkan)</option>
+                  <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
+                    {{ cls.grade }} {{ cls.major }} - {{ cls.name }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Jurusan / Peminatan</label
+                >
+                <select
+                  v-model="bulkEditForm.major"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Tetap --</option>
+                  <option v-for="major in majors" :key="major" :value="major">
+                    {{ major }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Status Siswa</label
+                >
+                <select
+                  v-model="bulkEditForm.status"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Tetap --</option>
+                  <option value="aktif">Aktif</option>
+                  <option value="alumni">Alumni</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+          >
+            <button
+              @click="closeBulkEditModal"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <PhXCircle class="w-5 h-5 mr-2" /> Batal
+            </button>
+            <button
+              @click="executeBulkEdit"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <PhFloppyDisk class="w-5 h-5 mr-2" />
+              Simpan Perubahan
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
     <!-- Data Table & Filters -->
     <div
-      class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden"
+      class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-visible"
     >
       <div
         class="p-6 border-b border-gray-100 dark:border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
@@ -838,12 +1053,53 @@ const filteredStudents = computed(() => {
         </div>
       </div>
 
-      <div class="overflow-x-auto">
+      <!-- Bulk Actions Bar -->
+      <div
+        v-if="selectedStudents.length > 0"
+        class="bg-blue-50 dark:bg-blue-900/30 border-b border-blue-100 dark:border-blue-800/50 p-4 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-20"
+      >
+        <span class="text-sm font-medium text-blue-800 dark:text-blue-300">
+          {{ selectedStudents.length }} siswa dipilih
+        </span>
+        <div class="relative group">
+          <button
+            class="inline-flex items-center px-4 py-2 border border-blue-200 dark:border-blue-700 bg-white dark:bg-slate-800 text-sm font-medium rounded-md text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-slate-700 focus:outline-none"
+          >
+            Aksi Massal
+            <PhCaretDown class="w-4 h-4 ml-2" />
+          </button>
+          <div
+            class="absolute right-0 mt-1 w-48 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-lg rounded-md py-1 hidden group-hover:block top-full origin-top"
+          >
+            <button
+              @click="openBulkEditModal"
+              class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700"
+            >
+              Edit Terpilih
+            </button>
+            <button
+              @click="confirmBulkDelete"
+              class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+            >
+              Hapus Terpilih
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto relative z-10">
         <table class="w-full text-left border-collapse">
           <thead>
             <tr
               class="bg-gray-50 dark:bg-slate-700/50 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
+              <th class="px-6 py-4 w-12 text-center">
+                <input
+                  type="checkbox"
+                  v-model="selectAll"
+                  class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer w-4 h-4"
+                />
+              </th>
               <th class="px-6 py-4">NISN</th>
               <th class="px-6 py-4">Nama</th>
               <th class="px-6 py-4">L/P</th>
@@ -857,7 +1113,7 @@ const filteredStudents = computed(() => {
           <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
             <tr v-if="filteredStudents.length === 0">
               <td
-                colspan="7"
+                colspan="8"
                 class="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
               >
                 <PhGraduationCap
@@ -871,6 +1127,14 @@ const filteredStudents = computed(() => {
               :key="student.id"
               class="hover:bg-blue-50/50 dark:hover:bg-slate-700/30 transition-colors group"
             >
+              <td class="px-6 py-4 text-center">
+                <input
+                  type="checkbox"
+                  :value="student.id"
+                  v-model="selectedStudents"
+                  class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer w-4 h-4"
+                />
+              </td>
               <td class="px-6 py-4">
                 <span class="block text-sm text-gray-600 dark:text-gray-400 font-mono">{{
                   student.nisn
@@ -955,6 +1219,14 @@ const filteredStudents = computed(() => {
       message="Yakin ingin menghapus data siswa ini secara permanen dari sistem?"
       @confirm="confirmDelete"
       @cancel="cancelDelete"
+    />
+
+    <ConfirmModal
+      :isOpen="isBulkDeleteModalOpen"
+      title="Hapus Massal Siswa"
+      :message="`Yakin ingin menghapus ${selectedStudents.length} data siswa ini secara permanen dari sistem?`"
+      @confirm="executeBulkDelete"
+      @cancel="cancelBulkDelete"
     />
     <ToastNotification
       :isOpen="showToast"
