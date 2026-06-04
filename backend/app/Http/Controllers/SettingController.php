@@ -78,7 +78,7 @@ class SettingController extends Controller
             'headerFasilitas', 'headerGuruStaf', 'headerEkskul', 'headerKurikulum',
             'headerAlumni', 'headerProgramJurusan', 'headerPrestasi', 'headerPendaftaran',
             'headerBerita', 'headerGaleri', 'headerArtikel', 'headerUnduhan',
-            'kenapaPilihKami1', 'kenapaPilihKami2', 'kenapaPilihKami3', 'coverJurusan'
+            'benefitFasilitasImage', 'benefitGuruImage', 'benefitPrestasiImage', 'programCoverImage'
         ];
 
         foreach ($data as $key => $value) {

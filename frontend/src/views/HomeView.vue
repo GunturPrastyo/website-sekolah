@@ -103,6 +103,11 @@
               <div
                 class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[340px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500"
                 style="background-image: url('/img/fasilitas.jpg')"
+                :style="{
+                  backgroundImage: `url(${
+                    appearanceSettings.benefitFasilitasImage || '/img/fasilitas.jpg'
+                  })`,
+                }"
               >
                 <!-- Overlay Parallax -->
                 <div
@@ -151,6 +156,11 @@
               <div
                 class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[340px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
                 style="background-image: url('/img/pengajar.jpg')"
+                :style="{
+                  backgroundImage: `url(${
+                    appearanceSettings.benefitGuruImage || '/img/pengajar.jpg'
+                  })`,
+                }"
               >
                 <!-- Overlay Parallax -->
                 <div
@@ -198,6 +208,11 @@
               <div
                 class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[340px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
                 style="background-image: url('/img/prestasi.jpg')"
+                :style="{
+                  backgroundImage: `url(${
+                    appearanceSettings.benefitPrestasiImage || '/img/prestasi.jpg'
+                  })`,
+                }"
               >
                 <!-- Overlay Parallax -->
                 <div
@@ -426,6 +441,11 @@
           <div
             class="relative overflow-hidden shadow-2xl min-h-[340px] md:min-h-[450px] flex items-center md:rounded-lg bg-center bg-cover lg:bg-fixed"
             style="background-image: url('/img/jurusan.jpg')"
+            :style="{
+              backgroundImage: `url(${
+                appearanceSettings.programCoverImage || '/img/jurusan.jpg'
+              })`,
+            }"
           >
             <!-- Overlay Parallax -->
             <div
@@ -1558,6 +1578,13 @@ const fullTitle = ref("");
 const showSubtitle = ref(false);
 const slogan = ref("");
 
+const appearanceSettings = ref({
+  benefitFasilitasImage: "",
+  benefitGuruImage: "",
+  benefitPrestasiImage: "",
+  programCoverImage: "",
+});
+
 const activeFaq = ref(null);
 const toggleFaq = (index) => {
   activeFaq.value = activeFaq.value === index ? null : index;
@@ -2243,6 +2270,15 @@ const fetchSettings = async () => {
     if (response.data && response.data.data) {
       fullTitle.value = response.data.data.namaSekolah || "";
       slogan.value = response.data.data.deskripsi || "";
+
+      appearanceSettings.value.benefitFasilitasImage =
+        response.data.data.benefitFasilitasImage || "";
+      appearanceSettings.value.benefitGuruImage =
+        response.data.data.benefitGuruImage || "";
+      appearanceSettings.value.benefitPrestasiImage =
+        response.data.data.benefitPrestasiImage || "";
+      appearanceSettings.value.programCoverImage =
+        response.data.data.programCoverImage || "";
     }
   } catch (error) {
     console.error("Gagal mengambil pengaturan:", error);

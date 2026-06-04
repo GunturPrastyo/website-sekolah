@@ -62,10 +62,10 @@ const appearanceSettings = ref({
   headerGaleri: "",
   headerArtikel: "",
   headerUnduhan: "",
-  kenapaPilihKami1: "",
-  kenapaPilihKami2: "",
-  kenapaPilihKami3: "",
-  coverJurusan: "",
+  benefitFasilitasImage: "",
+  benefitGuruImage: "",
+  benefitPrestasiImage: "",
+  programCoverImage: "",
 });
 
 // State Akun
@@ -504,7 +504,7 @@ const updateProfile = async () => {
                 class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
               >
                 <ImageUploader
-                  v-model="appearanceSettings.kenapaPilihKami1"
+                  v-model="appearanceSettings.benefitFasilitasImage"
                   label="Kenapa Pilih Kami 1 (Fasilitas)"
                   containerClass="w-full aspect-[4/3]"
                 />
@@ -513,8 +513,8 @@ const updateProfile = async () => {
                 class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
               >
                 <ImageUploader
-                  v-model="appearanceSettings.kenapaPilihKami2"
-                  label="Kenapa Pilih Kami 2 (Kurikulum)"
+                  v-model="appearanceSettings.benefitGuruImage"
+                  label="Kenapa Pilih Kami 2 (Guru)"
                   containerClass="w-full aspect-[4/3]"
                 />
               </div>
@@ -522,7 +522,7 @@ const updateProfile = async () => {
                 class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
               >
                 <ImageUploader
-                  v-model="appearanceSettings.kenapaPilihKami3"
+                  v-model="appearanceSettings.benefitPrestasiImage"
                   label="Kenapa Pilih Kami 3 (Prestasi)"
                   containerClass="w-full aspect-[4/3]"
                 />
@@ -531,7 +531,7 @@ const updateProfile = async () => {
                 class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
               >
                 <ImageUploader
-                  v-model="appearanceSettings.coverJurusan"
+                  v-model="appearanceSettings.programCoverImage"
                   label="Cover Jurusan Pilihan"
                   containerClass="w-full aspect-[4/3]"
                 />
