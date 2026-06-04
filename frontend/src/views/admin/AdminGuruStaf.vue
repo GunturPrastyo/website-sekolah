@@ -69,6 +69,12 @@ const showNewRoleInput = ref(false);
 const newRoleName = ref("");
 const isRoleDropdownOpen = ref(false);
 
+// State Bulk Action
+const selectedStaff = ref([]);
+const isBulkEditModalOpen = ref(false);
+const isBulkDeleteModalOpen = ref(false);
+const bulkEditForm = ref({ category: "", role: "" });
+
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };
   showToast.value = true;
@@ -174,6 +180,81 @@ const confirmDelete = async () => {
 const cancelDelete = () => {
   itemToDelete.value = null;
   isDeleteModalOpen.value = false;
+};
+
+// --- Fungsi Bulk Action ---
+const selectAll = computed({
+  get: () =>
+    selectedStaff.value.length > 0 &&
+    selectedStaff.value.length === filteredStaff.value.length,
+  set: (val) => {
+    if (val) {
+      selectedStaff.value = filteredStaff.value.map((s) => s.id);
+    } else {
+      selectedStaff.value = [];
+    }
+  },
+});
+
+const openBulkEditModal = () => {
+  bulkEditForm.value = { category: "", role: "" };
+  isBulkEditModalOpen.value = true;
+  document.body.style.overflow = "hidden";
+};
+
+const closeBulkEditModal = () => {
+  isBulkEditModalOpen.value = false;
+  document.body.style.overflow = "";
+};
+
+const executeBulkEdit = async () => {
+  const payload = {};
+  if (bulkEditForm.value.category) payload.category = bulkEditForm.value.category;
+  if (bulkEditForm.value.role) payload.role = bulkEditForm.value.role;
+
+  if (Object.keys(payload).length === 0) {
+    triggerToast("Info", "Tidak ada perubahan yang dipilih.", "info");
+    return;
+  }
+
+  try {
+    for (const id of selectedStaff.value) {
+      const staff = staffList.value.find((s) => s.id === id);
+      if (staff) {
+        const updateData = { ...staff, ...payload };
+        await api.put(`/api/staff/${id}`, updateData);
+      }
+    }
+    await fetchStaff(); // Reload data setelah update
+    selectedStaff.value = [];
+    closeBulkEditModal();
+    triggerToast("Berhasil", "Data terpilih berhasil diperbarui.", "success");
+  } catch (error) {
+    console.error(error);
+    triggerToast("Gagal", "Terjadi kesalahan saat memperbarui data massal.", "error");
+  }
+};
+
+const confirmBulkDelete = () => {
+  isBulkDeleteModalOpen.value = true;
+};
+
+const cancelBulkDelete = () => {
+  isBulkDeleteModalOpen.value = false;
+};
+
+const executeBulkDelete = async () => {
+  try {
+    await Promise.all(selectedStaff.value.map((id) => api.delete(`/api/staff/${id}`)));
+    await fetchStaff(); // Reload data setelah hapus
+    selectedStaff.value = [];
+    isBulkDeleteModalOpen.value = false;
+    triggerToast("Berhasil", "Data terpilih berhasil dihapus.", "success");
+  } catch (error) {
+    console.error(error);
+    triggerToast("Gagal", "Terjadi kesalahan saat menghapus data massal.", "error");
+    isBulkDeleteModalOpen.value = false;
+  }
 };
 
 const filteredStaff = computed(() => {
@@ -624,18 +705,89 @@ const handleDeleteRole = (index) => {
     <div
       class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
     >
-      <!-- Kolom Pencarian -->
-      <div class="mb-6 relative max-w-md">
-        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <PhMagnifyingGlass class="w-5 h-5 text-gray-400" />
+      <!-- Kolom Pencarian & Select All -->
+      <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="relative max-w-md w-full">
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
+            <PhMagnifyingGlass class="w-5 h-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Cari berdasarkan nama, nip, atau jabatan..."
+            class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+          />
         </div>
-        <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Cari berdasarkan nama, nip, atau jabatan..."
-          class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
-        />
+        <div class="flex items-center gap-2" v-if="filteredStaff.length > 0">
+          <input
+            type="checkbox"
+            id="selectAll"
+            v-model="selectAll"
+            .indeterminate="selectedStaff.length > 0 && selectedStaff.length < filteredStaff.length"
+            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer w-4 h-4"
+          />
+          <label
+            for="selectAll"
+            class="text-sm text-gray-700 dark:text-gray-300 cursor-pointer font-medium select-none"
+            >Pilih Semua</label
+          >
+        </div>
       </div>
+
+      <!-- Bulk Actions Bar -->
+      <Transition
+        enter-active-class="transition-all duration-300 ease-out"
+        enter-from-class="opacity-0 -translate-y-4"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition-all duration-200 ease-in"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 -translate-y-4"
+      >
+        <div
+          v-if="selectedStaff.length > 0"
+          class="bg-blue-50/90 dark:bg-blue-900/30 backdrop-blur-md border border-blue-200 dark:border-blue-800/50 p-3 sm:p-4 flex flex-wrap justify-between items-center gap-4 relative z-20 shadow-sm mb-6 rounded-lg"
+        >
+          <div class="flex items-center gap-3">
+            <span
+              class="inline-flex items-center justify-center bg-blue-600 text-white w-7 h-7 rounded-full text-xs font-bold shadow-md"
+            >
+              {{ selectedStaff.length }}
+            </span>
+            <span class="text-sm font-semibold text-blue-900 dark:text-blue-200">
+              Staf Terpilih
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2 sm:gap-3">
+            <button
+              @click="openBulkEditModal"
+              class="inline-flex items-center px-3 py-2 border border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-800 text-sm font-semibold rounded-lg text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-700 focus:outline-none transition-colors shadow-sm"
+            >
+              <PhPencilSimple class="w-4 h-4 sm:mr-2" />
+              <span class="hidden sm:inline">Edit Massal</span>
+            </button>
+            <button
+              @click="confirmBulkDelete"
+              class="inline-flex items-center px-3 py-2 border border-red-300 dark:border-red-800/50 bg-white dark:bg-slate-800 text-sm font-semibold rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-slate-700 focus:outline-none transition-colors shadow-sm"
+            >
+              <PhTrash class="w-4 h-4 sm:mr-2" />
+              <span class="hidden sm:inline">Hapus</span>
+            </button>
+            <div
+              class="h-6 border-l-2 border-blue-200 dark:border-blue-700/50 mx-1 sm:mx-2"
+            ></div>
+            <button
+              @click="selectedStaff = []"
+              class="inline-flex items-center px-2 py-2 text-sm font-medium rounded-lg text-gray-500 hover:text-gray-900 hover:bg-white dark:text-gray-400 dark:hover:text-white dark:hover:bg-slate-700 focus:outline-none transition-all"
+              title="Batal Pilih"
+            >
+              <PhX class="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </Transition>
 
       <!-- Empty State -->
       <div
@@ -666,7 +818,25 @@ const handleDeleteRole = (index) => {
               v-for="staff in group.staff"
               :key="staff.id"
               class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-shadow p-5 flex flex-col items-center text-center relative group"
+              :class="{
+                'ring-2 ring-blue-500 shadow-md': selectedStaff.includes(staff.id),
+              }"
             >
+              <!-- Checkbox Item -->
+              <label
+                class="absolute top-3 left-3 z-20 cursor-pointer flex items-center justify-center w-6 h-6 rounded-md bg-white/90 dark:bg-slate-800/90 shadow-sm border border-gray-200 dark:border-slate-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                :class="{
+                  'opacity-100 !border-blue-500': selectedStaff.includes(staff.id),
+                }"
+              >
+                <input
+                  type="checkbox"
+                  :value="staff.id"
+                  v-model="selectedStaff"
+                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+                />
+              </label>
+
               <!-- Dropdown Aksi (Muncul saat hover) -->
               <div
                 class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-slate-800/90 backdrop-blur p-1 rounded-lg border border-gray-100 dark:border-slate-700 z-10"
@@ -769,6 +939,104 @@ const handleDeleteRole = (index) => {
       message="Apakah Anda yakin ingin menghapus data staf ini? Tindakan ini tidak dapat dikembalikan."
       @confirm="confirmDelete"
       @cancel="cancelDelete"
+    />
+
+    <!-- Modal Bulk Edit -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isBulkEditModalOpen"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="closeBulkEditModal"
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all"
+          @click.stop
+        >
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+              Edit Massal ({{ selectedStaff.length }} Staf)
+            </h3>
+            <button
+              @click="closeBulkEditModal"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
+          </div>
+          <div class="p-6">
+            <p class="text-sm text-gray-500 mb-4">
+              Pilih data yang ingin diubah. Kosongkan jika tidak ingin mengubah.
+            </p>
+            <div class="space-y-4">
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Kategori</label
+                >
+                <select
+                  v-model="bulkEditForm.category"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Tetap --</option>
+                  <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                    {{ cat.name }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Jabatan / Posisi</label
+                >
+                <select
+                  v-model="bulkEditForm.role"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Tetap --</option>
+                  <option v-for="role in commonRoles" :key="role" :value="role">
+                    {{ role }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+          >
+            <button
+              @click="closeBulkEditModal"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <PhXCircle class="w-5 h-5 mr-2" /> Batal
+            </button>
+            <button
+              @click="executeBulkEdit"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <PhFloppyDisk class="w-5 h-5 mr-2" />
+              Simpan Perubahan
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Modal Bulk Delete -->
+    <ConfirmModal
+      :isOpen="isBulkDeleteModalOpen"
+      title="Hapus Massal Data Staf"
+      :message="`Yakin ingin menghapus ${selectedStaff.length} data staf ini secara permanen dari sistem?`"
+      @confirm="executeBulkDelete"
+      @cancel="cancelBulkDelete"
     />
 
     <!-- Notifikasi Toast -->
