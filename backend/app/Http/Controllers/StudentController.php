@@ -70,4 +70,37 @@ class StudentController extends Controller
             'message' => 'Data siswa berhasil dihapus'
         ]);
     }
+
+    public function import(Request $request)
+    {
+        $validated = $request->validate([
+            'students' => 'required|array',
+            'students.*.nisn' => 'required|string',
+            'students.*.name' => 'required|string|max:255',
+            'students.*.gender' => 'required|in:L,P',
+            'students.*.grade' => 'required|string',
+            'students.*.major' => 'required|string',
+            'students.*.status' => 'required|in:aktif,alumni',
+        ]);
+
+        $importedCount = 0;
+        foreach ($validated['students'] as $studentData) {
+            Student::updateOrCreate(
+                ['nisn' => $studentData['nisn']],
+                [
+                    'name' => $studentData['name'],
+                    'gender' => $studentData['gender'],
+                    'grade' => $studentData['grade'],
+                    'major' => $studentData['major'],
+                    'status' => $studentData['status'],
+                ]
+            );
+            $importedCount++;
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Berhasil mengimpor $importedCount data siswa."
+        ]);
+    }
 }

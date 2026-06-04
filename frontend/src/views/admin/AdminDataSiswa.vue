@@ -11,6 +11,7 @@ import {
   PhGraduationCap,
   PhUploadSimple,
   PhX,
+  PhSpinner,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -41,6 +42,18 @@ const itemToDelete = ref(null);
 const isImportModalOpen = ref(false);
 const isImporting = ref(false);
 const fileInput = ref(null);
+
+const showMapping = ref(false);
+const excelHeaders = ref([]);
+const excelData = ref([]);
+const columnMapping = ref({
+  nisn: "",
+  name: "",
+  gender: "",
+  grade: "",
+  major: "",
+  status: "",
+});
 
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
@@ -121,6 +134,9 @@ const closeImportModal = () => {
   isImportModalOpen.value = false;
   document.body.style.overflow = "";
   if (fileInput.value) fileInput.value.value = "";
+  showMapping.value = false;
+  excelData.value = [];
+  excelHeaders.value = [];
 };
 
 const handleFileUpload = async (event) => {
@@ -130,55 +146,47 @@ const handleFileUpload = async (event) => {
   isImporting.value = true;
 
   try {
-    /* 
-    // --- CARA IMPLEMENTASI ASLI DENGAN LIBRARY 'xlsx' (SheetJS) ---
-    // 1. Install library: npm install xlsx
-    // 2. Import di atas file: import * as xlsx from 'xlsx';
-    
+    let xlsx;
+    try {
+      xlsx = await import(/* @vite-ignore */ "xlsx");
+    } catch (err) {
+      triggerToast(
+        "Library Tidak Ditemukan",
+        "Silakan install library xlsx di frontend dengan perintah: npm install xlsx",
+        "error"
+      );
+      isImporting.value = false;
+      return;
+    }
+
     const data = await file.arrayBuffer();
     const workbook = xlsx.read(data);
-    const firstSheetName = workbook.SheetNames[0]; // Biasanya sheet pertama
-    const worksheet = workbook.Sheets[firstSheetName];
-    
-    // Ubah data sheet ke format JSON Array
-    const jsonData = xlsx.utils.sheet_to_json(worksheet);
-    
-    // 3. Lakukan mapping data dari kolom Dapodik ke properti sistem Anda
-    const mappedData = jsonData.map((row, index) => ({
-      id: Date.now() + index,
-      nisn: row['NISN'] || row['nisn'] || '',
-      name: row['Nama Peserta Didik'] || row['nama'] || '',
-      gender: (row['L/P'] || row['jenis_kelamin']) === 'L' ? 'L' : 'P',
-      grade: row['Tingkat Kelas'] || row['kelas'] || 'X',
-      major: row['Jurusan'] || row['peminatan'] || 'MIPA',
-      school_class_id: null,
-      status: row['Status'] || row['status'] || 'aktif'
-    }));
-    
-    // 4. Masukkan ke dalam list / kirim bulk insert ke backend API
-    studentsList.value = [...mappedData, ...studentsList.value];
-    */
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    const jsonData = xlsx.utils.sheet_to_json(worksheet, { defval: "" });
 
-    // --- SIMULASI PROSES IMPORT UNTUK DEMO UI ---
-    setTimeout(() => {
-      studentsList.value.unshift({
-        id: Date.now(),
-        nisn: Math.floor(1000000000 + Math.random() * 9000000000).toString(),
-        name: "Siswa Baru (Hasil Import Dapodik)",
-        gender: Math.random() > 0.5 ? "L" : "P",
-        grade: grades[Math.floor(Math.random() * grades.length)],
-        major: majors[Math.floor(Math.random() * majors.length)],
-        school_class_id: null,
-        school_class: null,
-        status: "aktif",
-      });
+    if (jsonData.length === 0) {
+      triggerToast("Gagal", "File Excel kosong atau format tidak didukung.", "error");
       isImporting.value = false;
-      closeImportModal();
-      triggerToast(
-        "Import Berhasil",
-        `Data siswa berhasil dibaca dari file ${file.name}.`
-      );
-    }, 2000);
+      return;
+    }
+
+    excelData.value = jsonData;
+    excelHeaders.value = Object.keys(jsonData[0]);
+
+    // Auto-guess (tebakan otomatis) untuk membantu pengguna
+    const findHeader = (keywords) =>
+      excelHeaders.value.find((h) => keywords.some((k) => h.toLowerCase().includes(k))) ||
+      "";
+
+    columnMapping.value.nisn = findHeader(["nisn"]);
+    columnMapping.value.name = findHeader(["nama", "name", "peserta didik"]);
+    columnMapping.value.gender = findHeader(["jenis kelamin", "j.k", "l/p", "gender"]);
+    columnMapping.value.grade = findHeader(["kelas", "tingkat", "rombel", "grade"]);
+    columnMapping.value.major = findHeader(["jurusan", "peminatan", "major"]);
+    columnMapping.value.status = findHeader(["status"]);
+
+    showMapping.value = true;
+    isImporting.value = false;
   } catch (error) {
     isImporting.value = false;
     triggerToast(
@@ -186,6 +194,71 @@ const handleFileUpload = async (event) => {
       "Terjadi kesalahan saat membaca file atau format tidak didukung.",
       "error"
     );
+  }
+};
+
+const processImport = async () => {
+  if (!columnMapping.value.nisn || !columnMapping.value.name) {
+    triggerToast(
+      "Peringatan",
+      "Kolom NISN dan Nama wajib dipilih untuk melakukan mapping!",
+      "warning"
+    );
+    return;
+  }
+
+  isImporting.value = true;
+
+  const formattedData = excelData.value
+    .map((row) => {
+      let gender = "L";
+      const rawGender = String(row[columnMapping.value.gender] || "").toUpperCase();
+      if (rawGender === "P" || rawGender.includes("PEREMPUAN")) gender = "P";
+
+      let grade = "X";
+      const rawGrade = String(row[columnMapping.value.grade] || "").toUpperCase();
+      if (rawGrade.includes("11") || rawGrade === "XI") grade = "XI";
+      else if (rawGrade.includes("12") || rawGrade === "XII") grade = "XII";
+
+      let status = "aktif";
+      const rawStatus = String(row[columnMapping.value.status] || "").toLowerCase();
+      if (rawStatus.includes("alumni") || rawStatus.includes("lulus")) status = "alumni";
+
+      return {
+        nisn: String(row[columnMapping.value.nisn] || "").trim(),
+        name: String(row[columnMapping.value.name] || "").trim(),
+        gender: gender,
+        grade: grade,
+        major: String(row[columnMapping.value.major] || "MIPA").trim(),
+        status: status,
+      };
+    })
+    .filter((item) => item.nisn && item.name); // Hanya kirim yang NISN & Nama tidak kosong
+
+  if (formattedData.length === 0) {
+    triggerToast("Peringatan", "Tidak ada data yang valid untuk diimport.", "warning");
+    isImporting.value = false;
+    return;
+  }
+
+  try {
+    const response = await api.post("/api/students/import", { students: formattedData });
+    triggerToast(
+      "Import Berhasil",
+      response.data.message || `${formattedData.length} data siswa berhasil diimport.`
+    );
+    closeImportModal();
+    fetchData(); // Reload data ke tabel
+  } catch (error) {
+    console.error(error);
+    triggerToast(
+      "Gagal Import",
+      error.response?.data?.message ||
+        "Terjadi kesalahan pada server saat import massal.",
+      "error"
+    );
+  } finally {
+    isImporting.value = false;
   }
 };
 
@@ -356,7 +429,7 @@ const filteredStudents = computed(() => {
               <PhX class="w-6 h-6" />
             </button>
           </div>
-          <div class="p-6">
+          <div class="p-6" v-if="!showMapping">
             <div
               class="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-xl p-8 text-center flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-700/30"
             >
@@ -428,6 +501,131 @@ const filteredStudents = computed(() => {
                   otomatis.
                 </li>
               </ol>
+            </div>
+          </div>
+          <!-- UI Mapping Kolom -->
+          <div class="p-6" v-else>
+            <div class="mb-4">
+              <h4 class="text-lg font-bold text-gray-800 dark:text-white">
+                Sesuaikan Kolom (Mapping)
+              </h4>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                Pilih kolom dari Excel Anda yang sesuai dengan data sistem.
+              </p>
+            </div>
+
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[50vh] overflow-y-auto custom-scrollbar pr-2"
+            >
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >NISN <span class="text-red-500">*</span></label
+                >
+                <select
+                  v-model="columnMapping.nisn"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Pilih Kolom --</option>
+                  <option v-for="header in excelHeaders" :key="header" :value="header">
+                    {{ header }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Nama Lengkap <span class="text-red-500">*</span></label
+                >
+                <select
+                  v-model="columnMapping.name"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Pilih Kolom --</option>
+                  <option v-for="header in excelHeaders" :key="header" :value="header">
+                    {{ header }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Jenis Kelamin</label
+                >
+                <select
+                  v-model="columnMapping.gender"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Pilih Kolom --</option>
+                  <option v-for="header in excelHeaders" :key="header" :value="header">
+                    {{ header }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Tingkat Kelas</label
+                >
+                <select
+                  v-model="columnMapping.grade"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Pilih Kolom --</option>
+                  <option v-for="header in excelHeaders" :key="header" :value="header">
+                    {{ header }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Jurusan</label
+                >
+                <select
+                  v-model="columnMapping.major"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Pilih Kolom --</option>
+                  <option v-for="header in excelHeaders" :key="header" :value="header">
+                    {{ header }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Status</label
+                >
+                <select
+                  v-model="columnMapping.status"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Pilih Kolom --</option>
+                  <option v-for="header in excelHeaders" :key="header" :value="header">
+                    {{ header }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div
+              class="mt-8 flex justify-end gap-3 border-t border-gray-100 dark:border-slate-700 pt-4"
+            >
+              <button
+                @click="showMapping = false"
+                class="px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700"
+              >
+                Kembali
+              </button>
+              <button
+                @click="processImport"
+                :disabled="isImporting"
+                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md flex items-center"
+              >
+                <PhSpinner v-if="isImporting" class="w-4 h-4 mr-2 animate-spin" />
+                {{ isImporting ? "Memproses..." : "Proses Import" }}
+              </button>
             </div>
           </div>
         </div>
@@ -711,7 +909,7 @@ const filteredStudents = computed(() => {
               <td
                 class="px-6 py-4 text-sm font-semibold text-gray-700 dark:text-gray-300"
               >
-                {{ student.school_class ? student.school_class.name : '-' }}
+                {{ student.school_class ? student.school_class.name : "-" }}
               </td>
               <td class="px-6 py-4">
                 <span

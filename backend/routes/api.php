@@ -149,6 +149,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/fasilitas/{facility}', [FacilityController::class, 'destroy']);
 
     // API Data Siswa
+    Route::post('/students/import', [StudentController::class, 'import']);
     Route::apiResource('students', StudentController::class);
 
     // API Data Guru & Staf
