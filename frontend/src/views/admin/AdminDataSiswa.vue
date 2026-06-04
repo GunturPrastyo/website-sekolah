@@ -12,7 +12,6 @@ import {
   PhUploadSimple,
   PhX,
   PhSpinner,
-  PhCaretDown,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -1054,38 +1053,57 @@ const executeBulkDelete = async () => {
       </div>
 
       <!-- Bulk Actions Bar -->
-      <div
-        v-if="selectedStudents.length > 0"
-        class="bg-blue-50 dark:bg-blue-900/30 border-b border-blue-100 dark:border-blue-800/50 p-4 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-20"
+      <Transition
+        enter-active-class="transition-all duration-300 ease-out"
+        enter-from-class="opacity-0 -translate-y-4"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition-all duration-200 ease-in"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 -translate-y-4"
       >
-        <span class="text-sm font-medium text-blue-800 dark:text-blue-300">
-          {{ selectedStudents.length }} siswa dipilih
-        </span>
-        <div class="relative group">
-          <button
-            class="inline-flex items-center px-4 py-2 border border-blue-200 dark:border-blue-700 bg-white dark:bg-slate-800 text-sm font-medium rounded-md text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-slate-700 focus:outline-none"
-          >
-            Aksi Massal
-            <PhCaretDown class="w-4 h-4 ml-2" />
-          </button>
-          <div
-            class="absolute right-0 mt-1 w-48 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-lg rounded-md py-1 hidden group-hover:block top-full origin-top"
-          >
+        <div
+          v-if="selectedStudents.length > 0"
+          class="bg-blue-50/90 dark:bg-blue-900/30 backdrop-blur-md border-b border-blue-200 dark:border-blue-800/50 p-3 sm:p-4 flex flex-wrap justify-between items-center gap-4 relative z-20 shadow-sm"
+        >
+          <div class="flex items-center gap-3">
+            <span
+              class="inline-flex items-center justify-center bg-blue-600 text-white w-7 h-7 rounded-full text-xs font-bold shadow-md"
+            >
+              {{ selectedStudents.length }}
+            </span>
+            <span class="text-sm font-semibold text-blue-900 dark:text-blue-200">
+              Siswa Terpilih
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2 sm:gap-3">
             <button
               @click="openBulkEditModal"
-              class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700"
+              class="inline-flex items-center px-3 py-2 border border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-800 text-sm font-semibold rounded-lg text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-700 focus:outline-none transition-colors shadow-sm"
             >
-              Edit Terpilih
+              <PhPencilSimple class="w-4 h-4 sm:mr-2" />
+              <span class="hidden sm:inline">Edit Massal</span>
             </button>
             <button
               @click="confirmBulkDelete"
-              class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+              class="inline-flex items-center px-3 py-2 border border-red-300 dark:border-red-800/50 bg-white dark:bg-slate-800 text-sm font-semibold rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-slate-700 focus:outline-none transition-colors shadow-sm"
             >
-              Hapus Terpilih
+              <PhTrash class="w-4 h-4 sm:mr-2" />
+              <span class="hidden sm:inline">Hapus</span>
+            </button>
+            <div
+              class="h-6 border-l-2 border-blue-200 dark:border-blue-700/50 mx-1 sm:mx-2"
+            ></div>
+            <button
+              @click="selectedStudents = []"
+              class="inline-flex items-center px-2 py-2 text-sm font-medium rounded-lg text-gray-500 hover:text-gray-900 hover:bg-white dark:text-gray-400 dark:hover:text-white dark:hover:bg-slate-700 focus:outline-none transition-all"
+              title="Batal Pilih"
+            >
+              <PhX class="w-5 h-5" />
             </button>
           </div>
         </div>
-      </div>
+      </Transition>
 
       <div class="overflow-x-auto relative z-10">
         <table class="w-full text-left border-collapse">
@@ -1097,6 +1115,7 @@ const executeBulkDelete = async () => {
                 <input
                   type="checkbox"
                   v-model="selectAll"
+                  .indeterminate="selectedStudents.length > 0 && selectedStudents.length < filteredStudents.length"
                   class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer w-4 h-4"
                 />
               </th>
