@@ -83,6 +83,10 @@ const cropImage = () => {
     return;
   }
 
+  // Ekstrak tipe file dari rawImage
+  const mimeTypeMatch = rawImage.value.match(/^data:(image\/\w+);base64,/);
+  const mimeType = mimeTypeMatch ? mimeTypeMatch[1] : "image/jpeg";
+
   const canvas = document.createElement("canvas");
   // Tentukan resolusi crop. 800x800 jika isCircular (1:1), 800x450 jika tidak (16:9)
   const width = 800;
@@ -100,12 +104,18 @@ const cropImage = () => {
     const x = (width - drawW) * (posX.value / 100);
     const y = (height - drawH) * (posY.value / 100);
 
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, width, height); // Background putih untuk gambar transparan
-    ctx.drawImage(img, x, y, drawW, drawH);
+    if (mimeType === "image/png" || mimeType === "image/webp") {
+      ctx.clearRect(0, 0, width, height); // Bersihkan canvas untuk menjaga transparansi
+      ctx.drawImage(img, x, y, drawW, drawH);
 
-    // Mengirim gambar yang sudah dipotong murni ke v-model
-    emit("update:modelValue", canvas.toDataURL("image/jpeg", 0.9));
+      // Kirim format asli agar transparansi terjaga
+      emit("update:modelValue", canvas.toDataURL(mimeType));
+    } else {
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, width, height); // Background putih untuk gambar selain PNG/WEBP
+      ctx.drawImage(img, x, y, drawW, drawH);
+      emit("update:modelValue", canvas.toDataURL("image/jpeg", 0.9));
+    }
   };
   img.src = rawImage.value;
 };

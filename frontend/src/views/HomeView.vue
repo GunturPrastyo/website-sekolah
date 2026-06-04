@@ -1574,9 +1574,10 @@ import {
 } from "@phosphor-icons/vue";
 
 const displayedTitle = ref("");
-const fullTitle = ref("");
+const fullTitle = ref(localStorage.getItem("app_namaSekolah") || "");
 const showSubtitle = ref(false);
-const slogan = ref("");
+const slogan = ref(localStorage.getItem("app_sloganSekolah") || "");
+const isTypewriterStarted = ref(false);
 
 const appearanceSettings = ref({
   benefitFasilitasImage: "",
@@ -2268,8 +2269,12 @@ const fetchSettings = async () => {
   try {
     const response = await api.get("/api/settings");
     if (response.data && response.data.data) {
+      const isFirstLoad = !fullTitle.value;
       fullTitle.value = response.data.data.namaSekolah || "";
       slogan.value = response.data.data.deskripsi || "";
+
+      localStorage.setItem("app_namaSekolah", fullTitle.value);
+      localStorage.setItem("app_sloganSekolah", slogan.value);
 
       appearanceSettings.value.benefitFasilitasImage =
         response.data.data.benefitFasilitasImage || "";
@@ -2279,12 +2284,16 @@ const fetchSettings = async () => {
         response.data.data.benefitPrestasiImage || "";
       appearanceSettings.value.programCoverImage =
         response.data.data.programCoverImage || "";
+
+      // Jika pertama kali load (cache kosong), jalankan animasi setelah data turun
+      if (isFirstLoad && !isTypewriterStarted.value) {
+        startTypewriter();
+      }
     }
   } catch (error) {
     console.error("Gagal mengambil pengaturan:", error);
+    if (!isTypewriterStarted.value) startTypewriter();
   } finally {
-    // Panggil animasi typewriter SETELAH data nama sekolah berhasil diambil
-    startTypewriter();
   }
 };
 
@@ -2299,6 +2308,11 @@ onMounted(() => {
   fetchSchoolStats();
   fetchPpdbInfo();
   fetchSettings();
+
+  // Jika sudah ada cache, langsung mulai efek ketik tanpa delay menunggu backend
+  if (fullTitle.value && !isTypewriterStarted.value) {
+    startTypewriter();
+  }
 
   // Initialize countdown
   updateCountdown();
@@ -2387,6 +2401,9 @@ onMounted(() => {
 
 // Dipisahkan ke dalam fungsi agar bisa dipanggil setelah fetching data pengaturan
 const startTypewriter = () => {
+  if (isTypewriterStarted.value) return;
+  isTypewriterStarted.value = true;
+
   let i = 0;
   displayedTitle.value = "";
   const typeWriter = setInterval(() => {

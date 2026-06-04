@@ -588,8 +588,8 @@ const activeDropdown = ref(null);
 const route = useRoute();
 
 const settings = ref({
-  namaSekolah: "",
-  logo: "",
+  namaSekolah: localStorage.getItem("app_namaSekolah") || "",
+  logo: localStorage.getItem("app_logoSekolah") || "",
 });
 
 const fetchSettings = async () => {
@@ -597,6 +597,12 @@ const fetchSettings = async () => {
     const response = await api.get("/api/settings");
     if (response.data && response.data.data) {
       settings.value = { ...settings.value, ...response.data.data };
+
+      // Simpan ke cache agar load berikutnya instan (tanpa delay)
+      if (response.data.data.namaSekolah)
+        localStorage.setItem("app_namaSekolah", response.data.data.namaSekolah);
+      if (response.data.data.logo)
+        localStorage.setItem("app_logoSekolah", response.data.data.logo);
     }
   } catch (error) {
     console.error("Gagal mengambil pengaturan navbar:", error);
