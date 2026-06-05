@@ -333,7 +333,11 @@ const confirmDelete = async () => {
       triggerToast("Data Dihapus", "Data siswa berhasil dihapus dari sistem.", "info");
     } catch (error) {
       console.error(error);
-      triggerToast("Gagal Menghapus", "Terjadi kesalahan saat menghapus data.", "error");
+      triggerToast(
+        "Gagal Menghapus",
+        error.response?.data?.message || "Terjadi kesalahan saat menghapus data.",
+        "error"
+      );
     }
   }
   isDeleteModalOpen.value = false;
@@ -442,20 +446,27 @@ const cancelBulkDelete = () => {
 };
 
 const executeBulkDelete = async () => {
+  isBulkDeleteModalOpen.value = false;
   try {
-    await Promise.all(
-      selectedStudents.value.map((id) => api.delete(`/api/students/${id}`))
-    );
+    const response = await api.post("/api/students/bulk-delete", {
+      ids: selectedStudents.value,
+    });
     studentsList.value = studentsList.value.filter(
       (s) => !selectedStudents.value.includes(s.id)
     );
     selectedStudents.value = [];
-    isBulkDeleteModalOpen.value = false;
-    triggerToast("Berhasil", "Data terpilih berhasil dihapus.", "success");
+    triggerToast(
+      "Berhasil",
+      response.data?.message || "Data terpilih berhasil dihapus.",
+      "success"
+    );
   } catch (error) {
     console.error(error);
-    triggerToast("Gagal", "Terjadi kesalahan saat menghapus data massal.", "error");
-    isBulkDeleteModalOpen.value = false;
+    triggerToast(
+      "Gagal",
+      error.response?.data?.message || "Terjadi kesalahan saat menghapus data massal.",
+      "error"
+    );
   }
 };
 </script>

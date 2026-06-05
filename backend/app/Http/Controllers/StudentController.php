@@ -63,12 +63,39 @@ class StudentController extends Controller
 
     public function destroy(Student $student)
     {
-        $student->delete();
+        try {
+            $student->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Data siswa berhasil dihapus'
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus: Siswa ini masih terhubung dengan data lain di sistem (misal: Data Alumni).'
+            ], 400);
+        }
+    }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Data siswa berhasil dihapus'
+    public function bulkDelete(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:students,id'
         ]);
+
+        try {
+            Student::whereIn('id', $validated['ids'])->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Data siswa terpilih berhasil dihapus secara massal'
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus: Beberapa siswa masih terhubung dengan data lain (misal: Data Alumni).'
+            ], 400);
+        }
     }
 
     public function import(Request $request)
