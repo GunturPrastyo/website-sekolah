@@ -504,7 +504,7 @@ const handleDeleteRole = (index) => {
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                         >Jabatan / Posisi</label
                       >
-                      <div v-if="!showNewRoleInput" class="relative">
+                      <div v-show="!showNewRoleInput" class="relative">
                         <!-- Custom Dropdown Button -->
                         <button
                           type="button"
@@ -619,7 +619,7 @@ const handleDeleteRole = (index) => {
                           </div>
                         </Transition>
                       </div>
-                      <div v-else class="flex gap-2">
+                      <div v-show="showNewRoleInput" class="flex gap-2">
                         <input
                           type="text"
                           v-model="newRoleName"
