@@ -12,6 +12,7 @@ import {
   PhUploadSimple,
   PhX,
   PhSpinner,
+  PhCaretDown,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -59,6 +60,24 @@ const columnMapping = ref({
   grade: "",
   major: "",
   status: "",
+});
+
+const mappingFields = [
+  { key: "nisn", label: "NISN", required: true },
+  { key: "name", label: "Nama Lengkap", required: true },
+  { key: "gender", label: "Jenis Kelamin", required: false },
+  { key: "grade", label: "Tingkat Kelas", required: false },
+  { key: "major", label: "Jurusan", required: false },
+  { key: "status", label: "Status", required: false },
+];
+
+const mappingDropdowns = ref({
+  nisn: false,
+  name: false,
+  gender: false,
+  grade: false,
+  major: false,
+  status: false,
 });
 
 const showToast = ref(false);
@@ -143,6 +162,9 @@ const closeImportModal = () => {
   showMapping.value = false;
   excelData.value = [];
   excelHeaders.value = [];
+  for (const key in mappingDropdowns.value) {
+    mappingDropdowns.value[key] = false;
+  }
 };
 
 const handleFileUpload = async (event) => {
@@ -534,15 +556,15 @@ const executeBulkDelete = async () => {
     >
       <div
         v-if="isImportModalOpen"
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6 overflow-y-auto"
         @click="closeImportModal"
       >
         <div
-          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all"
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg transform transition-all my-auto"
           @click.stop
         >
           <div
-            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 rounded-t-xl"
           >
             <h3 class="text-xl font-bold text-gray-800 dark:text-white">
               Import Data dari Dapodik
@@ -639,98 +661,77 @@ const executeBulkDelete = async () => {
               </p>
             </div>
 
-            <div
-              class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[50vh] overflow-y-auto custom-scrollbar pr-2"
-            >
-              <div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div v-for="field in mappingFields" :key="field.key" class="relative">
                 <label
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >NISN <span class="text-red-500">*</span></label
                 >
-                <select
-                  v-model="columnMapping.nisn"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="">-- Pilih Kolom --</option>
-                  <option v-for="header in excelHeaders" :key="header" :value="header">
-                    {{ header }}
-                  </option>
-                </select>
-              </div>
-              <div>
-                <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >Nama Lengkap <span class="text-red-500">*</span></label
-                >
-                <select
-                  v-model="columnMapping.name"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="">-- Pilih Kolom --</option>
-                  <option v-for="header in excelHeaders" :key="header" :value="header">
-                    {{ header }}
-                  </option>
-                </select>
-              </div>
-              <div>
-                <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >Jenis Kelamin</label
-                >
-                <select
-                  v-model="columnMapping.gender"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="">-- Pilih Kolom --</option>
-                  <option v-for="header in excelHeaders" :key="header" :value="header">
-                    {{ header }}
-                  </option>
-                </select>
-              </div>
-              <div>
-                <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >Tingkat Kelas</label
-                >
-                <select
-                  v-model="columnMapping.grade"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="">-- Pilih Kolom --</option>
-                  <option v-for="header in excelHeaders" :key="header" :value="header">
-                    {{ header }}
-                  </option>
-                </select>
-              </div>
-              <div>
-                <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >Jurusan</label
-                >
-                <select
-                  v-model="columnMapping.major"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="">-- Pilih Kolom --</option>
-                  <option v-for="header in excelHeaders" :key="header" :value="header">
-                    {{ header }}
-                  </option>
-                </select>
-              </div>
-              <div>
-                <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >Status</label
-                >
-                <select
-                  v-model="columnMapping.status"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="">-- Pilih Kolom --</option>
-                  <option v-for="header in excelHeaders" :key="header" :value="header">
-                    {{ header }}
-                  </option>
-                </select>
+                  {{ field.label }}
+                  <span v-if="field.required" class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                  <button
+                    type="button"
+                    @click="mappingDropdowns[field.key] = !mappingDropdowns[field.key]"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-left focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex justify-between items-center transition-colors"
+                    :class="
+                      columnMapping[field.key]
+                        ? 'text-gray-900 dark:text-white'
+                        : 'text-gray-500 dark:text-gray-400'
+                    "
+                  >
+                    <span class="truncate">{{
+                      columnMapping[field.key] || "-- Pilih Kolom --"
+                    }}</span>
+                    <PhCaretDown
+                      class="w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200"
+                      :class="{ 'rotate-180': mappingDropdowns[field.key] }"
+                    />
+                  </button>
+
+                  <div
+                    v-if="mappingDropdowns[field.key]"
+                    @click="mappingDropdowns[field.key] = false"
+                    class="fixed inset-0 z-40"
+                  ></div>
+
+                  <Transition
+                    enter-active-class="transition ease-out duration-100"
+                    enter-from-class="opacity-0 translate-y-[-10px]"
+                    enter-to-class="opacity-100 translate-y-0"
+                    leave-active-class="transition ease-in duration-100"
+                    leave-from-class="opacity-100 translate-y-0"
+                    leave-to-class="opacity-0 translate-y-[-10px]"
+                  >
+                    <div
+                      v-if="mappingDropdowns[field.key]"
+                      class="absolute top-full left-0 z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl max-h-48 overflow-y-auto custom-scrollbar"
+                    >
+                      <ul class="py-1 text-sm">
+                        <li
+                          class="px-4 py-2 hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 cursor-pointer"
+                          @click="
+                            columnMapping[field.key] = '';
+                            mappingDropdowns[field.key] = false;
+                          "
+                        >
+                          -- Pilih Kolom --
+                        </li>
+                        <li
+                          v-for="header in excelHeaders"
+                          :key="header"
+                          class="px-4 py-2 hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 cursor-pointer"
+                          @click="
+                            columnMapping[field.key] = header;
+                            mappingDropdowns[field.key] = false;
+                          "
+                        >
+                          {{ header }}
+                        </li>
+                      </ul>
+                    </div>
+                  </Transition>
+                </div>
               </div>
             </div>
 
