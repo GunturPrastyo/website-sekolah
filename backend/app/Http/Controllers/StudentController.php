@@ -98,6 +98,43 @@ class StudentController extends Controller
         }
     }
 
+    public function bulkUpdate(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:students,id',
+            'grade' => 'nullable|string',
+            'major' => 'nullable|string',
+            'school_class_id' => 'nullable|exists:school_classes,id',
+            'status' => 'nullable|in:aktif,alumni',
+        ]);
+
+        $updateData = [];
+        if ($request->has('grade')) $updateData['grade'] = $validated['grade'];
+        if ($request->has('major')) $updateData['major'] = $validated['major'];
+        if ($request->has('status')) $updateData['status'] = $validated['status'];
+        if ($request->has('school_class_id')) {
+            $updateData['school_class_id'] = $validated['school_class_id'];
+        }
+
+        if (empty($updateData)) {
+            return response()->json(['success' => false, 'message' => 'Tidak ada data yang diubah'], 400);
+        }
+
+        try {
+            Student::whereIn('id', $validated['ids'])->update($updateData);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data siswa terpilih berhasil diperbarui secara massal'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memperbarui data massal.'
+            ], 500);
+        }
+    }
+
     public function import(Request $request)
     {
         $validated = $request->validate([

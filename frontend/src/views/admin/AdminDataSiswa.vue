@@ -403,7 +403,10 @@ const executeBulkEdit = async () => {
   if (bulkEditForm.value.grade) payload.grade = bulkEditForm.value.grade;
   if (bulkEditForm.value.major) payload.major = bulkEditForm.value.major;
   if (bulkEditForm.value.school_class_id !== null)
-    payload.school_class_id = bulkEditForm.value.school_class_id;
+    payload.school_class_id =
+      bulkEditForm.value.school_class_id === ""
+        ? null
+        : bulkEditForm.value.school_class_id;
   if (bulkEditForm.value.status) payload.status = bulkEditForm.value.status;
 
   if (Object.keys(payload).length === 0) {
@@ -411,15 +414,20 @@ const executeBulkEdit = async () => {
     return;
   }
 
+  payload.ids = selectedStudents.value;
+
   try {
-    for (const id of selectedStudents.value) {
+    const response = await api.post("/api/students/bulk-update", payload);
+
+    // Perbarui data state Vue tanpa me-reload list kembali
+    selectedStudents.value.forEach((id) => {
       const student = studentsList.value.find((s) => s.id === id);
       if (student) {
-        const updateData = { ...student, ...payload };
-        await api.put(`/api/students/${id}`, updateData);
-        Object.assign(student, payload);
+        if (payload.grade) student.grade = payload.grade;
+        if (payload.major) student.major = payload.major;
+        if (payload.status) student.status = payload.status;
         if (payload.school_class_id !== undefined) {
-          if (payload.school_class_id === "") {
+          if (payload.school_class_id === null) {
             student.school_class = null;
           } else {
             const sc = classesList.value.find((c) => c.id === payload.school_class_id);
@@ -427,13 +435,22 @@ const executeBulkEdit = async () => {
           }
         }
       }
-    }
+    });
+
     selectedStudents.value = [];
     closeBulkEditModal();
-    triggerToast("Berhasil", "Data siswa terpilih berhasil diperbarui.", "success");
+    triggerToast(
+      "Berhasil",
+      response.data?.message || "Data siswa terpilih berhasil diperbarui.",
+      "success"
+    );
   } catch (error) {
     console.error(error);
-    triggerToast("Gagal", "Terjadi kesalahan saat memperbarui data massal.", "error");
+    triggerToast(
+      "Gagal",
+      error.response?.data?.message || "Terjadi kesalahan saat memperbarui data massal.",
+      "error"
+    );
   }
 };
 
