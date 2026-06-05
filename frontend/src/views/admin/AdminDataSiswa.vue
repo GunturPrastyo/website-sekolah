@@ -223,8 +223,10 @@ const processImport = async () => {
 
       let grade = "X";
       const rawGrade = String(row[columnMapping.value.grade] || "").toUpperCase();
-      if (rawGrade.includes("11") || rawGrade === "XI") grade = "XI";
-      else if (rawGrade.includes("12") || rawGrade === "XII") grade = "XII";
+
+      if (/(12|XII)\b/.test(rawGrade)) grade = "XII";
+      else if (/(11|XI)\b/.test(rawGrade)) grade = "XI";
+      else if (/(10|X)\b/.test(rawGrade)) grade = "X";
 
       let status = "aktif";
       const rawStatus = String(row[columnMapping.value.status] || "").toLowerCase();
