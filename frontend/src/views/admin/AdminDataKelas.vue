@@ -362,7 +362,7 @@ const filteredClasses = computed(() => {
           </div>
           <select
             v-model="filterGrade"
-            class="block w-full md:w-32 px-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm cursor-pointer"
+            class="block w-full md:w-auto md:min-w-[160px] px-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm cursor-pointer"
           >
             <option value="semua">Semua Kelas</option>
             <option v-for="grade in grades" :key="grade" :value="grade">
@@ -371,7 +371,7 @@ const filteredClasses = computed(() => {
           </select>
           <select
             v-model="filterMajor"
-            class="block w-full md:w-40 px-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm cursor-pointer"
+            class="block w-full md:w-auto md:min-w-[160px] px-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm cursor-pointer"
           >
             <option value="semua">Semua Jurusan</option>
             <option v-for="major in majors" :key="major" :value="major">
