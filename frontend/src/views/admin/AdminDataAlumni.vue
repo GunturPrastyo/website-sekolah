@@ -1365,6 +1365,109 @@ const filteredAlumni = computed(() => {
       @confirm="confirmDelete"
       @cancel="cancelDelete"
     />
+
+    <!-- Modal Bulk Edit -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isBulkEditModalOpen"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="closeBulkEditModal"
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all"
+          @click.stop
+        >
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+              Edit Massal ({{ selectedAlumni.length }} Alumni)
+            </h3>
+            <button
+              @click="closeBulkEditModal"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
+          </div>
+          <div class="p-6">
+            <p class="text-sm text-gray-500 mb-4">
+              Pilih data yang ingin diubah. Kosongkan jika tidak ingin mengubah.
+            </p>
+            <div class="space-y-4">
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Status Karir</label
+                >
+                <select
+                  v-model="bulkEditForm.status"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Tetap --</option>
+                  <option
+                    v-for="status in statusAlumniList"
+                    :key="status"
+                    :value="status"
+                  >
+                    {{ status }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Instansi / Kampus</label
+                >
+                <select
+                  v-model="bulkEditForm.instansi"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Tetap --</option>
+                  <option v-for="inst in institutionList" :key="inst" :value="inst">
+                    {{ inst }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+          >
+            <button
+              @click="closeBulkEditModal"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <PhXCircle class="w-5 h-5 mr-2" /> Batal
+            </button>
+            <button
+              @click="executeBulkEdit"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <PhFloppyDisk class="w-5 h-5 mr-2" />
+              Simpan Perubahan
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Modal Bulk Delete -->
+    <ConfirmModal
+      :isOpen="isBulkDeleteModalOpen"
+      title="Hapus Massal Data Alumni"
+      :message="`Yakin ingin menghapus ${selectedAlumni.length} data alumni ini secara permanen dari sistem?`"
+      @confirm="executeBulkDelete"
+      @cancel="cancelBulkDelete"
+    />
+
     <ToastNotification
       :isOpen="showToast"
       :title="toastData.title"
