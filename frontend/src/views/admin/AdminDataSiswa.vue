@@ -260,6 +260,7 @@ const processImport = async () => {
         gender: gender,
         grade: grade,
         major: String(row[columnMapping.value.major] || "MIPA").trim(),
+        major: String(row[columnMapping.value.major] || "").trim(),
         status: status,
       };
     })
