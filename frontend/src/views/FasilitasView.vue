@@ -3,11 +3,71 @@
     <section class="relative z-20 px-0 dark:bg-slate-900 min-h-screen">
       <main class="w-full">
         <!-- HEADER TRANSITION -->
-        <div v-if="isLoading" class="flex justify-center items-center min-h-[50vh]">
+        <template v-if="isLoading">
+          <!-- Skeleton Header -->
           <div
-            class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"
-          ></div>
-        </div>
+            class="relative h-[350px] md:h-[400px] lg:h-[450px] overflow-hidden shadow-lg lg:rounded-b-2xl border-b border-gray-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 animate-pulse"
+          >
+            <div class="absolute bottom-0 left-0 w-full p-2 md:p-14 py-8">
+              <div class="container mx-auto max-w-7xl px-4 md:px-0">
+                <div
+                  class="h-8 w-40 bg-slate-300 dark:bg-slate-700 rounded-full mb-4"
+                ></div>
+                <div
+                  class="h-10 w-3/4 md:w-1/2 bg-slate-300 dark:bg-slate-700 rounded-lg mb-4"
+                ></div>
+                <div
+                  class="h-4 w-full md:w-2/3 bg-slate-300 dark:bg-slate-700 rounded mb-2"
+                ></div>
+                <div
+                  class="h-4 w-5/6 md:w-1/2 bg-slate-300 dark:bg-slate-700 rounded"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <!-- Skeleton Content -->
+          <div
+            class="container mx-auto max-w-full px-2 sm:px-8 py-6 lg:py-8 grid lg:grid-cols-12 gap-10 items-start"
+          >
+            <div class="lg:col-span-8 space-y-6">
+              <div
+                class="bg-white dark:bg-slate-800 p-6 md:p-8 lg:p-10 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm animate-pulse space-y-4"
+              >
+                <div class="h-6 w-1/3 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                <div class="h-4 w-full bg-gray-200 dark:bg-slate-700 rounded"></div>
+                <div class="h-4 w-full bg-gray-200 dark:bg-slate-700 rounded"></div>
+                <div class="h-4 w-5/6 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                <div
+                  class="h-64 w-full bg-gray-200 dark:bg-slate-700 rounded-xl my-6"
+                ></div>
+                <div class="h-4 w-full bg-gray-200 dark:bg-slate-700 rounded"></div>
+                <div class="h-4 w-4/5 bg-gray-200 dark:bg-slate-700 rounded"></div>
+              </div>
+            </div>
+            <div class="lg:col-span-4 space-y-8">
+              <div
+                class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 animate-pulse"
+              >
+                <div class="border-gray-200 dark:border-slate-700 border-l-4 pl-4 mb-6">
+                  <div class="h-5 w-1/2 bg-gray-200 dark:bg-slate-700 rounded mb-2"></div>
+                  <div class="h-3 w-3/4 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                </div>
+                <div class="space-y-4 mt-4">
+                  <div v-for="i in 4" :key="i" class="flex items-start gap-4">
+                    <div
+                      class="w-20 h-20 bg-gray-200 dark:bg-slate-700 rounded-xl shrink-0"
+                    ></div>
+                    <div class="flex-1 py-1 space-y-2">
+                      <div class="h-4 w-3/4 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                      <div class="h-3 w-full bg-gray-200 dark:bg-slate-700 rounded"></div>
+                      <div class="h-3 w-5/6 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
         <template v-else>
           <Transition
             mode="out-in"
@@ -58,16 +118,44 @@
             </div>
             <div
               v-else
-              class="relative h-[350px] md:h-[400px] lg:h-[450px] overflow-hidden shadow-lg lg:rounded-b-2xl border-b border-gray-200 dark:border-slate-800 bg-slate-900 flex items-center justify-center"
+              key="empty-header"
+              class="relative h-[350px] md:h-[400px] lg:h-[450px] overflow-hidden shadow-lg lg:rounded-b-2xl border-b border-gray-200 dark:border-slate-800 bg-slate-900"
             >
-              <h1 class="text-3xl md:text-4xl font-bold text-white">
-                Belum Ada Fasilitas
-              </h1>
+              <img
+                :src="defaultImage"
+                class="absolute inset-0 w-full h-full object-cover scale-105 animate-slow-zoom opacity-50"
+                alt="Fasilitas Header"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-slate-900/20"
+              ></div>
+              <div class="absolute bottom-0 left-0 w-full p-2 md:p-14 py-8 text-white">
+                <div class="container mx-auto max-w-7xl px-4 md:px-0">
+                  <span
+                    class="inline-block px-4 py-1.5 mb-4 text-md font-extrabold text-blue-900 bg-white backdrop-blur-sm dark:bg-blue-900/40 dark:text-blue-300 rounded-full shadow-sm"
+                    style="font-family: 'Kalam', cursive"
+                  >
+                    Fasilitas Unggulan
+                  </span>
+                  <h1
+                    class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 drop-shadow-md"
+                  >
+                    Fasilitas Sekolah
+                  </h1>
+                  <p
+                    class="text-blue-50 text-sm md:text-base max-w-2xl leading-relaxed drop-shadow"
+                  >
+                    Jelajahi berbagai fasilitas modern yang mendukung pengalaman belajar
+                    siswa secara optimal di lingkungan sekolah kami.
+                  </p>
+                </div>
+              </div>
             </div>
           </Transition>
 
           <!-- CONTENT AREA -->
           <div
+            v-if="facilityCategories.length > 0"
             class="container mx-auto max-w-full px-2 sm:px-8 py-6 lg:py-8 grid lg:grid-cols-12 gap-10 items-start"
           >
             <!-- MAIN ARTICLE (Transitions on change) -->
@@ -158,6 +246,31 @@
               </div>
             </div>
           </div>
+          <!-- EMPTY STATE KONTEN -->
+          <div
+            v-else
+            class="container mx-auto max-w-4xl px-4 py-16 md:py-24 flex flex-col items-center justify-center text-center"
+          >
+            <div
+              class="w-20 h-20 md:w-24 md:h-24 bg-blue-50 dark:bg-slate-800/50 rounded-full flex items-center justify-center mb-6 shadow-sm border border-blue-100 dark:border-slate-700"
+            >
+              <PhBuildings
+                class="w-10 h-10 md:w-12 md:h-12 text-blue-500 dark:text-slate-400"
+                weight="duotone"
+              />
+            </div>
+            <h2
+              class="text-2xl md:text-3xl font-bold text-slate-800 dark:text-white mb-3"
+            >
+              Fasilitas Belum Tersedia
+            </h2>
+            <p
+              class="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-lg leading-relaxed"
+            >
+              Kami sedang dalam proses memperbarui data fasilitas sekolah. Silakan kembali
+              lagi nanti untuk melihat pembaruan.
+            </p>
+          </div>
         </template>
       </main>
     </section>
@@ -247,10 +360,32 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import api from "@/api/index.js";
-import { PhArrowsOut, PhImage, PhX } from "@phosphor-icons/vue";
+import { PhArrowsOut, PhImage, PhX, PhBuildings } from "@phosphor-icons/vue";
 
 const facilityCategories = ref([]);
 const isLoading = ref(true);
+const defaultImage = ref("/img/gedung.jpg");
+
+const fetchSchoolProfile = async () => {
+  try {
+    const response = await api.get("/api/profil-sekolah");
+    if (response.data?.data?.image) {
+      let imgUrl = response.data.data.image;
+      if (
+        imgUrl &&
+        !imgUrl.startsWith("http") &&
+        !imgUrl.startsWith("data:") &&
+        !imgUrl.startsWith("/")
+      ) {
+        const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+        imgUrl = `${backendUrl.replace(/\/+$/, "")}/${imgUrl.replace(/^\/+/, "")}`;
+      }
+      defaultImage.value = imgUrl;
+    }
+  } catch (error) {
+    console.error("Gagal memuat profil sekolah:", error);
+  }
+};
 
 const fetchFacilities = async () => {
   isLoading.value = true;
@@ -258,7 +393,7 @@ const fetchFacilities = async () => {
     const response = await api.get("/api/fasilitas");
     if (response.data?.data) {
       facilityCategories.value = response.data.data.map((f) => {
-        let coverImage = "/img/gedung.jpg";
+        let coverImage = defaultImage.value;
         if (f.images && f.images.length > 0) {
           coverImage = f.images[0];
         } else {
@@ -305,8 +440,9 @@ const fetchFacilities = async () => {
   }
 };
 
-onMounted(() => {
-  fetchFacilities();
+onMounted(async () => {
+  await fetchSchoolProfile();
+  await fetchFacilities();
 });
 
 const activeCategory = ref(null);
