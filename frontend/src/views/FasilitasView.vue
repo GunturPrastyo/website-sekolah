@@ -174,11 +174,14 @@
                   :key="currentCategory.id + '-content'"
                   class="bg-white dark:bg-slate-800 p-6 md:p-8 lg:p-10 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm space-y-8"
                 >
-                  <div
-                    class="editor-content-preview text-gray-700 dark:text-gray-300 leading-relaxed text-justify"
-                    v-html="currentCategory.content"
-                    @click="handleContentClick"
-                  ></div>
+                  <div class="text-gray-700 dark:text-gray-300 text-justify ql-snow">
+                    <div
+                      class="editor-content-preview ql-editor !p-0"
+                      style="font-family: inherit"
+                      v-html="currentCategory.content"
+                      @click="handleContentClick"
+                    ></div>
+                  </div>
                 </div>
               </Transition>
             </div>
@@ -361,6 +364,7 @@
 import { ref, computed, onMounted } from "vue";
 import api from "@/api/index.js";
 import { PhArrowsOut, PhImage, PhX, PhBuildings } from "@phosphor-icons/vue";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
 
 const facilityCategories = ref([]);
 const isLoading = ref(true);
