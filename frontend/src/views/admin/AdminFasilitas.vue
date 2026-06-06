@@ -13,6 +13,7 @@ import {
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
 
 const facilities = ref([]);
 const isLoading = ref(false);
@@ -278,10 +279,12 @@ const confirmDelete = async () => {
             <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">
               {{ facility.category }}
             </h3>
-            <div
-              class="text-gray-800 dark:text-gray-200 text-sm md:text-base leading-relaxed"
-            >
-              <div v-html="facility.content" class="editor-content-preview"></div>
+            <div class="text-gray-800 dark:text-gray-200 text-sm md:text-base ql-snow">
+              <div
+                v-html="facility.content"
+                class="editor-content-preview ql-editor !p-0"
+                style="font-family: inherit"
+              ></div>
             </div>
           </div>
           <div class="flex gap-2 shrink-0">
@@ -340,3 +343,11 @@ const confirmDelete = async () => {
     />
   </main>
 </template>
+
+<style scoped>
+:deep(.editor-content-preview img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+</style>
