@@ -18,7 +18,7 @@ import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
 const grades = ["X", "XI", "XII"];
-const majors = ["MIPA", "IPS", "Bahasa"];
+const majors = ref([]); // Mengambil dari data API
 
 // State Data Siswa
 const studentsList = ref([]);
@@ -30,7 +30,7 @@ const form = ref({
   name: "",
   gender: "L",
   grade: "X",
-  major: "MIPA",
+  major: "",
   school_class_id: null,
   status: "aktif",
 });
@@ -119,9 +119,22 @@ const fetchClasses = async () => {
   }
 };
 
+const fetchMajors = async () => {
+  try {
+    const response = await api.get("/api/programs");
+    // Mengambil nama jurusan (title atau name berdasarkan properti API)
+    majors.value = response.data.data.map(
+      (item) => item.title || item.name || item.program_name
+    );
+  } catch (error) {
+    console.error("Gagal memuat data jurusan", error);
+  }
+};
+
 onMounted(() => {
   fetchData();
   fetchClasses();
+  fetchMajors();
 });
 
 const resetForm = () => {
@@ -131,7 +144,7 @@ const resetForm = () => {
     name: "",
     gender: "L",
     grade: "X",
-    major: "MIPA",
+    major: majors.value.length > 0 ? majors.value[0] : "",
     school_class_id: null,
     status: "aktif",
   };
@@ -259,8 +272,10 @@ const processImport = async () => {
         name: String(row[columnMapping.value.name] || "").trim(),
         gender: gender,
         grade: grade,
-        major: String(row[columnMapping.value.major] || "MIPA").trim(),
-        major: String(row[columnMapping.value.major] || "").trim(),
+        major: String(
+          row[columnMapping.value.major] ||
+            (majors.value.length > 0 ? majors.value[0] : "")
+        ).trim(),
         status: status,
       };
     })
