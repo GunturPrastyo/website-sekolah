@@ -25,8 +25,8 @@ class StudentController extends Controller
             'nisn'   => 'required|string|unique:students,nisn',
             'name'   => 'required|string|max:255',
             'gender' => 'required|in:L,P',
-            'grade'  => 'required|string',
-            'major'  => 'required|string',
+            'grade'  => 'nullable|string',
+            'major'  => 'nullable|string',
             'school_class_id' => 'nullable|exists:school_classes,id',
             'status' => 'required|in:aktif,alumni',
         ]);
@@ -46,8 +46,8 @@ class StudentController extends Controller
             'nisn'   => 'required|string|unique:students,nisn,' . $student->id,
             'name'   => 'required|string|max:255',
             'gender' => 'required|in:L,P',
-            'grade'  => 'required|string',
-            'major'  => 'required|string',
+            'grade'  => 'nullable|string',
+            'major'  => 'nullable|string',
             'school_class_id' => 'nullable|exists:school_classes,id',
             'status' => 'required|in:aktif,alumni',
         ]);
@@ -110,10 +110,10 @@ class StudentController extends Controller
         ]);
 
         $updateData = [];
-        if ($request->has('grade')) $updateData['grade'] = $validated['grade'];
-        if ($request->has('major')) $updateData['major'] = $validated['major'];
-        if ($request->has('status')) $updateData['status'] = $validated['status'];
-        if ($request->has('school_class_id')) {
+        if (array_key_exists('grade', $validated)) $updateData['grade'] = $validated['grade'];
+        if (array_key_exists('major', $validated)) $updateData['major'] = $validated['major'];
+        if (array_key_exists('status', $validated)) $updateData['status'] = $validated['status'];
+        if (array_key_exists('school_class_id', $validated)) {
             $updateData['school_class_id'] = $validated['school_class_id'];
         }
 
@@ -142,8 +142,8 @@ class StudentController extends Controller
             'students.*.nisn' => 'required|string',
             'students.*.name' => 'required|string|max:255',
             'students.*.gender' => 'required|in:L,P',
-            'students.*.grade' => 'required|string',
-            'students.*.major' => 'required|string',
+            'students.*.grade' => 'nullable|string',
+            'students.*.major' => 'nullable|string',
             'students.*.status' => 'required|in:aktif,alumni',
         ]);
 
@@ -154,8 +154,8 @@ class StudentController extends Controller
                 [
                     'name' => $studentData['name'],
                     'gender' => $studentData['gender'],
-                    'grade' => $studentData['grade'],
-                    'major' => $studentData['major'],
+                    'grade' => $studentData['grade'] ?? null,
+                    'major' => $studentData['major'] ?? null,
                     'status' => $studentData['status'],
                 ]
             );

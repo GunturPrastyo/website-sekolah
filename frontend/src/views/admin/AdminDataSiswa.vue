@@ -29,7 +29,7 @@ const form = ref({
   nisn: "",
   name: "",
   gender: "L",
-  grade: "X",
+  grade: "",
   major: "",
   school_class_id: null,
   status: "aktif",
@@ -143,8 +143,8 @@ const resetForm = () => {
     nisn: "",
     name: "",
     gender: "L",
-    grade: "X",
-    major: majors.value.length > 0 ? majors.value[0] : "",
+    grade: "",
+    major: "",
     school_class_id: null,
     status: "aktif",
   };
@@ -256,12 +256,17 @@ const processImport = async () => {
       const rawGender = String(row[columnMapping.value.gender] || "").toUpperCase();
       if (rawGender === "P" || rawGender.includes("PEREMPUAN")) gender = "P";
 
-      let grade = "X";
-      const rawGrade = String(row[columnMapping.value.grade] || "").toUpperCase();
+      let grade = "";
+      const rawGrade = String(row[columnMapping.value.grade] || "")
+        .trim()
+        .toUpperCase();
 
-      if (/(12|XII)\b/.test(rawGrade)) grade = "XII";
-      else if (/(11|XI)\b/.test(rawGrade)) grade = "XI";
-      else if (/(10|X)\b/.test(rawGrade)) grade = "X";
+      if (rawGrade) {
+        if (/(12|XII)\b/.test(rawGrade)) grade = "XII";
+        else if (/(11|XI)\b/.test(rawGrade)) grade = "XI";
+        else if (/(10|X)\b/.test(rawGrade)) grade = "X";
+        else grade = rawGrade;
+      }
 
       let status = "aktif";
       const rawStatus = String(row[columnMapping.value.status] || "").toLowerCase();
@@ -437,8 +442,12 @@ const closeBulkEditModal = () => {
 
 const executeBulkEdit = async () => {
   const payload = {};
-  if (bulkEditForm.value.grade) payload.grade = bulkEditForm.value.grade;
-  if (bulkEditForm.value.major) payload.major = bulkEditForm.value.major;
+  if (bulkEditForm.value.grade)
+    payload.grade =
+      bulkEditForm.value.grade === "kosong" ? null : bulkEditForm.value.grade;
+  if (bulkEditForm.value.major)
+    payload.major =
+      bulkEditForm.value.major === "kosong" ? null : bulkEditForm.value.major;
   if (bulkEditForm.value.school_class_id !== null)
     payload.school_class_id =
       bulkEditForm.value.school_class_id === ""
@@ -460,10 +469,10 @@ const executeBulkEdit = async () => {
     selectedStudents.value.forEach((id) => {
       const student = studentsList.value.find((s) => s.id === id);
       if (student) {
-        if (payload.grade) student.grade = payload.grade;
-        if (payload.major) student.major = payload.major;
-        if (payload.status) student.status = payload.status;
-        if (payload.school_class_id !== undefined) {
+        if (payload.hasOwnProperty("grade")) student.grade = payload.grade;
+        if (payload.hasOwnProperty("major")) student.major = payload.major;
+        if (payload.hasOwnProperty("status")) student.status = payload.status;
+        if (payload.hasOwnProperty("school_class_id")) {
           if (payload.school_class_id === null) {
             student.school_class = null;
           } else {
@@ -853,6 +862,7 @@ const executeBulkDelete = async () => {
                     v-model="form.grade"
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                   >
+                    <option value="">-- Kosong --</option>
                     <option v-for="grade in grades" :key="grade" :value="grade">
                       {{ grade }}
                     </option>
@@ -882,6 +892,7 @@ const executeBulkDelete = async () => {
                     v-model="form.major"
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                   >
+                    <option value="">-- Kosong --</option>
                     <option v-for="major in majors" :key="major" :value="major">
                       {{ major }}
                     </option>
@@ -973,6 +984,7 @@ const executeBulkDelete = async () => {
                   class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">-- Tetap --</option>
+                  <option value="kosong">Kosongkan Tingkat Kelas</option>
                   <option v-for="grade in grades" :key="grade" :value="grade">
                     {{ grade }}
                   </option>
@@ -1004,6 +1016,7 @@ const executeBulkDelete = async () => {
                   class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">-- Tetap --</option>
+                  <option value="kosong">Kosongkan Jurusan</option>
                   <option v-for="major in majors" :key="major" :value="major">
                     {{ major }}
                   </option>
@@ -1224,13 +1237,13 @@ const executeBulkDelete = async () => {
               <td
                 class="px-6 py-4 text-sm font-semibold text-gray-700 dark:text-gray-300"
               >
-                {{ student.grade }}
+                {{ student.grade || "-" }}
               </td>
               <td class="px-6 py-4">
                 <span
                   class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-slate-700 dark:text-gray-300"
                 >
-                  {{ student.major }}
+                  {{ student.major || "-" }}
                 </span>
               </td>
               <td

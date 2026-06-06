@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('nisn')->unique();
             $table->string('name');
             $table->enum('gender', ['L', 'P']);
-            $table->string('grade'); // X, XI, XII
-            $table->string('major'); // MIPA, IPS, Bahasa
+            $table->string('grade')->nullable(); // X, XI, XII
+            $table->string('major')->nullable(); // MIPA, IPS, Bahasa
             $table->enum('status', ['aktif', 'alumni'])->default('aktif');
             $table->timestamps();
         });
