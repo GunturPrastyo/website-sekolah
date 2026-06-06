@@ -133,17 +133,9 @@ const fetchMajors = async () => {
   }
 };
 
-onMounted(() => {
-  fetchData();
-  fetchClasses();
-  fetchMajors();
 onMounted(async () => {
   isLoadingData.value = true;
-  await Promise.all([
-    fetchData(),
-    fetchClasses(),
-    fetchMajors()
-  ]);
+  await Promise.all([fetchData(), fetchClasses(), fetchMajors()]);
   isLoadingData.value = false;
 });
 
