@@ -12,7 +12,7 @@ class SchoolClass extends Model
     protected $fillable = [
         'name',
         'grade',
-        'major',
+        'program_id',
         'homeroom_id',
         'capacity',
     ];
@@ -20,5 +20,10 @@ class SchoolClass extends Model
     public function homeroom()
     {
         return $this->belongsTo(Staff::class, 'homeroom_id');
+    }
+
+    public function program()
+    {
+        return $this->belongsTo(Program::class, 'program_id');
     }
 }

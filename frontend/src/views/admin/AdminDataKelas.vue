@@ -20,13 +20,13 @@ const classList = ref([]);
 const staffList = ref([]);
 
 const grades = ["X", "XI", "XII"];
-const majors = ["MIPA", "IPS", "Bahasa"];
+const majors = ref([]);
 
 const form = ref({
   id: null,
   name: "",
   grade: "X",
-  major: "MIPA",
+  program_id: "",
   homeroom_id: "",
   capacity: 36,
 });
@@ -61,9 +61,21 @@ const fetchStaff = async () => {
   }
 };
 
+const fetchMajors = async () => {
+  try {
+    const response = await api.get("/api/programs");
+    // Menyimpan keseluruhan data object jurusan untuk mengambil id-nya
+    majors.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal mengambil data jurusan:", error);
+    triggerToast("Gagal", "Gagal mengambil data jurusan dari server.", "error");
+  }
+};
+
 onMounted(() => {
   fetchClasses();
   fetchStaff();
+  fetchMajors();
 });
 
 const triggerToast = (title, message, type = "success") => {
@@ -79,7 +91,7 @@ const resetForm = () => {
     id: null,
     name: "",
     grade: "X",
-    major: "MIPA",
+    program_id: "",
     homeroom_id: "",
     capacity: 36,
   };
@@ -99,8 +111,12 @@ const showAddForm = () => {
 };
 
 const addEntry = async () => {
-  if (!form.value.name || !form.value.homeroom_id) {
-    triggerToast("Gagal Menyimpan", "Nama Kelas dan Wali Kelas wajib diisi!", "error");
+  if (!form.value.name || !form.value.homeroom_id || !form.value.program_id) {
+    triggerToast(
+      "Gagal Menyimpan",
+      "Nama Kelas, Jurusan, dan Wali Kelas wajib diisi!",
+      "error"
+    );
     return;
   }
 
@@ -123,8 +139,12 @@ const startEdit = (item) => {
 };
 
 const saveEntry = async () => {
-  if (!form.value.name || !form.value.homeroom_id) {
-    triggerToast("Gagal Menyimpan", "Nama Kelas dan Wali Kelas wajib diisi!", "error");
+  if (!form.value.name || !form.value.homeroom_id || !form.value.program_id) {
+    triggerToast(
+      "Gagal Menyimpan",
+      "Nama Kelas, Jurusan, dan Wali Kelas wajib diisi!",
+      "error"
+    );
     return;
   }
 
@@ -170,7 +190,7 @@ const filteredClasses = computed(() => {
     result = result.filter((item) => item.grade === filterGrade.value);
   }
   if (filterMajor.value !== "semua") {
-    result = result.filter((item) => item.major === filterMajor.value);
+    result = result.filter((item) => item.program_id === filterMajor.value);
   }
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
@@ -261,11 +281,12 @@ const filteredClasses = computed(() => {
                     >Jurusan</label
                   >
                   <select
-                    v-model="form.major"
+                    v-model="form.program_id"
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option v-for="major in majors" :key="major" :value="major">
-                      {{ major }}
+                    <option value="" disabled>Pilih Jurusan</option>
+                    <option v-for="major in majors" :key="major.id" :value="major.id">
+                      {{ major.title || major.name || major.program_name }}
                     </option>
                   </select>
                 </div>
@@ -374,8 +395,8 @@ const filteredClasses = computed(() => {
             class="block w-full md:w-auto md:min-w-[160px] px-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm cursor-pointer"
           >
             <option value="semua">Semua Jurusan</option>
-            <option v-for="major in majors" :key="major" :value="major">
-              {{ major }}
+            <option v-for="major in majors" :key="major.id" :value="major.id">
+              {{ major.title || major.name || major.program_name }}
             </option>
           </select>
         </div>
@@ -429,7 +450,11 @@ const filteredClasses = computed(() => {
                 <span
                   class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-slate-700 dark:text-gray-300"
                 >
-                  {{ cls.major }}
+                  {{
+                    cls.program
+                      ? cls.program.title || cls.program.name
+                      : "Belum Ditentukan"
+                  }}
                 </span>
               </td>
               <td class="px-6 py-4">
