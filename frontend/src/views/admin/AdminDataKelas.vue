@@ -22,6 +22,8 @@ const staffList = ref([]);
 const grades = ["X", "XI", "XII"];
 const majors = ref([]);
 
+const isLoadingData = ref(true);
+
 const form = ref({
   id: null,
   name: "",
@@ -72,10 +74,10 @@ const fetchMajors = async () => {
   }
 };
 
-onMounted(() => {
-  fetchClasses();
-  fetchStaff();
-  fetchMajors();
+onMounted(async () => {
+  isLoadingData.value = true;
+  await Promise.all([fetchClasses(), fetchStaff(), fetchMajors()]);
+  isLoadingData.value = false;
 });
 
 const triggerToast = (title, message, type = "success") => {
@@ -227,6 +229,53 @@ const filteredClasses = computed(() => {
       </button>
     </div>
 
+    <!-- Banner Peringatan Kekurangan Data Relasi -->
+    <div
+      v-if="!isLoadingData && (majors.length === 0 || staffList.length === 0)"
+      class="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 rounded-r-lg shadow-sm"
+    >
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+            Perhatian: Data Induk Belum Lengkap
+          </h3>
+          <div class="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
+            <p>
+              Untuk dapat membuat data Kelas (Rombel), Anda perlu melengkapi data berikut
+              terlebih dahulu:
+            </p>
+            <ul class="list-disc pl-5 mt-1 space-y-1">
+              <li v-if="majors.length === 0">
+                Data Jurusan masih kosong.
+                <router-link
+                  to="/admin/program-jurusan"
+                  class="font-bold underline hover:text-yellow-600"
+                  >Tambah Jurusan</router-link
+                >
+              </li>
+              <li v-if="staffList.length === 0">
+                Data Guru/Staf (Wali Kelas) masih kosong.
+                <router-link
+                  to="/admin/guru-staf"
+                  class="font-bold underline hover:text-yellow-600"
+                  >Tambah Guru/Staf</router-link
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Form Tambah/Edit -->
     <Transition
       enter-active-class="transition-opacity duration-300"
@@ -282,13 +331,33 @@ const filteredClasses = computed(() => {
                   >
                   <select
                     v-model="form.program_id"
+                    :disabled="isLoadingData || majors.length === 0"
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="" disabled>Pilih Jurusan</option>
+                    <option v-if="isLoadingData" value="" disabled>
+                      -- Memuat Data... --
+                    </option>
+                    <option v-else-if="majors.length === 0" value="" disabled>
+                      -- Data Jurusan Kosong --
+                    </option>
                     <option v-for="major in majors" :key="major.id" :value="major.id">
                       {{ major.title || major.name || major.program_name }}
                     </option>
                   </select>
+                  <p
+                    v-if="!isLoadingData && majors.length === 0"
+                    class="mt-1 text-xs text-red-500"
+                  >
+                    * Anda harus
+                    <router-link
+                      to="/admin/program-jurusan"
+                      class="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                      @click="hideForm"
+                      >menambah Jurusan</router-link
+                    >
+                    terlebih dahulu.
+                  </p>
                 </div>
                 <div class="md:col-span-1">
                   <label
@@ -325,13 +394,33 @@ const filteredClasses = computed(() => {
                   <select
                     v-model="form.homeroom_id"
                     required
+                    :disabled="isLoadingData || staffList.length === 0"
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="" disabled>Pilih Wali Kelas</option>
+                    <option v-if="isLoadingData" value="" disabled>
+                      -- Memuat Data... --
+                    </option>
+                    <option v-else-if="staffList.length === 0" value="" disabled>
+                      -- Data Guru/Staf Kosong --
+                    </option>
                     <option v-for="staff in staffList" :key="staff.id" :value="staff.id">
                       {{ staff.name }} ({{ staff.role }})
                     </option>
                   </select>
+                  <p
+                    v-if="!isLoadingData && staffList.length === 0"
+                    class="mt-1 text-xs text-red-500"
+                  >
+                    * Anda harus
+                    <router-link
+                      to="/admin/guru-staf"
+                      class="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                      @click="hideForm"
+                      >menambah Guru/Staf</router-link
+                    >
+                    terlebih dahulu.
+                  </p>
                 </div>
               </div>
             </form>
@@ -349,7 +438,8 @@ const filteredClasses = computed(() => {
             <button
               form="classForm"
               type="submit"
-              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              :disabled="isLoadingData || majors.length === 0 || staffList.length === 0"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <PhFloppyDisk v-if="isEditing" class="w-5 h-5 mr-2" />
               <PhPlusCircle v-else class="w-5 h-5 mr-2" />
