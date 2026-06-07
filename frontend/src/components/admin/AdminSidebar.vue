@@ -30,6 +30,8 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["close"]);
+
 const openDropdown = ref(null);
 
 const toggleDropdown = (menuName) => {
@@ -140,8 +142,37 @@ const checkActiveMenu = () => {
   }
 };
 
-onMounted(checkActiveMenu);
-watch(() => route.path, checkActiveMenu);
+// Fetch nama dan logo sekolah dari backend
+const schoolName = ref("Admin Panel");
+const schoolLogo = ref(null);
+
+const fetchSettings = async () => {
+  try {
+    const response = await api.get("/api/settings");
+    if (response.data && response.data.data) {
+      if (response.data.data.namaSekolah)
+        schoolName.value = response.data.data.namaSekolah;
+      if (response.data.data.logo) schoolLogo.value = response.data.data.logo;
+    }
+  } catch (error) {
+    console.error("Gagal mengambil pengaturan sekolah:", error);
+  }
+};
+
+onMounted(() => {
+  checkActiveMenu();
+  fetchSettings();
+});
+watch(
+  () => route.path,
+  () => {
+    checkActiveMenu();
+    // Otomatis menutup sidebar di layar mobile setelah menu diklik
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      emit("close");
+    }
+  }
+);
 
 const handleLogout = async () => {
   try {
@@ -159,14 +190,39 @@ const handleLogout = async () => {
 </script>
 
 <template>
+  <!-- Overlay background khusus mobile untuk menutup sidebar jika area luar diklik -->
+  <div
+    v-show="props.isOpen"
+    @click="emit('close')"
+    class="fixed inset-0 z-20 bg-black/50 transition-opacity lg:hidden"
+  ></div>
+
   <aside
-    :class="props.isOpen ? 'translate-x-0' : '-translate-x-full'"
-    class="fixed inset-y-0 left-0 z-30 w-64 bg-white dark:bg-slate-800 shadow-lg transform transition-transform duration-300 ease-in-out flex flex-col"
+    :class="[
+      props.isOpen ? 'translate-x-0' : '-translate-x-full',
+      'fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-slate-800 shadow-lg transform transition-transform duration-300 ease-in-out flex flex-col lg:translate-x-0',
+    ]"
   >
     <div
-      class="flex items-center justify-center h-20 shrink-0 border-b border-gray-100 dark:border-slate-700"
+      class="flex items-center px-6 h-20 shrink-0 border-b border-gray-100 dark:border-slate-700"
     >
-      <h1 class="text-xl font-bold text-blue-600 dark:text-blue-400">Admin Panel</h1>
+      <img
+        v-if="schoolLogo"
+        :src="schoolLogo"
+        alt="Logo Sekolah"
+        class="w-10 h-10 object-contain mr-3 shrink-0"
+      />
+      <div
+        v-else
+        class="w-10 h-10 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 mr-3 shrink-0"
+      >
+        <PhBuildings :size="20" />
+      </div>
+      <h1
+        class="text-base font-bold text-blue-600 dark:text-blue-400 line-clamp-2 leading-tight"
+      >
+        {{ schoolName }}
+      </h1>
     </div>
     <nav class="py-2 flex-1 overflow-y-auto text-sm custom-scrollbar">
       <div v-for="(item, index) in menu" :key="index" class="mb-1">

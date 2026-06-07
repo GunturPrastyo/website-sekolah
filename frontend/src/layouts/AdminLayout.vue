@@ -3,7 +3,8 @@ import { ref } from "vue";
 import AdminSidebar from "@/components/admin/AdminSidebar.vue"; // Corrected path
 import AdminNavbar from "@/components/admin/AdminNavbar.vue"; // Corrected path
 
-const isSidebarOpen = ref(true); // Default untuk terbuka di desktop
+// Set default false agar di mobile mulai dalam keadaan tertutup
+const isSidebarOpen = ref(false);
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
@@ -12,12 +13,12 @@ const toggleSidebar = () => {
 
 <template>
   <div class="flex h-screen bg-gray-100 dark:bg-slate-900 font-sans">
-    <AdminSidebar :is-open="isSidebarOpen" />
+    <!-- Tambahkan listener @close -->
+    <AdminSidebar :is-open="isSidebarOpen" @close="isSidebarOpen = false" />
 
     <!-- Konten utama -->
     <div
-      class="flex-1 flex flex-col overflow-hidden transition-all duration-300 ease-in-out"
-      :class="{ 'lg:ml-64': isSidebarOpen, 'lg:ml-0': !isSidebarOpen }"
+      class="flex-1 flex flex-col w-full overflow-hidden transition-all duration-300 ease-in-out lg:ml-64"
     >
       <AdminNavbar @toggle-sidebar="toggleSidebar" />
 

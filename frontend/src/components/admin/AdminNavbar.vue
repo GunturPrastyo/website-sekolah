@@ -501,7 +501,7 @@ const handleLogout = async () => {
     <div class="flex items-center">
       <button
         @click="emit('toggle-sidebar')"
-        class="text-gray-600 dark:text-gray-300 focus:outline-none mr-4"
+        class="text-gray-600 dark:text-gray-300 focus:outline-none mr-4 lg:hidden"
       >
         <PhList :size="24" />
       </button>
