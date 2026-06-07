@@ -27,11 +27,11 @@
           </div>
           <!-- Skeleton Content -->
           <div
-            class="container mx-auto max-w-full px-2 sm:px-8 py-6 lg:py-8 grid lg:grid-cols-12 gap-10 items-start"
+            class="container mx-auto max-w-full px-4 md:px-6 lg:px-8 py-6 lg:py-8 grid lg:grid-cols-12 gap-6 lg:gap-10 items-start"
           >
             <div class="lg:col-span-8 space-y-6">
               <div
-                class="bg-white dark:bg-slate-800 p-6 md:p-8 lg:p-10 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm animate-pulse space-y-4"
+                class="bg-white dark:bg-slate-800 p-5 md:p-8 lg:p-10 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm animate-pulse space-y-4"
               >
                 <div class="h-6 w-1/3 bg-gray-200 dark:bg-slate-700 rounded"></div>
                 <div class="h-4 w-full bg-gray-200 dark:bg-slate-700 rounded"></div>
@@ -102,7 +102,7 @@
                   </span>
 
                   <h1
-                    class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 drop-shadow-md"
+                    class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 drop-shadow-md break-words"
                   >
                     {{ currentCategory.name }}
                   </h1>
@@ -156,7 +156,7 @@
           <!-- CONTENT AREA -->
           <div
             v-if="facilityCategories.length > 0"
-            class="container mx-auto max-w-full px-2 sm:px-8 py-6 lg:py-8 grid lg:grid-cols-12 gap-10 items-start"
+            class="container mx-auto max-w-full px-4 md:px-6 lg:px-8 py-6 lg:py-8 grid lg:grid-cols-12 gap-6 lg:gap-10 items-start overflow-hidden"
           >
             <!-- MAIN ARTICLE (Transitions on change) -->
             <div class="lg:col-span-8">
@@ -172,7 +172,7 @@
                 <div
                   v-if="currentCategory"
                   :key="currentCategory.id + '-content'"
-                  class="bg-white dark:bg-slate-800 p-6 md:p-8 lg:p-10 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm space-y-8"
+                  class="bg-white dark:bg-slate-800 p-5 md:p-8 lg:p-10 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm space-y-8 overflow-hidden"
                 >
                   <div class="text-gray-700 dark:text-gray-300 text-justify ql-snow">
                     <div
@@ -341,7 +341,7 @@
 
         <!-- Image Container -->
         <div
-          class="relative w-full max-w-7xl max-h-[95vh] px-12 md:px-24 flex flex-col items-center justify-center"
+          class="relative w-full max-w-7xl max-h-[95vh] px-4 md:px-24 flex flex-col items-center justify-center"
           @click.stop
         >
           <img
@@ -521,38 +521,39 @@ const currentCategory = computed(() => {
     images.forEach((img) => {
       const altText = img.getAttribute("alt") || img.getAttribute("title");
       if (altText) {
-                // Gunakan <span> sebagai wrapper agar tidak merusak struktur tag <p> bawaan dari editor
-                const wrapper = document.createElement("span");
-                wrapper.style.cssText = img.style.cssText;
-                
-                if (img.style.float === "left" || img.style.float === "right") {
-                  wrapper.style.display = "table"; // Perilaku paling baik untuk caption gambar yang di-float
-                } else if (img.style.display === "block") {
-                  wrapper.style.display = "block";
-                } else {
-                  wrapper.style.display = "inline-block";
-                }
+        // Gunakan <span> sebagai wrapper agar tidak merusak struktur tag <p> bawaan dari editor
+        const wrapper = document.createElement("span");
+        wrapper.className = "caption-wrapper";
+        wrapper.style.cssText = img.style.cssText;
 
-                wrapper.style.width = img.style.width || "max-content";
-                wrapper.style.maxWidth = "100%";
-                wrapper.style.textAlign = "center";
-                wrapper.style.clear = img.style.clear || "both";
+        if (img.style.float === "left" || img.style.float === "right") {
+          wrapper.style.display = "table"; // Perilaku paling baik untuk caption gambar yang di-float
+        } else if (img.style.display === "block") {
+          wrapper.style.display = "block";
+        } else {
+          wrapper.style.display = "inline-block";
+        }
 
-                // Reset style gambar
-                img.style.cssText = "";
-                img.style.display = "block";
-                img.style.margin = "0 auto";
-                img.style.maxWidth = "100%";
-                img.style.height = "auto";
+        wrapper.style.width = img.style.width || "max-content";
+        wrapper.style.maxWidth = "100%";
+        wrapper.style.textAlign = "center";
+        wrapper.style.clear = img.style.clear || "both";
 
-                img.parentNode.insertBefore(wrapper, img);
-                wrapper.appendChild(img);
+        // Reset style gambar
+        img.style.cssText = "";
+        img.style.display = "block";
+        img.style.margin = "0 auto";
+        img.style.maxWidth = "100%";
+        img.style.height = "auto";
+
+        img.parentNode.insertBefore(wrapper, img);
+        wrapper.appendChild(img);
 
         const caption = document.createElement("span");
         caption.className =
-                  "block text-center text-xs md:text-sm text-gray-500 mt-2 italic pointer-events-none break-words w-full";
+          "block text-center text-xs md:text-sm text-gray-500 mt-2 italic pointer-events-none break-words w-full px-2";
         caption.textContent = altText;
-                wrapper.appendChild(caption);
+        wrapper.appendChild(caption);
       }
     });
     return { ...cat, displayContent: tempDiv.innerHTML };
@@ -591,13 +592,49 @@ const currentCategory = computed(() => {
   animation: slow-zoom 20s alternate infinite ease-in-out;
 }
 
+/* Responsivitas untuk konten rich text editor */
+:deep(.editor-content-preview) {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+:deep(.editor-content-preview iframe),
+:deep(.editor-content-preview video) {
+  max-width: 100% !important;
+  height: auto;
+}
+:deep(.editor-content-preview table) {
+  display: block;
+  width: 100% !important;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Image pointer style inside v-html */
 :deep(.editor-content-preview img) {
   cursor: pointer;
   border-radius: 0.5rem;
   transition: transform 0.3s ease;
+  max-width: 100% !important;
+  height: auto !important;
 }
 :deep(.editor-content-preview img:hover) {
   transform: scale(1.02);
+}
+
+/* Reset float gambar pada layar mobile agar tidak merusak layout */
+@media (max-width: 768px) {
+  :deep(.caption-wrapper) {
+    float: none !important;
+    display: block !important;
+    width: 100% !important;
+    margin: 1.5rem auto !important;
+    clear: both !important;
+  }
+  :deep(.editor-content-preview img) {
+    width: 100% !important;
+    float: none !important;
+    margin: 0 auto !important;
+  }
 }
 </style>
