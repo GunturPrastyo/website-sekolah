@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Staff;
 use App\Http\Resources\StaffResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class StaffController extends Controller
@@ -37,6 +38,8 @@ class StaffController extends Controller
         }
 
         $staff = Staff::create($validatedData);
+
+        Cache::forget('dashboard_total_guru');
 
         return response()->json(['message' => 'Data staf berhasil ditambahkan', 'data' => new StaffResource($staff)], 201);
     }
@@ -72,6 +75,8 @@ class StaffController extends Controller
 
         $staff->update($validatedData);
 
+        Cache::forget('dashboard_total_guru');
+
         return response()->json(['message' => 'Data staf berhasil diperbarui', 'data' => new StaffResource($staff)]);
     }
 
@@ -81,6 +86,9 @@ class StaffController extends Controller
             Storage::disk('public')->delete($staff->image);
         }
         $staff->delete();
+        
+        Cache::forget('dashboard_total_guru');
+
         return response()->json(['message' => 'Data staf berhasil dihapus']);
     }
 }

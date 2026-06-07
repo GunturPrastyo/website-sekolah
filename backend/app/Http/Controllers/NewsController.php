@@ -6,6 +6,7 @@ use App\Models\News;
 use App\Models\DismissedNotification;
 use App\Http\Resources\NewsResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
@@ -77,6 +78,8 @@ class NewsController extends Controller
             DismissedNotification::where('notification_id', 'val_news')->delete();
         }
 
+        Cache::forget('dashboard_total_artikel');
+
         return response()->json(['message' => 'Berita berhasil ditambahkan', 'data' => new NewsResource($news)], 201);
     }
 
@@ -115,6 +118,8 @@ class NewsController extends Controller
             DismissedNotification::where('notification_id', 'val_news')->delete();
         }
 
+        Cache::forget('dashboard_total_artikel');
+
         return response()->json(['message' => 'Berita berhasil diperbarui', 'data' => new NewsResource($news)]);
     }
 
@@ -131,6 +136,9 @@ class NewsController extends Controller
         }
         
         $news->delete();
+
+        Cache::forget('dashboard_total_artikel');
+
         return response()->json(['message' => 'Berita berhasil dihapus']);
     }
 
