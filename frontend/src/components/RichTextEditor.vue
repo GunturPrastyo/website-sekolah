@@ -393,18 +393,6 @@ const setImageCaption = () => {
     blot.format("alt", imageCaption.value);
     blot.format("title", imageCaption.value);
 
-    // Beri sedikit margin bawah (jika belum ada) agar ruang overlay tidak bertumpuk dengan teks di bawahnya
-    let currentStyle = selectedImage.value.getAttribute("style") || "";
-    if (
-      !currentStyle.includes("margin-bottom") &&
-      !currentStyle.match(/margin:\s*[^;]*(1rem|auto)/)
-    ) {
-      let newStyle = currentStyle;
-      if (newStyle && !newStyle.endsWith(";")) newStyle += "; ";
-      newStyle += "margin-bottom: 1.5rem;";
-      blot.format("style", newStyle);
-    }
-
     emit("update:modelValue", qInstance.root.innerHTML); // Paksa sinkronisasi V-Model
     updateToolbarPosition();
     updateImageCaptions();
