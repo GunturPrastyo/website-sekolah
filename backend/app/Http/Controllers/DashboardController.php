@@ -15,7 +15,7 @@ class DashboardController extends Controller
     public function getStats()
     {
         // Menghitung data dari database berdasarkan model
-        $totalSiswa = Student::count();
+        $totalSiswa = Student::where('status', 'aktif')->count();
         
         // Mengambil jumlah staf dengan kategori pendidik (guru)
         $totalGuru = Staff::where('category', 'pendidik')->count();

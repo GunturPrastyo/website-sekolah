@@ -1862,6 +1862,7 @@ const statsArray = ref([
     value: 0,
     target: 0,
     label: "Jumlah Siswa",
+    label: "Siswa Aktif",
     prefix: "",
     suffix: "+",
     isNumber: true,
