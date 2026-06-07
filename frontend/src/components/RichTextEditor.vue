@@ -24,6 +24,7 @@
       >
         <span class="text-[10px] text-gray-500 font-bold px-1 uppercase">Posisi</span>
         <button
+          type="button"
           @mousedown.prevent
           @click="setImageStyle('float: left; margin: 0 1rem 1rem 0;')"
           class="p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded text-gray-700 dark:text-gray-300"
@@ -39,6 +40,7 @@
           </svg>
         </button>
         <button
+          type="button"
           @mousedown.prevent
           @click="
             setImageStyle('display: block; margin: 1rem auto; clear: both; float: none;')
@@ -56,6 +58,7 @@
           </svg>
         </button>
         <button
+          type="button"
           @mousedown.prevent
           @click="setImageStyle('float: right; margin: 0 0 1rem 1rem;')"
           class="p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded text-gray-700 dark:text-gray-300"
@@ -71,6 +74,7 @@
           </svg>
         </button>
         <button
+          type="button"
           @mousedown.prevent
           @click="
             setImageStyle(
@@ -94,6 +98,7 @@
       <div class="flex items-center gap-1">
         <span class="text-[10px] text-gray-500 font-bold px-1 uppercase">Ukuran</span>
         <button
+          type="button"
           @mousedown.prevent
           @click="setImageWidth('100%')"
           class="px-2 py-1 text-xs hover:bg-gray-100 dark:hover:bg-slate-700 rounded text-gray-700 dark:text-gray-300 font-medium transition-colors"
@@ -101,6 +106,7 @@
           100%
         </button>
         <button
+          type="button"
           @mousedown.prevent
           @click="setImageWidth('50%')"
           class="px-2 py-1 text-xs hover:bg-gray-100 dark:hover:bg-slate-700 rounded text-gray-700 dark:text-gray-300 font-medium transition-colors"
@@ -108,6 +114,7 @@
           50%
         </button>
         <button
+          type="button"
           @mousedown.prevent
           @click="setImageWidth('25%')"
           class="px-2 py-1 text-xs hover:bg-gray-100 dark:hover:bg-slate-700 rounded text-gray-700 dark:text-gray-300 font-medium transition-colors"
@@ -115,6 +122,7 @@
           25%
         </button>
         <button
+          type="button"
           @mousedown.prevent
           @click="setImageWidth('auto')"
           class="px-2 py-1 text-xs hover:bg-gray-100 dark:hover:bg-slate-700 rounded text-gray-700 dark:text-gray-300 font-medium transition-colors"
@@ -133,6 +141,7 @@
           type="text"
           v-model="imageCaption"
           @input="setImageCaption"
+          @keydown.enter.prevent
           placeholder="Keterangan / Alt text..."
           class="text-xs px-2 py-1.5 w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded text-gray-700 dark:text-gray-300 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
         />

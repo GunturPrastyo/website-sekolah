@@ -30,11 +30,58 @@ const triggerToast = (title, message, type = "success") => {
   setTimeout(() => (showToast.value = false), 4000);
 };
 
+// Fungsi untuk menambahkan caption gambar secara dinamis saat preview
+const processContentWithCaptions = (content) => {
+  if (!content) return content;
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = content;
+  const images = tempDiv.querySelectorAll("img");
+  images.forEach((img) => {
+    const altText = img.getAttribute("alt") || img.getAttribute("title");
+    if (altText) {
+      const wrapper = document.createElement("span");
+      wrapper.style.cssText = img.style.cssText;
+
+      if (img.style.float === "left" || img.style.float === "right") {
+        wrapper.style.display = "table";
+      } else if (img.style.display === "block") {
+        wrapper.style.display = "block";
+      } else {
+        wrapper.style.display = "inline-block";
+      }
+
+      wrapper.style.width = img.style.width || "max-content";
+      wrapper.style.maxWidth = "100%";
+      wrapper.style.textAlign = "center";
+      wrapper.style.clear = img.style.clear || "both";
+
+      img.style.cssText = "";
+      img.style.display = "block";
+      img.style.margin = "0 auto";
+      img.style.maxWidth = "100%";
+      img.style.height = "auto";
+
+      img.parentNode.insertBefore(wrapper, img);
+      wrapper.appendChild(img);
+
+      const caption = document.createElement("span");
+      caption.className =
+        "block text-center text-xs md:text-sm text-gray-500 mt-2 italic pointer-events-none break-words w-full";
+      caption.textContent = altText;
+      wrapper.appendChild(caption);
+    }
+  });
+  return tempDiv.innerHTML;
+};
+
 const fetchData = async () => {
   isLoading.value = true;
   try {
     const response = await api.get("/api/fasilitas");
-    facilities.value = response.data.data;
+    facilities.value = response.data.data.map((f) => ({
+      ...f,
+      displayContent: processContentWithCaptions(f.content),
+    }));
   } catch (error) {
     console.error("Gagal memuat data", error);
     triggerToast(
@@ -108,12 +155,18 @@ const saveFacility = async () => {
       const response = await api.put(`/api/fasilitas/${form.value.id}`, payload);
       const idx = facilities.value.findIndex((f) => f.id === form.value.id);
       if (idx !== -1) {
-        facilities.value[idx] = response.data.data;
+        facilities.value[idx] = {
+          ...response.data.data,
+          displayContent: processContentWithCaptions(response.data.data.content),
+        };
       }
       triggerToast("Disimpan", "Data fasilitas berhasil diperbarui.");
     } else {
       const response = await api.post("/api/fasilitas", payload);
-      facilities.value.unshift(response.data.data);
+      facilities.value.unshift({
+        ...response.data.data,
+        displayContent: processContentWithCaptions(response.data.data.content),
+      });
       triggerToast("Ditambahkan", "Fasilitas baru berhasil ditambahkan.");
     }
     isFormVisible.value = false;
@@ -281,7 +334,7 @@ const confirmDelete = async () => {
             </h3>
             <div class="text-gray-800 dark:text-gray-200 text-sm md:text-base ql-snow">
               <div
-                v-html="facility.content"
+                v-html="facility.displayContent || facility.content"
                 class="editor-content-preview ql-editor !p-0"
                 style="font-family: inherit"
               ></div>
