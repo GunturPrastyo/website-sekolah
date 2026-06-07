@@ -9,31 +9,45 @@ use App\Models\Gallery;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
 {
     public function getStats()
     {
-        // Menghitung data dari database berdasarkan model
-        $totalSiswa = Student::where('status', 'aktif')->count();
+        // Cache total siswa selama 10 menit (600 detik)
+        $totalSiswa = Cache::remember('dashboard_total_siswa', 600, function () {
+            return Student::where('status', 'aktif')->count();
+        });
         
-        // Mengambil jumlah staf dengan kategori pendidik (guru)
-        $totalGuru = Staff::where('category', 'pendidik')->count();
+        // Cache total guru selama 10 menit
+        $totalGuru = Cache::remember('dashboard_total_guru', 600, function () {
+            return Staff::where('category', 'pendidik')->count();
+        });
         
-        // Menghitung jumlah berita / artikel
-        $totalArtikel = News::count();
+        // Cache jumlah artikel selama 5 menit
+        $totalArtikel = Cache::remember('dashboard_total_artikel', 300, function () {
+            return News::count();
+        });
         
         // Menghitung jumlah pengunjung unik hari ini
-        $pengunjungHariIni = Visitor::whereDate('visited_date', Carbon::today())->count(); 
+        $pengunjungHariIni = Cache::remember('dashboard_pengunjung_hari_ini', 60, function () {
+            return Visitor::whereDate('visited_date', Carbon::today())->count(); 
+        });
 
         // Menyiapkan data chart pengunjung untuk 7 hari terakhir
-        $chartLabels = [];
-        $chartData = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $date = Carbon::today()->subDays($i);
-            $chartLabels[] = $date->format('d M'); // Format misal: "18 May"
-            $chartData[] = Visitor::whereDate('visited_date', $date->toDateString())->count();
-        }
+        $chartDataObj = Cache::remember('dashboard_chart_visitor', 3600, function () {
+            $labels = [];
+            $data = [];
+            for ($i = 6; $i >= 0; $i--) {
+                $date = Carbon::today()->subDays($i);
+                $labels[] = $date->format('d M');
+                $data[] = Visitor::whereDate('visited_date', $date->toDateString())->count();
+            }
+            return ['labels' => $labels, 'data' => $data];
+        });
+        $chartLabels = $chartDataObj['labels'];
+        $chartData = $chartDataObj['data'];
 
         // Mengambil data aktivitas terbaru dari Berita dan Galeri
         $recentNews = News::with('author')->orderBy('created_at', 'desc')->take(5)->get()->map(function ($item) {

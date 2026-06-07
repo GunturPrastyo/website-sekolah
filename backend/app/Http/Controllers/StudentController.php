@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Student;
 use App\Http\Resources\StudentResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class StudentController extends Controller
 {
@@ -34,6 +35,9 @@ class StudentController extends Controller
         $student = Student::create($validated);
         $student->load('schoolClass');
 
+        // Hapus cache dashboard agar data terupdate
+        Cache::forget('dashboard_total_siswa');
+
         return response()->json([
             'success' => true,
             'data'    => new StudentResource($student)
@@ -55,6 +59,9 @@ class StudentController extends Controller
         $student->update($validated);
         $student->load('schoolClass');
 
+        // Hapus cache dashboard agar data terupdate
+        Cache::forget('dashboard_total_siswa');
+
         return response()->json([
             'success' => true,
             'data'    => new StudentResource($student)
@@ -65,6 +72,9 @@ class StudentController extends Controller
     {
         try {
             $student->delete();
+            
+            Cache::forget('dashboard_total_siswa');
+
             return response()->json([
                 'success' => true,
                 'message' => 'Data siswa berhasil dihapus'
@@ -86,6 +96,9 @@ class StudentController extends Controller
 
         try {
             Student::whereIn('id', $validated['ids'])->delete();
+            
+            Cache::forget('dashboard_total_siswa');
+
             return response()->json([
                 'success' => true,
                 'message' => 'Data siswa terpilih berhasil dihapus secara massal'
@@ -123,6 +136,9 @@ class StudentController extends Controller
 
         try {
             Student::whereIn('id', $validated['ids'])->update($updateData);
+            
+            Cache::forget('dashboard_total_siswa');
+
             return response()->json([
                 'success' => true,
                 'message' => 'Data siswa terpilih berhasil diperbarui secara massal'
@@ -161,6 +177,8 @@ class StudentController extends Controller
             );
             $importedCount++;
         }
+
+        Cache::forget('dashboard_total_siswa');
 
         return response()->json([
             'success' => true,
