@@ -11,6 +11,7 @@ use App\Models\Extracurricular;
 use App\Models\Achievement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 
 class SettingController extends Controller
@@ -18,7 +19,9 @@ class SettingController extends Controller
     public function index()
     {
         // Mengambil semua data pengaturan sebagai pasangan key => value
-        $settings = Setting::pluck('value', 'key')->all();
+        $settings = Cache::rememberForever('global_settings', function () {
+            return Setting::pluck('value', 'key')->all();
+        });
         
         return response()->json([
             'success' => true,
@@ -48,23 +51,20 @@ class SettingController extends Controller
     public function publicStats()
     {
         // Ambil data secara dinamis dari masing-masing tabel terkait
-        $schoolProfile = SchoolProfile::first();
-        $akreditasi = $schoolProfile ? $schoolProfile->accreditation : '-';
-        
-        $siswa = Student::where('status', 'aktif')->count();
-        $guru = Staff::where('category', 'pendidik')->count();
-        $ekskul = Extracurricular::count();
-        $prestasi = Achievement::count();
+        $stats = Cache::remember('public_landing_stats', 3600, function () { // Cache selama 1 jam
+            $schoolProfile = SchoolProfile::first();
+            return [
+                'akreditasi' => $schoolProfile ? $schoolProfile->accreditation : '-',
+                'siswa'      => Student::where('status', 'aktif')->count(),
+                'guru'       => Staff::where('category', 'pendidik')->count(),
+                'ekskul'     => Extracurricular::count(),
+                'prestasi'   => Achievement::count(),
+            ];
+        });
 
         return response()->json([
             'success' => true,
-            'data' => [
-                'akreditasi' => $akreditasi,
-                'siswa'      => $siswa,
-                'guru'       => $guru,
-                'ekskul'     => $ekskul,
-                'prestasi'   => $prestasi,
-            ]
+            'data' => $stats
         ]);
     }
 
@@ -111,6 +111,9 @@ class SettingController extends Controller
                 ['value' => $value]
             );
         }
+
+        // Hapus cache pengaturan ketika ada perubahan
+        Cache::forget('global_settings');
 
         return response()->json([
             'success' => true,

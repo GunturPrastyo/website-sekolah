@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, markRaw, onMounted, watch } from "vue";
+import { ref, computed, markRaw, onMounted, onBeforeUnmount, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import {
   PhHouse,
@@ -162,6 +162,7 @@ const fetchSettings = async () => {
 onMounted(() => {
   checkActiveMenu();
   fetchSettings();
+  window.addEventListener("settings-updated", fetchSettings);
 });
 watch(
   () => route.path,
@@ -173,6 +174,10 @@ watch(
     }
   }
 );
+
+onBeforeUnmount(() => {
+  window.removeEventListener("settings-updated", fetchSettings);
+});
 
 const handleLogout = async () => {
   try {

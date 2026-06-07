@@ -2310,6 +2310,9 @@ onMounted(() => {
   fetchPpdbInfo();
   fetchSettings();
 
+  // Dengarkan sinyal pembaruan pengaturan
+  window.addEventListener("settings-updated", fetchSettings);
+
   // Jika sudah ada cache, langsung mulai efek ketik tanpa delay menunggu backend
   if (fullTitle.value && !isTypewriterStarted.value) {
     startTypewriter();
@@ -2466,6 +2469,7 @@ const initJurusanSwiper = () => {
 
 onBeforeUnmount(() => {
   if (countdownInterval) clearInterval(countdownInterval);
+  window.removeEventListener("settings-updated", fetchSettings);
 });
 </script>
 

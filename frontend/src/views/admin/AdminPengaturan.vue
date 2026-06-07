@@ -148,6 +148,9 @@ const saveSettings = async () => {
     const payload = { ...generalSettings.value, ...appearanceSettings.value };
     await api.post("/api/settings", payload);
     triggerToast("Tersimpan", "Pengaturan berhasil disimpan", "success");
+
+    // Mengirim sinyal agar semua komponen lain (Sidebar, Header, Publik) me-refresh datanya secara reaktif
+    window.dispatchEvent(new CustomEvent("settings-updated"));
   } catch (error) {
     console.error("Gagal menyimpan pengaturan:", error);
     triggerToast(
