@@ -26,12 +26,12 @@
             </div>
           </div>
           <!-- Skeleton Content -->
-          <div
-            class="container mx-auto max-w-full px-4 md:px-6 lg:px-8 py-6 lg:py-8 grid lg:grid-cols-12 gap-6 lg:gap-10 items-start"
-          >
-            <div class="lg:col-span-8 space-y-6">
+          <div class="container mx-auto max-w-full px-0 md:px-6 lg:px-8 py-0 md:py-8">
+            <div
+              class="bg-white dark:bg-slate-800 rounded-none md:rounded-lg border-y md:border border-gray-100 dark:border-slate-700 shadow-sm grid lg:grid-cols-12 overflow-hidden"
+            >
               <div
-                class="bg-white dark:bg-slate-800 p-5 md:p-8 lg:p-10 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm animate-pulse space-y-4"
+                class="lg:col-span-8 p-5 md:p-8 lg:p-10 border-b lg:border-b-0 lg:border-r border-gray-100 dark:border-slate-700 animate-pulse space-y-4"
               >
                 <div class="h-6 w-1/3 bg-gray-200 dark:bg-slate-700 rounded"></div>
                 <div class="h-4 w-full bg-gray-200 dark:bg-slate-700 rounded"></div>
@@ -43,10 +43,8 @@
                 <div class="h-4 w-full bg-gray-200 dark:bg-slate-700 rounded"></div>
                 <div class="h-4 w-4/5 bg-gray-200 dark:bg-slate-700 rounded"></div>
               </div>
-            </div>
-            <div class="lg:col-span-4 space-y-8">
               <div
-                class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 animate-pulse"
+                class="lg:col-span-4 p-5 md:p-8 lg:p-10 bg-gray-50/50 dark:bg-slate-800/50 animate-pulse"
               >
                 <div class="border-gray-200 dark:border-slate-700 border-l-4 pl-4 mb-6">
                   <div class="h-5 w-1/2 bg-gray-200 dark:bg-slate-700 rounded mb-2"></div>
@@ -156,93 +154,96 @@
           <!-- CONTENT AREA -->
           <div
             v-if="facilityCategories.length > 0"
-            class="container mx-auto max-w-full px-4 md:px-6 lg:px-8 py-6 lg:py-8 grid lg:grid-cols-12 gap-6 lg:gap-10 items-start overflow-hidden"
+            class="container mx-auto max-w-full px-0 md:px-6 lg:px-8 py-0 md:py-8"
           >
-            <!-- MAIN ARTICLE (Transitions on change) -->
-            <div class="lg:col-span-8">
-              <Transition
-                mode="out-in"
-                enter-active-class="transition-all duration-500 ease-out delay-100"
-                enter-from-class="opacity-0 translate-y-8"
-                enter-to-class="opacity-100 translate-y-0"
-                leave-active-class="transition-all duration-200 ease-in"
-                leave-from-class="opacity-100 translate-y-0"
-                leave-to-class="opacity-0 -translate-y-4"
-              >
-                <div
-                  v-if="currentCategory"
-                  :key="currentCategory.id + '-content'"
-                  class="bg-white dark:bg-slate-800 p-5 md:p-8 lg:p-10 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm space-y-8 overflow-hidden"
-                >
-                  <div class="text-gray-700 dark:text-gray-300 text-justify ql-snow">
-                    <div
-                      class="editor-content-preview ql-editor !p-0"
-                      style="font-family: inherit"
-                      v-html="currentCategory.displayContent || currentCategory.content"
-                      @click="handleContentClick"
-                    ></div>
-                  </div>
-                </div>
-              </Transition>
-            </div>
-
-            <!-- SIDEBAR NAVIGASI (STATIS) -->
             <div
-              class="lg:col-span-4 space-y-8 lg:sticky lg:top-28 z-10"
-              v-if="facilityCategories.length > 0"
+              class="bg-white dark:bg-slate-800 rounded-none md:rounded-lg border-y md:border border-gray-100 dark:border-slate-700 shadow-sm grid lg:grid-cols-12 overflow-hidden"
             >
+              <!-- MAIN ARTICLE -->
               <div
-                class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col"
+                class="lg:col-span-8 p-5 md:p-8 lg:p-10 border-b lg:border-b-0 lg:border-r border-gray-100 dark:border-slate-700"
               >
-                <div
-                  class="border-blue-600 dark:border-slate-600 shrink-0 border-l-4 pl-4 rounded-sm mb-6"
-                >
-                  <h4 class="text-lg font-bold text-gray-900 dark:text-white">
-                    Kategori Fasilitas
-                  </h4>
-                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                    Pilih kategori untuk melihat fasilitas.
-                  </p>
-                </div>
-
-                <div
-                  class="space-y-3 mt-2 max-h-[600px] overflow-y-auto pr-2 pb-4 custom-scrollbar"
+                <Transition
+                  mode="out-in"
+                  enter-active-class="transition-all duration-500 ease-out delay-100"
+                  enter-from-class="opacity-0 translate-y-8"
+                  enter-to-class="opacity-100 translate-y-0"
+                  leave-active-class="transition-all duration-200 ease-in"
+                  leave-from-class="opacity-100 translate-y-0"
+                  leave-to-class="opacity-0 -translate-y-4"
                 >
                   <div
-                    v-for="other in facilityCategories"
-                    :key="other.id"
-                    @click="changeCategory(other.id)"
-                    class="group cursor-pointer flex items-start gap-4 p-3 rounded-2xl transition-all border"
-                    :class="
-                      other.id === activeCategory
-                        ? 'bg-blue-50 border-blue-200 dark:bg-blue-900/30 dark:border-blue-800'
-                        : 'bg-transparent border-transparent hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:border-gray-100 dark:hover:border-slate-600'
-                    "
+                    v-if="currentCategory"
+                    :key="currentCategory.id + '-content'"
+                    class="space-y-8 overflow-hidden"
+                  >
+                    <div class="text-gray-700 dark:text-gray-300 text-justify ql-snow">
+                      <div
+                        class="editor-content-preview ql-editor !p-0"
+                        style="font-family: inherit"
+                        v-html="currentCategory.displayContent || currentCategory.content"
+                        @click="handleContentClick"
+                      ></div>
+                    </div>
+                  </div>
+                </Transition>
+              </div>
+
+              <!-- SIDEBAR NAVIGASI -->
+              <div
+                class="lg:col-span-4 p-5 md:p-6 lg:p-8 bg-gray-50/50 dark:bg-slate-800/50 flex flex-col"
+              >
+                <div class="sticky top-28">
+                  <div
+                    class="border-blue-600 dark:border-slate-600 shrink-0 border-l-4 pl-4 rounded-sm mb-6"
+                  >
+                    <h4 class="text-lg font-bold text-gray-900 dark:text-white">
+                      Kategori Fasilitas
+                    </h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                      Pilih kategori untuk melihat fasilitas.
+                    </p>
+                  </div>
+
+                  <div
+                    class="space-y-3 mt-2 max-h-[600px] overflow-y-auto pr-2 pb-4 custom-scrollbar"
                   >
                     <div
-                      class="relative overflow-hidden rounded-xl w-20 h-20 shrink-0 shadow-sm"
+                      v-for="other in facilityCategories"
+                      :key="other.id"
+                      @click="changeCategory(other.id)"
+                      class="group cursor-pointer flex items-start gap-4 p-3 rounded-xl transition-all border"
+                      :class="
+                        other.id === activeCategory
+                          ? 'bg-blue-50 border-blue-200 dark:bg-blue-900/30 dark:border-blue-800'
+                          : 'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:border-gray-200 dark:hover:border-slate-600 shadow-sm'
+                      "
                     >
-                      <img
-                        :src="other.coverImage"
-                        class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                      />
-                    </div>
-                    <div class="flex-1 py-1">
-                      <h5
-                        class="text-sm font-bold transition-colors line-clamp-1"
-                        :class="
-                          other.id === activeCategory
-                            ? 'text-blue-700 dark:text-blue-400'
-                            : 'text-gray-800 dark:text-gray-200 group-hover:text-blue-600 dark:group-hover:text-blue-400'
-                        "
+                      <div
+                        class="relative overflow-hidden rounded-lg w-20 h-20 shrink-0 shadow-sm"
                       >
-                        {{ other.name }}
-                      </h5>
-                      <p
-                        class="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2 leading-relaxed"
-                      >
-                        {{ other.description || "Tidak ada deskripsi" }}
-                      </p>
+                        <img
+                          :src="other.coverImage"
+                          class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                        />
+                      </div>
+                      <div class="flex-1 py-1">
+                        <h5
+                          class="text-sm font-bold transition-colors line-clamp-1"
+                          :class="
+                            other.id === activeCategory
+                              ? 'text-blue-700 dark:text-blue-400'
+                              : 'text-gray-800 dark:text-gray-200 group-hover:text-blue-600 dark:group-hover:text-blue-400'
+                          "
+                        >
+                          {{ other.name }}
+                        </h5>
+                        <p
+                          class="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2 leading-relaxed"
+                        >
+                          {{ other.description || "Tidak ada deskripsi" }}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
