@@ -16,7 +16,7 @@
     <div
       v-show="selectedImage"
       :style="toolbarStyle"
-      class="absolute z-10 flex flex-col gap-1 p-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 shadow-xl rounded-lg pointer-events-auto transition-opacity"
+      class="absolute z-20 flex flex-col gap-1 p-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 shadow-xl rounded-lg pointer-events-auto transition-opacity"
     >
       <!-- Opsi Posisi / Alignment -->
       <div
@@ -143,7 +143,7 @@
     <div
       v-for="(cap, idx) in imageCaptions"
       :key="idx"
-      class="absolute z-0 text-center text-[10px] sm:text-xs text-gray-500 italic pointer-events-none mt-1"
+      class="absolute z-[5] text-center text-[10px] sm:text-xs text-gray-500 italic pointer-events-none mt-1 px-2 break-words"
       :style="{ top: cap.top + 'px', left: cap.left + 'px', width: cap.width + 'px' }"
     >
       {{ cap.text }}
@@ -183,12 +183,12 @@ if (typeof window !== "undefined" && Quill) {
   const BaseImage = Quill.import("formats/image");
   class StylableImage extends BaseImage {
     static formats(domNode) {
-      return {
-        width: domNode.getAttribute("width") || "",
-        style: domNode.getAttribute("style") || "",
-        alt: domNode.getAttribute("alt") || "",
-        title: domNode.getAttribute("title") || "",
-      };
+      const formats = {};
+      if (domNode.hasAttribute("width")) formats.width = domNode.getAttribute("width");
+      if (domNode.hasAttribute("style")) formats.style = domNode.getAttribute("style");
+      if (domNode.hasAttribute("alt")) formats.alt = domNode.getAttribute("alt");
+      if (domNode.hasAttribute("title")) formats.title = domNode.getAttribute("title");
+      return formats;
     }
     format(name, value) {
       if (["width", "style", "alt", "title"].includes(name)) {
@@ -235,22 +235,25 @@ let qInstance = null;
 const imageCaptions = ref([]);
 const updateImageCaptions = () => {
   if (!qInstance || !editorWrapper.value) return;
-  const wrapperRect = editorWrapper.value.getBoundingClientRect();
-  const images = qInstance.root.querySelectorAll("img");
-  const caps = [];
-  images.forEach((img) => {
-    const text = img.getAttribute("alt") || img.getAttribute("title");
-    if (text) {
-      const imgRect = img.getBoundingClientRect();
-      caps.push({
-        text: text,
-        top: imgRect.bottom - wrapperRect.top,
-        left: imgRect.left - wrapperRect.left,
-        width: imgRect.width,
-      });
-    }
+  // Pastikan render DOM selesai sebelum mengambil posisinya
+  requestAnimationFrame(() => {
+    const wrapperRect = editorWrapper.value.getBoundingClientRect();
+    const images = qInstance.root.querySelectorAll("img");
+    const caps = [];
+    images.forEach((img) => {
+      const text = img.getAttribute("alt") || img.getAttribute("title");
+      if (text) {
+        const imgRect = img.getBoundingClientRect();
+        caps.push({
+          text: text,
+          top: imgRect.bottom - wrapperRect.top,
+          left: imgRect.left - wrapperRect.left,
+          width: imgRect.width,
+        });
+      }
+    });
+    imageCaptions.value = caps;
   });
-  imageCaptions.value = caps;
 };
 
 // Konfigurasi Toolbar yang lebih lengkap (termasuk link, gambar, video, dan styling text)
@@ -296,8 +299,10 @@ const onEditorReady = (quill) => {
   });
 
   // Sembunyikan toolbar jika user lanjut mengetik
-  quill.on("text-change", () => {
-    selectedImage.value = null;
+  quill.on("text-change", (delta, oldDelta, source) => {
+    if (source === "user") {
+      selectedImage.value = null;
+    }
     updateImageCaptions();
   });
 

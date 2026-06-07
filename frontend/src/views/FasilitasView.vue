@@ -521,15 +521,24 @@ const currentCategory = computed(() => {
     images.forEach((img) => {
       const altText = img.getAttribute("alt") || img.getAttribute("title");
       if (altText) {
-                // Buat wrapper agar gambar dan caption menjadi satu kesatuan (memperbaiki layout untuk gambar dengan float/alignment)
-                const wrapper = document.createElement("div");
+                // Gunakan <span> sebagai wrapper agar tidak merusak struktur tag <p> bawaan dari editor
+                const wrapper = document.createElement("span");
                 wrapper.style.cssText = img.style.cssText;
-                wrapper.style.display = img.style.display === "block" ? "block" : "inline-block";
+                
+                if (img.style.float === "left" || img.style.float === "right") {
+                  wrapper.style.display = "table"; // Perilaku paling baik untuk caption gambar yang di-float
+                } else if (img.style.display === "block") {
+                  wrapper.style.display = "block";
+                } else {
+                  wrapper.style.display = "inline-block";
+                }
+
                 wrapper.style.width = img.style.width || "max-content";
                 wrapper.style.maxWidth = "100%";
                 wrapper.style.textAlign = "center";
+                wrapper.style.clear = img.style.clear || "both";
 
-                // Reset style gambar setelah ditangani oleh wrapper
+                // Reset style gambar
                 img.style.cssText = "";
                 img.style.display = "block";
                 img.style.margin = "0 auto";
@@ -541,7 +550,7 @@ const currentCategory = computed(() => {
 
         const caption = document.createElement("span");
         caption.className =
-          "block text-center text-xs text-gray-500 mt-1.5 italic pointer-events-none";
+                  "block text-center text-xs md:text-sm text-gray-500 mt-2 italic pointer-events-none break-words w-full";
         caption.textContent = altText;
                 wrapper.appendChild(caption);
       }
