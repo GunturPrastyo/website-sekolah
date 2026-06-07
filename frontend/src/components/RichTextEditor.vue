@@ -123,8 +123,12 @@
         </button>
       </div>
       <!-- Opsi Keterangan Gambar -->
-      <div class="flex items-center gap-2 mt-1 border-t border-gray-100 dark:border-slate-700 pt-2">
-        <span class="text-[10px] text-gray-500 font-bold px-1 uppercase shrink-0">Info</span>
+      <div
+        class="flex items-center gap-2 mt-1 border-t border-gray-100 dark:border-slate-700 pt-2"
+      >
+        <span class="text-[10px] text-gray-500 font-bold px-1 uppercase shrink-0"
+          >Info</span
+        >
         <input
           type="text"
           v-model="imageCaption"
@@ -133,6 +137,16 @@
           class="text-xs px-2 py-1.5 w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded text-gray-700 dark:text-gray-300 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
         />
       </div>
+    </div>
+
+    <!-- Overlay Dinamis untuk Menampilkan Teks Keterangan Gambar di dalam Editor -->
+    <div
+      v-for="(cap, idx) in imageCaptions"
+      :key="idx"
+      class="absolute z-0 text-center text-[10px] sm:text-xs text-gray-500 italic pointer-events-none mt-1"
+      :style="{ top: cap.top + 'px', left: cap.left + 'px', width: cap.width + 'px' }"
+    >
+      {{ cap.text }}
     </div>
 
     <QuillEditor
@@ -149,7 +163,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onUnmounted } from "vue";
 import { QuillEditor, Quill } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 
@@ -217,6 +231,28 @@ const toolbarStyle = ref({ top: "0px", left: "0px" });
 const imageCaption = ref("");
 let qInstance = null;
 
+// State untuk menampilkan caption gambar secara dinamis (overlay) di dalam editor
+const imageCaptions = ref([]);
+const updateImageCaptions = () => {
+  if (!qInstance || !editorWrapper.value) return;
+  const wrapperRect = editorWrapper.value.getBoundingClientRect();
+  const images = qInstance.root.querySelectorAll("img");
+  const caps = [];
+  images.forEach((img) => {
+    const text = img.getAttribute("alt") || img.getAttribute("title");
+    if (text) {
+      const imgRect = img.getBoundingClientRect();
+      caps.push({
+        text: text,
+        top: imgRect.bottom - wrapperRect.top,
+        left: imgRect.left - wrapperRect.left,
+        width: imgRect.width,
+      });
+    }
+  });
+  imageCaptions.value = caps;
+};
+
 // Konfigurasi Toolbar yang lebih lengkap (termasuk link, gambar, video, dan styling text)
 const toolbarOptions = [
   ["bold", "italic", "underline", "strike"], // Toggled buttons
@@ -251,7 +287,8 @@ const onEditorReady = (quill) => {
   quill.root.addEventListener("click", (e) => {
     if (e.target.tagName === "IMG") {
       selectedImage.value = e.target;
-      imageCaption.value = e.target.getAttribute("alt") || e.target.getAttribute("title") || "";
+      imageCaption.value =
+        e.target.getAttribute("alt") || e.target.getAttribute("title") || "";
       updateToolbarPosition();
     } else {
       selectedImage.value = null;
@@ -261,8 +298,21 @@ const onEditorReady = (quill) => {
   // Sembunyikan toolbar jika user lanjut mengetik
   quill.on("text-change", () => {
     selectedImage.value = null;
+    updateImageCaptions();
   });
+
+  // Sinkronkan posisi caption saat di-scroll atau saat ukuran layar berubah
+  quill.root.addEventListener("scroll", updateImageCaptions);
+  window.addEventListener("resize", updateImageCaptions);
+
+  setTimeout(updateImageCaptions, 200);
 };
+
+onUnmounted(() => {
+  if (typeof window !== "undefined") {
+    window.removeEventListener("resize", updateImageCaptions);
+  }
+});
 
 const updateToolbarPosition = () => {
   if (!selectedImage.value || !editorWrapper.value) return;
@@ -315,6 +365,7 @@ const applyFormat = (formatType, valueStr) => {
     blot.format(formatType, valueStr);
     emit("update:modelValue", qInstance.root.innerHTML); // Paksa sinkronisasi V-Model
     updateToolbarPosition();
+    updateImageCaptions();
   }
 };
 
@@ -327,8 +378,22 @@ const setImageCaption = () => {
   if (blot) {
     blot.format("alt", imageCaption.value);
     blot.format("title", imageCaption.value);
+
+    // Beri sedikit margin bawah (jika belum ada) agar ruang overlay tidak bertumpuk dengan teks di bawahnya
+    let currentStyle = selectedImage.value.getAttribute("style") || "";
+    if (
+      !currentStyle.includes("margin-bottom") &&
+      !currentStyle.match(/margin:\s*[^;]*(1rem|auto)/)
+    ) {
+      let newStyle = currentStyle;
+      if (newStyle && !newStyle.endsWith(";")) newStyle += "; ";
+      newStyle += "margin-bottom: 1.5rem;";
+      blot.format("style", newStyle);
+    }
+
     emit("update:modelValue", qInstance.root.innerHTML); // Paksa sinkronisasi V-Model
     updateToolbarPosition();
+    updateImageCaptions();
   }
 };
 </script>

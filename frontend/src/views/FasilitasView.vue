@@ -521,11 +521,29 @@ const currentCategory = computed(() => {
     images.forEach((img) => {
       const altText = img.getAttribute("alt") || img.getAttribute("title");
       if (altText) {
+                // Buat wrapper agar gambar dan caption menjadi satu kesatuan (memperbaiki layout untuk gambar dengan float/alignment)
+                const wrapper = document.createElement("div");
+                wrapper.style.cssText = img.style.cssText;
+                wrapper.style.display = img.style.display === "block" ? "block" : "inline-block";
+                wrapper.style.width = img.style.width || "max-content";
+                wrapper.style.maxWidth = "100%";
+                wrapper.style.textAlign = "center";
+
+                // Reset style gambar setelah ditangani oleh wrapper
+                img.style.cssText = "";
+                img.style.display = "block";
+                img.style.margin = "0 auto";
+                img.style.maxWidth = "100%";
+                img.style.height = "auto";
+
+                img.parentNode.insertBefore(wrapper, img);
+                wrapper.appendChild(img);
+
         const caption = document.createElement("span");
         caption.className =
           "block text-center text-xs text-gray-500 mt-1.5 italic pointer-events-none";
         caption.textContent = altText;
-        img.parentNode.insertBefore(caption, img.nextSibling);
+                wrapper.appendChild(caption);
       }
     });
     return { ...cat, displayContent: tempDiv.innerHTML };
