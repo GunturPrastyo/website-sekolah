@@ -686,6 +686,12 @@ const toggleDarkMode = () => {
   setDarkMode(!isDarkMode.value);
 };
 
+const handleStorageChange = (e) => {
+  if (e.key === "settings_updated_at") {
+    fetchSettings();
+  }
+};
+
 watch(
   () => route.path,
   () => {
@@ -695,6 +701,8 @@ watch(
 
 onMounted(() => {
   fetchSettings();
+  window.addEventListener("settings-updated", fetchSettings);
+  window.addEventListener("storage", handleStorageChange);
   window.addEventListener("scroll", handleScroll);
   document.addEventListener("click", handleClickOutside);
   window.addEventListener("resize", handleResize);
@@ -712,6 +720,8 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+  window.removeEventListener("settings-updated", fetchSettings);
+  window.removeEventListener("storage", handleStorageChange);
   window.removeEventListener("scroll", handleScroll);
   document.removeEventListener("click", handleClickOutside);
   window.removeEventListener("resize", handleResize);

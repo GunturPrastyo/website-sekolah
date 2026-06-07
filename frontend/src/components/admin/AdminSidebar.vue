@@ -159,10 +159,17 @@ const fetchSettings = async () => {
   }
 };
 
+const handleStorageChange = (e) => {
+  if (e.key === "settings_updated_at") {
+    fetchSettings();
+  }
+};
+
 onMounted(() => {
   checkActiveMenu();
   fetchSettings();
   window.addEventListener("settings-updated", fetchSettings);
+  window.addEventListener("storage", handleStorageChange);
 });
 watch(
   () => route.path,
@@ -177,6 +184,7 @@ watch(
 
 onBeforeUnmount(() => {
   window.removeEventListener("settings-updated", fetchSettings);
+  window.removeEventListener("storage", handleStorageChange);
 });
 
 const handleLogout = async () => {

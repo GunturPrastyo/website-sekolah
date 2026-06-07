@@ -151,6 +151,8 @@ const saveSettings = async () => {
 
     // Mengirim sinyal agar semua komponen lain (Sidebar, Header, Publik) me-refresh datanya secara reaktif
     window.dispatchEvent(new CustomEvent("settings-updated"));
+    // Mengirim sinyal ke tab browser lain (cross-tab) menggunakan event 'storage'
+    localStorage.setItem("settings_updated_at", Date.now());
   } catch (error) {
     console.error("Gagal menyimpan pengaturan:", error);
     triggerToast(

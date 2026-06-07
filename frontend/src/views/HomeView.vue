@@ -2298,6 +2298,12 @@ const fetchSettings = async () => {
   }
 };
 
+const handleStorageChange = (e) => {
+  if (e.key === "settings_updated_at") {
+    fetchSettings();
+  }
+};
+
 onMounted(() => {
   // Fetch data dari API Backend
   fetchPrograms();
@@ -2312,6 +2318,7 @@ onMounted(() => {
 
   // Dengarkan sinyal pembaruan pengaturan
   window.addEventListener("settings-updated", fetchSettings);
+  window.addEventListener("storage", handleStorageChange);
 
   // Jika sudah ada cache, langsung mulai efek ketik tanpa delay menunggu backend
   if (fullTitle.value && !isTypewriterStarted.value) {
@@ -2470,6 +2477,7 @@ const initJurusanSwiper = () => {
 onBeforeUnmount(() => {
   if (countdownInterval) clearInterval(countdownInterval);
   window.removeEventListener("settings-updated", fetchSettings);
+  window.removeEventListener("storage", handleStorageChange);
 });
 </script>
 

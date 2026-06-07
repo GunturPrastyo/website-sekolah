@@ -6,12 +6,12 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 md:gap-12 mb-12">
         <!-- Col 1: Brand & About -->
         <div class="lg:col-span-3">
-          <a href="#" class="flex items-center gap-3 mb-6 inline-block">
+          <a href="#" class="inline-flex items-center gap-3 mb-6">
             <img
               v-if="settings.logo"
               :src="settings.logo"
               alt="Logo Sekolah"
-              class="h-10 w-auto"
+              class="h-10 w-auto object-contain"
             />
             <span class="text-2xl font-bold text-white">{{ settings.namaSekolah }}</span>
           </a>
@@ -237,7 +237,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { PhCaretRight, PhMapPin, PhPhone, PhEnvelope } from "@phosphor-icons/vue";
 import api from "@/api/index.js";
 
@@ -329,9 +329,17 @@ const fetchVisitorStats = async () => {
   }
 };
 
+const handleStorageChange = (e) => {
+  if (e.key === "settings_updated_at") {
+    fetchSettings();
+  }
+};
+
 onMounted(() => {
   fetchSettings();
   fetchVisitorStats();
+  window.addEventListener("settings-updated", fetchSettings);
+  window.addEventListener("storage", handleStorageChange);
 
   const observer = new IntersectionObserver(
     (entries) => {
@@ -349,5 +357,10 @@ onMounted(() => {
   if (footerRef.value) {
     observer.observe(footerRef.value);
   }
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("settings-updated", fetchSettings);
+  window.removeEventListener("storage", handleStorageChange);
 });
 </script>
