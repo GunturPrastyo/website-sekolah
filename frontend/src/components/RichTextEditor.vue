@@ -122,6 +122,17 @@
           Auto
         </button>
       </div>
+      <!-- Opsi Keterangan Gambar -->
+      <div class="flex items-center gap-2 mt-1 border-t border-gray-100 dark:border-slate-700 pt-2">
+        <span class="text-[10px] text-gray-500 font-bold px-1 uppercase shrink-0">Info</span>
+        <input
+          type="text"
+          v-model="imageCaption"
+          @input="setImageCaption"
+          placeholder="Keterangan / Alt text..."
+          class="text-xs px-2 py-1.5 w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded text-gray-700 dark:text-gray-300 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+        />
+      </div>
     </div>
 
     <QuillEditor
@@ -161,10 +172,12 @@ if (typeof window !== "undefined" && Quill) {
       return {
         width: domNode.getAttribute("width") || "",
         style: domNode.getAttribute("style") || "",
+        alt: domNode.getAttribute("alt") || "",
+        title: domNode.getAttribute("title") || "",
       };
     }
     format(name, value) {
-      if (name === "width" || name === "style") {
+      if (["width", "style", "alt", "title"].includes(name)) {
         if (value) {
           this.domNode.setAttribute(name, value);
         } else {
@@ -201,6 +214,7 @@ const editorWrapper = ref(null);
 const fileInput = ref(null);
 const selectedImage = ref(null);
 const toolbarStyle = ref({ top: "0px", left: "0px" });
+const imageCaption = ref("");
 let qInstance = null;
 
 // Konfigurasi Toolbar yang lebih lengkap (termasuk link, gambar, video, dan styling text)
@@ -237,6 +251,7 @@ const onEditorReady = (quill) => {
   quill.root.addEventListener("click", (e) => {
     if (e.target.tagName === "IMG") {
       selectedImage.value = e.target;
+      imageCaption.value = e.target.getAttribute("alt") || e.target.getAttribute("title") || "";
       updateToolbarPosition();
     } else {
       selectedImage.value = null;
@@ -305,6 +320,17 @@ const applyFormat = (formatType, valueStr) => {
 
 const setImageStyle = (styleStr) => applyFormat("style", styleStr);
 const setImageWidth = (widthStr) => applyFormat("width", widthStr);
+
+const setImageCaption = () => {
+  if (!selectedImage.value || !qInstance) return;
+  const blot = Quill.find(selectedImage.value);
+  if (blot) {
+    blot.format("alt", imageCaption.value);
+    blot.format("title", imageCaption.value);
+    emit("update:modelValue", qInstance.root.innerHTML); // Paksa sinkronisasi V-Model
+    updateToolbarPosition();
+  }
+};
 </script>
 
 <style scoped>

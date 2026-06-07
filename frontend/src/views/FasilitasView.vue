@@ -178,7 +178,7 @@
                     <div
                       class="editor-content-preview ql-editor !p-0"
                       style="font-family: inherit"
-                      v-html="currentCategory.content"
+                      v-html="currentCategory.displayContent || currentCategory.content"
                       @click="handleContentClick"
                     ></div>
                   </div>
@@ -290,7 +290,6 @@
       <div
         v-if="isGalleryOpen"
         class="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm"
-        @click="closeGallery"
       >
         <!-- Close Button -->
         <button
@@ -342,13 +341,23 @@
 
         <!-- Image Container -->
         <div
-          class="relative w-full max-w-5xl max-h-[90vh] px-12 md:px-24 flex flex-col items-center justify-center"
+          class="relative w-full max-w-7xl max-h-[95vh] px-12 md:px-24 flex flex-col items-center justify-center"
           @click.stop
         >
           <img
-            :src="currentGalleryImages[currentImageIndex]"
+            :src="
+              currentGalleryImages[currentImageIndex]?.src ||
+              currentGalleryImages[currentImageIndex]
+            "
             class="max-w-full max-h-[85vh] object-contain rounded-md shadow-2xl transition-transform duration-300"
           />
+          <p
+            v-if="currentGalleryImages[currentImageIndex]?.caption"
+            class="mt-4 text-white/90 text-xs md:text-sm max-w-3xl text-center bg-black/60 px-5 py-2.5 rounded-lg border border-white/10"
+          >
+            {{ currentGalleryImages[currentImageIndex].caption }}
+          </p>
+
           <div
             class="absolute bottom-[-30px] md:bottom-[-40px] text-white/80 text-sm md:text-base font-medium bg-black/50 px-3 py-1 rounded-full"
           >
@@ -485,10 +494,11 @@ const prevImage = () => {
 
 const handleContentClick = (event) => {
   if (event.target.tagName === "IMG") {
-    const images = Array.from(event.currentTarget.querySelectorAll("img")).map(
-      (img) => img.src
-    );
-    const index = images.indexOf(event.target.src);
+    const images = Array.from(event.currentTarget.querySelectorAll("img")).map((img) => ({
+      src: img.src,
+      caption: img.getAttribute("alt") || img.getAttribute("title") || "",
+    }));
+    const index = images.findIndex((img) => img.src === event.target.src);
     openGallery(images, index !== -1 ? index : 0);
   }
 };
@@ -502,7 +512,25 @@ const changeCategory = (id) => {
 };
 
 const currentCategory = computed(() => {
-  return facilityCategories.value.find((c) => c.id === activeCategory.value) || null;
+  const cat = facilityCategories.value.find((c) => c.id === activeCategory.value) || null;
+  if (cat && cat.content) {
+    // Menyisipkan teks caption secara dinamis di bawah gambar untuk tampilan publik
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = cat.content;
+    const images = tempDiv.querySelectorAll("img");
+    images.forEach((img) => {
+      const altText = img.getAttribute("alt") || img.getAttribute("title");
+      if (altText) {
+        const caption = document.createElement("span");
+        caption.className =
+          "block text-center text-xs text-gray-500 mt-1.5 italic pointer-events-none";
+        caption.textContent = altText;
+        img.parentNode.insertBefore(caption, img.nextSibling);
+      }
+    });
+    return { ...cat, displayContent: tempDiv.innerHTML };
+  }
+  return cat;
 });
 </script>
 
