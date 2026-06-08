@@ -1918,39 +1918,54 @@ const fetchSchoolStats = async () => {
       const data = response.data.data;
       statsArray.value.forEach((stat) => {
         if (data[stat.key] !== undefined) {
-          stat.target = data[stat.key];
+          stat.target = stat.isNumber ? Number(data[stat.key]) || 0 : data[stat.key];
           if (!stat.isNumber) {
-            stat.value = data[stat.key]; // Langsung set nilai string untuk akreditasi
+            stat.value = stat.target; // Langsung set nilai string untuk akreditasi
           }
         }
       });
+      // Jika efek ketik & animasi kotak sudah selesai/muncul, animasikan angka agar terupdate
+      if (showSubtitle.value) {
+        animateStats();
+      }
     }
   } catch (error) {
     console.error("Gagal mengambil data statistik sekolah:", error);
   }
 };
 
+let statsAnimationId = null;
+
 const animateStats = () => {
+  if (statsAnimationId) cancelAnimationFrame(statsAnimationId);
+
   const duration = 3000; // Durasi diperpanjang menjadi 3 detik agar efek naiknya lebih dramatis
   let startTimestamp = null;
+
+  const startValues = statsArray.value.map((stat) => (stat.isNumber ? stat.value : 0));
+
   const step = (timestamp) => {
     if (!startTimestamp) startTimestamp = timestamp;
     const progress = Math.min((timestamp - startTimestamp) / duration, 1);
     const easeProgress = 1 - Math.pow(1 - progress, 4); // Efek ease-out
 
-    statsArray.value.forEach((stat) => {
-      if (stat.isNumber) stat.value = Math.floor(easeProgress * stat.target);
+    statsArray.value.forEach((stat, index) => {
+      if (stat.isNumber) {
+        stat.value = Math.floor(
+          startValues[index] + easeProgress * (stat.target - startValues[index])
+        );
+      }
     });
 
     if (progress < 1) {
-      window.requestAnimationFrame(step);
+      statsAnimationId = window.requestAnimationFrame(step);
     } else {
       statsArray.value.forEach((stat) => {
         if (stat.isNumber) stat.value = stat.target;
       });
     }
   };
-  window.requestAnimationFrame(step);
+  statsAnimationId = window.requestAnimationFrame(step);
 };
 
 // --- Data Animasi Statistik Alumni ---
@@ -1961,7 +1976,11 @@ const alumniStats = ref({
   instansi: { value: 0, target: 0 },
 });
 
+let alumniAnimationId = null;
+
 const animateAlumniStats = () => {
+  if (alumniAnimationId) cancelAnimationFrame(alumniAnimationId);
+
   const duration = 2500;
   let startTimestamp = null;
 
@@ -1984,14 +2003,14 @@ const animateAlumniStats = () => {
     );
 
     if (progress < 1) {
-      window.requestAnimationFrame(step);
+      alumniAnimationId = window.requestAnimationFrame(step);
     } else {
       alumniStats.value.alumni.value = alumniStats.value.alumni.target;
       alumniStats.value.ptn.value = alumniStats.value.ptn.target;
       alumniStats.value.instansi.value = alumniStats.value.instansi.target;
     }
   };
-  window.requestAnimationFrame(step);
+  alumniAnimationId = window.requestAnimationFrame(step);
 };
 
 const themeClasses = {
