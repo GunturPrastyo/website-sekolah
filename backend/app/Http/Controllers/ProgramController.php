@@ -21,6 +21,7 @@ class ProgramController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'badge' => 'required|string|max:255',
+            'icon' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'subjects' => 'nullable|string',
             'careers' => 'nullable|string',
@@ -48,6 +49,7 @@ class ProgramController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'badge' => 'required|string|max:255',
+            'icon' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'subjects' => 'nullable|string',
             'careers' => 'nullable|string',

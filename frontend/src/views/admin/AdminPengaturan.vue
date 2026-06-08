@@ -316,7 +316,7 @@ const updateProfile = async () => {
               <input
                 type="text"
                 v-model="generalSettings.namaSekolah"
-                class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400 dark:placeholder-slate-500"
+                class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
               />
             </div>
             <div>
@@ -328,7 +328,7 @@ const updateProfile = async () => {
                 type="text"
                 v-model="generalSettings.deskripsi"
                 placeholder="Contoh: Mencetak Generasi Unggul..."
-                class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400 dark:placeholder-slate-500"
+                class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
               />
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-1.5">
                 Akan ditampilkan sebagai teks hero di banner halaman beranda.
@@ -386,7 +386,7 @@ const updateProfile = async () => {
               <input
                 type="email"
                 v-model="generalSettings.email"
-                class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400 dark:placeholder-slate-500"
+                class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
                 placeholder="info@sekolah.sch.id"
               />
             </div>
@@ -398,7 +398,7 @@ const updateProfile = async () => {
               <input
                 type="text"
                 v-model="generalSettings.telepon"
-                class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400 dark:placeholder-slate-500"
+                class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
                 placeholder="(021) 1234567"
               />
             </div>
@@ -415,7 +415,7 @@ const updateProfile = async () => {
                   v-model="generalSettings.embedMap"
                   @input="extractLocationFromMapUrl"
                   rows="4"
-                  class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400 dark:placeholder-slate-500"
+                  class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
                   :class="
                     !isMapUrlValid && generalSettings.embedMap
                       ? 'border-red-500 ring-2 ring-red-500 focus:ring-red-500 focus:border-red-500'
@@ -446,7 +446,7 @@ const updateProfile = async () => {
                 <textarea
                   v-model="generalSettings.alamat"
                   rows="3"
-                  class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400 dark:placeholder-slate-500"
+                  class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
                   placeholder="Jl. Raya Sekolah No. 123..."
                 ></textarea>
               </div>
@@ -505,7 +505,7 @@ const updateProfile = async () => {
               <input
                 type="text"
                 v-model="generalSettings.instagram"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400 dark:placeholder-slate-500"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
                 placeholder="https://instagram.com/..."
               />
             </div>
@@ -517,7 +517,7 @@ const updateProfile = async () => {
               <input
                 type="text"
                 v-model="generalSettings.facebook"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400 dark:placeholder-slate-500"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
                 placeholder="https://facebook.com/..."
               />
             </div>
@@ -529,7 +529,7 @@ const updateProfile = async () => {
               <input
                 type="text"
                 v-model="generalSettings.youtube"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400 dark:placeholder-slate-500"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
                 placeholder="https://youtube.com/..."
               />
             </div>
@@ -542,7 +542,7 @@ const updateProfile = async () => {
               <input
                 type="text"
                 v-model="generalSettings.x"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400 dark:placeholder-slate-500"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
                 placeholder="https://x.com/..."
               />
             </div>
@@ -555,7 +555,7 @@ const updateProfile = async () => {
               <input
                 type="text"
                 v-model="generalSettings.tiktok"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400 dark:placeholder-slate-500"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
                 placeholder="https://tiktok.com/@..."
               />
             </div>
@@ -867,7 +867,7 @@ const updateProfile = async () => {
                   type="text"
                   v-model="profileForm.name"
                   required
-                  class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 dark:placeholder-slate-500"
+                  class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400/60 dark:placeholder-slate-500/60"
                 />
               </div>
 
@@ -882,7 +882,7 @@ const updateProfile = async () => {
                   v-model="profileForm.password"
                   minlength="8"
                   placeholder="Kosongkan jika tidak ingin mengubah kata sandi"
-                  class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 dark:placeholder-slate-500"
+                  class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400/60 dark:placeholder-slate-500/60"
                 />
                 <p class="text-xs text-gray-500 mt-2">Minimal 8 karakter.</p>
               </div>

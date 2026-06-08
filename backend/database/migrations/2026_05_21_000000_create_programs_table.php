@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('badge');
+            $table->string('icon')->nullable();
             $table->text('description')->nullable();
             $table->text('subjects')->nullable();
             $table->text('careers')->nullable();

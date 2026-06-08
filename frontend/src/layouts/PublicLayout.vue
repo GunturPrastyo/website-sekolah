@@ -2,7 +2,11 @@
   <div class="bg-blue-50 dark:bg-slate-900 overflow-x-hidden relative w-full">
     <Navbar />
     <main>
-      <router-view />
+      <router-view v-slot="{ Component, route }">
+        <keep-alive :max="10">
+          <component :is="Component" :key="route.path" />
+        </keep-alive>
+      </router-view>
     </main>
     <Footer />
   </div>

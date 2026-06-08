@@ -12,6 +12,7 @@ class Program extends Model
     protected $fillable = [
         'title',
         'badge',
+        'icon',
         'description',
         'subjects',
         'careers',
