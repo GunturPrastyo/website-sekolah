@@ -289,6 +289,44 @@ router.beforeEach((to, from, next) => {
   }
 });
 
+// State lokal untuk menyimpan pengaturan web secara sementara
+let appSettings = null;
+
+// Ambil pengaturan web (Title & Favicon) secara asinkron dari API
+api.get('/api/settings')
+  .then(response => {
+    const result = response.data;
+    if (result.success && result.data) {
+      appSettings = result.data;
+      
+      // Mengatur Favicon
+      if (appSettings.favicon) {
+        let link = document.querySelector("link[rel~='icon']");
+        if (link) link.href = appSettings.favicon;
+      }
+      
+      // Memperbarui title untuk halaman yang saat ini sedang dibuka
+      updateDocumentTitle(router.currentRoute.value);
+    }
+  })
+  .catch(error => console.error('Gagal memuat pengaturan website:', error));
+
+// Fungsi untuk memperbarui document.title secara dinamis berdasarkan rute
+function updateDocumentTitle(route) {
+  const baseTitle = appSettings?.namaSekolah || 'Website Sekolah';
+  
+  // Mengambil judul dari atribut meta, jika tidak ada, gunakan dari nama rute (diformat rapi)
+  let pageTitle = route.meta?.title;
+  if (!pageTitle && route.name) {
+    pageTitle = String(route.name).split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  }
+
+  // Format judul: "Nama Halaman | Nama Sekolah" (contoh: "Visi Misi | SMAN 1 Nogosari")
+  document.title = (pageTitle && pageTitle.toLowerCase() !== 'home') 
+    ? `${pageTitle} | ${baseTitle}` 
+    : baseTitle;
+}
+
 // Global after hook untuk tracking pengunjung
 router.afterEach((to, from) => {
   // Catat kunjungan jika mengakses rute publik (bukan halaman admin)
@@ -298,6 +336,9 @@ router.afterEach((to, from) => {
       console.error('Gagal mencatat pengunjung:', err);
     });
   }
+
+  // Perbarui title tab browser setiap kali pindah halaman
+  updateDocumentTitle(to);
 });
 
 export default router
