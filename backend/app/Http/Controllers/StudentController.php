@@ -37,6 +37,7 @@ class StudentController extends Controller
 
         // Hapus cache dashboard agar data terupdate
         Cache::forget('dashboard_total_siswa');
+        Cache::forget('public_landing_stats');
 
         return response()->json([
             'success' => true,
@@ -61,6 +62,7 @@ class StudentController extends Controller
 
         // Hapus cache dashboard agar data terupdate
         Cache::forget('dashboard_total_siswa');
+        Cache::forget('public_landing_stats');
 
         return response()->json([
             'success' => true,
@@ -74,6 +76,7 @@ class StudentController extends Controller
             $student->delete();
             
             Cache::forget('dashboard_total_siswa');
+            Cache::forget('public_landing_stats');
 
             return response()->json([
                 'success' => true,
@@ -98,6 +101,7 @@ class StudentController extends Controller
             Student::whereIn('id', $validated['ids'])->delete();
             
             Cache::forget('dashboard_total_siswa');
+            Cache::forget('public_landing_stats');
 
             return response()->json([
                 'success' => true,
@@ -138,6 +142,7 @@ class StudentController extends Controller
             Student::whereIn('id', $validated['ids'])->update($updateData);
             
             Cache::forget('dashboard_total_siswa');
+            Cache::forget('public_landing_stats');
 
             return response()->json([
                 'success' => true,
@@ -179,6 +184,7 @@ class StudentController extends Controller
         }
 
         Cache::forget('dashboard_total_siswa');
+        Cache::forget('public_landing_stats');
 
         return response()->json([
             'success' => true,
