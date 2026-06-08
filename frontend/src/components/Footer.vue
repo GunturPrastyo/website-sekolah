@@ -13,7 +13,7 @@
               alt="Logo Sekolah"
               class="h-10 w-auto object-contain"
             />
-            <span class="text-2xl font-bold text-white">{{ settings.namaSekolah }}</span>
+            <span class="text-2xl font-bold text-white" style="font-family: 'Montserrat', sans-serif;">{{ settings.namaSekolah }}</span>
           </a>
           <p class="text-sm text-slate-400 leading-relaxed mb-6">
             {{ settings.deskripsiSekolah }}

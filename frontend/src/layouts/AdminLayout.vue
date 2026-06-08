@@ -33,7 +33,12 @@ const toggleSidebar = () => {
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap");
 
 /* Menggunakan font Poppins dari file HTML, jika tidak ada, gunakan sans-serif */
 .font-sans {

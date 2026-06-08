@@ -16,7 +16,7 @@
           'text-gray-800 dark:text-white': isNavbarScrolled || isMobileMenuOpen,
           'text-white': !isNavbarScrolled && !isMobileMenuOpen,
         }"
-        style="font-family: 'Oswald', sans-serif"
+        style="font-family: 'Montserrat', sans-serif"
       >
         <img
           v-if="settings.logo"
@@ -729,5 +729,4 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap");
 </style>
