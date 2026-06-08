@@ -1558,6 +1558,11 @@ import {
   PhTranslate,
   PhMonitor,
   PhBookOpen,
+  PhCalculator,
+  PhBuildings,
+  PhBriefcase,
+  PhPalette,
+  PhStethoscope,
   PhGraduationCap,
   PhCaretRight,
   PhCaretLeft,
@@ -1615,6 +1620,16 @@ const programIconMap = {
   PhMonitor,
   PhBookOpen,
   PhGraduationCap,
+  monitor: PhMonitor,
+  microscope: PhFlask,
+  "book-open": PhBookOpen,
+  languages: PhTranslate,
+  calculator: PhCalculator,
+  building: PhBuildings,
+  briefcase: PhBriefcase,
+  palette: PhPalette,
+  stethoscope: PhStethoscope,
+  globe: PhGlobe,
 };
 
 const getProgramIcon = (iconOrIndex) => {
