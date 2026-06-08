@@ -143,7 +143,11 @@ const addEntry = async () => {
 
 const startEdit = (program) => {
   isEditing.value = true;
-  form.value = { ...program };
+  form.value = {
+    ...program,
+    image: getImageUrl(program.image),
+    background_img: getImageUrl(program.background_img),
+  };
   isFormVisible.value = true;
   document.body.style.overflow = "hidden";
 };

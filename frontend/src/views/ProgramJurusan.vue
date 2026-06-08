@@ -12,7 +12,7 @@ import api from "@/api/index.js";
 const programs = ref([]);
 const isFetching = ref(true);
 
-const getImageUrl = (path, defaultUrl) => {
+const getImageUrl = (path, defaultUrl = "") => {
   if (!path) return defaultUrl;
   if (path.startsWith("http") || path.startsWith("data:")) return path;
   const backendUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
@@ -54,10 +54,7 @@ const fetchData = async () => {
           program.image,
           "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800"
         ),
-        pattern: getImageUrl(
-          program.pattern,
-          "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=1200"
-        ),
+        background_img: getImageUrl(program.background_img, ""),
       }));
     }
   } catch (error) {
@@ -182,7 +179,11 @@ onMounted(() => {
           v-for="(program, index) in programs"
           :key="program.id"
           class="relative py-16 md:py-24 px-6 transition-colors duration-700 ease-in-out overflow-hidden z-10 bg-fixed bg-cover bg-center"
-          :style="{ backgroundImage: `url(${program.pattern})` }"
+          :style="
+            program.background_img
+              ? { backgroundImage: `url(${program.background_img})` }
+              : {}
+          "
         >
           <!-- Background Overlay -->
           <div
