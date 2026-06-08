@@ -269,7 +269,7 @@ const confirmDelete = async () => {
                     type="text"
                     v-model="form.category"
                     required
-                    class="w-full px-4 py-2 bg-gray-50 dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow"
+                    class="w-full px-4 py-2 bg-gray-50 dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow placeholder-gray-400 dark:placeholder-slate-500"
                     placeholder="Contoh: Ruang Kelas, Laboratorium, dll."
                   />
                 </div>
