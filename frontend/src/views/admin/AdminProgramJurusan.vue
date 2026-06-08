@@ -12,6 +12,14 @@ import {
   PhBriefcase,
   PhBookOpen,
   PhX,
+  PhMonitor,
+  PhFlask,
+  PhTranslate,
+  PhCalculator,
+  PhBuildings,
+  PhPalette,
+  PhStethoscope,
+  PhGlobe,
 } from "@phosphor-icons/vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
@@ -28,7 +36,21 @@ const form = ref({
   careers: "",
   image: "",
   background_img: "",
+  icon: "",
 });
+
+const iconOptions = [
+  { value: "monitor", label: "IT / Komputer", component: PhMonitor },
+  { value: "microscope", label: "Sains / IPA", component: PhFlask },
+  { value: "book-open", label: "Sosial / IPS", component: PhBookOpen },
+  { value: "languages", label: "Bahasa", component: PhTranslate },
+  { value: "calculator", label: "Matematika", component: PhCalculator },
+  { value: "building", label: "Teknik", component: PhBuildings },
+  { value: "briefcase", label: "Bisnis", component: PhBriefcase },
+  { value: "palette", label: "Seni", component: PhPalette },
+  { value: "stethoscope", label: "Kesehatan", component: PhStethoscope },
+  { value: "globe", label: "Global", component: PhGlobe },
+];
 
 const isFormVisible = ref(false);
 const isEditing = ref(false);
@@ -86,6 +108,7 @@ const resetForm = () => {
     careers: "",
     image: "",
     background_img: "",
+    icon: "",
   };
   isEditing.value = false;
 };
@@ -284,7 +307,7 @@ const filteredPrograms = computed(() => {
 
                 <!-- Kolom Kanan: Form Data -->
                 <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div class="md:col-span-1">
+                  <div class="md:col-span-2">
                     <label
                       class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                     >
@@ -294,12 +317,12 @@ const filteredPrograms = computed(() => {
                       type="text"
                       v-model="form.title"
                       required
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 dark:placeholder-slate-500"
                       placeholder="Contoh: Ilmu Pengetahuan Alam (IPA)"
                     />
                   </div>
 
-                  <div class="md:col-span-1">
+                  <div class="md:col-span-2">
                     <label
                       class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                     >
@@ -309,9 +332,36 @@ const filteredPrograms = computed(() => {
                       type="text"
                       v-model="form.badge"
                       required
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 dark:placeholder-slate-500"
                       placeholder="Contoh: Sains & Teknologi"
                     />
+                  </div>
+
+                  <div class="md:col-span-2">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      Pilih Icon (Untuk Beranda)
+                    </label>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                      <button
+                        v-for="icon in iconOptions"
+                        :key="icon.value"
+                        type="button"
+                        @click="form.icon = icon.value"
+                        :class="[
+                          'flex flex-col items-center justify-center p-3 rounded-xl border transition-all',
+                          form.icon === icon.value
+                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+                            : 'border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-600 dark:text-gray-400 hover:border-blue-300 hover:bg-blue-50/50 dark:hover:bg-slate-600',
+                        ]"
+                      >
+                        <component :is="icon.component" class="w-6 h-6 mb-2" />
+                        <span class="text-xs font-medium text-center">{{
+                          icon.label
+                        }}</span>
+                      </button>
+                    </div>
                   </div>
 
                   <div class="md:col-span-2">
@@ -323,7 +373,7 @@ const filteredPrograms = computed(() => {
                     <textarea
                       v-model="form.description"
                       rows="3"
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 dark:placeholder-slate-500"
                       placeholder="Jelaskan secara singkat mengenai jurusan ini..."
                     ></textarea>
                   </div>
@@ -338,7 +388,7 @@ const filteredPrograms = computed(() => {
                     <textarea
                       v-model="form.subjects"
                       rows="3"
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 dark:placeholder-slate-500"
                       placeholder="Contoh: Fisika Lanjutan, Biologi Terpadu, Kimia Terapan"
                     ></textarea>
                   </div>
@@ -353,7 +403,7 @@ const filteredPrograms = computed(() => {
                     <textarea
                       v-model="form.careers"
                       rows="3"
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 dark:placeholder-slate-500"
                       placeholder="Contoh: Dokter, Insinyur, Ilmuwan, Apoteker"
                     ></textarea>
                   </div>
@@ -399,7 +449,7 @@ const filteredPrograms = computed(() => {
           type="text"
           v-model="searchQuery"
           placeholder="Cari jurusan..."
-          class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 dark:placeholder-slate-500"
         />
       </div>
 
@@ -482,6 +532,12 @@ const filteredPrograms = computed(() => {
               class="absolute bottom-3 left-3 bg-blue-600/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded"
             >
               {{ prog.badge }}
+            </div>
+            <div
+              v-if="prog.icon"
+              class="absolute bottom-3 right-3 bg-slate-800/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold tracking-wider rounded"
+            >
+              Icon: {{ prog.icon }}
             </div>
           </div>
 
