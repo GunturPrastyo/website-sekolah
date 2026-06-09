@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Extracurricular;
 use App\Http\Resources\ExtracurricularResource;
+use App\Traits\ImageUploadTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ExtracurricularController extends Controller
 {
+    use ImageUploadTrait;
+
     public function index()
     {
         return response()->json([
@@ -31,9 +33,7 @@ class ExtracurricularController extends Controller
             'socials' => 'nullable|array',
         ]);
 
-        if ($request->has('image') && preg_match('/^data:image\/(\w+);base64,/', $request->image)) {
-            $validated['image'] = $this->saveBase64Image($request->image);
-        }
+        $validated['image'] = $this->processAndSaveImage($validated['image'] ?? null, 'extracurriculars', null, 800);
 
         $extracurricular = Extracurricular::create($validated);
 
@@ -59,8 +59,10 @@ class ExtracurricularController extends Controller
             'socials' => 'nullable|array',
         ]);
 
-        if ($request->has('image') && preg_match('/^data:image\/(\w+);base64,/', $request->image)) {
-            $validated['image'] = $this->saveBase64Image($request->image);
+        if ($request->has('image')) {
+            $validated['image'] = $this->processAndSaveImage(
+                $request->input('image'), 'extracurriculars', $extracurricular->image, 800
+            );
         }
 
         $extracurricular->update($validated);
@@ -74,19 +76,11 @@ class ExtracurricularController extends Controller
     public function destroy($id)
     {
         $extracurricular = Extracurricular::findOrFail($id);
+        $this->deleteOldImage($extracurricular->image);
         $extracurricular->delete();
 
         return response()->json([
             'message' => 'Data ekstrakurikuler berhasil dihapus.'
         ]);
-    }
-
-    private function saveBase64Image($base64Image)
-    {
-        $imageName = time() . '-' . uniqid() . '.jpg';
-        $image = substr($base64Image, strpos($base64Image, ',') + 1);
-        $image = base64_decode($image);
-        Storage::disk('public')->put('extracurriculars/' . $imageName, $image);
-        return '/storage/extracurriculars/' . $imageName;
     }
 }

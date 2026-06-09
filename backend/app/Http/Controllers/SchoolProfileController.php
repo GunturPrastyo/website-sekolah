@@ -7,9 +7,12 @@ use App\Models\SchoolProfile;
 use App\Http\Resources\SchoolProfileResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\ImageUploadTrait;
 
 class SchoolProfileController extends Controller
 {
+    use ImageUploadTrait;
+
     public function show()
     {
         $profile = SchoolProfile::first();
@@ -36,19 +39,8 @@ class SchoolProfileController extends Controller
 
         // Handle upload gambar jika dikirim dalam bentuk Base64 (dari cropImage vue)
         if ($request->filled('image') && preg_match('/^data:image\/(\w+);base64,/', $request->input('image'))) {
-            $imageData = $request->input('image');
-            $position = strpos($imageData, ',');
-            $extension = explode(';', explode('/', $imageData)[1])[0];
-            $imageData = base64_decode(substr($imageData, $position + 1));
-            
-            $filename = 'profile/school_profile_' . time() . '.' . $extension;
-            Storage::disk('public')->put($filename, $imageData);
-            
-            // Hapus gambar lama agar tidak menumpuk di storage
-            if ($profile && $profile->image && str_starts_with($profile->image, '/storage/profile/')) {
-                $oldPath = str_replace('/storage/', '', $profile->image);
-                Storage::disk('public')->delete($oldPath);
-            }
+            $oldPath = $profile && $profile->image && str_starts_with($profile->image, '/storage/profile/') ? str_replace('/storage/', '', $profile->image) : null;
+            $filename = $this->processAndSaveImage($request->input('image'), 'profile', $oldPath);
 
             $validatedData['image'] = '/storage/' . $filename;
         }

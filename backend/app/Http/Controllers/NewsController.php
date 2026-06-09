@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\News;
 use App\Models\DismissedNotification;
 use App\Http\Resources\NewsResource;
+use App\Traits\ImageUploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
+    use ImageUploadTrait;
+
     public function index()
     {
         // Hanya tampilkan berita yang sudah disetujui di halaman utama Admin Berita
@@ -65,7 +67,11 @@ class NewsController extends Controller
         /** @var \App\Models\User $user */
         $user = $request->user();
 
-        $validated['images'] = $this->handleBase64Images($validated['images'] ?? []);
+        $validated['images'] = $this->handleMultipleImages(
+            $validated['images'] ?? [],
+            [], // Tidak ada gambar lama saat membuat baru
+            'news'
+        );
         $validated['views'] = 0;
         $validated['user_id'] = $user->id;
         
@@ -104,7 +110,11 @@ class NewsController extends Controller
             'images.*' => 'nullable|string'
         ]);
 
-        $validated['images'] = $this->handleBase64Images($validated['images'] ?? []);
+        $validated['images'] = $this->handleMultipleImages(
+            $validated['images'] ?? [],
+            $news->images ?? [],
+            'news'
+        );
         
         // Jika admin biasa mengedit berita yang ditolak atau telah disetujui, kembalikan ke pending
         if ($user->role !== 'super_admin') {
@@ -135,6 +145,12 @@ class NewsController extends Controller
             return response()->json(['message' => 'Anda tidak memiliki hak akses untuk menghapus berita ini.'], 403);
         }
         
+        // Hapus semua gambar terkait berita ini dari storage
+        if (!empty($news->images)) {
+            foreach ($news->images as $imagePath) {
+                $this->deleteOldImage($imagePath);
+            }
+        }
         $news->delete();
 
         Cache::forget('dashboard_total_artikel');
@@ -169,22 +185,29 @@ class NewsController extends Controller
         return response()->json(['message' => 'Status berita berhasil diperbarui', 'data' => new NewsResource($news)]);
     }
 
-    private function handleBase64Images(array $images)
+    private function handleMultipleImages(array $newImageData, array $oldImagePaths, string $storagePath): array
     {
-        $processedImages = [];
-        foreach ($images as $image) {
-            if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {
-                $imageData = substr($image, strpos($image, ',') + 1);
-                $imageData = base64_decode($imageData);
-                $extension = strtolower($type[1]);
-                $filename = 'news/' . time() . '_' . uniqid() . '.' . $extension;
-                Storage::disk('public')->put($filename, $imageData);
-                
-                $processedImages[] = asset('storage/' . $filename);
-            } else {
-                $processedImages[] = $image;
+        $newPaths = [];
+        $existingUrls = [];
+
+        foreach ($newImageData as $image) {
+            if (str_starts_with($image, 'data:image')) {
+                $path = $this->processAndSaveImage($image, $storagePath, null, 1024);
+                if ($path) {
+                    $newPaths[] = $path;
+                    $existingUrls[] = \Illuminate\Support\Facades\Storage::url($path);
+                }
+            } elseif (str_starts_with($image, 'http')) {
+                $existingUrls[] = $image;
+                $newPaths[] = str_replace(\Illuminate\Support\Facades\Storage::url(''), '', $image);
             }
         }
-        return $processedImages;
+
+        $oldImageUrls = array_map(fn($path) => \Illuminate\Support\Facades\Storage::url($path), $oldImagePaths);
+        $imagesToDelete = array_diff($oldImageUrls, $existingUrls);
+
+        foreach ($imagesToDelete as $url) $this->deleteOldImage($url);
+
+        return $newPaths;
     }
 }

@@ -7,9 +7,12 @@ use App\Http\Resources\StaffResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\ImageUploadTrait;
 
 class StaffController extends Controller
 {
+    use ImageUploadTrait;
+
     public function index()
     {
         $staff = Staff::all();
@@ -29,12 +32,7 @@ class StaffController extends Controller
         ]);
 
         if (isset($validatedData['image']) && str_starts_with($validatedData['image'], 'data:image')) {
-            preg_match('/data:image\/(\w+);base64,/', $validatedData['image'], $type);
-            $extension = $type[1] ?? 'jpg';
-            $imageData = base64_decode(substr($validatedData['image'], strpos($validatedData['image'], ',') + 1));
-            $filename = 'staff/' . time() . '_' . uniqid() . '.' . $extension;
-            Storage::disk('public')->put($filename, $imageData);
-            $validatedData['image'] = $filename;
+            $validatedData['image'] = $this->processAndSaveImage($validatedData['image'], 'staff');
         }
 
         $staff = Staff::create($validatedData);
@@ -57,19 +55,10 @@ class StaffController extends Controller
         ]);
 
         if (isset($validatedData['image']) && str_starts_with($validatedData['image'], 'data:image')) {
-            if ($staff->image && !str_starts_with($staff->image, 'http')) {
-                Storage::disk('public')->delete($staff->image);
-            }
-            preg_match('/data:image\/(\w+);base64,/', $validatedData['image'], $type);
-            $extension = $type[1] ?? 'jpg';
-            $imageData = base64_decode(substr($validatedData['image'], strpos($validatedData['image'], ',') + 1));
-            $filename = 'staff/' . time() . '_' . uniqid() . '.' . $extension;
-            Storage::disk('public')->put($filename, $imageData);
-            $validatedData['image'] = $filename;
+            $oldPath = $staff->image && !str_starts_with($staff->image, 'http') ? $staff->image : null;
+            $validatedData['image'] = $this->processAndSaveImage($validatedData['image'], 'staff', $oldPath);
         } elseif (!isset($validatedData['image']) || empty($validatedData['image'])) {
-            if ($staff->image && !str_starts_with($staff->image, 'http')) {
-                Storage::disk('public')->delete($staff->image);
-            }
+            $this->deleteOldImage($staff->image);
             $validatedData['image'] = null;
         }
 
@@ -82,9 +71,7 @@ class StaffController extends Controller
 
     public function destroy(Staff $staff)
     {
-        if ($staff->image && !str_starts_with($staff->image, 'http')) {
-            Storage::disk('public')->delete($staff->image);
-        }
+        $this->deleteOldImage($staff->image);
         $staff->delete();
         
         Cache::forget('dashboard_total_guru');

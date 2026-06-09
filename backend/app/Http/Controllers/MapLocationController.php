@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\MapLocation;
 use App\Http\Resources\MapLocationResource;
+use App\Traits\ImageUploadTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class MapLocationController extends Controller
 {
+    use ImageUploadTrait;
+
     public function index()
     {
         $locations = MapLocation::all();
@@ -49,32 +51,30 @@ class MapLocationController extends Controller
 
     public function destroy(MapLocation $mapLocation)
     {
-        $this->processInstitutionsImages([], $mapLocation->institutions ?? []);
+        // Hapus semua logo institusi yang terkait
+        if (!empty($mapLocation->institutions)) {
+            foreach ($mapLocation->institutions as $inst) {
+                if (!empty($inst['logo'])) {
+                    $this->deleteOldImage($inst['logo']);
+                }
+            }
+        }
         $mapLocation->delete();
         return response()->json(['message' => 'Lokasi berhasil dihapus']);
     }
 
     private function processInstitutionsImages($newInstitutions, $oldInstitutions = [])
     {
-        $oldImages = collect($oldInstitutions)->pluck('logo')->filter(fn($val) => str_starts_with($val, '/storage/'))->toArray();
-        $newImages = [];
+        $oldLogos = collect($oldInstitutions)->pluck('logo')->filter()->all();
+        $currentLogos = [];
 
         foreach ($newInstitutions as &$inst) {
-            if (!empty($inst['logo'])) {
-                if (str_starts_with($inst['logo'], 'data:image')) {
-                    preg_match('/data:image\/(\w+);base64,/', $inst['logo'], $type);
-                    $extension = $type[1] ?? 'png';
-                    $imageData = base64_decode(substr($inst['logo'], strpos($inst['logo'], ',') + 1));
-                    $filename = 'institutions/' . time() . '_' . uniqid() . '.' . $extension;
-                    Storage::disk('public')->put($filename, $imageData);
-                    $inst['logo'] = '/storage/' . $filename;
-                }
-                if (str_starts_with($inst['logo'], '/storage/')) $newImages[] = $inst['logo'];
-            }
+            $inst['logo'] = $this->processAndSaveImage($inst['logo'] ?? null, 'institutions', null, 200);
+            if ($inst['logo']) $currentLogos[] = $inst['logo'];
         }
 
-        $imagesToDelete = array_diff($oldImages, $newImages);
-        foreach ($imagesToDelete as $img) Storage::disk('public')->delete(str_replace('/storage/', '', $img));
+        $logosToDelete = array_diff($oldLogos, $currentLogos);
+        foreach ($logosToDelete as $logoPath) $this->deleteOldImage($logoPath);
 
         return $newInstitutions;
     }

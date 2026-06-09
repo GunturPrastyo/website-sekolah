@@ -7,9 +7,12 @@ use App\Models\Timeline;
 use App\Http\Resources\TimelineResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\ImageUploadTrait;
 
 class TimelineController extends Controller
 {
+    use ImageUploadTrait;
+
     public function index()
     {
         // Get all timelines sorted by order and then year
@@ -39,10 +42,7 @@ class TimelineController extends Controller
             foreach ($images as $img) {
                 $src = $img->getAttribute('src');
                 if (str_starts_with($src, 'data:image')) {
-                    preg_match('/data:image\/(\w+);base64,/', $src, $type);
-                    $imageData = base64_decode(substr($src, strpos($src, ',') + 1));
-                    $filename = 'timeline/content/' . time() . '_' . uniqid() . '.' . ($type[1] ?? 'jpg');
-                    Storage::disk('public')->put($filename, $imageData);
+                    $filename = $this->processAndSaveImage($src, 'timeline/content');
                     $img->setAttribute('src', asset('storage/' . $filename));
                 }
             }
@@ -82,10 +82,7 @@ class TimelineController extends Controller
             foreach ($images as $img) {
                 $src = $img->getAttribute('src');
                 if (str_starts_with($src, 'data:image')) {
-                    preg_match('/data:image\/(\w+);base64,/', $src, $type);
-                    $imageData = base64_decode(substr($src, strpos($src, ',') + 1));
-                    $filename = 'timeline/content/' . time() . '_' . uniqid() . '.' . ($type[1] ?? 'jpg');
-                    Storage::disk('public')->put($filename, $imageData);
+                    $filename = $this->processAndSaveImage($src, 'timeline/content');
                     $img->setAttribute('src', asset('storage/' . $filename));
                 }
             }

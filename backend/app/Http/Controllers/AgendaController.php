@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Agenda;
 use Illuminate\Http\Request;
 use App\Http\Resources\AgendaResource;
+use App\Traits\ImageUploadTrait;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class AgendaController extends Controller
 {
+    use ImageUploadTrait;
+
     public function index()
     {
         $agendas = Agenda::orderBy('start_date', 'asc')->get();
@@ -28,18 +31,17 @@ class AgendaController extends Controller
             'attachment' => 'nullable|string',
         ]);
 
-        $attachmentPath = null;
-        if (!empty($validated['attachment']) && preg_match('/^data:(image|application)\/(\w+);base64,/', $validated['attachment'], $type)) {
-            $data = substr($validated['attachment'], strpos($validated['attachment'], ',') + 1);
-            $extension = strtolower($type[2]);
-            if ($type[1] === 'application' && $extension === 'pdf') {
-                $extension = 'pdf';
-            } elseif ($type[1] === 'image') {
-                $extension = $extension === 'jpeg' ? 'jpg' : $extension;
+        if (!empty($validated['attachment'])) {
+            if (str_starts_with($validated['attachment'], 'data:image')) {
+                // Proses sebagai gambar
+                $validated['attachment'] = $this->processAndSaveImage($validated['attachment'], 'agendas', null, 1200);
+            } elseif (str_starts_with($validated['attachment'], 'data:application/pdf')) {
+                // Proses sebagai PDF
+                $data = substr($validated['attachment'], strpos($validated['attachment'], ',') + 1);
+                $filename = 'agendas/' . Str::random(20) . '.pdf';
+                Storage::disk('public')->put($filename, base64_decode($data));
+                $validated['attachment'] = $filename;
             }
-            $filename = 'agendas/' . time() . '_' . uniqid() . '.' . $extension;
-            Storage::disk('public')->put($filename, base64_decode($data));
-            $attachmentPath = '/storage/' . $filename;
         }
 
         $agenda = Agenda::create([
@@ -49,7 +51,7 @@ class AgendaController extends Controller
             'time' => $validated['time'] ?? null,
             'location' => $validated['location'] ?? null,
             'color' => $validated['color'],
-            'attachment' => $attachmentPath,
+            'attachment' => $validated['attachment'] ?? null,
         ]);
 
         return new AgendaResource($agenda);
@@ -67,47 +69,31 @@ class AgendaController extends Controller
             'attachment' => 'nullable|string',
         ]);
 
-        $attachmentPath = $agenda->attachment;
-        if (!empty($validated['attachment']) && preg_match('/^data:(image|application)\/(\w+);base64,/', $validated['attachment'], $type)) {
-            $data = substr($validated['attachment'], strpos($validated['attachment'], ',') + 1);
-            $extension = strtolower($type[2]);
-            if ($type[1] === 'application' && $extension === 'pdf') {
-                $extension = 'pdf';
-            } elseif ($type[1] === 'image') {
-                $extension = $extension === 'jpeg' ? 'jpg' : $extension;
+        if ($request->has('attachment')) {
+            $attachment = $request->input('attachment');
+            if (str_starts_with($attachment, 'data:image')) {
+                $validated['attachment'] = $this->processAndSaveImage($attachment, 'agendas', $agenda->attachment, 1200);
+            } elseif (str_starts_with($attachment, 'data:application/pdf')) {
+                $this->deleteOldImage($agenda->attachment);
+                $data = substr($attachment, strpos($attachment, ',') + 1);
+                $filename = 'agendas/' . Str::random(20) . '.pdf';
+                Storage::disk('public')->put($filename, base64_decode($data));
+                $validated['attachment'] = $filename;
+            } else {
+                // Jika dikirim null atau string kosong, hapus file lama
+                $this->deleteOldImage($agenda->attachment);
+                $validated['attachment'] = null;
             }
-            $filename = 'agendas/' . time() . '_' . uniqid() . '.' . $extension;
-            Storage::disk('public')->put($filename, base64_decode($data));
-            $attachmentPath = '/storage/' . $filename;
-
-            if ($agenda->attachment && Str::startsWith($agenda->attachment, '/storage/')) {
-                Storage::disk('public')->delete(str_replace('/storage/', '', $agenda->attachment));
-            }
-        } elseif (empty($validated['attachment']) && $request->has('attachment')) {
-            if ($agenda->attachment && Str::startsWith($agenda->attachment, '/storage/')) {
-                Storage::disk('public')->delete(str_replace('/storage/', '', $agenda->attachment));
-            }
-            $attachmentPath = null;
         }
 
-        $agenda->update([
-            'title' => $validated['title'],
-            'start_date' => $validated['startDate'],
-            'end_date' => $validated['endDate'] ?? null,
-            'time' => $validated['time'] ?? null,
-            'location' => $validated['location'] ?? null,
-            'color' => $validated['color'],
-            'attachment' => $attachmentPath,
-        ]);
+        $agenda->update($validated);
 
         return new AgendaResource($agenda);
     }
 
     public function destroy(Agenda $agenda)
     {
-        if ($agenda->attachment && Str::startsWith($agenda->attachment, '/storage/')) {
-            Storage::disk('public')->delete(str_replace('/storage/', '', $agenda->attachment));
-        }
+        $this->deleteOldImage($agenda->attachment);
         $agenda->delete();
         return response()->json(['message' => 'Agenda berhasil dihapus']);
     }
