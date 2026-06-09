@@ -71,7 +71,7 @@ watch(homeroomSearchQuery, () => {
 
 const handleHomeroomScroll = (e) => {
   const target = e.target;
-  if (target.scrollTop + target.clientHeight >= target.scrollHeight - 10) {
+  if (target.scrollTop + target.clientHeight >= target.scrollHeight - 20) {
     if (homeroomPage.value * homeroomItemsPerPage < filteredStaffList.value.length) {
       homeroomPage.value++;
     }
@@ -337,11 +337,11 @@ const getSelectedHomeroomName = computed(() => {
         @click="hideForm"
       >
         <div
-          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all"
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl transform transition-all flex flex-col"
           @click.stop
         >
           <div
-            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 rounded-t-xl"
           >
             <h3 class="text-xl font-bold text-gray-800 dark:text-white">
               {{ isEditing ? "Edit Data Kelas" : "Tambah Kelas Baru" }}
@@ -353,10 +353,10 @@ const getSelectedHomeroomName = computed(() => {
               <PhX class="w-6 h-6" />
             </button>
           </div>
-          <div class="p-6 overflow-y-auto custom-scrollbar max-h-[70vh]">
+          <div class="p-6 overflow-visible">
             <form id="classForm" @submit.prevent="isEditing ? saveEntry() : addEntry()">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="md:col-span-2 relative z-50">
+                <div class="md:col-span-2 relative z-[110]">
                   <label
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                     >Wali Kelas</label
@@ -408,7 +408,7 @@ const getSelectedHomeroomName = computed(() => {
                   >
                     <div
                       v-if="isHomeroomDropdownOpen"
-                      class="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl overflow-hidden flex flex-col"
+                      class="absolute top-full left-0 right-0 z-[120] mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-2xl overflow-hidden flex flex-col"
                     >
                       <!-- Search Bar Inside Dropdown -->
                       <div
@@ -464,7 +464,7 @@ const getSelectedHomeroomName = computed(() => {
                           v-if="
                             homeroomPage * homeroomItemsPerPage < filteredStaffList.length
                           "
-                          class="px-4 py-2 text-center text-xs text-gray-400"
+                          class="px-4 py-3 text-center text-xs text-blue-500 font-medium animate-pulse"
                         >
                           Scroll ke bawah untuk memuat lebih...
                         </li>
@@ -566,7 +566,7 @@ const getSelectedHomeroomName = computed(() => {
             </form>
           </div>
           <div
-            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3 rounded-b-xl"
           >
             <button
               type="button"
