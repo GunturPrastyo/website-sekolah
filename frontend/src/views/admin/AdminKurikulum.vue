@@ -32,6 +32,8 @@ import {
   PhHandHeart,
   PhPerson,
   PhUsersFour,
+  PhHandsPraying,
+  PhSparkle,
 } from "@phosphor-icons/vue";
 import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
@@ -169,6 +171,8 @@ const fallbackIcons = {
   PhHandHeart,
   PhPerson,
   PhUsersFour,
+  PhHandsPraying,
+  PhSparkle,
 };
 
 const getIconComponent = (iconName) => {
@@ -487,7 +491,15 @@ const getMajorName = (id) => {
         </button>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div
+        class="grid gap-4 w-full"
+        :class="{
+          'grid-cols-1': pppData.dimensions.length === 1,
+          'grid-cols-1 md:grid-cols-2': pppData.dimensions.length === 2,
+          'grid-cols-1 md:grid-cols-2 lg:grid-cols-3':
+            pppData.dimensions.length >= 3 || pppData.dimensions.length === 0,
+        }"
+      >
         <div
           v-for="dim in pppData.dimensions"
           :key="dim.id"

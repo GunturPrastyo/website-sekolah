@@ -45,6 +45,8 @@ import {
   PhHandHeart,
   PhPerson,
   PhUsersFour,
+  PhHandsPraying,
+  PhSparkle,
 } from "@phosphor-icons/vue";
 
 const activeGrade = ref("10");
@@ -89,6 +91,20 @@ const iconMap = {
   PhCaretDown,
   PhBookmark,
   PhCheckCircle,
+  PhStar,
+  PhHandshake,
+  PhHandsClapping,
+  PhPlant,
+  PhRecycle,
+  PhScales,
+  PhShieldCheck,
+  PhBrain,
+  PhTree,
+  PhHandHeart,
+  PhPerson,
+  PhUsersFour,
+  PhHandsPraying,
+  PhSparkle,
 };
 
 const getDarkColorClass = (colorClass) => {
@@ -346,13 +362,12 @@ onMounted(() => {
               </p>
             </div>
             <div
-              class="grid gap-6 mx-auto"
+              class="grid gap-6 mx-auto w-full"
               :class="{
-                'grid-cols-1 max-w-md': pancasilaProfile.dimensions.length === 1,
-                'grid-cols-1 md:grid-cols-2 max-w-4xl':
-                  pancasilaProfile.dimensions.length === 2,
+                'grid-cols-1': pancasilaProfile.dimensions.length === 1,
+                'grid-cols-1 md:grid-cols-2': pancasilaProfile.dimensions.length === 2,
                 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3':
-                  pancasilaProfile.dimensions.length >= 3,
+                  pancasilaProfile.dimensions.length >= 3 || pancasilaProfile.dimensions.length === 0,
               }"
             >
               <div
