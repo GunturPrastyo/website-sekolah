@@ -475,7 +475,8 @@ const getMajorName = (id) => {
     >
       <div class="flex justify-between items-start mb-6">
         <div>
-          <h3 class="text-2xl font-bold text-gray-800 dark:text-white">
+          <h3 class="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+            <PhGlobe class="w-7 h-7 text-blue-500 shrink-0" />
             {{ pppData.title }}
           </h3>
           <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 max-w-2xl">
@@ -542,7 +543,8 @@ const getMajorName = (id) => {
           <div
             class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
           >
-            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+              <PhGlobe class="w-6 h-6 text-blue-500 shrink-0" />
               Edit Profil Pelajar Pancasila
             </h3>
             <button

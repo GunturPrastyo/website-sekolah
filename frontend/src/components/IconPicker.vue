@@ -38,6 +38,24 @@ import {
   PhHammer,
   PhCheckCircle,
   PhHash,
+  PhGlobe,
+  PhHandsPraying,
+  PhHandshake,
+  PhPerson,
+  PhBrain,
+  PhHeart,
+  PhGlobeHemisphereWest,
+  PhUsers,
+  PhUserCheck,
+  PhLightbulb,
+  PhLightning,
+  PhHandsClapping,
+  PhRecycle,
+  PhScales,
+  PhShieldCheck,
+  PhHandHeart,
+  PhUsersFour,
+  PhSparkle,
 } from "@phosphor-icons/vue";
 
 // Ekspor objek ini agar komponen lain bisa me-render ikon dari string nama ikon
@@ -79,6 +97,24 @@ export const educationIcons = {
   PhHammer: markRaw(PhHammer),
   PhCheckCircle: markRaw(PhCheckCircle),
   PhHash: markRaw(PhHash),
+  PhGlobe: markRaw(PhGlobe),
+  PhHandsPraying: markRaw(PhHandsPraying),
+  PhHandshake: markRaw(PhHandshake),
+  PhPerson: markRaw(PhPerson),
+  PhBrain: markRaw(PhBrain),
+  PhHeart: markRaw(PhHeart),
+  PhGlobeHemisphereWest: markRaw(PhGlobeHemisphereWest),
+  PhUsers: markRaw(PhUsers),
+  PhUserCheck: markRaw(PhUserCheck),
+  PhLightbulb: markRaw(PhLightbulb),
+  PhLightning: markRaw(PhLightning),
+  PhHandsClapping: markRaw(PhHandsClapping),
+  PhRecycle: markRaw(PhRecycle),
+  PhScales: markRaw(PhScales),
+  PhShieldCheck: markRaw(PhShieldCheck),
+  PhHandHeart: markRaw(PhHandHeart),
+  PhUsersFour: markRaw(PhUsersFour),
+  PhSparkle: markRaw(PhSparkle),
 };
 </script>
 
@@ -97,7 +133,11 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:modelValue", "update:colorValue", "update:color-value"]);
+const emit = defineEmits([
+  "update:modelValue",
+  "update:colorValue",
+  "update:color-value",
+]);
 
 const searchQuery = ref("");
 
@@ -126,64 +166,55 @@ const colors = [
     name: "Biru",
     text: "text-blue-500",
     bg: "bg-blue-500",
-    active:
-      "bg-blue-600 dark:bg-blue-500 text-white border-transparent",
+    active: "bg-blue-600 dark:bg-blue-500 text-white border-transparent",
   },
   {
     name: "Merah",
     text: "text-red-500",
     bg: "bg-red-500",
-    active:
-      "bg-red-600 dark:bg-red-500 text-white border-transparent",
+    active: "bg-red-600 dark:bg-red-500 text-white border-transparent",
   },
   {
     name: "Hijau",
     text: "text-green-500",
     bg: "bg-green-500",
-    active:
-      "bg-green-600 dark:bg-green-500 text-white border-transparent",
+    active: "bg-green-600 dark:bg-green-500 text-white border-transparent",
   },
   {
     name: "Kuning",
     text: "text-yellow-500",
     bg: "bg-yellow-500",
-    active:
-      "bg-yellow-500 dark:bg-yellow-600 text-white border-transparent",
+    active: "bg-yellow-500 dark:bg-yellow-600 text-white border-transparent",
   },
   {
     name: "Ungu",
     text: "text-purple-500",
     bg: "bg-purple-500",
-    active:
-      "bg-purple-600 dark:bg-purple-500 text-white border-transparent",
+    active: "bg-purple-600 dark:bg-purple-500 text-white border-transparent",
   },
   {
     name: "Jingga",
     text: "text-orange-500",
     bg: "bg-orange-500",
-    active:
-      "bg-orange-500 dark:bg-orange-600 text-white border-transparent",
+    active: "bg-orange-500 dark:bg-orange-600 text-white border-transparent",
   },
   {
     name: "Merah Muda",
     text: "text-pink-500",
     bg: "bg-pink-500",
-    active:
-      "bg-pink-600 dark:bg-pink-500 text-white border-transparent",
+    active: "bg-pink-600 dark:bg-pink-500 text-white border-transparent",
   },
   {
     name: "Teal",
     text: "text-teal-500",
     bg: "bg-teal-500",
-    active:
-      "bg-teal-600 dark:bg-teal-500 text-white border-transparent",
+    active: "bg-teal-600 dark:bg-teal-500 text-white border-transparent",
   },
   {
     name: "Abu-abu",
     text: "text-gray-500",
     bg: "bg-gray-500",
-    active:
-      "bg-gray-600 dark:bg-gray-500 text-white border-transparent",
+    active: "bg-gray-600 dark:bg-gray-500 text-white border-transparent",
   },
 ];
 

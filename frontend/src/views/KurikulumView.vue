@@ -48,6 +48,7 @@ import {
   PhHandsPraying,
   PhSparkle,
 } from "@phosphor-icons/vue";
+import { educationIcons } from "@/components/IconPicker.vue";
 
 const activeGrade = ref("10");
 const activeMajor = ref("ipa");
@@ -62,6 +63,7 @@ const changeGrade = (id) => {
 const majors = ref([]);
 
 const iconMap = {
+  ...educationIcons,
   PhBook,
   PhMedal,
   PhBookOpen,
@@ -312,23 +314,45 @@ onMounted(() => {
           <div v-if="isFetching" class="w-full">
             <div class="text-center mb-10">
               <div class="inline-flex items-center justify-center space-x-2 mb-3">
-                <span class="h-px w-8 sm:w-12 bg-blue-200 dark:bg-blue-400/50 rounded-full animate-pulse"></span>
-                <div class="h-6 w-32 bg-blue-200 dark:bg-blue-900/50 rounded animate-pulse"></div>
-                <span class="h-px w-8 sm:w-12 bg-blue-200 dark:bg-blue-400/50 rounded-full animate-pulse"></span>
+                <span
+                  class="h-px w-8 sm:w-12 bg-blue-200 dark:bg-blue-400/50 rounded-full animate-pulse"
+                ></span>
+                <div
+                  class="h-6 w-32 bg-blue-200 dark:bg-blue-900/50 rounded animate-pulse"
+                ></div>
+                <span
+                  class="h-px w-8 sm:w-12 bg-blue-200 dark:bg-blue-400/50 rounded-full animate-pulse"
+                ></span>
               </div>
-              <div class="h-10 w-3/4 max-w-md mx-auto bg-gray-200 dark:bg-slate-700 rounded-lg animate-pulse mb-4"></div>
+              <div
+                class="h-10 w-3/4 max-w-md mx-auto bg-gray-200 dark:bg-slate-700 rounded-lg animate-pulse mb-4"
+              ></div>
               <div class="space-y-2 max-w-2xl mx-auto">
-                <div class="h-4 w-full bg-gray-200 dark:bg-slate-700 rounded animate-pulse"></div>
-                <div class="h-4 w-5/6 mx-auto bg-gray-200 dark:bg-slate-700 rounded animate-pulse"></div>
+                <div
+                  class="h-4 w-full bg-gray-200 dark:bg-slate-700 rounded animate-pulse"
+                ></div>
+                <div
+                  class="h-4 w-5/6 mx-auto bg-gray-200 dark:bg-slate-700 rounded animate-pulse"
+                ></div>
               </div>
             </div>
-            <div class="grid gap-6 mx-auto grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-6xl">
-              <div v-for="i in 6" :key="i" class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 animate-pulse">
-                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-200 dark:bg-slate-700"></div>
+            <div
+              class="grid gap-6 mx-auto grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-6xl"
+            >
+              <div
+                v-for="i in 6"
+                :key="i"
+                class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 animate-pulse"
+              >
+                <div
+                  class="w-12 h-12 shrink-0 rounded-full bg-gray-200 dark:bg-slate-700"
+                ></div>
                 <div class="flex-1 space-y-3 py-1">
                   <div class="h-5 w-3/4 bg-gray-200 dark:bg-slate-700 rounded"></div>
                   <div class="space-y-2">
-                    <div class="h-3 w-full bg-gray-100 dark:bg-slate-700/50 rounded"></div>
+                    <div
+                      class="h-3 w-full bg-gray-100 dark:bg-slate-700/50 rounded"
+                    ></div>
                     <div class="h-3 w-5/6 bg-gray-100 dark:bg-slate-700/50 rounded"></div>
                     <div class="h-3 w-4/6 bg-gray-100 dark:bg-slate-700/50 rounded"></div>
                   </div>
@@ -336,7 +360,7 @@ onMounted(() => {
               </div>
             </div>
           </div>
-          
+
           <div v-else>
             <div class="text-center mb-10">
               <div class="inline-flex items-center justify-center space-x-2 mb-3">
@@ -353,8 +377,9 @@ onMounted(() => {
                 ></span>
               </div>
               <h2
-                class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight"
+                class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight flex items-center justify-center gap-3"
               >
+                <PhGlobe class="w-10 h-10 text-blue-500 shrink-0" />
                 {{ pancasilaProfile.title }}
               </h2>
               <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -367,7 +392,8 @@ onMounted(() => {
                 'grid-cols-1': pancasilaProfile.dimensions.length === 1,
                 'grid-cols-1 md:grid-cols-2': pancasilaProfile.dimensions.length === 2,
                 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3':
-                  pancasilaProfile.dimensions.length >= 3 || pancasilaProfile.dimensions.length === 0,
+                  pancasilaProfile.dimensions.length >= 3 ||
+                  pancasilaProfile.dimensions.length === 0,
               }"
             >
               <div
@@ -450,11 +476,17 @@ onMounted(() => {
           <!-- Jenjang Kelas Skeleton -->
           <div v-if="isFetching" class="mb-10">
             <div class="flex items-center gap-4 mb-6">
-              <div class="h-8 w-40 bg-white/10 dark:bg-slate-700/50 rounded animate-pulse"></div>
+              <div
+                class="h-8 w-40 bg-white/10 dark:bg-slate-700/50 rounded animate-pulse"
+              ></div>
               <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
             </div>
             <div class="flex flex-col gap-3">
-              <div v-for="i in 3" :key="i" class="w-full p-5 rounded-lg border-2 border-white/5 bg-white/5 dark:bg-slate-800/30 animate-pulse flex justify-between items-center">
+              <div
+                v-for="i in 3"
+                :key="i"
+                class="w-full p-5 rounded-lg border-2 border-white/5 bg-white/5 dark:bg-slate-800/30 animate-pulse flex justify-between items-center"
+              >
                 <div class="space-y-2 flex-1">
                   <div class="h-5 w-1/2 bg-white/10 dark:bg-slate-700/50 rounded"></div>
                   <div class="h-3 w-1/3 bg-white/10 dark:bg-slate-700/50 rounded"></div>
@@ -498,11 +530,17 @@ onMounted(() => {
           <!-- Peminatan / Jurusan Skeleton -->
           <div v-if="isFetching" class="mb-6">
             <div class="flex items-center gap-4 mb-6">
-              <div class="h-8 w-48 bg-white/10 dark:bg-slate-700/50 rounded animate-pulse"></div>
+              <div
+                class="h-8 w-48 bg-white/10 dark:bg-slate-700/50 rounded animate-pulse"
+              ></div>
               <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
             </div>
             <div class="flex flex-col gap-3">
-              <div v-for="i in 3" :key="i" class="w-full p-5 rounded-lg border-2 border-white/5 bg-white/5 dark:bg-slate-800/30 animate-pulse flex justify-between items-center">
+              <div
+                v-for="i in 3"
+                :key="i"
+                class="w-full p-5 rounded-lg border-2 border-white/5 bg-white/5 dark:bg-slate-800/30 animate-pulse flex justify-between items-center"
+              >
                 <div class="space-y-2 flex-1">
                   <div class="h-5 w-1/2 bg-white/10 dark:bg-slate-700/50 rounded"></div>
                   <div class="h-3 w-1/3 bg-white/10 dark:bg-slate-700/50 rounded"></div>
@@ -514,7 +552,9 @@ onMounted(() => {
           <!-- Peminatan / Jurusan Data -->
           <div v-else class="mb-6">
             <div class="flex items-center gap-4 mb-6">
-              <h2 class="text-xl md:text-2xl font-bold text-white">Peminatan / Jurusan</h2>
+              <h2 class="text-xl md:text-2xl font-bold text-white">
+                Peminatan / Jurusan
+              </h2>
               <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
             </div>
             <div class="flex flex-col gap-3">
