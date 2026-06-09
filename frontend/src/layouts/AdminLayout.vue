@@ -26,7 +26,11 @@ const toggleSidebar = () => {
       <main
         class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-slate-900"
       >
-        <router-view />
+        <router-view v-slot="{ Component, route }">
+          <keep-alive :max="10">
+            <component :is="Component" :key="route.path" />
+          </keep-alive>
+        </router-view>
       </main>
     </div>
   </div>
