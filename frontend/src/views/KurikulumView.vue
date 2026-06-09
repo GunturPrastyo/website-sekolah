@@ -51,7 +51,7 @@ import {
 import { educationIcons } from "@/components/IconPicker.vue";
 
 const activeGrade = ref("10");
-const activeMajor = ref("ipa");
+const activeMajor = ref("");
 const expandedSubject = ref(null);
 const searchQuery = ref("");
 
@@ -179,15 +179,15 @@ const fetchCurriculum = async () => {
 
     if (progRes && progRes.data && progRes.data.data) {
       majors.value = progRes.data.data.map((p) => ({
-        id: p.title.toLowerCase().replace(/[^a-z0-9]/g, ""),
+        id: String(p.id),
         name: p.title,
         desc: p.badge || p.description?.substring(0, 50) || "",
       }));
     } else {
       majors.value = [
-        { id: "ipa", name: "MIPA", desc: "Matematika & Ilmu Pengetahuan Alam" },
-        { id: "ips", name: "IPS", desc: "Ilmu Pengetahuan Sosial" },
-        { id: "bahasa", name: "Bahasa", desc: "Ilmu Bahasa & Budaya" },
+        { id: "1", name: "MIPA", desc: "Matematika & Ilmu Pengetahuan Alam" },
+        { id: "2", name: "IPS", desc: "Ilmu Pengetahuan Sosial" },
+        { id: "3", name: "Bahasa", desc: "Ilmu Bahasa & Budaya" },
       ];
     }
 
@@ -199,12 +199,20 @@ const fetchCurriculum = async () => {
       data.forEach((subject) => {
         const grade = String(subject.grade);
         uniqueGrades.add(grade);
-        const major = subject.major;
         const category = subject.category;
+
+        const programId = subject.program_id;
 
         if (!groupedData[grade]) groupedData[grade] = {};
 
-        const majorsToAdd = major === "semua" ? majors.value.map((m) => m.id) : [major];
+        // Jika program_id null/kosong (Umum), masukkan mapel ini ke semua peminatan
+        const majorsToAdd =
+          programId === null ||
+          programId === undefined ||
+          programId === "semua" ||
+          programId === ""
+            ? majors.value.map((m) => m.id)
+            : [String(programId)];
 
         majorsToAdd.forEach((m) => {
           if (!groupedData[grade][m]) groupedData[grade][m] = [];
