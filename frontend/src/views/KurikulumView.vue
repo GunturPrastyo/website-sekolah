@@ -33,6 +33,18 @@ import {
   PhBookmark,
   PhCheckCircle,
   PhSpinner,
+  PhStar,
+  PhHandshake,
+  PhHandsClapping,
+  PhPlant,
+  PhRecycle,
+  PhScales,
+  PhShieldCheck,
+  PhBrain,
+  PhTree,
+  PhHandHeart,
+  PhPerson,
+  PhUsersFour,
 } from "@phosphor-icons/vue";
 
 const activeGrade = ref("10");
@@ -77,6 +89,21 @@ const iconMap = {
   PhCaretDown,
   PhBookmark,
   PhCheckCircle,
+};
+
+const getDarkColorClass = (colorClass) => {
+  const colorMap = {
+    "text-blue-500": "bg-blue-600 dark:bg-blue-500 text-white",
+    "text-red-500": "bg-red-600 dark:bg-red-500 text-white",
+    "text-green-500": "bg-green-600 dark:bg-green-500 text-white",
+    "text-yellow-500": "bg-yellow-500 dark:bg-yellow-600 text-white",
+    "text-purple-500": "bg-purple-600 dark:bg-purple-500 text-white",
+    "text-orange-500": "bg-orange-500 dark:bg-orange-600 text-white",
+    "text-pink-500": "bg-pink-600 dark:bg-pink-500 text-white",
+    "text-teal-500": "bg-teal-600 dark:bg-teal-500 text-white",
+    "text-gray-500": "bg-gray-600 dark:bg-gray-500 text-white",
+  };
+  return colorMap[colorClass] || "bg-blue-600 dark:bg-blue-500 text-white";
 };
 
 const changeMajor = (id) => {
@@ -266,48 +293,87 @@ onMounted(() => {
       <div class="container mx-auto max-w-6xl">
         <!-- Profil Pelajar Pancasila -->
         <div>
-          <div class="text-center mb-10">
-            <div class="inline-flex items-center justify-center space-x-2 mb-3">
-              <span
-                class="h-px w-8 sm:w-12 bg-blue-600 dark:bg-blue-400 rounded-full"
-              ></span>
-              <span
-                class="text-blue-600 dark:text-blue-400 font-bold text-base sm:text-xl"
-                style="font-family: 'Kalam', cursive"
-                >Pilar Karakter</span
-              >
-              <span
-                class="h-px w-8 sm:w-12 bg-blue-600 dark:bg-blue-400 rounded-full"
-              ></span>
+          <div v-if="isFetching" class="w-full">
+            <div class="text-center mb-10">
+              <div class="inline-flex items-center justify-center space-x-2 mb-3">
+                <span class="h-px w-8 sm:w-12 bg-blue-200 dark:bg-blue-400/50 rounded-full animate-pulse"></span>
+                <div class="h-6 w-32 bg-blue-200 dark:bg-blue-900/50 rounded animate-pulse"></div>
+                <span class="h-px w-8 sm:w-12 bg-blue-200 dark:bg-blue-400/50 rounded-full animate-pulse"></span>
+              </div>
+              <div class="h-10 w-3/4 max-w-md mx-auto bg-gray-200 dark:bg-slate-700 rounded-lg animate-pulse mb-4"></div>
+              <div class="space-y-2 max-w-2xl mx-auto">
+                <div class="h-4 w-full bg-gray-200 dark:bg-slate-700 rounded animate-pulse"></div>
+                <div class="h-4 w-5/6 mx-auto bg-gray-200 dark:bg-slate-700 rounded animate-pulse"></div>
+              </div>
             </div>
-            <h2
-              class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight"
-            >
-              {{ pancasilaProfile.title }}
-            </h2>
-            <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              {{ pancasilaProfile.description }}
-            </p>
+            <div class="grid gap-6 mx-auto grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-6xl">
+              <div v-for="i in 6" :key="i" class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 animate-pulse">
+                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-200 dark:bg-slate-700"></div>
+                <div class="flex-1 space-y-3 py-1">
+                  <div class="h-5 w-3/4 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                  <div class="space-y-2">
+                    <div class="h-3 w-full bg-gray-100 dark:bg-slate-700/50 rounded"></div>
+                    <div class="h-3 w-5/6 bg-gray-100 dark:bg-slate-700/50 rounded"></div>
+                    <div class="h-3 w-4/6 bg-gray-100 dark:bg-slate-700/50 rounded"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <div v-else>
+            <div class="text-center mb-10">
+              <div class="inline-flex items-center justify-center space-x-2 mb-3">
+                <span
+                  class="h-px w-8 sm:w-12 bg-blue-600 dark:bg-blue-400 rounded-full"
+                ></span>
+                <span
+                  class="text-blue-600 dark:text-blue-400 font-bold text-base sm:text-xl"
+                  style="font-family: 'Kalam', cursive"
+                  >Pilar Karakter</span
+                >
+                <span
+                  class="h-px w-8 sm:w-12 bg-blue-600 dark:bg-blue-400 rounded-full"
+                ></span>
+              </div>
+              <h2
+                class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight"
+              >
+                {{ pancasilaProfile.title }}
+              </h2>
+              <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                {{ pancasilaProfile.description }}
+              </p>
+            </div>
             <div
-              v-for="(dim, idx) in pancasilaProfile.dimensions"
-              :key="idx"
-              class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 transition-transform hover:-translate-y-1"
+              class="grid gap-6 mx-auto"
+              :class="{
+                'grid-cols-1 max-w-md': pancasilaProfile.dimensions.length === 1,
+                'grid-cols-1 md:grid-cols-2 max-w-4xl':
+                  pancasilaProfile.dimensions.length === 2,
+                'grid-cols-1 md:grid-cols-2 lg:grid-cols-3':
+                  pancasilaProfile.dimensions.length >= 3,
+              }"
             >
               <div
-                class="w-12 h-12 shrink-0 rounded-full text-white flex items-center justify-center shadow-md"
-                :class="dim.color || 'bg-blue-600 dark:bg-blue-500'"
+                v-for="(dim, idx) in pancasilaProfile.dimensions"
+                :key="idx"
+                class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 transition-transform hover:-translate-y-1"
               >
-                <component :is="iconMap[dim.icon] || iconMap.PhHeart" class="w-6 h-6" />
-              </div>
-              <div>
-                <h4 class="font-bold text-gray-900 dark:text-white mb-1">
-                  {{ dim.title }}
-                </h4>
-                <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                  {{ dim.description }}
-                </p>
+                <div
+                  class="w-12 h-12 shrink-0 rounded-full flex items-center justify-center shadow-md"
+                  :class="getDarkColorClass(dim.color)"
+                >
+                  <component :is="iconMap[dim.icon] || iconMap.PhHeart" class="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-900 dark:text-white mb-1">
+                    {{ dim.name }}
+                  </h4>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                    {{ dim.desc }}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -366,63 +432,100 @@ onMounted(() => {
             </div>
           </div>
 
-          <div class="flex items-center gap-4 mb-6">
-            <h2 class="text-xl md:text-2xl font-bold text-white">Jenjang Kelas</h2>
-            <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
-          </div>
-          <div class="flex flex-col gap-3 mb-10">
-            <button
-              v-for="grade in grades"
-              :key="grade.id"
-              @click="changeGrade(grade.id)"
-              class="w-full text-left p-5 rounded-lg transition-all duration-300 border-2"
-              :class="
-                activeGrade === grade.id
-                  ? 'bg-white border-white text-blue-600 shadow-xl shadow-black/10 dark:bg-slate-800 dark:border-slate-700 dark:text-white'
-                  : 'bg-white/10 backdrop-blur-sm border-white/10 hover:bg-white/20 hover:border-white/30 text-blue-50 dark:bg-slate-800/50 dark:hover:bg-slate-800 dark:border-slate-700/50 dark:text-gray-300 shadow-sm'
-              "
-            >
-              <div class="flex justify-between items-center">
-                <div>
-                  <h4 class="text-lg font-bold mb-1">{{ grade.name }}</h4>
-                  <p class="text-sm opacity-80">{{ grade.desc }}</p>
+          <!-- Jenjang Kelas Skeleton -->
+          <div v-if="isFetching" class="mb-10">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="h-8 w-40 bg-white/10 dark:bg-slate-700/50 rounded animate-pulse"></div>
+              <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
+            </div>
+            <div class="flex flex-col gap-3">
+              <div v-for="i in 3" :key="i" class="w-full p-5 rounded-lg border-2 border-white/5 bg-white/5 dark:bg-slate-800/30 animate-pulse flex justify-between items-center">
+                <div class="space-y-2 flex-1">
+                  <div class="h-5 w-1/2 bg-white/10 dark:bg-slate-700/50 rounded"></div>
+                  <div class="h-3 w-1/3 bg-white/10 dark:bg-slate-700/50 rounded"></div>
                 </div>
-                <PhCaretRight
-                  class="w-5 h-5 transition-transform"
-                  :class="activeGrade === grade.id ? 'translate-x-1' : ''"
-                />
+                <div class="w-5 h-5 rounded bg-white/10 dark:bg-slate-700/50"></div>
               </div>
-            </button>
+            </div>
+          </div>
+          <!-- Jenjang Kelas Data -->
+          <div v-else class="mb-10">
+            <div class="flex items-center gap-4 mb-6">
+              <h2 class="text-xl md:text-2xl font-bold text-white">Jenjang Kelas</h2>
+              <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
+            </div>
+            <div class="flex flex-col gap-3">
+              <button
+                v-for="grade in grades"
+                :key="grade.id"
+                @click="changeGrade(grade.id)"
+                class="w-full text-left p-5 rounded-lg transition-all duration-300 border-2"
+                :class="
+                  activeGrade === grade.id
+                    ? 'bg-white border-white text-blue-600 shadow-xl shadow-black/10 dark:bg-slate-800 dark:border-slate-700 dark:text-white'
+                    : 'bg-white/10 backdrop-blur-sm border-white/10 hover:bg-white/20 hover:border-white/30 text-blue-50 dark:bg-slate-800/50 dark:hover:bg-slate-800 dark:border-slate-700/50 dark:text-gray-300 shadow-sm'
+                "
+              >
+                <div class="flex justify-between items-center">
+                  <div>
+                    <h4 class="text-lg font-bold mb-1">{{ grade.name }}</h4>
+                    <p class="text-sm opacity-80">{{ grade.desc }}</p>
+                  </div>
+                  <PhCaretRight
+                    class="w-5 h-5 transition-transform"
+                    :class="activeGrade === grade.id ? 'translate-x-1' : ''"
+                  />
+                </div>
+              </button>
+            </div>
           </div>
 
-          <!-- Jurusan / Peminatan -->
-          <div class="flex items-center gap-4 mb-6">
-            <h2 class="text-xl md:text-2xl font-bold text-white">Peminatan / Jurusan</h2>
-            <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
-          </div>
-          <div class="flex flex-col gap-3">
-            <button
-              v-for="major in majors"
-              :key="major.id"
-              @click="changeMajor(major.id)"
-              class="w-full text-left p-5 rounded-lg transition-all duration-300 border-2"
-              :class="
-                activeMajor === major.id
-                  ? 'bg-white border-white text-blue-600 shadow-xl shadow-black/10 dark:bg-slate-800 dark:border-slate-700 dark:text-white'
-                  : 'bg-white/10 backdrop-blur-sm border-white/10 hover:bg-white/20 hover:border-white/30 text-blue-50 dark:bg-slate-800/50 dark:hover:bg-slate-800 dark:border-slate-700/50 dark:text-gray-300 shadow-sm'
-              "
-            >
-              <div class="flex justify-between items-center">
-                <div>
-                  <h4 class="text-lg font-bold mb-1">{{ major.name }}</h4>
-                  <p class="text-sm opacity-80">{{ major.desc }}</p>
+          <!-- Peminatan / Jurusan Skeleton -->
+          <div v-if="isFetching" class="mb-6">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="h-8 w-48 bg-white/10 dark:bg-slate-700/50 rounded animate-pulse"></div>
+              <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
+            </div>
+            <div class="flex flex-col gap-3">
+              <div v-for="i in 3" :key="i" class="w-full p-5 rounded-lg border-2 border-white/5 bg-white/5 dark:bg-slate-800/30 animate-pulse flex justify-between items-center">
+                <div class="space-y-2 flex-1">
+                  <div class="h-5 w-1/2 bg-white/10 dark:bg-slate-700/50 rounded"></div>
+                  <div class="h-3 w-1/3 bg-white/10 dark:bg-slate-700/50 rounded"></div>
                 </div>
-                <PhCaretRight
-                  class="w-5 h-5 transition-transform"
-                  :class="activeMajor === major.id ? 'translate-x-1' : ''"
-                />
+                <div class="w-5 h-5 rounded bg-white/10 dark:bg-slate-700/50"></div>
               </div>
-            </button>
+            </div>
+          </div>
+          <!-- Peminatan / Jurusan Data -->
+          <div v-else class="mb-6">
+            <div class="flex items-center gap-4 mb-6">
+              <h2 class="text-xl md:text-2xl font-bold text-white">Peminatan / Jurusan</h2>
+              <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
+            </div>
+            <div class="flex flex-col gap-3">
+              <button
+                v-for="major in majors"
+                :key="major.id"
+                @click="changeMajor(major.id)"
+                class="w-full text-left p-5 rounded-lg transition-all duration-300 border-2"
+                :class="
+                  activeMajor === major.id
+                    ? 'bg-white border-white text-blue-600 shadow-xl shadow-black/10 dark:bg-slate-800 dark:border-slate-700 dark:text-white'
+                    : 'bg-white/10 backdrop-blur-sm border-white/10 hover:bg-white/20 hover:border-white/30 text-blue-50 dark:bg-slate-800/50 dark:hover:bg-slate-800 dark:border-slate-700/50 dark:text-gray-300 shadow-sm'
+                "
+              >
+                <div class="flex justify-between items-center">
+                  <div>
+                    <h4 class="text-lg font-bold mb-1">{{ major.name }}</h4>
+                    <p class="text-sm opacity-80">{{ major.desc }}</p>
+                  </div>
+                  <PhCaretRight
+                    class="w-5 h-5 transition-transform"
+                    :class="activeMajor === major.id ? 'translate-x-1' : ''"
+                  />
+                </div>
+              </button>
+            </div>
           </div>
 
           <!-- Info Box Mini -->
@@ -450,10 +553,41 @@ onMounted(() => {
             leave-from-class="opacity-100 translate-x-0"
             leave-to-class="opacity-0 -translate-x-4"
           >
-            <div v-if="isFetching" class="py-16 flex justify-center items-center">
-              <div class="flex flex-col items-center">
-                <PhSpinner class="animate-spin w-10 h-10 text-blue-400 mb-4" />
-                <span class="text-blue-200 font-medium">Memuat silabus kurikulum...</span>
+            <div v-if="isFetching" class="w-full space-y-8 py-4">
+              <div v-for="i in 2" :key="i" class="mb-8">
+                <!-- Category Header Skeleton -->
+                <div class="flex items-center gap-4 mb-6">
+                  <div
+                    class="h-8 w-48 bg-white/10 dark:bg-slate-700/50 rounded animate-pulse"
+                  ></div>
+                  <div class="h-px bg-white/10 dark:bg-slate-700/50 flex-1"></div>
+                </div>
+
+                <!-- Subject Accordions Skeleton -->
+                <div class="flex flex-col gap-4">
+                  <div
+                    v-for="j in 3"
+                    :key="j"
+                    class="bg-white/5 dark:bg-slate-800/50 rounded-lg p-5 md:p-6 flex items-center justify-between gap-4 animate-pulse border border-white/5 dark:border-slate-700/50"
+                  >
+                    <div class="flex items-center gap-4 w-full text-left">
+                      <div
+                        class="w-12 h-12 shrink-0 rounded-lg bg-white/10 dark:bg-slate-700/50"
+                      ></div>
+                      <div class="space-y-3 flex-1 py-1">
+                        <div
+                          class="h-5 w-1/3 bg-white/10 dark:bg-slate-700/50 rounded"
+                        ></div>
+                        <div
+                          class="h-4 w-2/3 bg-white/10 dark:bg-slate-700/50 rounded"
+                        ></div>
+                      </div>
+                    </div>
+                    <div
+                      class="shrink-0 w-8 h-8 rounded-full bg-white/10 dark:bg-slate-700/50"
+                    ></div>
+                  </div>
+                </div>
               </div>
             </div>
 

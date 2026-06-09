@@ -20,6 +20,18 @@ import {
   PhLightning,
   PhCaretDown,
   PhCheck,
+  PhStar,
+  PhHandshake,
+  PhHandsClapping,
+  PhPlant,
+  PhRecycle,
+  PhScales,
+  PhShieldCheck,
+  PhBrain,
+  PhTree,
+  PhHandHeart,
+  PhPerson,
+  PhUsersFour,
 } from "@phosphor-icons/vue";
 import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
@@ -145,6 +157,18 @@ const fallbackIcons = {
   PhBookOpen,
   PhBook,
   PhLightning,
+  PhStar,
+  PhHandshake,
+  PhHandsClapping,
+  PhPlant,
+  PhRecycle,
+  PhScales,
+  PhShieldCheck,
+  PhBrain,
+  PhTree,
+  PhHandHeart,
+  PhPerson,
+  PhUsersFour,
 };
 
 const getIconComponent = (iconName) => {
@@ -443,17 +467,10 @@ const getMajorName = (id) => {
 
     <!-- Profil Pelajar Pancasila Section -->
     <div
-      class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm mb-8 relative group"
+      class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm mb-8 relative group"
     >
       <div class="flex justify-between items-start mb-6">
         <div>
-          <div class="inline-flex items-center space-x-2 mb-2">
-            <span class="h-px w-6 bg-blue-600 dark:bg-blue-400 rounded-full"></span>
-            <span
-              class="text-blue-600 dark:text-blue-400 font-bold text-xs tracking-wider uppercase"
-              >Pilar Karakter</span
-            >
-          </div>
           <h3 class="text-2xl font-bold text-gray-800 dark:text-white">
             {{ pppData.title }}
           </h3>
@@ -538,7 +555,8 @@ const getMajorName = (id) => {
                     type="text"
                     v-model="tempPPPData.title"
                     required
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Contoh: Profil Pelajar Pancasila"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 placeholder:font-light"
                   />
                 </div>
                 <div>
@@ -550,7 +568,8 @@ const getMajorName = (id) => {
                     v-model="tempPPPData.description"
                     required
                     rows="2"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Contoh: Kurikulum kami berfokus pada pembentukan karakter siswa..."
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 placeholder:font-light"
                   ></textarea>
                 </div>
               </div>
@@ -605,7 +624,8 @@ const getMajorName = (id) => {
                         type="text"
                         v-model="dim.name"
                         required
-                        class="w-full px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        placeholder="Contoh: Beriman, bertakwa kepada Tuhan YME..."
+                        class="w-full px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 text-sm placeholder-gray-400 placeholder:font-light"
                       />
                     </div>
                     <div>
@@ -617,7 +637,8 @@ const getMajorName = (id) => {
                         v-model="dim.desc"
                         required
                         rows="2"
-                        class="w-full px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        placeholder="Masukkan deskripsi dari dimensi ini..."
+                        class="w-full px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 text-sm placeholder-gray-400 placeholder:font-light"
                       ></textarea>
                     </div>
                   </div>
@@ -950,7 +971,7 @@ const getMajorName = (id) => {
 
     <!-- Search & List Section -->
     <div
-      class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
+      class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm"
     >
       <!-- Kolom Pencarian, Filter & Tombol Tambah -->
       <div
