@@ -179,7 +179,7 @@
                   >
                     <div class="text-gray-700 dark:text-gray-300 text-justify ql-snow">
                       <div
-                        class="editor-content-preview ql-editor !p-0"
+                        class="editor-content-preview ql-editor !p-0 [&>p:first-of-type]:first-letter:float-left [&>p:first-of-type]:first-letter:text-[4rem] [&>p:first-of-type]:first-letter:font-extrabold [&>p:first-of-type]:first-letter:leading-[0.8] [&>p:first-of-type]:first-letter:pt-1 [&>p:first-of-type]:first-letter:pr-2 [&>p:first-of-type]:first-letter:text-blue-600 dark:[&>p:first-of-type]:first-letter:text-blue-400 [&>p:first-of-type]:first-letter:font-['Oswald']"
                         style="font-family: inherit"
                         v-html="currentCategory.displayContent || currentCategory.content"
                         @click="handleContentClick"
