@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, nextTick, onBeforeUpdate } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -206,6 +206,12 @@ const pppData = ref({
 const isPPPModalVisible = ref(false);
 const tempPPPData = ref({});
 
+const dimensionRefs = ref([]);
+
+onBeforeUpdate(() => {
+  dimensionRefs.value = [];
+});
+
 const subjectList = ref([]);
 
 const form = ref({
@@ -246,7 +252,7 @@ const removeDimension = (index) => {
   tempPPPData.value.dimensions.splice(index, 1);
 };
 
-const addDimension = () => {
+const addDimension = async () => {
   tempPPPData.value.dimensions.push({
     id: Date.now(),
     name: "",
@@ -254,6 +260,13 @@ const addDimension = () => {
     icon: "PhHeart",
     color: "text-blue-500",
   });
+
+  await nextTick();
+
+  const lastDimensionEl = dimensionRefs.value[dimensionRefs.value.length - 1];
+  if (lastDimensionEl) {
+    lastDimensionEl.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
 };
 
 const fetchData = async () => {
@@ -475,7 +488,9 @@ const getMajorName = (id) => {
     >
       <div class="flex justify-between items-start mb-6">
         <div>
-          <h3 class="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+          <h3
+            class="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2"
+          >
             <PhGlobe class="w-7 h-7 text-blue-500 shrink-0" />
             {{ pppData.title }}
           </h3>
@@ -543,7 +558,9 @@ const getMajorName = (id) => {
           <div
             class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
           >
-            <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+            <h3
+              class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2"
+            >
               <PhGlobe class="w-6 h-6 text-blue-500 shrink-0" />
               Edit Profil Pelajar Pancasila
             </h3>
@@ -588,21 +605,15 @@ const getMajorName = (id) => {
                 </div>
               </div>
 
-              <div class="flex justify-between items-center mb-4">
+              <div class="mb-4">
                 <h4 class="font-bold text-gray-800 dark:text-white">Dimensi Karakter</h4>
-                <button
-                  type="button"
-                  @click="addDimension"
-                  class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/50 dark:text-blue-400 dark:hover:bg-blue-900 transition-colors"
-                >
-                  <PhPlusCircle class="w-4 h-4 mr-1" /> Tambah Dimensi
-                </button>
               </div>
 
               <div class="space-y-4">
                 <div
                   v-for="(dim, index) in tempPPPData.dimensions"
                   :key="dim.id"
+                  :ref="(el) => (dimensionRefs[index] = el)"
                   class="p-4 bg-gray-50 dark:bg-slate-700/30 rounded-lg border border-gray-100 dark:border-slate-600"
                 >
                   <div class="flex justify-between items-center mb-3">
@@ -657,6 +668,18 @@ const getMajorName = (id) => {
                     </div>
                   </div>
                 </div>
+
+                <!-- Tombol Tambah Dimensi -->
+                <button
+                  type="button"
+                  @click="addDimension"
+                  class="w-full flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 group"
+                >
+                  <PhPlusCircle
+                    class="w-6 h-6 mb-1 text-gray-400 group-hover:text-blue-500 transition-colors"
+                  />
+                  <span class="text-sm font-medium">Tambah Dimensi Baru</span>
+                </button>
               </div>
             </form>
           </div>

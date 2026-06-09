@@ -308,7 +308,7 @@ onMounted(() => {
 
     <!-- Main Content Section -->
     <section class="pt-8 md:pt-12 pb-12 px-6 bg-gray-50 dark:bg-slate-900">
-      <div class="container mx-auto max-w-6xl">
+      <div class="container mx-auto max-w-full px-0 lg:px-16">
         <!-- Profil Pelajar Pancasila -->
         <div>
           <div v-if="isFetching" class="w-full">
@@ -424,7 +424,7 @@ onMounted(() => {
 
     <!-- Interactive Syllabus Area (Full Width to Footer) -->
     <section
-      class="relative w-full py-12 md:py-16 px-6 border-t border-blue-800/30 dark:border-slate-800 bg-center bg-cover overflow-hidden"
+      class="relative py-12 border-t border-blue-800/30 dark:border-slate-800 bg-center bg-cover overflow-hidden"
     >
       <!-- Background Overlay -->
       <div
@@ -432,7 +432,9 @@ onMounted(() => {
       ></div>
 
       <!-- Header Silabus -->
-      <div class="relative z-10 container mx-auto max-w-6xl text-center mb-12 md:mb-16">
+      <div
+        class="relative z-10 container mx-auto max-w-full px-0 md:px-8 lg:px-4 text-center mb-12 md:mb-16"
+      >
         <div class="inline-flex items-center justify-center space-x-2 mb-3">
           <span class="h-px w-8 sm:w-12 bg-blue-400 rounded-full"></span>
           <span
@@ -454,7 +456,7 @@ onMounted(() => {
       </div>
 
       <div
-        class="container relative z-10 mx-auto max-w-6xl flex flex-col lg:flex-row gap-8 lg:gap-12 items-start"
+        class="container relative z-10 mx-auto max-w-full px-0 lg:px-16 flex flex-col lg:flex-row gap-8 lg:gap-12 items-start"
       >
         <!-- Sidebar Tabs (Tingkat Kelas) -->
         <div class="w-full lg:w-1/3">
