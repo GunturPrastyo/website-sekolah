@@ -425,7 +425,7 @@ onBeforeUnmount(() => {
               </div>
             </div>
             <div
-              class="grid gap-6 mx-auto grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-6xl"
+              class="grid gap-6 mx-auto grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full"
             >
               <div
                 v-for="i in 6"

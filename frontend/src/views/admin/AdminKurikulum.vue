@@ -948,7 +948,7 @@ const getMajorName = (id) => {
                     <input
                       type="text"
                       v-model="newCategoryName"
-                      class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                      class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 placeholder:font-light"
                       placeholder="Ketik nama kategori..."
                       @keydown.enter.prevent="addNewCategory"
                     />
@@ -979,7 +979,7 @@ const getMajorName = (id) => {
                     type="text"
                     v-model="form.name"
                     required
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 placeholder:font-light"
                     placeholder="Contoh: Matematika Peminatan"
                   />
                 </div>
@@ -993,7 +993,7 @@ const getMajorName = (id) => {
                   <textarea
                     v-model="form.desc"
                     rows="2"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 placeholder:font-light"
                     placeholder="Deskripsi tentang mata pelajaran"
                   ></textarea>
                 </div>
@@ -1008,7 +1008,7 @@ const getMajorName = (id) => {
                   <textarea
                     v-model="form.topics"
                     rows="3"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 placeholder:font-light"
                     placeholder="Contoh: Eksponen dan Logaritma, Barisan dan Deret, Sistem Persamaan Linear"
                   ></textarea>
                 </div>
@@ -1061,7 +1061,7 @@ const getMajorName = (id) => {
               type="text"
               v-model="searchQuery"
               placeholder="Cari mata pelajaran..."
-              class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+              class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors placeholder-gray-400 placeholder:font-light"
             />
           </div>
           <select
