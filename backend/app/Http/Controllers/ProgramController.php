@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Program;
 use App\Http\Resources\ProgramResource;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use App\Traits\ImageUploadTrait;
 
 class ProgramController extends Controller
 {
+    use ImageUploadTrait;
+
     public function index()
     {
         $programs = Program::orderBy('created_at', 'desc')->get();
@@ -29,12 +30,14 @@ class ProgramController extends Controller
             'background_img' => 'nullable|string',
         ]);
 
-        if (!empty($validated['image'])) {
-            $validated['image'] = $this->handleImage($validated['image']);
+        if (!empty($validated['image']) && str_starts_with($validated['image'], 'data:image')) {
+            $path = $this->processAndSaveImage($validated['image'], 'programs');
+            $validated['image'] = '/storage/' . $path;
         }
 
-        if (!empty($validated['background_img'])) {
-            $validated['background_img'] = $this->handleImage($validated['background_img']);
+        if (!empty($validated['background_img']) && str_starts_with($validated['background_img'], 'data:image')) {
+            $path = $this->processAndSaveImage($validated['background_img'], 'programs');
+            $validated['background_img'] = '/storage/' . $path;
         }
 
         $program = Program::create($validated);
@@ -57,26 +60,16 @@ class ProgramController extends Controller
             'background_img' => 'nullable|string',
         ]);
 
-        if (!empty($validated['image']) && $validated['image'] !== $program->image) {
-            $validated['image'] = $this->handleImage($validated['image']);
-            
-            if ($program->image && Str::startsWith($program->image, '/storage/')) {
-                $oldPath = str_replace('/storage/', '', $program->image);
-                if (Storage::disk('public')->exists($oldPath)) {
-                    Storage::disk('public')->delete($oldPath);
-                }
-            }
+        if (!empty($validated['image']) && $validated['image'] !== $program->image && str_starts_with($validated['image'], 'data:image')) {
+            $oldPath = $program->image ? str_replace('/storage/', '', $program->image) : null;
+            $path = $this->processAndSaveImage($validated['image'], 'programs', $oldPath);
+            $validated['image'] = '/storage/' . $path;
         }
 
-        if (!empty($validated['background_img']) && $validated['background_img'] !== $program->background_img) {
-            $validated['background_img'] = $this->handleImage($validated['background_img']);
-            
-            if ($program->background_img && Str::startsWith($program->background_img, '/storage/')) {
-                $oldPathBg = str_replace('/storage/', '', $program->background_img);
-                if (Storage::disk('public')->exists($oldPathBg)) {
-                    Storage::disk('public')->delete($oldPathBg);
-                }
-            }
+        if (!empty($validated['background_img']) && $validated['background_img'] !== $program->background_img && str_starts_with($validated['background_img'], 'data:image')) {
+            $oldPathBg = $program->background_img ? str_replace('/storage/', '', $program->background_img) : null;
+            $path = $this->processAndSaveImage($validated['background_img'], 'programs', $oldPathBg);
+            $validated['background_img'] = '/storage/' . $path;
         }
 
         $program->update($validated);
@@ -88,33 +81,13 @@ class ProgramController extends Controller
     {
         $program = Program::findOrFail($id);
         
-        if ($program->image && Str::startsWith($program->image, '/storage/')) {
-            $oldPath = str_replace('/storage/', '', $program->image);
-            if (Storage::disk('public')->exists($oldPath)) {
-                Storage::disk('public')->delete($oldPath);
-            }
-        }
+        $oldPath = $program->image ? str_replace('/storage/', '', $program->image) : null;
+        $this->deleteOldImage($oldPath);
 
-        if ($program->background_img && Str::startsWith($program->background_img, '/storage/')) {
-            $oldPathBg = str_replace('/storage/', '', $program->background_img);
-            if (Storage::disk('public')->exists($oldPathBg)) {
-                Storage::disk('public')->delete($oldPathBg);
-            }
-        }
+        $oldPathBg = $program->background_img ? str_replace('/storage/', '', $program->background_img) : null;
+        $this->deleteOldImage($oldPathBg);
 
         $program->delete();
         return response()->json(['message' => 'Data berhasil dihapus']);
-    }
-
-    private function handleImage($base64Image)
-    {
-        if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
-            $base64Image = substr($base64Image, strpos($base64Image, ',') + 1);
-            $base64Image = str_replace(' ', '+', $base64Image);
-            $imageName = Str::random(10) . '.' . strtolower($type[1]);
-            Storage::disk('public')->put('programs/' . $imageName, base64_decode($base64Image));
-            return '/storage/programs/' . $imageName;
-        }
-        return $base64Image;
     }
 }

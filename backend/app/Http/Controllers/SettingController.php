@@ -10,12 +10,14 @@ use App\Models\Staff;
 use App\Models\Extracurricular;
 use App\Models\Achievement;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
+use App\Traits\ImageUploadTrait;
 
 class SettingController extends Controller
 {
+    use ImageUploadTrait;
+
     public function index()
     {
         // Mengambil semua data pengaturan sebagai pasangan key => value
@@ -84,24 +86,17 @@ class SettingController extends Controller
         foreach ($data as $key => $value) {
             // Jika value adalah base64 string, maka konversi dan simpan ke Storage
             if (in_array($key, $fileKeys) && $value) {
-                if (preg_match('/^data:(image|video)\/(\w+);base64,/', $value, $type)) {
-                    $valueData = substr($value, strpos($value, ',') + 1);
-                    $extension = strtolower($type[2]);
+                if (preg_match('/^data:(image|video)\/(\w+);base64,/', $value)) {
                     
-                    // Normalisasi string base64
-                    $valueData = str_replace(' ', '+', $valueData);
-                    $fileDecoded = base64_decode($valueData);
-                    $fileName = 'settings/' . $key . '_' . time() . '.' . $extension;
-                    
-                    // Hapus file lama jika ada dan merupakan file storage
+                    // Ambil URL/Path file lama jika ada
                     $oldSetting = Setting::where('key', $key)->first();
-                    if ($oldSetting && $oldSetting->value && str_contains($oldSetting->value, url('storage'))) {
-                        $oldPath = str_replace(url('storage') . '/', '', $oldSetting->value);
-                        Storage::disk('public')->delete($oldPath);
-                    }
+                    $oldPath = $oldSetting ? $oldSetting->value : null;
+
+                    // Panggil trait, old file otomatis terhapus, resize + webp otomatis berjalan
+                    $relativePath = $this->processAndSaveImage($value, 'settings', $oldPath);
                     
-                    Storage::disk('public')->put($fileName, $fileDecoded);
-                    $value = url('storage/' . $fileName);
+                    // Format kembali ke URL utuh seperti format aslinya
+                    $value = url('storage/' . $relativePath);
                 }
             }
 
