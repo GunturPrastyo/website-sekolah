@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
 import PageHeader from "@/components/PageHeader.vue";
 import api from "@/api/index.js";
 import {
@@ -28,6 +28,7 @@ import {
   PhWarningCircle,
   PhFileX,
   PhCaretRight,
+  PhCaretLeft,
   PhInfo,
   PhCaretDown,
   PhBookmark,
@@ -310,8 +311,77 @@ const currentSyllabus = computed(() => {
   return syllabus;
 });
 
+const itemsPerPage = ref(window.innerWidth >= 768 ? 8 : 6);
+const currentPage = ref(1);
+const isChangingPage = ref(false);
+
+const handleResize = () => {
+  itemsPerPage.value = window.innerWidth >= 768 ? 8 : 6;
+};
+
+watch([activeGrade, activeMajor, searchQuery], () => {
+  currentPage.value = 1;
+});
+
+const flattenedSyllabus = computed(() => {
+  const flattened = [];
+  currentSyllabus.value.forEach((cat) => {
+    cat.subjects.forEach((sub) => {
+      flattened.push({ ...sub, category: cat.category });
+    });
+  });
+  return flattened;
+});
+
+const totalPages = computed(() => {
+  return Math.ceil(flattenedSyllabus.value.length / itemsPerPage.value) || 1;
+});
+
+watch(currentPage, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    isChangingPage.value = true;
+
+    // Otomatis scroll perlahan ke atas daftar silabus saat ganti halaman
+    const el = document.getElementById("syllabus-top");
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+
+    setTimeout(() => {
+      isChangingPage.value = false;
+    }, 500); // Simulasi delay lazy loading data (500ms)
+  }
+});
+
+watch(totalPages, (newVal) => {
+  if (currentPage.value > newVal) {
+    currentPage.value = newVal;
+  }
+});
+
+const paginatedSyllabus = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  const sliced = flattenedSyllabus.value.slice(start, end);
+
+  const groups = {};
+  sliced.forEach((sub) => {
+    if (!groups[sub.category]) {
+      groups[sub.category] = { category: sub.category, subjects: [] };
+    }
+    groups[sub.category].subjects.push(sub);
+  });
+  return Object.values(groups);
+});
+
 onMounted(() => {
   fetchCurriculum();
+  window.addEventListener("resize", handleResize);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", handleResize);
 });
 </script>
 
@@ -649,7 +719,7 @@ onMounted(() => {
         </div>
 
         <!-- Main Content (Syllabus Accordion) -->
-        <div class="w-full lg:w-2/3">
+        <div class="w-full lg:w-2/3" id="syllabus-top">
           <Transition
             mode="out-in"
             enter-active-class="transition-all duration-400 ease-out"
@@ -659,7 +729,7 @@ onMounted(() => {
             leave-from-class="opacity-100 translate-x-0"
             leave-to-class="opacity-0 -translate-x-4"
           >
-            <div v-if="isFetching" class="w-full space-y-8 py-4">
+            <div v-if="isFetching || isChangingPage" class="w-full space-y-8 py-4">
               <div v-for="i in 2" :key="i" class="mb-8">
                 <!-- Category Header Skeleton -->
                 <div class="flex items-center gap-4 mb-6">
@@ -699,7 +769,7 @@ onMounted(() => {
 
             <div v-else :key="activeGrade + '-' + activeMajor" class="space-y-8">
               <div
-                v-for="(category, idx) in currentSyllabus"
+                v-for="(category, idx) in paginatedSyllabus"
                 :key="idx"
                 class="mb-8 last:mb-0"
               >
@@ -826,6 +896,48 @@ onMounted(() => {
                       : "Modul kurikulum untuk kelas ini sedang dalam proses penyusunan."
                   }}
                 </p>
+              </div>
+
+              <!-- Pagination Controls -->
+              <div
+                v-if="totalPages > 1 && flattenedSyllabus.length > 0"
+                class="flex justify-between items-center mt-10 w-full border-t border-white/10 pt-6"
+              >
+                <!-- Tombol Sebelumnya -->
+                <button
+                  @click="currentPage > 1 ? currentPage-- : null"
+                  :disabled="currentPage === 1"
+                  class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 text-white hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium text-sm md:text-base border border-white/5 hover:border-white/20"
+                >
+                  <PhCaretLeft class="w-5 h-5" />
+                  <span class="hidden sm:inline">Sebelumnya</span>
+                </button>
+
+                <!-- Angka Pagination -->
+                <div class="flex gap-2 flex-wrap justify-center mx-2">
+                  <button
+                    v-for="page in totalPages"
+                    :key="page"
+                    @click="currentPage = page"
+                    class="w-10 h-10 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center border border-transparent"
+                    :class="
+                      currentPage === page
+                        ? 'bg-blue-600 text-white shadow-lg border-blue-400 scale-110'
+                        : 'bg-white/10 text-white hover:bg-white/20 hover:border-white/30'
+                    "
+                  >
+                    {{ page }}
+                  </button>
+                </div>
+                <!-- Tombol Selanjutnya -->
+                <button
+                  @click="currentPage < totalPages ? currentPage++ : null"
+                  :disabled="currentPage === totalPages"
+                  class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 text-white hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium text-sm md:text-base border border-white/5 hover:border-white/20"
+                >
+                  <span class="hidden sm:inline">Selanjutnya</span>
+                  <PhCaretRight class="w-5 h-5" />
+                </button>
               </div>
             </div>
           </Transition>
