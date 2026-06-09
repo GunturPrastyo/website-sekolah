@@ -110,7 +110,9 @@ const iconMap = {
 };
 
 const getDarkColorClass = (colorClass) => {
+  if (colorClass && colorClass.startsWith("#")) return "text-white";
   const colorMap = {
+    "text-slate-500": "bg-slate-600 dark:bg-slate-500 text-white",
     "text-blue-500": "bg-blue-600 dark:bg-blue-500 text-white",
     "text-red-500": "bg-red-600 dark:bg-red-500 text-white",
     "text-green-500": "bg-green-600 dark:bg-green-500 text-white",
@@ -120,6 +122,10 @@ const getDarkColorClass = (colorClass) => {
     "text-pink-500": "bg-pink-600 dark:bg-pink-500 text-white",
     "text-teal-500": "bg-teal-600 dark:bg-teal-500 text-white",
     "text-gray-500": "bg-gray-600 dark:bg-gray-500 text-white",
+    "text-emerald-500": "bg-emerald-600 dark:bg-emerald-500 text-white",
+    "text-cyan-500": "bg-cyan-600 dark:bg-cyan-500 text-white",
+    "text-indigo-500": "bg-indigo-600 dark:bg-indigo-500 text-white",
+    "text-rose-500": "bg-rose-600 dark:bg-rose-500 text-white",
   };
   return colorMap[colorClass] || "bg-blue-600 dark:bg-blue-500 text-white";
 };
@@ -219,14 +225,21 @@ const fetchCurriculum = async () => {
             topics = typeof subject.topics === "string" ? subject.topics.split(",") : [];
           }
 
+          const isHex = subject.color && subject.color.startsWith("#");
           catObj.subjects.push({
             id: subject.id || `${grade}-${m}-${category}-${subject.name}`,
             name: subject.name,
             desc: subject.description || subject.desc,
             icon: iconMap[subject.icon] || iconMap.PhBook,
-            color: subject.text_color || subject.color || "text-white",
-            bg:
-              subject.bg_color || subject.bg || "bg-blue-600 dark:bg-blue-500 shadow-md",
+            color: isHex
+              ? "text-white"
+              : subject.text_color || subject.color || "text-white",
+            bg: isHex
+              ? "shadow-md"
+              : subject.bg_color ||
+                subject.bg ||
+                "bg-blue-600 dark:bg-blue-500 shadow-md",
+            hexStyle: isHex ? { backgroundColor: subject.color } : {},
             topics: topics || [],
           });
         });
@@ -403,6 +416,11 @@ onMounted(() => {
                 <div
                   class="w-12 h-12 shrink-0 rounded-full flex items-center justify-center shadow-md"
                   :class="getDarkColorClass(dim.color)"
+                  :style="
+                    dim.color && dim.color.startsWith('#')
+                      ? { backgroundColor: dim.color }
+                      : {}
+                  "
                 >
                   <component :is="iconMap[dim.icon] || iconMap.PhHeart" class="w-6 h-6" />
                 </div>
@@ -682,6 +700,7 @@ onMounted(() => {
                         <div
                           class="w-12 h-12 shrink-0 rounded-lg flex items-center justify-center"
                           :class="subject.bg + ' ' + subject.color"
+                          :style="subject.hexStyle"
                         >
                           <component :is="subject.icon" class="w-6 h-6" />
                         </div>

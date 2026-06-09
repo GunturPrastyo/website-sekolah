@@ -210,63 +210,25 @@ const selectColor = (colorClass) => {
 };
 
 const colors = [
-  {
-    name: "Biru",
-    text: "text-blue-500",
-    bg: "bg-blue-500",
-    active: "bg-blue-600 dark:bg-blue-500 text-white border-transparent",
-  },
-  {
-    name: "Merah",
-    text: "text-red-500",
-    bg: "bg-red-500",
-    active: "bg-red-600 dark:bg-red-500 text-white border-transparent",
-  },
-  {
-    name: "Hijau",
-    text: "text-green-500",
-    bg: "bg-green-500",
-    active: "bg-green-600 dark:bg-green-500 text-white border-transparent",
-  },
-  {
-    name: "Kuning",
-    text: "text-yellow-500",
-    bg: "bg-yellow-500",
-    active: "bg-yellow-500 dark:bg-yellow-600 text-white border-transparent",
-  },
-  {
-    name: "Ungu",
-    text: "text-purple-500",
-    bg: "bg-purple-500",
-    active: "bg-purple-600 dark:bg-purple-500 text-white border-transparent",
-  },
-  {
-    name: "Jingga",
-    text: "text-orange-500",
-    bg: "bg-orange-500",
-    active: "bg-orange-500 dark:bg-orange-600 text-white border-transparent",
-  },
-  {
-    name: "Merah Muda",
-    text: "text-pink-500",
-    bg: "bg-pink-500",
-    active: "bg-pink-600 dark:bg-pink-500 text-white border-transparent",
-  },
-  {
-    name: "Teal",
-    text: "text-teal-500",
-    bg: "bg-teal-500",
-    active: "bg-teal-600 dark:bg-teal-500 text-white border-transparent",
-  },
-  {
-    name: "Abu-abu",
-    text: "text-gray-500",
-    bg: "bg-gray-500",
-    active: "bg-gray-600 dark:bg-gray-500 text-white border-transparent",
-  },
+  { name: "Slate", text: "text-slate-500", bg: "bg-slate-500", active: "bg-slate-600 dark:bg-slate-500 text-white border-transparent" },
+  { name: "Merah", text: "text-red-500", bg: "bg-red-500", active: "bg-red-600 dark:bg-red-500 text-white border-transparent" },
+  { name: "Jingga", text: "text-orange-500", bg: "bg-orange-500", active: "bg-orange-500 dark:bg-orange-600 text-white border-transparent" },
+  { name: "Kuning", text: "text-yellow-500", bg: "bg-yellow-500", active: "bg-yellow-500 dark:bg-yellow-600 text-white border-transparent" },
+  { name: "Hijau", text: "text-green-500", bg: "bg-green-500", active: "bg-green-600 dark:bg-green-500 text-white border-transparent" },
+  { name: "Emerald", text: "text-emerald-500", bg: "bg-emerald-500", active: "bg-emerald-600 dark:bg-emerald-500 text-white border-transparent" },
+  { name: "Teal", text: "text-teal-500", bg: "bg-teal-500", active: "bg-teal-600 dark:bg-teal-500 text-white border-transparent" },
+  { name: "Cyan", text: "text-cyan-500", bg: "bg-cyan-500", active: "bg-cyan-600 dark:bg-cyan-500 text-white border-transparent" },
+  { name: "Biru", text: "text-blue-500", bg: "bg-blue-500", active: "bg-blue-600 dark:bg-blue-500 text-white border-transparent" },
+  { name: "Indigo", text: "text-indigo-500", bg: "bg-indigo-500", active: "bg-indigo-600 dark:bg-indigo-500 text-white border-transparent" },
+  { name: "Ungu", text: "text-purple-500", bg: "bg-purple-500", active: "bg-purple-600 dark:bg-purple-500 text-white border-transparent" },
+  { name: "Pink", text: "text-pink-500", bg: "bg-pink-500", active: "bg-pink-600 dark:bg-pink-500 text-white border-transparent" },
+  { name: "Rose", text: "text-rose-500", bg: "bg-rose-500", active: "bg-rose-600 dark:bg-rose-500 text-white border-transparent" },
 ];
 
+const isHexColor = computed(() => props.colorValue && props.colorValue.startsWith('#'));
+
 const activeClasses = computed(() => {
+  if (isHexColor.value) return "text-white border-transparent";
   const found = colors.find((c) => c.text === props.colorValue);
   return found
     ? found.active
@@ -285,6 +247,7 @@ const selectedIconComponent = computed(() => educationIcons[props.modelValue]);
           'w-14 h-14 rounded-xl flex items-center justify-center shrink-0 shadow-sm border transition-all duration-300',
           activeClasses,
         ]"
+        :style="isHexColor ? { backgroundColor: props.colorValue } : {}"
       >
         <component
           v-if="selectedIconComponent"
@@ -296,14 +259,27 @@ const selectedIconComponent = computed(() => educationIcons[props.modelValue]);
         <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2"
           >Warna Ikon</label
         >
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-2 items-center">
+          <!-- Custom Color Picker (Canva style) -->
+          <div class="relative w-6 h-6 rounded-full shadow-sm border border-gray-200 dark:border-slate-600 cursor-pointer hover:scale-110 transition-all duration-200 flex items-center justify-center overflow-hidden shrink-0"
+               :class="isHexColor ? 'ring-2 ring-offset-2 ring-offset-white dark:ring-offset-slate-800 ring-gray-400 dark:ring-gray-300 scale-110' : ''"
+               style="background: conic-gradient(from 0deg, red, yellow, lime, aqua, blue, magenta, red);"
+               title="Warna Kustom">
+            <input type="color" 
+                   :value="isHexColor ? props.colorValue : '#3b82f6'" 
+                   @input="selectColor($event.target.value)" 
+                   class="absolute inset-[0] w-[200%] h-[200%] -top-1/2 -left-1/2 opacity-0 cursor-pointer" />
+          </div>
+          
+          <div class="h-4 w-px bg-gray-300 dark:bg-slate-600 mx-1 shrink-0"></div>
+
           <button
             v-for="color in colors"
             :key="color.text"
             type="button"
             @click="selectColor(color.text)"
             :class="[
-              'w-6 h-6 rounded-full transition-all duration-200 shadow-sm border border-white/20 cursor-pointer',
+              'w-6 h-6 rounded-full transition-all duration-200 shadow-sm border border-white/20 cursor-pointer shrink-0',
               color.bg,
               props.colorValue === color.text
                 ? 'ring-2 ring-offset-2 ring-offset-white dark:ring-offset-slate-800 ring-gray-400 dark:ring-gray-300 scale-110'
