@@ -7,9 +7,12 @@ use App\Models\DismissedNotification;
 use App\Http\Resources\GalleryResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\ImageUploadTrait;
 
 class GalleryController extends Controller
 {
+    use ImageUploadTrait;
+
     public function index()
     {
         // Hanya tampilkan galeri yang sudah disetujui di halaman utama Admin Galeri
@@ -62,11 +65,7 @@ class GalleryController extends Controller
             $imagePath = $imgData;
             
             if (str_starts_with($imgData, 'data:image')) {
-                preg_match('/data:image\/(\w+);base64,/', $imgData, $type);
-                $imageData = base64_decode(substr($imgData, strpos($imgData, ',') + 1));
-                $filename = 'gallery/' . time() . '_' . uniqid() . '.' . ($type[1] ?? 'jpg');
-                Storage::disk('public')->put($filename, $imageData);
-                $imagePath = $filename;
+                $imagePath = $this->processAndSaveImage($imgData, 'gallery');
             }
 
             $gallery = Gallery::create([
@@ -121,11 +120,12 @@ class GalleryController extends Controller
             $isNewFile = false;
 
             if (str_starts_with($imgData, 'data:image')) {
-                preg_match('/data:image\/(\w+);base64,/', $imgData, $type);
-                $imageData = base64_decode(substr($imgData, strpos($imgData, ',') + 1));
-                $filename = 'gallery/' . time() . '_' . uniqid() . '.' . ($type[1] ?? 'jpg');
-                Storage::disk('public')->put($filename, $imageData);
-                $imagePath = $filename;
+                if ($index === 0) {
+                    $oldPath = $gallery->image && !str_starts_with($gallery->image, 'http') ? $gallery->image : null;
+                    $imagePath = $this->processAndSaveImage($imgData, 'gallery', $oldPath);
+                } else {
+                    $imagePath = $this->processAndSaveImage($imgData, 'gallery');
+                }
                 $isNewFile = true;
             } elseif (str_starts_with($imgData, 'http')) {
                 $baseUrl = asset('storage/') . '/';
@@ -136,10 +136,6 @@ class GalleryController extends Controller
 
             // Update the existing row with the first image, create new rows for additional images
             if ($index === 0) {
-                if ($isNewFile && $gallery->image && !str_starts_with($gallery->image, 'http')) {
-                    Storage::disk('public')->delete($gallery->image);
-                }
-
                 $gallery->update([
                     'title' => $validatedData['title'],
                     'category' => $validatedData['category'],
@@ -181,7 +177,7 @@ class GalleryController extends Controller
         }
 
         if ($gallery->image && !str_starts_with($gallery->image, 'http')) {
-            Storage::disk('public')->delete($gallery->image);
+            $this->deleteOldImage($gallery->image);
         }
         $gallery->delete();
 
@@ -208,7 +204,7 @@ class GalleryController extends Controller
             }
 
             if ($gallery->image && !str_starts_with($gallery->image, 'http')) {
-                Storage::disk('public')->delete($gallery->image);
+                $this->deleteOldImage($gallery->image);
             }
             $gallery->delete();
         }
