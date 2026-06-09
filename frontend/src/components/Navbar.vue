@@ -11,7 +11,7 @@
     <div class="container flex items-center justify-between max-w-6xl mx-auto">
       <router-link
         to="/"
-        class="flex items-center gap-3 text-2xl font-bold transition-colors tracking-wide"
+        class="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl font-bold transition-colors tracking-wide"
         :class="{
           'text-gray-800 dark:text-white': isNavbarScrolled || isMobileMenuOpen,
           'text-white': !isNavbarScrolled && !isMobileMenuOpen,
@@ -728,5 +728,4 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

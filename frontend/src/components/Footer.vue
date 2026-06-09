@@ -6,14 +6,18 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 md:gap-12 mb-12">
         <!-- Col 1: Brand & About -->
         <div class="lg:col-span-3">
-          <a href="#" class="inline-flex items-center gap-3 mb-6">
+          <a href="#" class="inline-flex items-center gap-2 sm:gap-3 mb-6">
             <img
               v-if="settings.logo"
               :src="settings.logo"
               alt="Logo Sekolah"
               class="h-10 w-auto object-contain"
             />
-            <span class="text-2xl font-bold text-white" style="font-family: 'Montserrat', sans-serif;">{{ settings.namaSekolah }}</span>
+            <span
+              class="text-lg sm:text-xl font-bold text-white tracking-wide"
+              style="font-family: 'Montserrat', sans-serif"
+              >{{ settings.namaSekolah }}</span
+            >
           </a>
           <p class="text-sm text-slate-400 leading-relaxed mb-6">
             {{ settings.deskripsiSekolah }}
