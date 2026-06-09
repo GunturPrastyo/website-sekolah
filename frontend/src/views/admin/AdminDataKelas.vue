@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -11,6 +11,8 @@ import {
   PhX,
   PhUsers,
   PhUser,
+  PhCaretDown,
+  PhCheck,
 } from "@phosphor-icons/vue";
 import api from "@/api/index.js";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
@@ -43,6 +45,45 @@ const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
 const filterGrade = ref("semua");
 const filterMajor = ref("semua");
+
+// State untuk Custom Dropdown Wali Kelas
+const isHomeroomDropdownOpen = ref(false);
+const homeroomSearchQuery = ref("");
+const homeroomPage = ref(1);
+const homeroomItemsPerPage = 10;
+
+const filteredStaffList = computed(() => {
+  if (!homeroomSearchQuery.value) return staffList.value;
+  const query = homeroomSearchQuery.value.toLowerCase();
+  return staffList.value.filter(
+    (staff) =>
+      staff.name.toLowerCase().includes(query) || staff.role.toLowerCase().includes(query)
+  );
+});
+
+const displayedStaffList = computed(() => {
+  return filteredStaffList.value.slice(0, homeroomPage.value * homeroomItemsPerPage);
+});
+
+watch(homeroomSearchQuery, () => {
+  homeroomPage.value = 1;
+});
+
+const handleHomeroomScroll = (e) => {
+  const target = e.target;
+  if (target.scrollTop + target.clientHeight >= target.scrollHeight - 10) {
+    if (homeroomPage.value * homeroomItemsPerPage < filteredStaffList.value.length) {
+      homeroomPage.value++;
+    }
+  }
+};
+
+const selectHomeroom = (id) => {
+  form.value.homeroom_id = id;
+  isHomeroomDropdownOpen.value = false;
+  homeroomSearchQuery.value = "";
+  homeroomPage.value = 1;
+};
 
 const fetchClasses = async () => {
   try {
@@ -204,6 +245,11 @@ const filteredClasses = computed(() => {
   }
   return result;
 });
+
+const getSelectedHomeroomName = computed(() => {
+  const staff = staffList.value.find((s) => s.id === form.value.homeroom_id);
+  return staff ? `${staff.name} (${staff.role})` : "Pilih Wali Kelas";
+});
 </script>
 
 <template>
@@ -310,6 +356,136 @@ const filteredClasses = computed(() => {
           <div class="p-6 overflow-y-auto custom-scrollbar max-h-[70vh]">
             <form id="classForm" @submit.prevent="isEditing ? saveEntry() : addEntry()">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="md:col-span-2 relative z-50">
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >Wali Kelas</label
+                  >
+                  <!-- Custom Dropdown Wali Kelas -->
+                  <button
+                    type="button"
+                    @click="
+                      !isLoadingData && staffList.length > 0
+                        ? (isHomeroomDropdownOpen = !isHomeroomDropdownOpen)
+                        : null
+                    "
+                    :disabled="isLoadingData || staffList.length === 0"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-left focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex justify-between items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    :class="
+                      form.homeroom_id
+                        ? 'text-gray-900 dark:text-white'
+                        : 'text-gray-500 dark:text-gray-400'
+                    "
+                  >
+                    <span class="truncate">{{
+                      isLoadingData
+                        ? "Memuat Data..."
+                        : staffList.length === 0
+                        ? "Data Guru/Staf Kosong"
+                        : getSelectedHomeroomName
+                    }}</span>
+                    <PhCaretDown
+                      class="w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200"
+                      :class="{ 'rotate-180': isHomeroomDropdownOpen }"
+                    />
+                  </button>
+
+                  <!-- Invisible Overlay to close dropdown -->
+                  <div
+                    v-if="isHomeroomDropdownOpen"
+                    @click="isHomeroomDropdownOpen = false"
+                    class="fixed inset-0 z-40"
+                  ></div>
+
+                  <!-- Dropdown Content (Arah ke bawah, Lazy Loading, Search) -->
+                  <Transition
+                    enter-active-class="transition ease-out duration-100"
+                    enter-from-class="opacity-0 -translate-y-2"
+                    enter-to-class="opacity-100 translate-y-0"
+                    leave-active-class="transition ease-in duration-100"
+                    leave-from-class="opacity-100 translate-y-0"
+                    leave-to-class="opacity-0 -translate-y-2"
+                  >
+                    <div
+                      v-if="isHomeroomDropdownOpen"
+                      class="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl overflow-hidden flex flex-col"
+                    >
+                      <!-- Search Bar Inside Dropdown -->
+                      <div
+                        class="p-2 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50"
+                      >
+                        <div class="relative">
+                          <div
+                            class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
+                          >
+                            <PhMagnifyingGlass class="w-4 h-4 text-gray-400" />
+                          </div>
+                          <input
+                            type="text"
+                            v-model="homeroomSearchQuery"
+                            class="block w-full pl-9 pr-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400"
+                            placeholder="Cari nama atau peran..."
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Lazy Load List -->
+                      <ul
+                        class="max-h-48 overflow-y-auto custom-scrollbar py-1 text-sm"
+                        @scroll="handleHomeroomScroll"
+                      >
+                        <li
+                          v-if="displayedStaffList.length === 0"
+                          class="px-4 py-3 text-gray-500 dark:text-gray-400 text-center"
+                        >
+                          Tidak ada wali kelas yang cocok.
+                        </li>
+                        <li
+                          v-for="staff in displayedStaffList"
+                          :key="staff.id"
+                          @click="selectHomeroom(staff.id)"
+                          class="px-4 py-2.5 cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center"
+                          :class="
+                            form.homeroom_id === staff.id
+                              ? 'bg-blue-50/50 dark:bg-slate-700/50 font-medium text-blue-600 dark:text-blue-400'
+                              : 'text-gray-700 dark:text-gray-300'
+                          "
+                        >
+                          <div class="flex flex-col">
+                            <span>{{ staff.name }}</span>
+                            <span class="text-xs opacity-70">{{ staff.role }}</span>
+                          </div>
+                          <PhCheck
+                            v-if="form.homeroom_id === staff.id"
+                            class="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0"
+                          />
+                        </li>
+                        <li
+                          v-if="
+                            homeroomPage * homeroomItemsPerPage < filteredStaffList.length
+                          "
+                          class="px-4 py-2 text-center text-xs text-gray-400"
+                        >
+                          Scroll ke bawah untuk memuat lebih...
+                        </li>
+                      </ul>
+                    </div>
+                  </Transition>
+
+                  <p
+                    v-if="!isLoadingData && staffList.length === 0"
+                    class="mt-1 text-xs text-red-500"
+                  >
+                    * Anda harus
+                    <router-link
+                      to="/admin/guru-staf"
+                      class="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                      @click="hideForm"
+                      >menambah Guru/Staf</router-link
+                    >
+                    terlebih dahulu.
+                  </p>
+                </div>
                 <div class="md:col-span-1">
                   <label
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
@@ -385,42 +561,6 @@ const filteredClasses = computed(() => {
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                     placeholder="36"
                   />
-                </div>
-                <div class="md:col-span-2">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >Wali Kelas</label
-                  >
-                  <select
-                    v-model="form.homeroom_id"
-                    required
-                    :disabled="isLoadingData || staffList.length === 0"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="" disabled>Pilih Wali Kelas</option>
-                    <option v-if="isLoadingData" value="" disabled>
-                      -- Memuat Data... --
-                    </option>
-                    <option v-else-if="staffList.length === 0" value="" disabled>
-                      -- Data Guru/Staf Kosong --
-                    </option>
-                    <option v-for="staff in staffList" :key="staff.id" :value="staff.id">
-                      {{ staff.name }} ({{ staff.role }})
-                    </option>
-                  </select>
-                  <p
-                    v-if="!isLoadingData && staffList.length === 0"
-                    class="mt-1 text-xs text-red-500"
-                  >
-                    * Anda harus
-                    <router-link
-                      to="/admin/guru-staf"
-                      class="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
-                      @click="hideForm"
-                      >menambah Guru/Staf</router-link
-                    >
-                    terlebih dahulu.
-                  </p>
                 </div>
               </div>
             </form>
