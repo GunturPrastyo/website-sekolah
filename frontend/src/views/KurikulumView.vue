@@ -54,6 +54,7 @@ const activeGrade = ref("10");
 const activeMajor = ref("");
 const expandedSubject = ref(null);
 const searchQuery = ref("");
+const showMajorInfo = ref(false);
 
 const changeGrade = (id) => {
   activeGrade.value = id;
@@ -574,12 +575,39 @@ onMounted(() => {
           </div>
           <!-- Peminatan / Jurusan Data -->
           <div v-else class="mb-6">
-            <div class="flex items-center gap-4 mb-6">
-              <h2 class="text-xl md:text-2xl font-bold text-white">
+            <div class="flex items-center gap-4 mb-3">
+              <h2
+                class="text-xl md:text-2xl font-bold text-white flex items-center gap-2"
+              >
                 Peminatan / Jurusan
+                <button
+                  @click="showMajorInfo = !showMajorInfo"
+                  class="text-blue-300 hover:text-white transition-colors focus:outline-none"
+                  title="Informasi Peminatan"
+                >
+                  <PhInfo class="w-5 h-5 md:w-6 md:h-6" />
+                </button>
               </h2>
               <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
             </div>
+
+            <Transition
+              enter-active-class="transition-all duration-300 ease-out overflow-hidden"
+              enter-from-class="opacity-0 -translate-y-2 max-h-0"
+              enter-to-class="opacity-100 translate-y-0 max-h-40"
+              leave-active-class="transition-all duration-200 ease-in overflow-hidden"
+              leave-from-class="opacity-100 translate-y-0 max-h-40"
+              leave-to-class="opacity-0 -translate-y-2 max-h-0"
+            >
+              <div
+                v-if="showMajorInfo"
+                class="mb-4 p-3 bg-blue-800/40 border border-blue-400/30 rounded-lg text-xs sm:text-sm text-blue-100 leading-relaxed shadow-sm"
+              >
+                Mata pelajaran kategori <strong>Umum (Fase E)</strong> secara otomatis
+                akan tersedia dan ditampilkan di semua pilihan peminatan.
+              </div>
+            </Transition>
+
             <div class="flex flex-col gap-3">
               <button
                 v-for="major in majors"

@@ -34,6 +34,7 @@ import {
   PhUsersFour,
   PhHandsPraying,
   PhSparkle,
+  PhInfo,
 } from "@phosphor-icons/vue";
 import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
@@ -242,6 +243,7 @@ const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
 const filterGrade = ref("semua");
 const filterMajor = ref("semua");
+const showMajorInfo = ref(false);
 
 const openPPPModal = () => {
   tempPPPData.value = JSON.parse(JSON.stringify(pppData.value));
@@ -344,6 +346,7 @@ const resetForm = () => {
   showNewCategoryInput.value = false;
   newCategoryName.value = "";
   isCategoryDropdownOpen.value = false;
+  showMajorInfo.value = false;
 };
 
 const showAddForm = () => {
@@ -776,10 +779,34 @@ const getMajorName = (id) => {
 
                 <div>
                   <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                   >
                     Peminatan / Jurusan
+                    <button
+                      type="button"
+                      @click="showMajorInfo = !showMajorInfo"
+                      class="ml-2 text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors focus:outline-none"
+                      title="Informasi Peminatan"
+                    >
+                      <PhInfo class="w-4 h-4" />
+                    </button>
                   </label>
+                  <Transition
+                    enter-active-class="transition-all duration-300 ease-out overflow-hidden"
+                    enter-from-class="opacity-0 -translate-y-2 max-h-0"
+                    enter-to-class="opacity-100 translate-y-0 max-h-40"
+                    leave-active-class="transition-all duration-200 ease-in overflow-hidden"
+                    leave-from-class="opacity-100 translate-y-0 max-h-40"
+                    leave-to-class="opacity-0 -translate-y-2 max-h-0"
+                  >
+                    <div
+                      v-if="showMajorInfo"
+                      class="mb-2 p-2 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800/50 rounded-lg text-xs text-blue-700 dark:text-blue-300 leading-relaxed shadow-sm"
+                    >
+                      Pilih <strong>Umum (Fase E)</strong> jika mata pelajaran ini berlaku
+                      untuk semua peminatan/jurusan.
+                    </div>
+                  </Transition>
                   <select
                     v-model="form.program_id"
                     class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
