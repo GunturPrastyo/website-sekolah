@@ -239,14 +239,10 @@ const fetchCurriculum = async () => {
             name: subject.name,
             desc: subject.description || subject.desc,
             icon: iconMap[subject.icon] || iconMap.PhBook,
-            color: isHex
-              ? "text-white"
-              : subject.text_color || subject.color || "text-white",
+            color: "",
             bg: isHex
-              ? "shadow-md"
-              : subject.bg_color ||
-                subject.bg ||
-                "bg-blue-600 dark:bg-blue-500 shadow-md",
+              ? "shadow-md text-white"
+              : getDarkColorClass(subject.color) + " shadow-md",
             hexStyle: isHex ? { backgroundColor: subject.color } : {},
             topics: topics || [],
           });
