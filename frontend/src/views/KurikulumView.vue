@@ -379,7 +379,6 @@ onMounted(() => {
               <h2
                 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight flex items-center justify-center gap-3"
               >
-                <PhGlobe class="w-10 h-10 text-blue-500 shrink-0" />
                 {{ pancasilaProfile.title }}
               </h2>
               <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -408,7 +407,7 @@ onMounted(() => {
                   <component :is="iconMap[dim.icon] || iconMap.PhHeart" class="w-6 h-6" />
                 </div>
                 <div>
-                  <h4 class="font-bold text-gray-900 dark:text-white mb-1">
+                  <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-1">
                     {{ dim.name }}
                   </h4>
                   <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
@@ -424,7 +423,7 @@ onMounted(() => {
 
     <!-- Interactive Syllabus Area (Full Width to Footer) -->
     <section
-      class="relative py-12 border-t border-blue-800/30 dark:border-slate-800 bg-center bg-cover overflow-hidden"
+      class="relative py-12 px-6 border-t border-blue-800/30 dark:border-slate-800 bg-center bg-cover overflow-hidden"
     >
       <!-- Background Overlay -->
       <div

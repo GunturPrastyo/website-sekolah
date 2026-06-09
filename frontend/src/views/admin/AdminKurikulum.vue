@@ -491,7 +491,6 @@ const getMajorName = (id) => {
           <h3
             class="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2"
           >
-            <PhGlobe class="w-7 h-7 text-blue-500 shrink-0" />
             {{ pppData.title }}
           </h3>
           <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 max-w-2xl">
@@ -528,7 +527,7 @@ const getMajorName = (id) => {
             <component :is="getIconComponent(dim.icon)" class="w-5 h-5" />
           </div>
           <div>
-            <h4 class="font-bold text-gray-900 dark:text-white mb-1">{{ dim.name }}</h4>
+            <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-1">{{ dim.name }}</h4>
             <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
               {{ dim.desc }}
             </p>
@@ -561,7 +560,6 @@ const getMajorName = (id) => {
             <h3
               class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2"
             >
-              <PhGlobe class="w-6 h-6 text-blue-500 shrink-0" />
               Edit Profil Pelajar Pancasila
             </h3>
             <button
