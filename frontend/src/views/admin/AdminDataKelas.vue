@@ -384,7 +384,7 @@ const getSelectedHomeroomName = computed(() => {
                         : null
                     "
                     :disabled="isLoadingData || staffList.length === 0"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-left focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex justify-between items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-gray-50 dark:bg-slate-700 text-left focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex justify-between items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     :class="
                       form.homeroom_id
                         ? 'text-gray-900 dark:text-white'
@@ -422,7 +422,7 @@ const getSelectedHomeroomName = computed(() => {
                   >
                     <div
                       v-if="isHomeroomDropdownOpen"
-                      class="absolute top-full left-0 right-0 z-[120] mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-2xl overflow-hidden flex flex-col"
+                      class="absolute top-full left-0 right-0 z-[120] mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-md shadow-2xl overflow-hidden flex flex-col"
                     >
                       <!-- Search Bar Inside Dropdown -->
                       <div
