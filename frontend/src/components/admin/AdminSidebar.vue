@@ -232,7 +232,7 @@ const handleLogout = async () => {
         <PhBuildings :size="20" />
       </div>
       <h1
-        class="text-base font-bold text-blue-600 dark:text-blue-400 line-clamp-2 leading-tight"
+        class="text-base font-bold text-gray-800 dark:text-white line-clamp-2 leading-tight"
       >
         {{ schoolName }}
       </h1>
