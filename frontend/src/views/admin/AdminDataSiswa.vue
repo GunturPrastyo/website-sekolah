@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import api from "@/api/index.js";
 import {
   PhPlusCircle,
@@ -25,6 +25,10 @@ const isLoadingData = ref(true);
 // State Data Siswa
 const studentsList = ref([]);
 const classesList = ref([]);
+
+const currentPage = ref(1);
+const totalPages = ref(1);
+const paginationMeta = ref({});
 
 const form = ref({
   id: null,
@@ -88,6 +92,7 @@ const searchQuery = ref("");
 const filterGrade = ref("semua");
 const filterMajor = ref("semua");
 const filterStatus = ref("semua");
+const itemsPerPage = ref(10);
 
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };
@@ -98,10 +103,26 @@ const triggerToast = (title, message, type = "success") => {
 };
 
 // Mengambil data siswa dari API
-const fetchData = async () => {
+const fetchData = async (page = 1) => {
+  isLoadingData.value = true;
   try {
-    const response = await api.get("/api/students");
+    const params = {
+      page: page,
+      per_page: itemsPerPage.value === "semua" ? 999999 : itemsPerPage.value,
+    };
+    if (searchQuery.value) params.search = searchQuery.value;
+    if (filterGrade.value !== "semua") params.grade = filterGrade.value;
+    if (filterMajor.value !== "semua") params.major = filterMajor.value;
+    if (filterStatus.value !== "semua") params.status = filterStatus.value;
+
+    const response = await api.get("/api/students", { params });
     studentsList.value = response.data.data;
+
+    if (response.data.pagination) {
+      paginationMeta.value = response.data.pagination;
+      currentPage.value = response.data.pagination.current_page;
+      totalPages.value = response.data.pagination.last_page;
+    }
   } catch (error) {
     console.error("Gagal memuat data siswa", error);
     triggerToast(
@@ -109,8 +130,22 @@ const fetchData = async () => {
       "Tidak dapat mengambil data siswa dari server.",
       "error"
     );
+  } finally {
+    isLoadingData.value = false;
   }
 };
+
+let searchTimeout;
+watch(searchQuery, () => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    fetchData(1);
+  }, 500);
+});
+
+watch([filterGrade, filterMajor, filterStatus], () => {
+  fetchData(1);
+});
 
 const fetchClasses = async () => {
   try {
@@ -135,7 +170,7 @@ const fetchMajors = async () => {
 
 onMounted(async () => {
   isLoadingData.value = true;
-  await Promise.all([fetchData(), fetchClasses(), fetchMajors()]);
+  await Promise.all([fetchData(1), fetchClasses(), fetchMajors()]);
   isLoadingData.value = false;
 });
 
@@ -298,7 +333,7 @@ const processImport = async () => {
       response.data.message || `${formattedData.length} data siswa berhasil diimport.`
     );
     closeImportModal();
-    fetchData(); // Reload data ke tabel
+    fetchData(1); // Reload data ke tabel
   } catch (error) {
     console.error(error);
     triggerToast(
@@ -320,7 +355,7 @@ const addEntry = async () => {
 
   try {
     const response = await api.post("/api/students", form.value);
-    studentsList.value.unshift(response.data.data);
+    fetchData(1);
     hideForm();
     triggerToast("Berhasil Ditambahkan", "Data siswa baru berhasil ditambahkan.");
   } catch (error) {
@@ -373,7 +408,7 @@ const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
     try {
       await api.delete(`/api/students/${itemToDelete.value}`);
-      studentsList.value = studentsList.value.filter((s) => s.id !== itemToDelete.value);
+      fetchData(currentPage.value);
       triggerToast("Data Dihapus", "Data siswa berhasil dihapus dari sistem.", "info");
     } catch (error) {
       console.error(error);
@@ -393,42 +428,32 @@ const cancelDelete = () => {
   itemToDelete.value = null;
 };
 
-const filteredStudents = computed(() => {
-  let result = studentsList.value;
-
-  if (filterGrade.value !== "semua") {
-    result = result.filter((item) => item.grade === filterGrade.value);
-  }
-
-  if (filterMajor.value !== "semua") {
-    result = result.filter((item) => item.major === filterMajor.value);
-  }
-
-  if (filterStatus.value !== "semua") {
-    result = result.filter((item) => item.status === filterStatus.value);
-  }
-
-  if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase();
-    result = result.filter(
-      (item) =>
-        item.name.toLowerCase().includes(query) || item.nisn.toLowerCase().includes(query)
-    );
-  }
-  return result;
-});
-
 const selectAll = computed({
-  get: () =>
-    selectedStudents.value.length > 0 &&
-    selectedStudents.value.length === filteredStudents.value.length,
+  get: () => {
+    if (studentsList.value.length === 0) return false;
+    return studentsList.value.every((s) => selectedStudents.value.includes(s.id));
+  },
   set: (val) => {
+    const currentPageIds = studentsList.value.map((s) => s.id);
     if (val) {
-      selectedStudents.value = filteredStudents.value.map((s) => s.id);
+      // Hanya tambahkan ID di halaman ini yang belum dicentang (menyimpan state lintas halaman)
+      const newIds = currentPageIds.filter((id) => !selectedStudents.value.includes(id));
+      selectedStudents.value.push(...newIds);
     } else {
-      selectedStudents.value = [];
+      // Hanya hapus centangan dari halaman yang sedang aktif
+      selectedStudents.value = selectedStudents.value.filter(
+        (id) => !currentPageIds.includes(id)
+      );
     }
   },
+});
+
+const isIndeterminate = computed(() => {
+  if (studentsList.value.length === 0) return false;
+  const selectedInCurrentPage = studentsList.value.filter((s) =>
+    selectedStudents.value.includes(s.id)
+  ).length;
+  return selectedInCurrentPage > 0 && selectedInCurrentPage < studentsList.value.length;
 });
 
 const openBulkEditModal = () => {
@@ -516,9 +541,7 @@ const executeBulkDelete = async () => {
     const response = await api.post("/api/students/bulk-delete", {
       ids: selectedStudents.value,
     });
-    studentsList.value = studentsList.value.filter(
-      (s) => !selectedStudents.value.includes(s.id)
-    );
+    fetchData(currentPage.value);
     selectedStudents.value = [];
     triggerToast(
       "Berhasil",
@@ -1207,6 +1230,16 @@ const executeBulkDelete = async () => {
             <option value="aktif">Aktif</option>
             <option value="alumni">Alumni</option>
           </select>
+          <select
+            v-model="itemsPerPage"
+            @change="fetchData(1)"
+            class="block w-full md:w-auto md:min-w-[120px] px-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm cursor-pointer"
+          >
+            <option :value="10">10 Baris</option>
+            <option :value="50">50 Baris</option>
+            <option :value="100">100 Baris</option>
+            <option value="semua">Semua Baris</option>
+          </select>
         </div>
       </div>
 
@@ -1273,7 +1306,7 @@ const executeBulkDelete = async () => {
                 <input
                   type="checkbox"
                   v-model="selectAll"
-                  .indeterminate="selectedStudents.length > 0 && selectedStudents.length < filteredStudents.length"
+                  .indeterminate="isIndeterminate"
                   class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer w-4 h-4"
                 />
               </th>
@@ -1288,9 +1321,18 @@ const executeBulkDelete = async () => {
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
-            <tr v-if="filteredStudents.length === 0">
+            <tr v-if="isLoadingData">
               <td
-                colspan="8"
+                colspan="9"
+                class="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
+              >
+                <PhSpinner class="w-10 h-10 mx-auto text-blue-500 animate-spin mb-3" />
+                <p>Memuat data...</p>
+              </td>
+            </tr>
+            <tr v-else-if="studentsList.length === 0">
+              <td
+                colspan="9"
                 class="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
               >
                 <PhGraduationCap
@@ -1300,7 +1342,8 @@ const executeBulkDelete = async () => {
               </td>
             </tr>
             <tr
-              v-for="student in filteredStudents"
+              v-else
+              v-for="student in studentsList"
               :key="student.id"
               class="hover:bg-blue-50/50 dark:hover:bg-slate-700/30 transition-colors group"
             >
@@ -1387,6 +1430,44 @@ const executeBulkDelete = async () => {
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div
+        v-if="totalPages > 1"
+        class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm rounded-b-2xl"
+      >
+        <span class="text-gray-500 dark:text-gray-400">
+          Menampilkan
+          <span class="font-medium text-gray-900 dark:text-white">{{
+            paginationMeta.from || 0
+          }}</span>
+          -
+          <span class="font-medium text-gray-900 dark:text-white">{{
+            paginationMeta.to || 0
+          }}</span>
+          dari
+          <span class="font-medium text-gray-900 dark:text-white">{{
+            paginationMeta.total || 0
+          }}</span>
+          data
+        </span>
+        <div class="flex gap-2">
+          <button
+            @click="fetchData(currentPage - 1)"
+            :disabled="currentPage === 1 || isLoadingData"
+            class="px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+          >
+            Sebelumnya
+          </button>
+          <button
+            @click="fetchData(currentPage + 1)"
+            :disabled="currentPage === totalPages || isLoadingData"
+            class="px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+          >
+            Selanjutnya
+          </button>
+        </div>
       </div>
     </div>
 

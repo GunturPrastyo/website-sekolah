@@ -10,13 +10,45 @@ use Illuminate\Support\Facades\Cache;
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::with('schoolClass')->orderBy('id', 'desc')->get();
+        $perPage = $request->query('per_page', 10);
+        $search = $request->query('search');
+        $grade = $request->query('grade');
+        $major = $request->query('major');
+        $status = $request->query('status');
+
+        $query = Student::with('schoolClass')->orderBy('id', 'desc');
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('nisn', 'like', "%{$search}%");
+            });
+        }
+        if ($grade) {
+            $query->where('grade', $grade);
+        }
+        if ($major) {
+            $query->where('major', $major);
+        }
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $students = $query->paginate($perPage);
         
         return response()->json([
             'success' => true,
-            'data'    => StudentResource::collection($students)
+            'data'    => StudentResource::collection($students->items()),
+            'pagination' => [
+                'total'        => $students->total(),
+                'per_page'     => $students->perPage(),
+                'current_page' => $students->currentPage(),
+                'last_page'    => $students->lastPage(),
+                'from'         => $students->firstItem(),
+                'to'           => $students->lastItem(),
+            ]
         ]);
     }
 
