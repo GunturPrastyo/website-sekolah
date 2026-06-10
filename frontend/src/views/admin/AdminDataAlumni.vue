@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, nextTick } from "vue";
+import { ref, computed, onMounted, nextTick, watch } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -13,6 +13,7 @@ import {
   PhMapTrifold,
   PhCaretDown,
   PhCheck,
+  PhSpinner,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -22,15 +23,61 @@ import api from "@/api/index.js";
 const statusAlumniList = ["Kuliah", "Bekerja"];
 
 const alumniList = ref([]);
+const paginationMeta = ref({});
+const currentPage = ref(1);
+const totalPages = ref(1);
+const itemsPerPage = ref(10);
+const isLoadingData = ref(true);
+
 const unassignedAlumni = ref([]);
 const unassignedStudentsPage = ref(1);
 const unassignedStudentsLastPage = ref(1);
 const isLoadingUnassigned = ref(false);
 
-const fetchAlumnis = async () => {
+const searchQuery = ref("");
+const filterStatus = ref("semua");
+const searchStudent = ref("");
+const isDropdownOpen = ref(false);
+const selectedStudentsForAdd = ref([]);
+
+// State Bulk Action
+const selectedAlumni = ref([]);
+const isBulkEditModalOpen = ref(false);
+const isBulkDeleteModalOpen = ref(false);
+const bulkEditForm = ref({ year: "", status: "", instansi: "" });
+
+const showToast = ref(false);
+const toastData = ref({ title: "", message: "", type: "success" });
+
+const fetchAlumnis = async (page = 1) => {
+  isLoadingData.value = true;
   try {
-    const response = await api.get("/api/alumnis");
+    const params = {
+      page: page,
+      per_page: itemsPerPage.value === "semua" ? 999999 : itemsPerPage.value,
+    };
+    if (searchQuery.value) params.search = searchQuery.value;
+    if (filterStatus.value !== "semua") params.status = filterStatus.value;
+
+    const response = await api.get("/api/alumnis", { params });
     alumniList.value = response.data.data;
+    if (response.data.pagination) {
+      paginationMeta.value = response.data.pagination;
+      currentPage.value = response.data.pagination.current_page;
+      totalPages.value = response.data.pagination.last_page;
+    } else {
+      // Handle non-paginated response if per_page is 'semua' and backend doesn't paginate
+      paginationMeta.value = {
+        total: alumniList.value.length,
+        per_page: alumniList.value.length,
+        current_page: 1,
+        last_page: 1,
+        from: 1,
+        to: alumniList.value.length,
+      };
+      currentPage.value = 1;
+      totalPages.value = 1;
+    }
     mergeInstitutions();
   } catch (error) {
     console.error("Gagal memuat data alumni", error);
@@ -39,6 +86,8 @@ const fetchAlumnis = async () => {
       "Tidak dapat mengambil data alumni dari server.",
       "error"
     );
+  } finally {
+    isLoadingData.value = false;
   }
 };
 
@@ -77,9 +126,14 @@ const fetchMapLocations = async () => {
 };
 
 onMounted(() => {
-  fetchAlumnis();
+  fetchAlumnis(1);
   fetchUnassignedStudents();
   fetchMapLocations();
+});
+
+watch([searchQuery, filterStatus, itemsPerPage], () => {
+  fetchAlumnis(1);
+  selectedAlumni.value = [];
 });
 
 // State dan Logic untuk Dropdown CRUD Instansi
@@ -352,14 +406,6 @@ const isEditing = ref(false);
 const isDeleteModalOpen = ref(false);
 const itemToDelete = ref(null);
 
-const showToast = ref(false);
-const toastData = ref({ title: "", message: "", type: "success" });
-const searchQuery = ref("");
-const filterStatus = ref("semua");
-const searchStudent = ref("");
-const isDropdownOpen = ref(false);
-const selectedStudentsForAdd = ref([]);
-
 const filteredUnassignedAlumni = computed(() => {
   let list = unassignedAlumni.value;
   if (!isEditing.value && selectedStudentsForAdd.value.length > 0) {
@@ -557,22 +603,114 @@ const cancelDelete = () => {
   isDeleteModalOpen.value = false;
 };
 
-const filteredAlumni = computed(() => {
-  let result = alumniList.value;
+const selectAll = computed({
+  get: () => {
+    if (alumniList.value.length === 0) return false;
+    return alumniList.value.every((s) => selectedAlumni.value.includes(s.id));
+  },
+  set: (val) => {
+    const currentPageIds = alumniList.value.map((s) => s.id);
+    if (val) {
+      const newIds = currentPageIds.filter((id) => !selectedAlumni.value.includes(id));
+      selectedAlumni.value.push(...newIds);
+    } else {
+      selectedAlumni.value = selectedAlumni.value.filter(
+        (id) => !currentPageIds.includes(id)
+      );
+    }
+  },
+});
 
-  if (filterStatus.value !== "semua") {
-    result = result.filter((item) => item.status === filterStatus.value);
+const isIndeterminate = computed(() => {
+  if (alumniList.value.length === 0) return false;
+  const selectedInCurrentPage = alumniList.value.filter((s) =>
+    selectedAlumni.value.includes(s.id)
+  ).length;
+  return selectedInCurrentPage > 0 && selectedInCurrentPage < alumniList.value.length;
+});
+
+const openBulkEditModal = () => {
+  bulkEditForm.value = { year: "", status: "", instansi: "" };
+  isBulkEditModalOpen.value = true;
+  document.body.style.overflow = "hidden";
+};
+
+const closeBulkEditModal = () => {
+  isBulkEditModalOpen.value = false;
+  document.body.style.overflow = "";
+};
+
+const executeBulkEdit = async () => {
+  const payload = {};
+  if (bulkEditForm.value.year) payload.year = bulkEditForm.value.year;
+  if (bulkEditForm.value.status) payload.status = bulkEditForm.value.status;
+  if (bulkEditForm.value.instansi !== "")
+    payload.instansi =
+      bulkEditForm.value.instansi === "kosong" ? "" : bulkEditForm.value.instansi;
+
+  if (Object.keys(payload).length === 0) {
+    triggerToast("Info", "Tidak ada perubahan yang dipilih.", "info");
+    return;
   }
 
-  if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase();
-    result = result.filter(
-      (item) =>
-        item.name.toLowerCase().includes(query) || item.nisn.toLowerCase().includes(query)
+  payload.ids = selectedAlumni.value;
+
+  try {
+    const response = await api.post("/api/alumnis/bulk-update", payload);
+
+    fetchAlumnis(currentPage.value);
+
+    selectedAlumni.value = [];
+    closeBulkEditModal();
+    triggerToast(
+      "Berhasil",
+      response.data?.message || "Data alumni terpilih berhasil diperbarui.",
+      "success"
+    );
+  } catch (error) {
+    console.error(error);
+    triggerToast(
+      "Gagal",
+      error.response?.data?.message || "Terjadi kesalahan saat memperbarui data massal.",
+      "error"
     );
   }
-  return result;
-});
+};
+
+const confirmBulkDelete = () => {
+  isBulkDeleteModalOpen.value = true;
+};
+
+const cancelBulkDelete = () => {
+  isBulkDeleteModalOpen.value = false;
+};
+
+const executeBulkDelete = async () => {
+  isBulkDeleteModalOpen.value = false;
+  try {
+    const response = await api.post("/api/alumnis/bulk-delete", {
+      ids: selectedAlumni.value,
+    });
+    fetchAlumnis(
+      currentPage.value > 1 && alumniList.value.length === selectedAlumni.value.length
+        ? currentPage.value - 1
+        : currentPage.value
+    );
+    selectedAlumni.value = [];
+    triggerToast(
+      "Berhasil",
+      response.data?.message || "Data terpilih berhasil dihapus.",
+      "success"
+    );
+  } catch (error) {
+    console.error(error);
+    triggerToast(
+      "Gagal",
+      error.response?.data?.message || "Terjadi kesalahan saat menghapus data massal.",
+      "error"
+    );
+  }
+};
 </script>
 
 <template>
@@ -591,6 +729,111 @@ const filteredAlumni = computed(() => {
         </p>
       </div>
     </div>
+
+    <!-- Form Bulk Edit -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isBulkEditModalOpen"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="closeBulkEditModal"
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all"
+          @click.stop
+        >
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+          >
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+              Edit Massal ({{ selectedAlumni.length }} Alumni)
+            </h3>
+            <button
+              @click="closeBulkEditModal"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
+          </div>
+          <div class="p-6">
+            <p class="text-sm text-gray-500 mb-4">
+              Pilih data yang ingin diubah. Kosongkan jika tidak ingin mengubah.
+            </p>
+            <div class="space-y-4">
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Tahun Lulus</label
+                >
+                <input
+                  type="text"
+                  v-model="bulkEditForm.year"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Contoh: 2024"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Status Karir</label
+                >
+                <select
+                  v-model="bulkEditForm.status"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Tetap --</option>
+                  <option
+                    v-for="status in statusAlumniList"
+                    :key="status"
+                    :value="status"
+                  >
+                    {{ status }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Instansi / Kampus</label
+                >
+                <select
+                  v-model="bulkEditForm.instansi"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">-- Tetap --</option>
+                  <option value="kosong">Kosongkan Instansi</option>
+                  <option v-for="inst in institutionList" :key="inst" :value="inst">
+                    {{ inst }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+          >
+            <button
+              @click="closeBulkEditModal"
+              class="px-4 py-2 border rounded-md text-sm"
+            >
+              Batal
+            </button>
+            <button
+              @click="executeBulkEdit"
+              class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm"
+            >
+              Simpan Perubahan
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
 
     <!-- Form Tambah/Edit Manual -->
     <Transition
@@ -1015,6 +1258,16 @@ const filteredAlumni = computed(() => {
               {{ status }}
             </option>
           </select>
+          <select
+            v-model="itemsPerPage"
+            @change="fetchAlumnis(1)"
+            class="block w-full md:w-auto md:min-w-[120px] px-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm cursor-pointer"
+          >
+            <option :value="10">10 Baris</option>
+            <option :value="50">50 Baris</option>
+            <option :value="100">100 Baris</option>
+            <option value="semua">Semua Baris</option>
+          </select>
         </div>
         <button
           @click="showAddForm"
@@ -1025,12 +1278,73 @@ const filteredAlumni = computed(() => {
         </button>
       </div>
 
-      <div class="overflow-x-auto">
+      <!-- Bulk Actions Bar -->
+      <Transition
+        enter-active-class="transition-all duration-300 ease-out"
+        enter-from-class="opacity-0 -translate-y-4"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition-all duration-200 ease-in"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 -translate-y-4"
+      >
+        <div
+          v-if="selectedAlumni.length > 0"
+          class="bg-blue-50/90 dark:bg-blue-900/30 backdrop-blur-md border-y border-blue-200 dark:border-blue-800/50 p-3 sm:p-4 flex flex-wrap justify-between items-center gap-4 relative z-20 shadow-sm"
+        >
+          <div class="flex items-center gap-3">
+            <span
+              class="inline-flex items-center justify-center bg-blue-600 text-white w-7 h-7 rounded-full text-xs font-bold shadow-md"
+            >
+              {{ selectedAlumni.length }}
+            </span>
+            <span class="text-sm font-semibold text-blue-900 dark:text-blue-200">
+              Alumni Terpilih
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2 sm:gap-3">
+            <button
+              @click="openBulkEditModal"
+              class="inline-flex items-center px-3 py-2 border border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-800 text-sm font-semibold rounded-lg text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-700 focus:outline-none transition-colors shadow-sm"
+            >
+              <PhPencilSimple class="w-4 h-4 sm:mr-2" />
+              <span class="hidden sm:inline">Edit Massal</span>
+            </button>
+            <button
+              @click="confirmBulkDelete"
+              class="inline-flex items-center px-3 py-2 border border-red-300 dark:border-red-800/50 bg-white dark:bg-slate-800 text-sm font-semibold rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-slate-700 focus:outline-none transition-colors shadow-sm"
+            >
+              <PhTrash class="w-4 h-4 sm:mr-2" />
+              <span class="hidden sm:inline">Hapus</span>
+            </button>
+            <div
+              class="h-6 border-l-2 border-blue-200 dark:border-blue-700/50 mx-1 sm:mx-2"
+            ></div>
+            <button
+              @click="selectedAlumni = []"
+              class="inline-flex items-center px-2 py-2 text-sm font-medium rounded-lg text-gray-500 hover:text-gray-900 hover:bg-white dark:text-gray-400 dark:hover:text-white dark:hover:bg-slate-700 focus:outline-none transition-all"
+              title="Batal Pilih"
+            >
+              <PhX class="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </Transition>
+
+      <div class="overflow-x-auto relative z-10">
         <table class="w-full text-left border-collapse">
           <thead>
             <tr
               class="bg-gray-50 dark:bg-slate-700/50 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
+              <th class="px-6 py-4 w-12 text-center">
+                <input
+                  type="checkbox"
+                  v-model="selectAll"
+                  :indeterminate="isIndeterminate"
+                  class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer w-4 h-4"
+                />
+              </th>
               <th class="px-6 py-4">NISN</th>
               <th class="px-6 py-4">Nama</th>
               <th class="px-6 py-4">Tahun Lulus</th>
@@ -1040,9 +1354,39 @@ const filteredAlumni = computed(() => {
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
-            <tr v-if="filteredAlumni.length === 0">
+            <template v-if="isLoadingData">
+              <tr v-for="i in 5" :key="'skeleton-' + i" class="animate-pulse">
+                <td class="px-6 py-4 text-center">
+                  <div
+                    class="h-4 w-4 bg-gray-200 dark:bg-slate-600 rounded mx-auto"
+                  ></div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="h-4 bg-gray-200 dark:bg-slate-600 rounded w-24"></div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="h-4 bg-gray-200 dark:bg-slate-600 rounded w-32"></div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="h-4 bg-gray-200 dark:bg-slate-600 rounded w-12"></div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="h-6 bg-gray-200 dark:bg-slate-600 rounded-full w-16"></div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="h-4 bg-gray-200 dark:bg-slate-600 rounded w-28"></div>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-1">
+                    <div class="h-7 w-7 bg-gray-200 dark:bg-slate-600 rounded-md"></div>
+                    <div class="h-7 w-7 bg-gray-200 dark:bg-slate-600 rounded-md"></div>
+                  </div>
+                </td>
+              </tr>
+            </template>
+            <tr v-else-if="alumniList.length === 0">
               <td
-                colspan="6"
+                colspan="7"
                 class="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
               >
                 <PhGraduationCap
@@ -1052,11 +1396,20 @@ const filteredAlumni = computed(() => {
               </td>
             </tr>
             <tr
-              v-for="alumni in filteredAlumni"
+              v-else
+              v-for="alumni in alumniList"
               :key="alumni.id"
               class="hover:bg-blue-50/50 dark:hover:bg-slate-700/30 transition-colors group"
             >
-              <td class="px-6 py-4">
+              <td class="px-6 py-4 text-center">
+                <input
+                  type="checkbox"
+                  :value="alumni.id"
+                  v-model="selectedAlumni"
+                  class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer w-4 h-4"
+                />
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
                 <span class="block text-sm text-gray-600 dark:text-gray-400 font-mono">{{
                   alumni.nisn
                 }}</span>
@@ -1067,10 +1420,12 @@ const filteredAlumni = computed(() => {
                   >{{ alumni.name }}</span
                 >
               </td>
-              <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+              <td
+                class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap"
+              >
                 {{ alumni.year }}
               </td>
-              <td class="px-6 py-4">
+              <td class="px-6 py-4 whitespace-nowrap">
                 <span
                   class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium"
                   :class="{
@@ -1112,6 +1467,44 @@ const filteredAlumni = computed(() => {
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div
+        v-if="totalPages > 1"
+        class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm rounded-b-2xl"
+      >
+        <span class="text-gray-500 dark:text-gray-400">
+          Menampilkan
+          <span class="font-medium text-gray-900 dark:text-white">{{
+            paginationMeta.from || 0
+          }}</span>
+          -
+          <span class="font-medium text-gray-900 dark:text-white">{{
+            paginationMeta.to || 0
+          }}</span>
+          dari
+          <span class="font-medium text-gray-900 dark:text-white">{{
+            paginationMeta.total || 0
+          }}</span>
+          data
+        </span>
+        <div class="flex gap-2">
+          <button
+            @click="fetchAlumnis(currentPage - 1)"
+            :disabled="currentPage === 1 || isLoadingData"
+            class="px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+          >
+            Sebelumnya
+          </button>
+          <button
+            @click="fetchAlumnis(currentPage + 1)"
+            :disabled="currentPage === totalPages || isLoadingData"
+            class="px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+          >
+            Selanjutnya
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1530,6 +1923,14 @@ const filteredAlumni = computed(() => {
       message="Yakin ingin menghapus data tracking alumni ini secara permanen dari sistem?"
       @confirm="confirmDelete"
       @cancel="cancelDelete"
+    />
+
+    <ConfirmModal
+      :isOpen="isBulkDeleteModalOpen"
+      title="Hapus Massal Alumni"
+      :message="`Yakin ingin menghapus ${selectedAlumni.length} data alumni ini secara permanen dari sistem?`"
+      @confirm="executeBulkDelete"
+      @cancel="cancelBulkDelete"
     />
 
     <ToastNotification

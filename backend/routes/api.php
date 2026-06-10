@@ -162,6 +162,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // API Data Alumni
     Route::get('/alumnis/unassigned-students', [AlumniController::class, 'unassignedStudents']);
+    Route::post('/alumnis/bulk-update', [AlumniController::class, 'bulkUpdate']);
+    Route::post('/alumnis/bulk-delete', [AlumniController::class, 'bulkDelete']);
     Route::apiResource('/alumnis', AlumniController::class);
 
     // API Data Persebaran Peta Alumni
