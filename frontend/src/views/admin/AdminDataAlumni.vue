@@ -23,6 +23,9 @@ const statusAlumniList = ["Kuliah", "Bekerja"];
 
 const alumniList = ref([]);
 const unassignedAlumni = ref([]);
+const unassignedStudentsPage = ref(1);
+const unassignedStudentsLastPage = ref(1);
+const isLoadingUnassigned = ref(false);
 
 const fetchAlumnis = async () => {
   try {
@@ -39,12 +42,28 @@ const fetchAlumnis = async () => {
   }
 };
 
-const fetchUnassignedStudents = async () => {
+const fetchUnassignedStudents = async (isLoadMore = false) => {
+  if (isLoadingUnassigned.value) return;
+  if (!isLoadMore) unassignedStudentsPage.value = 1;
+  isLoadingUnassigned.value = true;
   try {
-    const response = await api.get("/api/alumnis/unassigned-students");
-    unassignedAlumni.value = response.data.data;
+    const response = await api.get("/api/alumnis/unassigned-students", {
+      params: {
+        page: unassignedStudentsPage.value,
+        per_page: 10,
+        search: searchStudent.value,
+      },
+    });
+    if (isLoadMore) {
+      unassignedAlumni.value = [...unassignedAlumni.value, ...response.data.data];
+    } else {
+      unassignedAlumni.value = response.data.data;
+    }
+    unassignedStudentsLastPage.value = response.data.pagination.last_page;
   } catch (error) {
     console.error("Gagal mengambil data siswa unassigned:", error);
+  } finally {
+    isLoadingUnassigned.value = false;
   }
 };
 
@@ -347,13 +366,26 @@ const filteredUnassignedAlumni = computed(() => {
     const selectedIds = selectedStudentsForAdd.value.map((s) => s.id);
     list = list.filter((s) => !selectedIds.includes(s.id));
   }
-
-  if (!searchStudent.value) return list;
-  const q = searchStudent.value.toLowerCase();
-  return list.filter(
-    (s) => s.name.toLowerCase().includes(q) || s.nisn.toLowerCase().includes(q)
-  );
+  return list;
 });
+
+let searchTimeout;
+const onSearchInput = () => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    fetchUnassignedStudents(false);
+  }, 500);
+};
+
+const onDropdownScroll = (event) => {
+  const { scrollTop, scrollHeight, clientHeight } = event.target;
+  if (scrollTop + clientHeight >= scrollHeight - 10) {
+    if (unassignedStudentsPage.value < unassignedStudentsLastPage.value) {
+      unassignedStudentsPage.value++;
+      fetchUnassignedStudents(true);
+    }
+  }
+};
 
 const selectStudent = (siswa) => {
   if (!isEditing.value) {
@@ -362,6 +394,7 @@ const selectStudent = (siswa) => {
       if (siswa.year && !form.value.year) form.value.year = siswa.year;
     }
     searchStudent.value = "";
+    fetchUnassignedStudents(false);
   } else {
     form.value.student_id = siswa.id;
     form.value.nisn = siswa.nisn;
@@ -401,6 +434,7 @@ const resetForm = () => {
     instansi: "",
   };
   searchStudent.value = "";
+  fetchUnassignedStudents(false);
   selectedStudentsForAdd.value = [];
   isDropdownOpen.value = false;
   isEditing.value = false;
@@ -644,6 +678,7 @@ const filteredAlumni = computed(() => {
                     <input
                       type="text"
                       v-model="searchStudent"
+                      @input="onSearchInput"
                       @focus="isDropdownOpen = true"
                       @blur="closeDropdown"
                       placeholder="Ketik NISN atau Nama Siswa lalu klik untuk memilih..."
@@ -651,10 +686,13 @@ const filteredAlumni = computed(() => {
                     />
                     <div
                       v-if="isDropdownOpen"
+                      @scroll="onDropdownScroll"
                       class="absolute z-10 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg max-h-48 overflow-y-auto"
                     >
                       <div
-                        v-if="filteredUnassignedAlumni.length === 0"
+                        v-if="
+                          filteredUnassignedAlumni.length === 0 && !isLoadingUnassigned
+                        "
                         class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400"
                       >
                         Siswa tidak ditemukan
@@ -666,6 +704,12 @@ const filteredAlumni = computed(() => {
                         class="px-4 py-2 text-sm cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-800 dark:text-gray-200"
                       >
                         {{ siswa.nisn }} - {{ siswa.name }}
+                      </div>
+                      <div
+                        v-if="isLoadingUnassigned"
+                        class="px-4 py-2 text-sm text-center text-blue-500 dark:text-blue-400"
+                      >
+                        Memuat data...
                       </div>
                     </div>
                   </div>
@@ -679,6 +723,7 @@ const filteredAlumni = computed(() => {
                     <input
                       type="text"
                       v-model="searchStudent"
+                      @input="onSearchInput"
                       @focus="isDropdownOpen = true"
                       @blur="closeDropdown"
                       placeholder="Ketik NISN atau Nama Siswa..."
@@ -686,10 +731,13 @@ const filteredAlumni = computed(() => {
                     />
                     <div
                       v-if="isDropdownOpen"
+                      @scroll="onDropdownScroll"
                       class="absolute z-10 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg max-h-48 overflow-y-auto"
                     >
                       <div
-                        v-if="filteredUnassignedAlumni.length === 0"
+                        v-if="
+                          filteredUnassignedAlumni.length === 0 && !isLoadingUnassigned
+                        "
                         class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400"
                       >
                         Siswa tidak ditemukan
@@ -701,6 +749,12 @@ const filteredAlumni = computed(() => {
                         class="px-4 py-2 text-sm cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-800 dark:text-gray-200"
                       >
                         {{ siswa.nisn }} - {{ siswa.name }}
+                      </div>
+                      <div
+                        v-if="isLoadingUnassigned"
+                        class="px-4 py-2 text-sm text-center text-blue-500 dark:text-blue-400"
+                      >
+                        Memuat data...
                       </div>
                     </div>
                   </div>

@@ -37,16 +37,35 @@ class AlumniController extends Controller
         ]);
     }
 
-    public function unassignedStudents()
+    public function unassignedStudents(Request $request)
     {
+        $perPage = $request->query('per_page', 10);
+        $search = $request->query('search');
+
         $trackedStudentIds = Alumni::pluck('student_id')->toArray();
         
         // Mengambil siswa dengan status "alumni" yang belum ada di tabel alumnis
-        $unassigned = Student::where('status', 'alumni')
-            ->whereNotIn('id', $trackedStudentIds)
-            ->get(['id', 'nisn', 'name', 'grade', 'major']);
+        $query = Student::where('status', 'alumni')
+            ->whereNotIn('id', $trackedStudentIds);
 
-        return response()->json(['data' => $unassigned]);
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('nisn', 'like', "%{$search}%");
+            });
+        }
+
+        $unassigned = $query->paginate($perPage, ['id', 'nisn', 'name', 'grade', 'major']);
+
+        return response()->json([
+            'data' => $unassigned->items(),
+            'pagination' => [
+                'total'        => $unassigned->total(),
+                'per_page'     => $unassigned->perPage(),
+                'current_page' => $unassigned->currentPage(),
+                'last_page'    => $unassigned->lastPage(),
+            ]
+        ]);
     }
 
     public function store(Request $request)
