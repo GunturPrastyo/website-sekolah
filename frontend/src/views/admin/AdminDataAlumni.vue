@@ -19,7 +19,7 @@ import ToastNotification from "@/components/admin/ToastNotification.vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import api from "@/api/index.js";
 
-const statusAlumniList = ["Kuliah", "Bekerja", "Wirausaha", "Lainnya"];
+const statusAlumniList = ["Kuliah", "Bekerja"];
 
 const alumniList = ref([]);
 const unassignedAlumni = ref([]);
@@ -518,13 +518,6 @@ const filteredAlumni = computed(() => {
           Study).
         </p>
       </div>
-      <button
-        @click="showAddForm"
-        class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-      >
-        <PhPlusCircle class="w-5 h-5 mr-2" />
-        Tambah Data Alumni
-      </button>
     </div>
 
     <!-- Form Tambah/Edit Manual -->
@@ -832,7 +825,7 @@ const filteredAlumni = computed(() => {
       <div
         class="p-6 border-b border-gray-100 dark:border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
       >
-        <div class="flex flex-col md:flex-row gap-4 w-full">
+        <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
           <div class="relative flex-1 md:max-w-xs">
             <div
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
@@ -856,6 +849,13 @@ const filteredAlumni = computed(() => {
             </option>
           </select>
         </div>
+        <button
+          @click="showAddForm"
+          class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors w-full md:w-auto"
+        >
+          <PhPlusCircle class="w-5 h-5 mr-2" />
+          Tambah Data Alumni
+        </button>
       </div>
 
       <div class="overflow-x-auto">
@@ -911,10 +911,6 @@ const filteredAlumni = computed(() => {
                       alumni.status === 'Kuliah',
                     'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400':
                       alumni.status === 'Bekerja',
-                    'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400':
-                      alumni.status === 'Wirausaha',
-                    'bg-gray-100 text-gray-700 dark:bg-slate-700 dark:text-gray-300':
-                      alumni.status === 'Lainnya',
                   }"
                 >
                   {{ alumni.status }}
