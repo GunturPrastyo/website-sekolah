@@ -339,22 +339,41 @@ const searchQuery = ref("");
 const filterStatus = ref("semua");
 const searchStudent = ref("");
 const isDropdownOpen = ref(false);
+const selectedStudentsForAdd = ref([]);
 
 const filteredUnassignedAlumni = computed(() => {
-  if (!searchStudent.value) return unassignedAlumni.value;
+  let list = unassignedAlumni.value;
+  if (!isEditing.value && selectedStudentsForAdd.value.length > 0) {
+    const selectedIds = selectedStudentsForAdd.value.map((s) => s.id);
+    list = list.filter((s) => !selectedIds.includes(s.id));
+  }
+
+  if (!searchStudent.value) return list;
   const q = searchStudent.value.toLowerCase();
-  return unassignedAlumni.value.filter(
+  return list.filter(
     (s) => s.name.toLowerCase().includes(q) || s.nisn.toLowerCase().includes(q)
   );
 });
 
 const selectStudent = (siswa) => {
-  form.value.student_id = siswa.id;
-  form.value.nisn = siswa.nisn;
-  form.value.name = siswa.name;
-  if (siswa.year) form.value.year = siswa.year;
-  searchStudent.value = `${siswa.nisn} - ${siswa.name}`;
-  isDropdownOpen.value = false;
+  if (!isEditing.value) {
+    if (!selectedStudentsForAdd.value.find((s) => s.id === siswa.id)) {
+      selectedStudentsForAdd.value.push(siswa);
+      if (siswa.year && !form.value.year) form.value.year = siswa.year;
+    }
+    searchStudent.value = "";
+  } else {
+    form.value.student_id = siswa.id;
+    form.value.nisn = siswa.nisn;
+    form.value.name = siswa.name;
+    if (siswa.year) form.value.year = siswa.year;
+    searchStudent.value = `${siswa.nisn} - ${siswa.name}`;
+    isDropdownOpen.value = false;
+  }
+};
+
+const removeSelectedStudent = (index) => {
+  selectedStudentsForAdd.value.splice(index, 1);
 };
 
 const closeDropdown = () => {
@@ -382,6 +401,7 @@ const resetForm = () => {
     instansi: "",
   };
   searchStudent.value = "";
+  selectedStudentsForAdd.value = [];
   isDropdownOpen.value = false;
   isEditing.value = false;
   showNewInstansiInput.value = false;
@@ -402,17 +422,35 @@ const showAddForm = () => {
 };
 
 const addEntry = async () => {
-  if (!form.value.student_id || !form.value.year) {
-    triggerToast("Gagal Menyimpan", "Siswa dan Tahun Lulus wajib diisi!", "error");
+  if (selectedStudentsForAdd.value.length === 0 || !form.value.year) {
+    triggerToast(
+      "Gagal Menyimpan",
+      "Pilih minimal satu siswa dan isi Tahun Lulus!",
+      "error"
+    );
     return;
   }
 
   try {
-    const response = await api.post("/api/alumnis", form.value);
-    alumniList.value.unshift(response.data.data);
+    let addedCount = 0;
+    for (const siswa of selectedStudentsForAdd.value) {
+      const payload = {
+        student_id: siswa.id,
+        year: form.value.year,
+        status: form.value.status,
+        instansi: form.value.instansi,
+      };
+      const response = await api.post("/api/alumnis", payload);
+      alumniList.value.unshift(response.data.data);
+      addedCount++;
+    }
+
     hideForm();
     fetchUnassignedStudents();
-    triggerToast("Berhasil Ditambahkan", "Data alumni baru berhasil ditambahkan.");
+    triggerToast(
+      "Berhasil Ditambahkan",
+      `${addedCount} data alumni baru berhasil ditambahkan.`
+    );
   } catch (error) {
     console.error(error);
     triggerToast(
@@ -559,10 +597,84 @@ const filteredAlumni = computed(() => {
               >
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div v-if="!isEditing" class="md:col-span-2 relative">
+                    <div class="flex justify-between items-end mb-1">
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                      >
+                        Pilih Siswa (Bisa lebih dari satu)
+                        <span
+                          v-if="selectedStudentsForAdd.length > 0"
+                          class="ml-1 text-blue-600 dark:text-blue-400 font-bold"
+                          >({{ selectedStudentsForAdd.length }} dipilih)</span
+                        >
+                      </label>
+                      <button
+                        v-if="selectedStudentsForAdd.length > 1"
+                        type="button"
+                        @click="selectedStudentsForAdd = []"
+                        class="text-xs text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-medium transition-colors"
+                      >
+                        Kosongkan Pilihan
+                      </button>
+                    </div>
+                    <div
+                      class="flex flex-wrap gap-2 mb-2 max-h-32 overflow-y-auto custom-scrollbar p-1 rounded-lg"
+                      :class="
+                        selectedStudentsForAdd.length > 6
+                          ? 'border border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-800/50'
+                          : ''
+                      "
+                      v-if="selectedStudentsForAdd.length > 0"
+                    >
+                      <span
+                        v-for="(siswa, index) in selectedStudentsForAdd"
+                        :key="siswa.id"
+                        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+                      >
+                        {{ siswa.nisn }} - {{ siswa.name }}
+                        <button
+                          type="button"
+                          @click="removeSelectedStudent(index)"
+                          class="flex-shrink-0 ml-1.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-blue-400 hover:bg-blue-200 hover:text-blue-600 focus:outline-none focus:bg-blue-500 focus:text-white dark:hover:bg-blue-800 dark:hover:text-blue-200"
+                        >
+                          <PhX class="h-3 w-3" />
+                        </button>
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      v-model="searchStudent"
+                      @focus="isDropdownOpen = true"
+                      @blur="closeDropdown"
+                      placeholder="Ketik NISN atau Nama Siswa lalu klik untuk memilih..."
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <div
+                      v-if="isDropdownOpen"
+                      class="absolute z-10 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg max-h-48 overflow-y-auto"
+                    >
+                      <div
+                        v-if="filteredUnassignedAlumni.length === 0"
+                        class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400"
+                      >
+                        Siswa tidak ditemukan
+                      </div>
+                      <div
+                        v-for="siswa in filteredUnassignedAlumni"
+                        :key="siswa.nisn"
+                        @mousedown.prevent="selectStudent(siswa)"
+                        class="px-4 py-2 text-sm cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-800 dark:text-gray-200"
+                      >
+                        {{ siswa.nisn }} - {{ siswa.name }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div v-if="isEditing" class="md:col-span-2 relative">
                     <label
                       class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                     >
-                      Cari Siswa (Dari Data Siswa Berstatus Alumni)
+                      Cari Siswa
                     </label>
                     <input
                       type="text"
@@ -585,14 +697,15 @@ const filteredAlumni = computed(() => {
                       <div
                         v-for="siswa in filteredUnassignedAlumni"
                         :key="siswa.nisn"
-                        @click="selectStudent(siswa)"
+                        @mousedown.prevent="selectStudent(siswa)"
                         class="px-4 py-2 text-sm cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-800 dark:text-gray-200"
                       >
                         {{ siswa.nisn }} - {{ siswa.name }}
                       </div>
                     </div>
                   </div>
-                  <div class="md:col-span-1">
+
+                  <div v-if="isEditing" class="md:col-span-1">
                     <label
                       class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                       >NISN</label
@@ -605,7 +718,7 @@ const filteredAlumni = computed(() => {
                       placeholder="005XXXXXXX"
                     />
                   </div>
-                  <div class="md:col-span-1">
+                  <div v-if="isEditing" class="md:col-span-1">
                     <label
                       class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                       >Nama Lengkap</label
