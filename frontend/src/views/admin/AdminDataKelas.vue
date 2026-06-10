@@ -51,6 +51,8 @@ const isHomeroomDropdownOpen = ref(false);
 const homeroomSearchQuery = ref("");
 const homeroomPage = ref(1);
 const homeroomItemsPerPage = 10;
+const isHomeroomPageLoading = ref(false);
+let loadingTimeout = null;
 
 const filteredStaffList = computed(() => {
   if (!homeroomSearchQuery.value) return staffList.value;
@@ -70,8 +72,24 @@ const displayedStaffList = computed(() => {
   return filteredStaffList.value.slice(start, start + homeroomItemsPerPage);
 });
 
+const triggerHomeroomLoading = () => {
+  isHomeroomPageLoading.value = true;
+  if (loadingTimeout) clearTimeout(loadingTimeout);
+  loadingTimeout = setTimeout(() => {
+    isHomeroomPageLoading.value = false;
+  }, 300);
+};
+
 watch(homeroomSearchQuery, () => {
-  homeroomPage.value = 1;
+  if (homeroomPage.value !== 1) {
+    homeroomPage.value = 1;
+  } else {
+    triggerHomeroomLoading();
+  }
+});
+
+watch(homeroomPage, () => {
+  triggerHomeroomLoading();
 });
 
 const selectHomeroom = (id) => {
@@ -426,33 +444,67 @@ const getSelectedHomeroomName = computed(() => {
                       </div>
 
                       <!-- Paginated List -->
-                      <ul class="max-h-60 overflow-y-auto custom-scrollbar py-1 text-sm">
+                      <ul
+                        class="max-h-60 overflow-y-auto custom-scrollbar py-1 text-sm relative"
+                      >
+                        <!-- Loading State -->
                         <li
-                          v-if="displayedStaffList.length === 0"
-                          class="px-4 py-3 text-gray-500 dark:text-gray-400 text-center"
+                          v-if="isHomeroomPageLoading"
+                          class="px-4 py-8 flex flex-col items-center justify-center text-center"
                         >
-                          Tidak ada wali kelas yang cocok.
+                          <svg
+                            class="animate-spin h-6 w-6 text-blue-500 mb-2"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              class="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              stroke-width="4"
+                            ></circle>
+                            <path
+                              class="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                          <span class="text-xs text-gray-500 dark:text-gray-400"
+                            >Memuat data...</span
+                          >
                         </li>
-                        <li
-                          v-for="staff in displayedStaffList"
-                          :key="staff.id"
-                          @click="selectHomeroom(staff.id)"
-                          class="px-4 py-2.5 cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center"
-                          :class="
-                            form.homeroom_id === staff.id
-                              ? 'bg-blue-50/50 dark:bg-slate-700/50 font-medium text-blue-600 dark:text-blue-400'
-                              : 'text-gray-700 dark:text-gray-300'
-                          "
-                        >
-                          <div class="flex flex-col">
-                            <span>{{ staff.name }}</span>
-                            <span class="text-xs opacity-70">{{ staff.role }}</span>
-                          </div>
-                          <PhCheck
-                            v-if="form.homeroom_id === staff.id"
-                            class="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0"
-                          />
-                        </li>
+
+                        <template v-else>
+                          <li
+                            v-if="displayedStaffList.length === 0"
+                            class="px-4 py-3 text-gray-500 dark:text-gray-400 text-center"
+                          >
+                            Tidak ada wali kelas yang cocok.
+                          </li>
+                          <li
+                            v-for="staff in displayedStaffList"
+                            :key="staff.id"
+                            @click="selectHomeroom(staff.id)"
+                            class="px-4 py-2.5 cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center"
+                            :class="
+                              form.homeroom_id === staff.id
+                                ? 'bg-blue-50/50 dark:bg-slate-700/50 font-medium text-blue-600 dark:text-blue-400'
+                                : 'text-gray-700 dark:text-gray-300'
+                            "
+                          >
+                            <div class="flex flex-col">
+                              <span>{{ staff.name }}</span>
+                              <span class="text-xs opacity-70">{{ staff.role }}</span>
+                            </div>
+                            <PhCheck
+                              v-if="form.homeroom_id === staff.id"
+                              class="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0"
+                            />
+                          </li>
+                        </template>
                       </ul>
 
                       <!-- Pagination Controls -->
@@ -463,7 +515,7 @@ const getSelectedHomeroomName = computed(() => {
                         <button
                           type="button"
                           @click.stop="homeroomPage > 1 ? homeroomPage-- : null"
-                          :disabled="homeroomPage === 1"
+                          :disabled="homeroomPage === 1 || isHomeroomPageLoading"
                           class="px-2.5 py-1.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
                         >
                           Sebelumnya
@@ -476,7 +528,9 @@ const getSelectedHomeroomName = computed(() => {
                           @click.stop="
                             homeroomPage < homeroomTotalPages ? homeroomPage++ : null
                           "
-                          :disabled="homeroomPage === homeroomTotalPages"
+                          :disabled="
+                            homeroomPage === homeroomTotalPages || isHomeroomPageLoading
+                          "
                           class="px-2.5 py-1.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
                         >
                           Selanjutnya
