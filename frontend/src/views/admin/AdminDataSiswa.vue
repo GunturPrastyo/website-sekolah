@@ -1321,15 +1321,42 @@ const executeBulkDelete = async () => {
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
-            <tr v-if="isLoadingData">
-              <td
-                colspan="9"
-                class="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
-              >
-                <PhSpinner class="w-10 h-10 mx-auto text-blue-500 animate-spin mb-3" />
-                <p>Memuat data...</p>
-              </td>
-            </tr>
+            <template v-if="isLoadingData">
+              <tr v-for="i in 5" :key="'skeleton-' + i" class="animate-pulse">
+                <td class="px-6 py-4 text-center">
+                  <div
+                    class="h-4 w-4 bg-gray-200 dark:bg-slate-600 rounded mx-auto"
+                  ></div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="h-4 bg-gray-200 dark:bg-slate-600 rounded w-24"></div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="h-4 bg-gray-200 dark:bg-slate-600 rounded w-32"></div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="h-6 bg-gray-200 dark:bg-slate-600 rounded w-6"></div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="h-4 bg-gray-200 dark:bg-slate-600 rounded w-8"></div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="h-6 bg-gray-200 dark:bg-slate-600 rounded-full w-16"></div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="h-4 bg-gray-200 dark:bg-slate-600 rounded w-20"></div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="h-6 bg-gray-200 dark:bg-slate-600 rounded-full w-12"></div>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-1">
+                    <div class="h-7 w-7 bg-gray-200 dark:bg-slate-600 rounded-md"></div>
+                    <div class="h-7 w-7 bg-gray-200 dark:bg-slate-600 rounded-md"></div>
+                  </div>
+                </td>
+              </tr>
+            </template>
             <tr v-else-if="studentsList.length === 0">
               <td
                 colspan="9"
