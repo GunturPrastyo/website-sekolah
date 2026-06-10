@@ -61,22 +61,18 @@ const filteredStaffList = computed(() => {
   );
 });
 
+const homeroomTotalPages = computed(() => {
+  return Math.ceil(filteredStaffList.value.length / homeroomItemsPerPage) || 1;
+});
+
 const displayedStaffList = computed(() => {
-  return filteredStaffList.value.slice(0, homeroomPage.value * homeroomItemsPerPage);
+  const start = (homeroomPage.value - 1) * homeroomItemsPerPage;
+  return filteredStaffList.value.slice(start, start + homeroomItemsPerPage);
 });
 
 watch(homeroomSearchQuery, () => {
   homeroomPage.value = 1;
 });
-
-const handleHomeroomScroll = (e) => {
-  const target = e.target;
-  if (target.scrollTop + target.clientHeight >= target.scrollHeight - 20) {
-    if (homeroomPage.value * homeroomItemsPerPage < filteredStaffList.value.length) {
-      homeroomPage.value++;
-    }
-  }
-};
 
 const selectHomeroom = (id) => {
   form.value.homeroom_id = id;
@@ -429,11 +425,8 @@ const getSelectedHomeroomName = computed(() => {
                         </div>
                       </div>
 
-                      <!-- Lazy Load List -->
-                      <ul
-                        class="max-h-48 overflow-y-auto custom-scrollbar py-1 text-sm"
-                        @scroll="handleHomeroomScroll"
-                      >
+                      <!-- Paginated List -->
+                      <ul class="max-h-60 overflow-y-auto custom-scrollbar py-1 text-sm">
                         <li
                           v-if="displayedStaffList.length === 0"
                           class="px-4 py-3 text-gray-500 dark:text-gray-400 text-center"
@@ -460,15 +453,35 @@ const getSelectedHomeroomName = computed(() => {
                             class="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0"
                           />
                         </li>
-                        <li
-                          v-if="
-                            homeroomPage * homeroomItemsPerPage < filteredStaffList.length
-                          "
-                          class="px-4 py-3 text-center text-xs text-blue-500 font-medium animate-pulse"
-                        >
-                          Scroll ke bawah untuk memuat lebih...
-                        </li>
                       </ul>
+
+                      <!-- Pagination Controls -->
+                      <div
+                        v-if="homeroomTotalPages > 1"
+                        class="p-2 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-between items-center text-xs"
+                      >
+                        <button
+                          type="button"
+                          @click.stop="homeroomPage > 1 ? homeroomPage-- : null"
+                          :disabled="homeroomPage === 1"
+                          class="px-2.5 py-1.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                        >
+                          Sebelumnya
+                        </button>
+                        <span class="text-gray-500 dark:text-gray-400 font-medium">
+                          Hal {{ homeroomPage }} dari {{ homeroomTotalPages }}
+                        </span>
+                        <button
+                          type="button"
+                          @click.stop="
+                            homeroomPage < homeroomTotalPages ? homeroomPage++ : null
+                          "
+                          :disabled="homeroomPage === homeroomTotalPages"
+                          class="px-2.5 py-1.5 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                        >
+                          Selanjutnya
+                        </button>
+                      </div>
                     </div>
                   </Transition>
 
