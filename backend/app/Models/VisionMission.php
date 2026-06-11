@@ -9,30 +9,23 @@ class VisionMission extends Model
 {
     use HasFactory;
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'vision_missions';
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'vision',
         'missions',
         'principal_speech',
+        'principal_id'
+    ];
+
+    protected $casts = [
+        // Mengubah format JSON di database menjadi tipe Array otomatis di Laravel
+        'missions' => 'array', 
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
+     * Relasi ke tabel staff (Guru & Staf) untuk mengambil data Kepala Sekolah
      */
-    protected $casts = [
-        'missions' => 'array',
-    ];
+    public function principal()
+    {
+        return $this->belongsTo(Staff::class, 'principal_id');
+    }
 }

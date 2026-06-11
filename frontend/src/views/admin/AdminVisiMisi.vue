@@ -220,14 +220,24 @@ const saveChanges = async () => {
           >
             <PhUser class="w-20 h-20 text-gray-400" />
           </div>
-          <h3 class="text-2xl font-bold text-gray-800 dark:text-white">
-            {{ selectedPrincipal ? selectedPrincipal.name : "Nama Kepala Sekolah" }}
-          </h3>
-          <p
-            class="text-blue-600 dark:text-blue-400 font-semibold mt-1 bg-blue-50 dark:bg-blue-900/30 px-4 py-1 rounded-full text-sm inline-block"
-          >
-            {{ selectedPrincipal ? selectedPrincipal.position : "Kepala Sekolah" }}
-          </p>
+          <template v-if="selectedPrincipal">
+            <h3 class="text-2xl font-bold text-gray-800 dark:text-white">
+              {{ selectedPrincipal.name }}
+            </h3>
+            <p
+              class="text-blue-600 dark:text-blue-400 font-semibold mt-1 bg-blue-50 dark:bg-blue-900/30 px-4 py-1 rounded-full text-sm inline-block"
+            >
+              {{ selectedPrincipal.position }}
+            </p>
+          </template>
+          <template v-else>
+            <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-300">
+              Profil Belum Dipilih
+            </h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              Pilih pada mode edit
+            </p>
+          </template>
         </div>
         <div class="flex-1 w-full relative z-10">
           <div
