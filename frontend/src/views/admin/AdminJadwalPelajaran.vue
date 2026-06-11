@@ -16,6 +16,7 @@ import {
   PhList,
   PhCalendarBlank,
   PhWarningCircle,
+  PhCaretDown,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -866,7 +867,7 @@ const groupedSchedule = computed(() => {
                           />
                         </div>
 
-                        <div class="max-h-48 overflow-y-auto custom-scrollbar">
+                        <div class="max-h-36 overflow-y-auto custom-scrollbar">
                           <div
                             v-if="paginatedSubjects.length === 0"
                             class="px-4 py-3 text-sm text-gray-500 text-center"
@@ -930,7 +931,7 @@ const groupedSchedule = computed(() => {
                       Guru Pengampu
                     </label>
                     <div
-                      class="flex items-center justify-between w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white hover:border-blue-400 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-colors cursor-pointer"
+                      class="flex items-center w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white hover:border-blue-400 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-colors cursor-pointer"
                       @click="
                         isTeacherDropdownOpen = !isTeacherDropdownOpen;
                         isSubjectDropdownOpen = false;
@@ -938,14 +939,18 @@ const groupedSchedule = computed(() => {
                         isEndDropdownOpen = false;
                       "
                     >
-                      <span class="truncate">{{
+                      <PhChalkboardTeacher
+                        class="w-5 h-5 text-gray-400 mr-2 shrink-0 pointer-events-none"
+                      />
+                      <span class="truncate flex-1">{{
                         form.staff_id
                           ? teachersList.find((t) => t.id === form.staff_id)?.name ||
                             "Pilih Guru Pengampu"
                           : "Pilih Guru Pengampu"
                       }}</span>
-                      <PhChalkboardTeacher
-                        class="w-5 h-5 text-gray-400 pointer-events-none"
+                      <PhCaretDown
+                        class="w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200"
+                        :class="{ 'rotate-180': isTeacherDropdownOpen }"
                       />
                     </div>
 
@@ -966,17 +971,22 @@ const groupedSchedule = computed(() => {
                           @click.stop="isTeacherDropdownOpen = false"
                         ></div>
 
-                        <div class="p-2 border-b border-gray-100 dark:border-slate-700">
+                        <div
+                          class="p-2 border-b border-gray-100 dark:border-slate-700 relative"
+                        >
+                          <PhMagnifyingGlass
+                            class="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none"
+                          />
                           <input
                             v-model="teacherSearch"
                             type="text"
                             placeholder="Cari guru pengampu..."
-                            class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-gray-50 dark:bg-slate-700 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 dark:text-white"
+                            class="w-full pl-8 pr-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-gray-50 dark:bg-slate-700 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 dark:text-white"
                             @click.stop
                           />
                         </div>
 
-                        <div class="max-h-48 overflow-y-auto custom-scrollbar">
+                        <div class="max-h-36 overflow-y-auto custom-scrollbar">
                           <div
                             v-if="paginatedTeachers.length === 0"
                             class="px-4 py-3 text-sm text-gray-500 text-center"
