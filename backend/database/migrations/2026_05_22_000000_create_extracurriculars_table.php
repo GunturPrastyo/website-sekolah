@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('category');
             $table->longText('image')->nullable();
             $table->string('schedule')->nullable();
-            $table->text('desc')->nullable();
             $table->text('story')->nullable();
             $table->string('pembina')->nullable();
             $table->integer('members')->default(0);

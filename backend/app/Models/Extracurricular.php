@@ -10,7 +10,7 @@ class Extracurricular extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'category', 'image', 'schedule', 'desc', 'story', 'pembina', 'members', 'socials'
+        'name', 'category', 'image', 'schedule', 'story', 'pembina', 'members', 'socials'
     ];
 
     protected $casts = [
