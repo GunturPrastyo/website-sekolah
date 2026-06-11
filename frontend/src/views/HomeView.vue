@@ -1291,7 +1291,17 @@
                 </p>
               </div>
 
-              <div v-if="faqs.length > 0" class="w-full flex flex-col gap-4">
+              <div v-if="isLoadingPpdb" class="w-full flex flex-col gap-4">
+                <div
+                  v-for="i in 4"
+                  :key="'skel-faq-' + i"
+                  class="bg-gray-50 border border-gray-100 rounded-xl shadow-md p-5 md:p-6 animate-pulse"
+                >
+                  <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+                </div>
+              </div>
+
+              <div v-else-if="faqs.length > 0" class="w-full flex flex-col gap-4">
                 <div
                   v-for="(faq, index) in faqs"
                   :key="index"
@@ -1355,101 +1365,129 @@
               ></div>
 
               <div class="relative z-10 w-full max-w-xl mx-auto">
-                <span
-                  class="inline-block px-4 py-1.5 mb-6 text-xs md:text-sm font-semibold text-blue-950 bg-yellow-400 rounded-full shadow-sm"
-                  >TAHUN AJARAN {{ ppdbInfo.academic_year }}</span
-                >
-                <h2
-                  class="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6 leading-tight"
-                  style="font-family: 'Oswald', sans-serif"
-                >
-                  {{ ppdbInfo.title }}
-                </h2>
-                <p class="text-blue-100 text-sm md:text-base mb-6 max-w-md mx-auto">
-                  {{ ppdbInfo.description }}
-                </p>
+                <!-- Skeleton CTA -->
+                <template v-if="isLoadingPpdb">
+                  <div class="animate-pulse flex flex-col items-center w-full">
+                    <div class="h-6 bg-white/20 rounded-full w-32 mb-6"></div>
+                    <div class="h-10 bg-white/20 rounded-lg w-3/4 mb-4"></div>
+                    <div class="h-10 bg-white/20 rounded-lg w-2/4 mb-6"></div>
+                    <div
+                      class="h-4 bg-white/20 rounded w-full max-w-md mx-auto mb-2"
+                    ></div>
+                    <div
+                      class="h-4 bg-white/20 rounded w-4/5 max-w-md mx-auto mb-8"
+                    ></div>
+                    <!-- skeleton countdown -->
+                    <div class="flex justify-center gap-3 sm:gap-4 mb-8">
+                      <div
+                        v-for="i in 4"
+                        :key="'skel-cd-' + i"
+                        class="bg-white/10 rounded-lg w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] border border-white/20"
+                      ></div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center w-full">
+                      <div class="h-12 bg-white/20 rounded-xl w-full sm:w-40"></div>
+                      <div class="h-12 bg-white/20 rounded-xl w-full sm:w-40"></div>
+                    </div>
+                  </div>
+                </template>
+                <template v-else>
+                  <span
+                    class="inline-block px-4 py-1.5 mb-6 text-xs md:text-sm font-semibold text-blue-950 bg-yellow-400 rounded-full shadow-sm"
+                    >TAHUN AJARAN {{ ppdbInfo.academic_year }}</span
+                  >
+                  <h2
+                    class="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6 leading-tight"
+                    style="font-family: 'Oswald', sans-serif"
+                  >
+                    {{ ppdbInfo.title }}
+                  </h2>
+                  <p class="text-blue-100 text-sm md:text-base mb-6 max-w-md mx-auto">
+                    {{ ppdbInfo.description }}
+                  </p>
 
-                <!-- Countdown Timer -->
-                <div class="flex justify-center gap-3 sm:gap-4 mb-8">
-                  <div
-                    class="group flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20 hover:bg-white/20 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all duration-300 cursor-default"
-                  >
-                    <span
-                      class="text-xl sm:text-2xl font-bold text-white mb-1 transform group-hover:scale-110 group-hover:text-yellow-300 transition-all duration-300 inline-block"
-                      style="font-family: 'Oswald', sans-serif"
-                      >{{ ppdbCountdown.days }}</span
+                  <!-- Countdown Timer -->
+                  <div class="flex justify-center gap-3 sm:gap-4 mb-8">
+                    <div
+                      class="group flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20 hover:bg-white/20 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all duration-300 cursor-default"
                     >
-                    <span
-                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider group-hover:text-white transition-colors duration-300"
-                      >Hari</span
+                      <span
+                        class="text-xl sm:text-2xl font-bold text-white mb-1 transform group-hover:scale-110 group-hover:text-yellow-300 transition-all duration-300 inline-block"
+                        style="font-family: 'Oswald', sans-serif"
+                        >{{ ppdbCountdown.days }}</span
+                      >
+                      <span
+                        class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider group-hover:text-white transition-colors duration-300"
+                        >Hari</span
+                      >
+                    </div>
+                    <div
+                      class="group flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20 hover:bg-white/20 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all duration-300 cursor-default"
                     >
+                      <span
+                        class="text-xl sm:text-2xl font-bold text-white mb-1 transform group-hover:scale-110 group-hover:text-yellow-300 transition-all duration-300 inline-block"
+                        style="font-family: 'Oswald', sans-serif"
+                        >{{ ppdbCountdown.hours }}</span
+                      >
+                      <span
+                        class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider group-hover:text-white transition-colors duration-300"
+                        >Jam</span
+                      >
+                    </div>
+                    <div
+                      class="group flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20 hover:bg-white/20 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all duration-300 cursor-default"
+                    >
+                      <span
+                        class="text-xl sm:text-2xl font-bold text-white mb-1 transform group-hover:scale-110 group-hover:text-yellow-300 transition-all duration-300 inline-block"
+                        style="font-family: 'Oswald', sans-serif"
+                        >{{ ppdbCountdown.minutes }}</span
+                      >
+                      <span
+                        class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider group-hover:text-white transition-colors duration-300"
+                        >Menit</span
+                      >
+                    </div>
+                    <div
+                      class="group flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20 hover:bg-white/20 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all duration-300 cursor-default"
+                    >
+                      <span
+                        class="text-xl sm:text-2xl font-bold text-white mb-1 transform group-hover:scale-110 group-hover:text-yellow-300 transition-all duration-300 inline-block"
+                        style="font-family: 'Oswald', sans-serif"
+                        >{{ ppdbCountdown.seconds }}</span
+                      >
+                      <span
+                        class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider group-hover:text-white transition-colors duration-300"
+                        >Detik</span
+                      >
+                    </div>
                   </div>
-                  <div
-                    class="group flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20 hover:bg-white/20 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all duration-300 cursor-default"
-                  >
-                    <span
-                      class="text-xl sm:text-2xl font-bold text-white mb-1 transform group-hover:scale-110 group-hover:text-yellow-300 transition-all duration-300 inline-block"
-                      style="font-family: 'Oswald', sans-serif"
-                      >{{ ppdbCountdown.hours }}</span
-                    >
-                    <span
-                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider group-hover:text-white transition-colors duration-300"
-                      >Jam</span
-                    >
-                  </div>
-                  <div
-                    class="group flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20 hover:bg-white/20 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all duration-300 cursor-default"
-                  >
-                    <span
-                      class="text-xl sm:text-2xl font-bold text-white mb-1 transform group-hover:scale-110 group-hover:text-yellow-300 transition-all duration-300 inline-block"
-                      style="font-family: 'Oswald', sans-serif"
-                      >{{ ppdbCountdown.minutes }}</span
-                    >
-                    <span
-                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider group-hover:text-white transition-colors duration-300"
-                      >Menit</span
-                    >
-                  </div>
-                  <div
-                    class="group flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] border border-white/20 hover:bg-white/20 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all duration-300 cursor-default"
-                  >
-                    <span
-                      class="text-xl sm:text-2xl font-bold text-white mb-1 transform group-hover:scale-110 group-hover:text-yellow-300 transition-all duration-300 inline-block"
-                      style="font-family: 'Oswald', sans-serif"
-                      >{{ ppdbCountdown.seconds }}</span
-                    >
-                    <span
-                      class="text-[10px] sm:text-xs text-blue-200 uppercase tracking-wider group-hover:text-white transition-colors duration-300"
-                      >Detik</span
-                    >
-                  </div>
-                </div>
 
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                  <a
-                    v-if="ppdbInfo.registration_link"
-                    :href="ppdbInfo.registration_link"
-                    target="_blank"
-                    class="px-6 py-3.5 bg-yellow-400 text-blue-950 font-bold rounded-xl shadow-lg hover:bg-yellow-300 hover:scale-105 transition-all text-sm md:text-base animate-float flex items-center justify-center"
-                  >
-                    Daftar Sekarang
-                  </a>
-                  <router-link
-                    v-else
-                    to="/pendaftaran"
-                    class="px-6 py-3.5 bg-yellow-400 text-blue-950 font-bold rounded-xl shadow-lg hover:bg-yellow-300 hover:scale-105 transition-all text-sm md:text-base animate-float flex items-center justify-center"
-                  >
-                    Info Pendaftaran
-                  </router-link>
-                  <a
-                    v-if="ppdbInfo.brochure_file"
-                    :href="ppdbInfo.brochure_file"
-                    target="_blank"
-                    class="px-6 py-3.5 bg-gray-50/10 text-white font-semibold rounded-xl border border-white/50 hover:bg-gray-50/20 transition-all flex items-center justify-center text-sm md:text-base"
-                  >
-                    <PhDownloadSimple class="w-5 h-5 mr-2" /> Unduh Brosur
-                  </a>
-                </div>
+                  <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a
+                      v-if="ppdbInfo.registration_link"
+                      :href="ppdbInfo.registration_link"
+                      target="_blank"
+                      class="px-6 py-3.5 bg-yellow-400 text-blue-950 font-bold rounded-xl shadow-lg hover:bg-yellow-300 hover:scale-105 transition-all text-sm md:text-base animate-float flex items-center justify-center"
+                    >
+                      Daftar Sekarang
+                    </a>
+                    <router-link
+                      v-else
+                      to="/pendaftaran"
+                      class="px-6 py-3.5 bg-yellow-400 text-blue-950 font-bold rounded-xl shadow-lg hover:bg-yellow-300 hover:scale-105 transition-all text-sm md:text-base animate-float flex items-center justify-center"
+                    >
+                      Info Pendaftaran
+                    </router-link>
+                    <a
+                      v-if="ppdbInfo.brochure_file"
+                      :href="ppdbInfo.brochure_file"
+                      target="_blank"
+                      class="px-6 py-3.5 bg-gray-50/10 text-white font-semibold rounded-xl border border-white/50 hover:bg-gray-50/20 transition-all flex items-center justify-center text-sm md:text-base"
+                    >
+                      <PhDownloadSimple class="w-5 h-5 mr-2" /> Unduh Brosur
+                    </a>
+                  </div>
+                </template>
               </div>
             </div>
           </div>
@@ -1838,8 +1876,8 @@ let countdownInterval;
 const updateCountdown = () => {
   // Misal target buka pendaftaran: 1 Juni 2026
   let targetDate = new Date("June 1, 2026 08:00:00").getTime();
-  if (ppdbInfo.value.start_date) {
-    targetDate = new Date(ppdbInfo.value.start_date).getTime();
+  if (ppdbInfo.value.opening_date) {
+    targetDate = new Date(ppdbInfo.value.opening_date).getTime();
   }
 
   const now = new Date().getTime();
@@ -2189,14 +2227,16 @@ const ppdbInfo = ref({
   title: "Siap Menjadi Bagian dari Generasi Berprestasi?",
   description:
     "Pendaftaran Peserta Didik Baru (PPDB) SMAN 1 Nogosari akan segera dibuka. Siapkan berkas dan pantau informasi selengkapnya!",
-  start_date: null,
+  opening_date: null,
   brochure_file: null,
   registration_link: null,
 });
 
 const faqs = ref([]);
+const isLoadingPpdb = ref(true);
 
 const fetchPpdbInfo = async () => {
+  isLoadingPpdb.value = true;
   try {
     const response = await api.get("/api/ppdb-info");
     if (response.data && response.data.data) {
@@ -2204,8 +2244,9 @@ const fetchPpdbInfo = async () => {
       if (data.academic_year) ppdbInfo.value.academic_year = data.academic_year;
       if (data.title) ppdbInfo.value.title = data.title;
       if (data.description) ppdbInfo.value.description = data.description;
-      if (data.start_date) ppdbInfo.value.start_date = data.start_date;
+      if (data.opening_date) ppdbInfo.value.opening_date = data.opening_date;
       if (data.brochure_file) ppdbInfo.value.brochure_file = data.brochure_file;
+      else if (data.brosur_url) ppdbInfo.value.brochure_file = data.brosur_url;
       if (data.registration_link)
         ppdbInfo.value.registration_link = data.registration_link;
 
@@ -2215,6 +2256,9 @@ const fetchPpdbInfo = async () => {
     }
   } catch (error) {
     console.error("Gagal mengambil data PPDB:", error);
+  } finally {
+    isLoadingPpdb.value = false;
+    updateCountdown();
   }
 };
 

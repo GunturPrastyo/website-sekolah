@@ -134,9 +134,11 @@ onMounted(() => {
             Informasi PPDB
           </h1>
           <p class="text-blue-100 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-            Pusat Informasi Penerimaan Peserta Didik Baru (PPDB) SMAN 1 Nogosari.
+            Pusat Informasi Penerimaan Peserta Didik Baru (PPDB). Temukan panduan lengkap
+            mengenai tata cara pendaftaran, persyaratan, alur, dan berbagai jalur
+            penerimaan yang tersedia untuk calon peserta didik baru.
           </p>
-          <div v-if="ppdbInfo && ppdbInfo.brosur" class="mt-8">
+          <div v-if="!isLoading && ppdbInfo && ppdbInfo.brosur" class="mt-8">
             <a
               :href="ppdbInfo.brosur"
               target="_blank"
@@ -166,13 +168,6 @@ onMounted(() => {
             </p>
           </div>
 
-          <!-- Menampilkan Konten yang dibuat via Rich Text Editor dari Admin -->
-          <div
-            v-if="!isLoading && ppdbInfo && (ppdbInfo.content || ppdbInfo.description)"
-            class="bg-blue-50/30 dark:bg-slate-700/30 p-6 md:p-8 rounded-xl border border-gray-200 dark:border-slate-700 mb-10 shadow-sm max-w-4xl mx-auto prose dark:prose-invert max-w-none"
-            v-html="ppdbInfo.content || ppdbInfo.description"
-          ></div>
-
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             <!-- Syarat Utama -->
             <div
@@ -184,7 +179,19 @@ onMounted(() => {
                 <PhListChecks class="w-6 h-6 mr-2 text-blue-950 dark:text-white" />
                 Syarat Pendaftaran
               </h3>
-              <ul v-if="syaratList.length > 0" class="space-y-4">
+
+              <!-- Skeleton Syarat -->
+              <ul v-if="isLoading" class="space-y-4 animate-pulse">
+                <li v-for="i in 4" :key="'skel-syarat-' + i" class="flex items-start">
+                  <div
+                    class="w-5 h-5 bg-gray-300 dark:bg-slate-600 rounded-full mr-3 shrink-0 mt-0.5"
+                  ></div>
+                  <div
+                    class="h-4 bg-gray-300 dark:bg-slate-600 rounded w-full mt-1.5"
+                  ></div>
+                </li>
+              </ul>
+              <ul v-else-if="syaratList.length > 0" class="space-y-4">
                 <li
                   v-for="(syarat, index) in syaratList"
                   :key="index"
@@ -214,8 +221,30 @@ onMounted(() => {
                 <PhGitMerge class="w-6 h-6 mr-2 text-blue-950 dark:text-white" />
                 Alur Pendaftaran
               </h3>
+
+              <!-- Skeleton Alur -->
               <div
-                v-if="alurList.length > 0"
+                v-if="isLoading"
+                class="space-y-6 animate-pulse relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-gray-300 dark:before:from-slate-600 before:to-transparent"
+              >
+                <div
+                  v-for="i in 3"
+                  :key="'skel-alur-' + i"
+                  class="relative flex items-center gap-4"
+                >
+                  <div
+                    class="w-10 h-10 rounded-full bg-gray-200 dark:bg-slate-700 shrink-0 z-10"
+                  ></div>
+                  <div class="flex-1">
+                    <div
+                      class="h-4 bg-gray-300 dark:bg-slate-600 rounded w-1/2 mb-2"
+                    ></div>
+                    <div class="h-3 bg-gray-300 dark:bg-slate-600 rounded w-full"></div>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-else-if="alurList.length > 0"
                 class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-blue-200 before:via-blue-200 dark:before:via-slate-600 before:to-transparent"
               >
                 <div
@@ -304,8 +333,18 @@ onMounted(() => {
             <div
               class="lg:col-span-7 relative h-[380px] lg:h-[520px] w-full flex items-center justify-center"
             >
+              <!-- Skeleton Slider Jalur -->
               <div
-                v-if="jalurList.length === 0"
+                v-if="isLoading"
+                class="w-full h-full flex items-center justify-center animate-pulse px-4 lg:px-10 py-8"
+              >
+                <div
+                  class="bg-blue-800/40 dark:bg-slate-800/50 rounded-xl w-full max-w-sm h-full border border-blue-700/30 dark:border-slate-700/50"
+                ></div>
+              </div>
+
+              <div
+                v-else-if="jalurList.length === 0"
                 class="text-center w-full text-blue-200 italic"
               >
                 Belum ada data jalur pendaftaran.
