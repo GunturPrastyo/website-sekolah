@@ -75,6 +75,7 @@ const appearanceSettings = ref({
   benefitPrestasiImage: "",
   programCoverImage: "",
   loginBackground: "",
+  ppdbBackgroundImage: "",
 });
 
 // State Akun
@@ -638,6 +639,15 @@ const updateProfile = async () => {
                   v-model="appearanceSettings.programCoverImage"
                   label="Cover Jurusan Pilihan"
                   containerClass="w-full aspect-[4/3]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.ppdbBackgroundImage"
+                  label="Gambar Latar FAQ PPDB"
+                  containerClass="w-full aspect-[21/9]"
                 />
               </div>
             </div>

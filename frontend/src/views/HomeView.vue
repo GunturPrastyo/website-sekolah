@@ -1267,6 +1267,12 @@
           style="
             background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200');
           "
+          :style="{
+            backgroundImage: `url(${
+              appearanceSettings.ppdbBackgroundImage ||
+              'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200'
+            })`,
+          }"
         >
           <!-- Overlay Parallax -->
           <div class="absolute inset-0 bg-blue-950/85"></div>
@@ -1630,6 +1636,7 @@ const appearanceSettings = ref({
   benefitGuruImage: "",
   benefitPrestasiImage: "",
   programCoverImage: "",
+  ppdbBackgroundImage: "",
 });
 
 const activeFaq = ref(null);
@@ -2365,6 +2372,8 @@ const fetchSettings = async () => {
         response.data.data.benefitPrestasiImage || "";
       appearanceSettings.value.programCoverImage =
         response.data.data.programCoverImage || "";
+      appearanceSettings.value.ppdbBackgroundImage =
+        response.data.data.ppdbBackgroundImage || "";
 
       // Jika pertama kali load (cache kosong), jalankan animasi setelah data turun
       if (isFirstLoad && !isTypewriterStarted.value) {
