@@ -243,9 +243,6 @@ const saveChanges = async () => {
           <div
             class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100 dark:border-slate-700"
           >
-            <div class="p-2 bg-blue-100 dark:bg-blue-900/60 rounded-lg">
-              <PhMegaphone class="w-6 h-6 text-blue-700 dark:text-blue-400" />
-            </div>
             <h3
               class="text-2xl font-bold text-gray-800 dark:text-white"
               style="font-family: 'Oswald', sans-serif"
@@ -268,7 +265,7 @@ const saveChanges = async () => {
       </div>
 
       <!-- Section Visi & Misi (Bawah) -->
-      <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+      <div class="grid grid-cols-1 gap-8">
         <!-- Tampilan Visi -->
         <div
           class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm p-6 lg:p-8 flex flex-col"
@@ -276,9 +273,6 @@ const saveChanges = async () => {
           <div
             class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100 dark:border-slate-700"
           >
-            <div class="p-2 bg-emerald-100 dark:bg-emerald-900/60 rounded-lg">
-              <PhEye class="w-6 h-6 text-emerald-700 dark:text-emerald-400" />
-            </div>
             <h3
               class="text-xl font-bold text-gray-800 dark:text-white"
               style="font-family: 'Oswald', sans-serif"
@@ -309,9 +303,6 @@ const saveChanges = async () => {
           <div
             class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100 dark:border-slate-700"
           >
-            <div class="p-2 bg-red-100 dark:bg-red-900/60 rounded-lg">
-              <PhTarget class="w-6 h-6 text-red-700 dark:text-red-400" />
-            </div>
             <h3
               class="text-xl font-bold text-gray-800 dark:text-white"
               style="font-family: 'Oswald', sans-serif"
@@ -392,7 +383,6 @@ const saveChanges = async () => {
                 <h4
                   class="text-lg font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-2 pb-3 border-b border-gray-200 dark:border-slate-600"
                 >
-                  <PhMegaphone class="w-5 h-5 text-blue-700 dark:text-blue-500" />
                   Pengaturan Sambutan
                 </h4>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -468,7 +458,7 @@ const saveChanges = async () => {
               </div>
 
               <!-- Pengaturan Visi & Misi -->
-              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="grid grid-cols-1 gap-6">
                 <!-- Visi -->
                 <div
                   class="bg-gray-50 dark:bg-slate-700/30 rounded-xl p-5 md:p-6 border border-gray-100 dark:border-slate-600"
@@ -476,8 +466,7 @@ const saveChanges = async () => {
                   <h4
                     class="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2 pb-3 border-b border-gray-200 dark:border-slate-600"
                   >
-                    <PhEye class="w-5 h-5 text-emerald-700 dark:text-emerald-500" /> Visi
-                    Sekolah
+                    Visi Sekolah
                   </h4>
                   <textarea
                     v-model="tempVisi"
@@ -495,8 +484,7 @@ const saveChanges = async () => {
                     <h4
                       class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"
                     >
-                      <PhTarget class="w-5 h-5 text-red-700 dark:text-red-500" /> Misi
-                      Sekolah
+                      Misi Sekolah
                     </h4>
                   </div>
                   <div
