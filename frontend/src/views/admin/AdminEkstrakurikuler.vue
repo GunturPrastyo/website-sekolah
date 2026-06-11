@@ -16,6 +16,7 @@ import {
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
+import RichTextEditor from "@/components/RichTextEditor.vue";
 import api from "@/api/index.js";
 
 const ekskulList = ref([]);
@@ -33,7 +34,6 @@ const form = ref({
   category: "",
   image: "",
   schedule: "",
-  desc: "",
   story: "",
   pembina: "",
   members: 0,
@@ -177,7 +177,6 @@ const resetForm = () => {
     category: "",
     image: "",
     schedule: "",
-    desc: "",
     story: "",
     pembina: "",
     members: 0,
@@ -294,6 +293,12 @@ const filteredEkskul = computed(() => {
 const getCategoryName = (id) => {
   const cat = categories.value.find((c) => c.id === id);
   return cat ? cat.name : id;
+};
+
+const stripTags = (html) => {
+  if (!html) return "";
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  return doc.body.textContent || "";
 };
 </script>
 
@@ -571,27 +576,12 @@ const getCategoryName = (id) => {
                   <div class="md:col-span-2">
                     <label
                       class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                      >Deskripsi Singkat</label
+                      >Detail Ekstrakurikuler</label
                     >
-                    <textarea
-                      v-model="form.desc"
-                      rows="2"
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Deskripsi singkat yang tampil di card"
-                    ></textarea>
-                  </div>
-
-                  <div class="md:col-span-2">
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                      >Cerita / Detail (Story)</label
-                    >
-                    <textarea
+                    <RichTextEditor
                       v-model="form.story"
-                      rows="4"
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Cerita lengkap ekstrakurikuler"
-                    ></textarea>
+                      placeholder="Cerita lengkap atau detail ekstrakurikuler..."
+                    />
                   </div>
 
                   <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -732,7 +722,7 @@ const getCategoryName = (id) => {
               <PhClock class="w-4 h-4 mr-1" /> {{ ekskul.schedule || "-" }}
             </p>
             <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 flex-1 mb-4">
-              {{ ekskul.desc }}
+              {{ stripTags(ekskul.story) }}
             </p>
 
             <div
