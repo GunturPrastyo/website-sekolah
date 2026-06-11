@@ -759,7 +759,7 @@ const removeBrosur = async () => {
                 <textarea
                   v-model="item.text"
                   rows="2"
-                  class="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white resize-none"
+                  class="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white resize-none placeholder-gray-400 dark:placeholder-gray-500 placeholder:font-light"
                   placeholder="Masukkan syarat pendaftaran..."
                 ></textarea>
                 <button
@@ -867,13 +867,13 @@ const removeBrosur = async () => {
                   <input
                     v-model="item.title"
                     type="text"
-                    class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white font-medium"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white font-medium placeholder-gray-400 dark:placeholder-gray-500 placeholder:font-light"
                     placeholder="Judul Langkah (contoh: Isi Formulir Online)"
                   />
                   <textarea
                     v-model="item.description"
                     rows="2"
-                    class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white resize-none"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white resize-none placeholder-gray-400 dark:placeholder-gray-500 placeholder:font-light"
                     placeholder="Deskripsi penjelasan langkah..."
                   ></textarea>
                 </div>
@@ -983,7 +983,7 @@ const removeBrosur = async () => {
                     <input
                       v-model="item.name"
                       type="text"
-                      class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white font-semibold"
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white font-semibold placeholder-gray-400 dark:placeholder-gray-500 placeholder:font-light"
                       placeholder="Contoh: Jalur Zonasi"
                     />
                   </div>
@@ -995,26 +995,35 @@ const removeBrosur = async () => {
                     <input
                       v-model="item.kuota"
                       type="text"
-                      class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white"
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 placeholder:font-light"
                       placeholder="Contoh: 50%"
                     />
                   </div>
-                  <div>
+                  <div class="sm:col-span-2">
                     <label
-                      class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2"
                       >Ikon Representasi</label
                     >
-                    <select
-                      v-model="item.icon"
-                      class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white"
-                    >
-                      <option value="PhMapPin">Lokasi/Zonasi (Map Pin)</option>
-                      <option value="PhMedal">Prestasi (Medal)</option>
-                      <option value="PhHandshake">Kerjasama/Afirmasi (Handshake)</option>
-                      <option value="PhBriefcase">Tugas/Kerja (Briefcase)</option>
-                      <option value="PhBuildings">Gedung/Sekolah (Buildings)</option>
-                      <option value="PhUsers">Komunitas/Orang (Users)</option>
-                    </select>
+                    <div class="flex flex-wrap gap-3">
+                      <button
+                        v-for="(iconComp, iconName) in iconMap"
+                        :key="iconName"
+                        type="button"
+                        @click="item.icon = iconName"
+                        class="p-3 border rounded-xl flex flex-col items-center justify-center gap-2 transition-all w-20 h-20 shadow-sm"
+                        :class="
+                          item.icon === iconName
+                            ? 'border-blue-500 bg-blue-50 text-blue-600 dark:bg-blue-900/40 dark:border-blue-400 dark:text-blue-300 ring-2 ring-blue-500/50'
+                            : 'border-gray-200 bg-white text-gray-500 hover:bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-400 dark:hover:bg-slate-600'
+                        "
+                      >
+                        <component :is="iconComp" class="w-6 h-6" />
+                        <span
+                          class="text-[10px] font-medium truncate w-full text-center"
+                          >{{ iconName.replace("Ph", "") }}</span
+                        >
+                      </button>
+                    </div>
                   </div>
                   <div class="sm:col-span-2">
                     <label
@@ -1024,7 +1033,7 @@ const removeBrosur = async () => {
                     <textarea
                       v-model="item.description"
                       rows="2"
-                      class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white resize-none"
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white resize-none placeholder-gray-400 dark:placeholder-gray-500 placeholder:font-light"
                       placeholder="Masukkan penjelasan mengenai jalur pendaftaran ini..."
                     ></textarea>
                   </div>
@@ -1129,13 +1138,13 @@ const removeBrosur = async () => {
                   <input
                     v-model="item.q"
                     type="text"
-                    class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white font-semibold"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white font-semibold placeholder-gray-400 dark:placeholder-gray-500 placeholder:font-light"
                     placeholder="Masukkan pertanyaan..."
                   />
                   <textarea
                     v-model="item.a"
                     rows="2"
-                    class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white resize-none"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white resize-none placeholder-gray-400 dark:placeholder-gray-500 placeholder:font-light"
                     placeholder="Masukkan jawaban..."
                   ></textarea>
                 </div>
