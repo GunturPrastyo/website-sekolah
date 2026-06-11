@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import api from "@/api/index.js";
 import {
   PhPlusCircle,
@@ -75,6 +75,48 @@ const itemToDelete = ref(null);
 const isStartDropdownOpen = ref(false);
 const isEndDropdownOpen = ref(false);
 
+const isSubjectDropdownOpen = ref(false);
+const isTeacherDropdownOpen = ref(false);
+
+const subjectSearch = ref("");
+const teacherSearch = ref("");
+const subjectPage = ref(1);
+const teacherPage = ref(1);
+const itemsPerPage = 10;
+
+watch(subjectSearch, () => {
+  subjectPage.value = 1;
+});
+watch(teacherSearch, () => {
+  teacherPage.value = 1;
+});
+
+const filteredSubjectsList = computed(() => {
+  if (!subjectSearch.value) return subjectsList.value;
+  const q = subjectSearch.value.toLowerCase();
+  return subjectsList.value.filter((s) => s.name.toLowerCase().includes(q));
+});
+const paginatedSubjects = computed(() => {
+  const start = (subjectPage.value - 1) * itemsPerPage;
+  return filteredSubjectsList.value.slice(start, start + itemsPerPage);
+});
+const totalSubjectPages = computed(
+  () => Math.ceil(filteredSubjectsList.value.length / itemsPerPage) || 1
+);
+
+const filteredTeachersList = computed(() => {
+  if (!teacherSearch.value) return teachersList.value;
+  const q = teacherSearch.value.toLowerCase();
+  return teachersList.value.filter((t) => t.name.toLowerCase().includes(q));
+});
+const paginatedTeachers = computed(() => {
+  const start = (teacherPage.value - 1) * itemsPerPage;
+  return filteredTeachersList.value.slice(start, start + itemsPerPage);
+});
+const totalTeacherPages = computed(
+  () => Math.ceil(filteredTeachersList.value.length / itemsPerPage) || 1
+);
+
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
@@ -138,6 +180,12 @@ const resetForm = () => {
   isEditing.value = false;
   isStartDropdownOpen.value = false;
   isEndDropdownOpen.value = false;
+  isSubjectDropdownOpen.value = false;
+  isTeacherDropdownOpen.value = false;
+  subjectSearch.value = "";
+  teacherSearch.value = "";
+  subjectPage.value = 1;
+  teacherPage.value = 1;
 };
 
 const showAddForm = () => {
@@ -481,333 +529,530 @@ const groupedSchedule = computed(() => {
     >
       <div
         v-if="isFormVisible"
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        class="fixed inset-0 z-[100] overflow-y-auto bg-black/50 backdrop-blur-sm"
         @click="hideForm"
       >
-        <div
-          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all"
-          @click.stop
-        >
+        <div class="flex items-center justify-center min-h-screen p-4 sm:p-6">
           <div
-            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+            class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl overflow-visible transform transition-all"
+            @click.stop
           >
-            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
-              {{ isEditing ? "Edit Jadwal Pelajaran" : "Tambah Jadwal Baru" }}
-            </h3>
-            <button
-              @click="hideForm"
-              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            <div
+              class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 rounded-t-xl"
             >
-              <PhX class="w-6 h-6" />
-            </button>
-          </div>
-          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
-            <form id="jadwalForm" @submit.prevent="isEditing ? saveEntry() : addEntry()">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >
-                    Kelas / Rombel
-                  </label>
-                  <select
-                    v-model="form.school_class_id"
-                    required
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option v-for="c in classesList" :key="c.id" :value="c.id">
-                      {{ c.name }}
-                    </option>
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >
-                    Hari
-                  </label>
-                  <select
-                    v-model="form.day"
-                    required
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
-                  </select>
-                </div>
-
-                <div class="relative">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >
-                    Waktu Mulai
-                  </label>
-                  <div
-                    class="flex items-center justify-between w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white hover:border-blue-400 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-colors cursor-pointer"
-                    @click="
-                      isStartDropdownOpen = !isStartDropdownOpen;
-                      isEndDropdownOpen = false;
-                    "
-                  >
-                    <div class="flex items-center">
-                      <span class="font-medium w-6 text-center">{{ formStartHour }}</span>
-                      <span class="mx-1 font-bold">:</span>
-                      <span class="font-medium w-6 text-center">{{
-                        formStartMinute
-                      }}</span>
-                    </div>
-                    <PhClock class="w-5 h-5 text-gray-400 pointer-events-none" />
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+                {{ isEditing ? "Edit Jadwal Pelajaran" : "Tambah Jadwal Baru" }}
+              </h3>
+              <button
+                @click="hideForm"
+                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              >
+                <PhX class="w-6 h-6" />
+              </button>
+            </div>
+            <div class="p-6 overflow-visible flex-1">
+              <form
+                id="jadwalForm"
+                @submit.prevent="isEditing ? saveEntry() : addEntry()"
+              >
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Kelas / Rombel
+                    </label>
+                    <select
+                      v-model="form.school_class_id"
+                      required
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option v-for="c in classesList" :key="c.id" :value="c.id">
+                        {{ c.name }}
+                      </option>
+                    </select>
                   </div>
 
-                  <Transition
-                    enter-active-class="transition ease-out duration-200"
-                    enter-from-class="opacity-0 translate-y-1 scale-95"
-                    enter-to-class="opacity-100 translate-y-0 scale-100"
-                    leave-active-class="transition ease-in duration-150"
-                    leave-from-class="opacity-100 translate-y-0 scale-100"
-                    leave-to-class="opacity-0 translate-y-1 scale-95"
-                  >
+                  <div>
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Hari
+                    </label>
+                    <select
+                      v-model="form.day"
+                      required
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
+                    </select>
+                  </div>
+
+                  <div class="relative" :class="{ 'z-50': isStartDropdownOpen }">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Waktu Mulai
+                    </label>
                     <div
-                      v-if="isStartDropdownOpen"
-                      class="absolute top-full left-0 mt-2 w-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-xl z-50 flex flex-col overflow-hidden origin-top"
+                      class="flex items-center justify-between w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white hover:border-blue-400 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-colors cursor-pointer"
+                      @click="
+                        isStartDropdownOpen = !isStartDropdownOpen;
+                        isEndDropdownOpen = false;
+                        isSubjectDropdownOpen = false;
+                        isTeacherDropdownOpen = false;
+                      "
+                    >
+                      <div class="flex items-center">
+                        <span class="font-medium w-6 text-center">{{
+                          formStartHour
+                        }}</span>
+                        <span class="mx-1 font-bold">:</span>
+                        <span class="font-medium w-6 text-center">{{
+                          formStartMinute
+                        }}</span>
+                      </div>
+                      <PhClock class="w-5 h-5 text-gray-400 pointer-events-none" />
+                    </div>
+
+                    <Transition
+                      enter-active-class="transition ease-out duration-200"
+                      enter-from-class="opacity-0 translate-y-1 scale-95"
+                      enter-to-class="opacity-100 translate-y-0 scale-100"
+                      leave-active-class="transition ease-in duration-150"
+                      leave-from-class="opacity-100 translate-y-0 scale-100"
+                      leave-to-class="opacity-0 translate-y-1 scale-95"
                     >
                       <div
-                        class="fixed inset-0 z-[-1] cursor-default"
-                        @click.stop="isStartDropdownOpen = false"
-                      ></div>
-
-                      <div
-                        class="flex border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50"
+                        v-if="isStartDropdownOpen"
+                        class="absolute top-full left-0 mt-2 w-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-xl z-50 flex flex-col overflow-hidden origin-top"
                       >
                         <div
-                          class="flex-1 text-center py-2 text-xs font-bold text-gray-500 dark:text-gray-400"
-                        >
-                          JAM
-                        </div>
-                        <div
-                          class="flex-1 text-center py-2 text-xs font-bold text-gray-500 dark:text-gray-400 border-l border-gray-100 dark:border-slate-700"
-                        >
-                          MENIT
-                        </div>
-                      </div>
-
-                      <div class="flex h-48 bg-white dark:bg-slate-800 relative z-10">
-                        <div
-                          class="flex-1 overflow-y-auto custom-scrollbar border-r border-gray-100 dark:border-slate-700 scroll-smooth"
-                        >
-                          <button
-                            v-for="h in hours"
-                            :key="h"
-                            type="button"
-                            @click.stop="formStartHour = h"
-                            class="w-full text-center py-2 text-sm hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
-                            :class="
-                              formStartHour === h
-                                ? 'bg-blue-100 text-blue-600 font-bold dark:bg-slate-700 dark:text-blue-400'
-                                : 'text-gray-700 dark:text-gray-300'
-                            "
-                          >
-                            {{ h }}
-                          </button>
-                        </div>
-                        <div
-                          class="flex-1 overflow-y-auto custom-scrollbar scroll-smooth"
-                        >
-                          <button
-                            v-for="m in minutes"
-                            :key="m"
-                            type="button"
-                            @click.stop="formStartMinute = m"
-                            class="w-full text-center py-2 text-sm hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
-                            :class="
-                              formStartMinute === m
-                                ? 'bg-blue-100 text-blue-600 font-bold dark:bg-slate-700 dark:text-blue-400'
-                                : 'text-gray-700 dark:text-gray-300'
-                            "
-                          >
-                            {{ m }}
-                          </button>
-                        </div>
-                      </div>
-
-                      <div
-                        class="p-2 border-t border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 relative z-10"
-                      >
-                        <button
-                          type="button"
+                          class="fixed inset-0 z-[-1] cursor-default"
                           @click.stop="isStartDropdownOpen = false"
-                          class="w-full py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
-                        >
-                          Pilih Waktu
-                        </button>
-                      </div>
-                    </div>
-                  </Transition>
-                </div>
+                        ></div>
 
-                <div class="relative">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >
-                    Waktu Selesai
-                  </label>
-                  <div
-                    class="flex items-center justify-between w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white hover:border-blue-400 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-colors cursor-pointer"
-                    @click="
-                      isEndDropdownOpen = !isEndDropdownOpen;
-                      isStartDropdownOpen = false;
-                    "
-                  >
-                    <div class="flex items-center">
-                      <span class="font-medium w-6 text-center">{{ formEndHour }}</span>
-                      <span class="mx-1 font-bold">:</span>
-                      <span class="font-medium w-6 text-center">{{ formEndMinute }}</span>
-                    </div>
-                    <PhClock class="w-5 h-5 text-gray-400 pointer-events-none" />
+                        <div
+                          class="flex border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50"
+                        >
+                          <div
+                            class="flex-1 text-center py-2 text-xs font-bold text-gray-500 dark:text-gray-400"
+                          >
+                            JAM
+                          </div>
+                          <div
+                            class="flex-1 text-center py-2 text-xs font-bold text-gray-500 dark:text-gray-400 border-l border-gray-100 dark:border-slate-700"
+                          >
+                            MENIT
+                          </div>
+                        </div>
+
+                        <div class="flex h-48 bg-white dark:bg-slate-800 relative z-10">
+                          <div
+                            class="flex-1 overflow-y-auto custom-scrollbar border-r border-gray-100 dark:border-slate-700 scroll-smooth"
+                          >
+                            <button
+                              v-for="h in hours"
+                              :key="h"
+                              type="button"
+                              @click.stop="formStartHour = h"
+                              class="w-full text-center py-2 text-sm hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
+                              :class="
+                                formStartHour === h
+                                  ? 'bg-blue-100 text-blue-600 font-bold dark:bg-slate-700 dark:text-blue-400'
+                                  : 'text-gray-700 dark:text-gray-300'
+                              "
+                            >
+                              {{ h }}
+                            </button>
+                          </div>
+                          <div
+                            class="flex-1 overflow-y-auto custom-scrollbar scroll-smooth"
+                          >
+                            <button
+                              v-for="m in minutes"
+                              :key="m"
+                              type="button"
+                              @click.stop="formStartMinute = m"
+                              class="w-full text-center py-2 text-sm hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
+                              :class="
+                                formStartMinute === m
+                                  ? 'bg-blue-100 text-blue-600 font-bold dark:bg-slate-700 dark:text-blue-400'
+                                  : 'text-gray-700 dark:text-gray-300'
+                              "
+                            >
+                              {{ m }}
+                            </button>
+                          </div>
+                        </div>
+
+                        <div
+                          class="p-2 border-t border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 relative z-10"
+                        >
+                          <button
+                            type="button"
+                            @click.stop="isStartDropdownOpen = false"
+                            class="w-full py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+                          >
+                            Pilih Waktu
+                          </button>
+                        </div>
+                      </div>
+                    </Transition>
                   </div>
 
-                  <Transition
-                    enter-active-class="transition ease-out duration-200"
-                    enter-from-class="opacity-0 translate-y-1 scale-95"
-                    enter-to-class="opacity-100 translate-y-0 scale-100"
-                    leave-active-class="transition ease-in duration-150"
-                    leave-from-class="opacity-100 translate-y-0 scale-100"
-                    leave-to-class="opacity-0 translate-y-1 scale-95"
-                  >
+                  <div class="relative" :class="{ 'z-50': isEndDropdownOpen }">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Waktu Selesai
+                    </label>
                     <div
-                      v-if="isEndDropdownOpen"
-                      class="absolute top-full left-0 mt-2 w-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-xl z-50 flex flex-col overflow-hidden origin-top"
+                      class="flex items-center justify-between w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white hover:border-blue-400 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-colors cursor-pointer"
+                      @click="
+                        isEndDropdownOpen = !isEndDropdownOpen;
+                        isStartDropdownOpen = false;
+                        isSubjectDropdownOpen = false;
+                        isTeacherDropdownOpen = false;
+                      "
+                    >
+                      <div class="flex items-center">
+                        <span class="font-medium w-6 text-center">{{ formEndHour }}</span>
+                        <span class="mx-1 font-bold">:</span>
+                        <span class="font-medium w-6 text-center">{{
+                          formEndMinute
+                        }}</span>
+                      </div>
+                      <PhClock class="w-5 h-5 text-gray-400 pointer-events-none" />
+                    </div>
+
+                    <Transition
+                      enter-active-class="transition ease-out duration-200"
+                      enter-from-class="opacity-0 translate-y-1 scale-95"
+                      enter-to-class="opacity-100 translate-y-0 scale-100"
+                      leave-active-class="transition ease-in duration-150"
+                      leave-from-class="opacity-100 translate-y-0 scale-100"
+                      leave-to-class="opacity-0 translate-y-1 scale-95"
                     >
                       <div
-                        class="fixed inset-0 z-[-1] cursor-default"
-                        @click.stop="isEndDropdownOpen = false"
-                      ></div>
-
-                      <div
-                        class="flex border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50"
+                        v-if="isEndDropdownOpen"
+                        class="absolute top-full left-0 mt-2 w-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-xl z-50 flex flex-col overflow-hidden origin-top"
                       >
                         <div
-                          class="flex-1 text-center py-2 text-xs font-bold text-gray-500 dark:text-gray-400"
-                        >
-                          JAM
-                        </div>
-                        <div
-                          class="flex-1 text-center py-2 text-xs font-bold text-gray-500 dark:text-gray-400 border-l border-gray-100 dark:border-slate-700"
-                        >
-                          MENIT
-                        </div>
-                      </div>
-
-                      <div class="flex h-48 bg-white dark:bg-slate-800 relative z-10">
-                        <div
-                          class="flex-1 overflow-y-auto custom-scrollbar border-r border-gray-100 dark:border-slate-700 scroll-smooth"
-                        >
-                          <button
-                            v-for="h in hours"
-                            :key="h"
-                            type="button"
-                            @click.stop="formEndHour = h"
-                            class="w-full text-center py-2 text-sm hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
-                            :class="
-                              formEndHour === h
-                                ? 'bg-blue-100 text-blue-600 font-bold dark:bg-slate-700 dark:text-blue-400'
-                                : 'text-gray-700 dark:text-gray-300'
-                            "
-                          >
-                            {{ h }}
-                          </button>
-                        </div>
-                        <div
-                          class="flex-1 overflow-y-auto custom-scrollbar scroll-smooth"
-                        >
-                          <button
-                            v-for="m in minutes"
-                            :key="m"
-                            type="button"
-                            @click.stop="formEndMinute = m"
-                            class="w-full text-center py-2 text-sm hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
-                            :class="
-                              formEndMinute === m
-                                ? 'bg-blue-100 text-blue-600 font-bold dark:bg-slate-700 dark:text-blue-400'
-                                : 'text-gray-700 dark:text-gray-300'
-                            "
-                          >
-                            {{ m }}
-                          </button>
-                        </div>
-                      </div>
-
-                      <div
-                        class="p-2 border-t border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 relative z-10"
-                      >
-                        <button
-                          type="button"
+                          class="fixed inset-0 z-[-1] cursor-default"
                           @click.stop="isEndDropdownOpen = false"
-                          class="w-full py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+                        ></div>
+
+                        <div
+                          class="flex border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50"
                         >
-                          Pilih Waktu
-                        </button>
+                          <div
+                            class="flex-1 text-center py-2 text-xs font-bold text-gray-500 dark:text-gray-400"
+                          >
+                            JAM
+                          </div>
+                          <div
+                            class="flex-1 text-center py-2 text-xs font-bold text-gray-500 dark:text-gray-400 border-l border-gray-100 dark:border-slate-700"
+                          >
+                            MENIT
+                          </div>
+                        </div>
+
+                        <div class="flex h-48 bg-white dark:bg-slate-800 relative z-10">
+                          <div
+                            class="flex-1 overflow-y-auto custom-scrollbar border-r border-gray-100 dark:border-slate-700 scroll-smooth"
+                          >
+                            <button
+                              v-for="h in hours"
+                              :key="h"
+                              type="button"
+                              @click.stop="formEndHour = h"
+                              class="w-full text-center py-2 text-sm hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
+                              :class="
+                                formEndHour === h
+                                  ? 'bg-blue-100 text-blue-600 font-bold dark:bg-slate-700 dark:text-blue-400'
+                                  : 'text-gray-700 dark:text-gray-300'
+                              "
+                            >
+                              {{ h }}
+                            </button>
+                          </div>
+                          <div
+                            class="flex-1 overflow-y-auto custom-scrollbar scroll-smooth"
+                          >
+                            <button
+                              v-for="m in minutes"
+                              :key="m"
+                              type="button"
+                              @click.stop="formEndMinute = m"
+                              class="w-full text-center py-2 text-sm hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
+                              :class="
+                                formEndMinute === m
+                                  ? 'bg-blue-100 text-blue-600 font-bold dark:bg-slate-700 dark:text-blue-400'
+                                  : 'text-gray-700 dark:text-gray-300'
+                              "
+                            >
+                              {{ m }}
+                            </button>
+                          </div>
+                        </div>
+
+                        <div
+                          class="p-2 border-t border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 relative z-10"
+                        >
+                          <button
+                            type="button"
+                            @click.stop="isEndDropdownOpen = false"
+                            class="w-full py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+                          >
+                            Pilih Waktu
+                          </button>
+                        </div>
                       </div>
+                    </Transition>
+                  </div>
+
+                  <div
+                    class="md:col-span-2 relative"
+                    :class="{ 'z-50': isSubjectDropdownOpen }"
+                  >
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Mata Pelajaran
+                    </label>
+                    <div
+                      class="flex items-center justify-between w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white hover:border-blue-400 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-colors cursor-pointer"
+                      @click="
+                        isSubjectDropdownOpen = !isSubjectDropdownOpen;
+                        isTeacherDropdownOpen = false;
+                        isStartDropdownOpen = false;
+                        isEndDropdownOpen = false;
+                      "
+                    >
+                      <span class="truncate">{{
+                        form.curriculum_subject_id
+                          ? subjectsList.find((s) => s.id === form.curriculum_subject_id)
+                              ?.name || "Pilih Mata Pelajaran"
+                          : "Pilih Mata Pelajaran"
+                      }}</span>
+                      <PhBookOpen class="w-5 h-5 text-gray-400 pointer-events-none" />
                     </div>
-                  </Transition>
-                </div>
 
-                <div class="md:col-span-2">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >
-                    Mata Pelajaran
-                  </label>
-                  <select
-                    v-model="form.curriculum_subject_id"
-                    required
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option v-for="s in subjectsList" :key="s.id" :value="s.id">
-                      {{ s.name }}
-                    </option>
-                  </select>
-                </div>
+                    <Transition
+                      enter-active-class="transition ease-out duration-200"
+                      enter-from-class="opacity-0 translate-y-1 scale-95"
+                      enter-to-class="opacity-100 translate-y-0 scale-100"
+                      leave-active-class="transition ease-in duration-150"
+                      leave-from-class="opacity-100 translate-y-0 scale-100"
+                      leave-to-class="opacity-0 translate-y-1 scale-95"
+                    >
+                      <div
+                        v-if="isSubjectDropdownOpen"
+                        class="absolute top-full left-0 mt-2 w-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-xl z-50 flex flex-col overflow-hidden origin-top"
+                      >
+                        <div
+                          class="fixed inset-0 z-[-1] cursor-default"
+                          @click.stop="isSubjectDropdownOpen = false"
+                        ></div>
 
-                <div class="md:col-span-2">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        <div class="p-2 border-b border-gray-100 dark:border-slate-700">
+                          <input
+                            v-model="subjectSearch"
+                            type="text"
+                            placeholder="Cari mata pelajaran..."
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-gray-50 dark:bg-slate-700 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 dark:text-white"
+                            @click.stop
+                          />
+                        </div>
+
+                        <div class="max-h-48 overflow-y-auto custom-scrollbar">
+                          <div
+                            v-if="paginatedSubjects.length === 0"
+                            class="px-4 py-3 text-sm text-gray-500 text-center"
+                          >
+                            Tidak ada data.
+                          </div>
+                          <button
+                            v-for="s in paginatedSubjects"
+                            :key="s.id"
+                            type="button"
+                            @click.stop="
+                              form.curriculum_subject_id = s.id;
+                              isSubjectDropdownOpen = false;
+                            "
+                            class="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
+                            :class="
+                              form.curriculum_subject_id === s.id
+                                ? 'bg-blue-100 text-blue-600 font-bold dark:bg-slate-700 dark:text-blue-400'
+                                : 'text-gray-700 dark:text-gray-300'
+                            "
+                          >
+                            {{ s.name }}
+                          </button>
+                        </div>
+
+                        <div
+                          class="p-2 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-between items-center text-sm"
+                          @click.stop
+                        >
+                          <button
+                            type="button"
+                            :disabled="subjectPage === 1"
+                            @click.stop="subjectPage--"
+                            class="px-2 py-1 rounded text-gray-600 hover:bg-gray-200 disabled:opacity-50 dark:text-gray-300 dark:hover:bg-slate-600"
+                          >
+                            Sebelumnya
+                          </button>
+                          <span class="text-gray-500 dark:text-gray-400 text-xs"
+                            >Halaman {{ subjectPage }} dari {{ totalSubjectPages }}</span
+                          >
+                          <button
+                            type="button"
+                            :disabled="subjectPage >= totalSubjectPages"
+                            @click.stop="subjectPage++"
+                            class="px-2 py-1 rounded text-gray-600 hover:bg-gray-200 disabled:opacity-50 dark:text-gray-300 dark:hover:bg-slate-600"
+                          >
+                            Selanjutnya
+                          </button>
+                        </div>
+                      </div>
+                    </Transition>
+                  </div>
+
+                  <div
+                    class="md:col-span-2 relative"
+                    :class="{ 'z-50': isTeacherDropdownOpen }"
                   >
-                    Guru Pengampu
-                  </label>
-                  <select
-                    v-model="form.staff_id"
-                    required
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option v-for="t in teachersList" :key="t.id" :value="t.id">
-                      {{ t.name }}
-                    </option>
-                  </select>
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Guru Pengampu
+                    </label>
+                    <div
+                      class="flex items-center justify-between w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white hover:border-blue-400 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-colors cursor-pointer"
+                      @click="
+                        isTeacherDropdownOpen = !isTeacherDropdownOpen;
+                        isSubjectDropdownOpen = false;
+                        isStartDropdownOpen = false;
+                        isEndDropdownOpen = false;
+                      "
+                    >
+                      <span class="truncate">{{
+                        form.staff_id
+                          ? teachersList.find((t) => t.id === form.staff_id)?.name ||
+                            "Pilih Guru Pengampu"
+                          : "Pilih Guru Pengampu"
+                      }}</span>
+                      <PhChalkboardTeacher
+                        class="w-5 h-5 text-gray-400 pointer-events-none"
+                      />
+                    </div>
+
+                    <Transition
+                      enter-active-class="transition ease-out duration-200"
+                      enter-from-class="opacity-0 translate-y-1 scale-95"
+                      enter-to-class="opacity-100 translate-y-0 scale-100"
+                      leave-active-class="transition ease-in duration-150"
+                      leave-from-class="opacity-100 translate-y-0 scale-100"
+                      leave-to-class="opacity-0 translate-y-1 scale-95"
+                    >
+                      <div
+                        v-if="isTeacherDropdownOpen"
+                        class="absolute top-full left-0 mt-2 w-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-xl z-50 flex flex-col overflow-hidden origin-top"
+                      >
+                        <div
+                          class="fixed inset-0 z-[-1] cursor-default"
+                          @click.stop="isTeacherDropdownOpen = false"
+                        ></div>
+
+                        <div class="p-2 border-b border-gray-100 dark:border-slate-700">
+                          <input
+                            v-model="teacherSearch"
+                            type="text"
+                            placeholder="Cari guru pengampu..."
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-gray-50 dark:bg-slate-700 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 dark:text-white"
+                            @click.stop
+                          />
+                        </div>
+
+                        <div class="max-h-48 overflow-y-auto custom-scrollbar">
+                          <div
+                            v-if="paginatedTeachers.length === 0"
+                            class="px-4 py-3 text-sm text-gray-500 text-center"
+                          >
+                            Tidak ada data.
+                          </div>
+                          <button
+                            v-for="t in paginatedTeachers"
+                            :key="t.id"
+                            type="button"
+                            @click.stop="
+                              form.staff_id = t.id;
+                              isTeacherDropdownOpen = false;
+                            "
+                            class="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
+                            :class="
+                              form.staff_id === t.id
+                                ? 'bg-blue-100 text-blue-600 font-bold dark:bg-slate-700 dark:text-blue-400'
+                                : 'text-gray-700 dark:text-gray-300'
+                            "
+                          >
+                            {{ t.name }}
+                          </button>
+                        </div>
+
+                        <div
+                          class="p-2 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-between items-center text-sm"
+                          @click.stop
+                        >
+                          <button
+                            type="button"
+                            :disabled="teacherPage === 1"
+                            @click.stop="teacherPage--"
+                            class="px-2 py-1 rounded text-gray-600 hover:bg-gray-200 disabled:opacity-50 dark:text-gray-300 dark:hover:bg-slate-600"
+                          >
+                            Sebelumnya
+                          </button>
+                          <span class="text-gray-500 dark:text-gray-400 text-xs"
+                            >Halaman {{ teacherPage }} dari {{ totalTeacherPages }}</span
+                          >
+                          <button
+                            type="button"
+                            :disabled="teacherPage >= totalTeacherPages"
+                            @click.stop="teacherPage++"
+                            class="px-2 py-1 rounded text-gray-600 hover:bg-gray-200 disabled:opacity-50 dark:text-gray-300 dark:hover:bg-slate-600"
+                          >
+                            Selanjutnya
+                          </button>
+                        </div>
+                      </div>
+                    </Transition>
+                  </div>
                 </div>
-              </div>
-            </form>
-          </div>
-          <div
-            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
-          >
-            <button
-              type="button"
-              @click="hideForm"
-              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              </form>
+            </div>
+            <div
+              class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3 rounded-b-xl"
             >
-              <PhXCircle class="w-5 h-5 mr-2" />
-              Batal
-            </button>
-            <button
-              form="jadwalForm"
-              type="submit"
-              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-            >
-              <PhFloppyDisk v-if="isEditing" class="w-5 h-5 mr-2" />
-              <PhPlusCircle v-else class="w-5 h-5 mr-2" />
-              {{ isEditing ? "Simpan Perubahan" : "Simpan Data" }}
-            </button>
+              <button
+                type="button"
+                @click="hideForm"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              >
+                <PhXCircle class="w-5 h-5 mr-2" />
+                Batal
+              </button>
+              <button
+                form="jadwalForm"
+                type="submit"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              >
+                <PhFloppyDisk v-if="isEditing" class="w-5 h-5 mr-2" />
+                <PhPlusCircle v-else class="w-5 h-5 mr-2" />
+                {{ isEditing ? "Simpan Perubahan" : "Simpan Data" }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -1089,9 +1334,6 @@ const groupedSchedule = computed(() => {
 </template>
 
 <style scoped>
-.transition-all {
-  overflow: hidden;
-}
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
 }
