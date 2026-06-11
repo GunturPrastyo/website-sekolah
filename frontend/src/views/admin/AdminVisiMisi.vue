@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import api from "@/api/index.js";
 import {
   PhPlusCircle,
@@ -12,6 +12,8 @@ import {
   PhEye,
   PhTarget,
   PhMegaphone,
+  PhUser,
+  PhQuotes,
 } from "@phosphor-icons/vue";
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -20,21 +22,27 @@ import ToastNotification from "@/components/admin/ToastNotification.vue";
 const visi = ref("");
 const misi = ref([]);
 const sambutan = ref("");
-const principalPosition = ref("Kepala Sekolah");
+const principalId = ref(null);
 const isLoading = ref(true);
+const staffList = ref([]);
 
 // Edit State
 const isModalOpen = ref(false);
 const tempVisi = ref("");
 const tempMisi = ref([]);
 const tempSambutan = ref("");
-const tempPrincipalPosition = ref("Kepala Sekolah");
+const tempPrincipalId = ref(null);
+
+const selectedPrincipal = computed(() => {
+  if (!principalId.value) return null;
+  return staffList.value.find((s) => s.id === principalId.value) || null;
+});
 
 const openEditModal = () => {
   tempVisi.value = visi.value;
   tempMisi.value = JSON.parse(JSON.stringify(misi.value || [])); // Deep copy
   tempSambutan.value = sambutan.value;
-  tempPrincipalPosition.value = principalPosition.value;
+  tempPrincipalId.value = principalId.value;
   isModalOpen.value = true;
   document.body.style.overflow = "hidden";
 };
@@ -81,6 +89,15 @@ const triggerToast = (title, message, type = "success") => {
   }, 4000); // Otomatis hilang setelah 4 detik
 };
 
+const fetchStaff = async () => {
+  try {
+    const response = await api.get("/api/guru-staf");
+    staffList.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal memuat daftar guru staf:", error);
+  }
+};
+
 const fetchData = async () => {
   isLoading.value = true;
   try {
@@ -89,7 +106,7 @@ const fetchData = async () => {
     visi.value = data.vision || "";
     misi.value = data.missions || [];
     sambutan.value = data.principal_speech || "";
-    principalPosition.value = data.principal_position || "Kepala Sekolah";
+    principalId.value = data.principal_id || null;
   } catch (error) {
     console.error("Gagal mengambil data Visi & Misi:", error);
     triggerToast("Gagal Memuat", "Tidak dapat memuat data dari server.", "error");
@@ -98,7 +115,10 @@ const fetchData = async () => {
   }
 };
 
-onMounted(fetchData);
+onMounted(() => {
+  fetchStaff();
+  fetchData();
+});
 
 const saveChanges = async () => {
   // Validate
@@ -111,7 +131,7 @@ const saveChanges = async () => {
     vision: tempVisi.value,
     missions: tempMisi.value.filter((m) => m.text.trim() !== ""), // Filter out empty missions
     principal_speech: tempSambutan.value,
-    principal_position: tempPrincipalPosition.value,
+    principal_id: tempPrincipalId.value,
   };
 
   try {
@@ -122,7 +142,7 @@ const saveChanges = async () => {
     visi.value = data.vision;
     misi.value = data.missions;
     sambutan.value = data.principal_speech;
-    principalPosition.value = data.principal_position || payload.principal_position;
+    principalId.value = data.principal_id || payload.principal_id;
 
     closeEditModal();
     triggerToast(
@@ -164,63 +184,145 @@ const saveChanges = async () => {
     </div>
 
     <!-- Skeleton Loader -->
-    <div v-if="isLoading" class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-      <div class="xl:col-span-2 space-y-8">
+    <div v-if="isLoading" class="space-y-8">
+      <div class="bg-gray-200 dark:bg-slate-700 rounded-lg h-64 animate-pulse"></div>
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
         <div class="bg-gray-200 dark:bg-slate-700 rounded-lg h-48 animate-pulse"></div>
         <div class="bg-gray-200 dark:bg-slate-700 rounded-lg h-64 animate-pulse"></div>
       </div>
-      <div class="bg-gray-200 dark:bg-slate-700 rounded-lg h-96 animate-pulse"></div>
     </div>
 
     <!-- View Mode -->
-    <div v-else class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-      <!-- Kolom Kiri: Visi & Misi -->
-      <div class="xl:col-span-2 space-y-8">
-        <!-- Tampilan Visi -->
+    <div v-else class="space-y-8">
+      <!-- Section Sambutan (Paling Atas) -->
+      <div
+        class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm p-6 lg:p-8 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden"
+      >
+        <div class="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
+          <PhQuotes class="w-48 h-48 text-blue-900" weight="fill" />
+        </div>
         <div
-          class="bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm p-6"
+          class="shrink-0 w-full md:w-72 flex flex-col items-center text-center relative z-10"
         >
-          <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-            Visi Sekolah
-          </h3>
-          <p
-            v-if="visi"
-            class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg italic border-l-4 border-blue-500 pl-4 py-2 bg-blue-50/50 dark:bg-blue-900/20 rounded-r-lg"
+          <div
+            v-if="selectedPrincipal && selectedPrincipal.image"
+            class="w-48 h-48 md:w-56 md:h-56 rounded-2xl overflow-hidden shadow-lg mb-5 border-4 border-white dark:border-slate-700 bg-gray-100"
           >
-            "{{ visi }}"
-          </p>
+            <img
+              :src="selectedPrincipal.image"
+              alt="Kepala Sekolah"
+              class="w-full h-full object-cover"
+            />
+          </div>
           <div
             v-else
-            class="py-8 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
+            class="w-48 h-48 md:w-56 md:h-56 rounded-2xl bg-gray-100 dark:bg-slate-700 flex items-center justify-center mb-5 shadow-lg border-4 border-white dark:border-slate-700"
           >
-            <div
-              class="mx-auto w-12 h-12 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-3"
-            >
-              <PhEye class="w-6 h-6 text-gray-400 dark:text-gray-500" />
+            <PhUser class="w-20 h-20 text-gray-400" />
+          </div>
+          <h3 class="text-2xl font-bold text-gray-800 dark:text-white">
+            {{ selectedPrincipal ? selectedPrincipal.name : "Nama Kepala Sekolah" }}
+          </h3>
+          <p
+            class="text-blue-600 dark:text-blue-400 font-semibold mt-1 bg-blue-50 dark:bg-blue-900/30 px-4 py-1 rounded-full text-sm inline-block"
+          >
+            {{ selectedPrincipal ? selectedPrincipal.position : "Kepala Sekolah" }}
+          </p>
+        </div>
+        <div class="flex-1 w-full relative z-10">
+          <div
+            class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100 dark:border-slate-700"
+          >
+            <div class="p-2 bg-blue-50 dark:bg-blue-900/50 rounded-lg">
+              <PhMegaphone class="w-6 h-6 text-blue-600 dark:text-blue-400" />
             </div>
-            <p class="text-sm font-medium">Visi sekolah belum diatur.</p>
+            <h3
+              class="text-2xl font-bold text-gray-800 dark:text-white"
+              style="font-family: 'Oswald', sans-serif"
+            >
+              Sambutan Kepala Sekolah
+            </h3>
+          </div>
+          <div
+            v-if="sambutan"
+            class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed editor-content-preview custom-scrollbar overflow-y-auto max-h-[500px] pr-4"
+            v-html="sambutan"
+          ></div>
+          <div
+            v-else
+            class="py-12 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
+          >
+            <p class="text-sm font-medium">Sambutan kepala sekolah belum diatur.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section Visi & Misi (Bawah) -->
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+        <!-- Tampilan Visi -->
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm p-6 lg:p-8 flex flex-col"
+        >
+          <div
+            class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100 dark:border-slate-700"
+          >
+            <div class="p-2 bg-emerald-50 dark:bg-emerald-900/50 rounded-lg">
+              <PhEye class="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <h3
+              class="text-xl font-bold text-gray-800 dark:text-white"
+              style="font-family: 'Oswald', sans-serif"
+            >
+              Visi Sekolah
+            </h3>
+          </div>
+          <div class="flex-1 flex items-center justify-center">
+            <p
+              v-if="visi"
+              class="text-gray-700 dark:text-gray-300 leading-relaxed text-xl lg:text-2xl font-medium italic text-center px-4"
+            >
+              "{{ visi }}"
+            </p>
+            <div
+              v-else
+              class="py-8 text-center text-gray-500 dark:text-gray-400 w-full border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
+            >
+              <p class="text-sm font-medium">Visi sekolah belum diatur.</p>
+            </div>
           </div>
         </div>
 
         <!-- Tampilan Misi -->
         <div
-          class="bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm p-6"
+          class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm p-6 lg:p-8"
         >
-          <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-            Misi Sekolah
-          </h3>
+          <div
+            class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100 dark:border-slate-700"
+          >
+            <div class="p-2 bg-red-50 dark:bg-red-900/50 rounded-lg">
+              <PhTarget class="w-6 h-6 text-red-600 dark:text-red-400" />
+            </div>
+            <h3
+              class="text-xl font-bold text-gray-800 dark:text-white"
+              style="font-family: 'Oswald', sans-serif"
+            >
+              Misi Sekolah
+            </h3>
+          </div>
           <ul v-if="misi && misi.length > 0" class="space-y-4">
             <li
               v-for="(item, index) in misi"
               :key="item.id || index"
-              class="flex items-start"
+              class="flex items-start bg-gray-50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-100 dark:border-slate-700"
             >
               <span
-                class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm mr-4 mt-0.5"
+                class="flex-shrink-0 w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400 flex items-center justify-center font-bold text-sm mr-4"
               >
                 {{ index + 1 }}
               </span>
-              <p class="text-gray-700 dark:text-gray-300 leading-relaxed pt-1">
+              <p
+                class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm lg:text-base pt-1"
+              >
                 {{ item.text }}
               </p>
             </li>
@@ -229,44 +331,7 @@ const saveChanges = async () => {
             v-else
             class="py-8 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
           >
-            <div
-              class="mx-auto w-12 h-12 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-3"
-            >
-              <PhTarget class="w-6 h-6 text-gray-400 dark:text-gray-500" />
-            </div>
             <p class="text-sm font-medium">Misi sekolah belum diatur.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Kolom Kanan: Sambutan Kepala Sekolah -->
-      <div class="xl:col-span-1">
-        <div
-          class="bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm p-6 sticky top-6"
-        >
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-xl font-semibold text-gray-800 dark:text-white">
-              Sambutan Kepala Sekolah
-            </h3>
-            <span class="text-xs px-2 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 rounded font-medium">
-              {{ principalPosition }}
-            </span>
-          </div>
-          <div
-            v-if="sambutan"
-            class="prose dark:prose-invert max-w-none text-sm text-gray-700 dark:text-gray-300 leading-relaxed editor-content-preview custom-scrollbar overflow-y-auto max-h-[600px] pr-2"
-            v-html="sambutan"
-          ></div>
-          <div
-            v-else
-            class="py-12 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
-          >
-            <div
-              class="mx-auto w-16 h-16 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-4"
-            >
-              <PhMegaphone class="w-8 h-8 text-gray-400 dark:text-gray-500" />
-            </div>
-            <p class="text-sm font-medium">Sambutan kepala sekolah belum diatur.</p>
           </div>
         </div>
       </div>
@@ -306,46 +371,137 @@ const saveChanges = async () => {
           </div>
 
           <!-- Modal Body -->
-          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <!-- Kiri: Visi & Misi -->
-              <div class="space-y-6">
+          <div
+            class="p-6 overflow-y-auto custom-scrollbar flex-1 bg-white dark:bg-slate-800"
+          >
+            <div class="space-y-8">
+              <!-- Pengaturan Sambutan -->
+              <div
+                class="bg-gray-50 dark:bg-slate-700/30 rounded-xl p-5 md:p-6 border border-gray-100 dark:border-slate-600"
+              >
+                <h4
+                  class="text-lg font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-2 pb-3 border-b border-gray-200 dark:border-slate-600"
+                >
+                  <PhMegaphone class="w-5 h-5 text-blue-500" /> Pengaturan Sambutan
+                </h4>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div class="lg:col-span-1 flex flex-col">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      Pilih Profil Pemberi Sambutan
+                    </label>
+                    <select
+                      v-model="tempPrincipalId"
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm mb-4"
+                    >
+                      <option :value="null">-- Pilih Dari Guru & Staf --</option>
+                      <option
+                        v-for="staff in staffList"
+                        :key="staff.id"
+                        :value="staff.id"
+                      >
+                        {{ staff.name }} ({{ staff.position }})
+                      </option>
+                    </select>
+                    <div
+                      v-if="tempPrincipalId"
+                      class="mt-2 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-600 flex items-center gap-4 shadow-sm"
+                    >
+                      <div
+                        class="w-14 h-14 rounded-full overflow-hidden shrink-0 bg-gray-100 border-2 border-gray-100 dark:border-slate-700"
+                      >
+                        <img
+                          v-if="staffList.find((s) => s.id === tempPrincipalId)?.image"
+                          :src="staffList.find((s) => s.id === tempPrincipalId).image"
+                          class="w-full h-full object-cover"
+                        />
+                        <PhUser v-else class="w-6 h-6 m-auto mt-4 text-gray-400" />
+                      </div>
+                      <div class="overflow-hidden">
+                        <p
+                          class="text-sm font-bold text-gray-800 dark:text-white truncate"
+                        >
+                          {{ staffList.find((s) => s.id === tempPrincipalId)?.name }}
+                        </p>
+                        <p
+                          class="text-xs text-blue-600 dark:text-blue-400 truncate mt-0.5"
+                        >
+                          {{ staffList.find((s) => s.id === tempPrincipalId)?.position }}
+                        </p>
+                      </div>
+                    </div>
+                    <p
+                      class="text-xs text-gray-500 dark:text-gray-400 mt-4 leading-relaxed"
+                    >
+                      Pilih dari data Guru & Staf untuk otomatis menampilkan nama,
+                      jabatan, dan foto pada sambutan Kepala Sekolah.
+                    </p>
+                  </div>
+                  <div class="lg:col-span-2">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      Teks Sambutan
+                    </label>
+                    <div
+                      class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-600 overflow-hidden"
+                    >
+                      <RichTextEditor
+                        v-model="tempSambutan"
+                        placeholder="Tuliskan isi pesan atau sambutan kepala sekolah..."
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pengaturan Visi & Misi -->
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Visi -->
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                <div
+                  class="bg-gray-50 dark:bg-slate-700/30 rounded-xl p-5 md:p-6 border border-gray-100 dark:border-slate-600"
+                >
+                  <h4
+                    class="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2 pb-3 border-b border-gray-200 dark:border-slate-600"
                   >
-                    Visi Sekolah
-                  </label>
+                    <PhEye class="w-5 h-5 text-emerald-500" /> Visi Sekolah
+                  </h4>
                   <textarea
                     v-model="tempVisi"
-                    rows="3"
-                    class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 resize-none transition-colors text-sm"
-                    placeholder="Tuliskan visi sekolah di sini..."
+                    rows="6"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-emerald-500 focus:border-emerald-500 resize-none transition-colors text-sm"
+                    placeholder="Tuliskan rumusan visi sekolah di sini..."
                   ></textarea>
                 </div>
 
                 <!-- Misi -->
-                <div>
-                  <div class="flex items-center justify-between mb-2">
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                <div
+                  class="bg-gray-50 dark:bg-slate-700/30 rounded-xl p-5 md:p-6 border border-gray-100 dark:border-slate-600"
+                >
+                  <div
+                    class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-slate-600"
+                  >
+                    <h4
+                      class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"
                     >
-                      Misi Sekolah
-                    </label>
+                      <PhTarget class="w-5 h-5 text-red-500" /> Misi Sekolah
+                    </h4>
                     <button
                       @click="addMisi"
                       type="button"
-                      class="inline-flex items-center px-2.5 py-1 text-xs font-medium text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400 rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+                      class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-white bg-red-500 dark:bg-red-600 rounded-md hover:bg-red-600 dark:hover:bg-red-700 transition-colors shadow-sm"
                     >
                       <PhPlusCircle class="w-4 h-4 mr-1.5" /> Tambah Misi
                     </button>
                   </div>
-                  <div class="space-y-3">
+                  <div
+                    class="space-y-3 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar"
+                  >
                     <div
                       v-for="(item, index) in tempMisi"
                       :key="item.id"
-                      class="flex gap-2 items-start group bg-gray-50 dark:bg-slate-700/30 p-2 rounded-lg border border-gray-100 dark:border-slate-600"
+                      class="flex gap-3 items-start group bg-white dark:bg-slate-800 p-3 rounded-lg border border-gray-200 dark:border-slate-600 shadow-sm"
                       draggable="true"
                       @dragstart="handleDragStart(index, $event)"
                       @dragover.prevent
@@ -353,7 +509,7 @@ const saveChanges = async () => {
                       @drop="handleDrop(index)"
                     >
                       <div
-                        class="mt-1 text-gray-400 cursor-grab active:cursor-grabbing hover:text-gray-600 dark:hover:text-gray-300 shrink-0"
+                        class="mt-2 text-gray-400 cursor-grab active:cursor-grabbing hover:text-gray-600 dark:hover:text-gray-300 shrink-0"
                         title="Tahan dan geser untuk memindahkan"
                       >
                         <PhDotsSixVertical class="w-5 h-5" />
@@ -362,14 +518,14 @@ const saveChanges = async () => {
                         <textarea
                           v-model="item.text"
                           rows="2"
-                          class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 resize-none transition-colors text-sm"
+                          class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-red-500 focus:border-red-500 resize-none transition-colors text-sm"
                           placeholder="Tuliskan butir misi..."
                         ></textarea>
                       </div>
                       <button
                         @click="removeMisi(index)"
                         type="button"
-                        class="mt-0.5 p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-md transition-colors shrink-0"
+                        class="mt-2 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-md transition-colors shrink-0"
                         title="Hapus Misi"
                       >
                         <PhTrash class="w-4 h-4" />
@@ -377,48 +533,12 @@ const saveChanges = async () => {
                     </div>
                     <div
                       v-if="tempMisi.length === 0"
-                      class="text-center py-4 text-gray-500 dark:text-gray-400 text-sm border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-lg"
+                      class="text-center py-8 text-gray-500 dark:text-gray-400 text-sm border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-lg"
                     >
-                      Belum ada data misi. Silakan klik "Tambah Misi".
+                      Belum ada data misi. Silakan klik "Tambah Misi" untuk mulai mengisi.
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <!-- Kanan: Sambutan -->
-              <div class="flex flex-col">
-                <div class="mb-4">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                  >
-                    Jabatan Pemberi Sambutan
-                  </label>
-                  <input
-                    v-model="tempPrincipalPosition"
-                    type="text"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
-                    placeholder="Contoh: Kepala Sekolah"
-                  />
-                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Digunakan untuk mencocokkan profil dari data Guru & Staf.
-                  </p>
-                </div>
-
-                <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                >
-                  Teks Sambutan
-                </label>
-                <div class="flex-1">
-                  <RichTextEditor
-                    v-model="tempSambutan"
-                    placeholder="Tuliskan sambutan kepala sekolah..."
-                  />
-                </div>
-                <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mt-4">
-                  Teks sambutan ini akan tampil pada halaman
-                  <strong>"Visi, Misi & Tujuan"</strong> di antarmuka publik website.
-                </p>
               </div>
             </div>
           </div>

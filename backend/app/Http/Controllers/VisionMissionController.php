@@ -46,6 +46,7 @@ class VisionMissionController extends Controller
             'missions' => 'nullable|array',
             'missions.*.text' => 'required|string',
             'principal_speech' => 'nullable|string',
+            'principal_id' => 'nullable|integer',
         ]);
 
         if ($validator->fails()) {
