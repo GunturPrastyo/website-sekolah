@@ -817,9 +817,12 @@
       <!-- Video Profil & Galeri Section -->
       <section
         class="relative py-8 md:py-6 mt-0 md:mt-16 -mx-6 md:mx-0 bg-blue-950 overflow-hidden px-6 md:px-4 lg:px-6 mb-0 md:mb-12 md:rounded-lg shadow-xl bg-center bg-cover md:bg-fixed"
-        style="
-          background-image: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop');
-        "
+        style="background-image: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop')"
+        :style="{
+          backgroundImage: `url(${
+            appearanceSettings.galleryBackgroundImage || 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop'
+          })`,
+        }"
       >
         <!-- Overlay Parallax -->
         <div class="absolute inset-0 bg-blue-950/85 dark:bg-slate-900/90"></div>
@@ -1637,6 +1640,7 @@ const appearanceSettings = ref({
   benefitPrestasiImage: "",
   programCoverImage: "",
   ppdbBackgroundImage: "",
+  galleryBackgroundImage: "",
 });
 
 const activeFaq = ref(null);
@@ -2374,6 +2378,8 @@ const fetchSettings = async () => {
         response.data.data.programCoverImage || "";
       appearanceSettings.value.ppdbBackgroundImage =
         response.data.data.ppdbBackgroundImage || "";
+      appearanceSettings.value.galleryBackgroundImage =
+        response.data.data.galleryBackgroundImage || "";
 
       // Jika pertama kali load (cache kosong), jalankan animasi setelah data turun
       if (isFirstLoad && !isTypewriterStarted.value) {

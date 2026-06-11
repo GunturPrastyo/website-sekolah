@@ -76,6 +76,7 @@ const appearanceSettings = ref({
   programCoverImage: "",
   loginBackground: "",
   ppdbBackgroundImage: "",
+  galleryBackgroundImage: "",
 });
 
 // State Akun
@@ -604,7 +605,7 @@ const updateProfile = async () => {
             <h5 class="font-semibold text-gray-700 dark:text-gray-300 mb-3 text-sm">
               Gambar Komponen Beranda
             </h5>
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
               <div
                 class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
               >
@@ -647,6 +648,15 @@ const updateProfile = async () => {
                 <ImageUploader
                   v-model="appearanceSettings.ppdbBackgroundImage"
                   label="Gambar Latar FAQ PPDB"
+                  containerClass="w-full aspect-[21/9]"
+                />
+              </div>
+              <div
+                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+              >
+                <ImageUploader
+                  v-model="appearanceSettings.galleryBackgroundImage"
+                  label="Gambar Latar Video & Galeri"
                   containerClass="w-full aspect-[21/9]"
                 />
               </div>
