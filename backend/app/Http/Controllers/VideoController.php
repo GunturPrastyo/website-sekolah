@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Video;
+use App\Models\SchoolVideo;
 use Illuminate\Http\Request;
 
 class VideoController extends Controller
 {
     public function index()
     {
-        $video = Video::first();
+        $video = SchoolVideo::first();
         return response()->json(['data' => $video]);
     }
 
@@ -19,11 +19,11 @@ class VideoController extends Controller
             'url' => 'nullable|string'
         ]);
 
-        $video = Video::first();
+        $video = SchoolVideo::first();
         if ($video) {
             $video->update(['url' => $validated['url']]);
         } else {
-            $video = Video::create(['url' => $validated['url']]);
+            $video = SchoolVideo::create(['url' => $validated['url']]);
         }
 
         return response()->json(['data' => $video]);
