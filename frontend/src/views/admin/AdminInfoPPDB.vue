@@ -735,17 +735,10 @@ const removeBrosur = async () => {
             </button>
           </div>
           <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
-            <div class="flex justify-between items-center mb-4">
+            <div class="mb-4">
               <p class="text-sm text-gray-500 dark:text-gray-400">
                 Atur syarat-syarat pendaftaran siswa baru.
               </p>
-              <button
-                @click="addSyarat"
-                type="button"
-                class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400 rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
-              >
-                <PhPlusCircle class="w-4 h-4 mr-1.5" /> Tambah Syarat
-              </button>
             </div>
             <div class="space-y-3">
               <div
@@ -783,6 +776,13 @@ const removeBrosur = async () => {
               >
                 Belum ada data. Silakan klik "Tambah Syarat".
               </div>
+              <button
+                @click="addSyarat"
+                type="button"
+                class="mt-2 w-full inline-flex items-center justify-center px-4 py-3 text-sm font-bold text-gray-600 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-800 hover:border-gray-400 dark:text-gray-400 dark:bg-slate-700/50 dark:border-slate-600 dark:hover:bg-slate-700 dark:hover:text-gray-200 dark:hover:border-slate-500 transition-colors"
+              >
+                <PhPlusCircle class="w-5 h-5 mr-2" /> Tambah Syarat
+              </button>
             </div>
           </div>
           <div
@@ -837,17 +837,10 @@ const removeBrosur = async () => {
             </button>
           </div>
           <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
-            <div class="flex justify-between items-center mb-4">
+            <div class="mb-4">
               <p class="text-sm text-gray-500 dark:text-gray-400">
                 Atur tahapan proses pendaftaran. Urutan akan menjadi nomor langkah (step).
               </p>
-              <button
-                @click="addAlur"
-                type="button"
-                class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400 rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
-              >
-                <PhPlusCircle class="w-4 h-4 mr-1.5" /> Tambah Alur
-              </button>
             </div>
             <div class="space-y-3">
               <div
@@ -898,6 +891,13 @@ const removeBrosur = async () => {
               >
                 Belum ada data alur.
               </div>
+              <button
+                @click="addAlur"
+                type="button"
+                class="mt-2 w-full inline-flex items-center justify-center px-4 py-3 text-sm font-bold text-gray-600 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-800 hover:border-gray-400 dark:text-gray-400 dark:bg-slate-700/50 dark:border-slate-600 dark:hover:bg-slate-700 dark:hover:text-gray-200 dark:hover:border-slate-500 transition-colors"
+              >
+                <PhPlusCircle class="w-5 h-5 mr-2" /> Tambah Alur
+              </button>
             </div>
           </div>
           <div
@@ -952,18 +952,11 @@ const removeBrosur = async () => {
             </button>
           </div>
           <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
-            <div class="flex justify-between items-center mb-4">
+            <div class="mb-4">
               <p class="text-sm text-gray-500 dark:text-gray-400">
                 Atur jalur penerimaan siswa baru, termasuk nama jalur, kuota, ikon, dan
                 deskripsinya.
               </p>
-              <button
-                @click="addJalur"
-                type="button"
-                class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400 rounded-md hover:bg-blue-100 dark:bg-blue-900/50 transition-colors"
-              >
-                <PhPlusCircle class="w-4 h-4 mr-1.5" /> Tambah Jalur
-              </button>
             </div>
             <div class="space-y-4">
               <div
@@ -1050,6 +1043,13 @@ const removeBrosur = async () => {
               >
                 Belum ada data. Silakan klik "Tambah Jalur".
               </div>
+              <button
+                @click="addJalur"
+                type="button"
+                class="mt-2 w-full inline-flex items-center justify-center px-4 py-3 text-sm font-bold text-gray-600 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-800 hover:border-gray-400 dark:text-gray-400 dark:bg-slate-700/50 dark:border-slate-600 dark:hover:bg-slate-700 dark:hover:text-gray-200 dark:hover:border-slate-500 transition-colors"
+              >
+                <PhPlusCircle class="w-5 h-5 mr-2" /> Tambah Jalur
+              </button>
             </div>
           </div>
           <div
@@ -1104,17 +1104,10 @@ const removeBrosur = async () => {
             </button>
           </div>
           <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
-            <div class="flex justify-between items-center mb-4">
+            <div class="mb-4">
               <p class="text-sm text-gray-500 dark:text-gray-400">
                 Atur pertanyaan dan jawaban yang sering ditanyakan seputar PPDB.
               </p>
-              <button
-                @click="addFaq"
-                type="button"
-                class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400 rounded-md hover:bg-blue-100 dark:bg-blue-900/50 transition-colors"
-              >
-                <PhPlusCircle class="w-4 h-4 mr-1.5" /> Tambah FAQ
-              </button>
             </div>
             <div class="space-y-4">
               <div
@@ -1160,6 +1153,13 @@ const removeBrosur = async () => {
               >
                 Belum ada data FAQ. Silakan klik "Tambah FAQ".
               </div>
+              <button
+                @click="addFaq"
+                type="button"
+                class="mt-2 w-full inline-flex items-center justify-center px-4 py-3 text-sm font-bold text-gray-600 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-800 hover:border-gray-400 dark:text-gray-400 dark:bg-slate-700/50 dark:border-slate-600 dark:hover:bg-slate-700 dark:hover:text-gray-200 dark:hover:border-slate-500 transition-colors"
+              >
+                <PhPlusCircle class="w-5 h-5 mr-2" /> Tambah FAQ
+              </button>
             </div>
           </div>
           <div
