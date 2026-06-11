@@ -36,7 +36,10 @@
           style="font-family: 'Merriweather', serif"
         >
           <span class="inline-flex items-center justify-center">
-            <PhQuotes class="w-6 h-6 sm:w-8 sm:h-8 mr-2 hidden sm:block opacity-80" />
+            <PhQuotes
+              class="w-6 h-6 sm:w-8 sm:h-8 mr-2 hidden sm:block opacity-80"
+              weight="fill"
+            />
             {{ slogan }}
           </span>
         </p>
