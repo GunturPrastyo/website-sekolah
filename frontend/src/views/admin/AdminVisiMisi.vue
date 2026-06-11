@@ -243,8 +243,8 @@ const saveChanges = async () => {
           <div
             class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100 dark:border-slate-700"
           >
-            <div class="p-2 bg-blue-50 dark:bg-blue-900/50 rounded-lg">
-              <PhMegaphone class="w-6 h-6 text-blue-600 dark:text-blue-400" />
+            <div class="p-2 bg-blue-100 dark:bg-blue-900/60 rounded-lg">
+              <PhMegaphone class="w-6 h-6 text-blue-700 dark:text-blue-400" />
             </div>
             <h3
               class="text-2xl font-bold text-gray-800 dark:text-white"
@@ -276,8 +276,8 @@ const saveChanges = async () => {
           <div
             class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100 dark:border-slate-700"
           >
-            <div class="p-2 bg-emerald-50 dark:bg-emerald-900/50 rounded-lg">
-              <PhEye class="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+            <div class="p-2 bg-emerald-100 dark:bg-emerald-900/60 rounded-lg">
+              <PhEye class="w-6 h-6 text-emerald-700 dark:text-emerald-400" />
             </div>
             <h3
               class="text-xl font-bold text-gray-800 dark:text-white"
@@ -309,8 +309,8 @@ const saveChanges = async () => {
           <div
             class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100 dark:border-slate-700"
           >
-            <div class="p-2 bg-red-50 dark:bg-red-900/50 rounded-lg">
-              <PhTarget class="w-6 h-6 text-red-600 dark:text-red-400" />
+            <div class="p-2 bg-red-100 dark:bg-red-900/60 rounded-lg">
+              <PhTarget class="w-6 h-6 text-red-700 dark:text-red-400" />
             </div>
             <h3
               class="text-xl font-bold text-gray-800 dark:text-white"
@@ -392,12 +392,13 @@ const saveChanges = async () => {
                 <h4
                   class="text-lg font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-2 pb-3 border-b border-gray-200 dark:border-slate-600"
                 >
-                  <PhMegaphone class="w-5 h-5 text-blue-500" /> Pengaturan Sambutan
+                  <PhMegaphone class="w-5 h-5 text-blue-700 dark:text-blue-500" />
+                  Pengaturan Sambutan
                 </h4>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   <div class="lg:col-span-1 flex flex-col">
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"
                     >
                       Pilih Profil Pemberi Sambutan
                     </label>
@@ -450,7 +451,7 @@ const saveChanges = async () => {
                   </div>
                   <div class="lg:col-span-2">
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"
                     >
                       Teks Sambutan
                     </label>
@@ -475,7 +476,8 @@ const saveChanges = async () => {
                   <h4
                     class="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2 pb-3 border-b border-gray-200 dark:border-slate-600"
                   >
-                    <PhEye class="w-5 h-5 text-emerald-500" /> Visi Sekolah
+                    <PhEye class="w-5 h-5 text-emerald-700 dark:text-emerald-500" /> Visi
+                    Sekolah
                   </h4>
                   <textarea
                     v-model="tempVisi"
@@ -489,21 +491,13 @@ const saveChanges = async () => {
                 <div
                   class="bg-gray-50 dark:bg-slate-700/30 rounded-xl p-5 md:p-6 border border-gray-100 dark:border-slate-600"
                 >
-                  <div
-                    class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-slate-600"
-                  >
+                  <div class="mb-4 pb-3 border-b border-gray-200 dark:border-slate-600">
                     <h4
                       class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"
                     >
-                      <PhTarget class="w-5 h-5 text-red-500" /> Misi Sekolah
+                      <PhTarget class="w-5 h-5 text-red-700 dark:text-red-500" /> Misi
+                      Sekolah
                     </h4>
-                    <button
-                      @click="addMisi"
-                      type="button"
-                      class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-white bg-red-500 dark:bg-red-600 rounded-md hover:bg-red-600 dark:hover:bg-red-700 transition-colors shadow-sm"
-                    >
-                      <PhPlusCircle class="w-4 h-4 mr-1.5" /> Tambah Misi
-                    </button>
                   </div>
                   <div
                     class="space-y-3 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar"
@@ -547,6 +541,14 @@ const saveChanges = async () => {
                     >
                       Belum ada data misi. Silakan klik "Tambah Misi" untuk mulai mengisi.
                     </div>
+
+                    <button
+                      @click="addMisi"
+                      type="button"
+                      class="mt-2 w-full inline-flex items-center justify-center px-4 py-3 text-sm font-bold text-gray-600 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-800 hover:border-gray-400 dark:text-gray-400 dark:bg-slate-700/50 dark:border-slate-600 dark:hover:bg-slate-700 dark:hover:text-gray-200 dark:hover:border-slate-500 transition-colors"
+                    >
+                      <PhPlusCircle class="w-5 h-5 mr-2" /> Tambah Misi
+                    </button>
                   </div>
                 </div>
               </div>
