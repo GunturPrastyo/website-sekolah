@@ -36,22 +36,25 @@
           >
             <div class="relative w-full max-w-sm aspect-[4/5]">
               <div
-                class="absolute -left-4 -bottom-4 md:-left-6 md:-bottom-6 w-full h-full bg-blue-600 dark:bg-blue-950 rounded-2xl z-0 shadow-lg"
+                class="absolute -left-4 -bottom-4 md:-left-6 md:-bottom-6 w-full h-full bg-blue-600 dark:bg-blue-950 rounded-lg z-0 shadow-lg"
               ></div>
               <div
-                class="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 z-10 bg-white dark:bg-slate-800"
+                class="absolute inset-0 rounded-lg overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 z-10 bg-white dark:bg-slate-800"
               >
                 <img
                   v-if="principal.photo"
                   :src="principal.photo"
-                  class="w-full h-full object-cover"
+                  class="w-full h-full object-cover rounded-lg"
                   :alt="principal.position"
                 />
                 <div
                   v-else
-                  class="w-full h-full flex flex-col items-center justify-center bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500"
+                  class="w-full h-full flex flex-col items-center justify-center bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500 rounded-lg"
                 >
-                  <span class="text-sm font-medium">Foto Belum Tersedia</span>
+                  <PhUser
+                    class="w-32 h-32 text-gray-300 dark:text-gray-500 mb-4"
+                    weight="fill"
+                  />
                 </div>
                 <div
                   class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6"
@@ -81,26 +84,31 @@
               <div class="h-4 bg-gray-200 dark:bg-slate-700 rounded w-5/6"></div>
               <div class="h-4 bg-gray-200 dark:bg-slate-700 rounded w-4/6"></div>
             </div>
-            <div v-else class="relative z-10 mt-6">
+            <div
+              v-else
+              class="relative z-10 mt-6 opacity-0 translate-y-4 transition-all duration-1000 ease-in-out"
+              ref="textContainerRef"
+            >
               <PhQuotes
-                class="absolute -top-4 -left-4 md:-top-6 md:-left-6 w-8 h-8 md:w-12 md:h-12 text-blue-100 dark:text-slate-800 -z-10 rotate-180"
+                class="absolute -top-4 right-0 md:right-4 w-24 h-24 md:w-32 md:h-32 text-blue-50 dark:text-slate-800 -z-10"
+                weight="fill"
               />
               <div
-                class="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed text-justify opacity-0 translate-y-4 transition-all duration-1000 ease-in-out editor-content"
-                ref="textContainerRef"
+                class="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed text-justify editor-content relative z-10"
                 v-html="sambutan"
               ></div>
-            </div>
 
-            <div
-              class="mt-8 pt-6 border-t border-gray-100 dark:border-slate-800 inline-block"
-            >
-              <p class="font-bold text-blue-950 dark:text-white text-lg">
-                {{ principal.name }}
-              </p>
-              <p class="text-sm text-gray-500 dark:text-gray-400">
-                NIP. {{ principal.nip }}
-              </p>
+              <div class="mt-8 pt-6 border-t border-gray-100 dark:border-slate-800 block">
+                <p class="font-bold text-blue-950 dark:text-white text-lg">
+                  {{ principal.name }}
+                </p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  {{ principal.position }}
+                  <span v-if="principal.nip && principal.nip !== '-'">
+                    | NIP. {{ principal.nip }}</span
+                  >
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -186,7 +194,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { PhQuotes } from "@phosphor-icons/vue";
+import { PhQuotes, PhUser } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 import api from "@/api/index.js";
 
@@ -196,6 +204,7 @@ const visi = ref("");
 const misi = ref([]);
 const sambutan = ref("");
 const principalPosition = ref("Kepala Sekolah");
+const principalId = ref(null);
 const isLoading = ref(true);
 
 const principal = ref({
@@ -220,7 +229,7 @@ const fetchVisionMission = async () => {
     visi.value = data.vision || "";
     misi.value = data.missions || [];
     sambutan.value = data.principal_speech || "";
-    principalPosition.value = data.principal_position || "Kepala Sekolah";
+    principalId.value = data.principal_id || null;
 
     await fetchPrincipal();
   } catch (error) {
@@ -234,11 +243,24 @@ const fetchPrincipal = async () => {
   try {
     const response = await api.get("/api/guru-staf");
     if (response.data && response.data.data) {
-      const principalStaff = response.data.data.find(
-        (staff) =>
-          staff.position &&
-          staff.position.toLowerCase() === principalPosition.value.toLowerCase()
-      );
+      let principalStaff = null;
+
+      // 1. Prioritaskan pencarian menggunakan ID Staf berdasarkan setelan dari Admin
+      if (principalId.value) {
+        principalStaff = response.data.data.find(
+          (staff) => staff.id === principalId.value
+        );
+      }
+
+      // 2. Fallback pencarian berdasarkan jabatan jika ID Staf kosong / tidak disetel
+      if (!principalStaff) {
+        principalStaff = response.data.data.find(
+          (staff) =>
+            staff.position &&
+            staff.position.toLowerCase() === principalPosition.value.toLowerCase()
+        );
+      }
+
       if (principalStaff) {
         principal.value.name = principalStaff.name;
         principal.value.position = principalStaff.position;
