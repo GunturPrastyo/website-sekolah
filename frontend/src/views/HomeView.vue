@@ -620,10 +620,17 @@
                 class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out group relative rounded-lg overflow-hidden shadow-lg h-[280px] sm:h-[350px] md:h-[400px] w-full block"
               >
                 <img
-                  :src="getNewsImage(mainNews.image)"
+                  v-if="getNewsImage(mainNews)"
+                  :src="getNewsImage(mainNews)"
                   class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   :alt="mainNews.title"
                 />
+                <div
+                  v-else
+                  class="absolute inset-0 w-full h-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center"
+                >
+                  <PhNewspaper class="w-16 h-16 text-slate-400 opacity-50" />
+                </div>
                 <div
                   class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"
                 ></div>
@@ -677,10 +684,17 @@
                   >
                     <div class="h-40 overflow-hidden relative">
                       <img
-                        :src="getNewsImage(news.image)"
+                        v-if="getNewsImage(news)"
+                        :src="getNewsImage(news)"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         :alt="news.title"
                       />
+                      <div
+                        v-else
+                        class="w-full h-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center"
+                      >
+                        <PhNewspaper class="w-10 h-10 text-slate-400 opacity-50" />
+                      </div>
                     </div>
                     <div class="p-4 flex flex-col flex-grow">
                       <span
@@ -750,24 +764,32 @@
 
                 <!-- Scroll Y Container -->
                 <div
+                  ref="announcementsWrapper"
                   class="relative flex-1 overflow-hidden group bg-white dark:bg-slate-800 z-10 min-h-0"
                 >
                   <!-- Efek Gradasi Atas-Bawah (Biar scrollnya terlihat smooth) -->
                   <div
+                    v-if="shouldAutoScroll"
                     class="absolute top-0 left-0 w-full h-10 bg-gradient-to-b from-white dark:from-slate-800 to-transparent z-20 pointer-events-none"
                   ></div>
                   <div
+                    v-if="shouldAutoScroll"
                     class="absolute bottom-0 left-0 w-full h-10 bg-gradient-to-t from-white dark:from-slate-800 to-transparent z-20 pointer-events-none"
                   ></div>
 
                   <!-- Wrapper Animasi Scroll Y -->
                   <!-- group-hover pause akan membuat scroll berhenti saat mouse diletakkan ke area ini -->
                   <div
-                    class="animate-scroll-y group-hover:[animation-play-state:paused] flex flex-col"
+                    ref="announcementsContent"
+                    class="flex flex-col"
+                    :class="{
+                      'animate-scroll-y group-hover:[animation-play-state:paused]': shouldAutoScroll,
+                      'overflow-y-auto custom-scrollbar': !shouldAutoScroll,
+                    }"
                   >
                     <!-- Karena butuh infinite loop, isi pengumuman akan kita duplikat 2x -->
                     <template v-if="announcements.length > 0">
-                      <template v-for="i in 2" :key="'loop-' + i">
+                      <template v-for="i in shouldAutoScroll ? 2 : 1" :key="'loop-' + i">
                         <div class="flex flex-col">
                           <!-- Item Pengumuman -->
                           <router-link
@@ -1643,6 +1665,7 @@ import {
   PhDownloadSimple,
   PhPaperclip,
   PhX,
+  PhNewspaper,
 } from "@phosphor-icons/vue";
 
 const displayedTitle = ref("");
@@ -1663,6 +1686,17 @@ const appearanceSettings = ref({
 const activeFaq = ref(null);
 const toggleFaq = (index) => {
   activeFaq.value = activeFaq.value === index ? null : index;
+};
+
+let scrollObserver = null;
+const observeElements = () => {
+  if (!scrollObserver) return;
+  document.querySelectorAll(".fade-on-scroll").forEach((el) => {
+    if (!el.dataset.observed) {
+      scrollObserver.observe(el);
+      el.dataset.observed = "true";
+    }
+  });
 };
 
 const programs = ref([]);
@@ -1731,6 +1765,22 @@ const fetchPrograms = async () => {
 const recentNews = ref([]);
 const announcements = ref([]);
 
+const announcementsWrapper = ref(null);
+const announcementsContent = ref(null);
+const shouldAutoScroll = ref(false);
+
+const checkScroll = () => {
+  if (
+    announcementsWrapper.value &&
+    announcementsContent.value &&
+    announcementsContent.value.children.length > 0
+  ) {
+    const singleContentHeight = announcementsContent.value.children[0].scrollHeight;
+    shouldAutoScroll.value =
+      singleContentHeight > announcementsWrapper.value.clientHeight;
+  }
+};
+
 const mainNews = computed(() =>
   recentNews.value.length > 0 ? recentNews.value[0] : null
 );
@@ -1740,10 +1790,18 @@ const fetchNewsAndAnnouncements = async () => {
   try {
     const response = await api.get("/api/public-news");
     if (response.data && response.data.data) {
-      const allNews = response.data.data;
+      // Pastikan berita diurutkan secara descending dari yang paling baru
+      const allNews = response.data.data.sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
       const isPengumuman = (cat) => cat && cat.toLowerCase() === "pengumuman";
       recentNews.value = allNews.filter((n) => !isPengumuman(n.category)).slice(0, 4);
-      announcements.value = allNews.filter((n) => isPengumuman(n.category)).slice(0, 5);
+      announcements.value = allNews.filter((n) => isPengumuman(n.category)).slice(0, 10);
+
+      nextTick(() => {
+        setTimeout(checkScroll, 500);
+        observeElements();
+      });
     }
   } catch (error) {
     console.error("Gagal mengambil data berita dan pengumuman:", error);
@@ -1804,10 +1862,14 @@ const getImageUrl = (path) => {
   return `${baseUrl}/storage/${cleanPath}`;
 };
 
-const getNewsImage = (image) => {
-  if (!image)
-    return "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=600&auto=format&fit=crop";
-  return getImageUrl(image);
+const getNewsImage = (newsItem) => {
+  if (!newsItem) return "";
+  let imagePath = newsItem.image;
+  if (newsItem.images && newsItem.images.length > 0) {
+    imagePath = newsItem.images[0];
+  }
+  if (!imagePath) return "";
+  return getImageUrl(imagePath);
 };
 
 // State & Logika Kalender Dinamis
@@ -1885,6 +1947,8 @@ const hideTooltip = () => {
   tooltip.value.show = false;
   tooltip.value.tailOffset = 0;
 };
+
+let resizeObserver = null;
 
 // Modal Lampiran
 const isAttachmentModalOpen = ref(false);
@@ -2191,6 +2255,10 @@ const fetchGalleries = async () => {
     }
   } catch (error) {
     console.error("Gagal mengambil data galeri:", error);
+  } finally {
+    nextTick(() => {
+      observeElements();
+    });
   }
 };
 
@@ -2221,6 +2289,10 @@ const fetchSchoolVideo = async () => {
     }
   } catch (error) {
     console.error("Gagal mengambil data video profil:", error);
+  } finally {
+    nextTick(() => {
+      observeElements();
+    });
   }
 };
 
@@ -2494,8 +2566,15 @@ onMounted(() => {
   updateCountdown();
   countdownInterval = setInterval(updateCountdown, 1000);
 
+  resizeObserver = new ResizeObserver(() => {
+    checkScroll();
+  });
+  if (announcementsWrapper.value) {
+    resizeObserver.observe(announcementsWrapper.value);
+  }
+
   // Intersection Observer untuk animasi fade-up pada saat scroll
-  const observer = new IntersectionObserver(
+  scrollObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -2507,16 +2586,14 @@ onMounted(() => {
             isAlumniStatsVisible.value = true;
             animateAlumniStats();
           }
-          observer.unobserve(entry.target); // Animasi hanya berjalan 1x
+          scrollObserver.unobserve(entry.target); // Animasi hanya berjalan 1x
         }
       });
     },
     { threshold: 0.1 }
   );
 
-  document.querySelectorAll(".fade-on-scroll").forEach((el) => {
-    observer.observe(el);
-  });
+  observeElements();
 
   // Initialize main Swiper
   new Swiper(".swiper-container", {
@@ -2643,6 +2720,12 @@ onBeforeUnmount(() => {
   if (countdownInterval) clearInterval(countdownInterval);
   window.removeEventListener("settings-updated", fetchSettings);
   window.removeEventListener("storage", handleStorageChange);
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+  }
+  if (scrollObserver) {
+    scrollObserver.disconnect();
+  }
 });
 </script>
 
