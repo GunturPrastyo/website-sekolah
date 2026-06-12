@@ -312,6 +312,18 @@ const getGalleryCategoryName = (id) => {
   const cat = galleryCategories.value.find((c) => c.id === id);
   return cat ? cat.name : id;
 };
+
+const getImageUrl = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http") || path.startsWith("data:image")) return path;
+
+  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+  if (cleanPath.startsWith("storage/")) {
+    return `${baseUrl}/${cleanPath}`;
+  }
+  return `${baseUrl}/storage/${cleanPath}`;
+};
 </script>
 
 <template>
@@ -427,7 +439,10 @@ const getGalleryCategoryName = (id) => {
                     @dragenter.prevent
                     @drop="handleImageDrop(0)"
                   >
-                    <img :src="form.images[0]" class="w-full h-full object-cover" />
+                    <img
+                      :src="getImageUrl(form.images[0])"
+                      class="w-full h-full object-cover"
+                    />
                     <div
                       class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm"
                     >
@@ -453,7 +468,7 @@ const getGalleryCategoryName = (id) => {
                       @dragenter.prevent
                       @drop="handleImageDrop(index + 1)"
                     >
-                      <img :src="img" class="w-full h-full object-cover" />
+                      <img :src="getImageUrl(img)" class="w-full h-full object-cover" />
                       <button
                         type="button"
                         @click="removeImage(index + 1)"
@@ -641,7 +656,7 @@ const getGalleryCategoryName = (id) => {
                       @drop="handleGalleryImageDrop(0)"
                     >
                       <img
-                        :src="galleryForm.images[0]"
+                        :src="getImageUrl(galleryForm.images[0])"
                         class="w-full h-full object-cover"
                       />
                       <div
@@ -667,7 +682,7 @@ const getGalleryCategoryName = (id) => {
                       @dragenter.prevent
                       @drop="handleGalleryImageDrop(index + 1)"
                     >
-                      <img :src="img" class="w-full h-full object-cover" />
+                      <img :src="getImageUrl(img)" class="w-full h-full object-cover" />
                       <button
                         type="button"
                         @click="removeGalleryImage(index + 1)"
@@ -778,7 +793,7 @@ const getGalleryCategoryName = (id) => {
             <div class="w-full aspect-[16/9] bg-gray-100 dark:bg-slate-700 relative">
               <img
                 v-if="news.images?.length > 0"
-                :src="news.images[0]"
+                :src="getImageUrl(news.images[0])"
                 class="w-full h-full object-cover"
               />
               <div
@@ -862,7 +877,7 @@ const getGalleryCategoryName = (id) => {
             <div class="w-full aspect-[4/3] bg-gray-100 dark:bg-slate-700 relative">
               <img
                 v-if="item.image"
-                :src="item.image"
+                :src="getImageUrl(item.image)"
                 class="w-full h-full object-cover"
               />
               <div
