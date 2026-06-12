@@ -57,15 +57,7 @@
                 <h3
                   class="font-bold text-white text-base min-[400px]:text-lg sm:text-2xl"
                 >
-                  {{ stat.prefix
-                  }}{{ stat.isNumber ? stat.value.toLocaleString("id-ID") : stat.value
-                  }}{{ stat.suffix }} }}{{
-                    stat.isNumber
-                      ? stat.value >= 1000
-                        ? (stat.value / 1000).toFixed(1) + "k+"
-                        : stat.value
-                      : stat.value + stat.suffix
-                  }}
+                  {{ stat.prefix }}{{ formatStatValue(stat) }}
                 </h3>
                 <p
                   class="mt-0.5 sm:mt-1 text-[9px] min-[400px]:text-[10px] sm:text-xs font-semibold uppercase text-white/80 tracking-tighter sm:tracking-normal line-clamp-1"
@@ -614,118 +606,183 @@
             <!-- KIRI: Bagian Kegiatan & Berita (Grid 1 Atas, 3 Bawah) -->
             <div class="lg:col-span-2 flex flex-col gap-6">
               <!-- Berita Utama (Atas - 1 Besar) -->
-              <router-link
-                v-if="mainNews"
-                :to="`/artikel/${mainNews.slug}`"
-                class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out group relative rounded-lg overflow-hidden shadow-lg h-[280px] sm:h-[350px] md:h-[400px] w-full block"
-              >
-                <img
-                  v-if="getNewsImage(mainNews)"
-                  :src="getNewsImage(mainNews)"
-                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  :alt="mainNews.title"
-                />
+              <template v-if="isLoadingNews">
                 <div
-                  v-else
-                  class="absolute inset-0 w-full h-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center"
+                  class="rounded-lg overflow-hidden shadow-lg h-[280px] sm:h-[350px] md:h-[400px] w-full bg-slate-200 dark:bg-slate-700 animate-pulse relative"
                 >
-                  <PhNewspaper class="w-16 h-16 text-slate-400 opacity-50" />
-                </div>
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"
-                ></div>
-                <div class="absolute bottom-0 left-0 p-5 md:p-8 w-full">
-                  <span
-                    class="inline-block px-3 py-1 mb-3 text-sm font-bold tracking-wide text-white bg-blue-600 rounded-full"
-                    style="font-family: 'Kalam', cursive"
-                    >{{ mainNews.category || "Kegiatan" }}</span
-                  >
-                  <h3
-                    class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors"
-                  >
-                    {{ mainNews.title }}
-                  </h3>
-                  <p class="text-gray-200 text-sm md:text-base line-clamp-3">
-                    {{ mainNews.excerpt || stripTags(mainNews.content) }}
-                  </p>
-                  <div
-                    class="mt-4 flex items-center justify-between text-gray-300 text-xs md:text-sm"
-                  >
-                    <div class="flex items-center">
-                      <PhCalendarBlank class="w-4 h-4 mr-1.5" />
-                      {{ formatDate(mainNews.created_at) }}
-                    </div>
-                    <span class="flex items-center font-medium">
-                      <PhEye class="w-4 h-4 mr-1.5 text-blue-400" />
-                      {{ mainNews.views || 0 }}
-                    </span>
+                  <div class="absolute bottom-0 left-0 p-5 md:p-8 w-full space-y-3">
+                    <div
+                      class="h-6 w-20 bg-slate-300 dark:bg-slate-600 rounded-full"
+                    ></div>
+                    <div class="h-8 w-3/4 bg-slate-300 dark:bg-slate-600 rounded"></div>
+                    <div class="h-4 w-full bg-slate-300 dark:bg-slate-600 rounded"></div>
+                    <div class="h-4 w-5/6 bg-slate-300 dark:bg-slate-600 rounded"></div>
                   </div>
                 </div>
-              </router-link>
-              <div
-                v-else
-                class="h-[280px] sm:h-[350px] md:h-[400px] w-full bg-slate-200 dark:bg-slate-700 rounded-lg animate-pulse flex items-center justify-center"
-              >
-                <span class="text-slate-400 dark:text-slate-500">Memuat Berita...</span>
-              </div>
+              </template>
+              <template v-else>
+                <router-link
+                  v-if="mainNews"
+                  :to="`/artikel/${mainNews.slug}`"
+                  class="group relative rounded-lg overflow-hidden shadow-lg h-[280px] sm:h-[350px] md:h-[400px] w-full block transition-all duration-500"
+                >
+                  <img
+                    v-if="getNewsImage(mainNews)"
+                    :src="getNewsImage(mainNews)"
+                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    :alt="mainNews.title"
+                  />
+                  <div
+                    v-else
+                    class="absolute inset-0 w-full h-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center"
+                  >
+                    <PhNewspaper class="w-16 h-16 text-slate-400 opacity-50" />
+                  </div>
+                  <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"
+                  ></div>
+                  <div class="absolute bottom-0 left-0 p-5 md:p-8 w-full">
+                    <span
+                      class="inline-block px-3 py-1 mb-3 text-sm font-bold tracking-wide text-white bg-blue-600 rounded-full"
+                      style="font-family: 'Kalam', cursive"
+                      >{{ mainNews.category || "Kegiatan" }}</span
+                    >
+                    <h3
+                      class="text-lg sm:text-xl md:text-3xl font-bold text-white mb-1 sm:mb-2 group-hover:text-blue-300 transition-colors line-clamp-2"
+                    >
+                      {{ mainNews.title }}
+                    </h3>
+                    <p
+                      class="text-gray-200 text-xs sm:text-sm md:text-base line-clamp-2 sm:line-clamp-3"
+                    >
+                      {{ mainNews.excerpt || stripTags(mainNews.content) }}
+                    </p>
+                    <div
+                      class="mt-4 flex items-center justify-between text-gray-300 text-xs md:text-sm"
+                    >
+                      <div class="flex items-center">
+                        <PhCalendarBlank class="w-4 h-4 mr-1.5" />
+                        {{ formatDate(mainNews.created_at) }}
+                      </div>
+                      <span class="flex items-center font-medium">
+                        <PhEye class="w-4 h-4 mr-1.5 text-blue-400" />
+                        {{ mainNews.views || 0 }}
+                      </span>
+                    </div>
+                  </div>
+                </router-link>
+                <div
+                  v-else
+                  class="h-[280px] sm:h-[350px] md:h-[400px] w-full bg-slate-200 dark:bg-slate-700 rounded-lg flex items-center justify-center"
+                >
+                  <span class="text-slate-400 dark:text-slate-500"
+                    >Berita Belum Tersedia</span
+                  >
+                </div>
+              </template>
 
               <!-- Berita Pendukung (Bawah - 3 Kecil) -->
               <div class="relative">
                 <div
                   class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
                 >
-                  <router-link
-                    v-for="(news, index) in subNews"
-                    :key="news.id"
-                    :to="`/artikel/${news.slug}`"
-                    class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full"
-                    :class="{ 'sm:hidden lg:flex': index === 2 }"
-                    :style="{ transitionDelay: `${(index + 1) * 100}ms` }"
-                  >
-                    <div class="h-40 overflow-hidden relative">
-                      <img
-                        v-if="getNewsImage(news)"
-                        :src="getNewsImage(news)"
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        :alt="news.title"
-                      />
+                  <template v-if="isLoadingNews">
+                    <div
+                      v-for="i in 3"
+                      :key="'skel-news-' + i"
+                      class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border border-gray-100 dark:border-slate-700 flex flex-row sm:flex-col h-full animate-pulse"
+                      :class="{ 'sm:hidden lg:flex': i === 3 }"
+                    >
                       <div
-                        v-else
-                        class="w-full h-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center"
-                      >
-                        <PhNewspaper class="w-10 h-10 text-slate-400 opacity-50" />
-                      </div>
-                    </div>
-                    <div class="p-4 flex flex-col flex-grow">
-                      <span
-                        class="text-sm font-bold tracking-wide text-blue-600 mb-1.5"
-                        style="font-family: 'Kalam', cursive"
-                        >{{ news.category || "Berita" }}</span
-                      >
-                      <h4
-                        class="font-bold text-blue-950 dark:text-slate-100 text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 min-h-[40px]"
-                      >
-                        {{ news.title }}
-                      </h4>
-                      <p
-                        class="text-xs text-gray-500 dark:text-slate-400 line-clamp-2 mb-2 min-h-[32px]"
-                      >
-                        {{ news.excerpt || stripTags(news.content) }}
-                      </p>
+                        class="h-28 w-1/3 sm:w-full sm:h-40 bg-slate-200 dark:bg-slate-700 shrink-0"
+                      ></div>
                       <div
-                        class="mt-auto flex items-center justify-between text-gray-500 dark:text-slate-400 text-xs pt-3"
+                        class="p-3 sm:p-4 flex flex-col flex-grow justify-center sm:justify-start space-y-3"
                       >
-                        <div class="flex items-center">
-                          <PhCalendarBlank class="w-3.5 h-3.5 mr-1" />
-                          {{ formatDate(news.created_at) }}
+                        <div
+                          class="h-4 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"
+                        ></div>
+                        <div
+                          class="h-4 w-full bg-slate-200 dark:bg-slate-700 rounded"
+                        ></div>
+                        <div
+                          class="h-4 w-full bg-slate-200 dark:bg-slate-700 rounded hidden sm:block"
+                        ></div>
+                        <div
+                          class="h-3 w-4/5 bg-slate-200 dark:bg-slate-700 rounded hidden sm:block"
+                        ></div>
+                        <div class="mt-auto pt-1 sm:pt-3 flex justify-between">
+                          <div
+                            class="h-3 w-24 bg-slate-200 dark:bg-slate-700 rounded"
+                          ></div>
+                          <div
+                            class="h-3 w-10 bg-slate-200 dark:bg-slate-700 rounded"
+                          ></div>
                         </div>
-                        <span class="flex items-center font-medium">
-                          <PhEye class="w-4 h-4 mr-1.5 text-blue-400" />
-                          {{ news.views || 0 }}
-                        </span>
                       </div>
                     </div>
-                  </router-link>
+                  </template>
+                  <template v-else>
+                    <router-link
+                      v-for="(news, index) in subNews"
+                      :key="news.id"
+                      :to="`/artikel/${news.slug}`"
+                      class="group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-row sm:flex-col h-full transition-all duration-500"
+                      :class="{ 'sm:hidden lg:flex': index === 2 }"
+                    >
+                      <div
+                        class="h-28 w-1/3 sm:w-full sm:h-40 overflow-hidden relative shrink-0"
+                      >
+                        <img
+                          v-if="getNewsImage(news)"
+                          :src="getNewsImage(news)"
+                          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          :alt="news.title"
+                        />
+                        <div
+                          v-else
+                          class="w-full h-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center"
+                        >
+                          <PhNewspaper
+                            class="w-8 h-8 sm:w-10 sm:h-10 text-slate-400 opacity-50"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="p-3 sm:p-4 flex flex-col flex-grow justify-center sm:justify-start"
+                      >
+                        <span
+                          class="text-xs sm:text-sm font-bold tracking-wide text-blue-600 mb-1 sm:mb-1.5"
+                          style="font-family: 'Kalam', cursive"
+                          >{{ news.category || "Berita" }}</span
+                        >
+                        <h4
+                          class="font-bold text-blue-950 dark:text-slate-100 text-sm sm:text-base mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2"
+                        >
+                          {{ news.title }}
+                        </h4>
+                        <p
+                          class="text-xs text-gray-500 dark:text-slate-400 line-clamp-2 mb-2 hidden sm:-webkit-box"
+                        >
+                          {{ news.excerpt || stripTags(news.content) }}
+                        </p>
+                        <div
+                          class="mt-auto flex items-center justify-between text-gray-500 dark:text-slate-400 text-[10px] sm:text-xs pt-1 sm:pt-3"
+                        >
+                          <div class="flex items-center">
+                            <PhCalendarBlank class="w-3 sm:w-3.5 h-3 sm:h-3.5 mr-1" />
+                            {{ formatDate(news.created_at) }}
+                          </div>
+                          <span class="flex items-center font-medium">
+                            <PhEye
+                              class="w-3 sm:w-4 h-3 sm:h-4 mr-1 sm:mr-1.5 text-blue-400"
+                            />
+                            {{ news.views || 0 }}
+                          </span>
+                        </div>
+                      </div>
+                    </router-link>
+                  </template>
                 </div>
 
                 <!-- Mobile "Lihat berita lainnya" Link -->
@@ -769,68 +826,101 @@
                 >
                   <!-- Efek Gradasi Atas-Bawah (Biar scrollnya terlihat smooth) -->
                   <div
-                    v-if="shouldAutoScroll"
+                    v-if="shouldAutoScroll && !isLoadingNews"
                     class="absolute top-0 left-0 w-full h-10 bg-gradient-to-b from-white dark:from-slate-800 to-transparent z-20 pointer-events-none"
                   ></div>
                   <div
-                    v-if="shouldAutoScroll"
+                    v-if="shouldAutoScroll && !isLoadingNews"
                     class="absolute bottom-0 left-0 w-full h-10 bg-gradient-to-t from-white dark:from-slate-800 to-transparent z-20 pointer-events-none"
                   ></div>
 
-                  <!-- Wrapper Animasi Scroll Y -->
-                  <!-- group-hover pause akan membuat scroll berhenti saat mouse diletakkan ke area ini -->
-                  <div
-                    ref="announcementsContent"
-                    class="flex flex-col"
-                    :class="{
-                      'animate-scroll-y group-hover:[animation-play-state:paused]': shouldAutoScroll,
-                      'overflow-y-auto custom-scrollbar': !shouldAutoScroll,
-                    }"
-                  >
-                    <!-- Karena butuh infinite loop, isi pengumuman akan kita duplikat 2x -->
-                    <template v-if="announcements.length > 0">
-                      <template v-for="i in shouldAutoScroll ? 2 : 1" :key="'loop-' + i">
-                        <div class="flex flex-col">
-                          <!-- Item Pengumuman -->
-                          <router-link
-                            v-for="(item, index) in announcements"
-                            :key="item.id + '-' + i"
-                            :to="`/artikel/${item.slug}`"
-                            class="p-5 border-b border-blue-50 dark:border-slate-700/50 hover:bg-blue-100/50 dark:hover:bg-slate-700 transition-colors flex items-start"
-                          >
-                            <!-- Date Badge -->
-                            <div
-                              class="bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 rounded-lg p-2 mr-4 text-center min-w-[60px] flex-shrink-0"
-                              style="font-family: 'Kalam', cursive"
-                            >
-                              <span class="block text-xl font-bold leading-none">{{
-                                formatDay(item.created_at)
-                              }}</span>
-                              <span class="block text-xs uppercase mt-1 font-semibold">{{
-                                formatMonth(item.created_at)
-                              }}</span>
-                            </div>
-                            <!-- Content -->
-                            <div>
-                              <h4
-                                class="font-semibold text-blue-950 dark:text-slate-100 text-sm mb-1 line-clamp-2"
-                              >
-                                {{ item.title }}
-                              </h4>
-                              <p
-                                class="text-xs text-gray-500 dark:text-slate-400 line-clamp-3 leading-relaxed"
-                              >
-                                {{ item.excerpt || stripTags(item.content) }}
-                              </p>
-                            </div>
-                          </router-link>
+                  <template v-if="isLoadingNews">
+                    <div class="flex flex-col p-5 space-y-6">
+                      <div
+                        v-for="i in 4"
+                        :key="'skel-ann-' + i"
+                        class="flex items-start animate-pulse border-b border-blue-50 dark:border-slate-700/50 pb-5"
+                      >
+                        <div
+                          class="w-[60px] h-[60px] rounded-lg bg-slate-200 dark:bg-slate-700 mr-4 shrink-0"
+                        ></div>
+                        <div class="flex-1 space-y-2 py-1">
+                          <div
+                            class="h-4 w-full bg-slate-200 dark:bg-slate-700 rounded"
+                          ></div>
+                          <div
+                            class="h-4 w-5/6 bg-slate-200 dark:bg-slate-700 rounded"
+                          ></div>
+                          <div
+                            class="h-3 w-4/5 bg-slate-200 dark:bg-slate-700 rounded mt-2"
+                          ></div>
                         </div>
-                      </template>
-                    </template>
-                    <div v-else class="p-6 text-center text-gray-500 dark:text-gray-400">
-                      Tidak ada pengumuman saat ini.
+                      </div>
                     </div>
-                  </div>
+                  </template>
+                  <template v-else>
+                    <!-- Wrapper Animasi Scroll Y -->
+                    <!-- group-hover pause akan membuat scroll berhenti saat mouse diletakkan ke area ini -->
+                    <div
+                      ref="announcementsContent"
+                      class="flex flex-col"
+                      :class="{
+                        'animate-scroll-y group-hover:[animation-play-state:paused]': shouldAutoScroll,
+                        'overflow-y-auto custom-scrollbar': !shouldAutoScroll,
+                      }"
+                    >
+                      <!-- Karena butuh infinite loop, isi pengumuman akan kita duplikat 2x -->
+                      <template v-if="announcements.length > 0">
+                        <template
+                          v-for="i in shouldAutoScroll ? 2 : 1"
+                          :key="'loop-' + i"
+                        >
+                          <div class="flex flex-col">
+                            <!-- Item Pengumuman -->
+                            <router-link
+                              v-for="(item, index) in announcements"
+                              :key="item.id + '-' + i"
+                              :to="`/artikel/${item.slug}`"
+                              class="p-5 border-b border-blue-50 dark:border-slate-700/50 hover:bg-blue-100/50 dark:hover:bg-slate-700 transition-colors flex items-start"
+                            >
+                              <!-- Date Badge -->
+                              <div
+                                class="bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 rounded-lg p-2 mr-4 text-center min-w-[60px] flex-shrink-0"
+                                style="font-family: 'Kalam', cursive"
+                              >
+                                <span class="block text-xl font-bold leading-none">{{
+                                  formatDay(item.created_at)
+                                }}</span>
+                                <span
+                                  class="block text-xs uppercase mt-1 font-semibold"
+                                  >{{ formatMonth(item.created_at) }}</span
+                                >
+                              </div>
+                              <!-- Content -->
+                              <div>
+                                <h4
+                                  class="font-semibold text-blue-950 dark:text-slate-100 text-sm mb-1 line-clamp-2"
+                                >
+                                  {{ item.title }}
+                                </h4>
+                                <p
+                                  class="text-xs text-gray-500 dark:text-slate-400 line-clamp-3 leading-relaxed"
+                                >
+                                  {{ item.excerpt || stripTags(item.content) }}
+                                </p>
+                              </div>
+                            </router-link>
+                          </div>
+                        </template>
+                      </template>
+                      <div
+                        v-else
+                        class="p-6 text-center text-gray-500 dark:text-gray-400"
+                      >
+                        Tidak ada pengumuman saat ini.
+                      </div>
+                    </div>
+                  </template>
                 </div>
 
                 <!-- Action Button Bawah -->
@@ -1683,6 +1773,14 @@ const appearanceSettings = ref({
   galleryBackgroundImage: "",
 });
 
+const formatStatValue = (stat) => {
+  if (!stat.isNumber) return stat.value + (stat.suffix || "");
+  if (stat.value >= 1000) {
+    return (stat.value / 1000).toFixed(1).replace(/\.0$/, "") + "k+";
+  }
+  return stat.value; // Tidak menampilkan "+" jika di bawah ribuan
+};
+
 const activeFaq = ref(null);
 const toggleFaq = (index) => {
   activeFaq.value = activeFaq.value === index ? null : index;
@@ -1763,6 +1861,7 @@ const fetchPrograms = async () => {
 };
 
 const recentNews = ref([]);
+const isLoadingNews = ref(true);
 const announcements = ref([]);
 
 const announcementsWrapper = ref(null);
@@ -1787,6 +1886,7 @@ const mainNews = computed(() =>
 const subNews = computed(() => recentNews.value.slice(1, 4));
 
 const fetchNewsAndAnnouncements = async () => {
+  isLoadingNews.value = true;
   try {
     const response = await api.get("/api/public-news");
     if (response.data && response.data.data) {
@@ -1805,6 +1905,8 @@ const fetchNewsAndAnnouncements = async () => {
     }
   } catch (error) {
     console.error("Gagal mengambil data berita dan pengumuman:", error);
+  } finally {
+    isLoadingNews.value = false;
   }
 };
 
