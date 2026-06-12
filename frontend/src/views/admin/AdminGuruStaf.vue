@@ -811,9 +811,7 @@ const handleDeleteRole = (index) => {
             <div class="flex-1 h-px bg-gray-200 dark:bg-slate-700"></div>
           </div>
 
-          <div
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-          >
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div
               v-for="staff in group.staff"
               :key="staff.id"
