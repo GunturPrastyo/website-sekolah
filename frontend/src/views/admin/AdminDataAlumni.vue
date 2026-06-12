@@ -51,6 +51,25 @@ const isBulkSubmitting = ref(false);
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 
+const allAlumniList = ref([]);
+const fetchAllAlumnisForInstansi = async () => {
+  try {
+    // Mengambil semua data alumni tanpa limit paginasi (menggunakan endpoint publik)
+    const response = await api.get("/api/public-alumnis");
+    allAlumniList.value = response.data.data;
+
+    const unique = new Set(institutionList.value);
+    allAlumniList.value.forEach((a) => {
+      if (a.instansi && a.instansi.trim()) {
+        unique.add(a.instansi.trim());
+      }
+    });
+    institutionList.value = Array.from(unique).sort();
+  } catch (error) {
+    console.error("Gagal memuat semua data alumni", error);
+  }
+};
+
 const fetchAlumnis = async (page = 1) => {
   isLoadingData.value = true;
   try {
@@ -134,6 +153,7 @@ onMounted(() => {
   fetchAlumnis(1);
   fetchUnassignedStudents();
   fetchMapLocations();
+  fetchAllAlumnisForInstansi();
 });
 
 watch([searchQuery, filterStatus, itemsPerPage], () => {
@@ -272,15 +292,30 @@ const mapInstDropdownOpen = ref(null);
 // Hitung daftar instansi unik yang ada di daftar alumni beserta jumlah alumninya
 const availableInstitutions = computed(() => {
   const counts = {};
-  alumniList.value.forEach((a) => {
+
+  // Menggunakan daftar utuh untuk rekap hitungan, bukan daftar yang terpaginasi
+  const sourceList =
+    allAlumniList.value.length > 0 ? allAlumniList.value : alumniList.value;
+  sourceList.forEach((a) => {
     const inst = a.instansi?.trim();
     if (inst) {
       counts[inst] = (counts[inst] || 0) + 1;
     }
   });
+
+  const selectedNames = (mapForm.value.institutions || []).map((i) => i.name);
+
   return Object.keys(counts)
-    .map((name) => ({ name, count: counts[name] }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+    .map((name) => ({
+      name,
+      count: counts[name],
+      isSelected: selectedNames.includes(name),
+    }))
+    .sort((a, b) => {
+      if (a.isSelected && !b.isSelected) return 1;
+      if (!a.isSelected && b.isSelected) return -1;
+      return a.name.localeCompare(b.name);
+    });
 });
 
 const autoFillInstansi = (inst) => {
@@ -537,6 +572,7 @@ const addEntry = async () => {
 
     hideForm();
     fetchUnassignedStudents();
+    fetchAllAlumnisForInstansi();
     triggerToast(
       "Berhasil Ditambahkan",
       `${addedCount} data alumni baru berhasil ditambahkan.`
@@ -576,6 +612,7 @@ const saveEntry = async () => {
     }
     hideForm();
     triggerToast("Perubahan Disimpan", "Data alumni berhasil diperbarui.");
+    fetchAllAlumnisForInstansi();
   } catch (error) {
     console.error(error);
     triggerToast(
@@ -600,6 +637,7 @@ const confirmDelete = async () => {
       alumniList.value = alumniList.value.filter((s) => s.id !== itemToDelete.value);
       itemToDelete.value = null;
       fetchUnassignedStudents();
+      fetchAllAlumnisForInstansi();
       triggerToast("Data Dihapus", "Data alumni berhasil dihapus dari sistem.", "info");
     } catch (error) {
       console.error(error);
@@ -678,6 +716,7 @@ const executeBulkEdit = async () => {
 
     selectedAlumni.value = [];
     closeBulkEditModal();
+    fetchAllAlumnisForInstansi();
     triggerToast(
       "Berhasil",
       response.data?.message || "Data alumni terpilih berhasil diperbarui.",
@@ -715,6 +754,7 @@ const executeBulkDelete = async () => {
         : currentPage.value
     );
     selectedAlumni.value = [];
+    fetchAllAlumnisForInstansi();
     triggerToast(
       "Berhasil",
       response.data?.message || "Data terpilih berhasil dihapus.",
@@ -1826,21 +1866,50 @@ const executeBulkDelete = async () => {
                               <li
                                 v-for="(item, i) in availableInstitutions"
                                 :key="i"
-                                class="hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 transition-colors"
+                                class="transition-colors"
+                                :class="
+                                  item.isSelected
+                                    ? 'bg-gray-100 dark:bg-slate-800/80 opacity-60 cursor-not-allowed'
+                                    : 'hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300'
+                                "
                               >
                                 <div
-                                  class="px-4 py-2 cursor-pointer flex justify-between items-center"
+                                  class="px-4 py-2 flex justify-between items-center"
+                                  :class="
+                                    item.isSelected
+                                      ? 'cursor-not-allowed'
+                                      : 'cursor-pointer'
+                                  "
                                   @click="
-                                    inst.name = item.name;
-                                    autoFillInstansi(inst);
-                                    mapInstDropdownOpen = null;
+                                    !item.isSelected &&
+                                      ((inst.name = item.name),
+                                      autoFillInstansi(inst),
+                                      (mapInstDropdownOpen = null))
                                   "
                                 >
-                                  <span class="truncate pr-2">{{ item.name }}</span>
                                   <span
-                                    class="text-[10px] bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 px-1.5 py-0.5 rounded font-bold shrink-0"
-                                    >{{ item.count }} Alumni</span
+                                    class="truncate pr-2"
+                                    :class="
+                                      item.isSelected ? 'text-gray-500 line-through' : ''
+                                    "
+                                    >{{ item.name }}</span
                                   >
+                                  <div class="flex items-center gap-2">
+                                    <span
+                                      v-if="item.isSelected"
+                                      class="text-[10px] text-red-500 font-semibold italic"
+                                      >Terpilih</span
+                                    >
+                                    <span
+                                      class="text-[10px] px-1.5 py-0.5 rounded font-bold shrink-0"
+                                      :class="
+                                        item.isSelected
+                                          ? 'bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400'
+                                          : 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
+                                      "
+                                      >{{ item.count }} Alumni</span
+                                    >
+                                  </div>
                                 </div>
                               </li>
                               <li

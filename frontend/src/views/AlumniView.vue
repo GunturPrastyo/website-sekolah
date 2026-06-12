@@ -15,21 +15,6 @@
       <div
         class="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 p-0 md:p-8"
       >
-        <div class="mb-8 mt-8 text-center">
-          <h2
-            class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2"
-            style="font-family: 'Oswald', sans-serif"
-          >
-            Peta Persebaran Alumni
-          </h2>
-          <p
-            class="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto text-sm md:text-base"
-          >
-            Visualisasi interaktif lokasi studi dan karir lulusan. Klik titik pada peta
-            untuk melihat detail instansi.
-          </p>
-        </div>
-
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           <!-- Map Area -->
           <div
