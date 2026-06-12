@@ -59,7 +59,13 @@
                 >
                   {{ stat.prefix
                   }}{{ stat.isNumber ? stat.value.toLocaleString("id-ID") : stat.value
-                  }}{{ stat.suffix }}
+                  }}{{ stat.suffix }} }}{{
+                    stat.isNumber
+                      ? stat.value >= 1000
+                        ? (stat.value / 1000).toFixed(1) + "k+"
+                        : stat.value
+                      : stat.value + stat.suffix
+                  }}
                 </h3>
                 <p
                   class="mt-0.5 sm:mt-1 text-[9px] min-[400px]:text-[10px] sm:text-xs font-semibold uppercase text-white/80 tracking-tighter sm:tracking-normal line-clamp-1"
@@ -310,7 +316,7 @@
                     {{
                       alumniStats.alumni.value >= 1000
                         ? (alumniStats.alumni.value / 1000).toFixed(1) + "k+"
-                        : Math.floor(alumniStats.alumni.value) + "+"
+                        : Math.floor(alumniStats.alumni.value)
                     }}
                   </h4>
                   <p class="text-[10px] sm:text-xs text-sky-200 mt-1 font-medium">
@@ -322,7 +328,11 @@
                     class="text-2xl md:text-3xl font-bold text-yellow-400"
                     style="font-family: 'Oswald', sans-serif"
                   >
-                    {{ Math.floor(alumniStats.ptn.value) }}+
+                    {{
+                      alumniStats.ptn.value >= 1000
+                        ? (alumniStats.ptn.value / 1000).toFixed(1) + "k+"
+                        : Math.floor(alumniStats.ptn.value)
+                    }}
                   </h4>
                   <p class="text-[10px] sm:text-xs text-sky-200 mt-1 font-medium">
                     PTN & Kampus Top
@@ -333,7 +343,11 @@
                     class="text-2xl md:text-3xl font-bold text-yellow-400"
                     style="font-family: 'Oswald', sans-serif"
                   >
-                    {{ Math.floor(alumniStats.instansi.value) }}+
+                    {{
+                      alumniStats.instansi.value >= 1000
+                        ? (alumniStats.instansi.value / 1000).toFixed(1) + "k+"
+                        : Math.floor(alumniStats.instansi.value)
+                    }}
                   </h4>
                   <p class="text-[10px] sm:text-xs text-sky-200 mt-1 font-medium">
                     Instansi & Kedinasan
