@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import api from "@/api/index.js";
 import {
@@ -44,6 +44,12 @@ const openShareModal = () => {
 const closeShareModal = () => {
   isShareModalOpen.value = false;
 };
+
+const breadcrumbTitle = computed(() => {
+  if (isLoading.value || !article.value) return "Memuat Artikel...";
+  const title = article.value.title;
+  return title.length > 40 ? title.substring(0, 40) + "..." : title;
+});
 
 const fetchArticleData = async () => {
   isLoading.value = true;
@@ -154,13 +160,93 @@ watch(
           :items="[
             { name: 'Beranda', link: '/', icon: 'home' },
             { name: 'Berita', link: '/berita' },
-            { name: route.params.slug || 'Artikel' },
+            { name: breadcrumbTitle },
           ]"
         />
       </div>
 
-      <div v-if="isLoading" class="flex justify-center items-center py-32">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <!-- Skeleton Loader -->
+      <div
+        v-if="isLoading"
+        class="flex flex-col lg:flex-row gap-0 lg:gap-8 animate-pulse"
+      >
+        <!-- KIRI: Konten Utama Skeleton -->
+        <main
+          class="w-full lg:w-2/3 bg-white dark:bg-slate-800 rounded-none lg:rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden relative z-10"
+        >
+          <div class="p-6 md:p-10 border-b border-gray-100 dark:border-slate-700">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="h-6 w-20 bg-gray-200 dark:bg-slate-700 rounded-md"></div>
+              <div class="h-4 w-24 bg-gray-200 dark:bg-slate-700 rounded"></div>
+            </div>
+
+            <div
+              class="h-10 w-full sm:w-3/4 bg-gray-200 dark:bg-slate-700 rounded mb-3"
+            ></div>
+            <div
+              class="h-10 w-2/3 sm:w-1/2 bg-gray-200 dark:bg-slate-700 rounded mb-6"
+            ></div>
+
+            <div class="flex items-center gap-3">
+              <div
+                class="w-12 h-12 rounded-full bg-gray-200 dark:bg-slate-700 shrink-0"
+              ></div>
+              <div class="flex flex-col gap-2">
+                <div class="h-4 w-32 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                <div class="h-3 w-48 bg-gray-200 dark:bg-slate-700 rounded"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full h-64 md:h-96 bg-gray-200 dark:bg-slate-700"></div>
+
+          <div class="p-6 md:p-10 space-y-4">
+            <div class="h-4 w-full bg-gray-200 dark:bg-slate-700 rounded"></div>
+            <div class="h-4 w-full bg-gray-200 dark:bg-slate-700 rounded"></div>
+            <div class="h-4 w-11/12 bg-gray-200 dark:bg-slate-700 rounded"></div>
+            <div class="h-4 w-full bg-gray-200 dark:bg-slate-700 rounded mt-6"></div>
+            <div class="h-4 w-full bg-gray-200 dark:bg-slate-700 rounded"></div>
+            <div class="h-4 w-4/5 bg-gray-200 dark:bg-slate-700 rounded"></div>
+            <div class="h-4 w-5/6 bg-gray-200 dark:bg-slate-700 rounded mt-6"></div>
+            <div class="h-4 w-1/2 bg-gray-200 dark:bg-slate-700 rounded"></div>
+          </div>
+        </main>
+
+        <!-- KANAN: Sidebar Skeleton -->
+        <aside class="w-full lg:w-1/3 flex flex-col -mt-px lg:mt-0 relative z-0">
+          <div
+            class="bg-white dark:bg-slate-800 rounded-none lg:rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden"
+          >
+            <div
+              class="p-6 md:p-8 text-center border-b border-gray-100 dark:border-slate-700 flex flex-col items-center"
+            >
+              <div
+                class="w-20 h-20 rounded-full bg-gray-200 dark:bg-slate-700 mb-4 border-4 border-white shadow-sm"
+              ></div>
+              <div class="h-5 w-32 bg-gray-200 dark:bg-slate-700 rounded mb-2"></div>
+              <div class="h-3 w-48 bg-gray-200 dark:bg-slate-700 rounded mb-4"></div>
+              <div class="h-10 w-full bg-gray-200 dark:bg-slate-700 rounded-lg"></div>
+            </div>
+
+            <div class="p-6 md:p-8 border-b border-gray-100 dark:border-slate-700">
+              <div class="h-6 w-40 bg-gray-200 dark:bg-slate-700 rounded mb-5"></div>
+              <div class="space-y-5">
+                <div v-for="i in 3" :key="i" class="flex gap-4">
+                  <div
+                    class="w-20 h-20 rounded-lg bg-gray-200 dark:bg-slate-700 shrink-0"
+                  ></div>
+                  <div class="flex-1 py-1 space-y-2">
+                    <div class="h-4 w-full bg-gray-200 dark:bg-slate-700 rounded"></div>
+                    <div class="h-4 w-3/4 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                    <div
+                      class="h-3 w-1/2 bg-gray-200 dark:bg-slate-700 rounded mt-3"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
 
       <div v-else class="flex flex-col lg:flex-row gap-0 lg:gap-8">
@@ -259,145 +345,143 @@ watch(
         </main>
 
         <!-- KANAN: Sidebar -->
-        <aside
-          class="w-full lg:w-1/3 flex flex-col -mt-px lg:mt-0 relative z-0 lg:space-y-8"
-        >
-          <!-- Author Profile Widget -->
+        <aside class="w-full lg:w-1/3 flex flex-col -mt-px lg:mt-0 relative z-0">
           <div
-            class="bg-white dark:bg-slate-800 py-8 px-6 rounded-none lg:rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 text-center relative z-20"
+            class="bg-white dark:bg-slate-800 rounded-none lg:rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden"
           >
+            <!-- Author Profile Widget -->
             <div
-              class="w-20 h-20 mx-auto rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-2xl mb-4 border-4 border-white shadow-sm uppercase"
+              class="py-8 px-6 text-center border-b border-gray-100 dark:border-slate-700"
             >
-              {{ article?.authorInitials }}
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">
-              {{ article?.authorName }}
-            </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              Penulis Artikel di SMA Negeri 1 Nogosari.
-            </p>
-            <router-link
-              to="/berita"
-              class="block w-full py-2 bg-blue-50 text-blue-600 dark:bg-slate-700 dark:text-blue-400 rounded-lg text-sm font-semibold hover:bg-blue-100 transition-colors"
-            >
-              Lihat Artikel Lainnya
-            </router-link>
-          </div>
-
-          <!-- Artikel Terkait Widget -->
-          <div
-            class="bg-white dark:bg-slate-800 py-8 px-6 rounded-none lg:rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 -mt-px lg:mt-0 relative z-10"
-          >
-            <h3
-              class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
-            >
-              <PhLink class="w-5 h-5 mr-2 text-blue-500" />
-              Artikel Terkait
-            </h3>
-            <div class="space-y-5">
-              <router-link
-                :to="`/artikel/${item.slug}`"
-                v-for="item in relatedArticles"
-                :key="item.id"
-                class="flex items-start gap-4 group"
+              <div
+                class="w-20 h-20 mx-auto rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-2xl mb-4 border-4 border-white shadow-sm uppercase"
               >
-                <div
-                  class="w-20 h-20 shrink-0 rounded-lg overflow-hidden shadow-sm relative"
-                >
-                  <img
-                    :src="item.image"
-                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div
-                    class="absolute top-0 left-0 px-2 py-0.5 flex items-center justify-center text-[10px] font-bold rounded-br-lg shadow-sm z-10 bg-blue-600 text-white"
-                  >
-                    {{ item.category }}
-                  </div>
-                </div>
-                <div class="flex flex-col justify-start flex-1 py-0.5">
-                  <h4
-                    class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1"
-                  >
-                    {{ item.title }}
-                  </h4>
-                  <p
-                    class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-2 leading-relaxed"
-                  >
-                    {{ item.description }}
-                  </p>
-                  <div
-                    class="flex items-center justify-between text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-auto"
-                  >
-                    <span class="flex items-center">
-                      <PhCalendarBlank class="w-3 h-3 mr-1" />
-                      {{ item.date }}
-                    </span>
-                    <span class="flex items-center">
-                      <PhEye class="w-3 h-3 mr-1" />
-                      {{ item.views }}
-                    </span>
-                  </div>
-                </div>
+                {{ article?.authorInitials }}
+              </div>
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">
+                {{ article?.authorName }}
+              </h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                Penulis Artikel di SMA Negeri 1 Nogosari.
+              </p>
+              <router-link
+                to="/berita"
+                class="block w-full py-2 bg-blue-50 text-blue-600 dark:bg-slate-700 dark:text-blue-400 rounded-lg text-sm font-semibold hover:bg-blue-100 transition-colors"
+              >
+                Lihat Artikel Lainnya
               </router-link>
             </div>
-          </div>
 
-          <!-- Berita Populer Widget -->
-          <div
-            class="bg-white dark:bg-slate-800 py-8 px-6 rounded-none lg:rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 -mt-px lg:mt-0 relative z-0"
-          >
-            <h3
-              class="text-lg font-bold text-gray-900 dark:text-white mb-0 md:mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
-            >
-              <PhTrendUp class="w-5 h-5 mr-2 text-blue-500" />
-              Terpopuler
-            </h3>
-            <div class="space-y-5 mt-5 md:mt-0">
-              <router-link
-                :to="`/artikel/${news.slug}`"
-                v-for="(news, index) in popularNews"
-                :key="news.id"
-                class="flex items-start gap-4 group"
+            <!-- Artikel Terkait Widget -->
+            <div class="py-8 px-6 border-b border-gray-100 dark:border-slate-700">
+              <h3
+                class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
               >
-                <div
-                  class="w-20 h-20 shrink-0 rounded-lg overflow-hidden shadow-sm relative"
+                <PhLink class="w-5 h-5 mr-2 text-blue-500" />
+                Artikel Terkait
+              </h3>
+              <div class="space-y-5">
+                <router-link
+                  :to="`/artikel/${item.slug}`"
+                  v-for="item in relatedArticles"
+                  :key="item.id"
+                  class="flex items-start gap-4 group"
                 >
-                  <img
-                    :src="news.image"
-                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
                   <div
-                    class="absolute top-0 left-0 px-2 py-0.5 flex items-center justify-center text-[10px] font-bold rounded-br-lg shadow-sm z-10 bg-blue-600 text-white"
+                    class="w-20 h-20 shrink-0 rounded-lg overflow-hidden shadow-sm relative"
                   >
-                    {{ news.category }}
+                    <img
+                      :src="item.image"
+                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div
+                      class="absolute top-0 left-0 px-2 py-0.5 flex items-center justify-center text-[10px] font-bold rounded-br-lg shadow-sm z-10 bg-blue-600 text-white"
+                    >
+                      {{ item.category }}
+                    </div>
                   </div>
-                </div>
-                <div class="flex flex-col justify-start flex-1 py-0.5">
-                  <h4
-                    class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1"
-                  >
-                    {{ news.title }}
-                  </h4>
-                  <p
-                    class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-2 leading-relaxed"
-                  >
-                    {{ news.description }}
-                  </p>
+                  <div class="flex flex-col justify-start flex-1 py-0.5">
+                    <h4
+                      class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1"
+                    >
+                      {{ item.title }}
+                    </h4>
+                    <p
+                      class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-2 leading-relaxed"
+                    >
+                      {{ item.description }}
+                    </p>
+                    <div
+                      class="flex items-center justify-between text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-auto"
+                    >
+                      <span class="flex items-center">
+                        <PhCalendarBlank class="w-3 h-3 mr-1" />
+                        {{ item.date }}
+                      </span>
+                      <span class="flex items-center">
+                        <PhEye class="w-3 h-3 mr-1" />
+                        {{ item.views }}
+                      </span>
+                    </div>
+                  </div>
+                </router-link>
+              </div>
+            </div>
+
+            <!-- Berita Populer Widget -->
+            <div class="py-8 px-6">
+              <h3
+                class="text-lg font-bold text-gray-900 dark:text-white mb-0 md:mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
+              >
+                <PhTrendUp class="w-5 h-5 mr-2 text-blue-500" />
+                Terpopuler
+              </h3>
+              <div class="space-y-5 mt-5 md:mt-0">
+                <router-link
+                  :to="`/artikel/${news.slug}`"
+                  v-for="(news, index) in popularNews"
+                  :key="news.id"
+                  class="flex items-start gap-4 group"
+                >
                   <div
-                    class="flex items-center justify-between text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-auto"
+                    class="w-20 h-20 shrink-0 rounded-lg overflow-hidden shadow-sm relative"
                   >
-                    <span class="flex items-center">
-                      <PhCalendarBlank class="w-3 h-3 mr-1" />
-                      {{ news.date }}
-                    </span>
-                    <span class="flex items-center">
-                      <PhEye class="w-3 h-3 mr-1" />
-                      {{ news.views }}
-                    </span>
+                    <img
+                      :src="news.image"
+                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div
+                      class="absolute top-0 left-0 px-2 py-0.5 flex items-center justify-center text-[10px] font-bold rounded-br-lg shadow-sm z-10 bg-blue-600 text-white"
+                    >
+                      {{ news.category }}
+                    </div>
                   </div>
-                </div>
-              </router-link>
+                  <div class="flex flex-col justify-start flex-1 py-0.5">
+                    <h4
+                      class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1"
+                    >
+                      {{ news.title }}
+                    </h4>
+                    <p
+                      class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-2 leading-relaxed"
+                    >
+                      {{ news.description }}
+                    </p>
+                    <div
+                      class="flex items-center justify-between text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-auto"
+                    >
+                      <span class="flex items-center">
+                        <PhCalendarBlank class="w-3 h-3 mr-1" />
+                        {{ news.date }}
+                      </span>
+                      <span class="flex items-center">
+                        <PhEye class="w-3 h-3 mr-1" />
+                        {{ news.views }}
+                      </span>
+                    </div>
+                  </div>
+                </router-link>
+              </div>
             </div>
           </div>
         </aside>
