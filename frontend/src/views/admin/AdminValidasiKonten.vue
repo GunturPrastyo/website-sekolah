@@ -9,7 +9,6 @@ import {
   PhImage,
   PhX,
 } from "@phosphor-icons/vue";
-import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
 
 const activeTab = ref("berita");
@@ -695,17 +694,69 @@ const closeRejectModal = () => {
     </div>
 
     <!-- Komponen Modal & Notifikasi -->
-    <ConfirmModal
-      :isOpen="isConfirmModalOpen"
-      title="Setujui & Publikasikan"
-      :message="
-        isBulkAction
-          ? `Apakah Anda yakin ingin menyetujui ${selectedGalleries.length} foto galeri ini? Konten akan langsung dipublikasikan dan tampil di halaman depan website.`
-          : 'Apakah Anda yakin ingin menyetujui konten ini? Setelah disetujui, konten akan langsung tampil di halaman depan website.'
-      "
-      @confirm="handleConfirm"
-      @cancel="handleCancel"
-    />
+    <!-- Modal Setujui Konten -->
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isConfirmModalOpen"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="handleCancel"
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all"
+          @click.stop
+        >
+          <div
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-green-50 dark:bg-green-900/20"
+          >
+            <h3
+              class="text-xl font-bold text-green-600 dark:text-green-400 flex items-center"
+            >
+              <PhCheckCircle class="w-6 h-6 mr-2" />
+              Setujui & Publikasikan
+            </h3>
+            <button
+              @click="handleCancel"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <PhX class="w-6 h-6" />
+            </button>
+          </div>
+          <div class="p-6">
+            <p class="text-sm text-gray-600 dark:text-gray-300">
+              {{
+                isBulkAction
+                  ? `Apakah Anda yakin ingin menyetujui ${selectedGalleries.length} foto galeri ini? Konten akan langsung dipublikasikan dan tampil di halaman depan website.`
+                  : "Apakah Anda yakin ingin menyetujui konten ini? Setelah disetujui, konten akan langsung tampil di halaman depan website."
+              }}
+            </p>
+          </div>
+          <div
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+          >
+            <button
+              @click="handleCancel"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
+            >
+              Batal
+            </button>
+            <button
+              @click="handleConfirm"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 transition-colors"
+            >
+              <PhCheckCircle class="w-5 h-5 mr-2" />
+              Terima
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
 
     <!-- Modal Catatan Penolakan -->
     <Transition
@@ -929,8 +980,8 @@ const closeRejectModal = () => {
             <button
               v-if="previewItem && previewItem.status === 'pending'"
               @click="
-                closePreview();
                 openConfirm('approve', previewItem);
+                closePreview();
               "
               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 transition-colors"
             >
