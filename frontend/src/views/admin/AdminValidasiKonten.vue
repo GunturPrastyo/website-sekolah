@@ -137,6 +137,18 @@ const closePreview = () => {
   previewItem.value = null;
 };
 
+const getImageUrl = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http") || path.startsWith("data:image")) return path;
+
+  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+  if (cleanPath.startsWith("storage/")) {
+    return `${baseUrl}/${cleanPath}`;
+  }
+  return `${baseUrl}/storage/${cleanPath}`;
+};
+
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };
   showToast.value = true;
@@ -620,7 +632,7 @@ const closeRejectModal = () => {
 
           <img
             v-if="item.image"
-            :src="item.image"
+            :src="getImageUrl(item.image)"
             class="w-full h-auto block transition-all duration-700 group-hover:scale-105"
           />
 
@@ -805,7 +817,10 @@ const closeRejectModal = () => {
                 v-if="previewItem.images?.length > 0"
                 class="relative w-full h-64 sm:h-80 bg-gray-100 dark:bg-slate-700 shrink-0"
               >
-                <img :src="previewItem.images[0]" class="w-full h-full object-cover" />
+                <img
+                  :src="getImageUrl(previewItem.images[0])"
+                  class="w-full h-full object-cover"
+                />
                 <div
                   class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
                 ></div>
@@ -864,7 +879,7 @@ const closeRejectModal = () => {
             <template v-if="activeTab === 'galeri'">
               <div class="relative w-full aspect-video bg-gray-100 dark:bg-slate-900">
                 <img
-                  :src="previewItem.image"
+                  :src="getImageUrl(previewItem.image)"
                   class="w-full h-full object-contain"
                   alt="Pratinjau Galeri"
                 />
@@ -939,7 +954,7 @@ const closeRejectModal = () => {
 <style scoped>
 /* Basic styling untuk v-html content supaya teks rapi tanpa harus menginstall Tailwind Typography */
 :deep(.content-preview p) {
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 :deep(.content-preview h1),
 :deep(.content-preview h2),
@@ -952,12 +967,12 @@ const closeRejectModal = () => {
 :deep(.content-preview ul) {
   list-style-type: disc;
   padding-left: 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 :deep(.content-preview ol) {
   list-style-type: decimal;
   padding-left: 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 :deep(.content-preview img) {
   border-radius: 0.5rem;
