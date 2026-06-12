@@ -693,9 +693,11 @@
                       class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border border-gray-100 dark:border-slate-700 flex flex-row sm:flex-col h-full animate-pulse"
                       :class="{ 'sm:hidden lg:flex': i === 3 }"
                     >
-                      <div
-                        class="h-28 w-1/3 sm:w-full sm:h-40 bg-slate-200 dark:bg-slate-700 shrink-0"
-                      ></div>
+                      <div class="w-2/5 sm:w-full sm:h-40 relative shrink-0">
+                        <div
+                          class="absolute inset-0 bg-slate-200 dark:bg-slate-700"
+                        ></div>
+                      </div>
                       <div
                         class="p-3 sm:p-4 flex flex-col flex-grow justify-center sm:justify-start space-y-3"
                       >
@@ -706,10 +708,10 @@
                           class="h-4 w-full bg-slate-200 dark:bg-slate-700 rounded"
                         ></div>
                         <div
-                          class="h-4 w-full bg-slate-200 dark:bg-slate-700 rounded hidden sm:block"
+                          class="h-4 w-full bg-slate-200 dark:bg-slate-700 rounded"
                         ></div>
                         <div
-                          class="h-3 w-4/5 bg-slate-200 dark:bg-slate-700 rounded hidden sm:block"
+                          class="h-3 w-4/5 bg-slate-200 dark:bg-slate-700 rounded"
                         ></div>
                         <div class="mt-auto pt-1 sm:pt-3 flex justify-between">
                           <div
@@ -731,17 +733,17 @@
                       :class="{ 'sm:hidden lg:flex': index === 2 }"
                     >
                       <div
-                        class="h-28 w-1/3 sm:w-full sm:h-40 overflow-hidden relative shrink-0"
+                        class="w-2/5 sm:w-full sm:h-40 overflow-hidden relative shrink-0"
                       >
                         <img
                           v-if="getNewsImage(news)"
                           :src="getNewsImage(news)"
-                          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                           :alt="news.title"
                         />
                         <div
                           v-else
-                          class="w-full h-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center"
+                          class="absolute inset-0 w-full h-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center"
                         >
                           <PhNewspaper
                             class="w-8 h-8 sm:w-10 sm:h-10 text-slate-400 opacity-50"
@@ -762,7 +764,7 @@
                           {{ news.title }}
                         </h4>
                         <p
-                          class="text-xs text-gray-500 dark:text-slate-400 line-clamp-2 mb-2 hidden sm:-webkit-box"
+                          class="text-xs text-gray-500 dark:text-slate-400 line-clamp-2 mb-2"
                         >
                           {{ news.excerpt || stripTags(news.content) }}
                         </p>
