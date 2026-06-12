@@ -200,6 +200,9 @@ class NewsController extends Controller
             } elseif (str_starts_with($image, 'http')) {
                 $existingUrls[] = $image;
                 $newPaths[] = str_replace(\Illuminate\Support\Facades\Storage::url(''), '', $image);
+            } else {
+                $existingUrls[] = \Illuminate\Support\Facades\Storage::url($image);
+                $newPaths[] = $image;
             }
         }
 
