@@ -425,105 +425,107 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- KANAN: Sidebar -->
-        <aside class="contents lg:block w-full lg:w-1/3 order-1 lg:order-2">
-          <!-- Search & Category Widget -->
+        <aside
+          class="w-full lg:w-1/3 flex flex-col -mt-px lg:mt-0 relative z-0 order-1 lg:order-2 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out"
+        >
           <div
-            class="w-full order-1 lg:order-none mb-0 lg:mb-8 bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out"
+            class="bg-white dark:bg-slate-800 rounded-none lg:rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden"
           >
-            <h3
-              class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center"
-            >
-              <PhFadersHorizontal class="w-5 h-5 mr-2 text-blue-500" />
-              Cari & Filter
-            </h3>
-
-            <!-- Search Bar -->
-            <div class="relative mb-6">
-              <PhMagnifyingGlass
-                class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-              />
-              <input
-                v-model="searchQuery"
-                type="text"
-                placeholder="Cari judul atau isi berita..."
-                class="w-full pl-11 pr-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm"
-              />
-            </div>
-
-            <!-- Kategori -->
-            <h4 class="text-sm font-bold text-gray-900 dark:text-white mb-3">
-              Kategori Berita
-            </h4>
-            <div class="flex flex-wrap gap-2.5">
-              <button
-                v-for="cat in categories"
-                :key="cat.id"
-                @click="activeCategory = cat.id"
-                class="px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 focus:outline-none border"
-                :class="
-                  activeCategory === cat.id
-                    ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
-                    : 'bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
-                "
+            <!-- Search & Category Widget -->
+            <div class="p-6 border-b border-gray-100 dark:border-slate-700">
+              <h3
+                class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center"
               >
-                {{ cat.name }}
-                <span class="ml-1 text-[11px] font-bold opacity-70">
-                  ({{ getCategoryCount(cat.id) }})
-                </span>
-              </button>
-            </div>
-          </div>
+                <PhFadersHorizontal class="w-5 h-5 mr-2 text-blue-500" />
+                Cari & Filter
+              </h3>
 
-          <!-- Berita Populer Widget -->
-          <div
-            class="w-full order-3 lg:order-none bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
-          >
-            <h3
-              class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
-            >
-              <PhTrendUp class="w-5 h-5 mr-2 text-blue-500" />
-              Terpopuler
-            </h3>
-            <div class="space-y-5">
-              <router-link
-                :to="`/artikel/${news.slug}`"
-                v-for="(news, index) in popularNews"
-                :key="'popular-' + news.id"
-                class="flex items-start gap-4 group"
-              >
-                <div
-                  class="w-24 h-24 shrink-0 rounded-lg overflow-hidden shadow-sm relative"
+              <!-- Search Bar -->
+              <div class="relative mb-6">
+                <PhMagnifyingGlass
+                  class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                />
+                <input
+                  v-model="searchQuery"
+                  type="text"
+                  placeholder="Cari judul atau isi berita..."
+                  class="w-full pl-11 pr-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm"
+                />
+              </div>
+
+              <!-- Kategori -->
+              <h4 class="text-sm font-bold text-gray-900 dark:text-white mb-3">
+                Kategori Berita
+              </h4>
+              <div class="flex flex-wrap gap-2.5">
+                <button
+                  v-for="cat in categories"
+                  :key="cat.id"
+                  @click="activeCategory = cat.id"
+                  class="px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 focus:outline-none border"
+                  :class="
+                    activeCategory === cat.id
+                      ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
+                      : 'bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
+                  "
                 >
-                  <img
-                    :src="news.image"
-                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <!-- Badge Peringkat -->
-                  <div
-                    class="absolute top-0 left-0 bg-blue-600 text-white w-6 h-6 flex items-center justify-center text-xs font-bold rounded-br-lg shadow-sm z-10"
-                  >
-                    {{ index + 1 }}
-                  </div>
-                </div>
-                <div class="flex flex-col justify-start flex-1 py-0.5">
-                  <h4
-                    class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1"
-                  >
-                    {{ news.title }}
-                  </h4>
-                  <p
-                    class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-2 leading-relaxed"
-                  >
-                    {{ news.excerpt }}
-                  </p>
-                  <span
-                    class="text-[11px] font-medium text-gray-400 dark:text-gray-500 flex items-center mt-auto"
-                  >
-                    <PhEye class="w-3.5 h-3.5 mr-1" />
-                    {{ news.views }} kali dibaca
+                  {{ cat.name }}
+                  <span class="ml-1 text-[11px] font-bold opacity-70">
+                    ({{ getCategoryCount(cat.id) }})
                   </span>
-                </div>
-              </router-link>
+                </button>
+              </div>
+            </div>
+
+            <!-- Berita Populer Widget -->
+            <div class="p-6">
+              <h3
+                class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
+              >
+                <PhTrendUp class="w-5 h-5 mr-2 text-blue-500" />
+                Terpopuler
+              </h3>
+              <div class="space-y-5">
+                <router-link
+                  :to="`/artikel/${news.slug}`"
+                  v-for="(news, index) in popularNews"
+                  :key="'popular-' + news.id"
+                  class="flex items-start gap-4 group"
+                >
+                  <div
+                    class="w-24 h-24 shrink-0 rounded-lg overflow-hidden shadow-sm relative"
+                  >
+                    <img
+                      :src="news.image"
+                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <!-- Badge Peringkat -->
+                    <div
+                      class="absolute top-0 left-0 bg-blue-600 text-white w-6 h-6 flex items-center justify-center text-xs font-bold rounded-br-lg shadow-sm z-10"
+                    >
+                      {{ index + 1 }}
+                    </div>
+                  </div>
+                  <div class="flex flex-col justify-start flex-1 py-0.5">
+                    <h4
+                      class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1"
+                    >
+                      {{ news.title }}
+                    </h4>
+                    <p
+                      class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-2 leading-relaxed"
+                    >
+                      {{ news.excerpt }}
+                    </p>
+                    <span
+                      class="text-[11px] font-medium text-gray-400 dark:text-gray-500 flex items-center mt-auto"
+                    >
+                      <PhEye class="w-3.5 h-3.5 mr-1" />
+                      {{ news.views }} kali dibaca
+                    </span>
+                  </div>
+                </router-link>
+              </div>
             </div>
           </div>
         </aside>
