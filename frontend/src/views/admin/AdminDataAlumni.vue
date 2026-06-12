@@ -1767,16 +1767,10 @@ const executeBulkDelete = async () => {
                 <label class="block text-sm font-bold text-gray-700 dark:text-gray-300"
                   >Daftar Universitas / Instansi</label
                 >
-                <button
-                  @click="addInstitution"
-                  class="text-xs px-2.5 py-1.5 bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 rounded hover:bg-blue-200 transition-colors flex items-center font-bold"
-                >
-                  <PhPlusCircle class="w-3.5 h-3.5 mr-1" /> Tambah
-                </button>
               </div>
 
               <div
-                class="space-y-4 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar"
+                class="space-y-4 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar pb-2"
                 ref="instansiListContainer"
               >
                 <div
@@ -1927,6 +1921,13 @@ const executeBulkDelete = async () => {
                 >
                   Belum ada instansi yang ditambahkan.
                 </div>
+
+                <button
+                  @click="addInstitution"
+                  class="w-full py-3 border-2 border-dashed border-blue-300 dark:border-blue-700/50 rounded-xl text-blue-600 dark:text-blue-400 font-bold hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center justify-center"
+                >
+                  <PhPlusCircle class="w-5 h-5 mr-2" /> Tambah Instansi / Kampus Baru
+                </button>
               </div>
             </div>
           </div>
