@@ -328,6 +328,16 @@ const handleImageDrop = (index) => {
 
 const filteredNews = computed(() => {
   const list = newsList.value || [];
+  let list = newsList.value || [];
+
+  if (currentUserRole.value !== "super_admin" && currentUserId.value !== null) {
+    list = list.filter(
+      (item) =>
+        item.user_id === currentUserId.value ||
+        (item.author && item.author.id === currentUserId.value)
+    );
+  }
+
   if (!searchQuery.value) return list;
   const query = searchQuery.value.toLowerCase();
   return list.filter((item) => item.title.toLowerCase().includes(query));

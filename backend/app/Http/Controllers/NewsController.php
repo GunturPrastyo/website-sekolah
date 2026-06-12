@@ -14,10 +14,19 @@ class NewsController extends Controller
 {
     use ImageUploadTrait;
 
-    public function index()
+    public function index(Request $request)
     {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
+        $query = News::with('author')->where('status', 'approved');
+
+        if ($user->role !== 'super_admin') {
+            $query->where('user_id', $user->id);
+        }
+
         // Hanya tampilkan berita yang sudah disetujui di halaman utama Admin Berita
-        $news = News::with('author')->where('status', 'approved')->orderBy('created_at', 'desc')->get();
+        $news = $query->orderBy('created_at', 'desc')->get();
         return response()->json(['data' => NewsResource::collection($news)]);
     }
 
