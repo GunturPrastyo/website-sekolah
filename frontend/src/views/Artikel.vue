@@ -22,6 +22,19 @@ const isLoading = ref(true);
 const popularNews = ref([]);
 const relatedArticles = ref([]);
 
+const getImageUrl = (path) => {
+  if (!path)
+    return "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200";
+  if (path.startsWith("http") || path.startsWith("data:image")) return path;
+
+  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+  if (cleanPath.startsWith("storage/")) {
+    return `${baseUrl}/${cleanPath}`;
+  }
+  return `${baseUrl}/storage/${cleanPath}`;
+};
+
 const openShareModal = () => {
   if (article.value) {
     isShareModalOpen.value = true;
@@ -40,10 +53,9 @@ const fetchArticleData = async () => {
     const response = await api.get(`/api/public-news/${id}`);
     const data = response.data.data;
 
-    let imageUrl =
-      "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200";
+    let imageUrl = getImageUrl(data.image);
     if (data.images && data.images.length > 0) {
-      imageUrl = data.images[0];
+      imageUrl = getImageUrl(data.images[0]);
     }
 
     article.value = {
@@ -82,10 +94,9 @@ const fetchSideData = async (category) => {
       tempDiv.innerHTML = item.content;
       const textContent = tempDiv.textContent || tempDiv.innerText || "";
 
-      let imageUrl =
-        "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800";
+      let imageUrl = getImageUrl(item.image);
       if (item.images && item.images.length > 0) {
-        imageUrl = item.images[0];
+        imageUrl = getImageUrl(item.images[0]);
       }
 
       return {
@@ -227,7 +238,7 @@ watch(
 
           <!-- Isi Artikel -->
           <article
-            class="p-6 md:p-10 text-gray-700 dark:text-gray-300 leading-relaxed space-y-6 text-base md:text-lg text-justify prose dark:prose-invert max-w-none"
+            class="p-6 md:p-10 text-gray-700 dark:text-gray-300 text-base md:text-lg text-justify article-content"
             v-html="article?.content"
           ></article>
 
@@ -400,3 +411,46 @@ watch(
     />
   </div>
 </template>
+
+<style scoped>
+:deep(.article-content p) {
+  margin-bottom: 0;
+}
+:deep(.article-content h1),
+:deep(.article-content h2),
+:deep(.article-content h3),
+:deep(.article-content h4) {
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: inherit;
+}
+:deep(.article-content ul) {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 0;
+}
+:deep(.article-content ol) {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 0;
+}
+:deep(.article-content img) {
+  border-radius: 0.5rem;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+:deep(.article-content a) {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+:deep(.article-content blockquote) {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1rem;
+  font-style: italic;
+  color: #6b7280;
+  margin: 1.5rem 0;
+}
+</style>

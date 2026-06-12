@@ -943,7 +943,7 @@
                 class="group relative rounded-xl overflow-hidden shadow-sm h-full block"
               >
                 <img
-                  :src="gallery.image"
+                  :src="getImageUrl(gallery.image)"
                   class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   :alt="gallery.title"
                 />
@@ -1792,9 +1792,22 @@ const stripTags = (html) => {
   return (tmp.textContent || tmp.innerText || "").substring(0, 150) + "...";
 };
 
+const getImageUrl = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http") || path.startsWith("data:image")) return path;
+
+  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+  if (cleanPath.startsWith("storage/")) {
+    return `${baseUrl}/${cleanPath}`;
+  }
+  return `${baseUrl}/storage/${cleanPath}`;
+};
+
 const getNewsImage = (image) => {
-  if (image) return image;
-  return "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=600&auto=format&fit=crop";
+  if (!image)
+    return "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=600&auto=format&fit=crop";
+  return getImageUrl(image);
 };
 
 // State & Logika Kalender Dinamis

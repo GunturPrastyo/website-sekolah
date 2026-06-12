@@ -91,6 +91,18 @@ const skeletonCount = computed(() => {
   return itemsPerPage;
 });
 
+const getImageUrl = (path) => {
+  if (!path) return "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800";
+  if (path.startsWith("http") || path.startsWith("data:image")) return path;
+
+  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+  if (cleanPath.startsWith("storage/")) {
+    return `${baseUrl}/${cleanPath}`;
+  }
+  return `${baseUrl}/storage/${cleanPath}`;
+};
+
 // Fungsi mengambil data dari API backend
 const fetchNews = async () => {
   isLoading.value = true;
@@ -107,11 +119,11 @@ const fetchNews = async () => {
       const textContent = tempDiv.textContent || tempDiv.innerText || "";
 
       // Ambil gambar pertama dari array images, atau gunakan fallback image
-      let imageUrl =
-        "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800";
+      let rawImage = item.image;
       if (item.images && item.images.length > 0) {
-        imageUrl = item.images[0];
+        rawImage = item.images[0];
       }
+      let imageUrl = getImageUrl(rawImage);
 
       // Pastikan kategori baru dimasukkan ke filter list jika belum ada
       const catLower = item.category ? item.category.toLowerCase() : "pengumuman";
