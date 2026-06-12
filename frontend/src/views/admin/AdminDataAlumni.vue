@@ -32,6 +32,7 @@ const isLoadingData = ref(true);
 const unassignedAlumni = ref([]);
 const unassignedStudentsPage = ref(1);
 const unassignedStudentsLastPage = ref(1);
+const totalUnassignedStudents = ref(0);
 const isLoadingUnassigned = ref(false);
 
 const searchQuery = ref("");
@@ -109,6 +110,9 @@ const fetchUnassignedStudents = async (isLoadMore = false) => {
       unassignedAlumni.value = response.data.data;
     }
     unassignedStudentsLastPage.value = response.data.pagination.last_page;
+    if (!searchStudent.value) {
+      totalUnassignedStudents.value = response.data.pagination.total;
+    }
   } catch (error) {
     console.error("Gagal mengambil data siswa unassigned:", error);
   } finally {
@@ -885,14 +889,25 @@ const executeBulkDelete = async () => {
                           >({{ selectedStudentsForAdd.length }} dipilih)</span
                         >
                       </label>
-                      <button
-                        v-if="selectedStudentsForAdd.length > 1"
-                        type="button"
-                        @click="selectedStudentsForAdd = []"
-                        class="text-xs text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-medium transition-colors"
-                      >
-                        Kosongkan Pilihan
-                      </button>
+                      <div class="flex items-center gap-2">
+                        <span
+                          class="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium"
+                        >
+                          Sisa:
+                          {{
+                            totalUnassignedStudents - selectedStudentsForAdd.length
+                          }}
+                          siswa
+                        </span>
+                        <button
+                          v-if="selectedStudentsForAdd.length > 1"
+                          type="button"
+                          @click="selectedStudentsForAdd = []"
+                          class="text-xs text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-medium transition-colors"
+                        >
+                          Kosongkan Pilihan
+                        </button>
+                      </div>
                     </div>
                     <div
                       class="flex flex-wrap gap-2 mb-2 max-h-32 overflow-y-auto custom-scrollbar p-1 rounded-lg"
