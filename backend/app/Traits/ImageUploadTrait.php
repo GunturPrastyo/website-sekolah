@@ -44,6 +44,13 @@ trait ImageUploadTrait
         if ($fileType === 'image' && !in_array($extension, ['svg', 'svg+xml', 'ico'])) {
             $image = @imagecreatefromstring($fileDecoded);
             if ($image !== false) {
+                // Pertahankan transparansi (alpha channel) dari gambar asli
+                if (!imageistruecolor($image)) {
+                    imagepalettetotruecolor($image);
+                }
+                imagealphablending($image, false);
+                imagesavealpha($image, true);
+
                 $width = imagesx($image);
                 $height = imagesy($image);
 

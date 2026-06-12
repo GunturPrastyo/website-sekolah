@@ -117,13 +117,6 @@ onMounted(() => {
 
       <!-- Content Kiri -->
       <div class="relative z-10 p-12 text-white max-w-lg">
-        <div class="mb-8">
-          <div
-            class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/30 shadow-lg transform -rotate-3"
-          >
-            <PhGraduationCap class="w-10 h-10 text-white rotate-3" />
-          </div>
-        </div>
         <h1
           class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight"
           style="font-family: 'Oswald', sans-serif"
