@@ -616,7 +616,7 @@
               <!-- Berita Utama (Atas - 1 Besar) -->
               <router-link
                 v-if="mainNews"
-                :to="`/berita/${mainNews.id}`"
+                :to="`/artikel/${mainNews.slug}`"
                 class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out group relative rounded-lg overflow-hidden shadow-lg h-[280px] sm:h-[350px] md:h-[400px] w-full block"
               >
                 <img
@@ -670,7 +670,7 @@
                   <router-link
                     v-for="(news, index) in subNews"
                     :key="news.id"
-                    :to="`/berita/${news.id}`"
+                    :to="`/artikel/${news.slug}`"
                     class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col h-full"
                     :class="{ 'sm:hidden lg:flex': index === 2 }"
                     :style="{ transitionDelay: `${(index + 1) * 100}ms` }"
@@ -773,7 +773,7 @@
                           <router-link
                             v-for="(item, index) in announcements"
                             :key="item.id + '-' + i"
-                            :to="`/berita/${item.id}`"
+                            :to="`/artikel/${item.slug}`"
                             class="p-5 border-b border-blue-50 dark:border-slate-700/50 hover:bg-blue-100/50 dark:hover:bg-slate-700 transition-colors flex items-start"
                           >
                             <!-- Date Badge -->

@@ -8,6 +8,7 @@ use App\Http\Resources\NewsResource;
 use App\Traits\ImageUploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class NewsController extends Controller
 {
@@ -39,10 +40,10 @@ class NewsController extends Controller
         return response()->json(['data' => NewsResource::collection($news)]);
     }
 
-    public function publicShow(string $id)
+    public function publicShow(string $slug)
     {
         // Menampilkan detail berita publik hanya jika statusnya approved
-        $news = News::with('author')->where('status', 'approved')->findOrFail($id);
+        $news = News::with('author')->where('status', 'approved')->where('slug', $slug)->firstOrFail();
         $news->increment('views'); // Update view count ketika dibaca dari halaman publik
         return response()->json(['data' => new NewsResource($news)]);
     }
@@ -75,6 +76,13 @@ class NewsController extends Controller
         $validated['views'] = 0;
         $validated['user_id'] = $user->id;
         
+        $slug = Str::slug($validated['title']);
+        $counter = 1;
+        while (News::where('slug', $slug)->exists()) {
+            $slug = Str::slug($validated['title']) . '-' . $counter++;
+        }
+        $validated['slug'] = $slug;
+
         // Super admin langsung approved, sedangkan admin biasa menunggu persetujuan
         $validated['status'] = $user->role === 'super_admin' ? 'approved' : 'pending';
 
@@ -115,6 +123,13 @@ class NewsController extends Controller
             $news->images ?? [],
             'news'
         );
+
+        $slug = Str::slug($validated['title']);
+        $counter = 1;
+        while (News::where('slug', $slug)->where('id', '!=', $id)->exists()) {
+            $slug = Str::slug($validated['title']) . '-' . $counter++;
+        }
+        $validated['slug'] = $slug;
         
         // Jika admin biasa mengedit berita yang ditolak atau telah disetujui, kembalikan ke pending
         if ($user->role !== 'super_admin') {

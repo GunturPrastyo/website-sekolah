@@ -92,7 +92,8 @@ const skeletonCount = computed(() => {
 });
 
 const getImageUrl = (path) => {
-  if (!path) return "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800";
+  if (!path)
+    return "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800";
   if (path.startsWith("http") || path.startsWith("data:image")) return path;
 
   const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -133,6 +134,7 @@ const fetchNews = async () => {
 
       return {
         id: item.id,
+        slug: item.slug,
         title: item.title,
         category: catLower,
         date: new Date(item.created_at).toLocaleDateString("id-ID", {
@@ -302,7 +304,10 @@ onBeforeUnmount(() => {
                     <h3
                       class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight"
                     >
-                      <router-link :to="`/artikel/${news.id}`" class="focus:outline-none">
+                      <router-link
+                        :to="`/artikel/${news.slug}`"
+                        class="focus:outline-none"
+                      >
                         <span class="absolute inset-0"></span>
                         {{ news.title }}
                       </router-link>
@@ -316,7 +321,7 @@ onBeforeUnmount(() => {
 
                     <div class="mt-auto flex items-center justify-between">
                       <router-link
-                        :to="`/artikel/${news.id}`"
+                        :to="`/artikel/${news.slug}`"
                         class="flex items-center text-sm font-bold text-blue-600 dark:text-blue-400 group-hover:underline"
                       >
                         Baca Selengkapnya
@@ -481,7 +486,7 @@ onBeforeUnmount(() => {
             </h3>
             <div class="space-y-5">
               <router-link
-                :to="`/artikel/${news.id}`"
+                :to="`/artikel/${news.slug}`"
                 v-for="(news, index) in popularNews"
                 :key="'popular-' + news.id"
                 class="flex items-start gap-4 group"

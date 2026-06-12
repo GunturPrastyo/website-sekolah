@@ -48,9 +48,9 @@ const closeShareModal = () => {
 const fetchArticleData = async () => {
   isLoading.value = true;
   try {
-    const id = route.params.id;
+    const slug = route.params.slug;
     // Fetch article
-    const response = await api.get(`/api/public-news/${id}`);
+    const response = await api.get(`/api/public-news/${slug}`);
     const data = response.data.data;
 
     let imageUrl = getImageUrl(data.image);
@@ -101,6 +101,7 @@ const fetchSideData = async (category) => {
 
       return {
         id: item.id,
+        slug: item.slug,
         title: item.title,
         category: item.category,
         date: new Date(item.created_at).toLocaleDateString("id-ID", {
@@ -115,7 +116,7 @@ const fetchSideData = async (category) => {
     });
 
     const otherNews = processedNews.filter(
-      (n) => String(n.id) !== String(route.params.id)
+      (n) => String(n.slug) !== String(route.params.slug)
     );
 
     popularNews.value = [...otherNews].sort((a, b) => b.views - a.views).slice(0, 3);
@@ -134,9 +135,9 @@ onMounted(() => {
 });
 
 watch(
-  () => route.params.id,
-  (newId) => {
-    if (newId) {
+  () => route.params.slug,
+  (newSlug) => {
+    if (newSlug) {
       fetchArticleData();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -153,7 +154,7 @@ watch(
           :items="[
             { name: 'Beranda', link: '/', icon: 'home' },
             { name: 'Berita', link: '/berita' },
-            { name: article?.category || 'Artikel' },
+            { name: route.params.slug || 'Artikel' },
           ]"
         />
       </div>
@@ -296,45 +297,45 @@ watch(
             </h3>
             <div class="space-y-5">
               <router-link
-                :to="`/artikel/${article.id}`"
-                v-for="article in relatedArticles"
-                :key="article.id"
+                :to="`/artikel/${item.slug}`"
+                v-for="item in relatedArticles"
+                :key="item.id"
                 class="flex items-start gap-4 group"
               >
                 <div
                   class="w-20 h-20 shrink-0 rounded-lg overflow-hidden shadow-sm relative"
                 >
                   <img
-                    :src="article.image"
+                    :src="item.image"
                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div
                     class="absolute top-0 left-0 px-2 py-0.5 flex items-center justify-center text-[10px] font-bold rounded-br-lg shadow-sm z-10 bg-blue-600 text-white"
                   >
-                    {{ article.category }}
+                    {{ item.category }}
                   </div>
                 </div>
                 <div class="flex flex-col justify-start flex-1 py-0.5">
                   <h4
                     class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1"
                   >
-                    {{ article.title }}
+                    {{ item.title }}
                   </h4>
                   <p
                     class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-2 leading-relaxed"
                   >
-                    {{ article.description }}
+                    {{ item.description }}
                   </p>
                   <div
                     class="flex items-center justify-between text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-auto"
                   >
                     <span class="flex items-center">
                       <PhCalendarBlank class="w-3 h-3 mr-1" />
-                      {{ article.date }}
+                      {{ item.date }}
                     </span>
                     <span class="flex items-center">
                       <PhEye class="w-3 h-3 mr-1" />
-                      {{ article.views }}
+                      {{ item.views }}
                     </span>
                   </div>
                 </div>
@@ -354,7 +355,7 @@ watch(
             </h3>
             <div class="space-y-5 mt-5 md:mt-0">
               <router-link
-                :to="`/artikel/${news.id}`"
+                :to="`/artikel/${news.slug}`"
                 v-for="(news, index) in popularNews"
                 :key="news.id"
                 class="flex items-start gap-4 group"
