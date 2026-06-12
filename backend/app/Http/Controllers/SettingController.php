@@ -33,20 +33,19 @@ class SettingController extends Controller
 
     public function visitorStats()
     {
-        $hariIni = Visitor::whereDate('visited_date', Carbon::today())->count();
-        $bulanIni = Visitor::whereMonth('visited_date', Carbon::now()->month)
-                          ->whereYear('visited_date', Carbon::now()->year)->count();
-        $tahunIni = Visitor::whereYear('visited_date', Carbon::now()->year)->count();
-        $total = Visitor::count();
+        // Cache statistik pengunjung selama 5 menit (300 detik) untuk mengurangi beban database yang berat karena COUNT()
+        $stats = Cache::remember('visitor_stats_cache', 300, function () {
+            return [
+                'hari' => Visitor::whereDate('visited_date', Carbon::today())->count(),
+                'bulan' => Visitor::whereMonth('visited_date', Carbon::now()->month)->whereYear('visited_date', Carbon::now()->year)->count(),
+                'tahun' => Visitor::whereYear('visited_date', Carbon::now()->year)->count(),
+                'total' => Visitor::count()
+            ];
+        });
 
         return response()->json([
             'success' => true,
-            'data' => [
-                'hari' => $hariIni,
-                'bulan' => $bulanIni,
-                'tahun' => $tahunIni,
-                'total' => $total
-            ]
+            'data' => $stats
         ]);
     }
 

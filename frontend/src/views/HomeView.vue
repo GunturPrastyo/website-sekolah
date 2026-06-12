@@ -817,10 +817,13 @@
       <!-- Video Profil & Galeri Section -->
       <section
         class="relative py-8 md:py-6 mt-0 md:mt-16 -mx-6 md:mx-0 bg-blue-950 overflow-hidden px-6 md:px-4 lg:px-6 mb-0 md:mb-12 md:rounded-lg shadow-xl bg-center bg-cover md:bg-fixed"
-        style="background-image: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop')"
+        style="
+          background-image: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop');
+        "
         :style="{
           backgroundImage: `url(${
-            appearanceSettings.galleryBackgroundImage || 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop'
+            appearanceSettings.galleryBackgroundImage ||
+            'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop'
           })`,
         }"
       >
@@ -1964,20 +1967,41 @@ const statsArray = ref([
 
 const fetchSchoolStats = async () => {
   try {
-    // Panggil API endpoint untuk mengambil data statistik (Anda perlu menyiapkannya di Laravel)
-    const response = await api.get("/api/public-stats");
-    if (response.data && response.data.data) {
-      const data = response.data.data;
+    // Ambil data dari cache terlebih dahulu agar langsung tampil (instan)
+    const cachedData = localStorage.getItem("app_schoolStats");
+    if (cachedData) {
+      const data = JSON.parse(cachedData);
       statsArray.value.forEach((stat) => {
         if (data[stat.key] !== undefined) {
           stat.target = stat.isNumber ? Number(data[stat.key]) || 0 : data[stat.key];
+          if (!stat.isNumber) {
+            stat.value = stat.target;
+          }
+        }
+      });
+    }
+
+    // Tetap panggil API endpoint untuk mengambil data statistik terbaru
+    const response = await api.get("/api/public-stats");
+    if (response.data && response.data.data) {
+      const data = response.data.data;
+      localStorage.setItem("app_schoolStats", JSON.stringify(data));
+
+      let needsAnimation = false;
+      statsArray.value.forEach((stat) => {
+        if (data[stat.key] !== undefined) {
+          const newTarget = stat.isNumber ? Number(data[stat.key]) || 0 : data[stat.key];
+          if (stat.target !== newTarget) {
+            stat.target = newTarget;
+            needsAnimation = true;
+          }
           if (!stat.isNumber) {
             stat.value = stat.target; // Langsung set nilai string untuk akreditasi
           }
         }
       });
-      // Jika efek ketik & animasi kotak sudah selesai/muncul, animasikan angka agar terupdate
-      if (showSubtitle.value) {
+      // Jika efek ketik & animasi kotak sudah selesai/muncul, dan ada data baru, animasikan angka agar terupdate
+      if (showSubtitle.value && needsAnimation) {
         animateStats();
       }
     }
@@ -2291,6 +2315,15 @@ const skeletonLocations = ref(
 const fetchAlumniLocations = async () => {
   isLoadingAlumniLocations.value = true;
   try {
+    // Ambil cache statistik alumni agar tidak delay
+    const cachedStats = localStorage.getItem("app_alumniStats");
+    if (cachedStats) {
+      const data = JSON.parse(cachedStats);
+      alumniStats.value.alumni.target = data.alumni || 0;
+      alumniStats.value.ptn.target = data.ptn || 0;
+      alumniStats.value.instansi.target = data.instansi || 0;
+    }
+
     const response = await api.get("/api/public-map-locations");
     if (response.data && response.data.data) {
       let totalAlumniCount = 0;
@@ -2339,6 +2372,16 @@ const fetchAlumniLocations = async () => {
         left: loc.left,
       }));
       localStorage.setItem("alumniMapCache", JSON.stringify(cacheCoords));
+
+      // Simpan data stats terbaru ke cache
+      localStorage.setItem(
+        "app_alumniStats",
+        JSON.stringify({
+          alumni: totalAlumniCount,
+          ptn: totalPTNCount,
+          instansi: totalInstansiCount,
+        })
+      );
 
       // Update target animasi dengan data real dari API
       if (totalAlumniCount > 0) alumniStats.value.alumni.target = totalAlumniCount;
