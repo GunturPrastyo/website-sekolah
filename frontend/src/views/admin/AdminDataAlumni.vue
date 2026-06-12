@@ -305,11 +305,25 @@ const availableInstitutions = computed(() => {
 
   const selectedNames = (mapForm.value.institutions || []).map((i) => i.name);
 
+  const selectedInOtherLocations = [];
+  mapLocations.value.forEach((loc) => {
+    if (loc.id !== mapForm.value.id) {
+      (loc.institutions || []).forEach((inst) => {
+        if (!selectedInOtherLocations.includes(inst.name)) {
+          selectedInOtherLocations.push(inst.name);
+        }
+      });
+    }
+  });
+
+  const allSelectedNames = [...selectedNames, ...selectedInOtherLocations];
+
   return Object.keys(counts)
     .map((name) => ({
       name,
       count: counts[name],
-      isSelected: selectedNames.includes(name),
+      isSelected: allSelectedNames.includes(name),
+      isOtherSelected: selectedInOtherLocations.includes(name),
     }))
     .sort((a, b) => {
       if (a.isSelected && !b.isSelected) return 1;
@@ -832,7 +846,7 @@ const executeBulkDelete = async () => {
                 <input
                   type="text"
                   v-model="bulkEditForm.year"
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60"
                   placeholder="Contoh: 2024"
                 />
               </div>
@@ -994,7 +1008,7 @@ const executeBulkDelete = async () => {
                       @focus="isDropdownOpen = true"
                       @blur="closeDropdown"
                       placeholder="Ketik NISN atau Nama Siswa lalu klik untuk memilih..."
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60"
                     />
                     <div
                       v-if="isDropdownOpen"
@@ -1039,7 +1053,7 @@ const executeBulkDelete = async () => {
                       @focus="isDropdownOpen = true"
                       @blur="closeDropdown"
                       placeholder="Ketik NISN atau Nama Siswa..."
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60"
                     />
                     <div
                       v-if="isDropdownOpen"
@@ -1080,7 +1094,7 @@ const executeBulkDelete = async () => {
                       type="text"
                       v-model="form.nisn"
                       disabled
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 cursor-not-allowed placeholder-gray-400/60 dark:placeholder-slate-500/60"
                       placeholder="005XXXXXXX"
                     />
                   </div>
@@ -1093,7 +1107,7 @@ const executeBulkDelete = async () => {
                       type="text"
                       v-model="form.name"
                       disabled
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 cursor-not-allowed placeholder-gray-400/60 dark:placeholder-slate-500/60"
                       placeholder="Nama alumni"
                     />
                   </div>
@@ -1106,7 +1120,7 @@ const executeBulkDelete = async () => {
                       type="text"
                       v-model="form.year"
                       required
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60"
                       placeholder="2023"
                     />
                   </div>
@@ -1249,7 +1263,7 @@ const executeBulkDelete = async () => {
                       <input
                         type="text"
                         v-model="newInstansiName"
-                        class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60"
                         placeholder="Ketik nama instansi baru..."
                         @keydown.enter.prevent="addNewInstansi"
                       />
@@ -1323,7 +1337,7 @@ const executeBulkDelete = async () => {
               type="text"
               v-model="searchQuery"
               placeholder="Cari NISN atau Nama..."
-              class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
             />
           </div>
           <select
@@ -1752,7 +1766,7 @@ const executeBulkDelete = async () => {
                 <input
                   type="text"
                   v-model="mapForm.name"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60"
                   placeholder="Contoh: Jawa Tengah"
                 />
               </div>
@@ -1898,7 +1912,11 @@ const executeBulkDelete = async () => {
                                     <span
                                       v-if="item.isSelected"
                                       class="text-[10px] text-red-500 font-semibold italic"
-                                      >Terpilih</span
+                                      >{{
+                                        item.isOtherSelected
+                                          ? "Terpilih di lokasi lain"
+                                          : "Terpilih"
+                                      }}</span
                                     >
                                     <span
                                       class="text-[10px] px-1.5 py-0.5 rounded font-bold shrink-0"
@@ -1941,7 +1959,7 @@ const executeBulkDelete = async () => {
                           type="number"
                           v-model="inst.alumni"
                           placeholder="0"
-                          class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500"
+                          class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60"
                         />
                       </div>
                     </div>
