@@ -327,7 +327,6 @@ const handleImageDrop = (index) => {
 };
 
 const filteredNews = computed(() => {
-  const list = newsList.value || [];
   let list = newsList.value || [];
 
   if (currentUserRole.value !== "super_admin" && currentUserId.value !== null) {

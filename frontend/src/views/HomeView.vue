@@ -684,14 +684,14 @@
               <!-- Berita Pendukung (Bawah - 3 Kecil) -->
               <div class="relative">
                 <div
-                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+                  class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6"
                 >
                   <template v-if="isLoadingNews">
                     <div
                       v-for="i in 3"
                       :key="'skel-news-' + i"
                       class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border border-gray-100 dark:border-slate-700 flex flex-row sm:flex-col h-full animate-pulse"
-                      :class="{ 'sm:hidden lg:flex': i === 3 }"
+                      :class="{ 'sm:hidden xl:flex': i === 3 }"
                     >
                       <div class="w-2/5 sm:w-full sm:h-40 relative shrink-0">
                         <div
@@ -730,7 +730,7 @@
                       :key="news.id"
                       :to="`/artikel/${news.slug}`"
                       class="group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 flex flex-row sm:flex-col h-full transition-all duration-500"
-                      :class="{ 'sm:hidden lg:flex': index === 2 }"
+                      :class="{ 'sm:hidden xl:flex': index === 2 }"
                     >
                       <div
                         class="w-2/5 sm:w-full sm:h-40 overflow-hidden relative shrink-0"
@@ -944,19 +944,17 @@
 
       <!-- Video Profil & Galeri Section -->
       <section
-        class="relative py-8 md:py-6 mt-0 md:mt-16 -mx-6 md:mx-0 bg-blue-950 overflow-hidden px-6 md:px-4 lg:px-6 mb-0 md:mb-12 md:rounded-lg shadow-xl bg-center bg-cover md:bg-fixed"
-        style="
-          background-image: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop');
+        class="relative py-8 md:py-6 mt-0 md:mt-16 -mx-6 md:mx-0 bg-slate-900 overflow-hidden px-6 md:px-4 lg:px-6 mb-0 md:mb-12 md:rounded-lg shadow-xl bg-center bg-cover md:bg-fixed"
+        :style="
+          appearanceSettings.galleryBackgroundImage
+            ? { backgroundImage: `url(${appearanceSettings.galleryBackgroundImage})` }
+            : {}
         "
-        :style="{
-          backgroundImage: `url(${
-            appearanceSettings.galleryBackgroundImage ||
-            'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop'
-          })`,
-        }"
       >
         <!-- Overlay Parallax -->
-        <div class="absolute inset-0 bg-blue-950/85 dark:bg-slate-900/90"></div>
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-blue-900/80 via-slate-900/90 to-black/95 backdrop-blur-[2px]"
+        ></div>
 
         <div class="container relative z-10 mx-auto">
           <!-- Header Section -->
@@ -1397,19 +1395,17 @@
       <!-- FAQ & CTA PPDB Section (Sejajar di Desktop) -->
       <section class="relative -mx-6 md:mx-0 overflow-hidden">
         <div
-          class="w-full max-w-full relative mx-auto mb-0 md:mb-12 p-8 px-4 md:px-6 lg:px-4 md:rounded-xl bg-center bg-cover md:bg-fixed overflow-hidden shadow-xl"
-          style="
-            background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200');
+          class="w-full max-w-full relative mx-auto mb-0 md:mb-12 p-8 px-4 md:px-6 lg:px-4 md:rounded-xl bg-center bg-cover md:bg-fixed overflow-hidden shadow-xl bg-slate-900"
+          :style="
+            appearanceSettings.ppdbBackgroundImage
+              ? { backgroundImage: `url(${appearanceSettings.ppdbBackgroundImage})` }
+              : {}
           "
-          :style="{
-            backgroundImage: `url(${
-              appearanceSettings.ppdbBackgroundImage ||
-              'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200'
-            })`,
-          }"
         >
           <!-- Overlay Parallax -->
-          <div class="absolute inset-0 bg-blue-950/85"></div>
+          <div
+            class="absolute inset-0 bg-gradient-to-b from-blue-900/80 via-slate-900/90 to-black/95 backdrop-blur-[2px]"
+          ></div>
 
           <div
             class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-stretch"

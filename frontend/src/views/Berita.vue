@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
+import { useRoute } from "vue-router";
 import {
   PhCalendarBlank,
   PhUser,
@@ -14,6 +15,8 @@ import {
 } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 import Breadcrumb from "@/components/Breadcrumb.vue";
+
+const route = useRoute();
 
 const activeCategory = ref("semua");
 
@@ -41,7 +44,8 @@ const filteredNews = computed(() => {
     filtered = filtered.filter(
       (news) =>
         news.title.toLowerCase().includes(query) ||
-        news.excerpt.toLowerCase().includes(query)
+        news.excerpt.toLowerCase().includes(query) ||
+        news.author.toLowerCase().includes(query)
     );
   }
 
@@ -167,6 +171,10 @@ watch([searchQuery, activeCategory], () => {
 let observer;
 
 onMounted(() => {
+  if (route.query.q) {
+    searchQuery.value = route.query.q;
+  }
+  
   fetchNews();
 
   observer = new IntersectionObserver(

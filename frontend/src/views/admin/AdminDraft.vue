@@ -150,7 +150,7 @@ const resetForm = () => {
 };
 
 const startEditNews = (item) => {
-  form.value = { ...item, images: item.images ? item.images.map((img) => getImageUrl(img)) : [] };
+  form.value = { ...item, images: item.images ? [...item.images] : [] };
   isFormVisible.value = true;
   isNewsFormVisible.value = true;
   isGalleryFormVisible.value = false;
@@ -160,12 +160,17 @@ const startEditNews = (item) => {
 };
 
 const startEditGallery = (item) => {
-  const imgs = item.images && item.images.length > 0 ? item.images : (item.image ? [item.image] : []);
+  const imgs =
+    item.images && item.images.length > 0
+      ? [...item.images]
+      : item.image
+      ? [item.image]
+      : [];
   galleryForm.value = {
     id: item.id,
     title: item.title,
     category: item.category,
-    images: imgs.map((img) => getImageUrl(img)),
+    images: imgs,
   };
   isGalleryFormVisible.value = true;
   isNewsFormVisible.value = false;
