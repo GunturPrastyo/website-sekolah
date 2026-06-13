@@ -785,7 +785,9 @@ const getImageUrl = (path) => {
           </div>
 
           <!-- Image Thumbnail -->
-          <div class="w-full aspect-[16/9] bg-gray-100 dark:bg-slate-700 relative">
+          <div
+            class="w-full h-48 sm:h-52 shrink-0 bg-gray-100 dark:bg-slate-700 relative"
+          >
             <img
               v-if="news.images?.length > 0"
               :src="getImageUrl(news.images[0])"
