@@ -19,15 +19,29 @@ class NewsController extends Controller
         /** @var \App\Models\User $user */
         $user = $request->user();
 
+        $perPage = $request->query('per_page', 9);
+        $search = $request->query('search');
+
         $query = News::with('author')->where('status', 'approved');
 
         if ($user->role !== 'super_admin') {
             $query->where('user_id', $user->id);
         }
 
-        // Hanya tampilkan berita yang sudah disetujui di halaman utama Admin Berita
-        $news = $query->orderBy('created_at', 'desc')->get();
-        return response()->json(['data' => NewsResource::collection($news)]);
+        if ($search) {
+            $query->where('title', 'like', "%{$search}%");
+        }
+
+        $news = $query->orderBy('created_at', 'desc')->paginate($perPage);
+        return response()->json([
+            'data' => NewsResource::collection($news->items()),
+            'pagination' => [
+                'total' => $news->total(),
+                'per_page' => $news->perPage(),
+                'current_page' => $news->currentPage(),
+                'last_page' => $news->lastPage(),
+            ]
+        ]);
     }
 
     public function myPendingNews(Request $request)
@@ -42,10 +56,51 @@ class NewsController extends Controller
         return response()->json(['data' => NewsResource::collection($news)]);
     }
 
-    public function publicIndex()
+    public function publicIndex(Request $request)
     {
-        // Hanya mengambil berita yang sudah disetujui (approved) untuk halaman publik
-        $news = News::with('author')->where('status', 'approved')->orderBy('created_at', 'desc')->get();
+        $perPage = $request->query('per_page');
+        $category = $request->query('category');
+        $excludeCategory = $request->query('exclude_category');
+        $search = $request->query('search');
+        $sort = $request->query('sort', 'created_at');
+
+        $query = News::with('author')->where('status', 'approved');
+
+        if ($category && $category !== 'semua') {
+            $query->where('category', $category);
+        }
+
+        if ($excludeCategory) {
+            $query->where('category', '!=', $excludeCategory);
+        }
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%");
+            });
+        }
+
+        if ($sort === 'views') {
+            $query->orderBy('views', 'desc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        if ($perPage) {
+            $news = $query->paginate($perPage);
+            return response()->json([
+                'data' => NewsResource::collection($news->items()),
+                'pagination' => [
+                    'total' => $news->total(),
+                    'per_page' => $news->perPage(),
+                    'current_page' => $news->currentPage(),
+                    'last_page' => $news->lastPage(),
+                ]
+            ]);
+        }
+
+        $news = $query->get();
         return response()->json(['data' => NewsResource::collection($news)]);
     }
 

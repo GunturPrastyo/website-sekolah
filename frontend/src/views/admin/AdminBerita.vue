@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, nextTick, onMounted } from "vue";
+import { ref, computed, nextTick, onMounted, watch } from "vue";
 import api from "@/api/index.js";
 import {
   PhPlusCircle,
@@ -14,6 +14,8 @@ import {
   PhX,
   PhCaretDown,
   PhCheck,
+  PhCaretLeft,
+  PhCaretRight,
 } from "@phosphor-icons/vue";
 import RichTextEditor from "@/components/RichTextEditor.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
@@ -48,10 +50,22 @@ const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
 const searchQuery = ref("");
 
-const fetchNews = async () => {
+const pagination = ref({
+  total: 0,
+  per_page: 9,
+  current_page: 1,
+  last_page: 1,
+});
+
+const fetchNews = async (page = 1) => {
   try {
-    const response = await api.get("/api/news");
+    const response = await api.get(
+      `/api/news?page=${page}&per_page=${pagination.value.per_page}&search=${searchQuery.value}`
+    );
     newsList.value = response.data.data || [];
+    if (response.data.pagination) {
+      pagination.value = response.data.pagination;
+    }
   } catch (error) {
     triggerToast("Error", "Gagal mengambil data berita", "error");
   }
@@ -65,6 +79,14 @@ onMounted(async () => {
   } catch (error) {
     console.error("Gagal mengambil data profil user", error);
   }
+});
+
+let searchTimeout;
+watch(searchQuery, (newVal) => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    fetchNews(1);
+  }, 500);
 });
 
 const showNewCategoryInput = ref(false);
@@ -222,7 +244,7 @@ const addEntry = async () => {
     const response = await api.post("/api/news", form.value);
 
     if (response.data.data.status === "approved") {
-      newsList.value.unshift(response.data.data);
+      fetchNews(pagination.value.current_page);
     }
 
     isFormVisible.value = false;
@@ -263,10 +285,7 @@ const saveEntry = async () => {
         "Berita kembali ke status Draft/Pending karena telah diedit."
       );
     } else {
-      const index = newsList.value.findIndex((s) => s.id === form.value.id);
-      if (index !== -1) {
-        newsList.value[index] = response.data.data;
-      }
+      fetchNews(pagination.value.current_page);
       triggerToast("Perubahan Disimpan", "Data berita berhasil diperbarui.");
     }
 
@@ -295,7 +314,7 @@ const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
     try {
       await api.delete(`/api/news/${itemToDelete.value}`);
-      newsList.value = newsList.value.filter((s) => s.id !== itemToDelete.value);
+      fetchNews(pagination.value.current_page);
       itemToDelete.value = null;
       triggerToast("Data Dihapus", "Data berita berhasil dihapus dari sistem.", "info");
     } catch (error) {
@@ -327,19 +346,7 @@ const handleImageDrop = (index) => {
 };
 
 const filteredNews = computed(() => {
-  let list = newsList.value || [];
-
-  if (currentUserRole.value !== "super_admin" && currentUserId.value !== null) {
-    list = list.filter(
-      (item) =>
-        item.user_id === currentUserId.value ||
-        (item.author && item.author.id === currentUserId.value)
-    );
-  }
-
-  if (!searchQuery.value) return list;
-  const query = searchQuery.value.toLowerCase();
-  return list.filter((item) => item.title.toLowerCase().includes(query));
+  return newsList.value || [];
 });
 
 const getCategoryName = (id) => {
@@ -843,6 +850,32 @@ const getImageUrl = (path) => {
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Pagination -->
+      <div
+        v-if="pagination.last_page > 1"
+        class="mt-8 flex justify-center items-center gap-2"
+      >
+        <button
+          @click="fetchNews(pagination.current_page - 1)"
+          :disabled="pagination.current_page === 1"
+          class="p-2 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          <PhCaretLeft class="w-5 h-5" />
+        </button>
+
+        <span class="text-sm text-gray-600 dark:text-gray-300">
+          Halaman {{ pagination.current_page }} dari {{ pagination.last_page }}
+        </span>
+
+        <button
+          @click="fetchNews(pagination.current_page + 1)"
+          :disabled="pagination.current_page === pagination.last_page"
+          class="p-2 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          <PhCaretRight class="w-5 h-5" />
+        </button>
       </div>
     </div>
 

@@ -1886,21 +1886,20 @@ const subNews = computed(() => recentNews.value.slice(1, 4));
 const fetchNewsAndAnnouncements = async () => {
   isLoadingNews.value = true;
   try {
-    const response = await api.get("/api/public-news");
-    if (response.data && response.data.data) {
-      // Pastikan berita diurutkan secara descending dari yang paling baru
-      const allNews = response.data.data.sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at)
-      );
-      const isPengumuman = (cat) => cat && cat.toLowerCase() === "pengumuman";
-      recentNews.value = allNews.filter((n) => !isPengumuman(n.category)).slice(0, 4);
-      announcements.value = allNews.filter((n) => isPengumuman(n.category)).slice(0, 10);
-
-      nextTick(() => {
-        setTimeout(checkScroll, 500);
-        observeElements();
-      });
+    const [newsRes, annRes] = await Promise.all([
+      api.get("/api/public-news?per_page=4&exclude_category=pengumuman"),
+      api.get("/api/public-news?per_page=10&category=pengumuman"),
+    ]);
+    if (newsRes.data && newsRes.data.data) {
+      recentNews.value = newsRes.data.data;
     }
+    if (annRes.data && annRes.data.data) {
+      announcements.value = annRes.data.data;
+    }
+    nextTick(() => {
+      setTimeout(checkScroll, 500);
+      observeElements();
+    });
   } catch (error) {
     console.error("Gagal mengambil data berita dan pengumuman:", error);
   } finally {

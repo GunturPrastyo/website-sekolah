@@ -15,6 +15,7 @@ import {
 } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 import Breadcrumb from "@/components/Breadcrumb.vue";
+import api from "@/api/index.js";
 
 const route = useRoute();
 
@@ -28,66 +29,26 @@ const categories = ref([
   { id: "pengumuman", name: "Pengumuman" },
 ]);
 
-const newsList = ref([]);
+const paginatedNews = ref([]);
+const popularNews = ref([]);
 
 const searchQuery = ref("");
-
-const filteredNews = computed(() => {
-  let filtered = newsList.value;
-
-  if (activeCategory.value !== "semua") {
-    filtered = filtered.filter((news) => news.category === activeCategory.value);
-  }
-
-  if (searchQuery.value.trim()) {
-    const query = searchQuery.value.trim().toLowerCase();
-    filtered = filtered.filter(
-      (news) =>
-        news.title.toLowerCase().includes(query) ||
-        news.excerpt.toLowerCase().includes(query) ||
-        news.author.toLowerCase().includes(query)
-    );
-  }
-
-  return filtered;
-});
-
-const popularNews = computed(() => {
-  return [...newsList.value].sort((a, b) => b.views - a.views).slice(0, 5);
-});
-
-const getCategoryCount = (categoryId) => {
-  if (categoryId === "semua") return newsList.value.length;
-  return newsList.value.filter((news) => news.category === categoryId).length;
-};
 
 // --- Fitur Pagination ---
 const itemsPerPage = 6;
 const currentPage = ref(1);
+const totalPages = ref(1);
 const isLoading = ref(true); // Set true untuk skeleton loading saat mount
 let searchTimeout = null;
 
-const totalPages = computed(() => {
-  return Math.ceil(filteredNews.value.length / itemsPerPage);
-});
-
-const paginatedNews = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
-  return filteredNews.value.slice(start, end);
-});
-
 const changePage = (page) => {
   if (page < 1 || page > totalPages.value) return;
-  isLoading.value = true;
-  setTimeout(() => {
-    currentPage.value = page;
-    isLoading.value = false;
-    const container = document.getElementById("news-list-container");
-    if (container) {
-      window.scrollTo({ top: container.offsetTop - 120, behavior: "smooth" });
-    }
-  }, 400);
+  currentPage.value = page;
+  fetchNews();
+  const container = document.getElementById("news-list-container");
+  if (container) {
+    window.scrollTo({ top: container.offsetTop - 120, behavior: "smooth" });
+  }
 };
 
 const skeletonCount = computed(() => {
@@ -108,50 +69,60 @@ const getImageUrl = (path) => {
   return `${baseUrl}/storage/${cleanPath}`;
 };
 
+const mapNewsItem = (item) => {
+  // Buat text excerpt dengan cara menghilangkan tag HTML dari konten
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = item.content;
+  const textContent = tempDiv.textContent || tempDiv.innerText || "";
+
+  // Ambil gambar pertama dari array images, atau gunakan fallback image
+  let rawImage = item.image;
+  if (item.images && item.images.length > 0) {
+    rawImage = item.images[0];
+  }
+  let imageUrl = getImageUrl(rawImage);
+
+  const catLower = item.category ? item.category.toLowerCase() : "pengumuman";
+
+  return {
+    id: item.id,
+    slug: item.slug,
+    title: item.title,
+    category: catLower,
+    date: new Date(item.created_at).toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }),
+    author: item.author ? item.author.name : "Admin",
+    image: imageUrl,
+    views: item.views || 0,
+    excerpt: textContent.substring(0, 150) + "...",
+  };
+};
+
 // Fungsi mengambil data dari API backend
 const fetchNews = async () => {
   isLoading.value = true;
   try {
-    // Mengambil Base URL dari environment variables Vite (.env) dengan fallback ke localhost
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
-    const response = await fetch(`${apiUrl}/public-news`);
-    const result = await response.json();
+    let url = `/api/public-news?page=${currentPage.value}&per_page=${itemsPerPage}`;
+    
+    if (activeCategory.value !== "semua") {
+      url += `&category=${activeCategory.value}`;
+    }
+    if (searchQuery.value.trim()) {
+      url += `&search=${encodeURIComponent(searchQuery.value.trim())}`;
+    }
 
-    newsList.value = result.data.map((item) => {
-      // Buat text excerpt dengan cara menghilangkan tag HTML dari konten
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = item.content;
-      const textContent = tempDiv.textContent || tempDiv.innerText || "";
+    const response = await api.get(url);
+    const result = response.data;
 
-      // Ambil gambar pertama dari array images, atau gunakan fallback image
-      let rawImage = item.image;
-      if (item.images && item.images.length > 0) {
-        rawImage = item.images[0];
-      }
-      let imageUrl = getImageUrl(rawImage);
-
-      // Pastikan kategori baru dimasukkan ke filter list jika belum ada
-      const catLower = item.category ? item.category.toLowerCase() : "pengumuman";
-      if (!categories.value.find((c) => c.id === catLower)) {
-        categories.value.push({ id: catLower, name: item.category });
-      }
-
-      return {
-        id: item.id,
-        slug: item.slug,
-        title: item.title,
-        category: catLower,
-        date: new Date(item.created_at).toLocaleDateString("id-ID", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }),
-        author: item.author ? item.author.name : "Admin",
-        image: imageUrl,
-        views: item.views || 0,
-        excerpt: textContent.substring(0, 150) + "...",
-      };
-    });
+    paginatedNews.value = result.data.map(mapNewsItem);
+    
+    if (result.pagination) {
+      totalPages.value = result.pagination.last_page;
+      currentPage.value = result.pagination.current_page;
+    }
   } catch (error) {
     console.error("Gagal mengambil data berita:", error);
   } finally {
@@ -159,13 +130,21 @@ const fetchNews = async () => {
   }
 };
 
+const fetchPopularNews = async () => {
+  try {
+    const response = await api.get("/api/public-news?per_page=5&sort=views");
+    popularNews.value = response.data.data.map(mapNewsItem);
+  } catch (error) {
+    console.error("Gagal mengambil data berita populer:", error);
+  }
+};
+
 watch([searchQuery, activeCategory], () => {
-  isLoading.value = true;
   currentPage.value = 1;
   if (searchTimeout) clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
-    isLoading.value = false;
-  }, 800); // Tampilkan loading selama 800ms
+    fetchNews();
+  }, 500);
 });
 
 let observer;
@@ -176,6 +155,7 @@ onMounted(() => {
   }
   
   fetchNews();
+  fetchPopularNews();
 
   observer = new IntersectionObserver(
     (entries) => {
@@ -259,7 +239,7 @@ onBeforeUnmount(() => {
           </div>
 
           <template v-else>
-            <div v-if="filteredNews.length > 0">
+            <div v-if="paginatedNews.length > 0">
               <!-- Grid Berita dengan Animasi -->
               <TransitionGroup
                 name="news-list"
@@ -478,9 +458,6 @@ onBeforeUnmount(() => {
                   "
                 >
                   {{ cat.name }}
-                  <span class="ml-1 text-[11px] font-bold opacity-70">
-                    ({{ getCategoryCount(cat.id) }})
-                  </span>
                 </button>
               </div>
             </div>
