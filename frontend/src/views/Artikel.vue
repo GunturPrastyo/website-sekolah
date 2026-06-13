@@ -397,35 +397,33 @@ watch(
             </div>
 
             <!-- Penulis Lainnya Widget -->
-            <div class="py-8 px-6 border-b border-gray-100 dark:border-slate-700" v-if="otherAuthors.length > 0">
+            <div
+              class="py-8 px-6 border-b border-gray-100 dark:border-slate-700"
+              v-if="otherAuthors.length > 0"
+            >
               <h3
                 class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"
               >
                 <PhUsers class="w-5 h-5 mr-2 text-blue-500" />
                 Penulis Lainnya
               </h3>
-              <div class="space-y-4">
+              <div class="flex flex-wrap gap-2">
                 <router-link
                   :to="{ path: '/berita', query: { q: author.name } }"
                   v-for="author in otherAuthors"
                   :key="author.id"
-                  class="flex items-center gap-4 group p-2 -mx-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
+                  class="flex items-center gap-2 px-3 py-1.5 bg-gray-50 hover:bg-blue-50 dark:bg-slate-700/50 dark:hover:bg-blue-900/30 border border-gray-200 hover:border-blue-200 dark:border-slate-600 dark:hover:border-blue-800/50 rounded-2xl transition-all group shadow-sm hover:shadow-md"
                 >
-                  <div
-                    class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg shrink-0 uppercase group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                  <span
+                    class="text-xs font-semibold text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400"
                   >
-                    {{ author.initials }}
-                  </div>
-                  <div class="flex flex-col justify-center flex-1">
-                    <h4
-                      class="text-sm font-bold text-gray-800 dark:text-gray-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
-                    >
-                      {{ author.name }}
-                    </h4>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                      Menulis {{ author.count }} artikel
-                    </p>
-                  </div>
+                    {{ author.name }}
+                  </span>
+                  <span
+                    class="flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-bold rounded-lg bg-white dark:bg-slate-800 text-gray-500 dark:text-gray-400 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 group-hover:text-blue-600 dark:group-hover:text-blue-300 border border-gray-100 dark:border-slate-700"
+                  >
+                    {{ author.count }}
+                  </span>
                 </router-link>
               </div>
             </div>
