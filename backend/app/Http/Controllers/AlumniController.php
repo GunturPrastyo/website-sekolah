@@ -50,12 +50,13 @@ class AlumniController extends Controller
 
     public function publicIndex()
     {
-        $alumnis = Alumni::with('student:id,name')->orderBy('graduation_year', 'desc')->get();
+        $alumnis = Alumni::with('student:id,name,nisn')->orderBy('graduation_year', 'desc')->get();
         
         $mapped = $alumnis->map(function($alumni) {
             return [
                 'id' => $alumni->id,
                 'name' => $alumni->student->name ?? 'Alumni',
+                'nisn' => $alumni->student->nisn ?? '-',
                 'year' => $alumni->graduation_year,
                 'status' => $alumni->career_status,
                 'instansi' => $alumni->institution,
