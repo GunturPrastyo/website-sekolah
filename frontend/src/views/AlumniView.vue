@@ -40,29 +40,69 @@
               <div
                 v-for="loc in mapLocations"
                 :key="loc.id"
-                class="absolute flex justify-center items-center group cursor-pointer w-8 h-8 -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 hover:scale-125 z-10"
-                :style="{ top: loc.top, left: loc.left }"
+                class="absolute flex justify-center items-end group cursor-pointer hover:z-50 focus:z-50 w-8 h-10 md:w-10 md:h-12 -translate-x-1/2 -translate-y-full focus:outline-none"
+                :style="{
+                  top: loc.top,
+                  left: loc.left,
+                  zIndex: selectedLocation?.id === loc.id ? 50 : 10,
+                }"
                 @click="selectedLocation = loc"
               >
-                <!-- Radar / Ping effect -->
-                <span
-                  v-if="selectedLocation?.id === loc.id"
-                  class="absolute w-6 h-6 bg-yellow-400 rounded-full animate-ping opacity-75"
-                ></span>
-                <span
-                  v-else
-                  class="absolute w-4 h-4 bg-blue-500 rounded-full animate-ping opacity-75 group-hover:bg-blue-400"
-                ></span>
-
-                <!-- Center Dot -->
+                <!-- Tooltip Hover -->
                 <div
-                  class="relative flex items-center justify-center shadow-lg rounded-full border-2 border-white dark:border-slate-800 transition-colors duration-300"
+                  class="absolute bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-20 flex flex-col items-center translate-y-2 group-hover:translate-y-0"
+                >
+                  <div
+                    class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs rounded-lg py-1.5 px-3 whitespace-nowrap shadow-xl font-medium flex items-center gap-2"
+                  >
+                    <span>{{ loc.name }}</span>
+                    <span
+                      class="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold"
+                      >{{ loc.totalAlumni }}</span
+                    >
+                  </div>
+                  <div
+                    class="w-2.5 h-2.5 bg-gray-900 dark:bg-white rotate-45 -mt-1.5"
+                  ></div>
+                </div>
+
+                <!-- Shadow Map -->
+                <div
+                  class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1.5 md:w-5 md:h-2 bg-black/40 rounded-[100%] blur-[2px] transition-transform duration-300"
                   :class="
-                    selectedLocation?.id === loc.id
-                      ? 'bg-yellow-400 w-4 h-4'
-                      : 'bg-blue-600 w-3 h-3 group-hover:bg-blue-500'
+                    selectedLocation?.id === loc.id ? 'scale-50' : 'group-hover:scale-50'
                   "
                 ></div>
+
+                <!-- Pin Icon (Bounce effect on hover) -->
+                <div
+                  class="relative drop-shadow-[0_5px_8px_rgba(0,0,0,0.4)] transition-transform duration-300 origin-bottom"
+                  :class="
+                    selectedLocation?.id === loc.id
+                      ? '-translate-y-2'
+                      : 'group-hover:-translate-y-2'
+                  "
+                >
+                  <PhMapPin
+                    weight="fill"
+                    class="w-8 h-8 md:w-10 md:h-10 transition-colors duration-300"
+                    :class="
+                      selectedLocation?.id === loc.id
+                        ? 'text-yellow-400'
+                        : loc.type === 'ptn'
+                        ? 'text-sky-500'
+                        : loc.type === 'kedinasan'
+                        ? 'text-yellow-500'
+                        : loc.type === 'instansi'
+                        ? 'text-emerald-500'
+                        : 'text-blue-500'
+                    "
+                  />
+                  <!-- Inner Dot -->
+                  <div
+                    class="absolute top-[8px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 md:top-[10px] md:w-3 md:h-3 bg-white rounded-full"
+                  ></div>
+                </div>
               </div>
             </template>
           </div>
@@ -417,6 +457,7 @@ import {
   PhCaretRight,
   PhCaretDown,
   PhCalendarBlank,
+  PhMapPin,
 } from "@phosphor-icons/vue";
 
 const mapLocations = ref([]);
