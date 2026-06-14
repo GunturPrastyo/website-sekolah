@@ -49,8 +49,11 @@ class DashboardController extends Controller
         $chartLabels = $chartDataObj['labels'];
         $chartData = $chartDataObj['data'];
 
+        // Menentukan jumlah maksimal aktivitas terbaru yang ingin ditampilkan
+        $activityLimit = 15;
+
         // Mengambil data aktivitas terbaru dari Berita dan Galeri
-        $recentNews = News::with('author')->orderBy('created_at', 'desc')->take(5)->get()->map(function ($item) {
+        $recentNews = News::with('author')->orderBy('created_at', 'desc')->take($activityLimit)->get()->map(function ($item) {
             $authorName = $item->author ? $item->author->name : 'Admin';
             return [
                 'id' => 'news_' . $item->id,
@@ -63,7 +66,7 @@ class DashboardController extends Controller
             ];
         });
 
-        $recentGalleries = Gallery::with('author')->orderBy('created_at', 'desc')->take(5)->get()->map(function ($item) {
+        $recentGalleries = Gallery::with('author')->orderBy('created_at', 'desc')->take($activityLimit)->get()->map(function ($item) {
             $authorName = $item->author ? $item->author->name : 'Admin';
             return [
                 'id' => 'gallery_' . $item->id,
@@ -76,10 +79,10 @@ class DashboardController extends Controller
             ];
         });
 
-        // Gabungkan, urutkan berdasarkan waktu terbaru, dan ambil 5 teratas
+        // Gabungkan, urutkan berdasarkan waktu terbaru, dan ambil teratas sesuai limit
         $recentActivities = $recentNews->concat($recentGalleries)
             ->sortByDesc('created_at')
-            ->take(5)
+            ->take($activityLimit)
             ->values()
             ->all();
 
