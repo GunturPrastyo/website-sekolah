@@ -349,13 +349,8 @@ onMounted(() => {
             <PhClock :size="20" class="mr-2 text-gray-500" />
             Aktivitas Terbaru
           </h3>
-          <button
-            class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium transition-colors"
-          >
-            Lihat Semua
-          </button>
         </div>
-        <div class="space-y-6 flex-1">
+        <div class="space-y-6 flex-1 overflow-y-auto max-h-[320px] custom-scrollbar pr-2">
           <!-- Empty State ketika belum ada aktivitas -->
           <div
             v-if="recentActivities.length === 0"
@@ -403,5 +398,19 @@ onMounted(() => {
 <style scoped>
 .font-sans {
   font-family: "Poppins", sans-serif;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 20px;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #475569;
 }
 </style>
