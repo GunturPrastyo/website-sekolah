@@ -351,44 +351,69 @@ onMounted(() => {
           </h3>
         </div>
         <div class="space-y-6 flex-1 overflow-y-auto max-h-[320px] custom-scrollbar pr-2">
-          <!-- Empty State ketika belum ada aktivitas -->
-          <div
-            v-if="recentActivities.length === 0"
-            class="text-sm text-gray-500 text-center py-4"
-          >
-            Belum ada aktivitas terbaru.
-          </div>
-
-          <!-- Daftar Aktivitas Dinamis -->
-          <div
-            v-for="(activity, index) in recentActivities"
-            :key="activity.id"
-            class="flex gap-4 relative"
-          >
+          <!-- Skeleton Loading -->
+          <template v-if="isChartLoading">
             <div
-              v-if="index !== recentActivities.length - 1"
-              class="absolute top-8 left-4 -ml-px h-full w-0.5 bg-gray-100 dark:bg-slate-700"
-            ></div>
-            <div
-              class="w-8 h-8 rounded-full border-2 border-white dark:border-slate-800 flex items-center justify-center text-xs font-bold z-10 shrink-0"
-              :class="activity.color"
+              v-for="i in 4"
+              :key="'skeleton-' + i"
+              class="flex gap-4 relative animate-pulse"
             >
-              {{ activity.user_initials }}
+              <div
+                v-if="i !== 4"
+                class="absolute top-8 left-4 -ml-px h-full w-0.5 bg-gray-200 dark:bg-slate-700"
+              ></div>
+              <div
+                class="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 shrink-0 z-10"
+              ></div>
+              <div class="pt-1 flex-1">
+                <div class="h-4 bg-gray-200 dark:bg-slate-700 rounded w-3/4 mb-2"></div>
+                <div class="h-3 bg-gray-200 dark:bg-slate-700 rounded w-1/4"></div>
+              </div>
             </div>
-            <div class="pt-1.5 pb-2">
-              <p class="text-sm text-gray-800 dark:text-gray-200 leading-snug">
-                <span class="font-semibold text-gray-900 dark:text-white">{{
-                  activity.user
-                }}</span>
-                {{ activity.action }}
-                <span class="italic font-medium">{{ activity.target }}</span
-                >.
-              </p>
-              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center">
-                {{ timeAgo(activity.created_at) }}
-              </p>
+          </template>
+
+          <template v-else>
+            <!-- Empty State ketika belum ada aktivitas -->
+            <div
+              v-if="recentActivities.length === 0"
+              class="text-sm text-gray-500 text-center py-4"
+            >
+              Belum ada aktivitas terbaru.
             </div>
-          </div>
+
+            <!-- Daftar Aktivitas Dinamis -->
+            <div
+              v-for="(activity, index) in recentActivities"
+              :key="activity.id"
+              class="flex gap-4 relative"
+            >
+              <div
+                v-if="index !== recentActivities.length - 1"
+                class="absolute top-8 left-4 -ml-px h-full w-0.5 bg-gray-100 dark:bg-slate-700"
+              ></div>
+              <div
+                class="w-8 h-8 rounded-full border-2 border-white dark:border-slate-800 flex items-center justify-center text-xs font-bold z-10 shrink-0"
+                :class="activity.color"
+              >
+                {{ activity.user_initials }}
+              </div>
+              <div class="pt-1.5 pb-2">
+                <p class="text-sm text-gray-800 dark:text-gray-200 leading-snug">
+                  <span class="font-semibold text-gray-900 dark:text-white">{{
+                    activity.user
+                  }}</span>
+                  {{ activity.action }}
+                  <span class="italic font-medium">{{ activity.target }}</span
+                  >.
+                </p>
+                <p
+                  class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center"
+                >
+                  {{ timeAgo(activity.created_at) }}
+                </p>
+              </div>
+            </div>
+          </template>
         </div>
       </div>
     </div>
