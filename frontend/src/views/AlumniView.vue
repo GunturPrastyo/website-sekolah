@@ -2,16 +2,6 @@
   <div
     class="overflow-x-hidden w-full bg-slate-50 dark:bg-slate-900 min-h-screen relative"
   >
-    <!-- Ambient Background -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      <div
-        class="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-50 dark:bg-blue-900/10 blur-[120px]"
-      ></div>
-      <div
-        class="absolute top-[40%] -right-[10%] w-[40%] h-[40%] rounded-full bg-slate-100 dark:bg-slate-800/10 blur-[120px]"
-      ></div>
-    </div>
-
     <!-- Header / Hero Section -->
     <PageHeader
       badge="Jejak Langkah Lulusan"
@@ -206,133 +196,131 @@
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- Direktori Alumni Block -->
-      <div
-        class="relative bg-white dark:bg-slate-900 py-12 md:py-16 lg:py-20 overflow-hidden border-t border-slate-200 dark:border-slate-800"
-      >
-        <div class="relative z-10 max-w-4xl mx-auto px-4 lg:px-8">
-          <div class="text-center mb-10">
-            <h2
-              class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight"
-            >
-              Direktori Alumni
-            </h2>
-            <p
-              class="text-slate-500 dark:text-slate-400 text-sm md:text-base font-medium"
-            >
-              Temukan data alumni dengan cepat. Cari berdasarkan Nama, NISN, Angkatan,
-              atau Instansi tempat belajar/bekerja.
-            </p>
-          </div>
-
-          <div class="relative group">
-            <div
-              class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
-            >
-              <PhMagnifyingGlass
-                class="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors"
-              />
-            </div>
-            <input
-              type="text"
-              v-model="searchQuery"
-              placeholder="Ketik kata kunci pencarian..."
-              class="w-full pl-12 pr-12 py-3.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-900 dark:text-white text-base transition-all outline-none"
-            />
-            <div
-              v-if="isLoadingAlumni"
-              class="absolute inset-y-0 right-0 pr-6 flex items-center pointer-events-none"
-            >
-              <div
-                class="animate-spin rounded-full h-6 w-6 border-2 border-slate-300 border-t-blue-600"
-              ></div>
-            </div>
-            <button
-              v-else-if="searchQuery.trim().length > 0"
-              @click="searchQuery = ''"
-              class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors focus:outline-none"
-            >
-              <PhXCircle class="w-5 h-5" weight="fill" />
-            </button>
-          </div>
-
-          <!-- Inline Search Results -->
-          <div
-            v-if="searchQuery.trim().length > 0"
-            class="mt-8 transition-all duration-300"
+    <!-- Direktori Alumni Block -->
+    <section
+      class="relative bg-white dark:bg-slate-900 py-12 md:py-16 lg:py-20 overflow-hidden border-t border-slate-200 dark:border-slate-800 z-10"
+    >
+      <div class="relative z-10 container mx-auto px-4 lg:px-8">
+        <div class="text-center mb-10 max-w-2xl mx-auto">
+          <h2
+            class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight"
           >
-            <template v-if="filteredAlumni.length > 0">
+            Direktori Alumni
+          </h2>
+          <p class="text-slate-500 dark:text-slate-400 text-sm md:text-base font-medium">
+            Temukan data alumni dengan cepat. Cari berdasarkan Nama, NISN, Angkatan, atau
+            Instansi tempat belajar/bekerja.
+          </p>
+        </div>
+
+        <div class="relative group max-w-3xl mx-auto">
+          <div
+            class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+          >
+            <PhMagnifyingGlass
+              class="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors"
+            />
+          </div>
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Ketik kata kunci pencarian..."
+            class="w-full pl-12 pr-12 py-3.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-900 dark:text-white text-base transition-all outline-none"
+          />
+          <div
+            v-if="isLoadingAlumni"
+            class="absolute inset-y-0 right-0 pr-6 flex items-center pointer-events-none"
+          >
+            <div
+              class="animate-spin rounded-full h-6 w-6 border-2 border-slate-300 border-t-blue-600"
+            ></div>
+          </div>
+          <button
+            v-else-if="searchQuery.trim().length > 0"
+            @click="searchQuery = ''"
+            class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors focus:outline-none"
+          >
+            <PhXCircle class="w-5 h-5" weight="fill" />
+          </button>
+        </div>
+
+        <!-- Inline Search Results -->
+        <div
+          v-if="searchQuery.trim().length > 0"
+          class="mt-8 transition-all duration-300"
+        >
+          <template v-if="filteredAlumni.length > 0">
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-h-[600px] overflow-y-auto custom-scrollbar pr-2 pb-2"
+            >
               <div
-                class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[600px] overflow-y-auto custom-scrollbar pr-2 pb-2"
+                v-for="alumni in filteredAlumni.slice(0, 24)"
+                :key="alumni.id"
+                class="bg-white dark:bg-slate-800 p-5 rounded-lg shadow-sm hover:shadow border border-slate-200 dark:border-slate-700 flex items-start gap-4 transition-all duration-300 hover:-translate-y-0.5"
               >
                 <div
-                  v-for="alumni in filteredAlumni.slice(0, 20)"
-                  :key="alumni.id"
-                  class="bg-white dark:bg-slate-800 p-5 rounded-lg shadow-sm hover:shadow border border-slate-200 dark:border-slate-700 flex items-start gap-4 transition-all duration-300 hover:-translate-y-0.5"
+                  class="w-12 h-12 md:w-14 md:h-14 shrink-0 rounded-lg bg-blue-50 dark:bg-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-lg md:text-xl border border-blue-100 dark:border-slate-600"
                 >
-                  <div
-                    class="w-12 h-12 md:w-14 md:h-14 shrink-0 rounded-lg bg-blue-50 dark:bg-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-lg md:text-xl border border-blue-100 dark:border-slate-600"
+                  {{ getInitials(alumni.name) }}
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4
+                    class="font-bold text-slate-800 dark:text-slate-100 text-base md:text-lg truncate"
                   >
-                    {{ getInitials(alumni.name) }}
+                    {{ alumni.name }}
+                  </h4>
+                  <div
+                    class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 mb-2.5 font-medium"
+                  >
+                    NISN: {{ alumni.nisn }}
                   </div>
-                  <div class="flex-1 min-w-0">
-                    <h4
-                      class="font-bold text-slate-800 dark:text-slate-100 text-base md:text-lg truncate"
+                  <div class="flex flex-wrap items-center gap-2 mb-2">
+                    <span
+                      class="inline-flex px-2 py-0.5 rounded text-[10px] md:text-xs font-bold uppercase tracking-wider"
+                      :class="getStatusColor(alumni.status)"
                     >
-                      {{ alumni.name }}
-                    </h4>
-                    <div
-                      class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 mb-2.5 font-medium"
-                    >
-                      NISN: {{ alumni.nisn }}
-                    </div>
-                    <div class="flex flex-wrap items-center gap-2 mb-2">
-                      <span
-                        class="inline-flex px-2 py-0.5 rounded text-[10px] md:text-xs font-bold uppercase tracking-wider"
-                        :class="getStatusColor(alumni.status)"
-                      >
-                        {{ alumni.status }}
-                      </span>
-                      <span class="text-xs text-slate-600 dark:text-slate-300 truncate">
-                        Angkatan: <strong>{{ alumni.year }}</strong>
-                      </span>
-                    </div>
-                    <div
-                      v-if="alumni.instansi"
-                      class="text-xs md:text-sm text-slate-600 dark:text-slate-300 truncate bg-slate-50 dark:bg-slate-700/50 rounded-lg px-3 py-2 border border-slate-100 dark:border-slate-600 flex items-center mt-1"
-                    >
-                      <PhBuildings class="shrink-0 w-4 h-4 mr-1.5 text-slate-400" />
-                      <span class="truncate">{{ alumni.instansi }}</span>
-                    </div>
+                      {{ alumni.status }}
+                    </span>
+                    <span class="text-xs text-slate-600 dark:text-slate-300 truncate">
+                      Angkatan: <strong>{{ alumni.year }}</strong>
+                    </span>
+                  </div>
+                  <div
+                    v-if="alumni.instansi"
+                    class="text-xs md:text-sm text-slate-600 dark:text-slate-300 truncate bg-slate-50 dark:bg-slate-700/50 rounded-lg px-3 py-2 border border-slate-100 dark:border-slate-600 flex items-center mt-1"
+                  >
+                    <PhBuildings class="shrink-0 w-4 h-4 mr-1.5 text-slate-400" />
+                    <span class="truncate">{{ alumni.instansi }}</span>
                   </div>
                 </div>
               </div>
-              <div
-                v-if="filteredAlumni.length > 20"
-                class="mt-6 text-center text-slate-500 dark:text-slate-400 text-sm font-medium bg-slate-50 dark:bg-slate-800 py-2 px-4 rounded-lg inline-block mx-auto border border-slate-200 dark:border-slate-700"
-              >
-                Menampilkan 20 dari {{ filteredAlumni.length }} hasil. Gunakan kata kunci
-                spesifik.
-              </div>
-            </template>
-            <template v-else>
-              <div
-                class="bg-slate-50 dark:bg-slate-800 p-10 rounded-lg text-center text-slate-500 dark:text-slate-400 shadow-sm border border-slate-200 dark:border-slate-700"
-              >
-                <PhUsers
-                  class="w-16 h-16 mx-auto mb-4 text-slate-300 dark:text-slate-600"
-                />
-                <p class="text-lg md:text-xl font-medium">
-                  Tidak menemukan alumni dengan kata kunci <br />
-                  <span
-                    class="font-bold text-slate-700 dark:text-slate-200 mt-2 inline-block"
-                    >"{{ searchQuery }}"</span
-                  >
-                </p>
-              </div>
-            </template>
-          </div>
+            </div>
+            <div
+              v-if="filteredAlumni.length > 24"
+              class="mt-6 text-center text-slate-500 dark:text-slate-400 text-sm font-medium bg-slate-50 dark:bg-slate-800 py-2 px-4 rounded-lg inline-block mx-auto border border-slate-200 dark:border-slate-700"
+            >
+              Menampilkan 24 dari {{ filteredAlumni.length }} hasil. Gunakan kata kunci
+              spesifik.
+            </div>
+          </template>
+          <template v-else>
+            <div
+              class="bg-slate-50 dark:bg-slate-800 p-10 rounded-lg text-center text-slate-500 dark:text-slate-400 shadow-sm border border-slate-200 dark:border-slate-700"
+            >
+              <PhUsers
+                class="w-16 h-16 mx-auto mb-4 text-slate-300 dark:text-slate-600"
+              />
+              <p class="text-lg md:text-xl font-medium">
+                Tidak menemukan alumni dengan kata kunci <br />
+                <span
+                  class="font-bold text-slate-700 dark:text-slate-200 mt-2 inline-block"
+                  >"{{ searchQuery }}"</span
+                >
+              </p>
+            </div>
+          </template>
         </div>
       </div>
     </section>
@@ -396,10 +384,11 @@ onMounted(() => {
 });
 
 const filteredAlumni = computed(() => {
-  if (!searchQuery.value.trim()) return [];
+  const query = searchQuery.value.trim();
+  if (query.length < 3) return [];
 
   return alumniList.value.filter((a) => {
-    const q = searchQuery.value.toLowerCase();
+    const q = query.toLowerCase();
     const matchName = a.name?.toLowerCase().includes(q);
     const matchInstansi = a.instansi?.toLowerCase().includes(q);
     const matchNisn = a.nisn?.toLowerCase().includes(q);
