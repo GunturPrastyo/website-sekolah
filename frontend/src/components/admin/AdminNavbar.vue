@@ -451,6 +451,8 @@ const fetchProfile = async () => {
   }
 };
 
+let notificationInterval;
+
 onMounted(() => {
   if (
     localStorage.getItem("color-theme") === "dark" ||
@@ -464,10 +466,14 @@ onMounted(() => {
 
   document.addEventListener("click", closeNotificationOutside);
   fetchProfile();
+
+  // Mengecek notifikasi baru (polling)
+  notificationInterval = setInterval(fetchNotifications, 15000);
 });
 
 onBeforeUnmount(() => {
   document.removeEventListener("click", closeNotificationOutside);
+  if (notificationInterval) clearInterval(notificationInterval);
 });
 
 const toggleDarkMode = () => {

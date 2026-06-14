@@ -41,6 +41,8 @@ const superAdminStats = [
     id: "total_siswa",
     title: "Total Siswa",
     value: "0",
+    change: 0,
+    changeLabel: "dari bulan lalu",
     icon: markRaw(PhUsers),
     color: "text-blue-500",
     bgColor: "bg-blue-100 dark:bg-blue-900/40",
@@ -49,6 +51,8 @@ const superAdminStats = [
     id: "total_guru",
     title: "Total Guru",
     value: "0",
+    change: 0,
+    changeLabel: "dari bulan lalu",
     icon: markRaw(PhChalkboardTeacher),
     color: "text-emerald-500",
     bgColor: "bg-emerald-100 dark:bg-emerald-900/40",
@@ -57,6 +61,8 @@ const superAdminStats = [
     id: "total_artikel",
     title: "Artikel Diterbitkan",
     value: "0",
+    change: 0,
+    changeLabel: "dari bulan lalu",
     icon: markRaw(PhNewspaper),
     color: "text-amber-500",
     bgColor: "bg-amber-100 dark:bg-amber-900/40",
@@ -65,6 +71,8 @@ const superAdminStats = [
     id: "pengunjung_hari_ini",
     title: "Pengunjung Hari Ini",
     value: "0",
+    change: 0,
+    changeLabel: "dari kemarin",
     icon: markRaw(PhEye),
     color: "text-indigo-500",
     bgColor: "bg-indigo-100 dark:bg-indigo-900/40",
@@ -76,6 +84,8 @@ const adminStats = [
     id: "artikel_saya",
     title: "Artikel Saya",
     value: "0",
+    change: 0,
+    changeLabel: "dari bulan lalu",
     icon: markRaw(PhNewspaper),
     color: "text-blue-500",
     bgColor: "bg-blue-100 dark:bg-blue-900/40",
@@ -84,6 +94,8 @@ const adminStats = [
     id: "galeri_saya",
     title: "Galeri Foto Saya",
     value: "0",
+    change: 0,
+    changeLabel: "dari bulan lalu",
     icon: markRaw(PhImage),
     color: "text-emerald-500",
     bgColor: "bg-emerald-100 dark:bg-emerald-900/40",
@@ -92,6 +104,8 @@ const adminStats = [
     id: "menunggu_validasi",
     title: "Menunggu Validasi",
     value: "0",
+    change: 0,
+    changeLabel: "dari bulan lalu",
     icon: markRaw(PhClock),
     color: "text-amber-500",
     bgColor: "bg-amber-100 dark:bg-amber-900/40",
@@ -100,6 +114,8 @@ const adminStats = [
     id: "konten_ditolak",
     title: "Perlu Revisi / Ditolak",
     value: "0",
+    change: 0,
+    changeLabel: "dari bulan lalu",
     icon: markRaw(PhXCircle),
     color: "text-red-500",
     bgColor: "bg-red-100 dark:bg-red-900/40",
@@ -189,6 +205,9 @@ const fetchDashboardStats = async () => {
       if (data[stat.id] !== undefined) {
         stat.value = data[stat.id].toLocaleString();
       }
+      if (data[stat.id + "_change"] !== undefined) {
+        stat.change = data[stat.id + "_change"];
+      }
     });
 
     if (data.chart) {
@@ -264,8 +283,12 @@ onMounted(() => {
         </div>
 
         <div class="mt-2 flex items-center text-xs">
-          <span class="text-emerald-500 font-medium flex items-center">
+          <span
+            :class="stat.change >= 0 ? 'text-emerald-500' : 'text-red-500'"
+            class="font-medium flex items-center"
+          >
             <svg
+              v-if="stat.change >= 0"
               class="w-3 h-3 mr-1"
               fill="none"
               viewBox="0 0 24 24"
@@ -278,9 +301,23 @@ onMounted(() => {
                 d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
               />
             </svg>
-            12%
+            <svg
+              v-else
+              class="w-3 h-3 mr-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"
+              />
+            </svg>
+            {{ Math.abs(stat.change) }}%
           </span>
-          <span class="text-gray-400 ml-2">dari bulan lalu</span>
+          <span class="text-gray-400 ml-2">{{ stat.changeLabel }}</span>
         </div>
 
         <!-- subtle hover line -->
