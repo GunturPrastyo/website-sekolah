@@ -10,10 +10,10 @@
     />
 
     <!-- Peta Persebaran Alumni Section -->
-    <section class="py-8 md:py-12 container mx-auto px-0 md:px-4 lg:px-8 relative z-10">
-      <div
-        class="bg-white dark:bg-slate-800 md:rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col w-full overflow-hidden"
-      >
+    <section
+      class="py-8 md:py-12 container mx-auto px-0 md:px-4 lg:px-8 relative z-10 bg-white dark:bg-slate-800"
+    >
+      <div class="md:rounded-xl flex flex-col w-full overflow-hidden">
         <!-- Main Content Area -->
         <div class="p-5 md:p-10">
           <!-- Map Area -->
@@ -202,7 +202,7 @@
     <section
       class="relative bg-white dark:bg-slate-900 py-12 md:py-16 lg:py-20 overflow-hidden border-t border-slate-200 dark:border-slate-800 z-10"
     >
-      <div class="relative z-10 container mx-auto px-4 lg:px-8">
+      <div class="relative z-10 container mx-auto px-4 lg:px-8 mb-42">
         <div class="text-center mb-10 max-w-2xl mx-auto">
           <h2
             class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight"
