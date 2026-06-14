@@ -11,40 +11,73 @@
 
     <!-- Direktori & Persebaran Alumni Section -->
     <section
-      class="py-8 md:py-12 container mx-auto px-0 md:px-4 lg:px-8 relative z-10 bg-white dark:bg-slate-800 mb-12"
+      class="py-8 md:py-12 container mx-auto px-0 md:px-4 lg:px-8 relative z-10 bg-white dark:bg-slate-800"
     >
       <div class="md:rounded-xl flex flex-col w-full overflow-hidden">
         <!-- Search Area -->
         <div class="px-5 md:px-10 pt-5 md:pt-8">
-          <div class="relative group max-w-3xl mx-auto mb-8">
-            <div
-              class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
-            >
-              <PhMagnifyingGlass
-                class="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors"
-              />
-            </div>
-            <input
-              type="text"
-              v-model="searchQuery"
-              placeholder="Cari alumni berdasarkan Nama, NISN, Angkatan, atau Instansi..."
-              class="w-full pl-12 pr-12 py-3.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-900 dark:text-white text-base transition-all outline-none"
-            />
-            <div
-              v-if="isLoadingAlumni"
-              class="absolute inset-y-0 right-0 pr-6 flex items-center pointer-events-none"
-            >
+          <div class="flex flex-col md:flex-row gap-4 mb-8 max-w-4xl">
+            <!-- Search Input -->
+            <div class="relative group flex-1">
               <div
-                class="animate-spin rounded-full h-6 w-6 border-2 border-slate-300 border-t-blue-600"
-              ></div>
+                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+              >
+                <PhMagnifyingGlass
+                  class="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors"
+                />
+              </div>
+              <input
+                type="text"
+                v-model="searchQuery"
+                placeholder="Cari alumni berdasarkan Nama, NISN, Angkatan, atau Instansi..."
+                class="w-full pl-12 pr-12 py-3.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-900 dark:text-white text-base transition-all outline-none"
+              />
+              <div
+                v-if="isLoadingAlumni"
+                class="absolute inset-y-0 right-0 pr-6 flex items-center pointer-events-none"
+              >
+                <div
+                  class="animate-spin rounded-full h-6 w-6 border-2 border-slate-300 border-t-blue-600"
+                ></div>
+              </div>
+              <button
+                v-else-if="searchQuery.trim().length > 0"
+                @click="searchQuery = ''"
+                class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors focus:outline-none"
+              >
+                <PhXCircle class="w-5 h-5" weight="fill" />
+              </button>
             </div>
-            <button
-              v-else-if="searchQuery.trim().length > 0"
-              @click="searchQuery = ''"
-              class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors focus:outline-none"
-            >
-              <PhXCircle class="w-5 h-5" weight="fill" />
-            </button>
+
+            <!-- Filter Tahun -->
+            <div class="w-full md:w-56 shrink-0 relative">
+              <select
+                v-model="selectedYear"
+                class="w-full py-3.5 pl-4 pr-10 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-900 dark:text-white text-base transition-all outline-none appearance-none cursor-pointer"
+              >
+                <option value="">Semua Angkatan</option>
+                <option v-for="year in availableYears" :key="year" :value="year">
+                  Angkatan {{ year }}
+                </option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-500"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </div>
+            </div>
           </div>
 
           <!-- Inline Search Results -->
@@ -52,9 +85,18 @@
             v-if="searchQuery.trim().length > 0"
             class="mb-10 transition-all duration-300"
           >
-            <template v-if="filteredAlumni.length > 0">
+            <template v-if="searchQuery.trim().length < 3">
               <div
-                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-h-[600px] overflow-y-auto custom-scrollbar pr-2 pb-2"
+                class="bg-slate-50 dark:bg-slate-800 p-8 rounded-lg text-center text-slate-500 dark:text-slate-400 shadow-sm border border-slate-200 dark:border-slate-700"
+              >
+                <p class="text-base md:text-lg font-medium">
+                  Ketik minimal 3 karakter untuk mulai mencari alumni...
+                </p>
+              </div>
+            </template>
+            <template v-else-if="filteredAlumni.length > 0">
+              <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[600px] overflow-y-auto custom-scrollbar pr-2 pb-2"
               >
                 <div
                   v-for="alumni in filteredAlumni.slice(0, 24)"
@@ -114,11 +156,7 @@
                   class="w-16 h-16 mx-auto mb-4 text-slate-300 dark:text-slate-600"
                 />
                 <p class="text-lg md:text-xl font-medium">
-                  Tidak menemukan alumni dengan kata kunci <br />
-                  <span
-                    class="font-bold text-slate-700 dark:text-slate-200 mt-2 inline-block"
-                    >"{{ searchQuery }}"</span
-                  >
+                  Tidak menemukan alumni dengan kriteria yang dicari.
                 </p>
               </div>
             </template>
@@ -331,6 +369,12 @@ const isLoadingMap = ref(true);
 const isLoadingAlumni = ref(true);
 
 const searchQuery = ref("");
+const selectedYear = ref("");
+
+const availableYears = computed(() => {
+  const years = alumniList.value.map((a) => a.year).filter((y) => y);
+  return [...new Set(years)].sort((a, b) => b - a);
+});
 
 const fetchMapLocations = async () => {
   isLoadingMap.value = true;
@@ -368,17 +412,24 @@ onMounted(() => {
 });
 
 const filteredAlumni = computed(() => {
-  const query = searchQuery.value.trim();
+  const query = searchQuery.value.trim().toLowerCase();
+  const year = selectedYear.value;
+
   if (query.length < 3) return [];
 
   return alumniList.value.filter((a) => {
-    const q = query.toLowerCase();
-    const matchName = a.name?.toLowerCase().includes(q);
-    const matchInstansi = a.instansi?.toLowerCase().includes(q);
-    const matchNisn = a.nisn?.toLowerCase().includes(q);
-    const matchYear = a.year?.toString().includes(q);
+    const matchName = a.name?.toLowerCase().includes(query);
+    const matchInstansi = a.instansi?.toLowerCase().includes(query);
+    const matchNisn = a.nisn?.toLowerCase().includes(query);
+    const matchYearQuery = a.year?.toString().includes(query);
+    const matchQuery = matchName || matchInstansi || matchNisn || matchYearQuery;
 
-    return matchName || matchInstansi || matchNisn || matchYear;
+    let matchYearFilter = true;
+    if (year) {
+      matchYearFilter = a.year?.toString() === year.toString();
+    }
+
+    return matchQuery && matchYearFilter;
   });
 });
 
