@@ -166,15 +166,19 @@
         <!-- Main Content Area -->
         <div class="px-5 md:px-10 pb-5 md:pb-10" v-show="searchQuery.trim().length === 0">
           <!-- Map Area -->
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
             <div
-              class="lg:col-span-2 relative aspect-[4/3] sm:aspect-[2/1] bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden flex items-center justify-center p-2 shadow-inner bg-grid-pattern group"
+              class="lg:col-span-2 relative aspect-[4/3] sm:aspect-[2/1] bg-slate-100 dark:bg-slate-800/80 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden flex items-center justify-center p-2 shadow-inner bg-grid-pattern group"
             >
               <img
                 src="/img/indonesia.svg"
                 alt="Peta Indonesia"
-                class="w-full h-full object-fill opacity-30 dark:opacity-20 pointer-events-none drop-shadow-lg transition-transform duration-700 group-hover:scale-[1.02]"
-                style="filter: invert(45%) sepia(60%) saturate(250%) hue-rotate(190deg)"
+                class="w-full h-full object-fill opacity-80 dark:opacity-50 pointer-events-none transition-transform duration-700 group-hover:scale-[1.02]"
+                style="
+                  filter: invert(30%) sepia(70%) saturate(2000%) hue-rotate(200deg)
+                    brightness(80%) contrast(110%)
+                    drop-shadow(0px 8px 12px rgba(0, 0, 0, 0.25));
+                "
               />
 
               <template v-if="isLoadingMap">
@@ -254,93 +258,117 @@
             </div>
 
             <!-- Location Detail Sidebar -->
-            <div
-              class="lg:col-span-1 bg-white dark:bg-slate-800 rounded-lg p-6 md:p-8 border border-slate-200 dark:border-slate-700 h-100 sm:h-112.5 flex flex-col transition-all duration-300 relative overflow-hidden shadow-sm"
-            >
-              <template v-if="selectedLocation">
-                <div class="border-b border-slate-200 dark:border-slate-700 pb-5 mb-5">
-                  <div class="flex justify-between items-start mb-2">
+            <div class="lg:col-span-1 relative h-[450px] sm:h-[500px] lg:h-auto">
+              <div
+                class="absolute inset-0 bg-white dark:bg-slate-800 rounded-lg p-6 md:p-8 border border-slate-200 dark:border-slate-700 flex flex-col transition-all duration-300 overflow-hidden shadow-sm"
+              >
+                <template v-if="selectedLocation">
+                  <div class="border-b border-slate-200 dark:border-slate-700 pb-5 mb-5">
                     <h3
-                      class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white leading-tight tracking-tight"
+                      class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white leading-tight tracking-tight mb-3"
                     >
                       {{ selectedLocation.name }}
                     </h3>
-                    <div
-                      class="bg-blue-100/80 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap border border-blue-200 dark:border-blue-800/50"
-                    >
-                      {{ selectedLocation.totalAlumni }} Alumni
-                    </div>
-                  </div>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                    Rincian instansi dan perguruan tinggi:
-                  </p>
-                </div>
-
-                <div class="flex-1 overflow-y-auto pr-3 space-y-3.5 custom-scrollbar">
-                  <div
-                    v-for="inst in selectedLocation.institutions"
-                    :key="inst.name"
-                    class="flex items-center gap-4 p-3.5 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow hover:-translate-y-0.5 transition-all duration-300 group"
-                  >
-                    <div
-                      class="w-12 h-12 shrink-0 bg-white dark:bg-slate-700/50 rounded-md border border-slate-200 dark:border-slate-600 flex items-center justify-center overflow-hidden p-2 group-hover:scale-105 transition-transform"
-                    >
-                      <img
-                        v-if="inst.logo"
-                        :src="inst.logo"
-                        class="w-full h-full object-contain"
-                        :alt="inst.name"
-                      />
-                      <PhBuildings v-else class="w-5 h-5 text-gray-400" />
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <h4
-                        class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate"
-                        :title="inst.name"
+                    <div class="mb-3">
+                      <span
+                        class="inline-block bg-blue-100/80 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap border border-blue-200 dark:border-blue-800/50"
                       >
-                        {{ inst.name }}
-                      </h4>
-                      <p class="text-xs text-slate-500 font-semibold mt-1">
-                        {{
-                          inst.type === "ptn"
-                            ? "PTN"
-                            : inst.type === "kedinasan"
-                            ? "Kedinasan"
-                            : "BUMN/Instansi"
-                        }}
-                        <span class="mx-1">•</span>
-                        <span class="text-blue-600 dark:text-blue-400"
-                          >{{ inst.alumni }} org</span
+                        {{ selectedLocation.totalAlumni }} Alumni
+                      </span>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                      Rincian instansi dan perguruan tinggi:
+                    </p>
+                  </div>
+
+                  <div class="relative flex-1 min-h-0">
+                    <div
+                      class="absolute inset-0 overflow-y-auto pr-3 space-y-3.5 custom-scrollbar pb-6"
+                    >
+                      <div
+                        v-for="inst in selectedLocation.institutions"
+                        :key="inst.name"
+                        class="flex items-center gap-4 p-3.5 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow hover:-translate-y-0.5 transition-all duration-300 group"
+                      >
+                        <div
+                          class="w-12 h-12 shrink-0 bg-white dark:bg-slate-700/50 rounded-md border border-slate-200 dark:border-slate-600 flex items-center justify-center overflow-hidden p-2 group-hover:scale-105 transition-transform"
                         >
-                      </p>
+                          <img
+                            v-if="inst.logo"
+                            :src="inst.logo"
+                            class="w-full h-full object-contain"
+                            :alt="inst.name"
+                          />
+                          <PhBuildings v-else class="w-5 h-5 text-gray-400" />
+                        </div>
+                        <div class="flex-1 min-w-0">
+                          <h4
+                            class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate"
+                            :title="inst.name"
+                          >
+                            {{ inst.name }}
+                          </h4>
+                          <p class="text-xs text-slate-500 font-semibold mt-1">
+                            {{
+                              inst.type === "ptn"
+                                ? "PTN"
+                                : inst.type === "kedinasan"
+                                ? "Kedinasan"
+                                : "BUMN/Instansi"
+                            }}
+                            <span class="mx-1">•</span>
+                            <span class="text-blue-600 dark:text-blue-400"
+                              >{{ inst.alumni }} org</span
+                            >
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        v-if="
+                          !selectedLocation.institutions ||
+                          selectedLocation.institutions.length === 0
+                        "
+                        class="text-center py-8 text-sm text-slate-500 font-medium"
+                      >
+                        Tidak ada detail instansi.
+                      </div>
+                    </div>
+
+                    <!-- Bottom Fade & Scroll Indicator -->
+                    <div
+                      v-if="
+                        selectedLocation.institutions &&
+                        selectedLocation.institutions.length > 3
+                      "
+                      class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white dark:from-slate-800 to-transparent pointer-events-none z-10 flex justify-center items-end"
+                    >
+                      <div
+                        class="text-xs font-semibold text-slate-500 flex items-center animate-bounce pb-1"
+                      >
+                        <PhArrowDown class="w-4 h-4 mr-1" />
+                        Scroll ke bawah
+                      </div>
                     </div>
                   </div>
+                </template>
+                <template v-else>
                   <div
-                    v-if="
-                      !selectedLocation.institutions ||
-                      selectedLocation.institutions.length === 0
-                    "
-                    class="text-center py-8 text-sm text-slate-500 font-medium"
+                    class="flex-1 flex flex-col items-center justify-center text-center text-slate-400 dark:text-slate-500"
                   >
-                    Tidak ada detail instansi.
+                    <div
+                      class="w-24 h-24 bg-white/50 dark:bg-slate-800/50 rounded-full shadow-inner flex items-center justify-center mb-5 border border-slate-200 dark:border-slate-700"
+                    >
+                      <PhMapTrifold
+                        class="w-12 h-12 text-slate-300 dark:text-slate-500"
+                      />
+                    </div>
+                    <p class="text-sm font-medium leading-relaxed px-4">
+                      Klik salah satu titik pada peta untuk melihat detail persebaran
+                      alumni di wilayah tersebut.
+                    </p>
                   </div>
-                </div>
-              </template>
-              <template v-else>
-                <div
-                  class="flex-1 flex flex-col items-center justify-center text-center text-slate-400 dark:text-slate-500"
-                >
-                  <div
-                    class="w-24 h-24 bg-white/50 dark:bg-slate-800/50 rounded-full shadow-inner flex items-center justify-center mb-5 border border-slate-200 dark:border-slate-700"
-                  >
-                    <PhMapTrifold class="w-12 h-12 text-slate-300 dark:text-slate-500" />
-                  </div>
-                  <p class="text-sm font-medium leading-relaxed px-4">
-                    Klik salah satu titik pada peta untuk melihat detail persebaran alumni
-                    di wilayah tersebut.
-                  </p>
-                </div>
-              </template>
+                </template>
+              </div>
             </div>
           </div>
         </div>
@@ -360,6 +388,7 @@ import {
   PhUsers,
   PhMapPin,
   PhXCircle,
+  PhArrowDown,
 } from "@phosphor-icons/vue";
 
 const mapLocations = ref([]);
