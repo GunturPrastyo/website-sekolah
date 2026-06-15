@@ -980,7 +980,7 @@
             <!-- KIRI: Video Profil Utama -->
             <div
               v-if="schoolVideoUrl"
-              class="lg:col-span-2 relative group rounded-2xl overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full block fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
+              class="lg:col-span-2 relative group rounded-lg overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full block fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
             >
               <template v-if="!isVideoPlaying">
                 <div
@@ -1040,7 +1040,7 @@
             </div>
             <div
               v-else
-              class="lg:col-span-2 relative group rounded-2xl overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full flex items-center justify-center bg-blue-900/40 border border-blue-800/40 cursor-default fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
+              class="lg:col-span-2 relative group rounded-lg overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full flex items-center justify-center bg-blue-900/40 border border-blue-800/40 cursor-default fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
             >
               <div class="text-center">
                 <div
@@ -1066,7 +1066,7 @@
                 v-for="(gallery, index) in galleriesByCategory"
                 :key="index"
                 to="/galeri"
-                class="group relative rounded-xl overflow-hidden shadow-sm h-full block"
+                class="group relative rounded-lg overflow-hidden shadow-sm h-full block"
               >
                 <img
                   :src="getImageUrl(gallery.image)"
@@ -1089,7 +1089,7 @@
               <div
                 v-for="i in 3 - galleriesByCategory.length"
                 :key="'empty-' + i"
-                class="group relative rounded-xl overflow-hidden shadow-sm h-full block bg-blue-900/30 border border-blue-800/30 flex flex-col items-center justify-center text-blue-300/50"
+                class="group relative rounded-lg overflow-hidden shadow-sm h-full block bg-blue-900/30 border border-blue-800/30 flex flex-col items-center justify-center text-blue-300/50"
               >
                 <PhImage class="w-8 h-8 mb-2 opacity-50" />
                 <span class="text-xs font-semibold opacity-50">Belum ada foto</span>
@@ -1098,10 +1098,16 @@
               <!-- Foto 4 (Lihat Semua) -->
               <router-link
                 to="/galeri"
-                class="group relative rounded-xl overflow-hidden shadow-sm h-full block bg-blue-900/40 border border-blue-800/40"
+                class="group relative rounded-lg overflow-hidden shadow-sm h-full block bg-blue-900/40 border border-blue-800/40"
               >
+                <img
+                  v-if="fourthGalleryImage"
+                  :src="getImageUrl(fourthGalleryImage)"
+                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  alt="Lihat Galeri"
+                />
                 <div
-                  class="absolute inset-0 flex items-center justify-center group-hover:bg-blue-800/50 transition-colors"
+                  class="absolute inset-0 flex items-center justify-center bg-blue-950/70 backdrop-blur-[2px] group-hover:bg-blue-900/80 transition-colors"
                 >
                   <div class="text-center">
                     <div
@@ -2355,6 +2361,7 @@ const agendas = ref([]);
 
 const galleries = ref([]);
 const galleriesByCategory = ref([]);
+const fourthGalleryImage = ref(null);
 
 const fetchGalleries = async () => {
   try {
@@ -2369,7 +2376,17 @@ const fetchGalleries = async () => {
           grouped[gallery.category] = gallery; // Data sudah diorder `desc` dari API, jadi kita akan dapat foto terbaru dari setiap kategori pertama kali
         }
       });
-      galleriesByCategory.value = Object.values(grouped).slice(0, 3);
+
+      const groupedArr = Object.values(grouped);
+      galleriesByCategory.value = groupedArr.slice(0, 3);
+
+      if (groupedArr.length > 3) {
+        fourthGalleryImage.value = groupedArr[3].image;
+      } else if (allGalleries.length > 3) {
+        fourthGalleryImage.value = allGalleries[3].image;
+      } else if (allGalleries.length > 0) {
+        fourthGalleryImage.value = allGalleries[0].image;
+      }
     }
   } catch (error) {
     console.error("Gagal mengambil data galeri:", error);
