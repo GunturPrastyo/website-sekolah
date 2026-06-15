@@ -66,8 +66,11 @@ const fetchGallery = async () => {
 const fetchVideo = async () => {
   try {
     const response = await api.get("/api/school-video");
-    if (response.data.data && response.data.data.url) {
-      videoUrl.value = response.data.data.url;
+    if (response.data && response.data.data) {
+      if (response.data.data.url) videoUrl.value = response.data.data.url;
+      if (response.data.data.title) videoTitle.value = response.data.data.title;
+      if (response.data.data.description)
+        videoDesc.value = response.data.data.description;
     }
   } catch (error) {
     console.error("Gagal memuat video profil", error);
@@ -169,6 +172,10 @@ const fileInput = ref(null);
 // Video Profil State
 const videoUrl = ref("");
 const tempVideoUrl = ref("");
+const videoTitle = ref("");
+const tempVideoTitle = ref("");
+const videoDesc = ref("");
+const tempVideoDesc = ref("");
 const isEditingVideo = ref(false);
 
 const embedVideoUrl = computed(() => {
@@ -184,24 +191,30 @@ const embedVideoUrl = computed(() => {
 
 const startEditVideo = () => {
   tempVideoUrl.value = videoUrl.value;
+  tempVideoTitle.value = videoTitle.value;
+  tempVideoDesc.value = videoDesc.value;
   isEditingVideo.value = true;
 };
 
 const cancelEditVideo = () => {
   isEditingVideo.value = false;
   tempVideoUrl.value = "";
+  tempVideoTitle.value = "";
+  tempVideoDesc.value = "";
 };
 
 const saveVideo = async () => {
-  if (!tempVideoUrl.value) {
-    triggerToast("Gagal Menyimpan", "Tautan video tidak boleh kosong!", "error");
-    return;
-  }
   try {
-    await api.post("/api/school-video", { url: tempVideoUrl.value });
+    await api.post("/api/school-video", {
+      url: tempVideoUrl.value,
+      title: tempVideoTitle.value,
+      description: tempVideoDesc.value,
+    });
     videoUrl.value = tempVideoUrl.value;
+    videoTitle.value = tempVideoTitle.value;
+    videoDesc.value = tempVideoDesc.value;
     isEditingVideo.value = false;
-    triggerToast("Perubahan Disimpan", "Tautan video profil berhasil diperbarui.");
+    triggerToast("Perubahan Disimpan", "Video profil berhasil diperbarui.");
   } catch (error) {
     triggerToast(
       "Gagal Menyimpan",
@@ -215,7 +228,9 @@ const deleteVideo = async () => {
   try {
     await api.delete("/api/school-video");
     videoUrl.value = "";
-    triggerToast("Data Dihapus", "Tautan video profil berhasil dihapus.", "info");
+    videoTitle.value = "";
+    videoDesc.value = "";
+    triggerToast("Data Dihapus", "Video profil berhasil dihapus.", "info");
   } catch (error) {
     triggerToast(
       "Gagal Menghapus",
@@ -766,34 +781,82 @@ const getCategoryName = (id) => {
             >
               Tautan Video YouTube
             </label>
-            <textarea
+            <input
+              type="url"
               v-model="tempVideoUrl"
-              rows="2"
-              class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none placeholder-gray-400 dark:placeholder-slate-500"
+              class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors placeholder-gray-400 dark:placeholder-slate-500"
               placeholder="Contoh: https://www.youtube.com/watch?v=..."
+            />
+          </div>
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+            >
+              Judul Video
+            </label>
+            <input
+              type="text"
+              v-model="tempVideoTitle"
+              class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors placeholder-gray-400 dark:placeholder-slate-500"
+              placeholder="Contoh: Company Profile SMAN 1 Nogosari"
+              maxlength="255"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+            >
+              Deskripsi Singkat
+            </label>
+            <textarea
+              v-model="tempVideoDesc"
+              rows="3"
+              class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none placeholder-gray-400 dark:placeholder-slate-500"
+              placeholder="Contoh: Saksikan cuplikan fasilitas, metode pembelajaran..."
+              maxlength="500"
             ></textarea>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">
-              Masukkan tautan video YouTube untuk ditampilkan di halaman profil. Sistem
-              akan otomatis mengonversi ke format embed.
-            </p>
           </div>
           <button
             @click="saveVideo"
             class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors self-start"
           >
             <PhFloppyDisk class="w-5 h-5 mr-2" />
-            Simpan Tautan
+            Simpan Video
           </button>
         </div>
 
-        <div v-else class="flex flex-col justify-center">
-          <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Tautan saat ini:
-          </p>
-          <div
-            class="p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-gray-200 dark:border-slate-600 break-all text-sm font-mono text-gray-800 dark:text-gray-200"
-          >
-            {{ videoUrl || "Belum ada tautan video yang diatur." }}
+        <div v-else class="flex flex-col gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Tautan saat ini:
+              </p>
+              <div
+                class="p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-gray-200 dark:border-slate-600 break-all text-sm font-mono text-gray-800 dark:text-gray-200"
+              >
+                {{ videoUrl || "Belum ada tautan video yang diatur." }}
+              </div>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Judul Video:
+              </p>
+              <div
+                class="p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-gray-200 dark:border-slate-600 text-sm text-gray-800 dark:text-gray-200"
+              >
+                {{ videoTitle || "Menggunakan judul default" }}
+              </div>
+            </div>
+            <div class="md:col-span-2">
+              <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Deskripsi Video:
+              </p>
+              <div
+                class="p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-gray-200 dark:border-slate-600 text-sm text-gray-800 dark:text-gray-200"
+              >
+                {{ videoDesc || "Menggunakan deskripsi default" }}
+              </div>
+            </div>
           </div>
         </div>
 

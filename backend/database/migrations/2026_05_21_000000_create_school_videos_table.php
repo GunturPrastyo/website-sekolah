@@ -11,6 +11,8 @@ return new class extends Migration
         Schema::create('school_videos', function (Blueprint $table) {
             $table->id();
             $table->string('url')->nullable();
+            $table->string('title')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

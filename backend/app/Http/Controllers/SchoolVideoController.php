@@ -17,11 +17,15 @@ class SchoolVideoController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'url' => 'required|url'
+            'url' => 'nullable|url',
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:500',
         ]);
 
         $video = SchoolVideo::first() ?? new SchoolVideo();
         $video->url = $request->url;
+        $video->title = $request->title;
+        $video->description = $request->description;
         $video->save();
 
         return response()->json([
