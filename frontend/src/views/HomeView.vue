@@ -978,84 +978,98 @@
           <!-- Main Grid Layout -->
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 items-stretch">
             <!-- KIRI: Video Profil Utama -->
-            <div
-              v-if="schoolVideoUrl"
-              class="lg:col-span-2 relative group rounded-lg overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full block fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
-            >
-              <template v-if="!isVideoPlaying">
-                <div
-                  class="absolute inset-0 cursor-pointer"
-                  @click="isVideoPlaying = true"
-                >
-                  <img
-                    :src="videoThumbnail"
-                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    alt="Video Profil Sekolah"
-                  />
+            <template v-if="isLoadingSchoolVideo">
+              <div
+                class="lg:col-span-2 relative rounded-lg overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full bg-slate-800/50 animate-pulse border border-slate-700/50"
+              >
+                <!-- Skeleton Play Button -->
+                <div class="absolute inset-0 flex items-center justify-center z-20">
+                  <div class="w-16 h-16 md:w-20 md:h-20 bg-slate-700 rounded-full"></div>
+                </div>
+                <!-- Skeleton Text Bottom -->
+                <div class="absolute bottom-0 left-0 p-5 md:p-8 w-full">
+                  <div class="h-6 w-3/4 md:w-1/2 bg-slate-700 rounded mb-3"></div>
+                  <div class="h-4 w-full bg-slate-700 rounded mb-2"></div>
+                  <div class="h-4 w-5/6 bg-slate-700 rounded"></div>
+                </div>
+              </div>
+            </template>
+            <template v-else>
+              <div
+                v-if="schoolVideoUrl"
+                class="lg:col-span-2 relative group rounded-lg overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full block fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
+              >
+                <template v-if="!isVideoPlaying">
                   <div
-                    class="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors"
-                  ></div>
-
-                  <!-- Play Button Center -->
-                  <div class="absolute inset-0 flex items-center justify-center z-20">
+                    class="absolute inset-0 cursor-pointer"
+                    @click="isVideoPlaying = true"
+                  >
+                    <img
+                      :src="videoThumbnail"
+                      class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      alt="Video Profil Sekolah"
+                    />
                     <div
-                      class="w-16 h-16 md:w-20 md:h-20 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-sm group-hover:bg-blue-500 group-hover:scale-110 transition-all shadow-[0_0_30px_rgba(37,99,235,0.6)]"
+                      class="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors"
+                    ></div>
+
+                    <!-- Play Button Center -->
+                    <div class="absolute inset-0 flex items-center justify-center z-20">
+                      <div
+                        class="w-16 h-16 md:w-20 md:h-20 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-sm group-hover:bg-blue-500 group-hover:scale-110 transition-all shadow-[0_0_30px_rgba(37,99,235,0.6)]"
+                      >
+                        <PhPlay class="w-8 h-8 md:w-10 md:h-10 ml-1" weight="fill" />
+                      </div>
+                    </div>
+
+                    <!-- Text Bottom -->
+                    <div
+                      class="absolute bottom-0 left-0 p-5 md:p-8 w-full bg-gradient-to-t from-blue-950/90 via-blue-950/40 to-transparent z-10"
                     >
-                      <PhPlay class="w-8 h-8 md:w-10 md:h-10 ml-1" weight="fill" />
+                      <h3
+                        class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors"
+                        style="font-family: 'Kalam', cursive"
+                      >
+                        {{ schoolVideoTitle || "Video Profil Sekolah" }}
+                      </h3>
+                      <p class="text-gray-200 text-sm md:text-base line-clamp-2">
+                        {{
+                          schoolVideoDesc ||
+                          "Saksikan cuplikan fasilitas, metode pembelajaran, dan prestasi kami."
+                        }}
+                      </p>
                     </div>
                   </div>
-
-                  <!-- Text Bottom -->
-                  <div
-                    class="absolute bottom-0 left-0 p-5 md:p-8 w-full bg-gradient-to-t from-blue-950/90 via-blue-950/40 to-transparent z-10"
-                  >
-                    <span
-                      class="inline-block px-3 py-1 mb-3 text-sm font-semibold text-blue-900 bg-blue-100 rounded-full"
-                      style="font-family: 'Kalam', cursive"
-                      >Video Profil</span
-                    >
-                    <h3
-                      class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors"
-                    >
-                      {{ schoolVideoTitle || "Company Profile" }}
-                    </h3>
-                    <p class="text-gray-200 text-sm md:text-base line-clamp-2">
-                      {{
-                        schoolVideoDesc ||
-                        "Saksikan cuplikan fasilitas, metode pembelajaran, dan prestasi kami."
-                      }}
-                    </p>
-                  </div>
-                </div>
-              </template>
-              <template v-else>
-                <iframe
-                  :src="videoEmbedUrl"
-                  class="absolute inset-0 w-full h-full"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen
-                ></iframe>
-              </template>
-            </div>
-            <div
-              v-else
-              class="lg:col-span-2 relative group rounded-lg overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full flex items-center justify-center bg-blue-900/40 border border-blue-800/40 cursor-default fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
-            >
-              <div class="text-center">
-                <div
-                  class="w-16 h-16 md:w-20 md:h-20 bg-blue-800/50 rounded-full flex items-center justify-center text-blue-300 mx-auto mb-4"
-                >
-                  <PhPlay class="w-8 h-8 md:w-10 md:h-10 ml-1" weight="fill" />
-                </div>
-                <h3 class="text-xl md:text-2xl font-bold text-blue-200 mb-2">
-                  Video Profil Belum Tersedia
-                </h3>
-                <p class="text-blue-300/80 text-sm md:text-base">
-                  Video profil sekolah akan segera hadir.
-                </p>
+                </template>
+                <template v-else>
+                  <iframe
+                    :src="videoEmbedUrl"
+                    class="absolute inset-0 w-full h-full"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                  ></iframe>
+                </template>
               </div>
-            </div>
+              <div
+                v-else
+                class="lg:col-span-2 relative group rounded-lg overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full flex items-center justify-center bg-blue-900/40 border border-blue-800/40 cursor-default fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
+              >
+                <div class="text-center">
+                  <div
+                    class="w-16 h-16 md:w-20 md:h-20 bg-blue-800/50 rounded-full flex items-center justify-center text-blue-300 mx-auto mb-4"
+                  >
+                    <PhPlay class="w-8 h-8 md:w-10 md:h-10 ml-1" weight="fill" />
+                  </div>
+                  <h3 class="text-xl md:text-2xl font-bold text-blue-200 mb-2">
+                    Video Profil Belum Tersedia
+                  </h3>
+                  <p class="text-blue-300/80 text-sm md:text-base">
+                    Video profil sekolah akan segera hadir.
+                  </p>
+                </div>
+              </div>
+            </template>
 
             <!-- KANAN: Grid Galeri 2x2 -->
             <div
@@ -2401,6 +2415,7 @@ const schoolVideoUrl = ref("");
 const schoolVideoTitle = ref("");
 const schoolVideoDesc = ref("");
 const isVideoPlaying = ref(false);
+const isLoadingSchoolVideo = ref(true);
 
 const videoEmbedUrl = computed(() => {
   if (!schoolVideoUrl.value) return "";
@@ -2426,6 +2441,7 @@ const videoThumbnail = computed(() => {
 });
 
 const fetchSchoolVideo = async () => {
+  isLoadingSchoolVideo.value = true;
   try {
     const response = await api.get("/api/public-school-video");
     if (response.data && response.data.data) {
@@ -2437,6 +2453,7 @@ const fetchSchoolVideo = async () => {
   } catch (error) {
     console.error("Gagal mengambil data video profil:", error);
   } finally {
+    isLoadingSchoolVideo.value = false;
     nextTick(() => {
       observeElements();
     });
