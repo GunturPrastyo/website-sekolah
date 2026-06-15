@@ -978,52 +978,66 @@
           <!-- Main Grid Layout -->
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 items-stretch">
             <!-- KIRI: Video Profil Utama -->
-            <a
+            <div
               v-if="schoolVideoUrl"
-              :href="schoolVideoUrl"
-              target="_blank"
-              class="lg:col-span-2 relative group rounded-2xl overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full block cursor-pointer fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
+              class="lg:col-span-2 relative group rounded-2xl overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full block fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
             >
-              <img
-                :src="videoThumbnail"
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                alt="Video Profil Sekolah"
-              />
-              <div
-                class="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors"
-              ></div>
-
-              <!-- Play Button Center -->
-              <div class="absolute inset-0 flex items-center justify-center z-20">
+              <template v-if="!isVideoPlaying">
                 <div
-                  class="w-16 h-16 md:w-20 md:h-20 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-sm group-hover:bg-blue-500 group-hover:scale-110 transition-all shadow-[0_0_30px_rgba(37,99,235,0.6)]"
+                  class="absolute inset-0 cursor-pointer"
+                  @click="isVideoPlaying = true"
                 >
-                  <PhPlay class="w-8 h-8 md:w-10 md:h-10 ml-1" weight="fill" />
-                </div>
-              </div>
+                  <img
+                    :src="videoThumbnail"
+                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    alt="Video Profil Sekolah"
+                  />
+                  <div
+                    class="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors"
+                  ></div>
 
-              <!-- Text Bottom -->
-              <div
-                class="absolute bottom-0 left-0 p-5 md:p-8 w-full bg-gradient-to-t from-blue-950/90 via-blue-950/40 to-transparent z-10"
-              >
-                <span
-                  class="inline-block px-3 py-1 mb-3 text-sm font-semibold text-blue-900 bg-blue-100 rounded-full"
-                  style="font-family: 'Kalam', cursive"
-                  >Video Profil</span
-                >
-                <h3
-                  class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors"
-                >
-                  {{ schoolVideoTitle || "Company Profile" }}
-                </h3>
-                <p class="text-gray-200 text-sm md:text-base line-clamp-2">
-                  {{
-                    schoolVideoDesc ||
-                    "Saksikan cuplikan fasilitas, metode pembelajaran, dan prestasi kami."
-                  }}
-                </p>
-              </div>
-            </a>
+                  <!-- Play Button Center -->
+                  <div class="absolute inset-0 flex items-center justify-center z-20">
+                    <div
+                      class="w-16 h-16 md:w-20 md:h-20 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-sm group-hover:bg-blue-500 group-hover:scale-110 transition-all shadow-[0_0_30px_rgba(37,99,235,0.6)]"
+                    >
+                      <PhPlay class="w-8 h-8 md:w-10 md:h-10 ml-1" weight="fill" />
+                    </div>
+                  </div>
+
+                  <!-- Text Bottom -->
+                  <div
+                    class="absolute bottom-0 left-0 p-5 md:p-8 w-full bg-gradient-to-t from-blue-950/90 via-blue-950/40 to-transparent z-10"
+                  >
+                    <span
+                      class="inline-block px-3 py-1 mb-3 text-sm font-semibold text-blue-900 bg-blue-100 rounded-full"
+                      style="font-family: 'Kalam', cursive"
+                      >Video Profil</span
+                    >
+                    <h3
+                      class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors"
+                    >
+                      {{ schoolVideoTitle || "Company Profile" }}
+                    </h3>
+                    <p class="text-gray-200 text-sm md:text-base line-clamp-2">
+                      {{
+                        schoolVideoDesc ||
+                        "Saksikan cuplikan fasilitas, metode pembelajaran, dan prestasi kami."
+                      }}
+                    </p>
+                  </div>
+                </div>
+              </template>
+              <template v-else>
+                <iframe
+                  :src="videoEmbedUrl"
+                  class="absolute inset-0 w-full h-full"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              </template>
+            </div>
             <div
               v-else
               class="lg:col-span-2 relative group rounded-2xl overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full flex items-center justify-center bg-blue-900/40 border border-blue-800/40 cursor-default fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out"
@@ -1049,7 +1063,7 @@
             >
               <!-- Foto 1, 2, 3 Dinamis -->
               <router-link
-                v-for="(gallery, index) in galleries"
+                v-for="(gallery, index) in galleriesByCategory"
                 :key="index"
                 to="/galeri"
                 class="group relative rounded-xl overflow-hidden shadow-sm h-full block"
@@ -1057,23 +1071,23 @@
                 <img
                   :src="getImageUrl(gallery.image)"
                   class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  :alt="gallery.title"
+                  :alt="gallery.category"
                 />
                 <div
                   class="absolute inset-0 bg-gradient-to-t from-blue-950/90 via-blue-950/20 to-transparent"
                 ></div>
                 <div class="absolute bottom-0 left-0 p-3 md:p-4 w-full z-10">
                   <h4
-                    class="text-white font-bold text-sm md:text-base leading-tight group-hover:text-blue-300 transition-colors line-clamp-2"
+                    class="text-white font-bold text-sm md:text-base leading-tight group-hover:text-blue-300 transition-colors line-clamp-2 capitalize"
                   >
-                    {{ gallery.title }}
+                    {{ gallery.category }}
                   </h4>
                 </div>
               </router-link>
 
               <!-- Skeleton / Empty State Jika Galeri Kurang Dari 3 -->
               <div
-                v-for="i in 3 - galleries.length"
+                v-for="i in 3 - galleriesByCategory.length"
                 :key="'empty-' + i"
                 class="group relative rounded-xl overflow-hidden shadow-sm h-full block bg-blue-900/30 border border-blue-800/30 flex flex-col items-center justify-center text-blue-300/50"
               >
@@ -1084,23 +1098,18 @@
               <!-- Foto 4 (Lihat Semua) -->
               <router-link
                 to="/galeri"
-                class="group relative rounded-xl overflow-hidden shadow-sm h-full block"
+                class="group relative rounded-xl overflow-hidden shadow-sm h-full block bg-blue-900/40 border border-blue-800/40"
               >
-                <img
-                  src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=600&auto=format&fit=crop"
-                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  alt="Galeri 4"
-                />
                 <div
-                  class="absolute inset-0 bg-blue-950/70 flex items-center justify-center backdrop-blur-[2px] group-hover:bg-blue-900/80 transition-colors"
+                  class="absolute inset-0 flex items-center justify-center group-hover:bg-blue-800/50 transition-colors"
                 >
                   <div class="text-center">
                     <div
-                      class="bg-white/20 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2"
+                      class="bg-blue-500/20 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform duration-300"
                     >
-                      <PhImage class="w-5 h-5 text-white" />
+                      <PhImage class="w-5 h-5 text-blue-300" />
                     </div>
-                    <span class="text-white text-sm font-semibold">Lihat Galeri</span>
+                    <span class="text-blue-300 text-sm font-semibold">Lihat Galeri</span>
                   </div>
                 </div>
               </router-link>
@@ -2345,12 +2354,22 @@ const themeClasses = {
 const agendas = ref([]);
 
 const galleries = ref([]);
+const galleriesByCategory = ref([]);
 
 const fetchGalleries = async () => {
   try {
     const response = await api.get("/api/public-galleries");
     if (response.data && response.data.data) {
       galleries.value = response.data.data.slice(0, 3);
+      const allGalleries = response.data.data;
+
+      const grouped = {};
+      allGalleries.forEach((gallery) => {
+        if (!grouped[gallery.category]) {
+          grouped[gallery.category] = gallery; // Data sudah diorder `desc` dari API, jadi kita akan dapat foto terbaru dari setiap kategori pertama kali
+        }
+      });
+      galleriesByCategory.value = Object.values(grouped).slice(0, 3);
     }
   } catch (error) {
     console.error("Gagal mengambil data galeri:", error);
@@ -2364,6 +2383,18 @@ const fetchGalleries = async () => {
 const schoolVideoUrl = ref("");
 const schoolVideoTitle = ref("");
 const schoolVideoDesc = ref("");
+const isVideoPlaying = ref(false);
+
+const videoEmbedUrl = computed(() => {
+  if (!schoolVideoUrl.value) return "";
+  const url = schoolVideoUrl.value;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  if (match && match[2].length === 11) {
+    return `https://www.youtube.com/embed/${match[2]}?autoplay=1&rel=0`;
+  }
+  return url;
+});
 
 const videoThumbnail = computed(() => {
   if (!schoolVideoUrl.value)
