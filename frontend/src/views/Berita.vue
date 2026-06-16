@@ -12,6 +12,7 @@ import {
   PhMagnifyingGlass,
   PhTrendUp,
   PhArrowUpRight,
+  PhX,
 } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 import Breadcrumb from "@/components/Breadcrumb.vue";
@@ -33,6 +34,7 @@ const paginatedNews = ref([]);
 const popularNews = ref([]);
 
 const searchQuery = ref("");
+const activeAuthor = ref("");
 
 // --- Fitur Pagination ---
 const itemsPerPage = 6;
@@ -113,6 +115,9 @@ const fetchNews = async () => {
     if (searchQuery.value.trim()) {
       url += `&search=${encodeURIComponent(searchQuery.value.trim())}`;
     }
+    if (activeAuthor.value) {
+      url += `&author=${encodeURIComponent(activeAuthor.value)}`;
+    }
 
     const response = await api.get(url);
     const result = response.data;
@@ -139,7 +144,7 @@ const fetchPopularNews = async () => {
   }
 };
 
-watch([searchQuery, activeCategory], () => {
+watch([searchQuery, activeCategory, activeAuthor], () => {
   currentPage.value = 1;
   if (searchTimeout) clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
@@ -152,6 +157,9 @@ let observer;
 onMounted(() => {
   if (route.query.q) {
     searchQuery.value = route.query.q;
+  }
+  if (route.query.author) {
+    activeAuthor.value = route.query.author;
   }
 
   fetchNews();
@@ -420,6 +428,7 @@ onBeforeUnmount(() => {
                 @click="
                   searchQuery = '';
                   activeCategory = 'semua';
+                  activeAuthor = '';
                 "
                 class="mt-4 px-5 py-2 bg-blue-50 text-blue-600 dark:bg-slate-700 dark:text-blue-400 rounded-lg text-sm font-semibold hover:bg-blue-100 transition-colors"
               >
@@ -456,6 +465,26 @@ onBeforeUnmount(() => {
                   placeholder="Cari judul atau isi berita..."
                   class="w-full pl-11 pr-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm"
                 />
+              </div>
+
+              <!-- Indikator Filter Penulis -->
+              <div
+                v-if="activeAuthor"
+                class="mb-6 flex items-center justify-between bg-blue-50 dark:bg-slate-700/50 px-4 py-3 rounded-lg border border-blue-100 dark:border-slate-600"
+              >
+                <div class="flex items-center text-sm text-blue-800 dark:text-blue-200">
+                  <PhUser class="w-4 h-4 mr-2" />
+                  <span
+                    >Penulis: <strong class="font-bold">{{ activeAuthor }}</strong></span
+                  >
+                </div>
+                <button
+                  @click="activeAuthor = ''"
+                  class="text-gray-400 hover:text-red-500 transition-colors"
+                  title="Hapus Filter"
+                >
+                  <PhX class="w-4 h-4" />
+                </button>
               </div>
 
               <!-- Kategori -->

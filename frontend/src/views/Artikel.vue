@@ -389,7 +389,7 @@ watch(
                 Penulis Artikel di SMA Negeri 1 Nogosari.
               </p>
               <router-link
-                to="/berita"
+                :to="{ path: '/berita', query: { author: article?.authorName } }"
                 class="block w-full py-2 bg-blue-50 text-blue-600 dark:bg-slate-700 dark:text-blue-400 rounded-lg text-sm font-semibold hover:bg-blue-100 transition-colors"
               >
                 Lihat Artikel Lainnya
@@ -409,7 +409,7 @@ watch(
               </h3>
               <div class="flex flex-wrap gap-2">
                 <router-link
-                  :to="{ path: '/berita', query: { q: author.name } }"
+                  :to="{ path: '/berita', query: { author: author.name } }"
                   v-for="author in otherAuthors"
                   :key="author.id"
                   class="flex items-center gap-2 px-3 py-1.5 bg-gray-50 hover:bg-blue-50 dark:bg-slate-700/50 dark:hover:bg-blue-900/30 border border-gray-200 hover:border-blue-200 dark:border-slate-600 dark:hover:border-blue-800/50 rounded-2xl transition-all group shadow-sm hover:shadow-md"
