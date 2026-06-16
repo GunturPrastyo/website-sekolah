@@ -28,16 +28,49 @@ const categories = ref([
 const galleryList = ref([]);
 const isLoadingGalleries = ref(true);
 
+const getImageUrl = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http") || path.startsWith("data:image")) return path;
+
+  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+  if (cleanPath.startsWith("storage/")) {
+    return `${baseUrl}/${cleanPath}`;
+  }
+  return `${baseUrl}/storage/${cleanPath}`;
+};
+
 const schoolVideoUrl = ref("");
+const schoolVideoTitle = ref("");
+const schoolVideoDesc = ref("");
+const isVideoPlaying = ref(false);
+const isLoadingSchoolVideo = ref(true);
+
+const videoEmbedUrl = computed(() => {
+  if (!schoolVideoUrl.value) return "";
+  const url = schoolVideoUrl.value;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  if (match && match[2].length === 11) {
+    return `https://www.youtube.com/embed/${match[2]}?autoplay=1&rel=0`;
+  }
+  return url;
+});
 
 const fetchSchoolVideo = async () => {
+  isLoadingSchoolVideo.value = true;
   try {
     const response = await api.get("/api/public-school-video");
-    if (response.data && response.data.data && response.data.data.url) {
-      schoolVideoUrl.value = response.data.data.url;
+    if (response.data && response.data.data) {
+      schoolVideoUrl.value = response.data.data.url || "";
+      if (response.data.data.title) schoolVideoTitle.value = response.data.data.title;
+      if (response.data.data.description)
+        schoolVideoDesc.value = response.data.data.description;
     }
   } catch (error) {
     console.error("Gagal mengambil data video profil:", error);
+  } finally {
+    isLoadingSchoolVideo.value = false;
   }
 };
 
@@ -88,13 +121,13 @@ const fetchGalleries = async (page = 1, append = false) => {
     if (result.categories) {
       categories.value[0].count = result.categories.total;
       if (result.categories.first_image) {
-        categories.value[0].image = result.categories.first_image;
+        categories.value[0].image = getImageUrl(result.categories.first_image);
       }
       const dynamicCats = result.categories.list.map((c) => ({
         id: c.category_name.replace(/\s+/g, "-"),
         name: c.category_name,
         count: c.count,
-        image: c.image,
+        image: getImageUrl(c.image),
       }));
       categories.value = [categories.value[0], ...dynamicCats];
     }
@@ -281,61 +314,95 @@ const onImageLoad = (id) => {
     <section class="py-4 md:py-12 px-0 md:px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
       <div class="container mx-auto max-w-full">
         <!-- Video Profil Section -->
-        <a
-          v-if="schoolVideoUrl"
-          :href="schoolVideoUrl"
-          target="_blank"
-          class="mb-4 md:mb-6 relative rounded-none sm:rounded-xl overflow-hidden shadow-xl aspect-[4/3] sm:aspect-video md:aspect-[21/9] group cursor-pointer w-full block"
-        >
-          <img
-            :src="videoThumbnail"
-            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            alt="Video Profil Sekolah"
-          />
+        <template v-if="isLoadingSchoolVideo">
           <div
-            class="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors"
-          ></div>
-
-          <!-- Play Button Center -->
-          <div class="absolute inset-0 flex items-center justify-center z-20">
-            <div
-              class="w-16 h-16 md:w-20 md:h-20 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-sm group-hover:bg-blue-500 group-hover:scale-110 transition-all shadow-[0_0_30px_rgba(37,99,235,0.6)]"
-            >
-              <PhPlay class="w-8 h-8 md:w-10 md:h-10 ml-1" weight="fill" />
+            class="mb-4 md:mb-6 relative rounded-none sm:rounded-xl overflow-hidden shadow-xl aspect-[4/3] sm:aspect-video md:aspect-[21/9] w-full bg-slate-800/50 animate-pulse border border-slate-700/50"
+          >
+            <!-- Skeleton Play Button -->
+            <div class="absolute inset-0 flex items-center justify-center z-20">
+              <div class="w-16 h-16 md:w-20 md:h-20 bg-slate-700 rounded-full"></div>
+            </div>
+            <!-- Skeleton Text Bottom -->
+            <div class="absolute bottom-0 left-0 p-5 md:p-8 w-full">
+              <div class="h-6 w-3/4 md:w-1/2 bg-slate-700 rounded mb-3"></div>
+              <div class="h-4 w-full bg-slate-700 rounded mb-2"></div>
+              <div class="h-4 w-5/6 bg-slate-700 rounded"></div>
             </div>
           </div>
-
+        </template>
+        <template v-else>
           <div
-            class="absolute bottom-0 left-0 p-5 md:p-8 w-full bg-gradient-to-t from-blue-950/90 via-blue-950/40 to-transparent z-10"
+            v-if="schoolVideoUrl"
+            class="mb-4 md:mb-6 relative group rounded-none sm:rounded-xl overflow-hidden shadow-xl aspect-[4/3] sm:aspect-video md:aspect-[21/9] w-full block"
           >
-            <span
-              class="inline-block px-3 py-1 mb-3 text-sm font-semibold text-blue-900 bg-blue-100 rounded-full"
-              style="font-family: 'Kalam', cursive"
-              >Video Profil</span
-            >
-            <h3
-              class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors"
-            >
-              Company Profile SMAN 1 Nogosari 2026
-            </h3>
-          </div>
-        </a>
+            <template v-if="!isVideoPlaying">
+              <div class="absolute inset-0 cursor-pointer" @click="isVideoPlaying = true">
+                <img
+                  :src="videoThumbnail"
+                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  alt="Video Profil Sekolah"
+                />
+                <div
+                  class="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors"
+                ></div>
 
-        <!-- Skeleton Video Profil -->
-        <div
-          v-else
-          class="mb-4 md:mb-6 relative rounded-none sm:rounded-xl overflow-hidden shadow-xl aspect-[4/3] sm:aspect-video md:aspect-[21/9] w-full block bg-gray-200 dark:bg-slate-800 animate-pulse flex items-center justify-center"
-        >
-          <div class="flex flex-col items-center">
-            <PhPlay
-              class="w-12 h-12 text-gray-400 dark:text-gray-500 mb-2"
-              weight="fill"
-            />
-            <span class="text-gray-500 dark:text-gray-400 font-medium"
-              >Memuat Video...</span
-            >
+                <!-- Play Button Center -->
+                <div class="absolute inset-0 flex items-center justify-center z-20">
+                  <div
+                    class="w-16 h-16 md:w-20 md:h-20 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-sm group-hover:bg-blue-500 group-hover:scale-110 transition-all shadow-[0_0_30px_rgba(37,99,235,0.6)]"
+                  >
+                    <PhPlay class="w-8 h-8 md:w-10 md:h-10 ml-1" weight="fill" />
+                  </div>
+                </div>
+
+                <!-- Text Bottom -->
+                <div
+                  class="absolute bottom-0 left-0 p-5 md:p-8 w-full bg-gradient-to-t from-blue-950/90 via-blue-950/40 to-transparent z-10"
+                >
+                  <h3
+                    class="text-xl md:text-3xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors"
+                    style="font-family: 'Kalam', cursive"
+                  >
+                    {{ schoolVideoTitle || "Video Profil Sekolah" }}
+                  </h3>
+                  <p class="text-gray-200 text-sm md:text-base line-clamp-2">
+                    {{
+                      schoolVideoDesc ||
+                      "Saksikan cuplikan fasilitas, metode pembelajaran, dan prestasi kami."
+                    }}
+                  </p>
+                </div>
+              </div>
+            </template>
+            <template v-else>
+              <iframe
+                :src="videoEmbedUrl"
+                class="absolute inset-0 w-full h-full"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </template>
           </div>
-        </div>
+          <div
+            v-else
+            class="mb-4 md:mb-6 relative group rounded-none sm:rounded-xl overflow-hidden shadow-xl aspect-[4/3] sm:aspect-video md:aspect-[21/9] w-full flex items-center justify-center bg-blue-900/40 border border-blue-800/40 cursor-default"
+          >
+            <div class="text-center">
+              <div
+                class="w-16 h-16 md:w-20 md:h-20 bg-blue-800/50 rounded-full flex items-center justify-center text-blue-300 mx-auto mb-4"
+              >
+                <PhPlay class="w-8 h-8 md:w-10 md:h-10 ml-1" weight="fill" />
+              </div>
+              <h3 class="text-xl md:text-2xl font-bold text-blue-200 mb-2">
+                Video Profil Belum Tersedia
+              </h3>
+              <p class="text-blue-300/80 text-sm md:text-base">
+                Video profil sekolah akan segera hadir.
+              </p>
+            </div>
+          </div>
+        </template>
 
         <!-- Category Cards (Flexible Wrap untuk Ganjil/Genap) -->
         <div class="flex flex-wrap gap-2 md:gap-4 mb-4 md:mb-6 px-0 md:px-0">
@@ -412,7 +479,23 @@ const onImageLoad = (id) => {
         </div>
 
         <!-- Photo Grid (True Masonry using CSS Columns) -->
+        <div
+          v-if="isLoadingGalleries && galleryList.length === 0"
+          class="columns-2 md:columns-3 lg:columns-4 gap-1 sm:gap-4 md:gap-6 w-full transform-gpu"
+        >
+          <div
+            v-for="i in 8"
+            :key="'skel-' + i"
+            class="relative overflow-hidden rounded-none sm:rounded-xl shadow-sm bg-gray-200 dark:bg-slate-700 block break-inside-avoid mb-1 sm:mb-4 md:mb-6 animate-pulse"
+            :class="i % 3 === 0 ? 'h-64' : i % 2 === 0 ? 'h-80' : 'h-48'"
+          >
+            <div class="absolute inset-0 flex items-center justify-center z-10">
+              <PhImage class="w-8 h-8 text-gray-300 dark:text-slate-600" />
+            </div>
+          </div>
+        </div>
         <TransitionGroup
+          v-else
           name="gallery"
           tag="div"
           class="columns-2 md:columns-3 lg:columns-4 gap-1 sm:gap-4 md:gap-6 w-full transform-gpu"
@@ -498,18 +581,6 @@ const onImageLoad = (id) => {
             </div>
           </div>
         </TransitionGroup>
-
-        <!-- Global Skeleton / Loading Data -->
-        <div v-if="isLoadingGalleries" class="flex justify-center items-center py-20">
-          <div class="flex flex-col items-center">
-            <PhImage
-              class="w-12 h-12 text-gray-400 dark:text-gray-500 animate-pulse mb-3"
-            />
-            <span class="text-gray-500 dark:text-gray-400 font-medium"
-              >Memuat Galeri...</span
-            >
-          </div>
-        </div>
 
         <!-- Sentinel / Loading Indicator untuk Infinite Scroll -->
         <div
