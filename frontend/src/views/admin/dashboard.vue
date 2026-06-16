@@ -171,6 +171,10 @@ const chartOptions = ref({
       grid: {
         display: false,
       },
+      ticks: {
+        maxTicksLimit: 10,
+        maxRotation: 0,
+      },
     },
   },
 });
