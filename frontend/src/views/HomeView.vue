@@ -1550,9 +1550,9 @@
                 <div
                   v-for="i in 4"
                   :key="'skel-faq-' + i"
-                  class="bg-gray-50 border border-gray-100 rounded-xl shadow-md p-5 md:p-6 animate-pulse"
+                  class="bg-white dark:bg-slate-800/80 border border-gray-100 dark:border-slate-700 rounded-xl shadow-md p-5 md:p-6 animate-pulse backdrop-blur-sm"
                 >
-                  <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div class="h-5 bg-gray-200 dark:bg-slate-700 rounded w-3/4 mb-2"></div>
                 </div>
               </div>
 
@@ -1560,17 +1560,17 @@
                 <div
                   v-for="(faq, index) in faqs"
                   :key="index"
-                  class="bg-gray-50 border border-gray-50 rounded-xl shadow-md"
+                  class="bg-white dark:bg-slate-800/80 border border-gray-100 dark:border-slate-700 rounded-xl shadow-md backdrop-blur-sm"
                 >
                   <button
                     @click="toggleFaq(index)"
-                    class="w-full text-left px-5 md:px-6 py-4 font-semibold text-gray-900 flex justify-between items-center hover:bg-gray-100 dark:hover:bg-blue-900 transition-colors rounded-xl focus:outline-none"
+                    class="w-full text-left px-5 md:px-6 py-4 font-semibold text-gray-900 dark:text-white flex justify-between items-center hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors rounded-xl focus:outline-none"
                   >
                     <span class="pr-0 sm:pr-2 text-sm md:text-base">{{
                       faq.question || faq.q
                     }}</span>
                     <svg
-                      class="w-5 h-5 text-blue-800 transform transition-transform duration-300 flex-shrink-0"
+                      class="w-5 h-5 text-blue-600 dark:text-blue-400 transform transition-transform duration-300 flex-shrink-0"
                       :class="{ 'rotate-180': activeFaq === index }"
                       fill="none"
                       stroke="currentColor"
@@ -1589,11 +1589,9 @@
                       'max-h-96 opacity-100 pb-4': activeFaq === index,
                       'max-h-0 opacity-0 overflow-hidden': activeFaq !== index,
                     }"
-                    class="transition-all duration-300 px-5 md:px-6 text-gray-700 text-sm md:text-base"
+                    class="transition-all duration-300 px-5 md:px-6 text-gray-700 dark:text-gray-300 text-sm md:text-base"
                   >
-                    <div
-                      class="border-t border-yellow-500/50 dark:border-yellow-400/50 pt-3"
-                    >
+                    <div class="border-t border-gray-100 dark:border-slate-700 pt-3">
                       {{ faq.answer || faq.a }}
                     </div>
                   </div>
