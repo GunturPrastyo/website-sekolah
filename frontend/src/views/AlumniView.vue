@@ -6,7 +6,7 @@
     <PageHeader
       badge="Jejak Langkah Lulusan"
       title="Direktori & Persebaran Alumni"
-      description="Temukan jejak sukses para alumni SMAN 1 Nogosari yang tersebar di berbagai perguruan tinggi favorit dan instansi bergengsi di seluruh Indonesia."
+      description="Temukan jejak sukses para alumni sekolah kami yang tersebar di berbagai perguruan tinggi favorit dan instansi bergengsi di seluruh Indonesia."
     />
 
     <!-- Direktori & Persebaran Alumni Section -->

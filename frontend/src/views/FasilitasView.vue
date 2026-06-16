@@ -109,7 +109,7 @@
                     class="text-blue-50 text-sm md:text-base max-w-2xl leading-relaxed drop-shadow"
                   >
                     Jelajahi berbagai fasilitas modern yang mendukung pengalaman belajar
-                    siswa secara optimal di lingkungan SMAN 1 Nogosari.
+                    siswa secara optimal di lingkungan sekolah kami.
                   </p>
                 </div>
               </div>

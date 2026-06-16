@@ -3,8 +3,7 @@
     <PageHeader
       badge="Profil Sekolah"
       title="Visi, Misi & Tujuan"
-      description="Mengenal lebih dekat arah, tujuan, dan landasan utama SMAN 1 Nogosari dalam mencetak generasi unggul penerus bangsa."
-      bgImage="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1600&auto=format&fit=crop"
+      description="Mengenal lebih dekat arah, tujuan, dan landasan utama sekolah kami dalam mencetak generasi unggul penerus bangsa."
     />
 
     <!-- Sambutan Kepala Sekolah Section -->
@@ -22,7 +21,7 @@
         <!-- Judul Mobile/Tablet -->
         <div class="flex lg:hidden items-center gap-3 mb-8 md:px-12">
           <h2
-            class="text-2xl md:text-4xl font-bold text-blue-950 dark:text-white tracking-wide"
+            class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-wide"
             style="font-family: 'Kalam', cursive"
           >
             Sambutan Kepala Sekolah
@@ -60,7 +59,7 @@
                   class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6"
                 >
                   <h4 class="text-white font-bold text-xl">{{ principal.name }}</h4>
-                  <p class="text-blue-300 text-sm font-medium mt-1">
+                  <p class="text-gray-300 text-sm font-medium mt-1">
                     {{ principal.position }}
                   </p>
                 </div>
@@ -72,7 +71,7 @@
           <div class="w-full lg:w-2/3 mt-4 lg:mt-0 md:px-12 lg:px-0">
             <div class="hidden lg:flex items-center gap-3 mb-6">
               <h2
-                class="text-2xl md:text-4xl font-bold text-blue-950 dark:text-white tracking-wide"
+                class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-wide"
                 style="font-family: 'Kalam', cursive"
               >
                 Sambutan Kepala Sekolah
@@ -99,7 +98,7 @@
               ></div>
 
               <div class="mt-8 pt-6 border-t border-gray-100 dark:border-slate-800 block">
-                <p class="font-bold text-blue-950 dark:text-white text-lg">
+                <p class="font-bold text-gray-800 dark:text-white text-lg">
                   {{ principal.name }}
                 </p>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">

@@ -151,8 +151,7 @@ onBeforeUnmount(() => {
     <PageHeader
       badge="Profil Sekolah"
       title="Tentang Kami & Sejarah"
-      description="Mengenal lebih dekat profil SMAN 1 Nogosari dan menyusuri jejak langkah perjuangan serta prestasi dari masa ke masa."
-      bgImage="https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?q=80&w=1600&auto=format&fit=crop"
+      description="Mengenal lebih dekat profil sekolah kami dan menyusuri jejak langkah perjuangan serta prestasi dari masa ke masa."
     />
 
     <!-- Profil Singkat Section -->

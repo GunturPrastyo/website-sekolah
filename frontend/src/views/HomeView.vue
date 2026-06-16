@@ -2527,7 +2527,7 @@ const ppdbInfo = ref({
   academic_year: "2026/2027",
   title: "Siap Menjadi Bagian dari Generasi Berprestasi?",
   description:
-    "Pendaftaran Peserta Didik Baru (PPDB) SMAN 1 Nogosari akan segera dibuka. Siapkan berkas dan pantau informasi selengkapnya!",
+    "Pendaftaran Peserta Didik Baru (PPDB) di sekolah kami akan segera dibuka. Siapkan berkas dan pantau informasi selengkapnya!",
   opening_date: null,
   brochure_file: null,
   registration_link: null,
