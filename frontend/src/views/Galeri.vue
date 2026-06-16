@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import {
   PhPlay,
   PhImage,
@@ -11,7 +12,10 @@ import {
 import PageHeader from "@/components/PageHeader.vue";
 import api from "@/api/index.js";
 
-const activeCategory = ref("semua");
+const route = useRoute();
+const router = useRouter();
+
+const activeCategory = ref(route.query.category || "semua");
 const activeTab = ref("terbaru"); // Status tab: 'terbaru' atau 'terpopuler'
 
 // Kategori dinamis
@@ -206,6 +210,10 @@ const loadMore = () => {
 
 watch([activeCategory, activeTab], () => {
   currentPage.value = 1;
+  router.replace({
+    path: route.path,
+    query: { ...route.query, category: activeCategory.value },
+  });
   fetchGalleries(1, false);
 });
 

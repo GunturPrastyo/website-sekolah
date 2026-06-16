@@ -1079,7 +1079,12 @@
               <router-link
                 v-for="(gallery, index) in galleriesByCategory"
                 :key="index"
-                to="/galeri"
+                :to="{
+                  path: '/galeri',
+                  query: {
+                    category: gallery.category.replace(/\s+/g, '-').toLowerCase(),
+                  },
+                }"
                 class="group relative rounded-lg overflow-hidden shadow-sm h-full block"
               >
                 <img
