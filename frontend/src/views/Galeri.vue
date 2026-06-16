@@ -9,6 +9,7 @@ import {
   PhX,
 } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
+import api from "@/api/index.js";
 
 const activeCategory = ref("semua");
 const activeTab = ref("terbaru"); // Status tab: 'terbaru' atau 'terpopuler'
@@ -31,11 +32,9 @@ const schoolVideoUrl = ref("");
 
 const fetchSchoolVideo = async () => {
   try {
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
-    const response = await fetch(`${apiUrl}/public-school-video`);
-    const result = await response.json();
-    if (result.data && result.data.url) {
-      schoolVideoUrl.value = result.data.url;
+    const response = await api.get("/api/public-school-video");
+    if (response.data && response.data.data && response.data.data.url) {
+      schoolVideoUrl.value = response.data.data.url;
     }
   } catch (error) {
     console.error("Gagal mengambil data video profil:", error);
@@ -45,9 +44,8 @@ const fetchSchoolVideo = async () => {
 const fetchGalleries = async () => {
   isLoadingGalleries.value = true;
   try {
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
-    const response = await fetch(`${apiUrl}/public-galleries`);
-    const result = await response.json();
+    const response = await api.get("/api/public-galleries");
+    const result = response.data;
 
     const categoryMap = {};
 
@@ -115,15 +113,13 @@ const toggleLike = async (item) => {
   localStorage.setItem("liked_galleries", JSON.stringify(likedGalleries));
 
   try {
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
-    await fetch(`${apiUrl}/public-galleries/${item.id}/like`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ action: item.liked ? "like" : "unlike" }),
+    const response = await api.post(`/api/public-galleries/${item.id}/like`, {
+      action: item.liked ? "like" : "unlike",
     });
+
+    if (response.data && response.data.likes !== undefined) {
+      item.likes = response.data.likes;
+    }
   } catch (error) {
     console.error("Gagal memperbarui like:", error);
     item.liked = previousLiked;

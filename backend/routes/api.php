@@ -51,6 +51,7 @@ Route::get('/public-news/{id}', [NewsController::class, 'publicShow']);
 
 // API Galeri (Akses Publik)
 Route::get('/public-galleries', [GalleryController::class, 'publicIndex']);
+Route::post('/public-galleries/{id}/like', [GalleryController::class, 'toggleLike']);
 
 // API Video Profil Sekolah (Akses Publik)
 Route::get('/public-school-video', [SchoolVideoController::class, 'show']);
