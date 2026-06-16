@@ -1282,7 +1282,8 @@
                     <span class="w-3 h-3 rounded-sm bg-green-500 mr-2"></span> Kegiatan
                   </div>
                   <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                    <span class="w-3 h-3 rounded-sm bg-blue-500 mr-2"></span> Seminar
+                    <span class="w-3 h-3 rounded-sm bg-blue-500 mr-2"></span> Seminar &
+                    Acara
                   </div>
                 </div>
               </div>
@@ -2424,26 +2425,26 @@ const themeClasses = {
     card:
       "bg-white border-gray-100 hover:border-yellow-300 hover:shadow-yellow-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-yellow-500/50",
     dateBox: "border-yellow-400 border-b-4",
-    monthBg: "bg-yellow-500 group-hover:bg-yellow-600",
+    monthBg: "bg-yellow-400 group-hover:bg-yellow-500",
     monthText: "text-white",
     dateBg: "bg-yellow-50",
     dateText: "text-yellow-700 group-hover:text-yellow-800",
     title:
       "text-gray-900 group-hover:text-yellow-600 dark:text-slate-100 dark:group-hover:text-yellow-400",
-    infoIcon: "text-yellow-500",
+    infoIcon: "text-yellow-400",
     infoText: "text-gray-700 dark:text-slate-300",
     fileBtn:
       "bg-yellow-50 text-yellow-700 border border-yellow-200 hover:bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-700/50 dark:hover:bg-yellow-900/50",
     eventBg:
       "bg-yellow-100 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:hover:bg-yellow-900/50",
-    eventHeaderBg: "bg-yellow-400 dark:bg-yellow-600",
+    eventHeaderBg: "bg-yellow-400 dark:bg-yellow-500",
     eventHeaderText: "text-yellow-900 dark:text-white",
     eventDayText: "text-yellow-800 dark:text-yellow-400",
   },
   red: {
     card:
       "bg-white border-gray-100 hover:border-red-300 hover:shadow-red-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-red-500/50",
-    dateBox: "border-red-400 border-b-4",
+    dateBox: "border-red-500 border-b-4",
     monthBg: "bg-red-500 group-hover:bg-red-600",
     monthText: "text-white",
     dateBg: "bg-red-50",
@@ -2455,14 +2456,14 @@ const themeClasses = {
     fileBtn:
       "bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:border-red-700/50 dark:hover:bg-red-900/50",
     eventBg: "bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50",
-    eventHeaderBg: "bg-red-400 dark:bg-red-600",
+    eventHeaderBg: "bg-red-500 dark:bg-red-600",
     eventHeaderText: "text-red-900 dark:text-white",
     eventDayText: "text-red-800 dark:text-red-400",
   },
   green: {
     card:
       "bg-white border-gray-100 hover:border-green-300 hover:shadow-green-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-green-500/50",
-    dateBox: "border-green-400 border-b-4",
+    dateBox: "border-green-500 border-b-4",
     monthBg: "bg-green-500 group-hover:bg-green-600",
     monthText: "text-white",
     dateBg: "bg-green-50",
@@ -2475,14 +2476,14 @@ const themeClasses = {
       "bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 dark:border-green-700/50 dark:hover:bg-green-900/50",
     eventBg:
       "bg-green-100 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-green-900/50",
-    eventHeaderBg: "bg-green-400 dark:bg-green-600",
+    eventHeaderBg: "bg-green-500 dark:bg-green-600",
     eventHeaderText: "text-green-900 dark:text-white",
     eventDayText: "text-green-800 dark:text-green-400",
   },
   blue: {
     card:
       "bg-white border-gray-100 hover:border-blue-300 hover:shadow-blue-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-blue-500/50",
-    dateBox: "border-blue-400 border-b-4",
+    dateBox: "border-blue-500 border-b-4",
     monthBg: "bg-blue-500 group-hover:bg-blue-600",
     monthText: "text-white",
     dateBg: "bg-blue-50",
@@ -2495,7 +2496,7 @@ const themeClasses = {
       "bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-700/50 dark:hover:bg-blue-900/50",
     eventBg:
       "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50",
-    eventHeaderBg: "bg-blue-400 dark:bg-blue-600",
+    eventHeaderBg: "bg-blue-500 dark:bg-blue-600",
     eventHeaderText: "text-blue-900 dark:text-white",
     eventDayText: "text-blue-800 dark:text-blue-400",
   },
@@ -2651,11 +2652,26 @@ const fetchAgendas = async () => {
           }
         }
 
-        let color = "blue";
-        const type = (agenda.type || agenda.kategori || "").toLowerCase();
-        if (type.includes("akademik")) color = "yellow";
-        else if (type.includes("guru") || type.includes("staf")) color = "red";
-        else if (type.includes("kegiatan") || type.includes("lomba")) color = "green";
+        // Membaca warna langsung dari database sama seperti halaman Admin
+        let color = agenda.color || "blue";
+
+        // Fallback untuk data lama yang mungkin tidak memiliki properti color
+        if (!agenda.color) {
+          const type = (
+            agenda.category ||
+            agenda.type ||
+            agenda.kategori ||
+            ""
+          ).toLowerCase();
+          if (type.includes("akademik")) color = "yellow";
+          else if (
+            type.includes("guru") ||
+            type.includes("staf") ||
+            type.includes("pendidik")
+          )
+            color = "red";
+          else if (type.includes("kegiatan") || type.includes("lomba")) color = "green";
+        }
 
         return {
           id: agenda.id,
