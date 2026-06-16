@@ -196,7 +196,7 @@ class GalleryController extends Controller
 
         $galleries = Gallery::whereIn('id', $validated['ids'])->get();
 
-        /** @var \App\Models\Gallery $gallery */
+        /** @var Gallery $gallery */
         foreach ($galleries as $gallery) {
             // Melewati galeri yang bukan miliknya untuk Admin biasa
             if ($user->role !== 'super_admin' && $gallery->user_id !== $user->id) {
@@ -249,5 +249,24 @@ class GalleryController extends Controller
             'message' => 'Berhasil memperbarui like',
             'likes' => $gallery->likes
         ]);
+    }
+
+    public function download(string $id)
+    {
+        $gallery = Gallery::findOrFail($id);
+        $imagePath = $gallery->image;
+
+        if (str_starts_with($imagePath, 'http')) {
+            return redirect($imagePath);
+        }
+
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('public');
+
+        if ($disk->exists($imagePath)) {
+            return $disk->download($imagePath);
+        }
+
+        return response()->json(['message' => 'File tidak ditemukan'], 404);
     }
 }

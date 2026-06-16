@@ -246,19 +246,22 @@ const prevImage = () => {
   currentImage.value = filteredGallery.value[currentIndex.value];
 };
 
-const downloadImage = async (url, title) => {
+const downloadImage = async (item) => {
   try {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    const blobUrl = window.URL.createObjectURL(blob);
+    const response = await api.get(`/api/public-galleries/${item.id}/download`, {
+      responseType: "blob",
+    });
+    const blobUrl = window.URL.createObjectURL(response.data);
     const a = document.createElement("a");
     a.style.display = "none";
     a.href = blobUrl;
 
-    const safeTitle = title
-      ? title.replace(/[^a-z0-9]/gi, "_").toLowerCase()
+    const safeTitle = item.title
+      ? item.title.replace(/[^a-z0-9]/gi, "_").toLowerCase()
       : "foto_galeri";
-    const extension = url.split(".").pop().split(/#|\?/)[0] || "jpg";
+    const extension = item.image
+      ? item.image.split(".").pop().split(/#|\?/)[0] || "jpg"
+      : "jpg";
     a.download = `${safeTitle}.${extension}`;
 
     document.body.appendChild(a);
@@ -268,8 +271,8 @@ const downloadImage = async (url, title) => {
   } catch (error) {
     console.error("Gagal mengunduh gambar:", error);
     const a = document.createElement("a");
-    a.href = url;
-    a.download = title || "foto_galeri";
+    a.href = item.image;
+    a.download = item.title || "foto_galeri";
     a.target = "_blank";
     document.body.appendChild(a);
     a.click();
@@ -481,7 +484,7 @@ const onImageLoad = (id) => {
                 {{ item.likes }}
               </button>
               <button
-                @click.stop="downloadImage(item.image, item.title)"
+                @click.stop="downloadImage(item)"
                 class="w-9 h-9 rounded-lg bg-white/90 hover:bg-white text-gray-700 hover:text-blue-600 hidden md:flex items-center justify-center shadow-sm transition-colors focus:outline-none"
                 title="Unduh"
               >
@@ -599,7 +602,7 @@ const onImageLoad = (id) => {
         >
           <button
             v-if="currentImage"
-            @click.stop="downloadImage(currentImage.image, currentImage.title)"
+            @click.stop="downloadImage(currentImage)"
             class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors focus:outline-none"
             title="Unduh Foto"
           >
