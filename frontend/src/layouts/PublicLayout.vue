@@ -24,6 +24,4 @@ import Footer from "@/components/Footer.vue";
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap");
-/* Anda bisa menambahkan gaya khusus untuk PublicLayout di sini jika diperlukan */
-/* Atau biarkan kosong jika gaya sudah ditangani secara global atau oleh komponen anak */
 </style>

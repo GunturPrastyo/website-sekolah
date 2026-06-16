@@ -970,7 +970,7 @@
               </h2>
               <p class="text-blue-200 text-sm md:text-base max-w-2xl">
                 Kenali lebih dekat lingkungan, fasilitas, dan berbagai kegiatan seru di
-                SMAN 1 Nogosari melalui tayangan video dan galeri foto kami.
+                Sekolah kami melalui tayangan video dan galeri foto.
               </p>
             </div>
           </div>
@@ -1155,8 +1155,8 @@
               <p
                 class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base ml-0 sm:ml-5 max-w-2xl"
               >
-                Jadwal kegiatan akademik dan non-akademik SMAN 1 Nogosari. Pantau kalender
-                agar tidak tertinggal event penting kami.
+                Jadwal kegiatan akademik dan non-akademik. Pantau kalender agar tidak
+                tertinggal event penting kami.
               </p>
             </div>
           </div>
@@ -1259,7 +1259,7 @@
                 >
                   <h3
                     class="text-lg md:text-xl font-bold text-slate-800 dark:text-slate-200 flex items-center"
-                    style="font-family: 'Kalam', cursive"
+                    style="font-family: 'Poppins', sans-serif"
                   >
                     <PhCalendar class="w-6 h-6 mr-2 text-slate-600 dark:text-slate-200" />
                     Daftar Agenda
@@ -1306,7 +1306,10 @@
                       </div>
 
                       <!-- Details -->
-                      <div class="flex flex-col justify-center flex-1">
+                      <div
+                        class="flex flex-col justify-center flex-1"
+                        style="font-family: 'Poppins', sans-serif"
+                      >
                         <div
                           class="flex items-start sm:items-center justify-between mb-1 gap-2"
                         >
