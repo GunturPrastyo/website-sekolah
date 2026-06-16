@@ -183,7 +183,7 @@
                       siswa mencapai potensi terbaiknya.
                     </p>
                     <router-link
-                      to="/guru"
+                      to="/guru-staf"
                       class="inline-flex items-center text-sm font-bold text-blue-400 group-hover:text-blue-300 transition-colors w-fit"
                     >
                       Profil Pendidik

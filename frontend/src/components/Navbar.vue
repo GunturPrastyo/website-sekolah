@@ -263,18 +263,6 @@
                 >Info PPDB</router-link
               >
               <router-link
-                to="/berita"
-                @click="closeDropdowns"
-                class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
-                >Berita</router-link
-              >
-              <router-link
-                to="/galeri"
-                @click="closeDropdowns"
-                class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
-                >Galeri</router-link
-              >
-              <router-link
                 to="/unduhan"
                 @click="closeDropdowns"
                 class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
@@ -283,6 +271,27 @@
             </div>
           </transition>
         </div>
+
+        <router-link
+          to="/berita"
+          class="rounded-md px-3 py-2"
+          :class="{
+            'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400':
+              isNavbarScrolled || isMobileMenuOpen,
+            'text-white hover:bg-white/10': !isNavbarScrolled && !isMobileMenuOpen,
+          }"
+          >Berita</router-link
+        >
+        <router-link
+          to="/galeri"
+          class="rounded-md px-3 py-2"
+          :class="{
+            'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400':
+              isNavbarScrolled || isMobileMenuOpen,
+            'text-white hover:bg-white/10': !isNavbarScrolled && !isMobileMenuOpen,
+          }"
+          >Galeri</router-link
+        >
       </div>
 
       <div class="hidden items-center lg:flex"></div>
@@ -512,18 +521,6 @@
               >Info PPDB</router-link
             >
             <router-link
-              to="/berita"
-              @click="closeMobileMenu"
-              class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
-              >Berita</router-link
-            >
-            <router-link
-              to="/galeri"
-              @click="closeMobileMenu"
-              class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
-              >Galeri</router-link
-            >
-            <router-link
               to="/unduhan"
               @click="closeMobileMenu"
               class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
@@ -531,6 +528,19 @@
             >
           </div>
         </div>
+
+        <router-link
+          to="/berita"
+          @click="closeMobileMenu"
+          class="block rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors"
+          >Berita</router-link
+        >
+        <router-link
+          to="/galeri"
+          @click="closeMobileMenu"
+          class="block rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors"
+          >Galeri</router-link
+        >
       </div>
     </div>
   </nav>

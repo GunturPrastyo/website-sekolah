@@ -296,7 +296,6 @@ onBeforeUnmount(() => {
     <!-- Timeline Section -->
     <section
       class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-blue-950 dark:bg-gray-900 bg-fixed bg-center bg-cover"
-      style="background-image: url('/img/sejarah.jpg')"
     >
       <!-- Overlay Parallax untuk memastikan teks tetap bisa dibaca -->
       <div

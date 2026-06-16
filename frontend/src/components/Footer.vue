@@ -183,7 +183,7 @@
           <ul class="space-y-3 text-sm">
             <li>
               <router-link
-                to="/profil"
+                to="/sejarah"
                 class="hover:text-white transition-colors flex items-center"
                 ><PhCaretRight class="w-4 h-4 mr-2" /> Profil Sekolah</router-link
               >
@@ -298,18 +298,6 @@
           &copy; {{ new Date().getFullYear() }} {{ settings.namaSekolah }}. Hak Cipta
           Dilindungi.
         </p>
-        <div class="flex gap-4">
-          <router-link
-            to="/kebijakan-privasi"
-            class="hover:text-slate-300 transition-colors"
-            >Kebijakan Privasi</router-link
-          >
-          <router-link
-            to="/syarat-ketentuan"
-            class="hover:text-slate-300 transition-colors"
-            >Syarat & Ketentuan</router-link
-          >
-        </div>
       </div>
     </div>
   </footer>
