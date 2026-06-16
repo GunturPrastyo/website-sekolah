@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import {
   PhCalendarBlank,
   PhUser,
@@ -19,6 +19,7 @@ import Breadcrumb from "@/components/Breadcrumb.vue";
 import api from "@/api/index.js";
 
 const route = useRoute();
+const router = useRouter();
 
 const activeCategory = ref("semua");
 
@@ -144,8 +145,58 @@ const fetchPopularNews = async () => {
   }
 };
 
+// Pantau perubahan URL secara reaktif (Mengatasi harus refresh)
+watch(
+  () => route.query,
+  (newQuery) => {
+    if (
+      newQuery.author !== activeAuthor.value &&
+      (newQuery.author !== undefined || activeAuthor.value !== "")
+    ) {
+      activeAuthor.value = newQuery.author || "";
+    }
+    if (
+      newQuery.q !== searchQuery.value &&
+      (newQuery.q !== undefined || searchQuery.value !== "")
+    ) {
+      searchQuery.value = newQuery.q || "";
+    }
+  },
+  { immediate: true }
+);
+
 watch([searchQuery, activeCategory, activeAuthor], () => {
   currentPage.value = 1;
+
+  // Sinkronisasi filter ke URL agar tidak nyangkut saat filter dihapus
+  const query = { ...route.query };
+  let urlChanged = false;
+
+  if (searchQuery.value) {
+    if (query.q !== searchQuery.value) {
+      query.q = searchQuery.value;
+      urlChanged = true;
+    }
+  } else if (query.q) {
+    delete query.q;
+    urlChanged = true;
+  }
+
+  if (activeAuthor.value) {
+    if (query.author !== activeAuthor.value) {
+      query.author = activeAuthor.value;
+      urlChanged = true;
+    }
+  } else if (query.author) {
+    delete query.author;
+    urlChanged = true;
+  }
+
+  // Perbarui URL browser tanpa memuat ulang halaman
+  if (urlChanged) {
+    router.replace({ query }).catch(() => {});
+  }
+
   if (searchTimeout) clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
     fetchNews();
@@ -155,13 +206,6 @@ watch([searchQuery, activeCategory, activeAuthor], () => {
 let observer;
 
 onMounted(() => {
-  if (route.query.q) {
-    searchQuery.value = route.query.q;
-  }
-  if (route.query.author) {
-    activeAuthor.value = route.query.author;
-  }
-
   fetchNews();
   fetchPopularNews();
 
