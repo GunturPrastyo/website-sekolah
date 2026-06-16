@@ -232,4 +232,22 @@ class GalleryController extends Controller
 
         return response()->json(['message' => 'Status galeri berhasil diperbarui', 'data' => new GalleryResource($gallery)]);
     }
+
+    public function toggleLike(Request $request, string $id)
+    {
+        $gallery = Gallery::findOrFail($id);
+        
+        $action = $request->input('action', 'like');
+        
+        if ($action === 'like') {
+            $gallery->increment('likes');
+        } elseif ($gallery->likes > 0) {
+            $gallery->decrement('likes');
+        }
+        
+        return response()->json([
+            'message' => 'Berhasil memperbarui like',
+            'likes' => $gallery->likes
+        ]);
+    }
 }

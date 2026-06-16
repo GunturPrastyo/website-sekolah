@@ -51,6 +51,8 @@ const fetchGalleries = async () => {
 
     const categoryMap = {};
 
+    const likedGalleries = JSON.parse(localStorage.getItem("liked_galleries") || "[]");
+
     galleryList.value = result.data.map((item) => {
       const catLower = item.category
         ? item.category.toLowerCase().replace(/\s+/g, "-")
@@ -73,11 +75,15 @@ const fetchGalleries = async () => {
         category: catLower,
         image: item.image,
         likes: item.likes || 0,
-        liked: false,
+        liked: likedGalleries.includes(item.id),
       };
     });
 
     categories.value[0].count = galleryList.value.length;
+
+    if (galleryList.value.length > 0) {
+      categories.value[0].image = galleryList.value[0].image;
+    }
 
     // Convert map to array and add to categories
     for (const key in categoryMap) {
@@ -90,13 +96,46 @@ const fetchGalleries = async () => {
   }
 };
 
-const toggleLike = (item) => {
+const toggleLike = async (item) => {
+  const likedGalleries = JSON.parse(localStorage.getItem("liked_galleries") || "[]");
+  const previousLiked = item.liked;
+  const previousLikes = item.likes;
+
   if (item.liked) {
     item.likes--;
     item.liked = false;
+    const index = likedGalleries.indexOf(item.id);
+    if (index > -1) likedGalleries.splice(index, 1);
   } else {
     item.likes++;
     item.liked = true;
+    if (!likedGalleries.includes(item.id)) likedGalleries.push(item.id);
+  }
+
+  localStorage.setItem("liked_galleries", JSON.stringify(likedGalleries));
+
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+    await fetch(`${apiUrl}/public-galleries/${item.id}/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ action: item.liked ? "like" : "unlike" }),
+    });
+  } catch (error) {
+    console.error("Gagal memperbarui like:", error);
+    item.liked = previousLiked;
+    item.likes = previousLikes;
+
+    if (previousLiked) {
+      if (!likedGalleries.includes(item.id)) likedGalleries.push(item.id);
+    } else {
+      const index = likedGalleries.indexOf(item.id);
+      if (index > -1) likedGalleries.splice(index, 1);
+    }
+    localStorage.setItem("liked_galleries", JSON.stringify(likedGalleries));
   }
 };
 
@@ -209,6 +248,37 @@ const prevImage = () => {
     (currentIndex.value - 1 + filteredGallery.value.length) %
     filteredGallery.value.length;
   currentImage.value = filteredGallery.value[currentIndex.value];
+};
+
+const downloadImage = async (url, title) => {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = blobUrl;
+
+    const safeTitle = title
+      ? title.replace(/[^a-z0-9]/gi, "_").toLowerCase()
+      : "foto_galeri";
+    const extension = url.split(".").pop().split(/#|\?/)[0] || "jpg";
+    a.download = `${safeTitle}.${extension}`;
+
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(blobUrl);
+    document.body.removeChild(a);
+  } catch (error) {
+    console.error("Gagal mengunduh gambar:", error);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = title || "foto_galeri";
+    a.target = "_blank";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
 };
 
 // Tracking loading state untuk skeleton
@@ -414,16 +484,13 @@ const onImageLoad = (id) => {
                 />
                 {{ item.likes }}
               </button>
-              <a
-                @click.stop
-                :href="item.image"
-                download
-                target="_blank"
-                class="w-9 h-9 rounded-lg bg-white/90 hover:bg-white text-gray-700 hover:text-blue-600 hidden md:flex items-center justify-center shadow-sm transition-colors"
+              <button
+                @click.stop="downloadImage(item.image, item.title)"
+                class="w-9 h-9 rounded-lg bg-white/90 hover:bg-white text-gray-700 hover:text-blue-600 hidden md:flex items-center justify-center shadow-sm transition-colors focus:outline-none"
                 title="Unduh"
               >
                 <PhDownloadSimple class="w-4 h-4" />
-              </a>
+              </button>
             </div>
 
             <!-- Bottom Left Text -->
@@ -534,17 +601,14 @@ const onImageLoad = (id) => {
         <div
           class="absolute top-4 right-4 md:top-6 md:right-6 flex items-center gap-3 z-50"
         >
-          <a
+          <button
             v-if="currentImage"
-            @click.stop
-            :href="currentImage.image"
-            download
-            target="_blank"
+            @click.stop="downloadImage(currentImage.image, currentImage.title)"
             class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors focus:outline-none"
             title="Unduh Foto"
           >
             <PhDownloadSimple class="w-5 h-5 md:w-6 md:h-6" />
-          </a>
+          </button>
           <button
             @click.stop="closeModal"
             class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors focus:outline-none"
