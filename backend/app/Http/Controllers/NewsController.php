@@ -63,6 +63,7 @@ class NewsController extends Controller
         $excludeCategory = $request->query('exclude_category');
         $search = $request->query('search');
         $author = $request->query('author');
+        $tag = $request->query('tag');
         $sort = $request->query('sort', 'created_at');
 
         $query = News::with('author')->where('status', 'approved');
@@ -86,6 +87,10 @@ class NewsController extends Controller
             $query->whereHas('author', function($q) use ($author) {
                 $q->where('name', $author);
             });
+        }
+
+        if ($tag) {
+            $query->where('tags', 'like', "%{$tag}%");
         }
 
         if ($sort === 'views') {

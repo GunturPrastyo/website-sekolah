@@ -13,6 +13,7 @@ import {
   PhTrendUp,
   PhArrowUpRight,
   PhX,
+  PhTag,
 } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 import Breadcrumb from "@/components/Breadcrumb.vue";
@@ -36,6 +37,7 @@ const popularNews = ref([]);
 
 const searchQuery = ref("");
 const activeAuthor = ref("");
+const activeTag = ref("");
 
 // --- Fitur Pagination ---
 const itemsPerPage = 6;
@@ -119,6 +121,9 @@ const fetchNews = async () => {
     if (activeAuthor.value) {
       url += `&author=${encodeURIComponent(activeAuthor.value)}`;
     }
+    if (activeTag.value) {
+      url += `&tag=${encodeURIComponent(activeTag.value)}`;
+    }
 
     const response = await api.get(url);
     const result = response.data;
@@ -161,11 +166,17 @@ watch(
     ) {
       searchQuery.value = newQuery.q || "";
     }
+    if (
+      newQuery.tag !== activeTag.value &&
+      (newQuery.tag !== undefined || activeTag.value !== "")
+    ) {
+      activeTag.value = newQuery.tag || "";
+    }
   },
   { immediate: true }
 );
 
-watch([searchQuery, activeCategory, activeAuthor], () => {
+watch([searchQuery, activeCategory, activeAuthor, activeTag], () => {
   currentPage.value = 1;
 
   // Sinkronisasi filter ke URL agar tidak nyangkut saat filter dihapus
@@ -189,6 +200,16 @@ watch([searchQuery, activeCategory, activeAuthor], () => {
     }
   } else if (query.author) {
     delete query.author;
+    urlChanged = true;
+  }
+
+  if (activeTag.value) {
+    if (query.tag !== activeTag.value) {
+      query.tag = activeTag.value;
+      urlChanged = true;
+    }
+  } else if (query.tag) {
+    delete query.tag;
     urlChanged = true;
   }
 
@@ -473,6 +494,7 @@ onBeforeUnmount(() => {
                   searchQuery = '';
                   activeCategory = 'semua';
                   activeAuthor = '';
+                  activeTag = '';
                 "
                 class="mt-4 px-5 py-2 bg-blue-50 text-blue-600 dark:bg-slate-700 dark:text-blue-400 rounded-lg text-sm font-semibold hover:bg-blue-100 transition-colors"
               >
@@ -524,6 +546,26 @@ onBeforeUnmount(() => {
                 </div>
                 <button
                   @click="activeAuthor = ''"
+                  class="text-gray-400 hover:text-red-500 transition-colors"
+                  title="Hapus Filter"
+                >
+                  <PhX class="w-4 h-4" />
+                </button>
+              </div>
+
+              <!-- Indikator Filter Tag -->
+              <div
+                v-if="activeTag"
+                class="mb-6 flex items-center justify-between bg-blue-50 dark:bg-slate-700/50 px-4 py-3 rounded-lg border border-blue-100 dark:border-slate-600"
+              >
+                <div class="flex items-center text-sm text-blue-800 dark:text-blue-200">
+                  <PhTag class="w-4 h-4 mr-2" />
+                  <span
+                    >Tag: <strong class="font-bold">#{{ activeTag }}</strong></span
+                  >
+                </div>
+                <button
+                  @click="activeTag = ''"
                   class="text-gray-400 hover:text-red-500 transition-colors"
                   title="Hapus Filter"
                 >

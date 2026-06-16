@@ -358,13 +358,13 @@ watch(
             v-if="article?.tags"
             class="px-6 md:px-10 pb-10 flex flex-wrap gap-2 border-b border-gray-100 dark:border-slate-700 mt-6"
           >
-            <a
-              href="#"
+          <router-link
+            :to="{ path: '/berita', query: { tag: tag.trim() } }"
               v-for="(tag, index) in article.tags.split(',')"
               :key="index"
               class="px-3 py-1 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 text-xs font-semibold rounded hover:bg-blue-100 hover:text-blue-600 transition-colors"
-              >#{{ tag.trim() }}</a
-            >
+            >#{{ tag.trim() }}</router-link
+          >
           </div>
         </main>
 
