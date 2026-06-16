@@ -189,10 +189,10 @@ onBeforeUnmount(() => {
     />
 
     <!-- News Section -->
-    <section class="py-16 md:py-12 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
+    <section class="py-8 md:py-12 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
       <!-- Breadcrumb -->
       <div
-        class="container mx-auto max-w-full px-0 lg:px-8 mb-8 md:mb-10 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out"
+        class="container mx-auto max-w-full px-0 lg:px-8 mb-6 md:mb-10 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out"
       >
         <Breadcrumb
           :items="[{ name: 'Beranda', link: '/', icon: 'home' }, { name: 'Berita' }]"
@@ -215,23 +215,37 @@ onBeforeUnmount(() => {
               class="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col h-full animate-pulse"
             >
               <div
-                class="h-56 bg-gray-200 dark:bg-slate-700 w-full shrink-0 rounded-t-lg"
+                class="h-48 md:h-56 bg-gray-200 dark:bg-slate-700 w-full shrink-0 rounded-t-lg"
               ></div>
-              <div class="p-6 flex flex-col flex-1">
-                <div class="flex gap-4 mb-4">
+              <div class="p-5 md:p-6 flex flex-col flex-1">
+                <div class="flex gap-3 md:gap-4 mb-4">
                   <div class="h-3 w-16 bg-gray-200 dark:bg-slate-700 rounded"></div>
                   <div class="h-3 w-20 bg-gray-200 dark:bg-slate-700 rounded"></div>
                 </div>
-                <div class="h-5 w-full bg-gray-200 dark:bg-slate-700 rounded mb-2"></div>
-                <div class="h-5 w-3/4 bg-gray-200 dark:bg-slate-700 rounded mb-5"></div>
-                <div class="space-y-2 mb-6">
-                  <div class="h-3 w-full bg-gray-200 dark:bg-slate-700 rounded"></div>
-                  <div class="h-3 w-full bg-gray-200 dark:bg-slate-700 rounded"></div>
-                  <div class="h-3 w-4/5 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                <div
+                  class="h-4 md:h-5 w-full bg-gray-200 dark:bg-slate-700 rounded mb-2"
+                ></div>
+                <div
+                  class="h-4 md:h-5 w-3/4 bg-gray-200 dark:bg-slate-700 rounded mb-4 md:mb-5"
+                ></div>
+                <div class="space-y-2 mb-5 md:mb-6">
+                  <div
+                    class="h-2.5 md:h-3 w-full bg-gray-200 dark:bg-slate-700 rounded"
+                  ></div>
+                  <div
+                    class="h-2.5 md:h-3 w-full bg-gray-200 dark:bg-slate-700 rounded"
+                  ></div>
+                  <div
+                    class="h-2.5 md:h-3 w-4/5 bg-gray-200 dark:bg-slate-700 rounded"
+                  ></div>
                 </div>
                 <div class="mt-auto flex justify-between items-center">
-                  <div class="h-4 w-32 bg-gray-200 dark:bg-slate-700 rounded"></div>
-                  <div class="h-6 w-6 bg-gray-200 dark:bg-slate-700 rounded-full"></div>
+                  <div
+                    class="h-3 md:h-4 w-24 md:w-32 bg-gray-200 dark:bg-slate-700 rounded"
+                  ></div>
+                  <div
+                    class="h-5 md:h-6 w-5 md:w-6 bg-gray-200 dark:bg-slate-700 rounded-full"
+                  ></div>
                 </div>
               </div>
             </div>
@@ -251,7 +265,7 @@ onBeforeUnmount(() => {
                   class="group relative bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full transform hover:-translate-y-1"
                 >
                   <!-- Image Container -->
-                  <div class="relative h-56 overflow-hidden shrink-0">
+                  <div class="relative h-48 md:h-56 overflow-hidden shrink-0">
                     <img
                       :src="news.image"
                       :alt="news.title"
@@ -263,7 +277,7 @@ onBeforeUnmount(() => {
 
                     <!-- Category Badge -->
                     <div
-                      class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-blue-700 text-sm font-bold rounded-md capitalize tracking-wide shadow-sm"
+                      class="absolute top-3 md:top-4 left-3 md:left-4 px-2.5 md:px-3 py-1 bg-white/90 backdrop-blur-sm text-blue-700 text-xs md:text-sm font-bold rounded-md capitalize tracking-wide shadow-sm"
                       style="font-family: 'Kalam', cursive"
                     >
                       {{ categories.find((c) => c.id === news.category)?.name }}
@@ -272,24 +286,26 @@ onBeforeUnmount(() => {
 
                   <!-- Content -->
                   <div
-                    class="p-6 flex flex-col flex-1 relative bg-white dark:bg-slate-800"
+                    class="p-5 md:p-6 flex flex-col flex-1 relative bg-white dark:bg-slate-800"
                   >
                     <!-- Meta Info -->
                     <div
-                      class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 gap-4 font-medium"
+                      class="flex items-center text-[11px] md:text-xs text-gray-500 dark:text-gray-400 mb-2 md:mb-3 gap-3 md:gap-4 font-medium"
                     >
                       <span class="flex items-center">
-                        <PhCalendarBlank class="w-3.5 h-3.5 mr-1.5 text-blue-500" />
+                        <PhCalendarBlank
+                          class="w-3 h-3 md:w-3.5 md:h-3.5 mr-1.5 text-blue-500"
+                        />
                         {{ news.date }}
                       </span>
                       <span class="flex items-center">
-                        <PhUser class="w-3.5 h-3.5 mr-1.5 text-blue-500" />
+                        <PhUser class="w-3 h-3 md:w-3.5 md:h-3.5 mr-1.5 text-blue-500" />
                         {{ news.author }}
                       </span>
                     </div>
 
                     <h3
-                      class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight"
+                      class="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-2 md:mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight"
                     >
                       <router-link
                         :to="`/artikel/${news.slug}`"
@@ -301,7 +317,7 @@ onBeforeUnmount(() => {
                     </h3>
 
                     <p
-                      class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3 mb-6"
+                      class="text-xs md:text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3 mb-4 md:mb-6"
                     >
                       {{ news.excerpt }}
                     </p>
@@ -309,17 +325,19 @@ onBeforeUnmount(() => {
                     <div class="mt-auto flex items-center justify-between">
                       <router-link
                         :to="`/artikel/${news.slug}`"
-                        class="flex items-center text-sm font-bold text-blue-600 dark:text-blue-400 group-hover:underline"
+                        class="flex items-center text-xs md:text-sm font-bold text-blue-600 dark:text-blue-400 group-hover:underline"
                       >
                         Baca Selengkapnya
                         <PhArrowUpRight
-                          class="w-4 h-4 ml-1 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+                          class="w-3.5 h-3.5 md:w-4 md:h-4 ml-1 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
                         />
                       </router-link>
                       <span
-                        class="flex items-center text-xs font-medium text-gray-500 dark:text-gray-400"
+                        class="flex items-center text-[11px] md:text-xs font-medium text-gray-500 dark:text-gray-400"
                       >
-                        <PhEye class="w-4 h-4 mr-1.5 text-blue-500" />
+                        <PhEye
+                          class="w-3.5 h-3.5 md:w-4 md:h-4 mr-1 md:mr-1.5 text-blue-500"
+                        />
                         {{ news.views }}
                       </span>
                     </div>
@@ -413,13 +431,13 @@ onBeforeUnmount(() => {
 
         <!-- KANAN: Sidebar -->
         <aside
-          class="w-full lg:w-1/3 flex flex-col -mt-px lg:mt-0 relative z-0 order-1 lg:order-2 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out"
+          class="contents lg:flex lg:flex-col lg:w-1/3 lg:gap-8 relative z-0 lg:order-2"
         >
+          <!-- Search & Category Widget -->
           <div
-            class="bg-white dark:bg-slate-800 rounded-none lg:rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden"
+            class="bg-white dark:bg-slate-800 rounded-none lg:rounded-lg shadow-sm border-b lg:border border-gray-100 dark:border-slate-700 overflow-hidden order-1 lg:order-none fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out"
           >
-            <!-- Search & Category Widget -->
-            <div class="p-6 border-b border-gray-100 dark:border-slate-700">
+            <div class="p-6">
               <h3
                 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center"
               >
@@ -460,8 +478,12 @@ onBeforeUnmount(() => {
                 </button>
               </div>
             </div>
+          </div>
 
-            <!-- Berita Populer Widget -->
+          <!-- Berita Populer Widget -->
+          <div
+            class="bg-white dark:bg-slate-800 rounded-none lg:rounded-lg shadow-sm border-y lg:border border-gray-100 dark:border-slate-700 overflow-hidden order-3 lg:order-none fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out"
+          >
             <div class="p-6">
               <h3
                 class="text-lg font-bold text-gray-900 dark:text-white mb-5 border-b border-gray-100 dark:border-slate-700 pb-3 flex items-center"

@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed, onMounted, nextTick, watch } from "vue";
+import { ref, computed, onMounted, nextTick, watch, onBeforeUnmount } from "vue";
+import { PhArrowDown } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 import api from "@/api/index.js";
 
@@ -161,8 +162,31 @@ const activeCategoryName = computed(() => {
   return categories.value.find((c) => c.id === activeCategory.value)?.name || "";
 });
 
+const categoryContainerRef = ref(null);
+const canScrollDown = ref(false);
+
+const checkScroll = () => {
+  if (categoryContainerRef.value) {
+    const { scrollTop, scrollHeight, clientHeight } = categoryContainerRef.value;
+    canScrollDown.value =
+      scrollHeight > clientHeight &&
+      Math.ceil(scrollTop + clientHeight) < scrollHeight - 2;
+  }
+};
+
+watch(categories, () => {
+  nextTick(() => {
+    checkScroll();
+  });
+});
+
 onMounted(() => {
   fetchData();
+  window.addEventListener("resize", checkScroll);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", checkScroll);
 });
 </script>
 
@@ -233,23 +257,41 @@ onMounted(() => {
                   </svg>
                   Kategori:
                 </h4>
-                <div class="flex flex-wrap items-center gap-2 md:gap-2.5">
-                  <button
-                    v-for="category in categories"
-                    :key="category.id"
-                    @click="changeCategory(category.id)"
-                    class="px-3.5 md:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-300 focus:outline-none flex items-center border"
-                    :class="
-                      activeCategory === category.id
-                        ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
-                        : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400 shadow-sm'
-                    "
+                <div class="relative pb-1">
+                  <div
+                    ref="categoryContainerRef"
+                    @scroll="checkScroll"
+                    class="flex flex-wrap items-center gap-2 md:gap-2.5 max-h-40 md:max-h-60 overflow-y-auto pr-2 pb-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-slate-500"
                   >
-                    {{ category.name }}
-                    <span class="ml-1 text-[11px] font-bold opacity-70">
-                      ({{ getCategoryCount(category.id) }})
-                    </span>
-                  </button>
+                    <button
+                      v-for="category in categories"
+                      :key="category.id"
+                      @click="changeCategory(category.id)"
+                      class="px-3.5 md:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-300 focus:outline-none flex items-center border"
+                      :class="
+                        activeCategory === category.id
+                          ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
+                          : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400 shadow-sm'
+                      "
+                    >
+                      {{ category.name }}
+                      <span class="ml-1 text-[11px] font-bold opacity-70">
+                        ({{ getCategoryCount(category.id) }})
+                      </span>
+                    </button>
+                  </div>
+                  <!-- Scroll Down Indicator -->
+                  <div
+                    v-show="canScrollDown"
+                    class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-gray-50 dark:from-slate-900 to-transparent pointer-events-none z-10 flex justify-center items-end"
+                  >
+                    <div
+                      class="text-sm font-semibold text-gray-500 dark:text-gray-400 flex items-center animate-bounce pb-2"
+                    >
+                      <PhArrowDown class="w-4 h-4 mr-1.5" />
+                      Scroll ke bawah
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
