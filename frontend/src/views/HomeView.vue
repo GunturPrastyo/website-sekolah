@@ -1217,20 +1217,54 @@
               </div>
 
               <div class="grid grid-cols-7 gap-y-2 text-sm text-center">
-                <!-- Offset kosong menyesuaikan hari pertama -->
-                <div
-                  v-for="n in calendarData.firstDayOffset"
-                  :key="'offset-' + n"
-                  class="py-2"
-                ></div>
+                <template v-for="(item, index) in calendarGrid" :key="'grid-' + index">
+                  <!-- Empty Offset -->
+                  <div v-if="item.type === 'empty'" class="py-2"></div>
 
-                <div
-                  v-for="day in calendarData.daysInMonth"
-                  :key="day"
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                >
-                  {{ day }}
-                </div>
+                  <!-- Normal Day -->
+                  <div
+                    v-else-if="item.type === 'day'"
+                    class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
+                  >
+                    {{ item.day }}
+                  </div>
+
+                  <!-- Event Spanning Day(s) -->
+                  <div
+                    v-else-if="item.type === 'event'"
+                    :class="[
+                      colSpanClasses[item.span],
+                      'mx-0.5 relative rounded-lg overflow-hidden cursor-pointer transition-colors flex flex-col justify-between',
+                      themeClasses[item.event.color].eventBg,
+                    ]"
+                    :title="item.event.title"
+                  >
+                    <div
+                      :class="[
+                        themeClasses[item.event.color].eventHeaderBg,
+                        themeClasses[item.event.color].eventHeaderText,
+                        'text-[10px] font-bold px-2 py-0.5 text-left truncate',
+                      ]"
+                    >
+                      {{ item.event.title }}
+                    </div>
+                    <div
+                      class="grid w-full py-1"
+                      :style="`grid-template-columns: repeat(${item.span}, minmax(0, 1fr))`"
+                    >
+                      <div
+                        v-for="d in item.days"
+                        :key="'day-' + d"
+                        :class="[
+                          themeClasses[item.event.color].eventDayText,
+                          'font-bold',
+                        ]"
+                      >
+                        {{ d }}
+                      </div>
+                    </div>
+                  </div>
+                </template>
               </div>
 
               <div class="mt-6 pt-4 border-t border-gray-100 dark:border-slate-700">
@@ -1298,12 +1332,17 @@
                           >
                         </div>
                         <div
-                          class="w-full text-center py-1.5 sm:py-3 transition-colors"
+                          class="w-full text-center py-1.5 sm:py-3 transition-colors flex items-center justify-center min-h-[48px]"
                           :class="themeClasses[agenda.color].dateBg"
                         >
                           <span
-                            class="text-xl sm:text-3xl font-extrabold leading-none tracking-tight"
-                            :class="themeClasses[agenda.color].dateText"
+                            class="font-extrabold leading-none tracking-tight"
+                            :class="[
+                              themeClasses[agenda.color].dateText,
+                              agenda.date.length > 2
+                                ? 'text-lg sm:text-xl'
+                                : 'text-xl sm:text-3xl',
+                            ]"
                             style="font-family: 'Kalam', cursive"
                             >{{ agenda.date }}</span
                           >
@@ -2038,6 +2077,70 @@ const nextMonth = () => {
   currentDisplayedDate.value = new Date(date.getFullYear(), date.getMonth() + 1, 1);
 };
 
+// Data Grid Kalender
+const colSpanClasses = {
+  1: "col-span-1",
+  2: "col-span-2",
+  3: "col-span-3",
+  4: "col-span-4",
+  5: "col-span-5",
+  6: "col-span-6",
+  7: "col-span-7",
+};
+
+const calendarGrid = computed(() => {
+  const year = currentDisplayedDate.value.getFullYear();
+  const month = currentDisplayedDate.value.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDayOffset = new Date(year, month, 1).getDay();
+
+  const gridItems = [];
+  for (let i = 0; i < firstDayOffset; i++) gridItems.push({ type: "empty" });
+
+  let currentDay = 1;
+  while (currentDay <= daysInMonth) {
+    const currentDayDate = new Date(year, month, currentDay);
+    currentDayDate.setHours(0, 0, 0, 0);
+
+    const eventOnDay = agendas.value.find((agenda) => {
+      if (!agenda.startDate) return false;
+      const start = new Date(agenda.startDate);
+      start.setHours(0, 0, 0, 0);
+      const end = agenda.endDate ? new Date(agenda.endDate) : new Date(start);
+      end.setHours(0, 0, 0, 0);
+      return currentDayDate >= start && currentDayDate <= end;
+    });
+
+    if (eventOnDay) {
+      const start = new Date(eventOnDay.startDate);
+      start.setHours(0, 0, 0, 0);
+      const end = eventOnDay.endDate ? new Date(eventOnDay.endDate) : new Date(start);
+      end.setHours(0, 0, 0, 0);
+
+      const currentDayOfWeek = currentDayDate.getDay();
+      const daysLeftInWeek = 7 - currentDayOfWeek;
+
+      let span = 1;
+      for (let i = 1; i < daysLeftInWeek; i++) {
+        const nextDayDate = new Date(year, month, currentDay + i);
+        nextDayDate.setHours(0, 0, 0, 0);
+        if (currentDay + i > daysInMonth) break;
+        if (nextDayDate >= start && nextDayDate <= end) span++;
+        else break;
+      }
+
+      const daysArr = [];
+      for (let i = 0; i < span; i++) daysArr.push(currentDay + i);
+      gridItems.push({ type: "event", span: span, days: daysArr, event: eventOnDay });
+      currentDay += span;
+    } else {
+      gridItems.push({ type: "day", day: currentDay });
+      currentDay++;
+    }
+  }
+  return gridItems;
+});
+
 // State Tooltip Dinamis Map
 const tooltip = ref({
   show: false,
@@ -2331,6 +2434,11 @@ const themeClasses = {
     infoText: "text-gray-700 dark:text-slate-300",
     fileBtn:
       "bg-yellow-50 text-yellow-700 border border-yellow-200 hover:bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-700/50 dark:hover:bg-yellow-900/50",
+    eventBg:
+      "bg-yellow-100 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:hover:bg-yellow-900/50",
+    eventHeaderBg: "bg-yellow-400 dark:bg-yellow-600",
+    eventHeaderText: "text-yellow-900 dark:text-white",
+    eventDayText: "text-yellow-800 dark:text-yellow-400",
   },
   red: {
     card:
@@ -2346,6 +2454,10 @@ const themeClasses = {
     infoText: "text-gray-700 dark:text-slate-300",
     fileBtn:
       "bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:border-red-700/50 dark:hover:bg-red-900/50",
+    eventBg: "bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50",
+    eventHeaderBg: "bg-red-400 dark:bg-red-600",
+    eventHeaderText: "text-red-900 dark:text-white",
+    eventDayText: "text-red-800 dark:text-red-400",
   },
   green: {
     card:
@@ -2361,6 +2473,11 @@ const themeClasses = {
     infoText: "text-gray-700 dark:text-slate-300",
     fileBtn:
       "bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 dark:border-green-700/50 dark:hover:bg-green-900/50",
+    eventBg:
+      "bg-green-100 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-green-900/50",
+    eventHeaderBg: "bg-green-400 dark:bg-green-600",
+    eventHeaderText: "text-green-900 dark:text-white",
+    eventDayText: "text-green-800 dark:text-green-400",
   },
   blue: {
     card:
@@ -2376,6 +2493,11 @@ const themeClasses = {
     infoText: "text-gray-700 dark:text-slate-300",
     fileBtn:
       "bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-700/50 dark:hover:bg-blue-900/50",
+    eventBg:
+      "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50",
+    eventHeaderBg: "bg-blue-400 dark:bg-blue-600",
+    eventHeaderText: "text-blue-900 dark:text-white",
+    eventDayText: "text-blue-800 dark:text-blue-400",
   },
 };
 
@@ -2475,33 +2597,57 @@ const fetchAgendas = async () => {
       agendas.value = response.data.data.map((agenda) => {
         let dateText = "01";
         let monthText = "Jan";
+        let startDate = null;
+        let endDate = null;
 
-        if (agenda.start_date || agenda.date) {
-          const d = new Date(agenda.start_date || agenda.date);
-          dateText = d.getDate().toString().padStart(2, "0");
-          const months = [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "Mei",
-            "Jun",
-            "Jul",
-            "Agt",
-            "Sep",
-            "Okt",
-            "Nov",
-            "Des",
-          ];
-          monthText = months[d.getMonth()];
+        const rawStartDate =
+          agenda.start_date ||
+          agenda.startDate ||
+          agenda.tanggal_mulai ||
+          agenda.date ||
+          agenda.tanggal;
+        const rawEndDate = agenda.end_date || agenda.endDate || agenda.tanggal_selesai;
 
-          if (
-            agenda.end_date &&
-            agenda.end_date !== agenda.start_date &&
-            agenda.end_date !== agenda.date
-          ) {
-            const endD = new Date(agenda.end_date);
-            dateText = `${dateText}-${endD.getDate().toString().padStart(2, "0")}`;
+        if (rawStartDate) {
+          const d = new Date(rawStartDate);
+
+          // Cek apakah tanggal valid ketika diparse ke object Date
+          if (!isNaN(d.getTime())) {
+            startDate = d;
+            dateText = d.getDate().toString().padStart(2, "0");
+            const months = [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "Mei",
+              "Jun",
+              "Jul",
+              "Agt",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Des",
+            ];
+            monthText = months[d.getMonth()];
+
+            if (rawEndDate && rawEndDate !== rawStartDate) {
+              const endD = new Date(rawEndDate);
+              if (!isNaN(endD.getTime())) {
+                endDate = endD;
+                dateText = `${d
+                  .getDate()
+                  .toString()
+                  .padStart(2, "0")}-${endD.getDate().toString().padStart(2, "0")}`;
+                if (d.getMonth() !== endD.getMonth()) {
+                  monthText = `${months[d.getMonth()]}-${months[endD.getMonth()]}`;
+                }
+              }
+            }
+          } else {
+            // Fallback jika API membalas dengan format literal seperti "18 - 24 Juli"
+            dateText = rawStartDate;
+            monthText = "Agenda";
           }
         }
 
@@ -2520,6 +2666,8 @@ const fetchAgendas = async () => {
           loc: agenda.location || agenda.lokasi || "Lingkungan Sekolah",
           color: color,
           file: agenda.file || agenda.lampiran || null,
+          startDate: startDate,
+          endDate: endDate || startDate,
         };
       });
     }
