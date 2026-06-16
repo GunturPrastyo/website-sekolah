@@ -2259,12 +2259,13 @@ const ppdbCountdown = ref({
 let countdownInterval;
 
 const updateCountdown = () => {
-  // Misal target buka pendaftaran: 1 Juni 2026
-  let targetDate = new Date("June 1, 2026 08:00:00").getTime();
-  if (ppdbInfo.value.opening_date) {
-    targetDate = new Date(ppdbInfo.value.opening_date).getTime();
+  if (!ppdbInfo.value.opening_date) {
+    // Jika tidak ada tanggal dari API, set ke nol sementara menunggu data
+    ppdbCountdown.value = { days: "00", hours: "00", minutes: "00", seconds: "00" };
+    return;
   }
 
+  const targetDate = new Date(ppdbInfo.value.opening_date).getTime();
   const now = new Date().getTime();
   const distance = targetDate - now;
 
@@ -2780,6 +2781,9 @@ const fetchPpdbInfo = async () => {
   } finally {
     isLoadingPpdb.value = false;
     updateCountdown();
+    if (!ppdbInfo.value.opening_date && countdownInterval) {
+      clearInterval(countdownInterval);
+    }
   }
 };
 
