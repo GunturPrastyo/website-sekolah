@@ -237,7 +237,6 @@ onMounted(() => {
       badge="Hall of Fame"
       title="Prestasi & Penghargaan"
       description="Dedikasi, kerja keras, dan semangat pantang menyerah siswa-siswi kami yang berhasil menorehkan tinta emas di berbagai ajang perlombaan bergengsi."
-      bgImage="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=1600&auto=format&fit=crop"
     >
       <template #bg-ornament>
         <div

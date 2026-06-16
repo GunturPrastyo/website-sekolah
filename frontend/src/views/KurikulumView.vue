@@ -391,7 +391,6 @@ onBeforeUnmount(() => {
       badge="Akademik"
       title="Silabus & Kurikulum Digital"
       description="Jelajahi struktur kurikulum interaktif kami yang dirancang khusus untuk membekali siswa dengan kompetensi abad 21 (Kurikulum Merdeka)."
-      bgImage="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop"
     />
 
     <!-- Main Content Section -->

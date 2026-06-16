@@ -106,7 +106,7 @@ const fetchNews = async () => {
   isLoading.value = true;
   try {
     let url = `/api/public-news?page=${currentPage.value}&per_page=${itemsPerPage}`;
-    
+
     if (activeCategory.value !== "semua") {
       url += `&category=${activeCategory.value}`;
     }
@@ -118,7 +118,7 @@ const fetchNews = async () => {
     const result = response.data;
 
     paginatedNews.value = result.data.map(mapNewsItem);
-    
+
     if (result.pagination) {
       totalPages.value = result.pagination.last_page;
       currentPage.value = result.pagination.current_page;
@@ -153,7 +153,7 @@ onMounted(() => {
   if (route.query.q) {
     searchQuery.value = route.query.q;
   }
-  
+
   fetchNews();
   fetchPopularNews();
 
@@ -186,7 +186,6 @@ onBeforeUnmount(() => {
       badge="Informasi Publik"
       title="Berita & Artikel Sekolah"
       description="Ikuti terus perkembangan, kegiatan, prestasi, dan pengumuman terbaru seputar lingkungan sekolah."
-      bgImage="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1600&auto=format&fit=crop"
     />
 
     <!-- News Section -->

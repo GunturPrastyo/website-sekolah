@@ -133,7 +133,6 @@ const downloadFile = (file) => {
       badge="Informasi"
       title="Unduhan Publik"
       description="Pusat dokumen, modul, dan formulir resmi SMAN 1 Nogosari yang dapat diakses dan diunduh oleh siswa maupun masyarakat umum."
-      bgImage="https://images.unsplash.com/photo-1568044852337-9cbac391ce42?q=80&w=1600&auto=format&fit=crop"
     />
 
     <section class="py-0 md:py-12 bg-gray-50 dark:bg-gray-900 min-h-[60vh]">

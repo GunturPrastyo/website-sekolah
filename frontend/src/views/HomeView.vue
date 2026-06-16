@@ -1217,53 +1217,62 @@
               </div>
 
               <div class="grid grid-cols-7 gap-y-2 text-sm text-center">
-                <template v-for="(item, index) in calendarGrid" :key="'grid-' + index">
-                  <!-- Empty Offset -->
-                  <div v-if="item.type === 'empty'" class="py-2"></div>
-
-                  <!-- Normal Day -->
+                <template v-if="isLoadingAgendas">
                   <div
-                    v-else-if="item.type === 'day'"
-                    class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
-                  >
-                    {{ item.day }}
-                  </div>
+                    v-for="i in 35"
+                    :key="'skel-cal-' + i"
+                    class="py-4 mx-0.5 rounded-lg bg-slate-100 dark:bg-slate-700/50 animate-pulse"
+                  ></div>
+                </template>
+                <template v-else>
+                  <template v-for="(item, index) in calendarGrid" :key="'grid-' + index">
+                    <!-- Empty Offset -->
+                    <div v-if="item.type === 'empty'" class="py-2"></div>
 
-                  <!-- Event Spanning Day(s) -->
-                  <div
-                    v-else-if="item.type === 'event'"
-                    :class="[
-                      colSpanClasses[item.span],
-                      'mx-0.5 relative rounded-lg overflow-hidden cursor-pointer transition-colors flex flex-col justify-between',
-                      themeClasses[item.event.color].eventBg,
-                    ]"
-                    :title="item.event.title"
-                  >
+                    <!-- Normal Day -->
                     <div
-                      :class="[
-                        themeClasses[item.event.color].eventHeaderBg,
-                        themeClasses[item.event.color].eventHeaderText,
-                        'text-[10px] font-bold px-2 py-0.5 text-left truncate',
-                      ]"
+                      v-else-if="item.type === 'day'"
+                      class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
                     >
-                      {{ item.event.title }}
+                      {{ item.day }}
                     </div>
+
+                    <!-- Event Spanning Day(s) -->
                     <div
-                      class="grid w-full py-1"
-                      :style="`grid-template-columns: repeat(${item.span}, minmax(0, 1fr))`"
+                      v-else-if="item.type === 'event'"
+                      :class="[
+                        colSpanClasses[item.span],
+                        'relative overflow-hidden cursor-pointer transition-colors flex flex-col justify-between',
+                        themeClasses[item.event.color].eventBg,
+                      ]"
+                      :title="item.event.title"
                     >
                       <div
-                        v-for="d in item.days"
-                        :key="'day-' + d"
                         :class="[
-                          themeClasses[item.event.color].eventDayText,
-                          'font-bold',
+                          themeClasses[item.event.color].eventHeaderBg,
+                          themeClasses[item.event.color].eventHeaderText,
+                          'text-[10px] font-bold px-2 py-0.5 text-left truncate',
                         ]"
                       >
-                        {{ d }}
+                        {{ item.event.title }}
+                      </div>
+                      <div
+                        class="grid w-full py-1"
+                        :style="`grid-template-columns: repeat(${item.span}, minmax(0, 1fr))`"
+                      >
+                        <div
+                          v-for="d in item.days"
+                          :key="'day-' + d"
+                          :class="[
+                            themeClasses[item.event.color].eventDayText,
+                            'font-bold',
+                          ]"
+                        >
+                          {{ d }}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </template>
                 </template>
               </div>
 
@@ -1309,147 +1318,180 @@
                   <div
                     class="absolute inset-0 p-5 md:p-6 flex flex-col gap-4 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-300 dark:hover:[&::-webkit-scrollbar-thumb]:bg-slate-500"
                   >
-                    <div
-                      v-for="(agenda, index) in agendas"
-                      :key="index"
-                      class="flex flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border hover:shadow-md transition-all group cursor-pointer shrink-0"
-                      :class="themeClasses[agenda.color].card"
-                    >
-                      <!-- Date Box (Calendar Style) -->
+                    <template v-if="isLoadingAgendas">
                       <div
-                        class="rounded-xl flex flex-col items-center justify-center min-w-[65px] w-[65px] sm:min-w-[95px] sm:w-[95px] border transition-all duration-300 overflow-hidden shrink-0"
-                        style="font-family: 'Kalam', cursive"
-                        :class="themeClasses[agenda.color].dateBox"
+                        v-for="i in 5"
+                        :key="'skel-ag-' + i"
+                        class="flex flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border border-gray-100 dark:border-slate-700 animate-pulse shrink-0"
                       >
                         <div
-                          class="w-full text-center py-1 sm:py-1.5 transition-colors"
-                          style="font-family: 'Kalam', cursive"
-                          :class="themeClasses[agenda.color].monthBg"
-                        >
-                          <span
-                            class="text-[10px] sm:text-xs font-bold uppercase tracking-wider"
-                            :class="themeClasses[agenda.color].monthText"
-                            >{{ agenda.month }}</span
-                          >
-                        </div>
-                        <div
-                          class="w-full text-center py-1.5 sm:py-3 transition-colors flex items-center justify-center min-h-[48px]"
-                          :class="themeClasses[agenda.color].dateBg"
-                        >
-                          <span
-                            class="font-extrabold leading-none tracking-tight"
-                            :class="[
-                              themeClasses[agenda.color].dateText,
-                              agenda.date.length > 2
-                                ? 'text-lg sm:text-xl'
-                                : 'text-xl sm:text-3xl',
-                            ]"
-                            style="font-family: 'Kalam', cursive"
-                            >{{ agenda.date }}</span
-                          >
-                        </div>
-                      </div>
-
-                      <!-- Details -->
-                      <div
-                        class="flex flex-col justify-center flex-1"
-                        style="font-family: 'Poppins', sans-serif"
-                      >
-                        <div
-                          class="flex items-start sm:items-center justify-between mb-1 gap-2"
-                        >
-                          <h4
-                            class="font-bold transition-colors text-sm md:text-base leading-tight"
-                            :class="themeClasses[agenda.color].title"
-                          >
-                            {{ agenda.title }}
-                          </h4>
-                        </div>
-                        <div
-                          class="flex flex-col gap-1.5 sm:gap-2 mt-2 transition-colors"
-                          :class="themeClasses[agenda.color].infoText"
-                        >
-                          <!-- Waktu -->
-                          <div class="flex items-start text-[11px] sm:text-xs">
-                            <svg
-                              class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                              :class="themeClasses[agenda.color].infoIcon"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            >
-                              <circle cx="12" cy="12" r="10" />
-                              <polyline points="12 6 12 12 16 14" />
-                            </svg>
-                            <div class="flex flex-wrap items-center mt-0.5">
-                              <span
-                                class="font-semibold text-gray-800 dark:text-gray-100 mr-1"
-                                >Waktu :</span
-                              >
-                              <span
-                                class="font-medium text-gray-600 dark:text-gray-300"
-                                >{{ agenda.time }}</span
-                              >
-                            </div>
-                          </div>
-
-                          <!-- Lokasi -->
-                          <div class="flex items-start text-[11px] sm:text-xs">
-                            <svg
-                              class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                              :class="themeClasses[agenda.color].infoIcon"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            >
-                              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                              <circle cx="12" cy="10" r="3" />
-                            </svg>
-                            <div class="flex flex-wrap items-center mt-0.5">
-                              <span
-                                class="font-semibold text-gray-800 dark:text-gray-100 mr-1"
-                                >Tempat :</span
-                              >
-                              <span
-                                class="font-medium text-gray-600 dark:text-gray-300"
-                                >{{ agenda.loc }}</span
-                              >
-                            </div>
-                          </div>
-
-                          <!-- File Lampiran -->
+                          class="w-[65px] h-[65px] sm:w-[95px] sm:h-[95px] rounded-xl bg-slate-200 dark:bg-slate-700 shrink-0"
+                        ></div>
+                        <div class="flex flex-col justify-center flex-1 space-y-2">
                           <div
-                            v-if="agenda.file"
-                            class="flex items-start text-[11px] sm:text-xs pt-1"
+                            class="h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded"
+                          ></div>
+                          <div
+                            class="h-4 w-1/2 bg-slate-200 dark:bg-slate-700 rounded mt-2"
+                          ></div>
+                          <div
+                            class="h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded"
+                          ></div>
+                        </div>
+                      </div>
+                    </template>
+                    <template v-else-if="agendas.length > 0">
+                      <div
+                        v-for="(agenda, index) in agendas"
+                        :key="index"
+                        class="flex flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border hover:shadow-md transition-all group cursor-pointer shrink-0"
+                        :class="themeClasses[agenda.color].card"
+                      >
+                        <!-- Date Box (Calendar Style) -->
+                        <div
+                          class="rounded-xl flex flex-col items-center justify-center min-w-[65px] w-[65px] sm:min-w-[95px] sm:w-[95px] border transition-all duration-300 overflow-hidden shrink-0"
+                          style="font-family: 'Kalam', cursive"
+                          :class="themeClasses[agenda.color].dateBox"
+                        >
+                          <div
+                            class="w-full text-center py-1 sm:py-1.5 transition-colors"
+                            style="font-family: 'Kalam', cursive"
+                            :class="themeClasses[agenda.color].monthBg"
                           >
-                            <PhPaperclip
-                              class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                              :class="themeClasses[agenda.color].infoIcon"
-                            />
-                            <div class="flex flex-wrap items-center mt-0.5">
-                              <span
-                                class="font-semibold text-gray-800 dark:text-gray-100 mr-1"
-                                >Lampiran :</span
+                            <span
+                              class="text-[10px] sm:text-xs font-bold uppercase tracking-wider"
+                              :class="themeClasses[agenda.color].monthText"
+                              >{{ agenda.month }}</span
+                            >
+                          </div>
+                          <div
+                            class="w-full text-center py-1.5 sm:py-3 transition-colors flex items-center justify-center min-h-[48px]"
+                            :class="themeClasses[agenda.color].dateBg"
+                          >
+                            <span
+                              class="font-extrabold leading-none tracking-tight"
+                              :class="[
+                                themeClasses[agenda.color].dateText,
+                                agenda.date.length > 2
+                                  ? 'text-lg sm:text-xl'
+                                  : 'text-xl sm:text-3xl',
+                              ]"
+                              style="font-family: 'Kalam', cursive"
+                              >{{ agenda.date }}</span
+                            >
+                          </div>
+                        </div>
+
+                        <!-- Details -->
+                        <div
+                          class="flex flex-col justify-center flex-1"
+                          style="font-family: 'Poppins', sans-serif"
+                        >
+                          <div
+                            class="flex items-start sm:items-center justify-between mb-1 gap-2"
+                          >
+                            <h4
+                              class="font-bold transition-colors text-sm md:text-base leading-tight"
+                              :class="themeClasses[agenda.color].title"
+                            >
+                              {{ agenda.title }}
+                            </h4>
+                          </div>
+                          <div
+                            class="flex flex-col gap-1.5 sm:gap-2 mt-2 transition-colors"
+                            :class="themeClasses[agenda.color].infoText"
+                          >
+                            <!-- Waktu -->
+                            <div class="flex items-start text-[11px] sm:text-xs">
+                              <svg
+                                class="w-4 h-4 mr-2 mt-0.5 shrink-0"
+                                :class="themeClasses[agenda.color].infoIcon"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
                               >
-                              <a
-                                :href="agenda.file"
-                                target="_blank"
-                                class="inline-flex items-center font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline transition-colors"
-                                @click.stop
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                              </svg>
+                              <div class="flex flex-wrap items-center mt-0.5">
+                                <span
+                                  class="font-semibold text-gray-800 dark:text-gray-100 mr-1"
+                                  >Waktu :</span
+                                >
+                                <span
+                                  class="font-medium text-gray-600 dark:text-gray-300"
+                                  >{{ agenda.time }}</span
+                                >
+                              </div>
+                            </div>
+
+                            <!-- Lokasi -->
+                            <div class="flex items-start text-[11px] sm:text-xs">
+                              <svg
+                                class="w-4 h-4 mr-2 mt-0.5 shrink-0"
+                                :class="themeClasses[agenda.color].infoIcon"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
                               >
-                                Lihat Dokumen
-                              </a>
+                                <path
+                                  d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"
+                                />
+                                <circle cx="12" cy="10" r="3" />
+                              </svg>
+                              <div class="flex flex-wrap items-center mt-0.5">
+                                <span
+                                  class="font-semibold text-gray-800 dark:text-gray-100 mr-1"
+                                  >Tempat :</span
+                                >
+                                <span
+                                  class="font-medium text-gray-600 dark:text-gray-300"
+                                  >{{ agenda.loc }}</span
+                                >
+                              </div>
+                            </div>
+
+                            <!-- File Lampiran -->
+                            <div
+                              v-if="agenda.file"
+                              class="flex items-start text-[11px] sm:text-xs pt-1"
+                            >
+                              <PhPaperclip
+                                class="w-4 h-4 mr-2 mt-0.5 shrink-0"
+                                :class="themeClasses[agenda.color].infoIcon"
+                              />
+                              <div class="flex flex-wrap items-center mt-0.5">
+                                <span
+                                  class="font-semibold text-gray-800 dark:text-gray-100 mr-1"
+                                  >Lampiran :</span
+                                >
+                                <a
+                                  :href="agenda.file"
+                                  target="_blank"
+                                  class="inline-flex items-center font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline transition-colors"
+                                  @click.stop
+                                >
+                                  Lihat Dokumen
+                                </a>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </template>
+                    <template v-else>
+                      <div
+                        class="p-6 text-center text-gray-500 dark:text-gray-400 m-auto"
+                      >
+                        Tidak ada agenda saat ini.
+                      </div>
+                    </template>
                   </div>
                   <!-- Bottom Fade & Scroll Indicator -->
                   <div
@@ -2439,6 +2481,8 @@ const themeClasses = {
       "bg-yellow-100 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:hover:bg-yellow-900/50",
     eventHeaderBg: "bg-yellow-400 dark:bg-yellow-500",
     eventHeaderText: "text-yellow-900 dark:text-white",
+    eventHeaderBg: "bg-yellow-500 dark:bg-yellow-600",
+    eventHeaderText: "text-white drop-shadow-md",
     eventDayText: "text-yellow-800 dark:text-yellow-400",
   },
   red: {
@@ -2458,6 +2502,7 @@ const themeClasses = {
     eventBg: "bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50",
     eventHeaderBg: "bg-red-500 dark:bg-red-600",
     eventHeaderText: "text-red-900 dark:text-white",
+    eventHeaderText: "text-white drop-shadow-md",
     eventDayText: "text-red-800 dark:text-red-400",
   },
   green: {
@@ -2478,6 +2523,8 @@ const themeClasses = {
       "bg-green-100 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-green-900/50",
     eventHeaderBg: "bg-green-500 dark:bg-green-600",
     eventHeaderText: "text-green-900 dark:text-white",
+    eventHeaderBg: "bg-green-600 dark:bg-green-700",
+    eventHeaderText: "text-white drop-shadow-md",
     eventDayText: "text-green-800 dark:text-green-400",
   },
   blue: {
@@ -2498,11 +2545,14 @@ const themeClasses = {
       "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50",
     eventHeaderBg: "bg-blue-500 dark:bg-blue-600",
     eventHeaderText: "text-blue-900 dark:text-white",
+    eventHeaderBg: "bg-blue-600 dark:bg-blue-700",
+    eventHeaderText: "text-white drop-shadow-md",
     eventDayText: "text-blue-800 dark:text-blue-400",
   },
 };
 
 const agendas = ref([]);
+const isLoadingAgendas = ref(true);
 
 const galleries = ref([]);
 const galleriesByCategory = ref([]);
@@ -2592,6 +2642,7 @@ const fetchSchoolVideo = async () => {
 };
 
 const fetchAgendas = async () => {
+  isLoadingAgendas.value = true;
   try {
     const response = await api.get("/api/public-agendas");
     if (response.data && response.data.data && response.data.data.length > 0) {
@@ -2689,6 +2740,8 @@ const fetchAgendas = async () => {
     }
   } catch (error) {
     console.error("Gagal mengambil data agenda:", error);
+  } finally {
+    isLoadingAgendas.value = false;
   }
 };
 
