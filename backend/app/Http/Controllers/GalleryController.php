@@ -20,11 +20,54 @@ class GalleryController extends Controller
         return response()->json(['data' => GalleryResource::collection($galleries)]);
     }
 
-    public function publicIndex()
+    public function publicIndex(Request $request)
     {
-        // Untuk halaman publik
-        $galleries = Gallery::with('author')->where('status', 'approved')->orderBy('created_at', 'desc')->get();
-        return response()->json(['data' => GalleryResource::collection($galleries)]);
+        $category = $request->query('category', 'semua');
+        $sort = $request->query('sort', 'terbaru');
+        $perPage = $request->query('per_page', 8);
+
+        // Hitung total kategori secara dinamis (Hanya dikirim di halaman pertama untuk efisiensi)
+        $categoriesData = null;
+        if ($request->query('page', 1) == 1) {
+            $categories = Gallery::where('status', 'approved')
+                ->selectRaw('LOWER(category) as category_name, count(*) as count, max(image) as image')
+                ->groupBy('category_name')
+                ->get();
+
+            $categoriesData = [
+                'total' => Gallery::where('status', 'approved')->count(),
+                'first_image' => Gallery::where('status', 'approved')->orderBy('created_at', 'desc')->value('image'),
+                'list' => $categories
+            ];
+        }
+
+        $query = Gallery::with('author')->where('status', 'approved');
+
+        // Menangani filter kategori (merubah tanda "-" dari frontend kembali menjadi spasi)
+        if ($category !== 'semua') {
+            $categoryClean = str_replace('-', ' ', strtolower($category));
+            $query->whereRaw('LOWER(category) = ?', [$categoryClean]);
+        }
+
+        // Menangani sorting
+        if ($sort === 'terpopuler') {
+            $query->orderBy('likes', 'desc')->orderBy('created_at', 'desc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $galleries = $query->paginate($perPage);
+
+        return response()->json([
+            'data' => GalleryResource::collection($galleries->items()),
+            'categories' => $categoriesData,
+            'pagination' => [
+                'current_page' => $galleries->currentPage(),
+                'last_page'    => $galleries->lastPage(),
+                'has_more'     => $galleries->hasMorePages(),
+                'total'        => $galleries->total(),
+            ]
+        ]);
     }
 
     public function myPendingGalleries(Request $request)

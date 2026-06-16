@@ -41,56 +41,72 @@ const fetchSchoolVideo = async () => {
   }
 };
 
-const fetchGalleries = async () => {
-  isLoadingGalleries.value = true;
-  try {
-    const response = await api.get("/api/public-galleries");
-    const result = response.data;
+// Pagination State
+const currentPage = ref(1);
+const hasMorePages = ref(false);
+const isLoadingMore = ref(false);
 
-    const categoryMap = {};
+const fetchGalleries = async (page = 1, append = false) => {
+  if (page === 1) {
+    isLoadingGalleries.value = true;
+    if (!append) galleryList.value = [];
+  } else {
+    isLoadingMore.value = true;
+  }
+
+  try {
+    const response = await api.get("/api/public-galleries", {
+      params: {
+        page: page,
+        per_page: 8,
+        category: activeCategory.value,
+        sort: activeTab.value,
+      },
+    });
+    const result = response.data;
 
     const likedGalleries = JSON.parse(localStorage.getItem("liked_galleries") || "[]");
 
-    galleryList.value = result.data.map((item) => {
-      const catLower = item.category
+    const newItems = result.data.map((item) => ({
+      id: item.id,
+      title: item.title,
+      category: item.category
         ? item.category.toLowerCase().replace(/\s+/g, "-")
-        : "lainnya";
-      const catName = item.category || "Lainnya";
+        : "lainnya",
+      image: item.image,
+      likes: item.likes || 0,
+      liked: likedGalleries.includes(item.id),
+    }));
 
-      if (!categoryMap[catLower]) {
-        categoryMap[catLower] = {
-          id: catLower,
-          name: catName,
-          count: 0,
-          image: item.image, // Menggunakan gambar pertama dari kategori ini sebagai cover
-        };
+    if (append) {
+      galleryList.value.push(...newItems);
+    } else {
+      galleryList.value = newItems;
+    }
+
+    // Update Categories (hanya saat awal load/page 1)
+    if (result.categories) {
+      categories.value[0].count = result.categories.total;
+      if (result.categories.first_image) {
+        categories.value[0].image = result.categories.first_image;
       }
-      categoryMap[catLower].count++;
-
-      return {
-        id: item.id,
-        title: item.title,
-        category: catLower,
-        image: item.image,
-        likes: item.likes || 0,
-        liked: likedGalleries.includes(item.id),
-      };
-    });
-
-    categories.value[0].count = galleryList.value.length;
-
-    if (galleryList.value.length > 0) {
-      categories.value[0].image = galleryList.value[0].image;
+      const dynamicCats = result.categories.list.map((c) => ({
+        id: c.category_name.replace(/\s+/g, "-"),
+        name: c.category_name,
+        count: c.count,
+        image: c.image,
+      }));
+      categories.value = [categories.value[0], ...dynamicCats];
     }
 
-    // Convert map to array and add to categories
-    for (const key in categoryMap) {
-      categories.value.push(categoryMap[key]);
-    }
+    // Update Pagination Info
+    currentPage.value = result.pagination.current_page;
+    hasMorePages.value = result.pagination.has_more;
   } catch (error) {
     console.error("Gagal mengambil data galeri:", error);
   } finally {
     isLoadingGalleries.value = false;
+    isLoadingMore.value = false;
   }
 };
 
@@ -135,24 +151,6 @@ const toggleLike = async (item) => {
   }
 };
 
-const filteredGallery = computed(() => {
-  let result = galleryList.value;
-
-  // 1. Filter Kategori
-  if (activeCategory.value !== "semua") {
-    result = result.filter((item) => item.category === activeCategory.value);
-  }
-
-  // 2. Sort berdasarkan Tab (Terpopuler vs Terbaru)
-  if (activeTab.value === "terpopuler") {
-    result = [...result].sort((a, b) => b.likes - a.likes);
-  } else {
-    result = [...result].sort((a, b) => b.id - a.id); // Asumsi ID lebih besar = lebih baru
-  }
-
-  return result;
-});
-
 // Ambil thumbnail dinamis jika URL adalah YouTube
 const videoThumbnail = computed(() => {
   if (!schoolVideoUrl.value)
@@ -166,40 +164,25 @@ const videoThumbnail = computed(() => {
   return "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop";
 });
 
-// --- INFINITE SCROLL STATE ---
-const itemsPerPage = 8;
-const visibleCount = ref(itemsPerPage);
-const isLoadingMore = ref(false);
 const loadMoreSentinel = ref(null);
 
-const displayedGallery = computed(() => {
-  return filteredGallery.value.slice(0, visibleCount.value);
-});
-
-const hasMore = computed(() => {
-  return visibleCount.value < filteredGallery.value.length;
-});
-
 const loadMore = () => {
-  if (isLoadingMore.value || !hasMore.value) return;
-  isLoadingMore.value = true;
-  setTimeout(() => {
-    visibleCount.value += itemsPerPage;
-    isLoadingMore.value = false;
-  }, 500); // Jeda simulasi loading halus
+  if (isLoadingMore.value || !hasMorePages.value) return;
+  fetchGalleries(currentPage.value + 1, true);
 };
 
 watch([activeCategory, activeTab], () => {
-  visibleCount.value = itemsPerPage;
+  currentPage.value = 1;
+  fetchGalleries(1, false);
 });
 
 let observer = null;
 onMounted(() => {
   fetchSchoolVideo();
-  fetchGalleries().then(() => {
+  fetchGalleries(1, false).then(() => {
     observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore.value) {
+        if (entries[0].isIntersecting && hasMorePages.value) {
           loadMore();
         }
       },
@@ -221,7 +204,7 @@ const currentIndex = ref(0);
 
 const openModal = (index) => {
   currentIndex.value = index;
-  currentImage.value = filteredGallery.value[index];
+  currentImage.value = galleryList.value[index];
   isModalOpen.value = true;
   document.body.style.overflow = "hidden"; // Prevent scrolling
 };
@@ -235,15 +218,14 @@ const closeModal = () => {
 };
 
 const nextImage = () => {
-  currentIndex.value = (currentIndex.value + 1) % filteredGallery.value.length;
-  currentImage.value = filteredGallery.value[currentIndex.value];
+  currentIndex.value = (currentIndex.value + 1) % galleryList.value.length;
+  currentImage.value = galleryList.value[currentIndex.value];
 };
 
 const prevImage = () => {
   currentIndex.value =
-    (currentIndex.value - 1 + filteredGallery.value.length) %
-    filteredGallery.value.length;
-  currentImage.value = filteredGallery.value[currentIndex.value];
+    (currentIndex.value - 1 + galleryList.value.length) % galleryList.value.length;
+  currentImage.value = galleryList.value[currentIndex.value];
 };
 
 const downloadImage = async (item) => {
@@ -436,7 +418,7 @@ const onImageLoad = (id) => {
           class="columns-2 md:columns-3 lg:columns-4 gap-1 sm:gap-4 md:gap-6 w-full transform-gpu"
         >
           <div
-            v-for="(item, index) in displayedGallery"
+            v-for="(item, index) in galleryList"
             :key="item.id"
             @click="openModal(index)"
             class="group relative overflow-hidden rounded-none sm:rounded-xl cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-200 dark:bg-slate-800 block break-inside-avoid mb-1 sm:mb-4 md:mb-6 transform-gpu"
@@ -535,7 +517,7 @@ const onImageLoad = (id) => {
           class="w-full flex justify-center items-center h-10 mt-8 mb-4"
         >
           <div
-            v-if="hasMore && !isLoadingGalleries"
+            v-if="hasMorePages && !isLoadingGalleries"
             class="flex items-center text-gray-400 dark:text-gray-500 gap-2"
           >
             <svg
@@ -566,7 +548,7 @@ const onImageLoad = (id) => {
 
         <!-- Empty State -->
         <div
-          v-if="filteredGallery.length === 0 && !isLoadingGalleries"
+          v-if="galleryList.length === 0 && !isLoadingGalleries"
           class="py-20 text-center bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm mt-4"
         >
           <div
@@ -619,7 +601,7 @@ const onImageLoad = (id) => {
 
         <!-- Navigation Buttons -->
         <button
-          v-if="filteredGallery.length > 1"
+          v-if="galleryList.length > 1"
           @click.stop="prevImage"
           class="absolute left-2 md:left-6 text-white/70 hover:text-white transition-colors z-50 p-2 md:p-4 hover:bg-white/10 rounded-full focus:outline-none"
         >
@@ -638,7 +620,7 @@ const onImageLoad = (id) => {
           </svg>
         </button>
         <button
-          v-if="filteredGallery.length > 1"
+          v-if="galleryList.length > 1"
           @click.stop="nextImage"
           class="absolute right-2 md:right-6 text-white/70 hover:text-white transition-colors z-50 p-2 md:p-4 hover:bg-white/10 rounded-full focus:outline-none"
         >
@@ -672,10 +654,10 @@ const onImageLoad = (id) => {
             </p>
           </div>
           <div
-            v-if="filteredGallery.length > 1"
+            v-if="galleryList.length > 1"
             class="absolute -bottom-8 md:-bottom-10 text-white/80 text-xs md:text-sm font-medium bg-black/50 px-3 py-1 rounded-full"
           >
-            {{ currentIndex + 1 }} / {{ filteredGallery.length }}
+            {{ currentIndex + 1 }} / {{ galleryList.length }}
           </div>
         </div>
       </div>
