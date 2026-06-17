@@ -13,6 +13,7 @@ import {
   PhX,
   PhSpinner,
   PhCaretDown,
+  PhDownloadSimple,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -54,6 +55,7 @@ const bulkEditForm = ref({ grade: "", major: "", school_class_id: null, status: 
 
 const isImportModalOpen = ref(false);
 const isImporting = ref(false);
+const isExporting = ref(false);
 const fileInput = ref(null);
 
 const showMapping = ref(false);
@@ -347,6 +349,112 @@ const processImport = async () => {
   }
 };
 
+const exportData = async () => {
+  try {
+    isExporting.value = true;
+    let xlsx;
+    try {
+      xlsx = await import(/* @vite-ignore */ "xlsx");
+    } catch (err) {
+      triggerToast(
+        "Library Tidak Ditemukan",
+        "Silakan install library xlsx di frontend dengan perintah: npm install xlsx",
+        "error"
+      );
+      isExporting.value = false;
+      return;
+    }
+
+    // Mengambil seluruh data siswa yang difilter saat ini
+    const params = {
+      page: 1,
+      per_page: 999999, // Angka besar agar semua data terambil
+    };
+    if (searchQuery.value) params.search = searchQuery.value;
+    if (filterGrade.value !== "semua") params.grade = filterGrade.value;
+    if (filterMajor.value !== "semua") params.major = filterMajor.value;
+    if (filterStatus.value !== "semua") params.status = filterStatus.value;
+
+    const response = await api.get("/api/students", { params });
+    const dataToExport = response.data.data.map((student) => ({
+      NISN: student.nisn || "-",
+      "Nama Lengkap": student.name || "-",
+      "Jenis Kelamin": student.gender || "-",
+      "Tingkat Kelas": student.grade || "-",
+      Jurusan: student.major || "-",
+      Rombel: student.school_class ? student.school_class.name : "-",
+      Status: student.status === "aktif" ? "Aktif" : "Alumni",
+    }));
+
+    if (dataToExport.length === 0) {
+      triggerToast("Peringatan", "Tidak ada data untuk dieksport.", "warning");
+      isExporting.value = false;
+      return;
+    }
+
+    const worksheet = xlsx.utils.json_to_sheet(dataToExport);
+    const workbook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(workbook, worksheet, "Data Siswa");
+
+    // Generate nama file dengan tanggal
+    const date = new Date();
+    const dateStr = `${date.getFullYear()}${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}${date.getDate().toString().padStart(2, "0")}`;
+    xlsx.writeFile(workbook, `Data_Siswa_${dateStr}.xlsx`);
+
+    triggerToast("Berhasil", "Data siswa berhasil dieksport ke Excel.");
+  } catch (error) {
+    console.error("Gagal export data", error);
+    triggerToast("Gagal Export", "Terjadi kesalahan saat mengeksport data.", "error");
+  } finally {
+    isExporting.value = false;
+  }
+};
+
+const downloadTemplate = async () => {
+  try {
+    let xlsx;
+    try {
+      xlsx = await import(/* @vite-ignore */ "xlsx");
+    } catch (err) {
+      triggerToast(
+        "Library Tidak Ditemukan",
+        "Silakan install library xlsx di frontend dengan perintah: npm install xlsx",
+        "error"
+      );
+      return;
+    }
+
+    const templateData = [
+      {
+        NISN: "0051234567",
+        "Nama Lengkap": "Budi Santoso",
+        "Jenis Kelamin": "L",
+        "Tingkat Kelas": "X",
+        Jurusan: "MIPA",
+        Status: "Aktif",
+      },
+      {
+        NISN: "0051234568",
+        "Nama Lengkap": "Siti Aminah",
+        "Jenis Kelamin": "P",
+        "Tingkat Kelas": "XI",
+        Jurusan: "IPS",
+        Status: "Aktif",
+      },
+    ];
+
+    const worksheet = xlsx.utils.json_to_sheet(templateData);
+    const workbook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(workbook, worksheet, "Template Siswa");
+    xlsx.writeFile(workbook, "Template_Data_Siswa.xlsx");
+  } catch (error) {
+    console.error(error);
+    triggerToast("Gagal", "Terjadi kesalahan saat mengunduh template.", "error");
+  }
+};
+
 const addEntry = async () => {
   if (!form.value.name || !form.value.nisn) {
     triggerToast("Gagal Menyimpan", "Nama dan NISN wajib diisi!", "error");
@@ -576,6 +684,15 @@ const executeBulkDelete = async () => {
       </div>
       <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
         <button
+          @click="exportData"
+          :disabled="isExporting"
+          class="inline-flex items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <PhSpinner v-if="isExporting" class="w-5 h-5 mr-2 animate-spin" />
+          <PhDownloadSimple v-else class="w-5 h-5 mr-2" />
+          Export Data
+        </button>
+        <button
           @click="showImportModal"
           class="inline-flex items-center justify-center px-4 py-2.5 border border-green-600 dark:border-green-500 text-sm font-medium rounded-lg text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/40 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
         >
@@ -721,6 +838,16 @@ const executeBulkDelete = async () => {
                   Sedang Membaca...
                 </span>
                 <span v-else>Cari File</span>
+              </button>
+            </div>
+
+            <div class="mt-4 flex justify-center">
+              <button
+                @click="downloadTemplate"
+                class="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium underline transition-colors"
+              >
+                <PhDownloadSimple class="w-4 h-4 mr-1.5" />
+                Unduh Template Excel Kosong
               </button>
             </div>
 
