@@ -1242,7 +1242,7 @@
                       v-else-if="item.type === 'event'"
                       :class="[
                         colSpanClasses[item.span],
-                        'relative overflow-hidden cursor-pointer transition-colors flex flex-col justify-between',
+                        'relative mx-0.5 my-0.5 rounded-md overflow-hidden cursor-pointer transition-colors flex flex-col justify-between',
                         themeClasses[item.event.color].eventBg,
                       ]"
                       :title="item.event.title"
@@ -1282,16 +1282,16 @@
                 </h4>
                 <div class="flex flex-wrap gap-3">
                   <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                    <span class="w-3 h-3 rounded-sm bg-yellow-400 mr-2"></span> Akademik
+                    <span class="w-3 h-3 rounded-sm bg-slate-600 mr-2"></span> Akademik
                   </div>
                   <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                    <span class="w-3 h-3 rounded-sm bg-red-500 mr-2"></span> Guru/Staf
+                    <span class="w-3 h-3 rounded-sm bg-gray-600 mr-2"></span> Guru/Staf
                   </div>
                   <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                    <span class="w-3 h-3 rounded-sm bg-green-500 mr-2"></span> Kegiatan
+                    <span class="w-3 h-3 rounded-sm bg-zinc-600 mr-2"></span> Kegiatan
                   </div>
                   <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                    <span class="w-3 h-3 rounded-sm bg-blue-500 mr-2"></span> Seminar &
+                    <span class="w-3 h-3 rounded-sm bg-neutral-600 mr-2"></span> Seminar &
                     Acara
                   </div>
                 </div>
@@ -2464,89 +2464,83 @@ const animateAlumniStats = () => {
 const themeClasses = {
   yellow: {
     card:
-      "bg-white border-gray-100 hover:border-yellow-300 hover:shadow-yellow-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-yellow-500/50",
-    dateBox: "border-yellow-400 border-b-4",
-    monthBg: "bg-yellow-400 group-hover:bg-yellow-500",
+      "bg-white border-gray-100 hover:border-slate-300 hover:shadow-slate-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-slate-500/50",
+    dateBox: "border-slate-600 border-b-4",
+    monthBg: "bg-slate-600 group-hover:bg-slate-700",
     monthText: "text-white",
-    dateBg: "bg-yellow-50",
-    dateText: "text-yellow-700 group-hover:text-yellow-800",
+    dateBg: "bg-slate-50",
+    dateText: "text-slate-700 group-hover:text-slate-800",
     title:
-      "text-gray-900 group-hover:text-yellow-600 dark:text-slate-100 dark:group-hover:text-yellow-400",
-    infoIcon: "text-yellow-400",
+      "text-gray-900 group-hover:text-slate-700 dark:text-slate-100 dark:group-hover:text-slate-400",
+    infoIcon: "text-slate-500",
     infoText: "text-gray-700 dark:text-slate-300",
     fileBtn:
-      "bg-yellow-50 text-yellow-700 border border-yellow-200 hover:bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-700/50 dark:hover:bg-yellow-900/50",
+      "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 dark:bg-slate-900/30 dark:text-slate-400 dark:border-slate-700/50 dark:hover:bg-slate-900/50",
     eventBg:
-      "bg-yellow-100 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:hover:bg-yellow-900/50",
-    eventHeaderBg: "bg-yellow-400 dark:bg-yellow-500",
-    eventHeaderText: "text-yellow-900 dark:text-white",
-    eventHeaderBg: "bg-yellow-500 dark:bg-yellow-600",
+      "bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/30 dark:hover:bg-slate-900/50",
+    eventHeaderBg: "bg-slate-600 dark:bg-slate-700",
     eventHeaderText: "text-white drop-shadow-md",
-    eventDayText: "text-yellow-800 dark:text-yellow-400",
+    eventDayText: "text-slate-800 dark:text-slate-400",
   },
   red: {
     card:
-      "bg-white border-gray-100 hover:border-red-300 hover:shadow-red-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-red-500/50",
-    dateBox: "border-red-500 border-b-4",
-    monthBg: "bg-red-500 group-hover:bg-red-600",
+      "bg-white border-gray-100 hover:border-gray-300 hover:shadow-gray-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-gray-500/50",
+    dateBox: "border-gray-600 border-b-4",
+    monthBg: "bg-gray-600 group-hover:bg-gray-700",
     monthText: "text-white",
-    dateBg: "bg-red-50",
-    dateText: "text-red-700 group-hover:text-red-800",
+    dateBg: "bg-gray-50",
+    dateText: "text-gray-700 group-hover:text-gray-800",
     title:
-      "text-gray-900 group-hover:text-red-600 dark:text-slate-100 dark:group-hover:text-red-400",
-    infoIcon: "text-red-500",
+      "text-gray-900 group-hover:text-gray-700 dark:text-slate-100 dark:group-hover:text-gray-400",
+    infoIcon: "text-gray-500",
     infoText: "text-gray-700 dark:text-slate-300",
     fileBtn:
-      "bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:border-red-700/50 dark:hover:bg-red-900/50",
-    eventBg: "bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50",
-    eventHeaderBg: "bg-red-500 dark:bg-red-600",
-    eventHeaderText: "text-red-900 dark:text-white",
+      "bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-700/50 dark:hover:bg-gray-900/50",
+    eventBg:
+      "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900/30 dark:hover:bg-gray-900/50",
+    eventHeaderBg: "bg-gray-600 dark:bg-gray-700",
     eventHeaderText: "text-white drop-shadow-md",
-    eventDayText: "text-red-800 dark:text-red-400",
+    eventDayText: "text-gray-800 dark:text-gray-400",
   },
   green: {
     card:
-      "bg-white border-gray-100 hover:border-green-300 hover:shadow-green-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-green-500/50",
-    dateBox: "border-green-500 border-b-4",
-    monthBg: "bg-green-500 group-hover:bg-green-600",
+      "bg-white border-gray-100 hover:border-zinc-300 hover:shadow-zinc-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-zinc-500/50",
+    dateBox: "border-zinc-600 border-b-4",
+    monthBg: "bg-zinc-600 group-hover:bg-zinc-700",
     monthText: "text-white",
-    dateBg: "bg-green-50",
-    dateText: "text-green-700 group-hover:text-green-800",
+    dateBg: "bg-zinc-50",
+    dateText: "text-zinc-700 group-hover:text-zinc-800",
     title:
-      "text-gray-900 group-hover:text-green-600 dark:text-slate-100 dark:group-hover:text-green-400",
-    infoIcon: "text-green-500",
+      "text-gray-900 group-hover:text-zinc-700 dark:text-slate-100 dark:group-hover:text-zinc-400",
+    infoIcon: "text-zinc-500",
     infoText: "text-gray-700 dark:text-slate-300",
     fileBtn:
-      "bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 dark:border-green-700/50 dark:hover:bg-green-900/50",
+      "bg-zinc-50 text-zinc-700 border border-zinc-200 hover:bg-zinc-100 dark:bg-zinc-900/30 dark:text-zinc-400 dark:border-zinc-700/50 dark:hover:bg-zinc-900/50",
     eventBg:
-      "bg-green-100 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-green-900/50",
-    eventHeaderBg: "bg-green-500 dark:bg-green-600",
-    eventHeaderText: "text-green-900 dark:text-white",
-    eventHeaderBg: "bg-green-600 dark:bg-green-700",
+      "bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900/30 dark:hover:bg-zinc-900/50",
+    eventHeaderBg: "bg-zinc-600 dark:bg-zinc-700",
     eventHeaderText: "text-white drop-shadow-md",
-    eventDayText: "text-green-800 dark:text-green-400",
+    eventDayText: "text-zinc-800 dark:text-zinc-400",
   },
   blue: {
     card:
-      "bg-white border-gray-100 hover:border-blue-300 hover:shadow-blue-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-blue-500/50",
-    dateBox: "border-blue-500 border-b-4",
-    monthBg: "bg-blue-500 group-hover:bg-blue-600",
+      "bg-white border-gray-100 hover:border-neutral-300 hover:shadow-neutral-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-neutral-500/50",
+    dateBox: "border-neutral-600 border-b-4",
+    monthBg: "bg-neutral-600 group-hover:bg-neutral-700",
     monthText: "text-white",
-    dateBg: "bg-blue-50",
-    dateText: "text-blue-700 group-hover:text-blue-800",
+    dateBg: "bg-neutral-50",
+    dateText: "text-neutral-700 group-hover:text-neutral-800",
     title:
-      "text-gray-900 group-hover:text-blue-600 dark:text-slate-100 dark:group-hover:text-blue-400",
-    infoIcon: "text-blue-500",
+      "text-gray-900 group-hover:text-neutral-700 dark:text-slate-100 dark:group-hover:text-neutral-400",
+    infoIcon: "text-neutral-500",
     infoText: "text-gray-700 dark:text-slate-300",
     fileBtn:
-      "bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-700/50 dark:hover:bg-blue-900/50",
+      "bg-neutral-50 text-neutral-700 border border-neutral-200 hover:bg-neutral-100 dark:bg-neutral-900/30 dark:text-neutral-400 dark:border-neutral-700/50 dark:hover:bg-neutral-900/50",
     eventBg:
-      "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50",
-    eventHeaderBg: "bg-blue-500 dark:bg-blue-600",
-    eventHeaderText: "text-blue-900 dark:text-white",
-    eventHeaderBg: "bg-blue-600 dark:bg-blue-700",
+      "bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900/30 dark:hover:bg-neutral-900/50",
+    eventHeaderBg: "bg-neutral-600 dark:bg-neutral-700",
     eventHeaderText: "text-white drop-shadow-md",
-    eventDayText: "text-blue-800 dark:text-blue-400",
+    eventDayText: "text-neutral-800 dark:text-neutral-400",
   },
 };
 
