@@ -8,6 +8,7 @@ const api = axios.create({
   headers: {
     'X-Requested-With': 'XMLHttpRequest',
     'Accept': 'application/json',
+    'ngrok-skip-browser-warning': 'any-value-atau-true'
   }
 });
 
