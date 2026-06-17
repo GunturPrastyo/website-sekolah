@@ -2940,9 +2940,21 @@ onMounted(() => {
   fetchSchoolVideo();
   fetchNewsAndAnnouncements();
   fetchAlumniLocations();
+  // Prioritaskan fetch data untuk Header dan Navbar terlebih dahulu
   fetchSchoolStats();
   fetchPpdbInfo();
   fetchSettings();
+
+  // Tunda fetch data seksi lain agar tidak memblokir koneksi di awal load
+  setTimeout(() => {
+    fetchPrograms();
+    fetchAgendas();
+    fetchGalleries();
+    fetchSchoolVideo();
+    fetchNewsAndAnnouncements();
+    fetchAlumniLocations();
+    fetchPpdbInfo();
+  }, 200);
 
   // Dengarkan sinyal pembaruan pengaturan
   window.addEventListener("settings-updated", fetchSettings);
