@@ -1350,8 +1350,11 @@
                         "
                         v-for="(agenda, index) in agendas"
                         :key="index"
-                        class="flex flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border hover:shadow-md transition-all group cursor-pointer shrink-0"
-                        :class="themeClasses[agenda.color].card"
+                        class="flex flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border hover:shadow-md transition-all duration-300 group cursor-pointer shrink-0 relative"
+                        :class="[
+                          themeClasses[agenda.color].card,
+                          highlightedAgendaId === agenda.id ? 'highlight-agenda' : '',
+                        ]"
                       >
                         <!-- Date Box (Calendar Style) -->
                         <div
@@ -1889,6 +1892,7 @@ import {
 
 const agendaListContainer = ref(null);
 const agendaElements = ref({});
+const highlightedAgendaId = ref(null);
 
 onBeforeUpdate(() => {
   // Kosongkan refs sebelum setiap pembaruan untuk menghindari kebocoran memori
@@ -1926,25 +1930,26 @@ const toggleFaq = (index) => {
 const scrollToAgenda = (eventToScrollTo) => {
   if (!agendaListContainer.value || !eventToScrollTo) return;
 
-  const targetElement = agendaElements.value[eventToScrollTo.id];
-  if (targetElement) {
-    // Gulir ke elemen dengan offset untuk padding
-    agendaListContainer.value.scrollTo({
-      top: targetElement.offsetTop - 24, // 24px untuk p-6
-      behavior: "smooth",
-    });
-
-    // Hapus sorotan yang ada
-    Object.values(agendaElements.value).forEach((el) => {
-      el.classList.remove("highlight-agenda");
-    });
-
-    // Tambahkan efek sorotan
-    targetElement.classList.add("highlight-agenda");
-    setTimeout(() => {
-      if (targetElement) targetElement.classList.remove("highlight-agenda");
-    }, 2500); // Hapus sorotan setelah 2.5 detik
+  // Jika user klik label yang sama, matikan sorotan (toggle off)
+  if (highlightedAgendaId.value === eventToScrollTo.id) {
+    highlightedAgendaId.value = null;
+    return;
   }
+
+  // Set sorotan ke agenda yang baru (termasuk memindahkannya jika klik label lain)
+  highlightedAgendaId.value = eventToScrollTo.id;
+
+  // Gunakan nextTick agar update class selesai sebelum menghitung posisi gulir
+  nextTick(() => {
+    const targetElement = agendaElements.value[eventToScrollTo.id];
+    if (targetElement) {
+      // Gulir otomatis menyesuaikan apakah target ada di bawah/atas
+      agendaListContainer.value.scrollTo({
+        top: targetElement.offsetTop - 24, // 24px untuk padding wadah
+        behavior: "smooth",
+      });
+    }
+  });
 };
 
 let scrollObserver = null;
@@ -3173,23 +3178,10 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-@keyframes highlight-agenda-animation {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
-  }
-  50% {
-    transform: scale(1.02);
-    box-shadow: 0 0 20px 8px rgba(59, 130, 246, 0.2);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-  }
-}
 .highlight-agenda {
-  animation: highlight-agenda-animation 2.5s ease-out;
-  border-color: #3b82f6 !important;
+  box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-4px) scale(1.01);
+  z-index: 10;
 }
 
 @keyframes float {
