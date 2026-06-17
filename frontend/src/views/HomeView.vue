@@ -1245,6 +1245,7 @@
                         'relative mx-0.5 my-0.5 rounded-md overflow-hidden cursor-pointer transition-colors flex flex-col justify-between',
                         themeClasses[item.event.color].eventBg,
                       ]"
+                      @click="scrollToAgenda(item.event)"
                       :title="item.event.title"
                     >
                       <div
@@ -1314,7 +1315,7 @@
                     Daftar Agenda
                   </h3>
                 </div>
-                <div class="relative flex-1 min-h-0">
+                <div class="relative flex-1 min-h-0" ref="agendaListContainer">
                   <div
                     class="absolute inset-0 p-5 md:p-6 flex flex-col gap-4 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-300 dark:hover:[&::-webkit-scrollbar-thumb]:bg-slate-500"
                   >
@@ -1342,6 +1343,11 @@
                     </template>
                     <template v-else-if="agendas.length > 0">
                       <div
+                        :ref="
+                          (el) => {
+                            if (el) agendaElements[agenda.id] = el;
+                          }
+                        "
                         v-for="(agenda, index) in agendas"
                         :key="index"
                         class="flex flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border hover:shadow-md transition-all group cursor-pointer shrink-0"
@@ -1840,7 +1846,15 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, reactive, nextTick } from "vue";
+import {
+  ref,
+  computed,
+  onMounted,
+  onBeforeUnmount,
+  reactive,
+  nextTick,
+  onBeforeUpdate,
+} from "vue";
 import api from "@/api/index.js";
 import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.css";
@@ -1873,6 +1887,14 @@ import {
   PhNewspaper,
 } from "@phosphor-icons/vue";
 
+const agendaListContainer = ref(null);
+const agendaElements = ref({});
+
+onBeforeUpdate(() => {
+  // Kosongkan refs sebelum setiap pembaruan untuk menghindari kebocoran memori
+  agendaElements.value = {};
+});
+
 const displayedTitle = ref("");
 const fullTitle = ref(localStorage.getItem("app_namaSekolah") || "");
 const showSubtitle = ref(false);
@@ -1899,6 +1921,30 @@ const formatStatValue = (stat) => {
 const activeFaq = ref(null);
 const toggleFaq = (index) => {
   activeFaq.value = activeFaq.value === index ? null : index;
+};
+
+const scrollToAgenda = (eventToScrollTo) => {
+  if (!agendaListContainer.value || !eventToScrollTo) return;
+
+  const targetElement = agendaElements.value[eventToScrollTo.id];
+  if (targetElement) {
+    // Gulir ke elemen dengan offset untuk padding
+    agendaListContainer.value.scrollTo({
+      top: targetElement.offsetTop - 24, // 24px untuk p-6
+      behavior: "smooth",
+    });
+
+    // Hapus sorotan yang ada
+    Object.values(agendaElements.value).forEach((el) => {
+      el.classList.remove("highlight-agenda");
+    });
+
+    // Tambahkan efek sorotan
+    targetElement.classList.add("highlight-agenda");
+    setTimeout(() => {
+      if (targetElement) targetElement.classList.remove("highlight-agenda");
+    }, 2500); // Hapus sorotan setelah 2.5 detik
+  }
 };
 
 let scrollObserver = null;
@@ -3127,6 +3173,25 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+@keyframes highlight-agenda-animation {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px 8px rgba(59, 130, 246, 0.2);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+.highlight-agenda {
+  animation: highlight-agenda-animation 2.5s ease-out;
+  border-color: #3b82f6 !important;
+}
+
 @keyframes float {
   0%,
   100% {
