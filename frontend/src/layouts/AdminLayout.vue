@@ -1,14 +1,25 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import AdminSidebar from "@/components/admin/AdminSidebar.vue"; // Corrected path
 import AdminNavbar from "@/components/admin/AdminNavbar.vue"; // Corrected path
 
-// Set default false agar di mobile mulai dalam keadaan tertutup
-const isSidebarOpen = ref(false);
+// Set default true untuk desktop, akan disesuaikan untuk mobile saat mounted
+const isSidebarOpen = ref(true);
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
 };
+
+// Fungsi untuk memeriksa ukuran layar dan mengatur status sidebar saat pertama kali dimuat
+const checkScreenSize = () => {
+  if (typeof window !== "undefined" && window.innerWidth < 1024) {
+    isSidebarOpen.value = false;
+  }
+};
+
+onMounted(() => {
+  checkScreenSize(); // Cek saat komponen pertama kali dimuat
+});
 </script>
 
 <template>
@@ -18,7 +29,10 @@ const toggleSidebar = () => {
 
     <!-- Konten utama -->
     <div
-      class="flex-1 flex flex-col w-full overflow-hidden transition-all duration-300 ease-in-out lg:ml-64"
+      :class="[
+        'flex-1 flex flex-col w-full overflow-hidden transition-all duration-300 ease-in-out',
+        { 'lg:ml-64': isSidebarOpen },
+      ]"
     >
       <AdminNavbar @toggle-sidebar="toggleSidebar" />
 
