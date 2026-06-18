@@ -143,7 +143,7 @@ const checkActiveMenu = () => {
 };
 
 // Fetch nama dan logo sekolah dari backend
-const schoolName = ref("Admin Panel");
+const schoolName = ref("");
 const schoolLogo = ref(null);
 
 const fetchSettings = async () => {
@@ -225,12 +225,6 @@ const handleLogout = async () => {
         alt="Logo Sekolah"
         class="w-10 h-10 object-contain mr-3 shrink-0"
       />
-      <div
-        v-else
-        class="w-10 h-10 rounded-full bg-blue-50 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 mr-3 shrink-0"
-      >
-        <PhBuildings :size="20" />
-      </div>
       <h1
         class="text-base font-bold text-gray-800 dark:text-white line-clamp-2 leading-tight"
       >
