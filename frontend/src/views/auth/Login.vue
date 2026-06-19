@@ -74,9 +74,20 @@ const handleLogin = async () => {
     localStorage.setItem("isLoggedIn", "true");
 
     // 4. Redirect ke dashboard admin
-    router.push("/admin/dashboard/");
+    router.push("/admin/dashboard");
   } catch (error) {
-    // ... bagian penanganan catch error kamu tetap sama seperti sebelumnya
+    // Tangkap validasi error dari Laravel (kode 422)
+    if (error.response && error.response.status === 422) {
+      errorMessage.value = error.response.data.message || "Email atau password salah.";
+    } else if (error.response && error.response.status === 419) {
+      errorMessage.value =
+        "Sesi kadaluarsa (CSRF token mismatch). Silakan refresh halaman dan coba lagi.";
+    } else {
+      console.error("Detail Error Login:", error.response || error);
+      errorMessage.value =
+        error.response?.data?.message ||
+        "Terjadi kesalahan pada server. Silakan cek console browser (F12) untuk detailnya.";
+    }
   } finally {
     isLoading.value = false;
   }
