@@ -45,43 +45,41 @@ const fetchSettings = async () => {
 };
 
 const handleGoogleLogin = () => {
-  // Arahkan browser langsung ke endpoint backend Laravel Socialite.
-  // Anda bisa mengganti URL di bawah sesuai dengan domain production/development Anda.
   const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
   window.location.href = `${backendUrl}/api/auth/google/redirect`;
 };
 
+// ==========================================
+// ROMBAK TOTAL FUNGSI LOGIN (STATELESS TOKEN)
+// ==========================================
 const handleLogin = async () => {
   isLoading.value = true;
   errorMessage.value = "";
 
   try {
-    // 1. Request CSRF Cookie dari Laravel Sanctum
-    // Ketuk pintu sanctum tanpa '/api' di depannya karena rute aslinya adalah domain/sanctum/csrf-cookie
-    await api.get("/sanctum/csrf-cookie");
-
-    // 2. Request Login ke endpoint yang sudah kita pindahkan ke routes/api.php
-    // Karena dipindah ke api.php, rutenya otomatis punya prefix /api/login
-    await api.post("/api/login", {
+    // 1. Langsung request POST login membawa email & password (TANPA CSRF COOKIE)
+    const response = await api.post("/api/login", {
       email: form.value.email,
       password: form.value.password,
       remember: form.value.remember,
     });
 
-    // 3. Ambil data user setelah sukses login
-    const { data } = await api.get("/api/user");
-    localStorage.setItem("user_role", data.role);
-    localStorage.setItem("isLoggedIn", "true");
+    // 2. Pastikan backend mengembalikan token sukses
+    if (response.data && response.data.token) {
+      // 3. Simpan token string dan metadata user asli dari database ke localStorage
+      localStorage.setItem("auth_token", response.data.token);
+      localStorage.setItem("user_role", response.data.role); // Nilai 'super_admin' atau 'admin' dari DB
+      localStorage.setItem("isLoggedIn", "true");
 
-    // 4. Redirect ke dashboard admin
-    router.push("/admin/dashboard");
+      // 4. Sukses jabat tangan token, langsung alihkan ke Dashboard Admin
+      router.push("/admin/dashboard");
+    } else {
+      errorMessage.value = "Gagal mendapatkan token autentikasi dari server.";
+    }
   } catch (error) {
-    // Tangkap validasi error dari Laravel (kode 422)
+    // Tangkap validasi error dari Laravel (kode 422 jika email/password salah)
     if (error.response && error.response.status === 422) {
       errorMessage.value = error.response.data.message || "Email atau password salah.";
-    } else if (error.response && error.response.status === 419) {
-      errorMessage.value =
-        "Sesi kadaluarsa (CSRF token mismatch). Silakan refresh halaman dan coba lagi.";
     } else {
       console.error("Detail Error Login:", error.response || error);
       errorMessage.value =
@@ -100,22 +98,18 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen flex bg-white dark:bg-slate-900">
-    <!-- Bagian Kiri: Gambar & Branding (Hanya tampil di layar besar) -->
     <div
       class="hidden lg:flex lg:w-1/2 relative bg-blue-900 overflow-hidden items-center justify-center"
     >
-      <!-- Background Image with Overlay -->
       <img
         :src="settings.loginBackground"
         alt="School Background"
         class="absolute inset-0 w-full h-full object-cover opacity-30 transition-all duration-1000"
       />
-      <!-- Gradient Overlay -->
       <div
         class="absolute inset-0 bg-gradient-to-br from-blue-900/90 to-blue-600/90 mix-blend-multiply"
       ></div>
 
-      <!-- Content Kiri -->
       <div class="relative z-10 p-12 text-white max-w-lg">
         <h1
           class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight"
@@ -136,7 +130,6 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- Ornamen Blobs Animasi -->
       <div
         class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-50 animate-blob"
       ></div>
@@ -145,12 +138,10 @@ onMounted(() => {
       ></div>
     </div>
 
-    <!-- Bagian Kanan: Form Login -->
     <div
       class="w-full lg:w-1/2 flex items-center justify-center px-6 sm:px-12 lg:px-20 bg-white dark:bg-slate-900 relative"
     >
       <div class="max-w-md w-full space-y-10 relative z-10 py-12">
-        <!-- Header Form -->
         <div class="text-center">
           <div
             class="lg:hidden w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/30 transform rotate-3"
@@ -169,10 +160,8 @@ onMounted(() => {
           </p>
         </div>
 
-        <!-- Form Login -->
         <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
           <div class="space-y-5">
-            <!-- Email Field -->
             <div>
               <label
                 for="email"
@@ -198,7 +187,6 @@ onMounted(() => {
               </div>
             </div>
 
-            <!-- Password Field -->
             <div>
               <label
                 for="password"
@@ -225,7 +213,6 @@ onMounted(() => {
             </div>
           </div>
 
-          <!-- Pilihan Lanjut -->
           <div class="flex items-center">
             <input
               id="remember-me"
@@ -242,7 +229,6 @@ onMounted(() => {
             </label>
           </div>
 
-          <!-- Pesan Error -->
           <div
             v-if="errorMessage"
             class="p-3 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-100 dark:border-red-800"
@@ -252,7 +238,6 @@ onMounted(() => {
             </p>
           </div>
 
-          <!-- Tombol Submit -->
           <div>
             <button
               type="submit"
@@ -269,7 +254,6 @@ onMounted(() => {
             </button>
           </div>
 
-          <!-- Garis Pemisah (Divider) -->
           <div class="mt-6 flex items-center justify-center">
             <div class="w-full border-t border-gray-200 dark:border-slate-700"></div>
             <span
@@ -280,7 +264,6 @@ onMounted(() => {
             <div class="w-full border-t border-gray-200 dark:border-slate-700"></div>
           </div>
 
-          <!-- Tombol Login Google -->
           <div>
             <button
               type="button"
@@ -298,7 +281,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Keyframes untuk efek dekorasi latar belakang animasi (blobs) */
 @keyframes blob {
   0% {
     transform: translate(0px, 0px) scale(1);
@@ -313,11 +295,9 @@ onMounted(() => {
     transform: translate(0px, 0px) scale(1);
   }
 }
-
 .animate-blob {
   animation: blob 7s infinite;
 }
-
 .animation-delay-2000 {
   animation-delay: 2s;
 }
