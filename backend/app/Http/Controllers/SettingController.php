@@ -20,11 +20,51 @@ class SettingController extends Controller
 
     public function index()
     {
-        // Mengambil semua data pengaturan sebagai pasangan key => value
+        // Ambil data dari cache
         $settings = Cache::rememberForever('global_settings', function () {
             return Setting::pluck('value', 'key')->all();
         });
-        
+
+        // List key yang bertindak sebagai file gambar/media sesuai array kodinganmu
+        $fileKeys = [
+            'logo',
+            'favicon',
+            'headerBeranda',
+            'headerSejarah',
+            'headerVisiMisi',
+            'headerFasilitas',
+            'headerGuruStaf',
+            'headerEkskul',
+            'headerKurikulum',
+            'headerAlumni',
+            'headerProgramJurusan',
+            'headerPrestasi',
+            'headerPendaftaran',
+            'headerBerita',
+            'headerGaleri',
+            'headerArtikel',
+            'headerUnduhan',
+            'benefitFasilitasImage',
+            'benefitGuruImage',
+            'benefitPrestasiImage',
+            'programCoverImage',
+            'loginBackground',
+            'ppdbBackgroundImage',
+            'galleryBackgroundImage'
+        ];
+
+        // Bersihkan teks localhost secara dinamis mengikuti APP_URL .env saat ini
+        foreach ($settings as $key => $value) {
+            if (in_array($key, $fileKeys) && $value) {
+                // Cabut paksa domain localhost jika ada yang tersisa
+                $cleanPath = str_replace('http://localhost:8000/storage/', '', $value);
+                $cleanPath = str_replace('storage/', '', $cleanPath);
+
+                // Bungkus ulang dengan domain server aktif secara dinamis
+                $settings[$key] = url('storage/' . $cleanPath);
+            }
+        }
+
         return response()->json([
             'success' => true,
             'data' => $settings
@@ -72,28 +112,47 @@ class SettingController extends Controller
     public function update(Request $request)
     {
         $data = $request->all();
-        
+
         // List key yang berpotensi menyimpan media (gambar/video) base64
         $fileKeys = [
-            'logo', 'favicon', 'headerBeranda', 'headerSejarah', 'headerVisiMisi', 
-            'headerFasilitas', 'headerGuruStaf', 'headerEkskul', 'headerKurikulum',
-            'headerAlumni', 'headerProgramJurusan', 'headerPrestasi', 'headerPendaftaran',
-            'headerBerita', 'headerGaleri', 'headerArtikel', 'headerUnduhan',
-            'benefitFasilitasImage', 'benefitGuruImage', 'benefitPrestasiImage', 'programCoverImage', 'loginBackground', 'ppdbBackgroundImage', 'galleryBackgroundImage'
+            'logo',
+            'favicon',
+            'headerBeranda',
+            'headerSejarah',
+            'headerVisiMisi',
+            'headerFasilitas',
+            'headerGuruStaf',
+            'headerEkskul',
+            'headerKurikulum',
+            'headerAlumni',
+            'headerProgramJurusan',
+            'headerPrestasi',
+            'headerPendaftaran',
+            'headerBerita',
+            'headerGaleri',
+            'headerArtikel',
+            'headerUnduhan',
+            'benefitFasilitasImage',
+            'benefitGuruImage',
+            'benefitPrestasiImage',
+            'programCoverImage',
+            'loginBackground',
+            'ppdbBackgroundImage',
+            'galleryBackgroundImage'
         ];
 
         foreach ($data as $key => $value) {
             // Jika value adalah base64 string, maka konversi dan simpan ke Storage
             if (in_array($key, $fileKeys) && $value) {
                 if (preg_match('/^data:(image|video)\/(\w+);base64,/', $value)) {
-                    
+
                     // Ambil URL/Path file lama jika ada
                     $oldSetting = Setting::where('key', $key)->first();
                     $oldPath = $oldSetting ? $oldSetting->value : null;
 
                     // Panggil trait, old file otomatis terhapus, resize + webp otomatis berjalan
                     $relativePath = $this->processAndSaveImage($value, 'settings', $oldPath);
-                    
+
                     // Format kembali ke URL utuh seperti format aslinya
                     $value = url('storage/' . $relativePath);
                 }
