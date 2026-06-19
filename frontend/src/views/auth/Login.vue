@@ -57,30 +57,42 @@ const handleLogin = async () => {
 
   try {
     // 1. Request CSRF Cookie dari Laravel Sanctum
-    // Ketuk pintu sanctum tanpa '/api' di depannya karena rute aslinya adalah domain/sanctum/csrf-cookie
     await api.get("/sanctum/csrf-cookie");
 
-    // 2. Request Login ke endpoint yang sudah kita pindahkan ke routes/api.php
-    // Karena dipindah ke api.php, rutenya otomatis punya prefix /api/login
+    // 2. Request Login ke endpoint Breeze
     await api.post("/api/login", {
       email: form.value.email,
       password: form.value.password,
       remember: form.value.remember,
     });
 
-    // 3. Ambil data user setelah sukses login
+    // 3. Fetch data user untuk mengecek role
     const { data } = await api.get("/api/user");
-    localStorage.setItem("user_role", data.role);
+    localStorage.setItem("user_role", data.role); // Simpan role untuk validasi route
+
+    // Simpan penanda bahwa pengguna sudah terautentikasi
     localStorage.setItem("isLoggedIn", "true");
 
-    // 4. Redirect ke dashboard admin
+    // 4. Redirect ke dashboard admin (sementara default masuk ke superadmin view)
     router.push("/admin/dashboard");
   } catch (error) {
-    // ... bagian penanganan catch error kamu tetap sama seperti sebelumnya
+    // Tangkap validasi error dari Laravel (kode 422)
+    if (error.response && error.response.status === 422) {
+      errorMessage.value = error.response.data.message || "Email atau password salah.";
+    } else if (error.response && error.response.status === 419) {
+      errorMessage.value =
+        "Sesi kadaluarsa (CSRF token mismatch). Silakan refresh halaman dan coba lagi.";
+    } else {
+      console.error("Detail Error Login:", error.response || error);
+      errorMessage.value =
+        error.response?.data?.message ||
+        "Terjadi kesalahan pada server. Silakan cek console browser (F12) untuk detailnya.";
+    }
   } finally {
     isLoading.value = false;
   }
 };
+
 onMounted(() => {
   fetchSettings();
 });
@@ -291,15 +303,12 @@ onMounted(() => {
   0% {
     transform: translate(0px, 0px) scale(1);
   }
-
   33% {
     transform: translate(30px, -50px) scale(1.1);
   }
-
   66% {
     transform: translate(-20px, 20px) scale(0.9);
   }
-
   100% {
     transform: translate(0px, 0px) scale(1);
   }
