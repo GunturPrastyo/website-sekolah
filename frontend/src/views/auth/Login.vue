@@ -69,8 +69,8 @@ const handleLogin = async () => {
     });
 
     // 3. Ambil data user setelah sukses login
-    // const { data } = await api.get("/api/user");
-    // localStorage.setItem("user_role", data.role);
+    const { data } = await api.get("/api/user");
+    localStorage.setItem("user_role", data.role);
     localStorage.setItem("isLoggedIn", "true");
 
     // 4. Redirect ke dashboard admin
