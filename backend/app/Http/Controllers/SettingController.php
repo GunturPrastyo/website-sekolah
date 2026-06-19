@@ -27,40 +27,28 @@ class SettingController extends Controller
 
         // List key yang bertindak sebagai file gambar/media sesuai array kodinganmu
         $fileKeys = [
-            'logo',
-            'favicon',
-            'headerBeranda',
-            'headerSejarah',
-            'headerVisiMisi',
-            'headerFasilitas',
-            'headerGuruStaf',
-            'headerEkskul',
-            'headerKurikulum',
-            'headerAlumni',
-            'headerProgramJurusan',
-            'headerPrestasi',
-            'headerPendaftaran',
-            'headerBerita',
-            'headerGaleri',
-            'headerArtikel',
-            'headerUnduhan',
-            'benefitFasilitasImage',
-            'benefitGuruImage',
-            'benefitPrestasiImage',
-            'programCoverImage',
-            'loginBackground',
-            'ppdbBackgroundImage',
-            'galleryBackgroundImage'
+            'logo', 'favicon', 'headerBeranda', 'headerSejarah', 'headerVisiMisi',
+            'headerFasilitas', 'headerGuruStaf', 'headerEkskul', 'headerKurikulum',
+            'headerAlumni', 'headerProgramJurusan', 'headerPrestasi', 'headerPendaftaran',
+            'headerBerita', 'headerGaleri', 'headerArtikel', 'headerUnduhan',
+            'benefitFasilitasImage', 'benefitGuruImage', 'benefitPrestasiImage',
+            'programCoverImage', 'loginBackground', 'ppdbBackgroundImage', 'galleryBackgroundImage'
         ];
 
-        // Bersihkan teks localhost secara dinamis mengikuti APP_URL .env saat ini
+        // Bersihkan teks domain lama/localhost secara dinamis mengikuti server aktif
         foreach ($settings as $key => $value) {
             if (in_array($key, $fileKeys) && $value) {
-                // Cabut paksa domain localhost jika ada yang tersisa
-                $cleanPath = str_replace('http://localhost:8000/storage/', '', $value);
-                $cleanPath = str_replace('storage/', '', $cleanPath);
+                
+                // 👈 JAGA-JAGA: Jika di DB terlanjur tersimpan URL utuh (http/https), ekstrak nama file/path aslinya saja
+                if (str_starts_with($value, 'http')) {
+                    // Ambil path setelah kata '/storage/'
+                    $parts = explode('/storage/', $value);
+                    $cleanPath = end($parts);
+                } else {
+                    $cleanPath = str_replace('storage/', '', $value);
+                }
 
-                // Bungkus ulang dengan domain server aktif secara dinamis
+                // Bungkus murni menggunakan domain server yang aktif saat ini secara dinamis
                 $settings[$key] = url('storage/' . $cleanPath);
             }
         }
@@ -73,7 +61,6 @@ class SettingController extends Controller
 
     public function visitorStats()
     {
-        // Cache statistik pengunjung selama 5 menit (300 detik) untuk mengurangi beban database yang berat karena COUNT()
         $stats = Cache::remember('visitor_stats_cache', 300, function () {
             return [
                 'hari' => Visitor::whereDate('visited_date', Carbon::today())->count(),
@@ -91,8 +78,7 @@ class SettingController extends Controller
 
     public function publicStats()
     {
-        // Ambil data secara dinamis dari masing-masing tabel terkait
-        $stats = Cache::remember('public_landing_stats', 3600, function () { // Cache selama 1 jam
+        $stats = Cache::remember('public_landing_stats', 3600, function () {
             $schoolProfile = SchoolProfile::first();
             return [
                 'akreditasi' => $schoolProfile ? $schoolProfile->accreditation : '-',
@@ -113,61 +99,50 @@ class SettingController extends Controller
     {
         $data = $request->all();
 
-        // List key yang berpotensi menyimpan media (gambar/video) base64
         $fileKeys = [
-            'logo',
-            'favicon',
-            'headerBeranda',
-            'headerSejarah',
-            'headerVisiMisi',
-            'headerFasilitas',
-            'headerGuruStaf',
-            'headerEkskul',
-            'headerKurikulum',
-            'headerAlumni',
-            'headerProgramJurusan',
-            'headerPrestasi',
-            'headerPendaftaran',
-            'headerBerita',
-            'headerGaleri',
-            'headerArtikel',
-            'headerUnduhan',
-            'benefitFasilitasImage',
-            'benefitGuruImage',
-            'benefitPrestasiImage',
-            'programCoverImage',
-            'loginBackground',
-            'ppdbBackgroundImage',
-            'galleryBackgroundImage'
+            'logo', 'favicon', 'headerBeranda', 'headerSejarah', 'headerVisiMisi',
+            'headerFasilitas', 'headerGuruStaf', 'headerEkskul', 'headerKurikulum',
+            'headerAlumni', 'headerProgramJurusan', 'headerPrestasi', 'headerPendaftaran',
+            'headerBerita', 'headerGaleri', 'headerArtikel', 'headerUnduhan',
+            'benefitFasilitasImage', 'benefitGuruImage', 'benefitPrestasiImage',
+            'programCoverImage', 'loginBackground', 'ppdbBackgroundImage', 'galleryBackgroundImage'
         ];
 
         foreach ($data as $key => $value) {
-            // Jika value adalah base64 string, maka konversi dan simpan ke Storage
             if (in_array($key, $fileKeys) && $value) {
                 if (preg_match('/^data:(image|video)\/(\w+);base64,/', $value)) {
 
-                    // Ambil URL/Path file lama jika ada
                     $oldSetting = Setting::where('key', $key)->first();
                     $oldPath = $oldSetting ? $oldSetting->value : null;
 
-                    // Panggil trait, old file otomatis terhapus, resize + webp otomatis berjalan
+                    // Bersihkan oldPath dari balutan URL jika ada sebelum dihapus lewat trait
+                    if ($oldPath && str_starts_with($oldPath, 'http')) {
+                        $parts = explode('/storage/', $oldPath);
+                        $oldPath = end($parts);
+                    }
+
+                    // Panggil trait untuk menyimpan file fisik baru
                     $relativePath = $this->processAndSaveImage($value, 'settings', $oldPath);
 
-                    // Format kembali ke URL utuh seperti format aslinya
-                    $value = url('storage/' . $relativePath);
+                    // 👈 BEST PRACTICE: Di database cukup simpan path relatifnya saja (misal: settings/foto.webp)
+                    $value = $relativePath;
+                } elseif (str_starts_with($value, 'http')) {
+                    // Jika data tidak diubah (masih URL lama dari frontend), bersihkan domainnya sebelum masuk DB kembali
+                    $parts = explode('/storage/', $value);
+                    $value = end($parts);
                 }
             }
 
-            // Simpan atau update berdasarkan "key"
             Setting::updateOrCreate(
                 ['key' => $key],
                 ['value' => $value]
             );
         }
 
-        // Hapus cache pengaturan ketika ada perubahan
+        // Wajib hapus cache pengaturan agar perubahannya langsung segar kembali
         Cache::forget('global_settings');
 
+        // Panggil method index() internal agar respons data yang dikembalikan langsung berbalut URL bersih
         return response()->json([
             'success' => true,
             'message' => 'Pengaturan berhasil disimpan.',
