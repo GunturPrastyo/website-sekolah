@@ -34,7 +34,6 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        $this->call(VisionMissionSeeder::class);
-        $this->call(SchoolProfileSeeder::class);
+       
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController; // 👈 DIPASTIKAN SUDAH DI-IMPORT
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\VisionMissionController;
 use App\Http\Controllers\SchoolProfileController;
@@ -29,6 +30,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+// API Login (Akses Publik - Menghasilkan Token Stateless)
+Route::post('/login', [AuthenticatedSessionController::class, 'store']); // 👈 Ditambahkan titik koma (;) yang kurang
 
 // API Info PPDB (Akses Publik untuk halaman pendaftaran)
 Route::get('/ppdb-info', [PpdbInfoController::class, 'index']);
@@ -97,9 +101,20 @@ Route::get('/public-map-locations', [MapLocationController::class, 'index']);
 // API Data Direktori Alumni (Akses Publik)
 Route::get('/public-alumnis', [AlumniController::class, 'publicIndex']);
 
+
+// ======================================================================
+// RUTE PRIVAT: Wajib membawa Header Authorization Bearer Token
+// ======================================================================
 Route::middleware(['auth:sanctum'])->group(function () {
+    
+    // Mengambil data user aktif secara aman lewat validasi Token Bearer
     Route::get('/user', function (Request $request) {
-        return $request->user();
+        return response()->json([
+            'id'    => $request->user()->id,
+            'name'  => $request->user()->name,
+            'email' => $request->user()->email,
+            'role'  => $request->user()->role, // 👈 Memastikan frontend menerima role asli dari token lokal
+        ]);
     });
 
     // API Dashboard
@@ -128,95 +143,98 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // API Video Profil Sekolah (Akses baca untuk admin biasa dan super_admin)
     Route::get('/school-video', [SchoolVideoController::class, 'show']);
 
-  // Group untuk Rute yang HANYA BOLEH diakses oleh Super Admin
-  Route::middleware([CheckRole::class . ':super_admin'])->group(function () {
-    // API Profil Sekolah
-    // Rute untuk update profil. Dikirim sebagai POST dari frontend dengan _method 'PUT' untuk menangani upload file.
-    Route::put('/profil-sekolah', [SchoolProfileController::class, 'update']);
+    // API Logout Token
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
 
-    // API Sejarah (Lini Masa Timeline)
-    Route::post('/sejarah', [TimelineController::class, 'store']);
-    Route::put('/sejarah/{timeline}', [TimelineController::class, 'update']);
-    Route::delete('/sejarah/{timeline}', [TimelineController::class, 'destroy']);
+    // ------------------------------------------------------------------
+    // SUB-GROUP: Khusus Hak Akses Super Admin (RBAC CheckRole Middleware)
+    // ------------------------------------------------------------------
+    Route::middleware([CheckRole::class . ':super_admin'])->group(function () {
+        // API Profil Sekolah
+        Route::put('/profil-sekolah', [SchoolProfileController::class, 'update']);
 
-    // API khusus untuk memperbarui urutan timeline lewat drag & drop
-    Route::post('/sejarah/reorder', [TimelineController::class, 'reorder']);
+        // API Sejarah (Lini Masa Timeline)
+        Route::post('/sejarah', [TimelineController::class, 'store']);
+        Route::put('/sejarah/{timeline}', [TimelineController::class, 'update']);
+        Route::delete('/sejarah/{timeline}', [TimelineController::class, 'destroy']);
+        Route::post('/sejarah/reorder', [TimelineController::class, 'reorder']);
 
-    // API Visi & Misi (Hanya Update yang butuh autentikasi Super Admin)
-    Route::post('/vision-mission', [VisionMissionController::class, 'update']);
+        // API Visi & Misi
+        Route::post('/vision-mission', [VisionMissionController::class, 'update']);
 
-    // API Fasilitas
-    Route::post('/fasilitas', [FacilityController::class, 'store']);
-    Route::put('/fasilitas/{facility}', [FacilityController::class, 'update']);
-    Route::delete('/fasilitas/{facility}', [FacilityController::class, 'destroy']);
+        // API Fasilitas
+        Route::post('/fasilitas', [FacilityController::class, 'store']);
+        Route::put('/fasilitas/{facility}', [FacilityController::class, 'update']);
+        Route::delete('/fasilitas/{facility}', [FacilityController::class, 'destroy']);
 
-    // API Data Siswa
-    Route::post('/students/bulk-delete', [StudentController::class, 'bulkDelete']);
-    Route::post('/students/bulk-update', [StudentController::class, 'bulkUpdate']);
-    Route::post('/students/import', [StudentController::class, 'import']);
-    Route::apiResource('students', StudentController::class);
+        // API Data Siswa
+        Route::post('/students/bulk-delete', [StudentController::class, 'bulkDelete']);
+        Route::post('/students/bulk-update', [StudentController::class, 'bulkUpdate']);
+        Route::post('/students/import', [StudentController::class, 'import']);
+        Route::apiResource('students', StudentController::class);
 
-    // API Data Guru & Staf
-    Route::apiResource('staff', StaffController::class);
+        // API Data Guru & Staf
+        Route::apiResource('staff', StaffController::class);
 
-    // API Data Kelas
-    Route::apiResource('school-classes', SchoolClassController::class);
+        // API Data Kelas
+        Route::apiResource('school-classes', SchoolClassController::class);
 
-    // API Data Alumni
-    Route::get('/alumnis/unassigned-students', [AlumniController::class, 'unassignedStudents']);
-    Route::post('/alumnis/bulk-update', [AlumniController::class, 'bulkUpdate']);
-    Route::post('/alumnis/bulk-delete', [AlumniController::class, 'bulkDelete']);
-    Route::apiResource('/alumnis', AlumniController::class);
+        // API Data Alumni
+        Route::get('/alumnis/unassigned-students', [AlumniController::class, 'unassignedStudents']);
+        Route::post('/alumnis/bulk-update', [AlumniController::class, 'bulkUpdate']);
+        Route::post('/alumnis/bulk-delete', [AlumniController::class, 'bulkDelete']);
+        Route::apiResource('/alumnis', AlumniController::class);
 
-    // API Data Persebaran Peta Alumni
-    Route::apiResource('/map-locations', MapLocationController::class);
+        // API Data Persebaran Peta Alumni
+        Route::apiResource('/map-locations', MapLocationController::class);
 
-    // API Video Profil Sekolah
-    Route::post('/school-video', [SchoolVideoController::class, 'update']);
-    Route::delete('/school-video', [SchoolVideoController::class, 'destroy']);
+        // API Video Profil Sekolah
+        Route::post('/school-video', [SchoolVideoController::class, 'update']);
+        Route::delete('/school-video', [SchoolVideoController::class, 'destroy']);
 
-    // API Unduhan
-    Route::apiResource('downloads', DownloadController::class);
+        // API Unduhan
+        Route::apiResource('downloads', DownloadController::class);
 
-    // API Program Jurusan
-    Route::apiResource('programs', ProgramController::class);
+        // API Program Jurusan
+        Route::apiResource('programs', ProgramController::class);
 
-    // API Kurikulum (Mata Pelajaran)
-    Route::apiResource('curriculum-subjects', CurriculumSubjectController::class);
+        // API Kurikulum (Mata Pelajaran)
+        Route::apiResource('curriculum-subjects', CurriculumSubjectController::class);
 
-    // API Profil Pelajar Pancasila
-    Route::get('/pancasila-profile', [PancasilaProfileController::class, 'show']);
-    Route::post('/pancasila-profile', [PancasilaProfileController::class, 'update']);
+        // API Profil Pelajar Pancasila
+        // Sesuai dengan config Kurikulum Merdeka framework (ATP), admin memegang kontrol penuh update data
+        Route::get('/pancasila-profile', [PancasilaProfileController::class, 'show']);
+        Route::post('/pancasila-profile', [PancasilaProfileController::class, 'update']);
 
-    // API Jadwal Pelajaran
-    Route::apiResource('lesson-schedules', LessonScheduleController::class);
+        // API Jadwal Pelajaran
+        Route::apiResource('lesson-schedules', LessonScheduleController::class);
 
-    // API Ekstrakurikuler
-    Route::apiResource('extracurriculars', ExtracurricularController::class);
+        // API Ekstrakurikuler
+        Route::apiResource('extracurriculars', ExtracurricularController::class);
 
-    // API Prestasi
-    Route::apiResource('achievements', AchievementController::class);
+        // API Prestasi
+        Route::apiResource('achievements', AchievementController::class);
 
-    // API Agenda
-    Route::apiResource('agendas', AgendaController::class);
+        // API Agenda
+        Route::apiResource('agendas', AgendaController::class);
 
-    // API Manajemen Info PPDB (Akses Admin)
-    Route::put('/ppdb-info', [PpdbInfoController::class, 'update']);
-    Route::post('/ppdb-info/brosur', [PpdbInfoController::class, 'uploadBrosur']);
-    Route::delete('/ppdb-info/brosur', [PpdbInfoController::class, 'deleteBrosur']);
+        // API Manajemen Info PPDB (Akses Admin)
+        Route::put('/ppdb-info', [PpdbInfoController::class, 'update']);
+        Route::post('/ppdb-info/brosur', [PpdbInfoController::class, 'uploadBrosur']);
+        Route::delete('/ppdb-info/brosur', [PpdbInfoController::class, 'deleteBrosur']);
 
-    // API Pengaturan Umum (Akses Admin untuk menyimpan)
-    Route::post('/settings', [SettingController::class, 'update']);
+        // API Pengaturan Umum (Akses Admin untuk menyimpan)
+        Route::post('/settings', [SettingController::class, 'update']);
 
-    // API Manajemen Pengguna
-    Route::apiResource('users', UserController::class);
+        // API Manajemen Pengguna
+        Route::apiResource('users', UserController::class);
 
-    // API Validasi Konten (Berita)
-    Route::get('/validasi-konten/berita', [NewsController::class, 'pendingNews']);
-    Route::put('/validasi-konten/berita/{news}/status', [NewsController::class, 'updateStatus']);
+        // API Validasi Konten (Berita)
+        Route::get('/validasi-konten/berita', [NewsController::class, 'pendingNews']);
+        Route::put('/validasi-konten/berita/{news}/status', [NewsController::class, 'updateStatus']);
 
-    // API Validasi Konten (Galeri)
-    Route::get('/validasi-konten/galeri', [GalleryController::class, 'pendingGalleries']);
-    Route::put('/validasi-konten/galeri/{gallery}/status', [GalleryController::class, 'updateStatus']);
-  });
+        // API Validasi Konten (Galeri)
+        Route::get('/validasi-konten/galeri', [GalleryController::class, 'pendingGalleries']);
+        Route::put('/validasi-konten/galeri/{gallery}/status', [GalleryController::class, 'updateStatus']);
+    });
 });

@@ -23,9 +23,8 @@ const isLoading = ref(false);
 const errorMessage = ref("");
 
 const settings = ref({
-  loginBackground:
-    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1600&auto=format&fit=crop",
-  namaSekolah: "SMAN 1 Nogosari",
+  loginBackground: "",
+  namaSekolah: "",
 });
 
 const fetchSettings = async () => {
