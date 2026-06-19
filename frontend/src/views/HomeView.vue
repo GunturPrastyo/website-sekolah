@@ -1321,12 +1321,12 @@
                   >
                     <template v-if="isLoadingAgendas">
                       <div
-                        v-for="i in 5"
+                        v-for="i in 4"
                         :key="'skel-ag-' + i"
-                        class="flex flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border border-gray-100 dark:border-slate-700 animate-pulse shrink-0"
+                        class="flex flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border border-gray-100 dark:border-slate-700 animate-pulse shrink-0 h-[115px] sm:h-auto"
                       >
                         <div
-                          class="w-[65px] h-[65px] sm:w-[95px] sm:h-[95px] rounded-xl bg-slate-200 dark:bg-slate-700 shrink-0"
+                          class="w-[65px] h-[80px] sm:w-[95px] sm:h-[95px] rounded-xl bg-slate-200 dark:bg-slate-700 shrink-0"
                         ></div>
                         <div class="flex flex-col justify-center flex-1 space-y-2">
                           <div
@@ -1927,26 +1927,27 @@ const toggleFaq = (index) => {
   activeFaq.value = activeFaq.value === index ? null : index;
 };
 
-const scrollToAgenda = (eventToScrollTo) => {
-  if (!agendaListContainer.value || !eventToScrollTo) return;
+const scrollToAgenda = (agendaToScrollTo) => {
+  if (!agendaListContainer.value || !agendaToScrollTo) return;
 
   // Jika user klik label yang sama, matikan sorotan (toggle off)
-  if (highlightedAgendaId.value === eventToScrollTo.id) {
+  if (highlightedAgendaId.value === agendaToScrollTo.id) {
     highlightedAgendaId.value = null;
     return;
   }
 
   // Set sorotan ke agenda yang baru (termasuk memindahkannya jika klik label lain)
-  highlightedAgendaId.value = eventToScrollTo.id;
+  highlightedAgendaId.value = agendaToScrollTo.id;
 
   // Gunakan nextTick agar update class selesai sebelum menghitung posisi gulir
   nextTick(() => {
-    const targetElement = agendaElements.value[eventToScrollTo.id];
+    const targetElement = agendaElements.value[agendaToScrollTo.id];
     if (targetElement) {
       // Gulir otomatis menyesuaikan apakah target ada di bawah/atas
-      agendaListContainer.value.scrollTo({
+      targetElement.scrollIntoView({
         top: targetElement.offsetTop - 24, // 24px untuk padding wadah
         behavior: "smooth",
+        block: "center",
       });
     }
   });
