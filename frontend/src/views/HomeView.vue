@@ -102,8 +102,7 @@
             >
               <!-- FASILITAS (2x2 Desktop) -->
               <div
-                class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[340px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500"
-                style="background-image: url('/img/fasilitas.jpg')"
+                class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[290px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500 before:absolute before:inset-0 before:bg-inherit before:blur-[3px] md:before:blur-none"
                 :style="{
                   backgroundImage: `url(${
                     appearanceSettings.benefitFasilitasImage || '/img/fasilitas.jpg'
@@ -115,8 +114,11 @@
                   class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/80 to-slate-800/40 group-hover:via-slate-800/70 group-hover:to-slate-700/40 transition-all duration-500"
                 ></div>
 
-                <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
-                  <div class="mt-auto flex flex-col">
+                <!-- TEXT CONTAINER -->
+                <div
+                  class="relative z-10 p-6 pt-10 sm:p-8 flex flex-col justify-start items-center text-left md:justify-end md:items-start h-full w-full min-h-[290px] md:min-h-0"
+                >
+                  <div class="flex flex-col items-start w-full max-w-sm mx-auto md:mx-0">
                     <h3
                       class="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300"
                       style="font-family: 'Oswald', sans-serif"
@@ -155,8 +157,7 @@
 
               <!-- GURU -->
               <div
-                class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[340px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
-                style="background-image: url('/img/pengajar.jpg')"
+                class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[290px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500 before:absolute before:inset-0 before:bg-inherit before:blur-[3px] md:before:blur-none"
                 :style="{
                   backgroundImage: `url(${
                     appearanceSettings.benefitGuruImage || '/img/pengajar.jpg'
@@ -168,8 +169,11 @@
                   class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/80 to-slate-800/40 group-hover:via-slate-800/70 group-hover:to-slate-700/40 transition-all duration-500"
                 ></div>
 
-                <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
-                  <div class="mt-auto flex flex-col">
+                <!-- TEXT CONTAINER -->
+                <div
+                  class="relative z-10 p-6 pt-10 sm:p-8 flex flex-col justify-start items-center text-left md:justify-end md:items-start h-full w-full min-h-[290px] md:min-h-0"
+                >
+                  <div class="flex flex-col items-start w-full max-w-sm mx-auto md:mx-0">
                     <h3
                       class="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300"
                       style="font-family: 'Oswald', sans-serif"
@@ -207,8 +211,7 @@
 
               <!-- PRESTASI -->
               <div
-                class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[340px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500"
-                style="background-image: url('/img/prestasi.jpg')"
+                class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[290px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500 before:absolute before:inset-0 before:bg-inherit before:blur-[3px] md:before:blur-none"
                 :style="{
                   backgroundImage: `url(${
                     appearanceSettings.benefitPrestasiImage || '/img/prestasi.jpg'
@@ -220,8 +223,11 @@
                   class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/80 to-slate-800/40 group-hover:via-slate-800/70 group-hover:to-slate-700/40 transition-all duration-500"
                 ></div>
 
-                <div class="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
-                  <div class="mt-auto flex flex-col">
+                <!-- TEXT CONTAINER -->
+                <div
+                  class="relative z-10 p-6 pt-10 sm:p-8 flex flex-col justify-start items-center text-left md:justify-end md:items-start h-full w-full min-h-[290px] md:min-h-0"
+                >
+                  <div class="flex flex-col items-start w-full max-w-sm mx-auto md:mx-0">
                     <h3
                       class="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300"
                       style="font-family: 'Oswald', sans-serif"
@@ -264,7 +270,6 @@
             ></div>
           </div>
         </div>
-
         <!-- ALUMNI / PTN -->
         <div class="mt-8 px-0 md:px-8 lg:px-4 mb-20 md:mb-24 -mx-0 md:-mx-8 lg:-mx-0">
           <div
@@ -3190,13 +3195,16 @@ onBeforeUnmount(() => {
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-8px);
   }
 }
+
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
+
 .animate-float:hover {
   animation-play-state: paused;
 }
@@ -3208,16 +3216,19 @@ onBeforeUnmount(() => {
   white-space: nowrap;
   width: 100%;
 }
+
 .text-marquee-content {
   display: inline-block;
   min-width: 100%;
   animation: slide-text 5s linear infinite alternate;
 }
+
 @keyframes slide-text {
   0%,
   20% {
     transform: translateX(0);
   }
+
   /* Jika text (100%) > kontainer (100cqw), hasil kalkulasi akan negatif dan memicu scroll. 
      Jika lebih pendek, hasil min(0, positif) tetap 0 (tidak bergerak). */
   80%,
