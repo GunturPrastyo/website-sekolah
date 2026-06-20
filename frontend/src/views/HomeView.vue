@@ -494,8 +494,9 @@
                       :key="'skeleton-' + i"
                       class="swiper-slide !h-auto relative min-h-[320px] overflow-hidden border-b border-white/10 md:border-b-0 md:border-r md:border-white/10 bg-slate-800 animate-pulse"
                     >
+                      <!-- Diperluas pb-14 di mobile untuk mencocokkan layout asli -->
                       <div
-                        class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full"
+                        class="relative z-10 p-6 pb-14 sm:p-8 flex flex-col justify-start h-full"
                       >
                         <div class="w-14 h-14 rounded-xl bg-slate-700 mb-4"></div>
                         <div class="h-8 bg-slate-700 rounded w-1/2 mb-4"></div>
@@ -504,10 +505,11 @@
                           <div class="h-4 bg-slate-700 rounded w-5/6"></div>
                           <div class="h-4 bg-slate-700 rounded w-4/6"></div>
                         </div>
-                        <div class="mt-auto w-32 h-4 bg-slate-700 rounded"></div>
+                        <div class="w-32 h-4 bg-slate-700 rounded mt-auto"></div>
                       </div>
                     </div>
                   </template>
+
                   <template v-else-if="programs.length > 0">
                     <!-- Actual Data -->
                     <div
@@ -519,8 +521,10 @@
                         class="absolute inset-0 bg-gradient-to-br transition-colors duration-500"
                         :class="getProgramGradient(index)"
                       ></div>
+
+                      <!-- TEXT CONTAINER: Ditambahkan pb-14 di mobile agar tombol menjauh dari bullet slider -->
                       <div
-                        class="relative z-10 p-6 sm:p-8 flex flex-col justify-start h-full text-white"
+                        class="relative z-10 p-6 pb-14 sm:p-8 flex flex-col justify-start h-full text-white"
                       >
                         <div
                           class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner"
@@ -530,17 +534,22 @@
                             class="w-7 h-7"
                           />
                         </div>
-                        <h3 class="text-2xl font-bold mb-2 text-white">
+
+                        <!-- HEADING JURUSAN: Diperkecil menjadi text-xl di mobile, text-2xl di desktop -->
+                        <h3 class="text-xl md:text-2xl font-bold mb-2 text-white">
                           {{ program.title }}
                         </h3>
+
+                        <!-- DESKRIPSI JURUSAN: Dibuat konsisten di text-xs ke sm pada mobile -->
                         <p
-                          class="text-blue-100 text-sm md:text-base mb-4 leading-relaxed line-clamp-3"
+                          class="text-xs sm:text-sm md:text-base text-blue-100 mb-4 leading-relaxed line-clamp-3"
                         >
                           {{ program.description || stripTags(program.content) }}
                         </p>
+
                         <router-link
                           to="/program-jurusan"
-                          class="mt-auto inline-flex items-center text-sm font-bold text-white group-hover:text-blue-200 transition-colors w-fit"
+                          class="inline-flex items-center text-xs sm:text-sm font-bold text-white group-hover:text-blue-200 transition-colors w-fit mt-auto"
                         >
                           Lihat Selengkapnya
                           <PhCaretRight
@@ -550,6 +559,7 @@
                       </div>
                     </div>
                   </template>
+
                   <template v-else>
                     <!-- Fallback Empty State -->
                     <div class="p-8 text-center text-white w-full">
@@ -558,9 +568,9 @@
                   </template>
                 </div>
 
-                <!-- Jurusan Pagination -->
+                <!-- Jurusan Pagination (Tetap diposisikan di paling bawah dengan aman) -->
                 <div
-                  class="jurusan-pagination absolute bottom-4 left-0 z-30 flex w-full justify-center mb-4"
+                  class="jurusan-pagination absolute bottom-4 left-0 z-30 flex w-full justify-center mb-0"
                 ></div>
               </div>
             </div>
