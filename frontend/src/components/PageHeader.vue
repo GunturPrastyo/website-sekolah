@@ -9,9 +9,8 @@ defineProps({
 
 <template>
   <div
-    class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 dark:from-slate-900 dark:to-slate-950 overflow-hidden"
+    class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-gradient-to-b from-blue-900 via-blue-950 to-slate-950 dark:from-slate-900 dark:via-slate-950 dark:to-black overflow-hidden"
   >
-    <!-- Background Image -->
     <div v-if="bgImage" class="absolute inset-0 z-0">
       <img
         :src="bgImage"
@@ -20,12 +19,9 @@ defineProps({
       />
     </div>
 
-    <!-- <div
-      class="absolute -top-32 -left-32 w-96 h-96 bg-blue-500/20 blur-3xl rounded-full pointer-events-none"
-    ></div>
     <div
-      class="absolute bottom-0 right-0 w-80 h-80 bg-sky-500/20 blur-3xl rounded-full pointer-events-none"
-    ></div> -->
+      class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent dark:from-black/90 dark:via-black/40 pointer-events-none z-0"
+    ></div>
 
     <slot name="bg-ornament"></slot>
 
