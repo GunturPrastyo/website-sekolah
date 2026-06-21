@@ -2567,9 +2567,10 @@ const themeClasses = {
     fileBtn:
       "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 dark:bg-slate-900/30 dark:text-slate-400 dark:border-slate-700/50 dark:hover:bg-slate-900/50",
     eventBg:
-      "bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/30 dark:hover:bg-slate-900/50",
-    eventHeaderBg: "bg-slate-600 dark:bg-slate-700",
-    eventDayText: "text-slate-800 dark:text-slate-400",
+      "bg-slate-600 hover:bg-slate-700 text-white dark:bg-slate-700 dark:hover:bg-slate-600",
+    eventHeaderBg: "bg-slate-700 dark:bg-slate-800",
+    eventHeaderText: "text-white/90 drop-shadow-md",
+    eventDayText: "text-white font-bold",
   },
   red: {
     card:
@@ -2586,9 +2587,10 @@ const themeClasses = {
     fileBtn:
       "bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-700/50 dark:hover:bg-gray-900/50",
     eventBg:
-      "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900/30 dark:hover:bg-gray-900/50",
-    eventHeaderBg: "bg-gray-600 dark:bg-gray-700",
-    eventDayText: "text-gray-800 dark:text-gray-400",
+      "bg-red-600 hover:bg-red-700 text-white dark:bg-red-700 dark:hover:bg-red-600",
+    eventHeaderBg: "bg-red-700 dark:bg-red-800",
+    eventHeaderText: "text-white/90 drop-shadow-md",
+    eventDayText: "text-white font-bold",
   },
   green: {
     card:
@@ -2605,9 +2607,10 @@ const themeClasses = {
     fileBtn:
       "bg-zinc-50 text-zinc-700 border border-zinc-200 hover:bg-zinc-100 dark:bg-zinc-900/30 dark:text-zinc-400 dark:border-zinc-700/50 dark:hover:bg-zinc-900/50",
     eventBg:
-      "bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900/30 dark:hover:bg-zinc-900/50",
-    eventHeaderBg: "bg-zinc-600 dark:bg-zinc-700",
-    eventDayText: "text-zinc-800 dark:text-zinc-400",
+      "bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-700 dark:hover:bg-emerald-600",
+    eventHeaderBg: "bg-emerald-700 dark:bg-emerald-800",
+    eventHeaderText: "text-white/90 drop-shadow-md",
+    eventDayText: "text-white font-bold",
   },
   blue: {
     card:
@@ -2624,9 +2627,10 @@ const themeClasses = {
     fileBtn:
       "bg-neutral-50 text-neutral-700 border border-neutral-200 hover:bg-neutral-100 dark:bg-neutral-900/30 dark:text-neutral-400 dark:border-neutral-700/50 dark:hover:bg-neutral-900/50",
     eventBg:
-      "bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900/30 dark:hover:bg-neutral-900/50",
-    eventHeaderBg: "bg-neutral-600 dark:bg-neutral-700",
-    eventDayText: "text-neutral-800 dark:text-neutral-400",
+      "bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-600",
+    eventHeaderBg: "bg-blue-700 dark:bg-blue-800",
+    eventHeaderText: "text-white/90 drop-shadow-md",
+    eventDayText: "text-white font-bold",
   },
 };
 
