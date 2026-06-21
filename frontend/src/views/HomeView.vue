@@ -1965,24 +1965,30 @@ const homeSliderImages = computed(() => {
 
 let bgSwiperInstance = null;
 
-// 2. Fungsi inisialisasi Swiper untuk background bergerak transisi halus (Fade)
+// Fungsi inisialisasi Swiper untuk background bergerak transisi halus (Fade)
 const initBgSwiper = () => {
   if (bgSwiperInstance) {
     bgSwiperInstance.destroy(true, true);
     bgSwiperInstance = null;
   }
 
-  if (homeSliderImages.value.length > 0) {
+  const totalImages = homeSliderImages.value.length;
+
+  if (totalImages > 0) {
     nextTick(() => {
       bgSwiperInstance = new Swiper(".home-bg-swiper", {
         effect: "fade",
         fadeEffect: { crossFade: true },
-        loop: true,
+        // 🚀 SEKARANG DINAMIS: Loop hanya aktif jika ada minimal 2 gambar
+        loop: totalImages > 1,
         speed: 1500,
-        autoplay: {
-          delay: 5000,
-          disableOnInteraction: false,
-        },
+        autoplay:
+          totalImages > 1
+            ? {
+                delay: 5000,
+                disableOnInteraction: false,
+              }
+            : false, // Matikan autoplay jika gambar hanya ada 1
         allowTouchMove: false,
       });
     });
