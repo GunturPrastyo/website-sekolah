@@ -4,22 +4,42 @@
     <header
       class="relative z-0 flex flex-col items-center justify-center h-screen md:h-[90vh] lg:h-screen text-center text-white"
     >
-      <!-- Video Background -->
-      <div class="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden bg-slate-900">
-        <video
-          autoplay
-          loop
-          muted
-          playsinline
-          class="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src="/img/footage.webm" type="video/webm" />
-        </video>
-        <!-- Dark Overlay -->
+      <!-- Background: Image from settings or default video -->
+      <template v-if="headerBackgroundUrl">
+        <!-- Image Background -->
         <div
-          class="absolute inset-0 bg-gradient-to-b from-blue-900/70 via-slate-900/80 to-black/90"
-        ></div>
-      </div>
+          class="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden bg-slate-900"
+        >
+          <img
+            :src="headerBackgroundUrl"
+            class="absolute inset-0 w-full h-full object-cover"
+            alt="Background Header"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-b from-blue-900/70 via-slate-900/80 to-black/90"
+          ></div>
+        </div>
+      </template>
+      <template v-else>
+        <!-- Video Background (Default) -->
+        <div
+          class="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden bg-slate-900"
+        >
+          <video
+            autoplay
+            loop
+            muted
+            playsinline
+            class="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src="/img/footage.webm" type="video/webm" />
+          </video>
+          <!-- Dark Overlay -->
+          <div
+            class="absolute inset-0 bg-gradient-to-b from-blue-900/70 via-slate-900/80 to-black/90"
+          ></div>
+        </div>
+      </template>
 
       <!-- Hero Content -->
       <div class="z-20 p-5">
@@ -1909,6 +1929,7 @@ const slogan = ref(localStorage.getItem("app_sloganSekolah") || "");
 const isTypewriterStarted = ref(false);
 
 const appearanceSettings = ref({
+  headerBeranda: "",
   benefitFasilitasImage: "",
   benefitGuruImage: "",
   benefitPrestasiImage: "",
@@ -2113,6 +2134,11 @@ const formatMonth = (dateString) => {
   ];
   return months[date.getMonth()];
 };
+
+const headerBackgroundUrl = computed(() => {
+  if (!appearanceSettings.value.headerBeranda) return "";
+  return getImageUrl(appearanceSettings.value.headerBeranda);
+});
 
 const stripTags = (html) => {
   if (!html) return "";
@@ -2950,6 +2976,7 @@ const fetchSettings = async () => {
       localStorage.setItem("app_namaSekolah", fullTitle.value);
       localStorage.setItem("app_sloganSekolah", slogan.value);
 
+      appearanceSettings.value.headerBeranda = response.data.data.headerBeranda || "";
       appearanceSettings.value.benefitFasilitasImage =
         response.data.data.benefitFasilitasImage || "";
       appearanceSettings.value.benefitGuruImage =
@@ -2963,8 +2990,12 @@ const fetchSettings = async () => {
       appearanceSettings.value.galleryBackgroundImage =
         response.data.data.galleryBackgroundImage || "";
 
-      // Jika pertama kali load (cache kosong), jalankan animasi setelah data turun
-      if (isFirstLoad && !isTypewriterStarted.value) {
+      // Jika typewriter sudah/sedang berjalan (isTypewriterStarted true),
+      // update langsung displayedTitle dengan data baru dari API
+      if (isTypewriterStarted.value) {
+        displayedTitle.value = fullTitle.value;
+      } else {
+        // Typewriter belum pernah dijalankan (cache kosong), mulai sekarang
         startTypewriter();
       }
     }
