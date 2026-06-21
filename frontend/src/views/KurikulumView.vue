@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from "vue";
 import PageHeader from "@/components/PageHeader.vue";
 import api from "@/api/index.js";
 import {
@@ -59,10 +59,11 @@ const showMajorInfo = ref(false);
 
 const changeGrade = (id) => {
   activeGrade.value = id;
-  expandedSubject.value = null; // Reset accordion saat ganti kelas
+  expandedSubject.value = null;
 };
 
 const majors = ref([]);
+const appearanceSettings = ref({}); // 👈 1. State baru untuk menampung data gambar dari SettingController
 
 const iconMap = {
   ...educationIcons,
@@ -134,7 +135,7 @@ const getDarkColorClass = (colorClass) => {
 
 const changeMajor = (id) => {
   activeMajor.value = id;
-  expandedSubject.value = null; // Reset accordion saat ganti jurusan
+  expandedSubject.value = null;
 };
 
 const toggleSubject = (id) => {
@@ -142,7 +143,6 @@ const toggleSubject = (id) => {
 };
 
 const grades = ref([]);
-
 const curriculumData = ref({});
 const isFetching = ref(true);
 
@@ -152,14 +152,28 @@ const pancasilaProfile = ref({
   dimensions: [],
 });
 
+// Fungsi pembantu menambal URL gambar header dinamis
+const getImageUrl = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http") || path.startsWith("data:")) return path;
+  const backendUrl =
+    import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
+  return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
+};
+
 const fetchCurriculum = async () => {
   isFetching.value = true;
   try {
-    const [currRes, progRes, pancaRes] = await Promise.all([
+    const [currRes, progRes, pancaRes, settingsRes] = await Promise.all([
       api.get("/api/public-curriculum-subjects"),
       api.get("/api/public-programs").catch(() => null),
       api.get("/api/public-pancasila-profile").catch(() => null),
+      api.get("/api/settings").catch(() => null),
     ]);
+
+    if (settingsRes && settingsRes.data?.success) {
+      appearanceSettings.value = settingsRes.data.data;
+    }
 
     if (pancaRes && pancaRes.data && pancaRes.data.data) {
       const pd = pancaRes.data.data;
@@ -202,12 +216,10 @@ const fetchCurriculum = async () => {
         const grade = String(subject.grade);
         uniqueGrades.add(grade);
         const category = subject.category;
-
         const programId = subject.program_id;
 
         if (!groupedData[grade]) groupedData[grade] = {};
 
-        // Jika program_id null/kosong (Umum), masukkan mapel ini ke semua peminatan
         const majorsToAdd =
           programId === null ||
           programId === undefined ||
@@ -341,7 +353,6 @@ watch(currentPage, (newVal, oldVal) => {
   if (newVal !== oldVal) {
     isChangingPage.value = true;
 
-    // Otomatis scroll perlahan ke atas daftar silabus saat ganti halaman
     const el = document.getElementById("syllabus-top");
     if (el) {
       const y = el.getBoundingClientRect().top + window.scrollY - 100;
@@ -350,7 +361,7 @@ watch(currentPage, (newVal, oldVal) => {
 
     setTimeout(() => {
       isChangingPage.value = false;
-    }, 500); // Simulasi delay lazy loading data (500ms)
+    }, 500);
   }
 });
 
@@ -388,9 +399,11 @@ onBeforeUnmount(() => {
 <template>
   <div>
     <PageHeader
+      v-if="!isFetching && appearanceSettings"
       badge="Akademik"
       title="Silabus & Kurikulum Digital"
       description="Jelajahi struktur kurikulum interaktif kami yang dirancang khusus untuk membekali siswa dengan kompetensi abad 21 (Kurikulum Merdeka)."
+      :bgImage="getImageUrl(appearanceSettings.headerKurikulum)"
     />
 
     <!-- Main Content Section -->
