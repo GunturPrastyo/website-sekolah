@@ -117,16 +117,16 @@
     </section>
 
     <!-- Visi & Misi Section -->
-    <section class="relative w-full bg-fixed bg-center bg-cover">
-      <div class="flex flex-col lg:flex-row w-full">
-        <div
-          class="w-full lg:w-6/12 p-8 sm:p-10 md:p-16 lg:p-24 text-white relative overflow-hidden flex flex-col justify-center"
-        >
-          <div
-            class="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-950/95 to-slate-950 dark:from-slate-900/90 dark:via-slate-950/95 dark:to-black backdrop-blur-[2px]"
-          ></div>
+    <section class="relative w-full bg-fixed bg-center bg-cover overflow-hidden">
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-950/95 to-slate-950 dark:from-slate-900/90 dark:via-slate-950/95 dark:to-black backdrop-blur-[2px] z-0"
+      ></div>
 
-          <div class="relative z-10">
+      <div class="flex flex-col lg:flex-row w-full relative z-10">
+        <div
+          class="w-full lg:w-6/12 p-8 sm:p-10 md:p-16 lg:p-24 text-white flex flex-col justify-center"
+        >
+          <div>
             <h3
               class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6 tracking-wide"
               style="font-family: 'Kalam', cursive"
@@ -147,14 +147,10 @@
         </div>
 
         <div
-          class="w-full lg:w-7/12 relative p-8 sm:p-10 md:p-16 lg:p-24 flex flex-col justify-center text-white overflow-hidden"
+          class="w-full lg:w-7/12 p-8 sm:p-10 md:p-16 lg:p-24 flex flex-col justify-center text-white"
         >
           <div
-            class="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-950/95 to-slate-950 dark:from-slate-900/90 dark:via-slate-950/95 dark:to-black backdrop-blur-[2px]"
-          ></div>
-
-          <div
-            class="relative z-10 mb-6 md:mb-8 pb-4 border-b border-blue-800 dark:border-slate-700"
+            class="mb-6 md:mb-8 pb-4 border-b border-blue-800/60 dark:border-slate-700"
           >
             <h3
               class="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-wide"
@@ -164,12 +160,12 @@
             </h3>
           </div>
 
-          <div v-if="isLoading" class="relative z-10 animate-pulse space-y-4">
+          <div v-if="isLoading" class="animate-pulse space-y-4">
             <div class="h-12 bg-white/10 rounded w-full"></div>
             <div class="h-12 bg-white/10 rounded w-full"></div>
             <div class="h-12 bg-white/10 rounded w-full"></div>
           </div>
-          <ul v-else class="relative z-10 space-y-4 md:space-y-6">
+          <ul v-else class="space-y-4 md:space-y-6">
             <li v-for="(item, index) in misi" :key="index" class="flex items-start group">
               <span
                 class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-slate-800 text-blue-200 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-white/20 dark:border-slate-700"
