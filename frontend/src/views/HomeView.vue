@@ -2983,7 +2983,7 @@ const fetchSettings = async () => {
         startTypewriter();
       }
 
-      // 👈 4. Trigger Swiper background bergerak setelah data settings tersimpan reaktif
+      // 🚀 PAKSA INJEKSI DISINI: Jalankan ulang Swiper agar membaca DOM slider yang baru saja di-render Vue
       nextTick(() => {
         initBgSwiper();
       });
