@@ -1,9 +1,11 @@
 <template>
   <div>
     <PageHeader
+      v-if="!isLoading && appearanceSettings"
       badge="Profil Sekolah"
-      title="Visi, Misi & Tujuan"
-      description="Mengenal lebih dekat arah, tujuan, dan landasan utama sekolah kami dalam mencetak generasi unggul penerus bangsa."
+      title="Visi, Misi & Sambutan"
+      description="Arah pandang, cita-cita luhur, dan komitmen strategis sekolah dalam menyelenggarakan pendidikan unggul, serta sambutan hangat dari Kepala Sekolah."
+      :bgImage="getImageUrl(appearanceSettings.headerVisiMisi)"
     />
 
     <!-- Sambutan Kepala Sekolah Section -->
@@ -204,6 +206,7 @@ const misi = ref([]);
 const sambutan = ref("");
 const principalPosition = ref("Kepala Sekolah");
 const principalId = ref(null);
+const appearanceSettings = ref({});
 const isLoading = ref(true);
 
 const principal = ref({
@@ -216,19 +219,29 @@ const principal = ref({
 const getImageUrl = (path) => {
   if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:")) return path;
-  const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const backendUrl =
+    import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
   return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
 };
 
 const fetchVisionMission = async () => {
   isLoading.value = true;
   try {
-    const response = await api.get("/api/vision-mission");
-    const data = response.data.data;
+    const [visionRes, settingsRes] = await Promise.all([
+      api.get("/api/vision-mission"),
+      api.get("/api/settings"), // Mengambil setingan gambar dinamis dari VPS
+    ]);
+
+    const data = visionRes.data.data;
     visi.value = data.vision || "";
     misi.value = data.missions || [];
     sambutan.value = data.principal_speech || "";
     principalId.value = data.principal_id || null;
+
+    // Set Data Global Settings untuk Background Header
+    if (settingsRes.data?.success) {
+      appearanceSettings.value = settingsRes.data.data;
+    }
 
     await fetchPrincipal();
   } catch (error) {
@@ -244,14 +257,12 @@ const fetchPrincipal = async () => {
     if (response.data && response.data.data) {
       let principalStaff = null;
 
-      // 1. Prioritaskan pencarian menggunakan ID Staf berdasarkan setelan dari Admin
       if (principalId.value) {
         principalStaff = response.data.data.find(
           (staff) => staff.id === principalId.value
         );
       }
 
-      // 2. Fallback pencarian berdasarkan jabatan jika ID Staf kosong / tidak disetel
       if (!principalStaff) {
         principalStaff = response.data.data.find(
           (staff) =>
@@ -293,7 +304,7 @@ onMounted(async () => {
         }
       });
     },
-    { threshold: 0.15 } // Efek dijalankan saat 15% blok teks terlihat di layar
+    { threshold: 0.15 }
   );
 
   if (textContainerRef.value) {
@@ -308,6 +319,7 @@ onMounted(async () => {
 .editor-content :deep(p) {
   margin-bottom: 1.25rem;
 }
+
 .editor-content :deep(strong) {
   font-weight: 600;
 }
