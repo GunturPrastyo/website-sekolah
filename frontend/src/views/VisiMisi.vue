@@ -117,20 +117,15 @@
     </section>
 
     <!-- Visi & Misi Section -->
-    <section
-      class="relative w-full bg-fixed bg-center bg-cover"
-      style="
-        background-image: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1600&auto=format&fit=crop');
-      "
-    >
+    <section class="relative w-full bg-fixed bg-center bg-cover">
       <div class="flex flex-col lg:flex-row w-full">
         <div
           class="w-full lg:w-6/12 p-8 sm:p-10 md:p-16 lg:p-24 text-white relative overflow-hidden flex flex-col justify-center"
         >
-          <!-- Parallax Overlay Visi -->
           <div
-            class="absolute inset-0 bg-gradient-to-br from-blue-900/90 to-blue-950/90 dark:from-slate-900/95 dark:to-slate-950/95 backdrop-blur-[2px]"
+            class="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-950/95 to-slate-950 dark:from-slate-900/90 dark:via-slate-950/95 dark:to-black backdrop-blur-[2px]"
           ></div>
+
           <div class="relative z-10">
             <h3
               class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6 tracking-wide"
@@ -154,10 +149,10 @@
         <div
           class="w-full lg:w-7/12 relative p-8 sm:p-10 md:p-16 lg:p-24 flex flex-col justify-center text-white overflow-hidden"
         >
-          <!-- Parallax Overlay Misi -->
           <div
-            class="absolute inset-0 bg-gradient-to-br from-blue-950/90 to-blue-900/90 dark:from-slate-950/95 dark:to-slate-900/95 backdrop-blur-[2px]"
+            class="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-950/95 to-slate-950 dark:from-slate-900/90 dark:via-slate-950/95 dark:to-black backdrop-blur-[2px]"
           ></div>
+
           <div
             class="relative z-10 mb-6 md:mb-8 pb-4 border-b border-blue-800 dark:border-slate-700"
           >
