@@ -34,6 +34,7 @@ const categories = ref([
 
 const paginatedNews = ref([]);
 const popularNews = ref([]);
+const appearanceSettings = ref({});
 
 const searchQuery = ref("");
 const activeAuthor = ref("");
@@ -43,7 +44,7 @@ const activeTag = ref("");
 const itemsPerPage = 6;
 const currentPage = ref(1);
 const totalPages = ref(1);
-const isLoading = ref(true); // Set true untuk skeleton loading saat mount
+const isLoading = ref(true);
 let searchTimeout = null;
 
 const changePage = (page) => {
@@ -66,8 +67,10 @@ const getImageUrl = (path) => {
     return "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800";
   if (path.startsWith("http") || path.startsWith("data:image")) return path;
 
-  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  // Jika berupa path mentah (relatif), gabungkan secara dinamis dengan domain API utama
+  const baseUrl = import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+
   if (cleanPath.startsWith("storage/")) {
     return `${baseUrl}/${cleanPath}`;
   }
@@ -75,12 +78,10 @@ const getImageUrl = (path) => {
 };
 
 const mapNewsItem = (item) => {
-  // Buat text excerpt dengan cara menghilangkan tag HTML dari konten
   const tempDiv = document.createElement("div");
   tempDiv.innerHTML = item.content;
   const textContent = tempDiv.textContent || tempDiv.innerText || "";
 
-  // Ambil gambar pertama dari array images, atau gunakan fallback image
   let rawImage = item.image;
   if (item.images && item.images.length > 0) {
     rawImage = item.images[0];
@@ -106,7 +107,7 @@ const mapNewsItem = (item) => {
   };
 };
 
-// Fungsi mengambil data dari API backend
+// Fungsi mengambil data berita utama dari API backend
 const fetchNews = async () => {
   isLoading.value = true;
   try {
@@ -150,36 +151,23 @@ const fetchPopularNews = async () => {
   }
 };
 
-// Pantau perubahan URL secara reaktif (Mengatasi harus refresh)
-watch(
-  () => route.query,
-  (newQuery) => {
-    if (
-      newQuery.author !== activeAuthor.value &&
-      (newQuery.author !== undefined || activeAuthor.value !== "")
-    ) {
-      activeAuthor.value = newQuery.author || "";
+const fetchInitialData = async () => {
+  try {
+    const [settingsResponse] = await Promise.all([api.get("/api/settings")]);
+
+    if (settingsResponse.data?.success) {
+      appearanceSettings.value = settingsResponse.data.data;
     }
-    if (
-      newQuery.q !== searchQuery.value &&
-      (newQuery.q !== undefined || searchQuery.value !== "")
-    ) {
-      searchQuery.value = newQuery.q || "";
-    }
-    if (
-      newQuery.tag !== activeTag.value &&
-      (newQuery.tag !== undefined || activeTag.value !== "")
-    ) {
-      activeTag.value = newQuery.tag || "";
-    }
-  },
-  { immediate: true }
-);
+  } catch (error) {
+    console.error("Gagal mengambil data setting halaman berita:", error);
+  }
+};
+
+watch();
 
 watch([searchQuery, activeCategory, activeAuthor, activeTag], () => {
   currentPage.value = 1;
 
-  // Sinkronisasi filter ke URL agar tidak nyangkut saat filter dihapus
   const query = { ...route.query };
   let urlChanged = false;
 
@@ -213,7 +201,6 @@ watch([searchQuery, activeCategory, activeAuthor, activeTag], () => {
     urlChanged = true;
   }
 
-  // Perbarui URL browser tanpa memuat ulang halaman
   if (urlChanged) {
     router.replace({ query }).catch(() => {});
   }
@@ -229,6 +216,7 @@ let observer;
 onMounted(() => {
   fetchNews();
   fetchPopularNews();
+  fetchInitialData();
 
   observer = new IntersectionObserver(
     (entries) => {
@@ -256,9 +244,11 @@ onBeforeUnmount(() => {
 <template>
   <div>
     <PageHeader
+      v-if="appearanceSettings"
       badge="Informasi Publik"
       title="Berita & Artikel Sekolah"
       description="Ikuti terus perkembangan, kegiatan, prestasi, dan pengumuman terbaru seputar lingkungan sekolah."
+      :bgImage="appearanceSettings.headerBerita"
     />
 
     <!-- News Section -->
