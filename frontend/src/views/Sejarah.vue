@@ -26,6 +26,7 @@ const schoolProfile = ref({
 });
 
 const timeline = ref([]);
+const appearanceSettings = ref({});
 const isLoading = ref(true);
 
 const handleScroll = () => {
@@ -34,12 +35,11 @@ const handleScroll = () => {
   const rect = timelineRef.value.getBoundingClientRect();
   const windowHeight = window.innerHeight;
 
-  // Animasi terpicu (garis menjalar) saat konten masuk 60% layar dari atas
   const startOffset = windowHeight * 0.6;
   const scrollPosition = startOffset - rect.top;
 
   let progress = scrollPosition / rect.height;
-  progress = Math.max(0, Math.min(1, progress)); // Membatasi nilai antara 0 - 1
+  progress = Math.max(0, Math.min(1, progress));
   lineHeight.value = `${progress * 100}%`;
   currentProgress.value = progress;
 };
@@ -47,13 +47,28 @@ const handleScroll = () => {
 const getImageUrl = (path) => {
   if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:")) return path;
-  const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const backendUrl =
+    import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
   return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
 };
 
-const fetchData = async () => {
+const fetchInitialData = async () => {
   try {
-    const profileRes = await api.get("/api/profil-sekolah");
+    const [profileRes, timelineRes, settingsRes] = await Promise.all([
+      api
+        .get("/api/profil-sekolah")
+        .catch((err) =>
+          err.response?.status === 404 ? { data: null } : Promise.reject(err)
+        ),
+      api
+        .get("/api/sejarah")
+        .catch((err) =>
+          err.response?.status === 404 ? { data: null } : Promise.reject(err)
+        ),
+      api.get("/api/settings").catch((err) => Promise.reject(err)), // Ambil setingan gambar dinamis dari VPS
+    ]);
+
+    // Set Data Profil Sekolah
     if (profileRes.data?.data) {
       const pd = profileRes.data.data;
       if (pd.description) schoolProfile.value.description = pd.description;
@@ -62,18 +77,11 @@ const fetchData = async () => {
       if (pd.location) schoolProfile.value.location = pd.location;
       if (pd.status) schoolProfile.value.status = pd.status;
       if (pd.image) schoolProfile.value.image = getImageUrl(pd.image);
-    }
-  } catch (error) {
-    if (error.response && error.response.status === 404) {
-      // Jangan tampilkan log console jika memang datanya belum ada di database
+    } else if (profileRes.data === null) {
       schoolProfile.value.description = "Data profil sekolah belum tersedia.";
-    } else {
-      console.error("Gagal memuat profil sekolah:", error);
     }
-  }
 
-  try {
-    const timelineRes = await api.get("/api/sejarah");
+    // Set Data Timeline Sejarah
     if (timelineRes.data?.data) {
       timeline.value = timelineRes.data.data.map((item) => {
         if (item.image) {
@@ -82,14 +90,16 @@ const fetchData = async () => {
         return item;
       });
     }
-  } catch (error) {
-    if (error.response && error.response.status !== 404) {
-      console.error("Gagal memuat sejarah:", error);
+
+    // Set Data Global Settings untuk Background Header
+    if (settingsRes.data?.success) {
+      appearanceSettings.value = settingsRes.data.data;
     }
+  } catch (error) {
+    console.error("Gagal memuat data inisialisasi halaman sejarah:", error);
   } finally {
     isLoading.value = false;
 
-    // Panggil ulang kalkulasi posisi scroll dan inisialisasi observer setelah rendering
     setTimeout(() => {
       handleScroll();
       setupObserver();
@@ -137,8 +147,8 @@ const setupObserver = () => {
 
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
-  setupObserver(); // Panggil observer di awal untuk teks statis
-  fetchData();
+  setupObserver();
+  fetchInitialData();
 });
 
 onBeforeUnmount(() => {
@@ -149,9 +159,11 @@ onBeforeUnmount(() => {
 <template>
   <div>
     <PageHeader
+      v-if="!isLoading && appearanceSettings"
       badge="Profil Sekolah"
-      title="Tentang Kami & Sejarah"
-      description="Mengenal lebih dekat profil sekolah kami dan menyusuri jejak langkah perjuangan serta prestasi dari masa ke masa."
+      title="Sejarah Singkat"
+      description="Menelusuri jejak historis, tonggak perkembangan, dan kisah perjalanan berdirinya sekolah kami dari masa ke masa."
+      :bgImage="getImageUrl(appearanceSettings.headerSejarah)"
     />
 
     <!-- Profil Singkat Section -->

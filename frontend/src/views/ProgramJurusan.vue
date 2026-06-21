@@ -10,18 +10,21 @@ import PageHeader from "@/components/PageHeader.vue";
 import api from "@/api/index.js";
 
 const programs = ref([]);
+const appearanceSettings = ref({}); // 👈 1. State baru untuk menampung gambar dari SettingController
 const isFetching = ref(true);
 
 const getImageUrl = (path, defaultUrl = "") => {
   if (!path) return defaultUrl;
   if (path.startsWith("http") || path.startsWith("data:")) return path;
-  const backendUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+  // Menyesuaikan dengan base domain server aktif agar adaptif saat di VPS
+  const backendUrl =
+    import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
   return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
 };
 
 const handleImageError = (e) => {
   e.target.src =
-    "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800"; // fallback placeholder
+    "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800";
 };
 
 const parseJSON = (data) => {
@@ -36,12 +39,17 @@ const parseJSON = (data) => {
   return data;
 };
 
-const fetchData = async () => {
+const fetchInitialData = async () => {
   isFetching.value = true;
   try {
-    const response = await api.get("/api/public-programs");
-    if (response.data && response.data.data) {
-      programs.value = response.data.data.map((program) => ({
+    const [programsResponse, settingsResponse] = await Promise.all([
+      api.get("/api/public-programs"),
+      api.get("/api/settings"), // Mengambil konfigurasi gambar dinamis dari VPS
+    ]);
+
+    // Set Data Program Keahlian
+    if (programsResponse.data && programsResponse.data.data) {
+      programs.value = programsResponse.data.data.map((program) => ({
         ...program,
         subjects: parseJSON(program.subjects),
         careers: parseJSON(program.careers),
@@ -57,8 +65,13 @@ const fetchData = async () => {
         background_img: getImageUrl(program.background_img, ""),
       }));
     }
+
+    // Set Data Global Settings untuk Background Header
+    if (settingsResponse.data?.success) {
+      appearanceSettings.value = settingsResponse.data.data;
+    }
   } catch (error) {
-    console.error("Gagal memuat data program jurusan:", error);
+    console.error("Gagal memuat data awal halaman program jurusan:", error);
   } finally {
     isFetching.value = false;
     nextTick(() => {
@@ -68,7 +81,6 @@ const fetchData = async () => {
 };
 
 const setupObserver = () => {
-  // Intersection Observer untuk efek animasi fade-up pada saat scroll
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -80,11 +92,11 @@ const setupObserver = () => {
             "-translate-x-10",
             "translate-x-10"
           );
-          observer.unobserve(entry.target); // Hentikan observasi agar animasi hanya berjalan 1x
+          observer.unobserve(entry.target);
         }
       });
     },
-    { threshold: 0.1 } // Animasi terpicu saat 10% elemen terlihat di layar
+    { threshold: 0.1 }
   );
 
   document.querySelectorAll(".fade-on-scroll").forEach((el) => {
@@ -93,16 +105,18 @@ const setupObserver = () => {
 };
 
 onMounted(() => {
-  fetchData();
+  fetchInitialData();
 });
 </script>
 
 <template>
   <div>
     <PageHeader
-      badge="Akademik"
-      title="Program Jurusan Unggulan"
-      description="Temukan minat, bakat, dan potensi terbaikmu melalui berbagai pilihan peminatan yang dirancang khusus untuk mempersiapkan masa depanmu di dunia perkuliahan maupun industri."
+      v-if="!isFetching && appearanceSettings"
+      badge="Program Keahlian"
+      title="Kompetensi Keahlian"
+      description="Membentuk tenaga kerja profesional, kompeten, dan siap kerja yang relevan dengan kebutuhan dunia usaha dan dunia industri saat ini."
+      :bgImage="getImageUrl(appearanceSettings.headerProgramJurusan)"
     />
 
     <!-- Program Details Section -->
