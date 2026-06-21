@@ -137,7 +137,7 @@ onMounted(() => {
     <div>
       <PageHeader
         v-if="!isLoading"
-        :badge="`TAHUN AJARAN ${new Date().getFullYear()}/${
+        :badge="`Tahun Ajaran ${new Date().getFullYear()}/${
           new Date().getFullYear() + 1
         }`"
         title="Informasi PPDB"

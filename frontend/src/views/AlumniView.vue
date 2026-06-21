@@ -2,11 +2,12 @@
   <div
     class="overflow-x-hidden w-full bg-slate-50 dark:bg-slate-900 min-h-screen relative"
   >
-    <!-- Header / Hero Section -->
+    <!-- Header / Hero Section (Sekarang dinamis mengambil data headerAlumni) -->
     <PageHeader
       badge="Jejak Langkah Lulusan"
       title="Direktori & Persebaran Alumni"
       description="Temukan jejak sukses para alumni sekolah kami yang tersebar di berbagai perguruan tinggi favorit dan instansi bergengsi di seluruh Indonesia."
+      :bgImage="appearanceSettings.headerAlumni"
     />
 
     <!-- Direktori & Persebaran Alumni Section -->
@@ -391,8 +392,10 @@ import {
   PhArrowDown,
 } from "@phosphor-icons/vue";
 
+// Reactive State
 const mapLocations = ref([]);
 const alumniList = ref([]);
+const appearanceSettings = ref({});
 const selectedLocation = ref(null);
 const isLoadingMap = ref(true);
 const isLoadingAlumni = ref(true);
@@ -400,46 +403,53 @@ const isLoadingAlumni = ref(true);
 const searchQuery = ref("");
 const selectedYear = ref("");
 
+// Computed: Ekstrak tahun angkatan unik dari daftar alumni
 const availableYears = computed(() => {
   const years = alumniList.value.map((a) => a.year).filter((y) => y);
   return [...new Set(years)].sort((a, b) => b - a);
 });
 
-const fetchMapLocations = async () => {
+//Modifikasi Fungsi Pengambilan Data Awal Secara Paralel
+const fetchInitialData = async () => {
   isLoadingMap.value = true;
+  isLoadingAlumni.value = true;
+
   try {
-    const response = await api.get("/api/public-map-locations");
-    mapLocations.value = response.data.data;
+    const [mapRes, alumniRes, settingsRes] = await Promise.all([
+      api.get("/api/public-map-locations"),
+      api.get("/api/public-alumnis"),
+      api.get("/api/settings"),
+    ]);
+
+    // Set Data Peta Indonesia
+    mapLocations.value = mapRes.data.data;
     if (mapLocations.value.length > 0) {
       selectedLocation.value = [...mapLocations.value].sort(
         (a, b) => b.totalAlumni - a.totalAlumni
       )[0];
     }
+
+    // Set Data Semua Alumni
+    alumniList.value = alumniRes.data.data;
+
+    // Set Data Global Settings untuk Gambar Banner
+    if (settingsRes.data?.success) {
+      appearanceSettings.value = settingsRes.data.data;
+    }
   } catch (error) {
-    console.error("Gagal mengambil data peta alumni:", error);
+    console.error("Gagal mengambil data inisialisasi alumni:", error);
   } finally {
     isLoadingMap.value = false;
-  }
-};
-
-const fetchAlumnis = async () => {
-  isLoadingAlumni.value = true;
-  try {
-    const response = await api.get("/api/public-alumnis");
-    alumniList.value = response.data.data;
-  } catch (error) {
-    console.error("Gagal mengambil data alumni:", error);
-  } finally {
     isLoadingAlumni.value = false;
   }
 };
 
 onMounted(() => {
-  fetchMapLocations();
-  fetchAlumnis();
+  fetchInitialData();
   window.scrollTo(0, 0);
 });
 
+// Computed: Filter pencarian alumni
 const filteredAlumni = computed(() => {
   const query = searchQuery.value.trim().toLowerCase();
   const year = selectedYear.value;
@@ -462,6 +472,7 @@ const filteredAlumni = computed(() => {
   });
 });
 
+// Helper: Ambil inisial nama alumni
 const getInitials = (name) => {
   if (!name) return "A";
   return name
@@ -472,6 +483,7 @@ const getInitials = (name) => {
     .toUpperCase();
 };
 
+// Helper: Warnai status lulusan
 const getStatusColor = (status) => {
   if (status === "Kuliah")
     return "bg-blue-50 text-blue-600 border border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800/50";
