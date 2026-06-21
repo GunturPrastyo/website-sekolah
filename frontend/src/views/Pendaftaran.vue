@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, nextTick, computed } from "vue";
 import api from "@/api/index.js";
+import PageHeader from "@/components/PageHeader.vue";
 import {
   PhListChecks,
   PhCheckCircle,
@@ -15,7 +16,9 @@ import {
 import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.css";
 
+// Reactive State
 const ppdbInfo = ref(null);
+const appearanceSettings = ref({});
 const isLoading = ref(true);
 
 const iconMap = [PhMapPin, PhMedal, PhHandshake, PhBriefcase];
@@ -24,6 +27,7 @@ const getIcon = (index) => {
   return iconMap[index % iconMap.length];
 };
 
+// Helper parser JSON/Teks baris baru dari Database
 const parseJson = (data) => {
   if (!data) return [];
   if (typeof data === "string") {
@@ -42,6 +46,7 @@ const parseJson = (data) => {
   return Array.isArray(data) ? data : [];
 };
 
+// Computed Properties untuk mapping data array
 const syaratList = computed(() => {
   if (!ppdbInfo.value) return [];
   return parseJson(ppdbInfo.value.syarat || ppdbInfo.value.requirements);
@@ -62,12 +67,23 @@ const jalurList = computed(() => {
   }));
 });
 
-const fetchPpdbInfo = async () => {
+// Fungsi gabungan untuk mengambil data PPDB dan Global Settings secara paralel (bersamaan)
+const fetchInitialData = async () => {
   try {
-    const response = await api.get("/api/ppdb-info");
-    ppdbInfo.value = response.data?.data || response.data;
+    const [ppdbResponse, settingsResponse] = await Promise.all([
+      api.get("/api/ppdb-info"),
+      api.get("/api/settings"), // 👈 Mengambil data setting dinamis dari VPS
+    ]);
+
+    // Set data PPDB
+    ppdbInfo.value = ppdbResponse.data?.data || ppdbResponse.data;
+
+    // Set data global settings jika request sukses
+    if (settingsResponse.data?.success) {
+      appearanceSettings.value = settingsResponse.data.data;
+    }
   } catch (error) {
-    console.error("Gagal mengambil data PPDB:", error);
+    console.error("Gagal memuat data halaman PPDB:", error);
   } finally {
     isLoading.value = false;
     if (jalurList.value.length > 0) {
@@ -78,6 +94,7 @@ const fetchPpdbInfo = async () => {
   }
 };
 
+// Inisialisasi Slider Swiper
 const initSwiper = () => {
   new Swiper(".jalur-swiper", {
     direction: "horizontal", // default slider horizontal untuk versi Mobile
@@ -109,49 +126,41 @@ const initSwiper = () => {
   });
 };
 
+// Panggil fungsi pengambilan data saat komponen dimuat
 onMounted(() => {
-  fetchPpdbInfo();
+  fetchInitialData();
 });
 </script>
 
 <template>
   <div>
     <div>
-      <!-- Hero Banner -->
-      <div
-        class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 bg-blue-950 dark:bg-slate-900 overflow-hidden"
+      <PageHeader
+        v-if="!isLoading"
+        :badge="`TAHUN AJARAN ${new Date().getFullYear()}/${
+          new Date().getFullYear() + 1
+        }`"
+        title="Informasi PPDB"
+        description="Pusat Informasi Penerimaan Peserta Didik Baru (PPDB). Temukan panduan lengkap mengenai tata cara pendaftaran, persyaratan, alur, dan berbagai jalur penerimaan yang tersedia untuk calon peserta didik baru."
+        :bgImage="appearanceSettings.ppdbBackgroundImage"
       >
-        <div class="container relative z-10 mx-auto px-6 text-center">
-          <span
-            class="inline-block px-4 py-1.5 mb-5 text-xs md:text-sm font-bold text-blue-900 bg-yellow-400 rounded-full shadow-sm tracking-wide"
+        <template #bg-ornament>
+          <div
+            v-if="ppdbInfo && ppdbInfo.brosur"
+            class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20"
           >
-            TAHUN AJARAN {{ new Date().getFullYear() }}/{{ new Date().getFullYear() + 1 }}
-          </span>
-          <h1
-            class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight"
-            style="font-family: 'Oswald', sans-serif"
-          >
-            Informasi PPDB
-          </h1>
-          <p class="text-blue-100 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-            Pusat Informasi Penerimaan Peserta Didik Baru (PPDB). Temukan panduan lengkap
-            mengenai tata cara pendaftaran, persyaratan, alur, dan berbagai jalur
-            penerimaan yang tersedia untuk calon peserta didik baru.
-          </p>
-          <div v-if="!isLoading && ppdbInfo && ppdbInfo.brosur" class="mt-8">
             <a
               :href="ppdbInfo.brosur"
               target="_blank"
-              class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-lg"
+              class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors shadow-lg"
             >
-              <PhDownloadSimple class="w-5 h-5 mr-2" />
+              <PhDownloadSimple class="w-4 h-4 mr-2" />
               Unduh Brosur PPDB
             </a>
           </div>
-        </div>
-      </div>
+        </template>
+      </PageHeader>
 
-      <!-- Informasi & Syarat Pendaftaran -->
       <section
         class="py-12 md:py-10 px-6 bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700"
       >
@@ -169,7 +178,6 @@ onMounted(() => {
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            <!-- Syarat Utama -->
             <div
               class="bg-blue-50/20 dark:bg-slate-700/30 p-6 md:p-8 rounded-xl border border-gray-300 dark:border-slate-700 shadow-lg"
             >
@@ -180,7 +188,6 @@ onMounted(() => {
                 Syarat Pendaftaran
               </h3>
 
-              <!-- Skeleton Syarat -->
               <ul v-if="isLoading" class="space-y-4 animate-pulse">
                 <li v-for="i in 4" :key="'skel-syarat-' + i" class="flex items-start">
                   <div
@@ -211,7 +218,6 @@ onMounted(() => {
               </p>
             </div>
 
-            <!-- Alur Pendaftaran -->
             <div
               class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-xl border border-gray-300 dark:border-slate-700 shadow-lg"
             >
@@ -222,7 +228,6 @@ onMounted(() => {
                 Alur Pendaftaran
               </h3>
 
-              <!-- Skeleton Alur -->
               <div
                 v-if="isLoading"
                 class="space-y-6 animate-pulse relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-gray-300 dark:before:from-slate-600 before:to-transparent"
@@ -294,13 +299,11 @@ onMounted(() => {
         </div>
       </section>
 
-      <!-- Jalur Pendaftaran Section -->
       <section
         class="py-12 md:py-8 px-6 bg-blue-950 dark:bg-slate-900 relative overflow-hidden border-b border-blue-900 dark:border-slate-800"
       >
         <div class="container mx-auto max-w-full px-0 lg:px-16 relative z-10">
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-            <!-- Left: Teks Deskripsi -->
             <div class="lg:col-span-5 text-center lg:text-left">
               <h2
                 class="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight"
@@ -316,7 +319,6 @@ onMounted(() => {
                 kualifikasi untuk memperbesar peluang diterima.
               </p>
 
-              <!-- Decorative Element on Desktop -->
               <div
                 class="hidden lg:flex items-center gap-3 text-yellow-400 font-semibold mt-8"
               >
@@ -329,11 +331,9 @@ onMounted(() => {
               </div>
             </div>
 
-            <!-- Right: Slider Container -->
             <div
               class="lg:col-span-7 relative h-[380px] lg:h-[520px] w-full flex items-center justify-center"
             >
-              <!-- Skeleton Slider Jalur -->
               <div
                 v-if="isLoading"
                 class="w-full h-full flex items-center justify-center animate-pulse px-4 lg:px-10 py-8"
@@ -350,11 +350,9 @@ onMounted(() => {
                 Belum ada data jalur pendaftaran.
               </div>
 
-              <!-- Slider with Mask -->
               <div v-else class="fade-mask-slider w-full h-full absolute inset-0">
                 <div class="swiper jalur-swiper h-full w-full lg:!py-8 lg:!px-10">
                   <div class="swiper-wrapper items-stretch">
-                    <!-- Card Jalur -->
                     <div
                       v-for="(jalur, index) in jalurList"
                       :key="index"
@@ -363,31 +361,36 @@ onMounted(() => {
                       <div
                         class="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl relative group transform transition-all duration-500 h-full flex flex-col overflow-hidden border border-gray-100 dark:border-slate-700/60 border-b-4 border-b-yellow-400 dark:border-b-yellow-500"
                       >
-                        <!-- Solid Color Header -->
                         <div
-                          class="h-32 sm:h-36 overflow-hidden relative shrink-0 bg-blue-600 dark:bg-blue-800 transition-colors duration-500 group-hover:bg-blue-700 dark:group-hover:bg-blue-600"
+                          class="h-28 sm:h-36 overflow-hidden relative shrink-0 bg-blue-600 dark:bg-blue-800 transition-colors duration-500 group-hover:bg-blue-700 dark:group-hover:bg-blue-600"
                         >
                           <div
-                            class="absolute top-5 left-5 px-3.5 py-1.5 bg-yellow-400 text-blue-950 text-xs font-bold rounded-full shadow-sm border border-yellow-300"
+                            class="absolute top-4 left-4 px-3 py-1 bg-yellow-400 text-blue-950 text-[10px] sm:text-xs font-bold rounded-full shadow-sm border border-yellow-300"
                           >
                             Kuota {{ jalur.kuota }}
                           </div>
                         </div>
+
                         <div
-                          class="relative z-10 px-6 md:px-8 pb-8 flex-1 flex flex-col -mt-8"
+                          class="relative z-10 px-5 sm:px-6 md:px-8 pb-16 lg:pb-8 flex-1 flex flex-col -mt-8"
                         >
                           <div
-                            class="w-12 h-12 bg-yellow-400 dark:bg-yellow-500 text-blue-950 rounded-2xl flex items-center justify-center mb-4 shadow-md border border-yellow-300 dark:border-yellow-400 group-hover:scale-110 transition-transform"
+                            class="w-10 h-10 sm:w-12 sm:h-12 bg-yellow-400 dark:bg-yellow-500 text-blue-950 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 shadow-md border border-yellow-300 dark:border-yellow-400 group-hover:scale-110 transition-transform"
                           >
-                            <component :is="getIcon(index)" class="w-6 h-6" />
+                            <component
+                              :is="getIcon(index)"
+                              class="w-5 h-5 sm:w-6 sm:h-6"
+                            />
                           </div>
+
                           <h3
-                            class="text-xl font-bold text-blue-950 dark:text-white mb-3"
+                            class="text-lg sm:text-xl font-bold text-blue-950 dark:text-white mb-2"
                           >
                             {{ jalur.title }}
                           </h3>
+
                           <p
-                            class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed"
+                            class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm leading-relaxed line-clamp-4 lg:line-clamp-none"
                           >
                             {{ jalur.desc }}
                           </p>
@@ -399,7 +402,6 @@ onMounted(() => {
               </div>
             </div>
 
-            <!-- Pagination Component -->
             <div class="jalur-pagination absolute z-30 pointer-events-auto"></div>
           </div>
         </div>
