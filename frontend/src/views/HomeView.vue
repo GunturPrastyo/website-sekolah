@@ -21,20 +21,10 @@
         </div>
       </template>
       <template v-else>
-        <!-- Video Background (Default) -->
+        <!-- Dark Background Only (no image fallback) -->
         <div
           class="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden bg-slate-900"
         >
-          <video
-            autoplay
-            loop
-            muted
-            playsinline
-            class="absolute inset-0 w-full h-full object-cover"
-          >
-            <source src="/img/footage.webm" type="video/webm" />
-          </video>
-          <!-- Dark Overlay -->
           <div
             class="absolute inset-0 bg-gradient-to-b from-blue-900/70 via-slate-900/80 to-black/90"
           ></div>
@@ -1929,7 +1919,7 @@ const slogan = ref(localStorage.getItem("app_sloganSekolah") || "");
 const isTypewriterStarted = ref(false);
 
 const appearanceSettings = ref({
-  headerBeranda: "",
+  headerBeranda: localStorage.getItem("app_headerBeranda") || "",
   benefitFasilitasImage: "",
   benefitGuruImage: "",
   benefitPrestasiImage: "",
@@ -2136,8 +2126,10 @@ const formatMonth = (dateString) => {
 };
 
 const headerBackgroundUrl = computed(() => {
-  if (!appearanceSettings.value.headerBeranda) return "";
-  return getImageUrl(appearanceSettings.value.headerBeranda);
+  const cachedUrl = localStorage.getItem("app_headerBeranda");
+  const url = appearanceSettings.value.headerBeranda || cachedUrl || "";
+  if (!url) return "";
+  return url.startsWith("http") ? url : getImageUrl(url);
 });
 
 const stripTags = (html) => {
@@ -2990,6 +2982,11 @@ const fetchSettings = async () => {
       appearanceSettings.value.galleryBackgroundImage =
         response.data.data.galleryBackgroundImage || "";
 
+      // Simpan headerBeranda ke localStorage agar langsung tampil tanpa menunggu API
+      if (response.data.data.headerBeranda) {
+        localStorage.setItem("app_headerBeranda", response.data.data.headerBeranda);
+      }
+
       // Jika typewriter sudah/sedang berjalan (isTypewriterStarted true),
       // update langsung displayedTitle dengan data baru dari API
       if (isTypewriterStarted.value) {
@@ -3013,28 +3010,26 @@ const handleStorageChange = (e) => {
 };
 
 onMounted(() => {
-  // Fetch data dari API Backend
+  // Ambil headerBeranda dari localStorage agar langsung tampil tanpa flash
+  const cachedHeader = localStorage.getItem("app_headerBeranda");
+  if (cachedHeader) {
+    appearanceSettings.value.headerBeranda = cachedHeader;
+  }
+
+  // PRIORITAS 1: Fetch settings dulu — ini yg paling penting untuk header
+  fetchSettings();
+
+  // PRIORITAS 2: Fetch data untuk hero & stats (visible pertama)
+  fetchSchoolStats();
+  fetchPpdbInfo();
+
+  // PRIORITAS 3: Fetch data section lainnya (tidak blocking)
   fetchPrograms();
   fetchAgendas();
   fetchGalleries();
   fetchSchoolVideo();
   fetchNewsAndAnnouncements();
   fetchAlumniLocations();
-  // Prioritaskan fetch data untuk Header dan Navbar terlebih dahulu
-  fetchSchoolStats();
-  fetchPpdbInfo();
-  fetchSettings();
-
-  // Tunda fetch data seksi lain agar tidak memblokir koneksi di awal load
-  setTimeout(() => {
-    fetchPrograms();
-    fetchAgendas();
-    fetchGalleries();
-    fetchSchoolVideo();
-    fetchNewsAndAnnouncements();
-    fetchAlumniLocations();
-    fetchPpdbInfo();
-  }, 200);
 
   // Dengarkan sinyal pembaruan pengaturan
   window.addEventListener("settings-updated", fetchSettings);
