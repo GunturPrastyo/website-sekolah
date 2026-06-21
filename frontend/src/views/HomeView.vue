@@ -2,46 +2,22 @@
   <div class="overflow-x-hidden w-full max-w-full">
     <!-- Header Section -->
     <header
-      v-if="appearanceSettings"
-      class="relative z-0 flex flex-col items-center justify-center h-screen md:h-[90vh] lg:h-screen text-center text-white overflow-hidden bg-slate-950"
+      class="relative z-0 flex flex-col items-center justify-center h-screen md:h-[90vh] lg:h-screen text-center text-white"
     >
-      <!-- Background Layer Container -->
-      <div class="absolute inset-0 -z-10 overflow-hidden bg-slate-950">
-        <!-- 🖼️ PILIHAN A: Jika Admin Upload Gambar (Tampilkan Slider Swiper) -->
-        <div
-          v-if="homeSliderImages && homeSliderImages.length > 0"
-          class="swiper home-bg-swiper absolute inset-0 w-full h-full"
-        >
-          <div class="swiper-wrapper">
-            <div
-              v-for="(imgUrl, idx) in homeSliderImages"
-              :key="'bg-slide-' + idx"
-              class="swiper-slide w-full h-full"
-            >
-              <img
-                :src="getImageUrl(imgUrl)"
-                class="w-full h-full object-cover opacity-25 mix-blend-screen dark:mix-blend-overlay"
-                alt="Home Background Slider"
-              />
-            </div>
-          </div>
-        </div>
-
-        <!-- 📹 PILIHAN B: Fallback Video Default jika gambar di database kosong -->
+      <!-- Video Background -->
+      <div class="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden bg-slate-900">
         <video
-          v-else
           autoplay
           loop
           muted
           playsinline
-          class="absolute inset-0 w-full h-full object-cover opacity-30"
+          class="absolute inset-0 w-full h-full object-cover"
         >
           <source src="/img/footage.webm" type="video/webm" />
         </video>
-
-        <!-- 🎨 Dark Overlay & Masking Gradien Gelap Bawah -->
+        <!-- Dark Overlay -->
         <div
-          class="absolute inset-0 bg-gradient-to-b from-blue-950/50 via-slate-950/70 to-slate-950 dark:to-black z-10 pointer-events-none"
+          class="absolute inset-0 bg-gradient-to-b from-blue-900/70 via-slate-900/80 to-black/90"
         ></div>
       </div>
 
@@ -1884,7 +1860,6 @@ import {
   reactive,
   nextTick,
   onBeforeUpdate,
-  watch,
 } from "vue";
 import api from "@/api/index.js";
 import Swiper from "swiper/bundle";
@@ -1916,7 +1891,6 @@ import {
   PhPaperclip,
   PhX,
   PhNewspaper,
-  PhTrophy,
 } from "@phosphor-icons/vue";
 
 const agendaListContainer = ref(null);
@@ -1924,6 +1898,7 @@ const agendaElements = ref({});
 const highlightedAgendaId = ref(null);
 
 onBeforeUpdate(() => {
+  // Kosongkan refs sebelum setiap pembaruan untuk menghindari kebocoran memori
   agendaElements.value = {};
 });
 
@@ -1934,7 +1909,6 @@ const slogan = ref(localStorage.getItem("app_sloganSekolah") || "");
 const isTypewriterStarted = ref(false);
 
 const appearanceSettings = ref({
-  loginBackground: "",
   benefitFasilitasImage: "",
   benefitGuruImage: "",
   benefitPrestasiImage: "",
@@ -1943,64 +1917,12 @@ const appearanceSettings = ref({
   galleryBackgroundImage: "",
 });
 
-// 1. Ambil array gambar slider secara fleksibel untuk background banner utama
-const homeSliderImages = computed(() => {
-  const rawData = appearanceSettings.value?.loginBackground;
-  if (!rawData) return [];
-
-  if (
-    typeof rawData === "string" &&
-    (rawData.startsWith("[") || rawData.startsWith("{"))
-  ) {
-    try {
-      return JSON.parse(rawData);
-    } catch (e) {
-      return [rawData];
-    }
-  }
-
-  if (Array.isArray(rawData)) return rawData;
-  return [rawData];
-});
-
-let bgSwiperInstance = null;
-
-// Fungsi inisialisasi Swiper untuk background bergerak transisi halus (Fade)
-const initBgSwiper = () => {
-  if (bgSwiperInstance) {
-    bgSwiperInstance.destroy(true, true);
-    bgSwiperInstance = null;
-  }
-
-  const totalImages = homeSliderImages.value.length;
-
-  if (totalImages > 0) {
-    nextTick(() => {
-      bgSwiperInstance = new Swiper(".home-bg-swiper", {
-        effect: "fade",
-        fadeEffect: { crossFade: true },
-        // 🚀 SEKARANG DINAMIS: Loop hanya aktif jika ada minimal 2 gambar
-        loop: totalImages > 1,
-        speed: 1500,
-        autoplay:
-          totalImages > 1
-            ? {
-                delay: 5000,
-                disableOnInteraction: false,
-              }
-            : false, // Matikan autoplay jika gambar hanya ada 1
-        allowTouchMove: false,
-      });
-    });
-  }
-};
-
 const formatStatValue = (stat) => {
   if (!stat.isNumber) return stat.value + (stat.suffix || "");
   if (stat.value >= 1000) {
     return (stat.value / 1000).toFixed(1).replace(/\.0$/, "") + "k+";
   }
-  return stat.value;
+  return stat.value; // Tidak menampilkan "+" jika di bawah ribuan
 };
 
 const activeFaq = ref(null);
@@ -2011,18 +1933,22 @@ const toggleFaq = (index) => {
 const scrollToAgenda = (agendaToScrollTo) => {
   if (!agendaListContainer.value || !agendaToScrollTo) return;
 
+  // Jika user klik label yang sama, matikan sorotan (toggle off)
   if (highlightedAgendaId.value === agendaToScrollTo.id) {
     highlightedAgendaId.value = null;
     return;
   }
 
+  // Set sorotan ke agenda yang baru (termasuk memindahkannya jika klik label lain)
   highlightedAgendaId.value = agendaToScrollTo.id;
 
+  // Gunakan nextTick agar update class selesai sebelum menghitung posisi gulir
   nextTick(() => {
     const targetElement = agendaElements.value[agendaToScrollTo.id];
     if (targetElement) {
+      // Gulir otomatis menyesuaikan apakah target ada di bawah/atas
       targetElement.scrollIntoView({
-        top: targetElement.offsetTop - 24,
+        top: targetElement.offsetTop - 24, // 24px untuk padding wadah
         behavior: "smooth",
         block: "center",
       });
@@ -2195,12 +2121,11 @@ const stripTags = (html) => {
   return (tmp.textContent || tmp.innerText || "").substring(0, 150) + "...";
 };
 
-// Modifikasi getImageUrl adaptif menjahit domain server aktif
 const getImageUrl = (path) => {
   if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:image")) return path;
 
-  const baseUrl = import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
+  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
   if (cleanPath.startsWith("storage/")) {
     return `${baseUrl}/${cleanPath}`;
@@ -2218,6 +2143,7 @@ const getNewsImage = (newsItem) => {
   return getImageUrl(imagePath);
 };
 
+// State & Logika Kalender Dinamis
 const currentDisplayedDate = ref(new Date());
 
 const calendarData = computed(() => {
@@ -2227,9 +2153,14 @@ const calendarData = computed(() => {
 
   const monthName = new Intl.DateTimeFormat("id-ID", { month: "long" }).format(date);
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const firstDayOffset = new Date(year, month, 1).getDay();
+  const firstDayOffset = new Date(year, month, 1).getDay(); // 0 (Minggu) - 6 (Sabtu)
 
-  return { monthName, year, daysInMonth, firstDayOffset };
+  return {
+    monthName,
+    year,
+    daysInMonth,
+    firstDayOffset,
+  };
 });
 
 const prevMonth = () => {
@@ -2242,6 +2173,7 @@ const nextMonth = () => {
   currentDisplayedDate.value = new Date(date.getFullYear(), date.getMonth() + 1, 1);
 };
 
+// Data Grid Kalender
 const colSpanClasses = {
   1: "col-span-1",
   2: "col-span-2",
@@ -2305,7 +2237,14 @@ const calendarGrid = computed(() => {
   return gridItems;
 });
 
-const tooltip = ref({ show: false, x: 0, y: 0, tailOffset: 0, data: null });
+// State Tooltip Dinamis Map
+const tooltip = ref({
+  show: false,
+  x: 0,
+  y: 0,
+  tailOffset: 0,
+  data: null,
+});
 const showTooltip = (e, loc) => {
   tooltip.value.show = true;
   tooltip.value.data = loc;
@@ -2317,10 +2256,11 @@ const updateTooltipPos = (e) => {
   const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
 
   let tooltipX = clientX;
-  const tooltipHalfWidth = window.innerWidth < 768 ? 128 : 144;
-  const margin = 16;
+  const tooltipHalfWidth = window.innerWidth < 768 ? 128 : 144; // Estimasi w-64 = 256px, w-72 = 288px
+  const margin = 16; // Jarak aman dari tepi layar
   let tailOffset = 0;
 
+  // Penyesuaian batas horizontal agar tooltip tidak terpotong (keluar layar)
   if (tooltipX < tooltipHalfWidth + margin) {
     tailOffset = tooltipX - (tooltipHalfWidth + margin);
     tooltipX = tooltipHalfWidth + margin;
@@ -2329,12 +2269,13 @@ const updateTooltipPos = (e) => {
     tooltipX = window.innerWidth - tooltipHalfWidth - margin;
   }
 
+  // Batasi pergeseran ekor (tail) agar tidak terlepas dari area card (menjaga sudut membulat)
   const maxTailOffset = tooltipHalfWidth - 24;
   if (tailOffset > maxTailOffset) tailOffset = maxTailOffset;
   if (tailOffset < -maxTailOffset) tailOffset = -maxTailOffset;
 
   tooltip.value.x = tooltipX;
-  tooltip.value.y = clientY - 15;
+  tooltip.value.y = clientY - 15; // Beri sedikit jarak vertikal ke atas agar tidak menutupi jari/kursor
   tooltip.value.tailOffset = tailOffset;
 };
 const hideTooltip = () => {
@@ -2344,6 +2285,7 @@ const hideTooltip = () => {
 
 let resizeObserver = null;
 
+// Modal Lampiran
 const isAttachmentModalOpen = ref(false);
 const selectedAgenda = ref(null);
 
@@ -2361,11 +2303,19 @@ const closeAttachmentModal = () => {
   }, 300);
 };
 
-const ppdbCountdown = ref({ days: "00", hours: "00", minutes: "00", seconds: "00" });
+// State Countdown PPDB
+const ppdbCountdown = ref({
+  days: "00",
+  hours: "00",
+  minutes: "00",
+  seconds: "00",
+});
+
 let countdownInterval;
 
 const updateCountdown = () => {
   if (!ppdbInfo.value.opening_date) {
+    // Jika tidak ada tanggal dari API, set ke nol sementara menunggu data
     ppdbCountdown.value = { days: "00", hours: "00", minutes: "00", seconds: "00" };
     return;
   }
@@ -2393,6 +2343,7 @@ const updateCountdown = () => {
   };
 };
 
+// --- Data Animasi Statistik Header ---
 const statsArray = ref([
   {
     key: "akreditasi",
@@ -2443,17 +2394,21 @@ const statsArray = ref([
 
 const fetchSchoolStats = async () => {
   try {
+    // Ambil data dari cache terlebih dahulu agar langsung tampil (instan)
     const cachedData = localStorage.getItem("app_schoolStats");
     if (cachedData) {
       const data = JSON.parse(cachedData);
       statsArray.value.forEach((stat) => {
         if (data[stat.key] !== undefined) {
           stat.target = stat.isNumber ? Number(data[stat.key]) || 0 : data[stat.key];
-          if (!stat.isNumber) stat.value = stat.target;
+          if (!stat.isNumber) {
+            stat.value = stat.target;
+          }
         }
       });
     }
 
+    // Tetap panggil API endpoint untuk mengambil data statistik terbaru
     const response = await api.get("/api/public-stats");
     if (response.data && response.data.data) {
       const data = response.data.data;
@@ -2467,9 +2422,12 @@ const fetchSchoolStats = async () => {
             stat.target = newTarget;
             needsAnimation = true;
           }
-          if (!stat.isNumber) stat.value = stat.target;
+          if (!stat.isNumber) {
+            stat.value = stat.target; // Langsung set nilai string untuk akreditasi
+          }
         }
       });
+      // Jika efek ketik & animasi kotak sudah selesai/muncul, dan ada data baru, animasikan angka agar terupdate
       if (showSubtitle.value && needsAnimation) {
         animateStats();
       }
@@ -2480,16 +2438,19 @@ const fetchSchoolStats = async () => {
 };
 
 let statsAnimationId = null;
+
 const animateStats = () => {
   if (statsAnimationId) cancelAnimationFrame(statsAnimationId);
-  const duration = 3000;
+
+  const duration = 3000; // Durasi diperpanjang menjadi 3 detik agar efek naiknya lebih dramatis
   let startTimestamp = null;
+
   const startValues = statsArray.value.map((stat) => (stat.isNumber ? stat.value : 0));
 
   const step = (timestamp) => {
     if (!startTimestamp) startTimestamp = timestamp;
     const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-    const easeProgress = 1 - Math.pow(1 - progress, 4);
+    const easeProgress = 1 - Math.pow(1 - progress, 4); // Efek ease-out
 
     statsArray.value.forEach((stat, index) => {
       if (stat.isNumber) {
@@ -2510,6 +2471,7 @@ const animateStats = () => {
   statsAnimationId = window.requestAnimationFrame(step);
 };
 
+// --- Data Animasi Statistik Alumni ---
 const isAlumniStatsVisible = ref(false);
 const alumniStats = ref({
   alumni: { value: 0, target: 0 },
@@ -2518,10 +2480,13 @@ const alumniStats = ref({
 });
 
 let alumniAnimationId = null;
+
 const animateAlumniStats = () => {
   if (alumniAnimationId) cancelAnimationFrame(alumniAnimationId);
+
   const duration = 2500;
   let startTimestamp = null;
+
   const startAlumni = alumniStats.value.alumni.value;
   const startPtn = alumniStats.value.ptn.value;
   const startInstansi = alumniStats.value.instansi.value;
@@ -2529,7 +2494,7 @@ const animateAlumniStats = () => {
   const step = (timestamp) => {
     if (!startTimestamp) startTimestamp = timestamp;
     const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-    const easeProgress = 1 - Math.pow(1 - progress, 4);
+    const easeProgress = 1 - Math.pow(1 - progress, 4); // Efek ease-out
 
     alumniStats.value.alumni.value =
       startAlumni + easeProgress * (alumniStats.value.alumni.target - startAlumni);
@@ -2567,10 +2532,10 @@ const themeClasses = {
     fileBtn:
       "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 dark:bg-slate-900/30 dark:text-slate-400 dark:border-slate-700/50 dark:hover:bg-slate-900/50",
     eventBg:
-      "bg-slate-600 hover:bg-slate-700 text-white dark:bg-slate-700 dark:hover:bg-slate-600",
-    eventHeaderBg: "bg-slate-700 dark:bg-slate-800",
-    eventHeaderText: "text-white/90 drop-shadow-md",
-    eventDayText: "text-white font-bold",
+      "bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/30 dark:hover:bg-slate-900/50",
+    eventHeaderBg: "bg-slate-600 dark:bg-slate-700",
+    eventHeaderText: "text-white drop-shadow-md",
+    eventDayText: "text-slate-800 dark:text-slate-400",
   },
   red: {
     card:
@@ -2587,10 +2552,10 @@ const themeClasses = {
     fileBtn:
       "bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-700/50 dark:hover:bg-gray-900/50",
     eventBg:
-      "bg-red-600 hover:bg-red-700 text-white dark:bg-red-700 dark:hover:bg-red-600",
-    eventHeaderBg: "bg-red-700 dark:bg-red-800",
-    eventHeaderText: "text-white/90 drop-shadow-md",
-    eventDayText: "text-white font-bold",
+      "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900/30 dark:hover:bg-gray-900/50",
+    eventHeaderBg: "bg-gray-600 dark:bg-gray-700",
+    eventHeaderText: "text-white drop-shadow-md",
+    eventDayText: "text-gray-800 dark:text-gray-400",
   },
   green: {
     card:
@@ -2607,10 +2572,10 @@ const themeClasses = {
     fileBtn:
       "bg-zinc-50 text-zinc-700 border border-zinc-200 hover:bg-zinc-100 dark:bg-zinc-900/30 dark:text-zinc-400 dark:border-zinc-700/50 dark:hover:bg-zinc-900/50",
     eventBg:
-      "bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-700 dark:hover:bg-emerald-600",
-    eventHeaderBg: "bg-emerald-700 dark:bg-emerald-800",
-    eventHeaderText: "text-white/90 drop-shadow-md",
-    eventDayText: "text-white font-bold",
+      "bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900/30 dark:hover:bg-zinc-900/50",
+    eventHeaderBg: "bg-zinc-600 dark:bg-zinc-700",
+    eventHeaderText: "text-white drop-shadow-md",
+    eventDayText: "text-zinc-800 dark:text-zinc-400",
   },
   blue: {
     card:
@@ -2627,15 +2592,16 @@ const themeClasses = {
     fileBtn:
       "bg-neutral-50 text-neutral-700 border border-neutral-200 hover:bg-neutral-100 dark:bg-neutral-900/30 dark:text-neutral-400 dark:border-neutral-700/50 dark:hover:bg-neutral-900/50",
     eventBg:
-      "bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-600",
-    eventHeaderBg: "bg-blue-700 dark:bg-blue-800",
-    eventHeaderText: "text-white/90 drop-shadow-md",
-    eventDayText: "text-white font-bold",
+      "bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900/30 dark:hover:bg-neutral-900/50",
+    eventHeaderBg: "bg-neutral-600 dark:bg-neutral-700",
+    eventHeaderText: "text-white drop-shadow-md",
+    eventDayText: "text-neutral-800 dark:text-neutral-400",
   },
 };
 
 const agendas = ref([]);
 const isLoadingAgendas = ref(true);
+
 const galleries = ref([]);
 const galleriesByCategory = ref([]);
 const fourthGalleryImage = ref(null);
@@ -2650,7 +2616,7 @@ const fetchGalleries = async () => {
       const grouped = {};
       allGalleries.forEach((gallery) => {
         if (!grouped[gallery.category]) {
-          grouped[gallery.category] = gallery;
+          grouped[gallery.category] = gallery; // Data sudah diorder `desc` dari API, jadi kita akan dapat foto terbaru dari setiap kategori pertama kali
         }
       });
 
@@ -2744,6 +2710,8 @@ const fetchAgendas = async () => {
 
         if (rawStartDate) {
           const d = new Date(rawStartDate);
+
+          // Cek apakah tanggal valid ketika diparse ke object Date
           if (!isNaN(d.getTime())) {
             startDate = d;
             dateText = d.getDate().toString().padStart(2, "0");
@@ -2777,12 +2745,16 @@ const fetchAgendas = async () => {
               }
             }
           } else {
+            // Fallback jika API membalas dengan format literal seperti "18 - 24 Juli"
             dateText = rawStartDate;
             monthText = "Agenda";
           }
         }
 
+        // Membaca warna langsung dari database sama seperti halaman Admin
         let color = agenda.color || "blue";
+
+        // Fallback untuk data lama yang mungkin tidak memiliki properti color
         if (!agenda.color) {
           const type = (
             agenda.category ||
@@ -2864,14 +2836,16 @@ const fetchPpdbInfo = async () => {
   }
 };
 
+// State Koordinat Persebaran Alumni di Peta Indonesia (Pendidikan & Karir)
 const alumniLocations = ref([]);
 const isLoadingAlumniLocations = ref(true);
 
+// Ambil cache koordinat dari LocalStorage (jika ada) untuk posisi skeleton yang akurat
 const cachedMapLocations = localStorage.getItem("alumniMapCache");
 const defaultSkeletons = [
-  { top: "73%", left: "27%" },
-  { top: "77%", left: "31%" },
-  { top: "80%", left: "38%" },
+  { top: "73%", left: "27%" }, // Jabodetabek
+  { top: "77%", left: "31%" }, // Jawa Barat
+  { top: "80%", left: "38%" }, // Jawa Tengah & DIY
 ];
 const skeletonLocations = ref(
   cachedMapLocations ? JSON.parse(cachedMapLocations) : defaultSkeletons
@@ -2880,6 +2854,7 @@ const skeletonLocations = ref(
 const fetchAlumniLocations = async () => {
   isLoadingAlumniLocations.value = true;
   try {
+    // Ambil cache statistik alumni agar tidak delay
     const cachedStats = localStorage.getItem("app_alumniStats");
     if (cachedStats) {
       const data = JSON.parse(cachedStats);
@@ -2904,11 +2879,15 @@ const fetchAlumniLocations = async () => {
           loc.institutions.forEach((inst) => {
             const count = parseInt(inst.alumni) || 0;
             calcAlumni += count;
-            if (inst.type === "ptn") locPTN += count;
-            else if (inst.type === "instansi" || inst.type === "kedinasan")
+            if (inst.type === "ptn") {
+              locPTN += count;
+            } else if (inst.type === "instansi" || inst.type === "kedinasan") {
               locInstansi += count;
+            }
           });
-          if (locAlumni < calcAlumni) locAlumni = calcAlumni;
+          if (locAlumni < calcAlumni) {
+            locAlumni = calcAlumni;
+          }
         }
 
         totalAlumniCount += locAlumni;
@@ -2926,12 +2905,14 @@ const fetchAlumniLocations = async () => {
         };
       });
 
+      // Simpan data koordinat ke cache agar saat loading selanjutnya, skeleton 100% akurat di titik yg sama
       const cacheCoords = alumniLocations.value.map((loc) => ({
         top: loc.top,
         left: loc.left,
       }));
       localStorage.setItem("alumniMapCache", JSON.stringify(cacheCoords));
 
+      // Simpan data stats terbaru ke cache
       localStorage.setItem(
         "app_alumniStats",
         JSON.stringify({
@@ -2941,11 +2922,15 @@ const fetchAlumniLocations = async () => {
         })
       );
 
+      // Update target animasi dengan data real dari API
       if (totalAlumniCount > 0) alumniStats.value.alumni.target = totalAlumniCount;
       if (totalPTNCount > 0) alumniStats.value.ptn.target = totalPTNCount;
       if (totalInstansiCount > 0) alumniStats.value.instansi.target = totalInstansiCount;
 
-      if (isAlumniStatsVisible.value) animateAlumniStats();
+      // Jika container alumni sudah di view, perbarui / jalankan lagi animasinya
+      if (isAlumniStatsVisible.value) {
+        animateAlumniStats();
+      }
     }
   } catch (error) {
     console.error("Gagal mengambil data persebaran alumni:", error);
@@ -2965,7 +2950,6 @@ const fetchSettings = async () => {
       localStorage.setItem("app_namaSekolah", fullTitle.value);
       localStorage.setItem("app_sloganSekolah", slogan.value);
 
-      appearanceSettings.value.loginBackground = response.data.data.loginBackground || "";
       appearanceSettings.value.benefitFasilitasImage =
         response.data.data.benefitFasilitasImage || "";
       appearanceSettings.value.benefitGuruImage =
@@ -2979,18 +2963,15 @@ const fetchSettings = async () => {
       appearanceSettings.value.galleryBackgroundImage =
         response.data.data.galleryBackgroundImage || "";
 
+      // Jika pertama kali load (cache kosong), jalankan animasi setelah data turun
       if (isFirstLoad && !isTypewriterStarted.value) {
         startTypewriter();
       }
-
-      // 🚀 PAKSA INJEKSI DISINI: Jalankan ulang Swiper agar membaca DOM slider yang baru saja di-render Vue
-      nextTick(() => {
-        initBgSwiper();
-      });
     }
   } catch (error) {
     console.error("Gagal mengambil pengaturan:", error);
     if (!isTypewriterStarted.value) startTypewriter();
+  } finally {
   }
 };
 
@@ -3001,9 +2982,19 @@ const handleStorageChange = (e) => {
 };
 
 onMounted(() => {
+  // Fetch data dari API Backend
+  fetchPrograms();
+  fetchAgendas();
+  fetchGalleries();
+  fetchSchoolVideo();
+  fetchNewsAndAnnouncements();
+  fetchAlumniLocations();
+  // Prioritaskan fetch data untuk Header dan Navbar terlebih dahulu
   fetchSchoolStats();
+  fetchPpdbInfo();
   fetchSettings();
 
+  // Tunda fetch data seksi lain agar tidak memblokir koneksi di awal load
   setTimeout(() => {
     fetchPrograms();
     fetchAgendas();
@@ -3014,13 +3005,16 @@ onMounted(() => {
     fetchPpdbInfo();
   }, 200);
 
+  // Dengarkan sinyal pembaruan pengaturan
   window.addEventListener("settings-updated", fetchSettings);
   window.addEventListener("storage", handleStorageChange);
 
+  // Jika sudah ada cache, langsung mulai efek ketik tanpa delay menunggu backend
   if (fullTitle.value && !isTypewriterStarted.value) {
     startTypewriter();
   }
 
+  // Initialize countdown
   updateCountdown();
   countdownInterval = setInterval(updateCountdown, 1000);
 
@@ -3031,6 +3025,7 @@ onMounted(() => {
     resizeObserver.observe(announcementsWrapper.value);
   }
 
+  // Intersection Observer untuk animasi fade-up pada saat scroll
   scrollObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -3038,11 +3033,12 @@ onMounted(() => {
           entry.target.classList.add("opacity-100", "translate-y-0");
           entry.target.classList.remove("opacity-0", "translate-y-10");
 
+          // Jalankan animasi angka spesifik untuk area alumni
           if (entry.target.classList.contains("alumni-stats-container")) {
             isAlumniStatsVisible.value = true;
             animateAlumniStats();
           }
-          scrollObserver.unobserve(entry.target);
+          scrollObserver.unobserve(entry.target); // Animasi hanya berjalan 1x
         }
       });
     },
@@ -3051,19 +3047,32 @@ onMounted(() => {
 
   observeElements();
 
+  // Initialize main Swiper
   new Swiper(".swiper-container", {
     loop: true,
     speed: 1000,
-    autoplay: { delay: 5000, disableOnInteraction: false },
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false,
+    },
     effect: "fade",
-    fadeEffect: { crossFade: true },
-    pagination: { el: ".swiper-pagination", clickable: true },
+    fadeEffect: {
+      crossFade: true,
+    },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
   });
 
+  // Initialize Stats Swiper
   new Swiper(".stats-swiper", {
     loop: true,
     speed: 800,
-    autoplay: { delay: 2500, disableOnInteraction: false },
+    autoplay: {
+      delay: 2500,
+      disableOnInteraction: false,
+    },
     slidesPerView: 3,
     spaceBetween: 5,
     breakpoints: {
@@ -3072,8 +3081,10 @@ onMounted(() => {
     },
   });
 
+  // Initialize Swipers
   initJurusanSwiper();
 
+  // Initialize Alasan Swiper
   new Swiper(".alasan-swiper", {
     loop: true,
     speed: 800,
@@ -3093,6 +3104,7 @@ onMounted(() => {
   });
 });
 
+// Dipisahkan ke dalam fungsi agar bisa dipanggil setelah fetching data pengaturan
 const startTypewriter = () => {
   if (isTypewriterStarted.value) return;
   isTypewriterStarted.value = true;
@@ -3106,11 +3118,13 @@ const startTypewriter = () => {
     } else {
       clearInterval(typeWriter);
       showSubtitle.value = true;
+
+      // Jalankan animasi angka bersamaan saat kotak statistik melayang naik
       setTimeout(() => {
         animateStats();
       }, 500);
     }
-  }, 120);
+  }, 120); // Kecepatan mengetik 120ms per huruf
 };
 
 let jurusanSwiperInstance = null;
@@ -3120,20 +3134,36 @@ const initJurusanSwiper = () => {
   }
 
   const totalPrograms = programs.value.length;
+
+  // Hitung slide dinamis (maksimal 3 untuk desktop, 2 untuk tablet)
   const desktopSlides = totalPrograms > 0 ? Math.min(3, totalPrograms) : 3;
   const tabletSlides = totalPrograms > 0 ? Math.min(2, totalPrograms) : 2;
+
+  // Matikan loop jika card sedikit agar card bisa meregang (tidak diduplikasi)
   const enableLoop = totalPrograms > 3;
 
   jurusanSwiperInstance = new Swiper(".jurusan-swiper", {
+    loop: true,
     loop: enableLoop,
     speed: 800,
-    autoplay: { delay: 3000, disableOnInteraction: false },
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false,
+    },
     slidesPerView: 1,
     spaceBetween: 0,
     pagination: { el: ".jurusan-pagination", clickable: true },
     breakpoints: {
-      768: { slidesPerView: tabletSlides, spaceBetween: 0 },
-      1024: { slidesPerView: desktopSlides, spaceBetween: 0 },
+      768: {
+        slidesPerView: 2,
+        slidesPerView: tabletSlides,
+        spaceBetween: 0,
+      },
+      1024: {
+        slidesPerView: 3,
+        slidesPerView: desktopSlides,
+        spaceBetween: 0,
+      },
     },
   });
 };
@@ -3142,9 +3172,12 @@ onBeforeUnmount(() => {
   if (countdownInterval) clearInterval(countdownInterval);
   window.removeEventListener("settings-updated", fetchSettings);
   window.removeEventListener("storage", handleStorageChange);
-  if (resizeObserver) resizeObserver.disconnect();
-  if (scrollObserver) scrollObserver.disconnect();
-  if (bgSwiperInstance) bgSwiperInstance.destroy(true, true); // 👈 Bersihkan instansi slider saat pindah halaman
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+  }
+  if (scrollObserver) {
+    scrollObserver.disconnect();
+  }
 });
 </script>
 
