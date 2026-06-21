@@ -14,13 +14,13 @@ defineProps({
     <div v-if="bgImage" class="absolute inset-0 z-0">
       <img
         :src="bgImage"
-        class="w-full h-full object-cover opacity-20 mix-blend-screen dark:mix-blend-overlay"
+        class="w-full h-full object-cover lg:object-contain lg:object-center opacity-25 mix-blend-screen dark:mix-blend-overlay transition-all duration-300"
         alt="Header Background"
       />
     </div>
 
     <div
-      class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent dark:from-black/90 dark:via-black/40 pointer-events-none z-0"
+      class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent dark:from-black/95 dark:via-black/40 pointer-events-none z-0"
     ></div>
 
     <slot name="bg-ornament"></slot>
