@@ -54,22 +54,29 @@ const filters = [
 ];
 
 const prestasiList = ref([]);
+const appearanceSettings = ref({});
 const isFetching = ref(true);
 
 const getImageUrl = (path) => {
   if (!path)
     return "https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800";
   if (path.startsWith("http") || path.startsWith("data:")) return path;
-  const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const backendUrl =
+    import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
   return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
 };
 
-const fetchPrestasi = async () => {
+const fetchInitialData = async () => {
   isFetching.value = true;
   try {
-    const response = await api.get("/api/public-achievements");
-    if (response.data && response.data.data) {
-      prestasiList.value = response.data.data.map((item) => ({
+    const [prestasiResponse, settingsResponse] = await Promise.all([
+      api.get("/api/public-achievements"),
+      api.get("/api/settings"), // Mengambil setingan gambar dinamis dari VPS
+    ]);
+
+    // Set Data List Prestasi
+    if (prestasiResponse.data && prestasiResponse.data.data) {
+      prestasiList.value = prestasiResponse.data.data.map((item) => ({
         id: item.id,
         title: item.title || item.name,
         winner: item.winner || item.student_name || "Siswa",
@@ -81,8 +88,19 @@ const fetchPrestasi = async () => {
         newsLink: item.newsLink || null,
       }));
     }
+
+    // Set Data Global Settings untuk Gambar Banner
+    if (settingsResponse.data?.success) {
+      appearanceSettings.value = settingsResponse.data.data;
+    }
+
+    // Jalankan Animasi Angka Statistik Juara setelah data selesai masuk
+    animateValue("internasional", counts.value.internasional);
+    animateValue("nasional", counts.value.nasional);
+    animateValue("provinsi", counts.value.provinsi);
+    animateValue("kabupaten", counts.value.kabupaten);
   } catch (error) {
-    console.error("Gagal memuat data prestasi:", error);
+    console.error("Gagal memuat data awal halaman prestasi:", error);
   } finally {
     isFetching.value = false;
   }
@@ -111,7 +129,6 @@ const filteredPrestasi = computed(() => {
     );
   }
 
-  // Sorting Bawaan (Selalu yang Terbaru di atas)
   filtered = [...filtered].sort((a, b) => {
     return b.year - a.year;
   });
@@ -143,7 +160,6 @@ const changePage = (page) => {
   }, 400);
 };
 
-// Hitung jumlah prestasi berdasarkan tingkat
 const counts = computed(() => ({
   internasional: prestasiList.value.filter((p) => p.level === "internasional").length,
   nasional: prestasiList.value.filter((p) => p.level === "nasional").length,
@@ -164,7 +180,6 @@ const animateValue = (key, target, duration = 2000) => {
   const step = (timestamp) => {
     if (!startTimestamp) startTimestamp = timestamp;
     const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-    // Efek easing (easeOutQuart) agar perlahan melambat di akhir
     const easeProgress = 1 - Math.pow(1 - progress, 4);
     animatedCounts.value[key] = Math.floor(easeProgress * target);
     if (progress < 1) {
@@ -176,7 +191,6 @@ const animateValue = (key, target, duration = 2000) => {
   window.requestAnimationFrame(step);
 };
 
-// Fungsi untuk menentukan warna dan badge berdasarkan ranking juara
 const getRankStyle = (rank) => {
   switch (rank) {
     case 1:
@@ -223,20 +237,22 @@ watch([activeFilter, activeType, activeYear, searchQuery], () => {
   if (filterTimeout) clearTimeout(filterTimeout);
   filterTimeout = setTimeout(() => {
     isLoading.value = false;
-  }, 800); // Simulasi loading selama 800ms
+  }, 800);
 });
 
 onMounted(() => {
-  fetchPrestasi();
+  fetchInitialData();
 });
 </script>
 
 <template>
   <div>
     <PageHeader
+      v-if="!isFetching && appearanceSettings"
       badge="Hall of Fame"
       title="Prestasi & Penghargaan"
       description="Dedikasi, kerja keras, dan semangat pantang menyerah siswa-siswi kami yang berhasil menorehkan tinta emas di berbagai ajang perlombaan bergengsi."
+      :bgImage="getImageUrl(appearanceSettings.headerPrestasi)"
     >
       <template #bg-ornament>
         <div
