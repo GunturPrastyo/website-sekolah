@@ -163,7 +163,30 @@ const fetchInitialData = async () => {
   }
 };
 
-watch();
+watch(
+  () => route.query,
+  (newQuery) => {
+    if (
+      newQuery.author !== activeAuthor.value &&
+      (newQuery.author !== undefined || activeAuthor.value !== "")
+    ) {
+      activeAuthor.value = newQuery.author || "";
+    }
+    if (
+      newQuery.q !== searchQuery.value &&
+      (newQuery.q !== undefined || searchQuery.value !== "")
+    ) {
+      searchQuery.value = newQuery.q || "";
+    }
+    if (
+      newQuery.tag !== activeTag.value &&
+      (newQuery.tag !== undefined || activeTag.value !== "")
+    ) {
+      activeTag.value = newQuery.tag || "";
+    }
+  },
+  { immediate: true }
+);
 
 watch([searchQuery, activeCategory, activeAuthor, activeTag], () => {
   currentPage.value = 1;

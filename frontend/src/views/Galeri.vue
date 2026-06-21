@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import {
   PhPlay,
@@ -16,7 +16,7 @@ const route = useRoute();
 const router = useRouter();
 
 const activeCategory = ref(route.query.category || "semua");
-const activeTab = ref("terbaru"); // Status tab: 'terbaru' atau 'terpopuler'
+const activeTab = ref("terbaru");
 
 // Kategori dinamis
 const categories = ref([
@@ -30,13 +30,14 @@ const categories = ref([
 ]);
 
 const galleryList = ref([]);
+const appearanceSettings = ref({});
 const isLoadingGalleries = ref(true);
 
 const getImageUrl = (path) => {
   if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:image")) return path;
 
-  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const baseUrl = import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
   if (cleanPath.startsWith("storage/")) {
     return `${baseUrl}/${cleanPath}`;
@@ -121,7 +122,6 @@ const fetchGalleries = async (page = 1, append = false) => {
       galleryList.value = newItems;
     }
 
-    // Update Categories (hanya saat awal load/page 1)
     if (result.categories) {
       categories.value[0].count = result.categories.total;
       if (result.categories.first_image) {
@@ -136,7 +136,6 @@ const fetchGalleries = async (page = 1, append = false) => {
       categories.value = [categories.value[0], ...dynamicCats];
     }
 
-    // Update Pagination Info
     currentPage.value = result.pagination.current_page;
     hasMorePages.value = result.pagination.has_more;
   } catch (error) {
@@ -188,7 +187,6 @@ const toggleLike = async (item) => {
   }
 };
 
-// Ambil thumbnail dinamis jika URL adalah YouTube
 const videoThumbnail = computed(() => {
   if (!schoolVideoUrl.value)
     return "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop";
@@ -217,10 +215,30 @@ watch([activeCategory, activeTab], () => {
   fetchGalleries(1, false);
 });
 
+// 1. Perbarui fungsi fetchInitialData agar lebih aman saat memuat data video profil dan setingan
+const fetchInitialData = async () => {
+  try {
+    const [settingsResponse] = await Promise.all([
+      api.get("/api/settings"),
+      fetchSchoolVideo(),
+    ]);
+
+    if (settingsResponse.data && settingsResponse.data.success) {
+      appearanceSettings.value = settingsResponse.data.data;
+    }
+  } catch (error) {
+    console.error("Gagal memuat setingan halaman galeri:", error);
+  }
+};
+
+// 2. Perbarui blok onMounted agar menunggu data setingan SELESAI dimuat sebelum memasang observer
 let observer = null;
-onMounted(() => {
-  fetchSchoolVideo();
-  fetchGalleries(1, false).then(() => {
+onMounted(async () => {
+  // Jalankan fetch data galeri dan data setting secara paralel, tunggu sampai keduanya rampung
+  await Promise.all([fetchInitialData(), fetchGalleries(1, false)]);
+
+  // Setelah semua data dipastikan masuk ke state reaktif, pasang lazy-load scroll sentinel
+  nextTick(() => {
     observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMorePages.value) {
@@ -228,7 +246,7 @@ onMounted(() => {
         }
       },
       { rootMargin: "0px 0px 150px 0px" }
-    ); // Pemicu aktif 150px sebelum mentok ke bawah
+    );
 
     if (loadMoreSentinel.value) observer.observe(loadMoreSentinel.value);
   });
@@ -247,15 +265,15 @@ const openModal = (index) => {
   currentIndex.value = index;
   currentImage.value = galleryList.value[index];
   isModalOpen.value = true;
-  document.body.style.overflow = "hidden"; // Prevent scrolling
+  document.body.style.overflow = "hidden";
 };
 
 const closeModal = () => {
   isModalOpen.value = false;
   setTimeout(() => {
     currentImage.value = null;
-  }, 300); // Tunggu animasi selesai
-  document.body.style.overflow = ""; // Restore scrolling
+  }, 300);
+  document.body.style.overflow = "";
 };
 
 const nextImage = () => {
@@ -303,7 +321,6 @@ const downloadImage = async (item) => {
   }
 };
 
-// Tracking loading state untuk skeleton
 const imageLoaded = ref({});
 const onImageLoad = (id) => {
   imageLoaded.value[id] = true;
@@ -313,9 +330,11 @@ const onImageLoad = (id) => {
 <template>
   <div>
     <PageHeader
+      v-if="appearanceSettings"
       badge="Koleksi Visual"
       title="Galeri Kegiatan"
       description="Merekam jejak langkah, fasilitas, dan berbagai momen tak terlupakan di lingkungan sekolah kami."
+      :bgImage="getImageUrl(appearanceSettings.galleryBackgroundImage)"
     />
 
     <!-- Gallery Section -->
