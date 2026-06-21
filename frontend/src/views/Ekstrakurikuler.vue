@@ -48,13 +48,15 @@ const days = [
 ];
 
 const ekskulList = ref([]);
+const appearanceSettings = ref({});
 const isFetching = ref(true);
 
 const getImageUrl = (path) => {
   if (!path)
     return "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800";
   if (path.startsWith("http") || path.startsWith("data:")) return path;
-  const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const backendUrl =
+    import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
   return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
 };
 
@@ -70,12 +72,16 @@ const parseJSON = (data) => {
   return data;
 };
 
-const fetchEkskul = async () => {
+const fetchInitialData = async () => {
   isFetching.value = true;
   try {
-    const response = await api.get("/api/public-extracurriculars");
-    if (response.data && response.data.data) {
-      ekskulList.value = response.data.data.map((item) => ({
+    const [ekskulResponse, settingsResponse] = await Promise.all([
+      api.get("/api/public-extracurriculars"),
+      api.get("/api/settings"),
+    ]);
+
+    if (ekskulResponse.data && ekskulResponse.data.data) {
+      ekskulList.value = ekskulResponse.data.data.map((item) => ({
         id: item.id,
         name: item.name,
         category: item.category || "semua",
@@ -88,8 +94,12 @@ const fetchEkskul = async () => {
         socials: parseJSON(item.socials),
       }));
     }
+
+    if (settingsResponse.data?.success) {
+      appearanceSettings.value = settingsResponse.data.data;
+    }
   } catch (error) {
-    console.error("Gagal memuat data ekstrakurikuler:", error);
+    console.error("Gagal memuat data inisialisasi halaman ekstrakurikuler:", error);
   } finally {
     isFetching.value = false;
   }
@@ -194,19 +204,19 @@ const selectedEkskul = ref(null);
 const openModal = (ekskul) => {
   selectedEkskul.value = ekskul;
   isModalOpen.value = true;
-  document.body.style.overflow = "hidden"; // Mencegah background di-scroll
+  document.body.style.overflow = "hidden";
 };
 
 const closeModal = () => {
   isModalOpen.value = false;
-  document.body.style.overflow = ""; // Kembalikan scroll
+  document.body.style.overflow = "";
 };
 
 let observer;
 
 onMounted(() => {
-  fetchEkskul();
-  // Intersection Observer untuk animasi fade-up
+  fetchInitialData();
+
   observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -217,7 +227,7 @@ onMounted(() => {
         }
       });
     },
-    { threshold: 0.1 } // Terpicu saat 10% elemen terlihat di layar
+    { threshold: 0.1 }
   );
 
   document.querySelectorAll(".fade-on-scroll").forEach((el) => {
@@ -225,7 +235,6 @@ onMounted(() => {
   });
 });
 
-// Pantau perubahan halaman/data agar kartu yang baru dirender tetap ikut dianismasi
 watch(paginatedEkskul, () => {
   if (observer) {
     document.querySelectorAll(".fade-on-scroll").forEach((el) => {
@@ -238,17 +247,18 @@ watch(paginatedEkskul, () => {
 
 onBeforeUnmount(() => {
   if (observer) observer.disconnect();
-  document.body.style.overflow = ""; // Pastikan scroll kembali normal saat komponen dihancurkan (pindah halaman)
+  document.body.style.overflow = "";
 });
 </script>
 
 <template>
   <div>
     <PageHeader
+      v-if="!isFetching && appearanceSettings"
       badge="Akademik"
       title="Ekstrakurikuler & Klub Siswa"
       description="Kembangkan bakat, minat, dan potensimu di luar jam pelajaran melalui berbagai pilihan kegiatan ekstrakurikuler yang seru dan inspiratif."
-      bgImage="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop"
+      :bgImage="appearanceSettings.headerEkskul"
     />
 
     <!-- Gallery Section -->
