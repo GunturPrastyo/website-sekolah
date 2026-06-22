@@ -32,11 +32,13 @@ const themeClasses = {
       "text-gray-900 group-hover:text-slate-700 dark:text-slate-100 dark:group-hover:text-slate-400",
     infoIcon: "text-slate-500",
     infoText: "text-gray-700 dark:text-slate-300",
+    fileBtn:
+      "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 dark:bg-slate-900/30 dark:text-slate-400 dark:border-slate-700/50 dark:hover:bg-slate-900/50",
     eventBg:
-      "bg-slate-600 hover:bg-slate-700 text-white dark:bg-slate-700 dark:hover:bg-slate-600",
-    eventHeaderBg: "bg-slate-700 dark:bg-slate-800",
-    eventHeaderText: "text-white/90 drop-shadow-md",
-    eventDayText: "text-white font-bold",
+      "bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/30 dark:hover:bg-slate-900/50",
+    eventHeaderBg: "bg-slate-600 dark:bg-slate-700",
+    eventHeaderText: "text-white drop-shadow-md",
+    eventDayText: "text-slate-800 dark:text-slate-400",
   },
   red: {
     card:
@@ -50,11 +52,13 @@ const themeClasses = {
       "text-gray-900 group-hover:text-gray-700 dark:text-slate-100 dark:group-hover:text-gray-400",
     infoIcon: "text-gray-500",
     infoText: "text-gray-700 dark:text-slate-300",
+    fileBtn:
+      "bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-700/50 dark:hover:bg-gray-900/50",
     eventBg:
-      "bg-red-600 hover:bg-red-700 text-white dark:bg-red-700 dark:hover:bg-red-600",
-    eventHeaderBg: "bg-red-700 dark:bg-red-800",
-    eventHeaderText: "text-white/90 drop-shadow-md",
-    eventDayText: "text-white font-bold",
+      "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900/30 dark:hover:bg-gray-900/50",
+    eventHeaderBg: "bg-gray-600 dark:bg-gray-700",
+    eventHeaderText: "text-white drop-shadow-md",
+    eventDayText: "text-gray-800 dark:text-gray-400",
   },
   green: {
     card:
@@ -68,11 +72,13 @@ const themeClasses = {
       "text-gray-900 group-hover:text-zinc-700 dark:text-slate-100 dark:group-hover:text-zinc-400",
     infoIcon: "text-zinc-500",
     infoText: "text-gray-700 dark:text-slate-300",
+    fileBtn:
+      "bg-zinc-50 text-zinc-700 border border-zinc-200 hover:bg-zinc-100 dark:bg-zinc-900/30 dark:text-zinc-400 dark:border-zinc-700/50 dark:hover:bg-zinc-900/50",
     eventBg:
-      "bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-700 dark:hover:bg-emerald-600",
-    eventHeaderBg: "bg-emerald-700 dark:bg-emerald-800",
-    eventHeaderText: "text-white/90 drop-shadow-md",
-    eventDayText: "text-white font-bold",
+      "bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900/30 dark:hover:bg-zinc-900/50",
+    eventHeaderBg: "bg-zinc-600 dark:bg-zinc-700",
+    eventHeaderText: "text-white drop-shadow-md",
+    eventDayText: "text-zinc-800 dark:text-zinc-400",
   },
   blue: {
     card:
@@ -86,11 +92,13 @@ const themeClasses = {
       "text-gray-900 group-hover:text-neutral-700 dark:text-slate-100 dark:group-hover:text-neutral-400",
     infoIcon: "text-neutral-500",
     infoText: "text-gray-700 dark:text-slate-300",
+    fileBtn:
+      "bg-neutral-50 text-neutral-700 border border-neutral-200 hover:bg-neutral-100 dark:bg-neutral-900/30 dark:text-neutral-400 dark:border-neutral-700/50 dark:hover:bg-neutral-900/50",
     eventBg:
-      "bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-600",
-    eventHeaderBg: "bg-blue-700 dark:bg-blue-800",
-    eventHeaderText: "text-white/90 drop-shadow-md",
-    eventDayText: "text-white font-bold",
+      "bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900/30 dark:hover:bg-neutral-900/50",
+    eventHeaderBg: "bg-neutral-600 dark:bg-neutral-700",
+    eventHeaderText: "text-white drop-shadow-md",
+    eventDayText: "text-neutral-800 dark:text-neutral-400",
   },
 };
 
