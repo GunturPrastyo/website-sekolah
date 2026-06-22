@@ -55,9 +55,16 @@ const getImageUrl = (path) => {
   if (!path)
     return "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800";
   if (path.startsWith("http") || path.startsWith("data:")) return path;
-  const backendUrl =
-    import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
-  return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
+
+  const backendUrl = import.meta.env.VITE_API_URL;
+  const cleanBase = backendUrl.replace(/\/+$/, "");
+  let cleanPath = path.replace(/^\/+/, "");
+
+  if (!cleanPath.startsWith("storage/")) {
+    cleanPath = `storage/${cleanPath}`;
+  }
+
+  return `${cleanBase}/${cleanPath}`;
 };
 
 const parseJSON = (data) => {
