@@ -95,10 +95,9 @@ const closeModal = () => {
             <!-- Story Text dengan Gaya Drop Cap (Huruf awal besar) -->
             <div class="mb-10">
               <p
-                class="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed text-justify first-letter:text-6xl first-letter:font-black first-letter:text-blue-600 dark:first-letter:text-blue-400 first-letter:float-left first-letter:mr-4 first-letter:mt-1 first-letter:leading-none"
-              >
-                {{ ekskul?.story }}
-              </p>
+                v-html="ekskul?.story"
+                class="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed text-justify first-letter:text-6xl first-letter:font-black first-letter:text-blue-600 dark:first-letter:text-blue-400 first-letter:float-left first-letter:mr-4 first-letter:mt-1 first-letter:leading-none custom-story-content"
+              ></p>
             </div>
 
             <!-- Quick Info Grid -->
@@ -197,7 +196,8 @@ const closeModal = () => {
                 @click="closeModal"
                 class="px-5 py-2.5 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors flex items-center shadow-md shadow-blue-500/30 focus:outline-none"
               >
-                Daftar Ekskul <PhArrowRight class="w-4 h-4 ml-2" />
+                Daftar Ekskul
+                <PhArrowRight class="w-4 h-4 ml-2" />
               </router-link>
             </div>
           </div>
@@ -206,3 +206,16 @@ const closeModal = () => {
     </div>
   </Transition>
 </template>
+
+<style scoped>
+/* Memastikan semua elemen anak di dalam v-html mewarisi warna teks modal yang benar */
+:deep(.custom-story-content) p {
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+:deep(.custom-story-content) strong {
+  font-weight: 700;
+  @apply text-blue-600 dark:text-blue-400;
+}
+</style>

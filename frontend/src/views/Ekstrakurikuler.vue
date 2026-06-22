@@ -382,10 +382,9 @@ onBeforeUnmount(() => {
                           </div>
 
                           <p
-                            class="text-gray-200 text-sm leading-relaxed mb-5 line-clamp-3"
-                          >
-                            {{ ekskul.desc }}
-                          </p>
+                            v-html="ekskul.desc"
+                            class="text-gray-200 text-sm leading-relaxed mb-5 line-clamp-3 input-html-content"
+                          ></p>
 
                           <button
                             class="inline-flex items-center text-xs font-bold text-white uppercase tracking-widest hover:text-blue-300 transition-colors focus:outline-none"
