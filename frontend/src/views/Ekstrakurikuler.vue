@@ -1,5 +1,13 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
+import {
+  ref,
+  computed,
+  onMounted,
+  onBeforeUnmount,
+  watch,
+  watchEffect,
+  nextTick,
+} from "vue";
 import {
   PhSquaresFour,
   PhActivity,
@@ -15,9 +23,6 @@ import {
   PhArrowUpRight,
   PhCaretLeft,
   PhCaretRight,
-  PhLightbulb,
-  PhDownloadSimple,
-  PhClipboardText,
   PhFileX,
 } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
@@ -109,16 +114,6 @@ const fetchInitialData = async () => {
     console.error("Gagal memuat data:", error);
   } finally {
     isFetching.value = false;
-
-    nextTick(() => {
-      setTimeout(() => {
-        if (observer) {
-          document.querySelectorAll(".fade-on-scroll").forEach((el) => {
-            observer.observe(el);
-          });
-        }
-      }, 100);
-    });
   }
 };
 
@@ -246,18 +241,16 @@ onMounted(() => {
     },
     { threshold: 0.1 }
   );
-
-  document.querySelectorAll(".fade-on-scroll").forEach((el) => {
-    observer.observe(el);
-  });
 });
 
-watch(paginatedEkskul, () => {
-  if (observer) {
-    document.querySelectorAll(".fade-on-scroll").forEach((el) => {
-      if (el.classList.contains("opacity-0")) {
-        observer.observe(el);
-      }
+watchEffect(() => {
+  if (!isFetching.value && !isLoading.value && paginatedEkskul.value.length > 0) {
+    nextTick(() => {
+      setTimeout(() => {
+        document.querySelectorAll(".fade-on-scroll").forEach((el) => {
+          if (observer) observer.observe(el);
+        });
+      }, 150);
     });
   }
 });
@@ -282,7 +275,6 @@ onBeforeUnmount(() => {
     <section
       class="relative pt-0 md:pt-6 pb-0 md:px-6 min-h-screen bg-gradient-to-b from-blue-50/50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden"
     >
-      <!-- Elemen Dekorasi Latar Belakang (Blob Cahaya) -->
       <div
         class="absolute top-0 right-0 w-96 h-96 bg-blue-400/10 dark:bg-blue-600/10 rounded-full blur-3xl -translate-y-1/4 translate-x-1/4 pointer-events-none"
       ></div>
@@ -294,7 +286,6 @@ onBeforeUnmount(() => {
         >
           <!-- KIRI: Daftar Card Ekstrakurikuler -->
           <div class="flex-1 w-full order-2 lg:order-1">
-            <!-- Judul Pembuka Daftar Ekskul -->
             <div
               class="mb-8 border-b border-gray-100 dark:border-slate-700 pb-3 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out"
             >
@@ -518,9 +509,7 @@ onBeforeUnmount(() => {
           <!-- KANAN: Sidebar Filter & Search -->
           <div class="w-full lg:w-1/3 shrink-0 order-1 lg:order-2">
             <div class="flex flex-col gap-6 lg:sticky lg:top-32">
-              <!-- Search Bar & Dropdown -->
               <div class="flex flex-row gap-3 sm:gap-4 w-full">
-                <!-- Search Bar -->
                 <div class="relative flex-1">
                   <PhMagnifyingGlass
                     class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
@@ -533,9 +522,7 @@ onBeforeUnmount(() => {
                   />
                 </div>
 
-                <!-- Dropdown Hari -->
                 <div class="relative w-14 shrink-0" title="Filter Hari">
-                  <!-- Toggle Button -->
                   <button
                     @click="isDayDropdownOpen = !isDayDropdownOpen"
                     class="w-full h-full py-4 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-inner flex items-center justify-center cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-800"
@@ -550,13 +537,11 @@ onBeforeUnmount(() => {
                     />
                   </button>
 
-                  <!-- Indikator filter aktif -->
                   <div
                     v-if="activeDay !== 'semua'"
                     class="absolute top-3 right-3 w-2.5 h-2.5 bg-blue-500 rounded-full border-2 border-gray-50 dark:border-slate-900/50 pointer-events-none"
                   ></div>
 
-                  <!-- Dropdown Card Menu -->
                   <Transition
                     enter-active-class="transition ease-out duration-200"
                     enter-from-class="opacity-0 translate-y-1 scale-95"
@@ -569,7 +554,6 @@ onBeforeUnmount(() => {
                       v-if="isDayDropdownOpen"
                       class="absolute top-full right-0 mt-3 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 p-2 z-50 origin-top-right"
                     >
-                      <!-- Transparent Overlay for clicking outside -->
                       <div
                         class="fixed inset-0 z-[-1]"
                         @click="isDayDropdownOpen = false"
@@ -597,7 +581,6 @@ onBeforeUnmount(() => {
                 </div>
               </div>
 
-              <!-- Filter Card (Kategori) -->
               <div
                 class="w-full bg-gray-50 dark:bg-slate-900/50 p-5 lg:p-6 rounded-xl shadow-inner border border-gray-200 dark:border-slate-700 flex flex-col gap-4"
               >
@@ -631,7 +614,6 @@ onBeforeUnmount(() => {
                 </div>
               </div>
 
-              <!-- Widget Jadwal Mingguan -->
               <div
                 class="w-full bg-white dark:bg-slate-800 p-5 lg:p-6 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col gap-4 mt-2 lg:mt-0"
               >
@@ -687,7 +669,6 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
-    <!-- Modal Detail Ekskul -->
     <EkskulModal
       :is-open="isModalOpen"
       :ekskul="selectedEkskul"
@@ -696,41 +677,3 @@ onBeforeUnmount(() => {
     />
   </div>
 </template>
-
-<style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap");
-
-.gallery-move,
-.gallery-enter-active,
-.gallery-leave-active {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.gallery-enter-from,
-.gallery-leave-to {
-  opacity: 0;
-  transform: scale(0.95) translateY(20px);
-}
-
-.gallery-leave-active {
-  position: absolute;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
-  border-radius: 10px;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #475569;
-}
-</style>
