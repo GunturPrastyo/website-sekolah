@@ -117,7 +117,7 @@ onBeforeUnmount(() => {
           >
             <img
               :src="getImageUrl(imgUrl)"
-              class="w-full h-full object-cover opacity-25 mix-blend-screen dark:mix-blend-overlay"
+              class="w-full h-full object-cover opacity-60 mix-blend-screen dark:mix-blend-overlay"
               alt="Home Background Slider"
             />
           </div>
@@ -130,25 +130,25 @@ onBeforeUnmount(() => {
         loop
         muted
         playsinline
-        class="absolute inset-0 w-full h-full object-cover opacity-30"
+        class="absolute inset-0 w-full h-full object-cover opacity-50"
       >
         <source src="/img/footage.webm" type="video/webm" />
       </video>
 
       <div
-        class="absolute inset-0 bg-gradient-to-b from-blue-950/50 via-slate-950/70 to-slate-950 dark:to-black z-10 pointer-events-none"
+        class="absolute inset-0 bg-gradient-to-b from-transparent via-slate-950/40 to-slate-950 dark:to-black z-10 pointer-events-none"
       ></div>
     </div>
 
     <div class="z-20 p-5">
       <h1
-        class="text-3xl md:text-5xl lg:text-5xl font-bold tracking-wide uppercase drop-shadow-lg"
+        class="text-3xl md:text-5xl lg:text-5xl font-bold tracking-wide uppercase drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]"
         style="font-family: 'Oswald', sans-serif"
       >
         {{ displayedTitle }}<span class="animate-pulse font-light text-white/70">|</span>
       </h1>
       <p
-        class="mt-6 text-lg md:text-xl lg:text-2xl text-center transition-all duration-1000 ease-out text-gray-100 drop-shadow-lg"
+        class="mt-6 text-lg md:text-xl lg:text-2xl text-center transition-all duration-1000 ease-out text-gray-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
         :class="showSubtitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'"
         style="font-family: 'Merriweather', serif"
       >
