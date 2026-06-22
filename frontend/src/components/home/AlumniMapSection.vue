@@ -136,9 +136,11 @@ watch(
 </script>
 
 <template>
-  <div class="mt-8 px-0 md:px-8 lg:px-4 mb-20 md:mb-24 -mx-0 md:-mx-8 lg:-mx-0">
+  <div
+    class="w-screen mt-8 mb-20 md:mb-24 -mx-6 md:mx-0 md:w-full md:max-w-full px-0 md:px-8 lg:px-4"
+  >
     <div
-      class="relative bg-center bg-fixed sm:rounded-xl shadow-xl p-3 md:p-2 flex flex-col md:flex-row items-center gap-0 md:gap-6 overflow-hidden"
+      class="relative bg-center bg-fixed md:rounded-xl shadow-xl p-4 md:p-2 flex flex-col md:flex-row items-center gap-0 md:gap-6 overflow-hidden"
       style="
         background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200');
       "
@@ -147,9 +149,8 @@ watch(
         class="absolute inset-0 bg-gradient-to-br from-slate-950/90 via-blue-950/80 to-slate-900/90 backdrop-blur-[2px]"
       ></div>
 
-      <!-- LEFT TEXT -->
       <div
-        class="relative z-10 md:w-2/5 lg:w-1/3 mx-0 sm:mx-6 mt-4 md:mt-0 opacity-0 translate-y-10 transition-all duration-700 ease-out alumni-stats-container"
+        class="relative z-10 md:w-2/5 lg:w-1/3 mx-0 sm:mx-6 mt-4 md:mt-0 px-0 opacity-0 translate-y-10 transition-all duration-700 ease-out alumni-stats-container"
       >
         <h3
           class="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2"
@@ -157,7 +158,7 @@ watch(
         >
           Persebaran Alumni Kami
         </h3>
-        <p class="text-sm lg:text-base text-sky-50 leading-relaxed mb-4">
+        <p class="text-sm lg:text-base text-sky-50 leading-relaxed mb-2 md:mb-4">
           Tersebar di berbagai perguruan tinggi favorit dan sukses berkarir di berbagai
           sektor industri terkemuka.
         </p>
@@ -211,9 +212,8 @@ watch(
         </div>
       </div>
 
-      <!-- RIGHT MAP VISUALIZATION -->
       <div
-        class="relative z-10 md:w-3/5 lg:w-2/3 w-full flex items-center justify-center min-h-[220px] md:min-h-[280px] mt-0"
+        class="relative z-10 md:w-3/5 lg:w-2/3 w-full flex items-center justify-center min-h-[220px] md:min-h-[280px] mt-2 md:mt-0 p-1 md:p-0"
       >
         <div
           class="relative w-full max-w-4xl group/map transition-transform duration-700 ease-out hover:scale-105 aspect-[2.5/1] md:aspect-[2/1] lg:aspect-[3.5/1]"
@@ -291,7 +291,6 @@ watch(
       </div>
     </div>
 
-    <!-- TOOLTIP TELEPORT -->
     <Teleport to="body">
       <Transition
         enter-active-class="transition-opacity duration-200"
@@ -383,16 +382,19 @@ watch(
   white-space: nowrap;
   width: 100%;
 }
+
 .text-marquee-content {
   display: inline-block;
   min-width: 100%;
   animation: slide-text 5s linear infinite alternate;
 }
+
 @keyframes slide-text {
   0%,
   20% {
     transform: translateX(0);
   }
+
   80%,
   100% {
     transform: translateX(min(0px, calc(100cqw - 100%)));

@@ -299,7 +299,7 @@ onBeforeUnmount(() => {
 
         <div class="lg:col-span-1 relative h-[550px] lg:h-auto mt-0 md:mt-8 lg:mt-0">
           <div
-            class="absolute inset-0 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col overflow-hidden"
+            class="absolute inset-0 bg-white dark:bg-slate-800 rounded-xl shadow-md border border-gray-100 dark:border-slate-700 flex flex-col overflow-hidden"
           >
             <div
               class="p-5 md:p-6 border-b border-blue-100 dark:border-slate-700/50 bg-gray-50 dark:bg-slate-700/50 z-20 flex items-center justify-between shadow-sm"
@@ -387,7 +387,7 @@ onBeforeUnmount(() => {
             </div>
 
             <div
-              class="p-4 bg-white dark:bg-slate-800 z-20 border-t text-center shadow-md"
+              class="p-4 bg-white dark:bg-slate-800 z-20 border-t border-t-gray-200 dark:border-t-slate-600 text-center shadow-md"
             >
               <router-link
                 to="/berita"
