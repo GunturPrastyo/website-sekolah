@@ -87,8 +87,10 @@ const fetchInitialData = async () => {
         category: item.category || "semua",
         image: getImageUrl(item.image),
         schedule: item.schedule || "-",
-        desc: item.description || item.desc || "",
-        story: item.story || item.description || "",
+
+        desc: item.story || "",
+        story: item.story || "",
+
         pembina: item.pembina || item.coach || "-",
         members: item.members || item.members_count || 0,
         socials: parseJSON(item.socials),
