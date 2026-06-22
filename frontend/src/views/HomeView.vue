@@ -62,7 +62,8 @@ const statsArray = ref([
 const programs = ref([]);
 const news = ref([]);
 const announcements = ref([]);
-const galleries = ref([]);
+const galleriesByCategory = ref([]);
+const fourthGalleryImage = ref(null);
 const agendas = ref([]);
 const alumniLocations = ref([]);
 
@@ -173,8 +174,118 @@ const fetchNewsAndAnnouncements = async () => {
 const fetchGalleries = async () => {
   try {
     const res = await api.get("/api/public-galleries");
-    if (res.data?.data) galleries.value = res.data.data;
-  } catch (error) {}
+    if (res.data?.data) {
+      const allGalleries = res.data.data;
+      const grouped = {};
+      allGalleries.forEach((gallery) => {
+        if (!grouped[gallery.category]) {
+          grouped[gallery.category] = gallery;
+        }
+      });
+      const groupedArr = Object.values(grouped);
+      galleriesByCategory.value = groupedArr.slice(0, 3); // Batasi maksimal 3 agar tidak RangeError
+
+      if (groupedArr.length > 3) fourthGalleryImage.value = groupedArr[3].image;
+      else if (allGalleries.length > 3) fourthGalleryImage.value = allGalleries[3].image;
+      else if (allGalleries.length > 0) fourthGalleryImage.value = allGalleries[0].image;
+    }
+  } catch (error) {
+    console.error("Gagal mengambil galeri:", error);
+  }
+};
+
+const fetchAgendas = async () => {
+  try {
+    const res = await api.get("/api/public-agendas");
+    if (res.data?.data && res.data.data.length > 0) {
+      agendas.value = res.data.data.map((agenda) => {
+        let dateText = "01";
+        let monthText = "Jan";
+        let startDate = null;
+        let endDate = null;
+
+        const rawStartDate =
+          agenda.start_date ||
+          agenda.startDate ||
+          agenda.tanggal_mulai ||
+          agenda.date ||
+          agenda.tanggal;
+        const rawEndDate = agenda.end_date || agenda.endDate || agenda.tanggal_selesai;
+
+        if (rawStartDate) {
+          const d = new Date(rawStartDate);
+          if (!isNaN(d.getTime())) {
+            startDate = d;
+            dateText = d.getDate().toString().padStart(2, "0");
+            const months = [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "Mei",
+              "Jun",
+              "Jul",
+              "Agt",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Des",
+            ];
+            monthText = months[d.getMonth()];
+
+            if (rawEndDate && rawEndDate !== rawStartDate) {
+              const endD = new Date(rawEndDate);
+              if (!isNaN(endD.getTime())) {
+                endDate = endD;
+                dateText = `${d
+                  .getDate()
+                  .toString()
+                  .padStart(2, "0")}-${endD.getDate().toString().padStart(2, "0")}`;
+                if (d.getMonth() !== endD.getMonth())
+                  monthText = `${months[d.getMonth()]}-${months[endD.getMonth()]}`;
+              }
+            }
+          } else {
+            dateText = rawStartDate;
+            monthText = "Agenda";
+          }
+        }
+
+        let color = agenda.color || "blue";
+        if (!agenda.color) {
+          const type = (
+            agenda.category ||
+            agenda.type ||
+            agenda.kategori ||
+            ""
+          ).toLowerCase();
+          if (type.includes("akademik")) color = "yellow";
+          else if (
+            type.includes("guru") ||
+            type.includes("staf") ||
+            type.includes("pendidik")
+          )
+            color = "red";
+          else if (type.includes("kegiatan") || type.includes("lomba")) color = "green";
+        }
+
+        return {
+          id: agenda.id,
+          date: dateText,
+          month: monthText,
+          title: agenda.title || agenda.nama || "Agenda Tanpa Judul",
+          time: agenda.time || agenda.waktu || "08:00 - Selesai",
+          loc: agenda.location || agenda.lokasi || "Lingkungan Sekolah",
+          color: color,
+          file: agenda.file || agenda.lampiran || null,
+          startDate: startDate,
+          endDate: endDate || startDate,
+        };
+      });
+    }
+  } finally {
+    isLoading.agendas = false;
+  }
 };
 
 const fetchSchoolVideo = async () => {
@@ -187,15 +298,6 @@ const fetchSchoolVideo = async () => {
     }
   } finally {
     isLoading.video = false;
-  }
-};
-
-const fetchAgendas = async () => {
-  try {
-    const res = await api.get("/api/public-agendas");
-    if (res.data?.data) agendas.value = res.data.data;
-  } finally {
-    isLoading.agendas = false;
   }
 };
 
@@ -379,7 +481,8 @@ onBeforeUnmount(() => {
         :schoolVideoDesc="schoolVideoDesc"
         :isLoadingSchoolVideo="isLoading.video"
         :isVideoPlaying="isVideoPlaying"
-        :galleriesByCategory="galleries"
+        :galleriesByCategory="galleriesByCategory"
+        :fourthGalleryImage="fourthGalleryImage"
         @play-video="isVideoPlaying = true"
       />
 
