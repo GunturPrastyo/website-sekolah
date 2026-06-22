@@ -208,7 +208,9 @@ const closeModal = () => {
 </template>
 
 <style scoped>
-/* Memastikan semua elemen anak di dalam v-html mewarisi warna teks modal yang benar */
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap");
+
 :deep(.custom-story-content) p {
   margin-bottom: 1rem;
   text-align: justify;
@@ -216,6 +218,10 @@ const closeModal = () => {
 
 :deep(.custom-story-content) strong {
   font-weight: 700;
-  @apply text-blue-600 dark:text-blue-400;
+  color: #2563eb; /* text-blue-600 */
+}
+
+:global(.dark) :deep(.custom-story-content) strong {
+  color: #60a5fa; /* text-blue-400 */
 }
 </style>
