@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, reactive, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
 import api from "@/api/index.js";
 
 // IMPORT SEMUA KOMPONEN
@@ -94,6 +94,7 @@ const isLoading = reactive({
 });
 
 let scrollObserver = null;
+let typewriterInterval = null;
 
 // FUNGSI FETCH API
 const fetchSettings = async () => {
@@ -101,15 +102,26 @@ const fetchSettings = async () => {
     const res = await api.get("/api/settings");
     if (res.data?.success) {
       appearanceSettings.value = { ...appearanceSettings.value, ...res.data.data };
-      fullTitle.value = res.data.data.namaSekolah || "";
+
+      const newTitle = res.data.data.namaSekolah || "";
       slogan.value = res.data.data.deskripsi || "";
-      localStorage.setItem("app_namaSekolah", fullTitle.value);
+
+      localStorage.setItem("app_namaSekolah", newTitle);
       localStorage.setItem("app_sloganSekolah", slogan.value);
 
       if (res.data.data.headerBeranda)
         localStorage.setItem("app_headerBeranda", res.data.data.headerBeranda);
-      if (isTypewriterStarted.value) displayedTitle.value = fullTitle.value;
-      else startTypewriter();
+
+      if (fullTitle.value !== newTitle) {
+        fullTitle.value = newTitle;
+        if (isTypewriterStarted.value) {
+          displayedTitle.value = newTitle;
+        } else {
+          startTypewriter();
+        }
+      } else {
+        if (!isTypewriterStarted.value) startTypewriter();
+      }
     }
   } catch (error) {
     if (!isTypewriterStarted.value) startTypewriter();
@@ -183,7 +195,7 @@ const fetchGalleries = async () => {
         }
       });
       const groupedArr = Object.values(grouped);
-      galleriesByCategory.value = groupedArr.slice(0, 3); // Batasi maksimal 3 agar tidak RangeError
+      galleriesByCategory.value = groupedArr.slice(0, 3);
 
       if (groupedArr.length > 3) fourthGalleryImage.value = groupedArr[3].image;
       else if (allGalleries.length > 3) fourthGalleryImage.value = allGalleries[3].image;
@@ -373,16 +385,20 @@ const animateStats = () => {
 };
 
 const startTypewriter = () => {
-  if (isTypewriterStarted.value) return;
+  if (isTypewriterStarted.value && displayedTitle.value.length > 0) return;
   isTypewriterStarted.value = true;
+
+  if (typewriterInterval) clearInterval(typewriterInterval);
+
   let i = 0;
   displayedTitle.value = "";
-  const typeWriter = setInterval(() => {
+
+  typewriterInterval = setInterval(() => {
     if (i < fullTitle.value.length) {
       displayedTitle.value += fullTitle.value.charAt(i);
       i++;
     } else {
-      clearInterval(typeWriter);
+      clearInterval(typewriterInterval);
       showSubtitle.value = true;
       setTimeout(animateStats, 500);
     }
@@ -434,6 +450,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   if (scrollObserver) scrollObserver.disconnect();
+  if (typewriterInterval) clearInterval(typewriterInterval);
 });
 </script>
 
@@ -475,6 +492,7 @@ onBeforeUnmount(() => {
 
       <!-- 5. GALERI & VIDEO -->
       <VideoGallerySection
+        :key="schoolVideoUrl || 'loading-video'"
         :appearanceSettings="appearanceSettings"
         :schoolVideoUrl="schoolVideoUrl"
         :schoolVideoTitle="schoolVideoTitle"
