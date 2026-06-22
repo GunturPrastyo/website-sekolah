@@ -94,10 +94,8 @@ const fetchInitialData = async () => {
         category: item.category || "semua",
         image: getImageUrl(item.image),
         schedule: item.schedule || "-",
-
         desc: item.story || "",
         story: item.story || "",
-
         pembina: item.pembina || item.coach || "-",
         members: item.members || item.members_count || 0,
         socials: parseJSON(item.socials),
@@ -108,9 +106,19 @@ const fetchInitialData = async () => {
       appearanceSettings.value = settingsResponse.data.data;
     }
   } catch (error) {
-    console.error("Gagal memuat data inisialisasi halaman ekstrakurikuler:", error);
+    console.error("Gagal memuat data:", error);
   } finally {
     isFetching.value = false;
+
+    nextTick(() => {
+      setTimeout(() => {
+        if (observer) {
+          document.querySelectorAll(".fade-on-scroll").forEach((el) => {
+            observer.observe(el);
+          });
+        }
+      }, 100);
+    });
   }
 };
 
