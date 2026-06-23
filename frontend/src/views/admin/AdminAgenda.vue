@@ -28,7 +28,7 @@ const form = ref({
   endDate: "",
   time: "",
   location: "",
-  color: "blue",
+  color: "seminarAcara",
   attachment: "",
 });
 const fileInputRef = ref(null);
@@ -45,43 +45,43 @@ const filterColor = ref("semua");
 
 const colors = [
   {
-    id: "yellow",
+    id: "akademik",
     name: "Akademik",
-    bg: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+    bg: "bg-slate-100 text-slate-700 dark:bg-slate-900/30 dark:text-slate-400",
     calBg:
-      "bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/40",
-    calHeader:
-      "bg-yellow-200/70 dark:bg-yellow-700/40 text-yellow-800 dark:text-yellow-200",
-    calText: "text-yellow-700 dark:text-yellow-300",
-    legendBg: "bg-yellow-400",
+      "bg-slate-50 dark:bg-slate-900/20 hover:bg-slate-100 dark:hover:bg-slate-900/40",
+    calHeader: "bg-slate-200/70 dark:bg-slate-700/40 text-slate-800 dark:text-slate-200",
+    calText: "text-slate-700 dark:text-slate-300",
+    legendBg: "bg-slate-600",
   },
   {
-    id: "red",
+    id: "guruStaf",
     name: "Guru & Staf",
-    bg: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-    calBg: "bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40",
-    calHeader: "bg-red-200/70 dark:bg-red-700/40 text-red-800 dark:text-red-200",
-    calText: "text-red-700 dark:text-red-300",
-    legendBg: "bg-red-500",
+    bg: "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400",
+    calBg: "bg-gray-50 dark:bg-gray-900/20 hover:bg-gray-100 dark:hover:bg-gray-900/40",
+    calHeader: "bg-gray-200/70 dark:bg-gray-700/40 text-gray-800 dark:text-gray-200",
+    calText: "text-gray-700 dark:text-gray-300",
+    legendBg: "bg-gray-600",
   },
   {
-    id: "green",
+    id: "kegiatan",
     name: "Kegiatan",
-    bg: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-    calBg:
-      "bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/40",
-    calHeader: "bg-green-200/70 dark:bg-green-700/40 text-green-800 dark:text-green-200",
-    calText: "text-green-700 dark:text-green-300",
-    legendBg: "bg-green-500",
+    bg: "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400",
+    calBg: "bg-zinc-50 dark:bg-zinc-900/20 hover:bg-zinc-100 dark:hover:bg-zinc-900/40",
+    calHeader: "bg-zinc-200/70 dark:bg-zinc-700/40 text-zinc-800 dark:text-zinc-200",
+    calText: "text-zinc-700 dark:text-zinc-300",
+    legendBg: "bg-zinc-600",
   },
   {
-    id: "blue",
+    id: "seminarAcara",
     name: "Seminar & Acara",
-    bg: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-    calBg: "bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40",
-    calHeader: "bg-blue-200/70 dark:bg-blue-700/40 text-blue-800 dark:text-blue-200",
-    calText: "text-blue-700 dark:text-blue-300",
-    legendBg: "bg-blue-500",
+    bg: "bg-neutral-100 text-neutral-700 dark:bg-neutral-900/30 dark:text-neutral-400",
+    calBg:
+      "bg-neutral-50 dark:bg-neutral-900/20 hover:bg-neutral-100 dark:hover:bg-neutral-900/40",
+    calHeader:
+      "bg-neutral-200/70 dark:bg-neutral-700/40 text-neutral-800 dark:text-neutral-200",
+    calText: "text-neutral-700 dark:text-neutral-300",
+    legendBg: "bg-neutral-600",
   },
 ];
 
@@ -138,7 +138,7 @@ const resetForm = () => {
     endDate: "",
     time: "",
     location: "",
-    color: "blue",
+    color: "seminarAcara",
     attachment: "",
   };
   isEditing.value = false;
