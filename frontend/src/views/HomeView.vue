@@ -263,24 +263,30 @@ const fetchAgendas = async () => {
           }
         }
 
-        let color = agenda.color || "blue";
-        if (!agenda.color) {
+        const validColors = ["yellow", "red", "green", "blue"];
+        let color = "blue";
+
+        if (agenda.color && validColors.includes(agenda.color.toLowerCase())) {
+          color = agenda.color.toLowerCase();
+        } else {
           const type = (
             agenda.category ||
             agenda.type ||
             agenda.kategori ||
             ""
           ).toLowerCase();
-          if (type.includes("akademik")) color = "yellow";
-          else if (
+          if (type.includes("akademik")) {
+            color = "yellow";
+          } else if (
             type.includes("guru") ||
             type.includes("staf") ||
             type.includes("pendidik")
-          )
+          ) {
             color = "red";
-          else if (type.includes("kegiatan") || type.includes("lomba")) color = "green";
+          } else if (type.includes("kegiatan") || type.includes("lomba")) {
+            color = "green";
+          }
         }
-
         return {
           id: agenda.id,
           date: dateText,
