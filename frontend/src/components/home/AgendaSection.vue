@@ -36,7 +36,7 @@ const themeClasses = {
       "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 dark:bg-slate-900/30 dark:text-slate-400 dark:border-slate-700/50 dark:hover:bg-slate-900/50",
     eventBg:
       "bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/30 dark:hover:bg-slate-900/50",
-    eventHeaderBg: "bg-slate-600 dark:bg-slate-700", // Changed from yellow-600
+    eventHeaderBg: "bg-slate-600 dark:bg-slate-700",
     eventHeaderText: "text-white drop-shadow-md",
     eventDayText: "text-slate-800 dark:text-slate-400",
   },
@@ -56,7 +56,7 @@ const themeClasses = {
       "bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-700/50 dark:hover:bg-gray-900/50",
     eventBg:
       "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900/30 dark:hover:bg-gray-900/50",
-    eventHeaderBg: "bg-gray-600 dark:bg-gray-700", // Changed from red-600
+    eventHeaderBg: "bg-gray-600 dark:bg-slate-700",
     eventHeaderText: "text-white drop-shadow-md",
     eventDayText: "text-gray-800 dark:text-gray-400",
   },
@@ -76,7 +76,7 @@ const themeClasses = {
       "bg-zinc-50 text-zinc-700 border border-zinc-200 hover:bg-zinc-100 dark:bg-zinc-900/30 dark:text-zinc-400 dark:border-zinc-700/50 dark:hover:bg-zinc-900/50",
     eventBg:
       "bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900/30 dark:hover:bg-zinc-900/50",
-    eventHeaderBg: "bg-zinc-600 dark:bg-zinc-700", // Changed from green-600
+    eventHeaderBg: "bg-zinc-600 dark:bg-slate-700",
     eventHeaderText: "text-white drop-shadow-md",
     eventDayText: "text-zinc-800 dark:text-zinc-400",
   },
@@ -93,10 +93,10 @@ const themeClasses = {
     infoIcon: "text-neutral-500",
     infoText: "text-gray-700 dark:text-slate-300",
     fileBtn:
-      "bg-neutral-50 text-neutral-700 border border-neutral-200 hover:bg-neutral-100 dark:bg-neutral-900/30 dark:text-neutral-400 dark:border-neutral-700/50 dark:hover:bg-neutral-900/50",
+      "bg-neutral-50 text-neutral-700 border border-neutral-200 hover:bg-neutral-100 dark:bg-zinc-900/30 dark:text-neutral-400 dark:border-neutral-700/50 dark:hover:bg-neutral-900/50",
     eventBg:
       "bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900/30 dark:hover:bg-neutral-900/50",
-    eventHeaderBg: "bg-neutral-600 dark:bg-neutral-700", // Changed from blue-600
+    eventHeaderBg: "bg-neutral-600 dark:bg-slate-700",
     eventHeaderText: "text-white drop-shadow-md",
     eventDayText: "text-neutral-800 dark:text-neutral-400",
   },
@@ -131,9 +131,8 @@ const nextMonth = () => {
   currentDisplayedDate.value = new Date(d.getFullYear(), d.getMonth() + 1, 1);
 };
 
-// Helper function to get theme classes with a fallback
+// 🚀 SECURE THEME FETCH FALLBACK
 const getThemeClass = (colorId, property) => {
-  // Ensure colorId is a valid key, otherwise fallback to 'seminarAcara'
   const validColorId = themeClasses[colorId] ? colorId : "seminarAcara";
   const theme = themeClasses[validColorId];
   return theme[property];
@@ -214,7 +213,6 @@ const scrollToAgenda = (agendaToScrollTo) => {
     class="relative py-8 md:py-6 pb-16 md:pb-0 mt-0 md:mt-16 -mx-6 md:mx-0 bg-white dark:bg-slate-800 overflow-hidden px-6 md:px-2 mb-0 md:mb-12 md:rounded-xl shadow-xl fade-on-scroll"
   >
     <div class="container mx-auto px-0 md:px-2">
-      <!-- Header Section -->
       <div class="mb-6 md:mb-10">
         <div class="relative block">
           <h2
@@ -232,11 +230,9 @@ const scrollToAgenda = (agendaToScrollTo) => {
         </div>
       </div>
 
-      <!-- Main Grid Layout -->
       <div
         class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-stretch md:pb-8 md:pr-2"
       >
-        <!-- KIRI: Kalender -->
         <div
           class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-5 md:p-6 flex flex-col"
         >
@@ -326,7 +322,6 @@ const scrollToAgenda = (agendaToScrollTo) => {
             </template>
           </div>
 
-          <!-- Keterangan Label -->
           <div class="mt-6 pt-4 border-t border-gray-100 dark:border-slate-700">
             <h4 class="text-xs font-bold text-gray-400 uppercase mb-3">
               Keterangan Label
@@ -349,7 +344,6 @@ const scrollToAgenda = (agendaToScrollTo) => {
           </div>
         </div>
 
-        <!-- KANAN: Daftar Agenda -->
         <div class="lg:col-span-7 relative h-[540px] md:h-[640px] lg:h-auto">
           <div
             class="absolute inset-0 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col"
@@ -399,40 +393,42 @@ const scrollToAgenda = (agendaToScrollTo) => {
                     "
                     class="flex flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border hover:shadow-md transition-all duration-300 shrink-0 relative"
                     :class="[
-                      themeClasses[agenda.color].card,
+                      getThemeClass(agenda.color, 'card'),
                       highlightedAgendaId === agenda.id ? 'highlight-agenda' : '',
                     ]"
                   >
                     <div
                       class="rounded-xl flex flex-col items-center justify-center min-w-[65px] w-[65px] sm:min-w-[95px] sm:w-[95px] border overflow-hidden shrink-0"
-                      :class="themeClasses[agenda.color].dateBox"
+                      :class="getThemeClass(agenda.color, 'dateBox')"
                     >
                       <div
                         class="w-full text-center py-1 sm:py-1.5"
                         style="font-family: 'Kalam', cursive"
-                        :class="themeClasses[agenda.color].monthBg"
+                        :class="getThemeClass(agenda.color, 'monthBg')"
                       >
                         <span
                           class="text-[10px] sm:text-xs font-bold uppercase tracking-wider"
-                          :class="themeClasses[agenda.color].monthText"
-                          >{{ agenda.month }}</span
+                          :class="getThemeClass(agenda.color, 'monthText')"
                         >
+                          {{ agenda.month }}
+                        </span>
                       </div>
                       <div
                         class="w-full text-center py-1.5 sm:py-3 flex items-center justify-center min-h-[48px]"
-                        :class="themeClasses[agenda.color].dateBg"
+                        :class="getThemeClass(agenda.color, 'dateBg')"
                       >
                         <span
                           class="font-extrabold leading-none tracking-tight"
                           :class="[
-                            themeClasses[agenda.color].dateText,
+                            getThemeClass(agenda.color, 'dateText'),
                             agenda.date.length > 2
                               ? 'text-lg sm:text-xl'
                               : 'text-xl sm:text-3xl',
                           ]"
                           style="font-family: 'Kalam', cursive"
-                          >{{ agenda.date }}</span
                         >
+                          {{ agenda.date }}
+                        </span>
                       </div>
                     </div>
 
@@ -442,18 +438,18 @@ const scrollToAgenda = (agendaToScrollTo) => {
                     >
                       <h4
                         class="font-bold text-sm md:text-base leading-tight mb-1"
-                        :class="themeClasses[agenda.color].title"
+                        :class="getThemeClass(agenda.color, 'title')"
                       >
                         {{ agenda.title }}
                       </h4>
                       <div
                         class="flex flex-col gap-1.5 mt-2"
-                        :class="themeClasses[agenda.color].infoText"
+                        :class="getThemeClass(agenda.color, 'infoText')"
                       >
                         <div class="flex items-start text-[11px] sm:text-xs">
                           <svg
                             class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                            :class="themeClasses[agenda.color].infoIcon"
+                            :class="getThemeClass(agenda.color, 'infoIcon')"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -464,14 +460,14 @@ const scrollToAgenda = (agendaToScrollTo) => {
                             <circle cx="12" cy="12" r="10" />
                             <polyline points="12 6 12 12 16 14" />
                           </svg>
-                          <span class="font-medium text-gray-600 dark:text-gray-300">{{
-                            agenda.time
-                          }}</span>
+                          <span class="font-medium text-gray-600 dark:text-gray-300">
+                            {{ agenda.time }}
+                          </span>
                         </div>
                         <div class="flex items-start text-[11px] sm:text-xs">
                           <svg
                             class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                            :class="themeClasses[agenda.color].infoIcon"
+                            :class="getThemeClass(agenda.color, 'infoIcon')"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -482,9 +478,9 @@ const scrollToAgenda = (agendaToScrollTo) => {
                             <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
                             <circle cx="12" cy="10" r="3" />
                           </svg>
-                          <span class="font-medium text-gray-600 dark:text-gray-300">{{
-                            agenda.loc
-                          }}</span>
+                          <span class="font-medium text-gray-600 dark:text-gray-300">
+                            {{ agenda.loc }}
+                          </span>
                         </div>
                         <div
                           v-if="agenda.file"
@@ -492,14 +488,15 @@ const scrollToAgenda = (agendaToScrollTo) => {
                         >
                           <PhPaperclip
                             class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                            :class="themeClasses[agenda.color].infoIcon"
+                            :class="getThemeClass(agenda.color, 'infoIcon')"
                           />
                           <a
                             :href="agenda.file"
                             target="_blank"
                             class="font-medium text-blue-600 hover:underline"
-                            >Lihat Dokumen</a
                           >
+                            Lihat Dokumen
+                          </a>
                         </div>
                       </div>
                     </div>
