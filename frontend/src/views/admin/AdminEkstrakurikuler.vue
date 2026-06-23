@@ -191,7 +191,6 @@ const resetForm = () => {
 const showAddForm = () => {
   resetForm();
   isFormVisible.value = true;
-  document.body.style.overflow = "hidden";
 };
 
 const addEntry = async () => {
@@ -204,7 +203,6 @@ const addEntry = async () => {
     await api.post("/api/extracurriculars", form.value);
     await fetchData();
     isFormVisible.value = false;
-    document.body.style.overflow = "";
     triggerToast(
       "Berhasil Ditambahkan",
       "Data ekstrakurikuler baru telah ditambahkan ke sistem."
@@ -223,7 +221,6 @@ const startEdit = (item) => {
     socials: { ...(item.socials || { ig: "", yt: "", email: "" }) },
   };
   isFormVisible.value = true;
-  document.body.style.overflow = "hidden";
 };
 
 const saveEntry = async () => {
@@ -236,7 +233,6 @@ const saveEntry = async () => {
     await api.put(`/api/extracurriculars/${form.value.id}`, form.value);
     await fetchData();
     isFormVisible.value = false;
-    document.body.style.overflow = "";
     triggerToast("Perubahan Disimpan", "Data ekstrakurikuler berhasil diperbarui.");
     resetForm();
   } catch (error) {
@@ -248,7 +244,6 @@ const saveEntry = async () => {
 const hideForm = () => {
   resetForm();
   isFormVisible.value = false;
-  document.body.style.overflow = "";
 };
 
 const deleteEntry = (id) => {
@@ -326,23 +321,15 @@ const stripTags = (html) => {
       </button>
     </div>
 
-    <!-- Modal Form Tambah/Edit Data -->
-    <Transition
-      enter-active-class="transition-opacity duration-300"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition-opacity duration-300"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div
-        v-if="isFormVisible"
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
-        @click="hideForm"
+    <!-- Form Tambah/Edit Data -->
+    <div v-if="isFormVisible" class="mb-8">
+      <Transition
+        enter-active-class="transition-all duration-300 ease-out"
+        enter-from-class="opacity-0 -translate-y-4"
+        enter-to-class="opacity-100 translate-y-0"
       >
         <div
-          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full sm:w-fit sm:min-w-[600px] md:min-w-[800px] lg:min-w-[1000px] max-w-[95vw] max-h-[90vh] flex flex-col overflow-hidden transform transition-all"
-          @click.stop
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg w-full flex flex-col overflow-hidden border border-gray-100 dark:border-slate-700"
         >
           <!-- Modal Header -->
           <div
@@ -364,7 +351,7 @@ const stripTags = (html) => {
           </div>
 
           <!-- Modal Body -->
-          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
+          <div class="p-6">
             <form id="ekskulForm" @submit.prevent="isEditing ? saveEntry() : addEntry()">
               <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-1">
@@ -649,11 +636,12 @@ const stripTags = (html) => {
             </button>
           </div>
         </div>
-      </div>
-    </Transition>
+      </Transition>
+    </div>
 
     <!-- List -->
     <div
+      v-if="!isFormVisible"
       class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
     >
       <div class="mb-6 relative max-w-md">
@@ -762,8 +750,4 @@ const stripTags = (html) => {
   </main>
 </template>
 
-<style scoped>
-.transition-all {
-  overflow: hidden;
-}
-</style>
+<style scoped></style>
