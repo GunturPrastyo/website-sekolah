@@ -133,7 +133,9 @@ const nextMonth = () => {
 
 // Helper function to get theme classes with a fallback
 const getThemeClass = (colorId, property) => {
-  const theme = themeClasses[colorId] || themeClasses.seminarAcara; // Fallback to seminarAcara
+  // Ensure colorId is a valid key, otherwise fallback to 'seminarAcara'
+  const validColorId = themeClasses[colorId] ? colorId : "seminarAcara";
+  const theme = themeClasses[validColorId];
   return theme[property];
 };
 
