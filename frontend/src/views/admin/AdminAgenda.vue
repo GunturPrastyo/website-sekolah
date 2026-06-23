@@ -45,18 +45,16 @@ const filterColor = ref("semua");
 
 const colors = [
   {
-    id: "yellow",
+    id: "akademik",
     name: "Akademik",
-    bg: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-    calBg:
-      "bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/40",
-    calHeader:
-      "bg-yellow-200/70 dark:bg-yellow-700/40 text-yellow-800 dark:text-yellow-200",
-    calText: "text-yellow-700 dark:text-yellow-300",
-    legendBg: "bg-yellow-400",
+    bg: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+    calBg: "bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40",
+    calHeader: "bg-blue-200/70 dark:bg-blue-700/40 text-blue-800 dark:text-blue-200",
+    calText: "text-blue-700 dark:text-blue-300",
+    legendBg: "bg-blue-500",
   },
   {
-    id: "red",
+    id: "guru-staf",
     name: "Guru & Staf",
     bg: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
     calBg: "bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40",
@@ -65,7 +63,7 @@ const colors = [
     legendBg: "bg-red-500",
   },
   {
-    id: "green",
+    id: "kegiatan",
     name: "Kegiatan",
     bg: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
     calBg:
@@ -75,13 +73,14 @@ const colors = [
     legendBg: "bg-green-500",
   },
   {
-    id: "blue",
+    id: "acara",
     name: "Seminar & Acara",
-    bg: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-    calBg: "bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40",
-    calHeader: "bg-blue-200/70 dark:bg-blue-700/40 text-blue-800 dark:text-blue-200",
-    calText: "text-blue-700 dark:text-blue-300",
-    legendBg: "bg-blue-500",
+    bg: "bg-slate-100 text-slate-700 dark:bg-slate-700/50 dark:text-slate-300",
+    calBg:
+      "bg-slate-50 dark:bg-slate-700/30 hover:bg-slate-100 dark:hover:bg-slate-700/50",
+    calHeader: "bg-slate-200/70 dark:bg-slate-600/40 text-slate-800 dark:text-slate-200",
+    calText: "text-slate-700 dark:text-slate-300",
+    legendBg: "bg-slate-500",
   },
 ];
 
@@ -138,7 +137,7 @@ const resetForm = () => {
     endDate: "",
     time: "",
     location: "",
-    color: "blue",
+    color: "akademik",
     attachment: "",
   };
   isEditing.value = false;
