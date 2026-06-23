@@ -290,15 +290,15 @@ const scrollToAgenda = (agendaToScrollTo) => {
                   :class="[
                     colSpanClasses[item.span],
                     'relative mx-0.5 my-0.5 rounded-md overflow-hidden cursor-pointer transition-colors flex flex-col justify-between',
-                    themeClasses[item.event.color].eventBg,
+                    getThemeClass(item.event.color, 'eventBg'),
                   ]"
                   @click="scrollToAgenda(item.event)"
                   :title="item.event.title"
                 >
                   <div
                     :class="[
-                      themeClasses[item.event.color].eventHeaderBg,
-                      themeClasses[item.event.color].eventHeaderText,
+                      getThemeClass(item.event.color, 'eventHeaderBg'),
+                      getThemeClass(item.event.color, 'eventHeaderText'),
                       'text-[10px] font-bold px-2 py-0.5 text-left truncate',
                     ]"
                   >
