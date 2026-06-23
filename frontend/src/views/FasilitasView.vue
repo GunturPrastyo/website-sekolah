@@ -391,7 +391,7 @@ const fetchSchoolProfile = async () => {
         !imgUrl.startsWith("data:") &&
         !imgUrl.startsWith("/")
       ) {
-        const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+        const backendUrl = import.meta.env.VITE_API_URL;
         imgUrl = `${backendUrl.replace(/\/+$/, "")}/${imgUrl.replace(/^\/+/, "")}`;
       }
       defaultImage.value = imgUrl;
@@ -423,7 +423,7 @@ const fetchFacilities = async () => {
           !coverImage.startsWith("data:") &&
           !coverImage.startsWith("/")
         ) {
-          const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+          const backendUrl = import.meta.env.VITE_API_URL;
           coverImage = `${backendUrl.replace(/\/+$/, "")}/${coverImage.replace(
             /^\/+/,
             ""

@@ -38,14 +38,14 @@ const isLoading = ref(true);
 const getImageUrl = (path) => {
   if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:")) return path;
-  const baseUrl = import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
+  const baseUrl = import.meta.env.VITE_API_URL;
   return `${baseUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
 };
 
 const fetchInitialData = async () => {
   isLoading.value = true;
   try {
-    const apiUrl = import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     // Gunakan Promise.all untuk mengambil data unduhan dan settings secara bersamaan
     const [downloadsRes, settingsRes] = await Promise.all([

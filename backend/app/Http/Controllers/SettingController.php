@@ -35,11 +35,9 @@ class SettingController extends Controller
             'programCoverImage', 'loginBackground', 'ppdbBackgroundImage', 'galleryBackgroundImage'
         ];
 
-        // Bersihkan teks domain lama/localhost secara dinamis mengikuti server aktif
         foreach ($settings as $key => $value) {
             if (in_array($key, $fileKeys) && $value) {
                 
-                // 👈 JAGA-JAGA: Jika di DB terlanjur tersimpan URL utuh (http/https), ekstrak nama file/path aslinya saja
                 if (str_starts_with($value, 'http')) {
                     // Ambil path setelah kata '/storage/'
                     $parts = explode('/storage/', $value);
@@ -48,7 +46,6 @@ class SettingController extends Controller
                     $cleanPath = str_replace('storage/', '', $value);
                 }
 
-                // Bungkus murni menggunakan domain server yang aktif saat ini secara dinamis
                 $settings[$key] = url('storage/' . $cleanPath);
             }
         }

@@ -67,8 +67,7 @@ const getImageUrl = (path) => {
     return "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800";
   if (path.startsWith("http") || path.startsWith("data:image")) return path;
 
-  // Jika berupa path mentah (relatif), gabungkan secara dinamis dengan domain API utama
-  const baseUrl = import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
+  const baseUrl = import.meta.env.VITE_API_URL;
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
 
   if (cleanPath.startsWith("storage/")) {

@@ -29,7 +29,7 @@ const getImageUrl = (path) => {
     return "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200";
   if (path.startsWith("http") || path.startsWith("data:image")) return path;
 
-  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const baseUrl = import.meta.env.VITE_API_URL;
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
   if (cleanPath.startsWith("storage/")) {
     return `${baseUrl}/${cleanPath}`;
@@ -358,13 +358,13 @@ watch(
             v-if="article?.tags"
             class="px-6 md:px-10 pb-10 flex flex-wrap gap-2 border-b border-gray-100 dark:border-slate-700 mt-6"
           >
-          <router-link
-            :to="{ path: '/berita', query: { tag: tag.trim() } }"
+            <router-link
+              :to="{ path: '/berita', query: { tag: tag.trim() } }"
               v-for="(tag, index) in article.tags.split(',')"
               :key="index"
               class="px-3 py-1 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 text-xs font-semibold rounded hover:bg-blue-100 hover:text-blue-600 transition-colors"
-            >#{{ tag.trim() }}</router-link
-          >
+              >#{{ tag.trim() }}</router-link
+            >
           </div>
         </main>
 

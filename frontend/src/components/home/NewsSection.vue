@@ -39,7 +39,7 @@ const checkScroll = () => {
 const getImageUrl = (path) => {
   if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:image")) return path;
-  const baseUrl = import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
+  const baseUrl = import.meta.env.VITE_API_URL;
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
   if (cleanPath.startsWith("storage/")) {
     return `${baseUrl}/${cleanPath}`;
