@@ -427,14 +427,13 @@ onMounted(() => {
   fetchSchoolStats();
   fetchPpdbInfo();
 
-  setTimeout(() => {
-    fetchPrograms();
-    fetchAgendas();
-    fetchGalleries();
-    fetchSchoolVideo();
-    fetchNewsAndAnnouncements();
-    fetchAlumniLocations();
-  }, 200);
+  // Panggil fungsi fetch data segera setelah komponen dimount
+  fetchPrograms();
+  fetchAgendas();
+  fetchGalleries();
+  fetchSchoolVideo();
+  fetchNewsAndAnnouncements();
+  fetchAlumniLocations();
 
   if (fullTitle.value && !isTypewriterStarted.value) startTypewriter();
 

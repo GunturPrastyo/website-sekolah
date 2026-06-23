@@ -98,50 +98,64 @@ const emptyCardsCount = computed(() => {
           </div>
         </template>
         <template v-else>
+          <!-- Kontainer utama untuk video, selalu tampil setelah loading -->
           <div
-            v-if="schoolVideoUrl"
             class="lg:col-span-2 relative group rounded-lg overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full block fade-on-scroll"
           >
-            <template v-if="!isVideoPlaying">
-              <div class="absolute inset-0 cursor-pointer" @click="$emit('play-video')">
-                <img
-                  :src="videoThumbnail"
-                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  alt="Video Profil Sekolah"
-                />
-                <div
-                  class="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors"
-                ></div>
-                <div class="absolute inset-0 flex items-center justify-center z-20">
+            <template v-if="schoolVideoUrl">
+              <!-- Tampilkan video jika URL tersedia -->
+              <template v-if="!isVideoPlaying">
+                <div class="absolute inset-0 cursor-pointer" @click="$emit('play-video')">
+                  <img
+                    :src="videoThumbnail"
+                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    alt="Video Profil Sekolah"
+                  />
                   <div
-                    class="w-16 h-16 md:w-20 md:h-20 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-sm group-hover:scale-110 transition-all"
+                    class="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors"
+                  ></div>
+                  <div class="absolute inset-0 flex items-center justify-center z-20">
+                    <div
+                      class="w-16 h-16 md:w-20 md:h-20 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-sm group-hover:scale-110 transition-all"
+                    >
+                      <PhPlay class="w-8 h-8 md:w-10 md:h-10 ml-1" weight="fill" />
+                    </div>
+                  </div>
+                  <div
+                    class="absolute bottom-0 left-0 p-5 md:p-8 w-full bg-gradient-to-t from-blue-950/90 via-blue-950/40 to-transparent z-10"
                   >
-                    <PhPlay class="w-8 h-8 md:w-10 md:h-10 ml-1" weight="fill" />
+                    <h3
+                      class="text-xl md:text-3xl font-bold text-white mb-2"
+                      style="font-family: 'Kalam', cursive"
+                    >
+                      {{ schoolVideoTitle || "Video Profil Sekolah" }}
+                    </h3>
+                    <p class="text-gray-200 text-sm md:text-base line-clamp-2">
+                      {{ schoolVideoDesc }}
+                    </p>
                   </div>
                 </div>
-                <div
-                  class="absolute bottom-0 left-0 p-5 md:p-8 w-full bg-gradient-to-t from-blue-950/90 via-blue-950/40 to-transparent z-10"
-                >
-                  <h3
-                    class="text-xl md:text-3xl font-bold text-white mb-2"
-                    style="font-family: 'Kalam', cursive"
-                  >
-                    {{ schoolVideoTitle || "Video Profil Sekolah" }}
-                  </h3>
-                  <p class="text-gray-200 text-sm md:text-base line-clamp-2">
-                    {{ schoolVideoDesc }}
-                  </p>
-                </div>
-              </div>
+              </template>
+              <template v-else>
+                <iframe
+                  :src="videoEmbedUrl"
+                  class="absolute inset-0 w-full h-full"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              </template>
             </template>
             <template v-else>
-              <iframe
-                :src="videoEmbedUrl"
-                class="absolute inset-0 w-full h-full"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-              ></iframe>
+              <!-- Tampilkan placeholder jika tidak ada URL video -->
+              <div
+                class="absolute inset-0 flex flex-col items-center justify-center bg-blue-900/30 border border-blue-800/30 text-blue-300/50"
+              >
+                <PhPlay class="w-16 h-16 mb-4 opacity-50" />
+                <span class="text-lg font-semibold opacity-50"
+                  >Video Profil Belum Tersedia</span
+                >
+              </div>
             </template>
           </div>
         </template>
