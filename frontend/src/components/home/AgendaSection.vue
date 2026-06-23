@@ -20,16 +20,16 @@ const highlightedAgendaId = ref(null);
 const currentDisplayedDate = ref(new Date());
 
 const themeClasses = {
-  akademik: {
+  yellow: {
     card:
       "bg-white border-gray-100 hover:border-slate-300 hover:shadow-slate-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-slate-500/50",
     dateBox: "border-slate-600 border-b-4",
     monthBg: "bg-slate-600 group-hover:bg-slate-700",
     monthText: "text-white",
     dateBg: "bg-slate-50",
-    dateText: "text-slate-700 group-hover:text-slate-900",
+    dateText: "text-slate-700 group-hover:text-slate-800",
     title:
-      "text-gray-900 group-hover:text-slate-800 dark:text-slate-100 dark:group-hover:text-slate-200",
+      "text-gray-900 group-hover:text-slate-700 dark:text-slate-100 dark:group-hover:text-slate-400",
     infoIcon: "text-slate-500",
     infoText: "text-gray-700 dark:text-slate-300",
     fileBtn:
@@ -38,18 +38,18 @@ const themeClasses = {
       "bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/30 dark:hover:bg-slate-900/50",
     eventHeaderBg: "bg-slate-600 dark:bg-slate-700",
     eventHeaderText: "text-white drop-shadow-md",
-    eventDayText: "text-slate-700 dark:text-slate-400",
+    eventDayText: "text-slate-800 dark:text-slate-400",
   },
-  "guru-staf": {
+  red: {
     card:
       "bg-white border-gray-100 hover:border-gray-300 hover:shadow-gray-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-gray-500/50",
     dateBox: "border-gray-600 border-b-4",
     monthBg: "bg-gray-600 group-hover:bg-gray-700",
     monthText: "text-white",
     dateBg: "bg-gray-50",
-    dateText: "text-gray-700 group-hover:text-gray-900",
+    dateText: "text-gray-700 group-hover:text-gray-800",
     title:
-      "text-gray-900 group-hover:text-gray-800 dark:text-slate-100 dark:group-hover:text-gray-200",
+      "text-gray-900 group-hover:text-gray-700 dark:text-slate-100 dark:group-hover:text-gray-400",
     infoIcon: "text-gray-500",
     infoText: "text-gray-700 dark:text-slate-300",
     fileBtn:
@@ -58,18 +58,18 @@ const themeClasses = {
       "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900/30 dark:hover:bg-gray-900/50",
     eventHeaderBg: "bg-gray-600 dark:bg-gray-700",
     eventHeaderText: "text-white drop-shadow-md",
-    eventDayText: "text-gray-700 dark:text-gray-400",
+    eventDayText: "text-gray-800 dark:text-gray-400",
   },
-  kegiatan: {
+  green: {
     card:
       "bg-white border-gray-100 hover:border-zinc-300 hover:shadow-zinc-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-zinc-500/50",
     dateBox: "border-zinc-600 border-b-4",
     monthBg: "bg-zinc-600 group-hover:bg-zinc-700",
     monthText: "text-white",
     dateBg: "bg-zinc-50",
-    dateText: "text-zinc-700 group-hover:text-zinc-900",
+    dateText: "text-zinc-700 group-hover:text-zinc-800",
     title:
-      "text-gray-900 group-hover:text-zinc-800 dark:text-slate-100 dark:group-hover:text-zinc-200",
+      "text-gray-900 group-hover:text-zinc-700 dark:text-slate-100 dark:group-hover:text-zinc-400",
     infoIcon: "text-zinc-500",
     infoText: "text-gray-700 dark:text-slate-300",
     fileBtn:
@@ -78,18 +78,18 @@ const themeClasses = {
       "bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900/30 dark:hover:bg-zinc-900/50",
     eventHeaderBg: "bg-zinc-600 dark:bg-zinc-700",
     eventHeaderText: "text-white drop-shadow-md",
-    eventDayText: "text-zinc-700 dark:text-zinc-400",
+    eventDayText: "text-zinc-800 dark:text-zinc-400",
   },
-  acara: {
+  blue: {
     card:
       "bg-white border-gray-100 hover:border-neutral-300 hover:shadow-neutral-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-neutral-500/50",
     dateBox: "border-neutral-600 border-b-4",
     monthBg: "bg-neutral-600 group-hover:bg-neutral-700",
     monthText: "text-white",
     dateBg: "bg-neutral-50",
-    dateText: "text-neutral-700 group-hover:text-neutral-900",
+    dateText: "text-neutral-700 group-hover:text-neutral-800",
     title:
-      "text-gray-900 group-hover:text-neutral-800 dark:text-slate-100 dark:group-hover:text-neutral-200",
+      "text-gray-900 group-hover:text-neutral-700 dark:text-slate-100 dark:group-hover:text-neutral-400",
     infoIcon: "text-neutral-500",
     infoText: "text-gray-700 dark:text-slate-300",
     fileBtn:
@@ -98,7 +98,7 @@ const themeClasses = {
       "bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900/30 dark:hover:bg-neutral-900/50",
     eventHeaderBg: "bg-neutral-600 dark:bg-neutral-700",
     eventHeaderText: "text-white drop-shadow-md",
-    eventDayText: "text-neutral-700 dark:text-neutral-400",
+    eventDayText: "text-neutral-800 dark:text-neutral-400",
   },
 };
 
@@ -284,7 +284,7 @@ const scrollToAgenda = (agendaToScrollTo) => {
                   :class="[
                     colSpanClasses[item.span],
                     'relative mx-0.5 my-0.5 rounded-md overflow-hidden cursor-pointer transition-colors flex flex-col justify-between',
-                    (themeClasses[item.event.color] || themeClasses['akademik']).eventBg,
+                    themeClasses[item.event.color].eventBg,
                   ]"
                   @click="scrollToAgenda(item.event)"
                   :title="item.event.title"
@@ -292,8 +292,7 @@ const scrollToAgenda = (agendaToScrollTo) => {
                   <div
                     :class="[
                       themeClasses[item.event.color].eventHeaderBg,
-                      (themeClasses[item.event.color] || themeClasses['akademik'])
-                        .eventHeaderText,
+                      themeClasses[item.event.color].eventHeaderText,
                       'text-[10px] font-bold px-2 py-0.5 text-left truncate',
                     ]"
                   >
@@ -306,11 +305,7 @@ const scrollToAgenda = (agendaToScrollTo) => {
                     <div
                       v-for="d in item.days"
                       :key="'day-' + d"
-                      :class="[
-                        (themeClasses[item.event.color] || themeClasses['akademik'])
-                          .eventDayText,
-                        'font-bold',
-                      ]"
+                      :class="[themeClasses[item.event.color].eventDayText, 'font-bold']"
                     >
                       {{ d }}
                     </div>
@@ -395,7 +390,6 @@ const scrollToAgenda = (agendaToScrollTo) => {
                     :class="[
                       themeClasses[agenda.color].card,
                       highlightedAgendaId === agenda.id ? 'highlight-agenda' : '',
-                      (themeClasses[agenda.color] || themeClasses['akademik']).card,
                     ]"
                   >
                     <div
@@ -405,30 +399,22 @@ const scrollToAgenda = (agendaToScrollTo) => {
                       <div
                         class="w-full text-center py-1 sm:py-1.5"
                         style="font-family: 'Kalam', cursive"
-                        :class="
-                          (themeClasses[agenda.color] || themeClasses['akademik']).monthBg
-                        "
+                        :class="themeClasses[agenda.color].monthBg"
                       >
                         <span
                           class="text-[10px] sm:text-xs font-bold uppercase tracking-wider"
-                          :class="
-                            (themeClasses[agenda.color] || themeClasses['akademik'])
-                              .monthText
-                          "
+                          :class="themeClasses[agenda.color].monthText"
                           >{{ agenda.month }}</span
                         >
                       </div>
                       <div
                         class="w-full text-center py-1.5 sm:py-3 flex items-center justify-center min-h-[48px]"
-                        :class="
-                          (themeClasses[agenda.color] || themeClasses['akademik']).dateBg
-                        "
+                        :class="themeClasses[agenda.color].dateBg"
                       >
                         <span
                           class="font-extrabold leading-none tracking-tight"
                           :class="[
-                            (themeClasses[agenda.color] || themeClasses['akademik'])
-                              .dateText,
+                            themeClasses[agenda.color].dateText,
                             agenda.date.length > 2
                               ? 'text-lg sm:text-xl'
                               : 'text-xl sm:text-3xl',
@@ -445,26 +431,18 @@ const scrollToAgenda = (agendaToScrollTo) => {
                     >
                       <h4
                         class="font-bold text-sm md:text-base leading-tight mb-1"
-                        :class="
-                          (themeClasses[agenda.color] || themeClasses['akademik']).title
-                        "
+                        :class="themeClasses[agenda.color].title"
                       >
                         {{ agenda.title }}
                       </h4>
                       <div
                         class="flex flex-col gap-1.5 mt-2"
-                        :class="
-                          (themeClasses[agenda.color] || themeClasses['akademik'])
-                            .infoText
-                        "
+                        :class="themeClasses[agenda.color].infoText"
                       >
                         <div class="flex items-start text-[11px] sm:text-xs">
                           <svg
                             class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                            :class="
-                              (themeClasses[agenda.color] || themeClasses['akademik'])
-                                .infoIcon
-                            "
+                            :class="themeClasses[agenda.color].infoIcon"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -482,10 +460,7 @@ const scrollToAgenda = (agendaToScrollTo) => {
                         <div class="flex items-start text-[11px] sm:text-xs">
                           <svg
                             class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                            :class="
-                              (themeClasses[agenda.color] || themeClasses['akademik'])
-                                .infoIcon
-                            "
+                            :class="themeClasses[agenda.color].infoIcon"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -506,10 +481,7 @@ const scrollToAgenda = (agendaToScrollTo) => {
                         >
                           <PhPaperclip
                             class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                            :class="
-                              (themeClasses[agenda.color] || themeClasses['akademik'])
-                                .infoIcon
-                            "
+                            :class="themeClasses[agenda.color].infoIcon"
                           />
                           <a
                             :href="agenda.file"
