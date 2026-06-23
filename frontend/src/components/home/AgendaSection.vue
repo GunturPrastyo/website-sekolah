@@ -284,7 +284,7 @@ const scrollToAgenda = (agendaToScrollTo) => {
                   :class="[
                     colSpanClasses[item.span],
                     'relative mx-0.5 my-0.5 rounded-md overflow-hidden cursor-pointer transition-colors flex flex-col justify-between',
-                    themeClasses[item.event.color].eventBg,
+                    (themeClasses[item.event.color] || themeClasses['akademik']).eventBg,
                   ]"
                   @click="scrollToAgenda(item.event)"
                   :title="item.event.title"
@@ -292,7 +292,8 @@ const scrollToAgenda = (agendaToScrollTo) => {
                   <div
                     :class="[
                       themeClasses[item.event.color].eventHeaderBg,
-                      themeClasses[item.event.color].eventHeaderText,
+                      (themeClasses[item.event.color] || themeClasses['akademik'])
+                        .eventHeaderText,
                       'text-[10px] font-bold px-2 py-0.5 text-left truncate',
                     ]"
                   >
@@ -305,7 +306,11 @@ const scrollToAgenda = (agendaToScrollTo) => {
                     <div
                       v-for="d in item.days"
                       :key="'day-' + d"
-                      :class="[themeClasses[item.event.color].eventDayText, 'font-bold']"
+                      :class="[
+                        (themeClasses[item.event.color] || themeClasses['akademik'])
+                          .eventDayText,
+                        'font-bold',
+                      ]"
                     >
                       {{ d }}
                     </div>
@@ -390,6 +395,7 @@ const scrollToAgenda = (agendaToScrollTo) => {
                     :class="[
                       themeClasses[agenda.color].card,
                       highlightedAgendaId === agenda.id ? 'highlight-agenda' : '',
+                      (themeClasses[agenda.color] || themeClasses['akademik']).card,
                     ]"
                   >
                     <div
@@ -399,22 +405,30 @@ const scrollToAgenda = (agendaToScrollTo) => {
                       <div
                         class="w-full text-center py-1 sm:py-1.5"
                         style="font-family: 'Kalam', cursive"
-                        :class="themeClasses[agenda.color].monthBg"
+                        :class="
+                          (themeClasses[agenda.color] || themeClasses['akademik']).monthBg
+                        "
                       >
                         <span
                           class="text-[10px] sm:text-xs font-bold uppercase tracking-wider"
-                          :class="themeClasses[agenda.color].monthText"
+                          :class="
+                            (themeClasses[agenda.color] || themeClasses['akademik'])
+                              .monthText
+                          "
                           >{{ agenda.month }}</span
                         >
                       </div>
                       <div
                         class="w-full text-center py-1.5 sm:py-3 flex items-center justify-center min-h-[48px]"
-                        :class="themeClasses[agenda.color].dateBg"
+                        :class="
+                          (themeClasses[agenda.color] || themeClasses['akademik']).dateBg
+                        "
                       >
                         <span
                           class="font-extrabold leading-none tracking-tight"
                           :class="[
-                            themeClasses[agenda.color].dateText,
+                            (themeClasses[agenda.color] || themeClasses['akademik'])
+                              .dateText,
                             agenda.date.length > 2
                               ? 'text-lg sm:text-xl'
                               : 'text-xl sm:text-3xl',
@@ -431,18 +445,26 @@ const scrollToAgenda = (agendaToScrollTo) => {
                     >
                       <h4
                         class="font-bold text-sm md:text-base leading-tight mb-1"
-                        :class="themeClasses[agenda.color].title"
+                        :class="
+                          (themeClasses[agenda.color] || themeClasses['akademik']).title
+                        "
                       >
                         {{ agenda.title }}
                       </h4>
                       <div
                         class="flex flex-col gap-1.5 mt-2"
-                        :class="themeClasses[agenda.color].infoText"
+                        :class="
+                          (themeClasses[agenda.color] || themeClasses['akademik'])
+                            .infoText
+                        "
                       >
                         <div class="flex items-start text-[11px] sm:text-xs">
                           <svg
                             class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                            :class="themeClasses[agenda.color].infoIcon"
+                            :class="
+                              (themeClasses[agenda.color] || themeClasses['akademik'])
+                                .infoIcon
+                            "
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -460,7 +482,10 @@ const scrollToAgenda = (agendaToScrollTo) => {
                         <div class="flex items-start text-[11px] sm:text-xs">
                           <svg
                             class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                            :class="themeClasses[agenda.color].infoIcon"
+                            :class="
+                              (themeClasses[agenda.color] || themeClasses['akademik'])
+                                .infoIcon
+                            "
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -481,7 +506,10 @@ const scrollToAgenda = (agendaToScrollTo) => {
                         >
                           <PhPaperclip
                             class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                            :class="themeClasses[agenda.color].infoIcon"
+                            :class="
+                              (themeClasses[agenda.color] || themeClasses['akademik'])
+                                .infoIcon
+                            "
                           />
                           <a
                             :href="agenda.file"
