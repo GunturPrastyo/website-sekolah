@@ -59,8 +59,10 @@ const prestasiList = ref([]);
 const appearanceSettings = ref({});
 const isFetching = ref(true);
 
+// 1. Deklarasi penampung berita
 const newsArticles = ref([]);
 
+// 2. Fungsi memanggil berita
 const fetchNewsArticles = async () => {
   try {
     const response = await api.get("/api/public-news?category=prestasi&per_page=999");
@@ -69,12 +71,15 @@ const fetchNewsArticles = async () => {
     }
   } catch (error) {
     console.error("Gagal mengambil data berita:", error);
+    newsArticles.value = [];
   }
 };
 
+// 3. Fungsi pencocokan Slug
 const getNewsSlug = (newsId) => {
-  const news = newsArticles.value.find((n) => n.id === newsId);
-  return news ? news.slug : newsId;
+  if (!newsArticles.value || !Array.isArray(newsArticles.value)) return newsId;
+  const news = newsArticles.value.find((n) => String(n.id) === String(newsId));
+  return news?.slug || newsId; // Kembalikan slug jika ketemu, fallback pakai ID
 };
 
 const getImageUrl = (path) => {
@@ -88,10 +93,9 @@ const fetchInitialData = async () => {
   try {
     const [prestasiResponse, settingsResponse] = await Promise.all([
       api.get("/api/public-achievements"),
-      api.get("/api/settings"), // Mengambil setingan gambar dinamis dari VPS
+      api.get("/api/settings"),
     ]);
 
-    // Set Data List Prestasi
     if (prestasiResponse.data && prestasiResponse.data.data) {
       prestasiList.value = prestasiResponse.data.data.map((item) => ({
         id: item.id,
@@ -100,20 +104,19 @@ const fetchInitialData = async () => {
         rank: parseInt(item.rank) || 1,
         level: (item.level || "nasional").toLowerCase(),
         year: parseInt(item.year) || new Date().getFullYear(),
-        type: item.category || "akademik", // Use item.category from backend
+        type: item.category || "akademik",
         image: getImageUrl(item.image),
-        internalNewsId: item.internalNewsId || null, // Map internalNewsId
-        externalNewsUrl: item.externalNewsUrl || null, // Map externalNewsUrl
-        internalNewsSlug: item.internalNewsSlug || item.internal_news_slug || null,
+
+        // Memastikan terbaca, entah API mengirim format camelCase atau snake_case
+        internalNewsId: item.internalNewsId || item.internal_news_id || null,
+        externalNewsUrl: item.externalNewsUrl || item.external_news_url || null,
       }));
     }
 
-    // Set Data Global Settings untuk Gambar Banner
     if (settingsResponse.data?.success) {
       appearanceSettings.value = settingsResponse.data.data;
     }
 
-    // Jalankan Animasi Angka Statistik Juara setelah data selesai masuk
     animateValue("internasional", counts.value.internasional);
     animateValue("nasional", counts.value.nasional);
     animateValue("provinsi", counts.value.provinsi);
@@ -131,15 +134,12 @@ const filteredPrestasi = computed(() => {
   if (activeFilter.value !== "semua") {
     filtered = filtered.filter((p) => p.level === activeFilter.value);
   }
-
   if (activeType.value !== "semua") {
     filtered = filtered.filter((p) => p.type === activeType.value);
   }
-
   if (activeYear.value !== "semua") {
     filtered = filtered.filter((p) => p.year === activeYear.value);
   }
-
   if (searchQuery.value.trim()) {
     const query = searchQuery.value.toLowerCase();
     filtered = filtered.filter(
@@ -148,14 +148,10 @@ const filteredPrestasi = computed(() => {
     );
   }
 
-  filtered = [...filtered].sort((a, b) => {
-    return b.year - a.year;
-  });
-
+  filtered = [...filtered].sort((a, b) => b.year - a.year);
   return filtered;
 });
 
-// Fitur Pagination
 const currentPage = ref(1);
 const itemsPerPage = 6;
 
@@ -186,12 +182,7 @@ const counts = computed(() => ({
   kabupaten: prestasiList.value.filter((p) => p.level === "kabupaten").length,
 }));
 
-const animatedCounts = ref({
-  internasional: 0,
-  nasional: 0,
-  provinsi: 0,
-  kabupaten: 0,
-});
+const animatedCounts = ref({ internasional: 0, nasional: 0, provinsi: 0, kabupaten: 0 });
 
 const animateValue = (key, target, duration = 2000) => {
   if (target === 0) return;
@@ -283,14 +274,11 @@ onMounted(() => {
       </template>
     </PageHeader>
 
-    <!-- Main Content Section -->
     <section class="pb-24 px-6 bg-gray-50 dark:bg-slate-900 min-h-screen">
       <div class="container mx-auto max-w-full px-0 lg:px-8">
-        <!-- Statistik Prestasi (Angka Berjalan) -->
         <div
           class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10 -mt-12 md:-mt-16 relative z-20"
         >
-          <!-- Internasional -->
           <div
             class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-500/20"
           >
@@ -308,8 +296,6 @@ onMounted(() => {
               Internasional
             </h4>
           </div>
-
-          <!-- Nasional -->
           <div
             class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-500/20"
           >
@@ -327,8 +313,6 @@ onMounted(() => {
               Nasional
             </h4>
           </div>
-
-          <!-- Provinsi -->
           <div
             class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-500/20"
           >
@@ -346,8 +330,6 @@ onMounted(() => {
               Provinsi
             </h4>
           </div>
-
-          <!-- Kabupaten -->
           <div
             class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-5 md:p-6 flex flex-col items-center border border-gray-100 dark:border-slate-700 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-500/20"
           >
@@ -367,19 +349,11 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- Search Bar, Filter Selects, & Filter Tabs -->
         <div class="flex flex-col gap-5 md:gap-6 mb-12 relative z-20">
-          <!-- Top Row: Selects and Search -->
           <div class="flex flex-row items-center gap-2.5 md:gap-4 w-full">
-            <!-- Filter Bidang -->
             <div class="relative w-12 md:w-48 shrink-0">
               <PhBookOpen
-                class="absolute left-1/2 md:left-4 top-1/2 -translate-x-1/2 md:translate-x-0 -translate-y-1/2 w-5 h-5 md:w-4 md:h-4 pointer-events-none transition-colors"
-                :class="
-                  activeType !== 'semua'
-                    ? 'text-blue-600 dark:text-blue-400'
-                    : 'text-gray-500 md:text-gray-400'
-                "
+                class="absolute left-1/2 md:left-4 top-1/2 -translate-x-1/2 md:translate-x-0 -translate-y-1/2 w-5 h-5 md:w-4 md:h-4 pointer-events-none transition-colors text-gray-500 md:text-gray-400"
               />
               <select
                 v-model="activeType"
@@ -394,22 +368,10 @@ onMounted(() => {
                   {{ t.name }}
                 </option>
               </select>
-              <div
-                class="absolute inset-y-0 right-4 hidden md:flex items-center pointer-events-none"
-              >
-                <PhCaretDown class="w-4 h-4 text-gray-400" />
-              </div>
             </div>
-
-            <!-- Filter Tahun -->
             <div class="relative w-12 md:w-52 shrink-0">
               <PhCalendarBlank
-                class="absolute left-1/2 md:left-4 top-1/2 -translate-x-1/2 md:translate-x-0 -translate-y-1/2 w-5 h-5 md:w-4 md:h-4 pointer-events-none transition-colors"
-                :class="
-                  activeYear !== 'semua'
-                    ? 'text-blue-600 dark:text-blue-400'
-                    : 'text-gray-500 md:text-gray-400'
-                "
+                class="absolute left-1/2 md:left-4 top-1/2 -translate-x-1/2 md:translate-x-0 -translate-y-1/2 w-5 h-5 md:w-4 md:h-4 pointer-events-none transition-colors text-gray-500 md:text-gray-400"
               />
               <select
                 v-model="activeYear"
@@ -424,14 +386,7 @@ onMounted(() => {
                   {{ y.name }}
                 </option>
               </select>
-              <div
-                class="absolute inset-y-0 right-4 hidden md:flex items-center pointer-events-none"
-              >
-                <PhCaretDown class="w-4 h-4 text-gray-400" />
-              </div>
             </div>
-
-            <!-- Search Bar -->
             <div class="relative flex-1 shrink-0 min-w-0">
               <PhMagnifyingGlass
                 class="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400"
@@ -444,27 +399,25 @@ onMounted(() => {
               />
             </div>
           </div>
-
-          <!-- Bottom Row: Filter Tabs (Tingkat) -->
           <div
             class="w-full bg-white dark:bg-slate-800 p-4 lg:p-5 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center gap-4"
           >
             <h4
               class="text-sm font-bold text-gray-900 dark:text-white whitespace-nowrap shrink-0 flex items-center sm:pl-2"
             >
-              <PhFunnel class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
-              Tingkat Lomba:
+              <PhFunnel class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" /> Tingkat
+              Lomba:
             </h4>
             <div class="flex flex-wrap items-center gap-2 md:gap-2.5">
               <button
                 v-for="filter in filters"
                 :key="filter.id"
                 @click="activeFilter = filter.id"
-                class="px-3.5 md:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-300 focus:outline-none flex items-center border"
+                class="px-3.5 md:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-300 flex items-center border"
                 :class="
                   activeFilter === filter.id
-                    ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
-                    : 'bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400'
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-md'
+                    : 'bg-gray-50 text-gray-600 border-gray-200 dark:bg-slate-700 dark:text-gray-300 dark:border-slate-600'
                 "
               >
                 {{ filter.name }}
@@ -473,42 +426,17 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- Skeleton Loading -->
         <div
           v-if="isLoading || isFetching"
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative"
         >
           <div
             v-for="i in 6"
-            :key="'skeleton-' + i"
-            class="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-gray-100 dark:border-slate-700 flex flex-col h-full overflow-hidden animate-pulse"
-          >
-            <div
-              class="h-48 bg-gray-200 dark:bg-slate-700 w-full shrink-0 border-b-[6px] border-gray-300 dark:border-slate-600"
-            ></div>
-            <div class="p-6 flex flex-col flex-1">
-              <div class="flex justify-between mb-4">
-                <div class="h-6 w-24 bg-gray-200 dark:bg-slate-700 rounded"></div>
-                <div class="h-6 w-28 bg-gray-200 dark:bg-slate-700 rounded"></div>
-              </div>
-              <div class="h-6 w-full bg-gray-200 dark:bg-slate-700 rounded mb-3"></div>
-              <div class="h-6 w-3/4 bg-gray-200 dark:bg-slate-700 rounded mb-6"></div>
-              <div
-                class="mt-auto pt-5 border-t border-gray-100 dark:border-slate-700 flex items-center gap-3"
-              >
-                <div
-                  class="w-10 h-10 rounded-full bg-gray-200 dark:bg-slate-700 shrink-0"
-                ></div>
-                <div class="flex-1 space-y-2">
-                  <div class="h-3 w-20 bg-gray-200 dark:bg-slate-700 rounded"></div>
-                  <div class="h-4 w-32 bg-gray-200 dark:bg-slate-700 rounded"></div>
-                </div>
-              </div>
-            </div>
-          </div>
+            :key="i"
+            class="bg-gray-200 dark:bg-slate-800 rounded-2xl h-96 animate-pulse"
+          ></div>
         </div>
 
-        <!-- Daftar Prestasi dengan Efek Papan Penghargaan -->
         <div v-else-if="filteredPrestasi.length > 0">
           <TransitionGroup
             name="list"
@@ -518,9 +446,8 @@ onMounted(() => {
             <div
               v-for="prestasi in paginatedPrestasi"
               :key="prestasi.id"
-              class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col h-full cursor-default transform hover:-translate-y-2"
+              class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col h-full transform hover:-translate-y-2"
             >
-              <!-- Gambar Sertifikat / Lomba -->
               <div
                 class="relative h-48 overflow-hidden shrink-0 border-b-[6px]"
                 :class="getRankStyle(prestasi.rank).border"
@@ -533,8 +460,6 @@ onMounted(() => {
                 <div
                   class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"
                 ></div>
-
-                <!-- Lencana Juara Pojok Atas Kanan -->
                 <div
                   class="absolute top-4 right-4 flex flex-col items-center justify-center w-14 h-16 rounded-b-full shadow-lg z-10"
                   :class="getRankStyle(prestasi.rank).badge"
@@ -552,8 +477,6 @@ onMounted(() => {
                     }}</span
                   >
                 </div>
-
-                <!-- Kategori Tag -->
                 <div
                   class="absolute bottom-3 left-4 px-2.5 py-1 bg-black/50 backdrop-blur-md text-white text-xs font-bold rounded capitalize tracking-wider"
                   style="font-family: 'Kalam', cursive"
@@ -562,7 +485,6 @@ onMounted(() => {
                 </div>
               </div>
 
-              <!-- Konten Kartu Prestasi -->
               <div
                 class="p-6 flex flex-col flex-1 relative bg-white dark:bg-slate-800 z-10"
               >
@@ -578,8 +500,7 @@ onMounted(() => {
                     class="flex items-center bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 px-2.5 py-1 rounded text-sm tracking-wide"
                     style="font-family: 'Kalam', cursive"
                   >
-                    <PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> Tahun
-                    {{ prestasi.year }}
+                    <PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> Tahun {{ prestasi.year }}
                   </span>
                 </div>
 
@@ -588,8 +509,6 @@ onMounted(() => {
                 >
                   {{ prestasi.title }}
                 </h3>
-
-                <!-- Tautan Berita Terkait (Opsional) -->
 
                 <div
                   v-if="prestasi.internalNewsId || prestasi.externalNewsUrl"
@@ -603,8 +522,11 @@ onMounted(() => {
                     "
                     target="_blank"
                     class="inline-flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors mb-4 w-fit"
-                    a
-                  />
+                  >
+                    <PhNewspaperClipping class="w-4 h-4 mr-1.5" />
+                    Lihat Liputan Berita
+                    <PhLink class="w-3.5 h-3.5 ml-1" />
+                  </a>
                 </div>
 
                 <div
@@ -630,7 +552,6 @@ onMounted(() => {
             </div>
           </TransitionGroup>
 
-          <!-- Pagination Controls -->
           <div
             v-if="totalPages > 1"
             class="flex justify-between items-center gap-2 mt-12 mb-6 sm:mb-0 relative z-10 w-full"
@@ -640,16 +561,9 @@ onMounted(() => {
               :disabled="currentPage === 1 || isLoading"
               class="flex items-center px-4 py-2 rounded-lg text-base tracking-wide font-bold transition-colors border"
               style="font-family: 'Kalam', cursive"
-              :class="
-                currentPage === 1
-                  ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed dark:bg-slate-800 dark:border-slate-700 dark:text-gray-500'
-                  : 'bg-white text-blue-600 border-gray-200 hover:bg-blue-50 hover:border-blue-300 dark:bg-slate-800 dark:text-blue-400 dark:border-slate-700 dark:hover:border-blue-500'
-              "
             >
-              <PhCaretLeft class="w-4 h-4 mr-1" />
-              Sebelumnya
+              <PhCaretLeft class="w-4 h-4 mr-1" /> Sebelumnya
             </button>
-
             <div class="flex items-center gap-1 hidden sm:flex">
               <button
                 v-for="page in totalPages"
@@ -661,31 +575,23 @@ onMounted(() => {
                 :class="
                   currentPage === page
                     ? 'bg-blue-600 text-white border-blue-600 shadow-md'
-                    : 'bg-white text-gray-600 border-gray-200 hover:bg-blue-50 hover:text-blue-600 dark:bg-slate-800 dark:text-gray-300 dark:border-slate-700 dark:hover:border-blue-500 dark:hover:text-blue-400'
+                    : 'bg-white text-gray-600 border-gray-200 hover:bg-blue-50'
                 "
               >
                 {{ page }}
               </button>
             </div>
-
             <button
               @click="changePage(currentPage + 1)"
               :disabled="currentPage === totalPages || isLoading"
               class="flex items-center px-4 py-2 rounded-lg text-base tracking-wide font-bold transition-colors border"
               style="font-family: 'Kalam', cursive"
-              :class="
-                currentPage === totalPages
-                  ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed dark:bg-slate-800 dark:border-slate-700 dark:text-gray-500'
-                  : 'bg-white text-blue-600 border-gray-200 hover:bg-blue-50 hover:border-blue-300 dark:bg-slate-800 dark:text-blue-400 dark:border-slate-700 dark:hover:border-blue-500'
-              "
             >
-              Selanjutnya
-              <PhCaretRight class="w-4 h-4 ml-1" />
+              Selanjutnya <PhCaretRight class="w-4 h-4 ml-1" />
             </button>
           </div>
         </div>
 
-        <!-- Empty State -->
         <div
           v-else
           class="py-20 text-center bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm mt-4"
@@ -696,10 +602,6 @@ onMounted(() => {
             <PhCertificate class="w-8 h-8" />
           </div>
           <h3 class="text-lg font-bold text-gray-900 dark:text-white">Tidak Ditemukan</h3>
-          <p class="text-gray-500 dark:text-gray-400 mt-1">
-            Data prestasi yang Anda cari tidak ditemukan. Coba kata kunci atau filter
-            lain.
-          </p>
           <button
             @click="
               searchQuery = '';
@@ -707,7 +609,7 @@ onMounted(() => {
               activeType = 'semua';
               activeYear = 'semua';
             "
-            class="mt-6 px-6 py-2.5 bg-blue-50 text-blue-600 dark:bg-slate-700 dark:text-blue-400 rounded-xl text-sm font-semibold hover:bg-blue-100 transition-colors"
+            class="mt-6 px-6 py-2.5 bg-blue-50 text-blue-600 rounded-xl text-sm font-semibold hover:bg-blue-100"
           >
             Reset Filter
           </button>
@@ -725,13 +627,11 @@ onMounted(() => {
 .list-leave-active {
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 .list-enter-from,
 .list-leave-to {
   opacity: 0;
   transform: scale(0.9) translateY(30px);
 }
-
 .list-leave-active {
   position: absolute;
 }
