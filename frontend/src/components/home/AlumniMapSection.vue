@@ -38,7 +38,8 @@ const updateTooltipPos = (e) => {
   const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
 
   let tooltipX = clientX;
-  const tooltipHalfWidth = window.innerWidth < 768 ? 128 : 144;
+  // Sesuaikan setengah lebar tooltip: mobile 260px (130), desktop 288px (144)
+  const tooltipHalfWidth = window.innerWidth < 768 ? 130 : 144;
   const margin = 16;
   let tailOffset = 0;
 
@@ -233,16 +234,16 @@ watch(
             <div
               v-for="(loc, index) in skeletonLocations"
               :key="'skeleton-map-' + index"
-              class="absolute flex justify-center items-end w-8 h-10 md:w-10 md:h-12 -translate-x-1/2 -translate-y-full animate-pulse opacity-60"
+              class="absolute flex justify-center items-end w-6 h-8 md:w-10 md:h-12 -translate-x-1/2 -translate-y-full animate-pulse opacity-60"
               :style="{ top: loc.top, left: loc.left, zIndex: 10 }"
             >
               <div
-                class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1.5 md:w-5 md:h-2 bg-black/20 rounded-[100%] blur-[2px]"
+                class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-1 md:w-5 md:h-2 bg-black/20 rounded-[100%] blur-[2px]"
               ></div>
               <div class="relative drop-shadow-[0_5px_8px_rgba(0,0,0,0.2)]">
-                <PhMapPin weight="fill" class="w-8 h-8 md:w-10 md:h-10 text-slate-400" />
+                <PhMapPin weight="fill" class="w-6 h-6 md:w-10 md:h-10 text-slate-400" />
                 <div
-                  class="absolute top-[8px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 md:top-[10px] md:w-3 md:h-3 bg-slate-300 rounded-full"
+                  class="absolute top-[6px] left-1/2 -translate-x-1/2 w-1.5 h-1.5 md:top-[10px] md:w-3 md:h-3 bg-slate-300 rounded-full"
                 ></div>
               </div>
             </div>
@@ -253,7 +254,7 @@ watch(
               v-for="loc in alumniLocations"
               :key="loc.id"
               tabindex="0"
-              class="absolute flex justify-center items-end group cursor-pointer hover:z-50 focus:z-50 w-7 h-9 md:w-10 md:h-12 -translate-x-1/2 -translate-y-full focus:outline-none"
+              class="absolute flex justify-center items-end group cursor-pointer hover:z-50 focus:z-50 w-6 h-8 md:w-10 md:h-12 -translate-x-1/2 -translate-y-full focus:outline-none"
               :style="{ top: loc.top, left: loc.left, zIndex: 10 }"
               @mouseenter="showTooltip($event, loc)"
               @mousemove="updateTooltipPos($event)"
@@ -263,14 +264,14 @@ watch(
               @touchend.passive="hideTooltip"
             >
               <div
-                class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1.5 md:w-5 md:h-2 bg-black/40 rounded-[100%] blur-[2px] group-hover:scale-50 transition-transform duration-300"
+                class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-1 md:w-5 md:h-2 bg-black/40 rounded-[100%] blur-[2px] group-hover:scale-50 transition-transform duration-300"
               ></div>
               <div
                 class="relative drop-shadow-[0_5px_8px_rgba(0,0,0,0.4)] group-hover:-translate-y-2 transition-transform duration-300 origin-bottom"
               >
                 <PhMapPin
                   weight="fill"
-                  class="w-7 h-7 md:w-10 md:h-10"
+                  class="w-6 h-6 md:w-10 md:h-10"
                   :class="
                     loc.type === 'ptn'
                       ? 'text-sky-500'
@@ -282,7 +283,7 @@ watch(
                   "
                 />
                 <div
-                  class="absolute top-[7px] left-1/2 -translate-x-1/2 w-2 h-2 md:top-[10px] md:w-3 md:h-3 bg-white rounded-full"
+                  class="absolute top-[6px] left-1/2 -translate-x-1/2 w-1.5 h-1.5 md:top-[10px] md:w-3 md:h-3 bg-white rounded-full"
                 ></div>
               </div>
             </div>
@@ -302,7 +303,7 @@ watch(
       >
         <div
           v-if="tooltip.show && tooltip.data"
-          class="fixed pointer-events-none z-[100] w-64 md:w-72 bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-slate-700"
+          class="fixed pointer-events-none z-[100] w-[260px] md:w-72 bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-slate-700"
           :style="{
             top: tooltip.y + 'px',
             left: tooltip.x + 'px',
@@ -313,14 +314,15 @@ watch(
             class="absolute -bottom-2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-slate-800 rotate-45 border-b border-r border-gray-100 dark:border-slate-700 rounded-sm transition-all"
             :style="{ left: `calc(50% + ${tooltip.tailOffset || 0}px)` }"
           ></div>
-          <div class="flex flex-col relative z-10 max-h-64 overflow-y-auto pr-1">
+          <div class="flex flex-col relative z-10 max-h-[60vh] overflow-y-auto pr-1">
             <h4
-              class="font-bold text-sm text-gray-900 dark:text-white border-b border-gray-100 dark:border-slate-700 pb-2 mb-2 flex items-center overflow-hidden"
+              class="font-bold text-sm text-gray-900 dark:text-white border-b border-gray-100 dark:border-slate-700 pb-2 mb-2 flex items-start"
             >
-              <PhMapPin weight="fill" class="w-4 h-4 mr-1.5 text-blue-500 shrink-0" />
-              <div class="text-marquee-container flex-1">
-                <span class="text-marquee-content">{{ tooltip.data.name }}</span>
-              </div>
+              <PhMapPin
+                weight="fill"
+                class="w-4 h-4 mr-1.5 mt-0.5 text-blue-500 shrink-0"
+              />
+              <span class="flex-1 leading-snug break-words">{{ tooltip.data.name }}</span>
             </h4>
             <div class="flex flex-col gap-2 mb-2">
               <div
@@ -337,13 +339,11 @@ watch(
                   />
                 </div>
                 <div class="flex flex-col flex-1 min-w-0">
-                  <div class="text-marquee-container">
-                    <span
-                      class="font-bold text-xs text-gray-900 dark:text-white leading-tight text-marquee-content"
-                      >{{ inst.name }}</span
-                    >
-                  </div>
-                  <span class="text-[10px] text-gray-500 font-medium">{{
+                  <span
+                    class="font-bold text-xs text-gray-900 dark:text-white leading-tight line-clamp-2 break-words"
+                    >{{ inst.name }}</span
+                  >
+                  <span class="text-[10px] text-gray-500 font-medium mt-0.5">{{
                     inst.type === "ptn"
                       ? "PTN"
                       : inst.type === "kedinasan"
@@ -361,11 +361,9 @@ watch(
             <div
               class="bg-blue-50 rounded-lg py-2 px-3 flex justify-between items-center border border-blue-100 mt-1"
             >
-              <span class="text-[11px] font-medium text-blue-600"
-                >Total Alumni di Kawasan</span
-              >
+              <span class="text-[11px] font-medium text-blue-600">Total di Kawasan</span>
               <span class="font-bold text-blue-700 text-xs"
-                >{{ tooltip.data.totalAlumni }} Orang</span
+                >{{ tooltip.data.totalAlumni }} Org</span
               >
             </div>
           </div>
@@ -374,30 +372,3 @@ watch(
     </Teleport>
   </div>
 </template>
-
-<style scoped>
-.text-marquee-container {
-  container-type: inline-size;
-  overflow: hidden;
-  white-space: nowrap;
-  width: 100%;
-}
-
-.text-marquee-content {
-  display: inline-block;
-  min-width: 100%;
-  animation: slide-text 5s linear infinite alternate;
-}
-
-@keyframes slide-text {
-  0%,
-  20% {
-    transform: translateX(0);
-  }
-
-  80%,
-  100% {
-    transform: translateX(min(0px, calc(100cqw - 100%)));
-  }
-}
-</style>
