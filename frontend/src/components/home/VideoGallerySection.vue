@@ -65,7 +65,7 @@ const emptyCardsCount = computed(() => {
     "
   >
     <div
-      class="absolute inset-0 bg-gradient-to-b from-blue-900/80 via-slate-900/90 to-black/95 backdrop-blur-[2px]"
+      class="absolute inset-0 bg-linear-to-b from-blue-900/80 via-slate-900/90 to-black/95 backdrop-blur-[2px]"
     ></div>
 
     <div class="container relative z-10 mx-auto">
@@ -90,7 +90,7 @@ const emptyCardsCount = computed(() => {
         <!-- SEKSI VIDEO -->
         <template v-if="isLoadingSchoolVideo">
           <div
-            class="lg:col-span-2 relative rounded-lg overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full bg-slate-800/50 animate-pulse border border-slate-700/50"
+            class="lg:col-span-2 relative rounded-lg overflow-hidden shadow-2xl h-70 sm:h-100 md:h-[450px] w-full bg-slate-800/50 animate-pulse border border-slate-700/50"
           >
             <div class="absolute inset-0 flex items-center justify-center z-20">
               <div class="w-16 h-16 md:w-20 md:h-20 bg-slate-700 rounded-full"></div>
@@ -100,7 +100,7 @@ const emptyCardsCount = computed(() => {
         <template v-else>
           <!-- Kontainer utama untuk video, selalu tampil setelah loading -->
           <div
-            class="lg:col-span-2 relative group rounded-lg overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full block fade-on-scroll"
+            class="lg:col-span-2 relative group rounded-lg overflow-hidden shadow-2xl h-70 sm:h-100 md:h-[450px] w-full block fade-on-scroll"
           >
             <template v-if="schoolVideoUrl">
               <!-- Tampilkan video jika URL tersedia -->
@@ -122,7 +122,7 @@ const emptyCardsCount = computed(() => {
                     </div>
                   </div>
                   <div
-                    class="absolute bottom-0 left-0 p-5 md:p-8 w-full bg-gradient-to-t from-blue-950/90 via-blue-950/40 to-transparent z-10"
+                    class="absolute bottom-0 left-0 p-5 md:p-8 w-full bg-linear-to-t from-blue-950/90 via-blue-950/40 to-transparent z-10"
                   >
                     <h3
                       class="text-xl md:text-3xl font-bold text-white mb-2"
@@ -131,7 +131,10 @@ const emptyCardsCount = computed(() => {
                       {{ schoolVideoTitle || "Video Profil Sekolah" }}
                     </h3>
                     <p class="text-gray-200 text-sm md:text-base line-clamp-2">
-                      {{ schoolVideoDesc }}
+                      {{
+                        schoolVideoDesc ||
+                        "Saksikan cuplikan fasilitas, metode pembelajaran, dan prestasi yang menjadikan kami sekolah pilihan utama."
+                      }}
                     </p>
                   </div>
                 </div>
@@ -161,13 +164,11 @@ const emptyCardsCount = computed(() => {
         </template>
 
         <!-- SEKSI GRID GALERI -->
-        <div
-          class="lg:col-span-1 grid grid-cols-2 gap-4 h-[300px] sm:h-[400px] md:h-[450px]"
-        >
+        <div class="lg:col-span-1 grid grid-cols-2 gap-4 h-75 sm:h-100 md:h-[450px]">
           <!-- Kartu Foto Kategori -->
           <router-link
             v-for="(gallery, index) in galleriesByCategory"
-            :key="index"
+            :key="gallery.category"
             :to="{
               path: '/galeri',
               query: { category: gallery.category.replace(/\s+/g, '-').toLowerCase() },
@@ -180,14 +181,17 @@ const emptyCardsCount = computed(() => {
               :alt="gallery.category"
             />
             <div
-              class="absolute inset-0 bg-gradient-to-t from-blue-950/90 via-blue-950/20 to-transparent"
+              class="absolute inset-0 bg-linear-to-t from-blue-950/90 via-blue-950/20 to-transparent"
             ></div>
-            <div class="absolute bottom-0 left-0 p-3 md:p-4 w-full z-10">
+            <div class="absolute bottom-0 left-0 p-3 md:p-4 w-full z-20">
               <h4
                 class="text-white font-bold text-sm md:text-base leading-tight group-hover:text-blue-300 transition-colors line-clamp-2 capitalize"
               >
                 {{ gallery.category }}
               </h4>
+              <p class="text-gray-200 text-xs md:text-sm line-clamp-2 mt-1">
+                Galeri kegiatan {{ gallery.category.toLowerCase() }} di sekolah kami.
+              </p>
             </div>
           </router-link>
 
@@ -215,7 +219,7 @@ const emptyCardsCount = computed(() => {
             <div
               class="absolute inset-0 flex items-center justify-center bg-blue-950/70 backdrop-blur-[2px] group-hover:bg-blue-900/80 transition-colors"
             >
-              <div class="text-center">
+              <div class="text-center relative z-10">
                 <div
                   class="bg-blue-500/20 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform duration-300"
                 >
