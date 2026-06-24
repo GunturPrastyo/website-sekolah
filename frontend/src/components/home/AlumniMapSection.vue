@@ -137,7 +137,7 @@ watch(
 
 <template>
   <div
-    class="w-screen mt-8 mb-20 md:mb-24 -mx-6 md:mx-0 md:w-full md:max-w-full px-0 md:px-8 lg:px-4"
+    class="relative mt-6 -mx-6 md:-mx-6 lg:-mx-0 overflow-hidden px-0 md:px-6 mb-18 md:mb-20"
   >
     <div
       class="relative bg-center bg-fixed md:rounded-xl shadow-xl p-4 md:p-2 flex flex-col md:flex-row items-center gap-0 md:gap-6 overflow-hidden"

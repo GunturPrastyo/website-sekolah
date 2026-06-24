@@ -35,10 +35,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="relative -mx-6 md:mx-0 overflow-hidden">
-    <div
-      class="w-full max-w-full container mt-12 sm:mt-8 relative z-10 mx-auto px-0 lg:px-4"
-    >
+  <section
+    class="relative mt-6 -mx-6 md:-mx-6 lg:-mx-0 overflow-hidden px-0 md:px-6 mb-8"
+  >
+    <div class="w-full max-w-full container z-10 mx-auto">
       <!-- HEADER -->
       <div class="mb-8 px-2 md:px-0 mt-4 sm:mt-6">
         <div class="relative block">

@@ -22,83 +22,82 @@ const currentDisplayedDate = ref(new Date());
 const themeClasses = {
   yellow: {
     card:
-      "bg-white border-gray-100 hover:border-slate-300 hover:shadow-slate-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-slate-500/50",
-    dateBox: "border-slate-600 border-b-4",
-    monthBg: "bg-slate-600 group-hover:bg-slate-700",
+      "bg-white border-gray-100 hover:border-yellow-300 hover:shadow-yellow-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-yellow-500/50",
+    dateBox: "border-yellow-600 border-b-4",
+    monthBg: "bg-yellow-600 group-hover:bg-yellow-700",
     monthText: "text-white",
-    dateBg: "bg-slate-50",
-    dateText: "text-slate-700 group-hover:text-slate-800",
+    dateBg: "bg-yellow-50",
+    dateText: "text-yellow-700 group-hover:text-yellow-800",
     title:
-      "text-gray-900 group-hover:text-slate-700 dark:text-slate-100 dark:group-hover:text-slate-400",
-    infoIcon: "text-slate-500",
-    infoText: "text-gray-700 dark:text-slate-300",
+      "text-gray-900 group-hover:text-yellow-700 dark:text-slate-100 dark:group-hover:text-yellow-400",
+    infoIcon: "text-yellow-500",
+    infoText: "text-gray-700 dark:text-yellow-300",
     fileBtn:
-      "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 dark:bg-slate-900/30 dark:text-slate-400 dark:border-slate-700/50 dark:hover:bg-slate-900/50",
+      "bg-yellow-50 text-yellow-700 border border-yellow-200 hover:bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-700/50 dark:hover:bg-yellow-900/50",
     eventBg:
-      "bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/30 dark:hover:bg-slate-900/50",
-    eventHeaderBg: "bg-slate-600 dark:bg-slate-700",
-    eventHeaderText: "text-white drop-shadow-md",
-    eventDayText: "text-slate-800 dark:text-slate-400",
+      "bg-yellow-100 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:hover:bg-yellow-900/50",
+    eventHeaderBg: "bg-yellow-400 dark:bg-yellow-600",
+    eventHeaderText: "text-yellow-900 dark:text-yellow-200 drop-shadow-md",
+    eventDayText: "text-yellow-800 dark:text-yellow-300",
   },
   red: {
     card:
-      "bg-white border-gray-100 hover:border-slate-300 hover:shadow-slate-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-slate-500/50",
-    dateBox: "border-slate-600 border-b-4",
-    monthBg: "bg-slate-600 group-hover:bg-slate-700",
+      "bg-white border-gray-100 hover:border-red-300 hover:shadow-red-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-red-500/50",
+    dateBox: "border-red-600 border-b-4",
+    monthBg: "bg-red-600 group-hover:bg-red-700",
     monthText: "text-white",
-    dateBg: "bg-slate-50",
-    dateText: "text-slate-700 group-hover:text-slate-800",
+    dateBg: "bg-red-50",
+    dateText: "text-red-700 group-hover:text-red-800",
     title:
-      "text-gray-900 group-hover:text-slate-700 dark:text-slate-100 dark:group-hover:text-slate-400",
-    infoIcon: "text-slate-500",
-    infoText: "text-gray-700 dark:text-slate-300",
+      "text-gray-900 group-hover:text-red-700 dark:text-slate-100 dark:group-hover:text-red-400",
+    infoIcon: "text-red-500",
+    infoText: "text-gray-700 dark:text-red-300",
     fileBtn:
-      "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 dark:bg-slate-900/30 dark:text-slate-400 dark:border-slate-700/50 dark:hover:bg-slate-900/50",
-    eventBg:
-      "bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/30 dark:hover:bg-slate-900/50",
-    eventHeaderBg: "bg-slate-600 dark:bg-slate-700",
-    eventHeaderText: "text-white drop-shadow-md",
-    eventDayText: "text-slate-800 dark:text-slate-400",
+      "bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:border-red-700/50 dark:hover:bg-red-900/50",
+    eventBg: "bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50",
+    eventHeaderBg: "bg-red-400 dark:bg-red-600",
+    eventHeaderText: "text-red-900 dark:text-red-200 drop-shadow-md",
+    eventDayText: "text-red-800 dark:text-red-300",
   },
   green: {
     card:
-      "bg-white border-gray-100 hover:border-slate-300 hover:shadow-slate-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-slate-500/50",
-    dateBox: "border-slate-600 border-b-4",
-    monthBg: "bg-slate-600 group-hover:bg-slate-700",
+      "bg-white border-gray-100 hover:border-green-300 hover:shadow-green-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-green-500/50",
+    dateBox: "border-green-600 border-b-4",
+    monthBg: "bg-green-600 group-hover:bg-green-700",
     monthText: "text-white",
-    dateBg: "bg-slate-50",
-    dateText: "text-slate-700 group-hover:text-slate-800",
+    dateBg: "bg-green-50",
+    dateText: "text-green-700 group-hover:text-green-800",
     title:
-      "text-gray-900 group-hover:text-slate-700 dark:text-slate-100 dark:group-hover:text-slate-400",
-    infoIcon: "text-slate-500",
-    infoText: "text-gray-700 dark:text-slate-300",
+      "text-gray-900 group-hover:text-green-700 dark:text-slate-100 dark:group-hover:text-green-400",
+    infoIcon: "text-green-500",
+    infoText: "text-gray-700 dark:text-green-300",
     fileBtn:
-      "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 dark:bg-slate-900/30 dark:text-slate-400 dark:border-slate-700/50 dark:hover:bg-slate-900/50",
+      "bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 dark:border-green-700/50 dark:hover:bg-green-900/50",
     eventBg:
-      "bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/30 dark:hover:bg-slate-900/50",
-    eventHeaderBg: "bg-slate-600 dark:bg-slate-700",
-    eventHeaderText: "text-white drop-shadow-md",
-    eventDayText: "text-slate-800 dark:text-slate-400",
+      "bg-green-100 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-green-900/50",
+    eventHeaderBg: "bg-green-400 dark:bg-green-600",
+    eventHeaderText: "text-green-900 dark:text-green-200 drop-shadow-md",
+    eventDayText: "text-green-800 dark:text-green-300",
   },
   blue: {
     card:
-      "bg-white border-gray-100 hover:border-slate-300 hover:shadow-slate-100/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-slate-500/50",
-    dateBox: "border-slate-600 border-b-4",
-    monthBg: "bg-slate-600 group-hover:bg-slate-700",
+      "bg-white border-gray-100 hover:border-blue-300 hover:shadow-blue-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-blue-500/50",
+    dateBox: "border-blue-600 border-b-4",
+    monthBg: "bg-blue-600 group-hover:bg-blue-700",
     monthText: "text-white",
-    dateBg: "bg-slate-50",
-    dateText: "text-slate-700 group-hover:text-slate-800",
+    dateBg: "bg-blue-50",
+    dateText: "text-blue-700 group-hover:text-blue-800",
     title:
-      "text-gray-900 group-hover:text-slate-700 dark:text-slate-100 dark:group-hover:text-slate-400",
-    infoIcon: "text-slate-500",
-    infoText: "text-gray-700 dark:text-slate-300",
+      "text-gray-900 group-hover:text-blue-700 dark:text-slate-100 dark:group-hover:text-blue-400",
+    infoIcon: "text-blue-500",
+    infoText: "text-gray-700 dark:text-blue-300",
     fileBtn:
-      "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 dark:bg-slate-900/30 dark:text-slate-400 dark:border-slate-700/50 dark:hover:bg-slate-900/50",
+      "bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-700/50 dark:hover:bg-blue-900/50",
     eventBg:
-      "bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/30 dark:hover:bg-slate-900/50",
-    eventHeaderBg: "bg-slate-600 dark:bg-slate-700",
-    eventHeaderText: "text-white drop-shadow-md",
-    eventDayText: "text-slate-800 dark:text-slate-400",
+      "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50",
+    eventHeaderBg: "bg-blue-400 dark:bg-blue-600",
+    eventHeaderText: "text-blue-900 dark:text-blue-200 drop-shadow-md",
+    eventDayText: "text-blue-800 dark:text-blue-300",
   },
 };
 
@@ -321,17 +320,17 @@ const scrollToAgenda = (agendaToScrollTo) => {
               Keterangan Label
             </h4>
             <div class="flex flex-wrap gap-3 text-xs text-gray-600 dark:text-gray-400">
-              <div class="flex items-center">
-                <span class="w-3 h-3 rounded-sm bg-slate-600 mr-2"></span> Akademik
+              <div class="flex items-center text-yellow-600 dark:text-yellow-400">
+                <span class="w-3 h-3 rounded-sm bg-yellow-400 mr-2"></span> Akademik
               </div>
-              <div class="flex items-center">
-                <span class="w-3 h-3 rounded-sm bg-slate-600 mr-2"></span> Guru/Staf
+              <div class="flex items-center text-red-600 dark:text-red-400">
+                <span class="w-3 h-3 rounded-sm bg-red-400 mr-2"></span> Guru/Staf
               </div>
-              <div class="flex items-center">
-                <span class="w-3 h-3 rounded-sm bg-slate-600 mr-2"></span> Kegiatan
+              <div class="flex items-center text-green-600 dark:text-green-400">
+                <span class="w-3 h-3 rounded-sm bg-green-400 mr-2"></span> Kegiatan
               </div>
-              <div class="flex items-center">
-                <span class="w-3 h-3 rounded-sm bg-slate-600 mr-2"></span> Seminar & Acara
+              <div class="flex items-center text-blue-600 dark:text-blue-400">
+                <span class="w-3 h-3 rounded-sm bg-blue-400 mr-2"></span> Seminar & Acara
               </div>
             </div>
           </div>
