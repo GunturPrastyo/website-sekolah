@@ -100,7 +100,7 @@ const emptyCardsCount = computed(() => {
         <template v-else>
           <!-- Kontainer utama untuk video, selalu tampil setelah loading -->
           <div
-            class="lg:col-span-2 relative group rounded-lg overflow-hidden shadow-2xl h-70 sm:h-100 md:h-[450px] w-full block fade-on-scroll"
+            class="lg:col-span-2 relative group rounded-lg overflow-hidden shadow-2xl h-70 sm:h-100 md:h-[450px] w-full block"
           >
             <template v-if="schoolVideoUrl">
               <!-- Tampilkan video jika URL tersedia -->
