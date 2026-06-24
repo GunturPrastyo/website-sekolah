@@ -148,7 +148,7 @@ onBeforeUnmount(() => {
         {{ displayedTitle }}<span class="animate-pulse font-light text-white/70">|</span>
       </h1>
       <p
-        class="mt-6 text-lg md:text-xl lg:text-2xl text-center transition-all duration-1000 ease-out text-gray-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
+        class="mt-6 text-lg md:text-xl lg:text-2xl text-center transition-all duration-1000 ease-out text-gray-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] w-11/12 sm:w-full max-w-96 sm:max-w-2xl mx-auto"
         :class="showSubtitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'"
         style="font-family: 'Merriweather', serif"
       >
