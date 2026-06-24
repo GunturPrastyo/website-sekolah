@@ -306,6 +306,7 @@ onBeforeUnmount(() => {
             >
               <h3
                 class="text-md md:text-xl font-bold text-slate-800 dark:text-slate-200 flex items-center"
+                style="font-family: 'Plus Jakarta Sans', sans-serif"
               >
                 <PhBell class="w-5 h-5 mr-2 text-slate-800 dark:text-slate-200" />
                 Pengumuman

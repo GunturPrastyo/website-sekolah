@@ -82,10 +82,15 @@ const getNewsSlug = (newsId) => {
   return news?.slug || newsId; // Kembalikan slug jika ketemu, fallback pakai ID
 };
 
-const getImageUrl = (path) => {
-  if (!path || path.startsWith("http") || path.startsWith("data:")) return path;
+const getImageUrl = (path, defaultUrl = "https://images.unsplash.com/photo-1517840901100-8179e98d84ae?q=80&w=800") => {
+  if (!path) return defaultUrl; // Menggunakan defaultUrl jika path kosong
+  if (path.startsWith("http") || path.startsWith("data:")) return path; // Jika sudah URL lengkap atau base64, langsung kembalikan
   const backendUrl = import.meta.env.VITE_API_URL;
   return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
+};
+
+const handleImageError = (e) => {
+  e.target.src = "https://images.unsplash.com/photo-1517840901100-8179e98d84ae?q=80&w=800"; // Placeholder gambar default
 };
 
 const fetchInitialData = async () => {
@@ -456,6 +461,7 @@ onMounted(() => {
                   :src="prestasi.image"
                   :alt="prestasi.title"
                   class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  @error="handleImageError"
                 />
                 <div
                   class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"

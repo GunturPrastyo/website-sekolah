@@ -312,7 +312,7 @@ const scrollToAgenda = (agendaToScrollTo) => {
               <PhCalendar class="w-6 h-6 mr-2 text-slate-600 dark:text-slate-200" />
               <h3
                 class="text-lg md:text-xl font-bold text-slate-800 dark:text-slate-200"
-                style="font-family: 'Poppins', sans-serif"
+                style="font-family: 'Plus Jakarta Sans', sans-serif"
               >
                 Daftar Agenda
               </h3>
