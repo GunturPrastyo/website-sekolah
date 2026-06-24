@@ -174,9 +174,7 @@ onBeforeUnmount(() => {
             >
               Sekilas Pandang
             </h4>
-            <p class="text-xs text-slate-500 font-medium">
-              Data & Statistik Pencapaian Sekolah
-            </p>
+            <p class="text-xs text-slate-500 font-medium">Data & Statistik Sekolah</p>
           </div>
 
           <!-- Swiper Angka Statistik di Sebelah Kanan -->
