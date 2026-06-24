@@ -13,6 +13,8 @@ import {
   PhUser,
   PhCaretDown,
   PhCheck,
+  PhDownloadSimple,
+  PhSpinner,
 } from "@phosphor-icons/vue";
 import api from "@/api/index.js";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
@@ -25,6 +27,7 @@ const grades = ["X", "XI", "XII"];
 const majors = ref([]);
 
 const isLoadingData = ref(true);
+const isExporting = ref(false);
 
 const form = ref({
   id: null,
@@ -223,6 +226,66 @@ const cancelDelete = () => {
   isDeleteModalOpen.value = false;
 };
 
+const exportData = async () => {
+  try {
+    isExporting.value = true;
+    let xlsx;
+    try {
+      xlsx = await import(/* @vite-ignore */ "xlsx");
+    } catch (err) {
+      triggerToast(
+        "Library Tidak Ditemukan",
+        "Silakan install library xlsx di frontend dengan perintah: npm install xlsx",
+        "error"
+      );
+      isExporting.value = false;
+      return;
+    }
+
+    // Mengambil seluruh data kelas yang difilter saat ini
+    const params = {
+      per_page: 999999, // Angka besar agar semua data terambil
+    };
+    if (searchQuery.value) params.search = searchQuery.value;
+    if (filterGrade.value !== "semua") params.grade = filterGrade.value;
+    if (filterMajor.value !== "semua") params.major = filterMajor.value;
+
+    const response = await api.get("/api/school-classes", { params });
+    const dataToExport = response.data.data.map((cls) => ({
+      "Nama Kelas": cls.name || "-",
+      "Tingkat Kelas": cls.grade || "-",
+      Jurusan: cls.program ? cls.program.title || cls.program.name : "-",
+      "Wali Kelas": cls.homeroom ? cls.homeroom.name : "-",
+      "Kapasitas Siswa": cls.capacity,
+      "Jumlah Siswa Saat Ini": cls.currentStudents,
+    }));
+
+    if (dataToExport.length === 0) {
+      triggerToast("Peringatan", "Tidak ada data untuk dieksport.", "warning");
+      isExporting.value = false;
+      return;
+    }
+
+    const worksheet = xlsx.utils.json_to_sheet(dataToExport);
+    const workbook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(workbook, worksheet, "Data Kelas");
+
+    // Generate nama file dengan tanggal
+    const date = new Date();
+    const dateStr = `${date.getFullYear()}${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}${date.getDate().toString().padStart(2, "0")}`;
+    xlsx.writeFile(workbook, `Data_Kelas_${dateStr}.xlsx`);
+
+    triggerToast("Berhasil", "Data kelas berhasil dieksport ke Excel.");
+  } catch (error) {
+    console.error("Gagal export data", error);
+    triggerToast("Gagal Export", "Terjadi kesalahan saat mengeksport data.", "error");
+  } finally {
+    isExporting.value = false;
+  }
+};
+
 const filteredClasses = computed(() => {
   let result = classList.value;
   if (filterGrade.value !== "semua") {
@@ -262,6 +325,15 @@ const getSelectedHomeroomName = computed(() => {
           Kelola data rombongan belajar, wali kelas, dan kapasitas siswa.
         </p>
       </div>
+      <button
+        @click="exportData"
+        :disabled="isExporting"
+        class="inline-flex items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <PhSpinner v-if="isExporting" class="w-5 h-5 mr-2 animate-spin" />
+        <PhDownloadSimple v-else class="w-5 h-5 mr-2" />
+        Export Data
+      </button>
       <button
         @click="showAddForm"
         class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"

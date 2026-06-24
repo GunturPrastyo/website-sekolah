@@ -12,6 +12,7 @@ import {
   PhMapPin,
   PhMapTrifold,
   PhCaretDown,
+  PhDownloadSimple,
   PhCheck,
   PhSpinner,
 } from "@phosphor-icons/vue";
@@ -46,6 +47,7 @@ const selectedAlumni = ref([]);
 const isBulkEditModalOpen = ref(false);
 const isBulkDeleteModalOpen = ref(false);
 const bulkEditForm = ref({ year: "", status: "", instansi: "" });
+const isExporting = ref(false);
 const isBulkSubmitting = ref(false);
 
 const showToast = ref(false);
@@ -670,6 +672,64 @@ const cancelDelete = () => {
   isDeleteModalOpen.value = false;
 };
 
+const exportData = async () => {
+  try {
+    isExporting.value = true;
+    let xlsx;
+    try {
+      xlsx = await import(/* @vite-ignore */ "xlsx");
+    } catch (err) {
+      triggerToast(
+        "Library Tidak Ditemukan",
+        "Silakan install library xlsx di frontend dengan perintah: npm install xlsx",
+        "error"
+      );
+      isExporting.value = false;
+      return;
+    }
+
+    // Mengambil seluruh data alumni yang difilter saat ini
+    const params = {
+      per_page: 999999, // Angka besar agar semua data terambil
+    };
+    if (searchQuery.value) params.search = searchQuery.value;
+    if (filterStatus.value !== "semua") params.status = filterStatus.value;
+
+    const response = await api.get("/api/alumnis", { params });
+    const dataToExport = response.data.data.map((alumni) => ({
+      NISN: alumni.nisn || "-",
+      "Nama Lengkap": alumni.name || "-",
+      "Tahun Lulus": alumni.year || "-",
+      "Status Karir": alumni.status || "-",
+      "Instansi / Kampus": alumni.instansi || "-",
+    }));
+
+    if (dataToExport.length === 0) {
+      triggerToast("Peringatan", "Tidak ada data untuk dieksport.", "warning");
+      isExporting.value = false;
+      return;
+    }
+
+    const worksheet = xlsx.utils.json_to_sheet(dataToExport);
+    const workbook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(workbook, worksheet, "Data Alumni");
+
+    // Generate nama file dengan tanggal
+    const date = new Date();
+    const dateStr = `${date.getFullYear()}${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}${date.getDate().toString().padStart(2, "0")}`;
+    xlsx.writeFile(workbook, `Data_Alumni_${dateStr}.xlsx`);
+
+    triggerToast("Berhasil", "Data alumni berhasil dieksport ke Excel.");
+  } catch (error) {
+    console.error("Gagal export data", error);
+    triggerToast("Gagal Export", "Terjadi kesalahan saat mengeksport data.", "error");
+  } finally {
+    isExporting.value = false;
+  }
+};
+
 const selectAll = computed({
   get: () => {
     if (alumniList.value.length === 0) return false;
@@ -801,8 +861,19 @@ const executeBulkDelete = async () => {
         </p>
       </div>
     </div>
-
+    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+      <button
+        @click="exportData"
+        :disabled="isExporting"
+        class="inline-flex items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <PhSpinner v-if="isExporting" class="w-5 h-5 mr-2 animate-spin" />
+        <PhDownloadSimple v-else class="w-5 h-5 mr-2" />
+        Export Data
+      </button>
+    </div>
     <!-- Form Bulk Edit -->
+    <!-- The div for centering the modal content -->
     <Transition
       enter-active-class="transition-opacity duration-300"
       enter-from-class="opacity-0"
@@ -813,7 +884,7 @@ const executeBulkDelete = async () => {
     >
       <div
         v-if="isBulkEditModalOpen"
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        class="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
         @click="closeBulkEditModal"
       >
         <div
@@ -1351,7 +1422,7 @@ const executeBulkDelete = async () => {
           </select>
           <select
             v-model="itemsPerPage"
-            @change="fetchAlumnis(1)"
+            @change="fetchData(1)"
             class="block w-full md:w-auto md:min-w-[120px] px-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm cursor-pointer"
           >
             <option :value="10">10 Baris</option>
@@ -1726,7 +1797,7 @@ const executeBulkDelete = async () => {
     >
       <div
         v-if="isMapModalOpen"
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        class="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
         @click="
           isMapModalOpen = false;
           document.body.style.overflow = '';
@@ -1779,7 +1850,7 @@ const executeBulkDelete = async () => {
                 <div
                   ref="mapContainerRef"
                   @click="handleMapClick"
-                  class="relative w-full aspect-[2/1] bg-blue-50 dark:bg-slate-900 rounded-lg overflow-hidden border border-gray-300 dark:border-slate-600 cursor-crosshair"
+                  class="relative w-full aspect-2/1 bg-blue-50 dark:bg-slate-900 rounded-lg overflow-hidden border border-gray-300 dark:border-slate-600 cursor-crosshair"
                 >
                   <img
                     src="/img/indonesia.svg"
