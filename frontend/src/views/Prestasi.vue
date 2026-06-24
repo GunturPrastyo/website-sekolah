@@ -17,6 +17,8 @@ import {
   PhUser,
   PhCaretLeft,
   PhCaretRight,
+  PhNewspaperClipping,
+  PhLink,
 } from "@phosphor-icons/vue";
 import api from "@/api/index.js";
 import PageHeader from "@/components/PageHeader.vue";
@@ -29,8 +31,8 @@ const searchQuery = ref("");
 
 const types = [
   { id: "semua", name: "Semua Bidang" },
-  { id: "Akademik", name: "Akademik" },
-  { id: "Non-Akademik", name: "Non-Akademik" },
+  { id: "akademik", name: "Akademik" },
+  { id: "non-akademik", name: "Non-Akademik" },
 ];
 
 const years = computed(() => {
@@ -57,6 +59,24 @@ const prestasiList = ref([]);
 const appearanceSettings = ref({});
 const isFetching = ref(true);
 
+const newsArticles = ref([]);
+
+const fetchNewsArticles = async () => {
+  try {
+    const response = await api.get("/api/public-news?category=prestasi&per_page=999");
+    if (response.data && response.data.data) {
+      newsArticles.value = response.data.data;
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data berita:", error);
+  }
+};
+
+const getNewsSlug = (newsId) => {
+  const news = newsArticles.value.find((n) => n.id === newsId);
+  return news ? news.slug : newsId;
+};
+
 const getImageUrl = (path) => {
   if (!path || path.startsWith("http") || path.startsWith("data:")) return path;
   const backendUrl = import.meta.env.VITE_API_URL;
@@ -76,13 +96,15 @@ const fetchInitialData = async () => {
       prestasiList.value = prestasiResponse.data.data.map((item) => ({
         id: item.id,
         title: item.title || item.name,
-        winner: item.winner || item.student_name || "Siswa",
+        winner: item.winner || item.studentName || item.student_name || "Siswa",
         rank: parseInt(item.rank) || 1,
         level: (item.level || "nasional").toLowerCase(),
         year: parseInt(item.year) || new Date().getFullYear(),
-        type: item.type || "Akademik",
+        type: item.category || "akademik", // Use item.category from backend
         image: getImageUrl(item.image),
-        newsLink: item.newsLink || null,
+        internalNewsId: item.internalNewsId || null, // Map internalNewsId
+        externalNewsUrl: item.externalNewsUrl || null, // Map externalNewsUrl
+        internalNewsSlug: item.internalNewsSlug || item.internal_news_slug || null,
       }));
     }
 
@@ -239,6 +261,7 @@ watch([activeFilter, activeType, activeYear, searchQuery], () => {
 
 onMounted(() => {
   fetchInitialData();
+  fetchNewsArticles();
 });
 </script>
 
@@ -554,9 +577,10 @@ onMounted(() => {
                   <span
                     class="flex items-center bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 px-2.5 py-1 rounded text-sm tracking-wide"
                     style="font-family: 'Kalam', cursive"
-                    ><PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> Tahun
-                    {{ prestasi.year }}</span
                   >
+                    <PhCalendarBlank class="w-3.5 h-3.5 mr-1" /> Tahun
+                    {{ prestasi.year }}
+                  </span>
                 </div>
 
                 <h3
@@ -566,14 +590,22 @@ onMounted(() => {
                 </h3>
 
                 <!-- Tautan Berita Terkait (Opsional) -->
-                <router-link
-                  v-if="prestasi.newsLink"
-                  :to="prestasi.newsLink"
-                  class="inline-flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors mb-4 w-fit"
+
+                <div
+                  v-if="prestasi.internalNewsId || prestasi.externalNewsUrl"
+                  class="mt-3 pt-3 border-t border-gray-100 dark:border-slate-700"
                 >
-                  Baca Liputan Berita
-                  <PhArrowUpRight class="w-3.5 h-3.5 ml-1" /> Lihat Liputan
-                </router-link>
+                  <a
+                    :href="
+                      prestasi.internalNewsId
+                        ? `/artikel/${getNewsSlug(prestasi.internalNewsId)}`
+                        : prestasi.externalNewsUrl
+                    "
+                    target="_blank"
+                    class="inline-flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors mb-4 w-fit"
+                    a
+                  />
+                </div>
 
                 <div
                   class="mt-auto pt-5 border-t border-gray-100 dark:border-slate-700 flex items-center gap-3"
@@ -693,11 +725,13 @@ onMounted(() => {
 .list-leave-active {
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .list-enter-from,
 .list-leave-to {
   opacity: 0;
   transform: scale(0.9) translateY(30px);
 }
+
 .list-leave-active {
   position: absolute;
 }
