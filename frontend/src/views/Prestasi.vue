@@ -58,11 +58,8 @@ const appearanceSettings = ref({});
 const isFetching = ref(true);
 
 const getImageUrl = (path) => {
-  if (!path)
-    return "https://images.unsplash.com/photo-1567057419565-4349c49d8a04?q=80&w=800";
-  if (path.startsWith("http") || path.startsWith("data:")) return path;
-  const backendUrl =
-    import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
+  if (!path || path.startsWith("http") || path.startsWith("data:")) return path;
+  const backendUrl = import.meta.env.VITE_API_URL;
   return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
 };
 
@@ -575,7 +572,7 @@ onMounted(() => {
                   class="inline-flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors mb-4 w-fit"
                 >
                   Baca Liputan Berita
-                  <PhArrowUpRight class="w-3.5 h-3.5 ml-1" />
+                  <PhArrowUpRight class="w-3.5 h-3.5 ml-1" /> Lihat Liputan
                 </router-link>
 
                 <div

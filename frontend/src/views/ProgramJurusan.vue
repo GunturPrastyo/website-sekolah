@@ -16,9 +16,8 @@ const isFetching = ref(true);
 const getImageUrl = (path, defaultUrl = "") => {
   if (!path) return defaultUrl;
   if (path.startsWith("http") || path.startsWith("data:")) return path;
-  // Menyesuaikan dengan base domain server aktif agar adaptif saat di VPS
-  const backendUrl =
-    import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
+
+  const backendUrl = import.meta.env.VITE_API_URL;
   return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
 };
 

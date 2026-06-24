@@ -210,8 +210,7 @@ const principal = ref({
 const getImageUrl = (path) => {
   if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:")) return path;
-  const backendUrl =
-    import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
+  const backendUrl = import.meta.env.VITE_API_URL;
   return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
 };
 

@@ -87,8 +87,7 @@ const getImageUrl = (path, name) => {
       name || "User"
     )}&background=0D8ABC&color=fff&size=256`;
   if (path.startsWith("http") || path.startsWith("data:")) return path;
-  const backendUrl =
-    import.meta.env.VITE_API_URL || "https://api-sekolah-sma.duckdns.org";
+  const backendUrl = import.meta.env.VITE_API_URL;
   return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
 };
 
@@ -196,53 +195,90 @@ onBeforeUnmount(() => {
 
 <template>
   <div>
-    <PageHeader v-if="!isFetching && appearanceSettings" badge="Profil Sekolah" title="Guru & Staf Sekolah"
+    <PageHeader
+      v-if="!isFetching && appearanceSettings"
+      badge="Profil Sekolah"
+      title="Guru & Staf Sekolah"
       description="Mengenal lebih dekat para pendidik dan tenaga kependidikan yang berperan penting dalam membimbing serta mendukung perkembangan siswa."
-      :bgImage="getImageUrl(appearanceSettings.headerGuruStaf)" />
+      :bgImage="getImageUrl(appearanceSettings.headerGuruStaf)"
+    />
 
     <!-- Main Content -->
     <section class="pt-0 pb-0 py-4 sm:py-8 md:px-6 bg-gray-50 dark:bg-slate-900">
       <div class="container mx-auto max-w-8xl">
         <div
-          class="bg-white dark:bg-slate-800 md:rounded-lg shadow-sm md:shadow-md border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-10 lg:p-12 flex flex-col w-full">
+          class="bg-white dark:bg-slate-800 md:rounded-lg shadow-sm md:shadow-md border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-10 lg:p-12 flex flex-col w-full"
+        >
           <!-- Content -->
           <main id="staff-content" class="w-full">
             <!-- Search Bar & Filter Group -->
             <div class="flex flex-col gap-6 mb-12">
               <!-- Search Bar -->
               <div class="relative w-full lg:w-1/2 group">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <svg class="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                <div
+                  class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+                >
+                  <svg
+                    class="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    ></path>
                   </svg>
                 </div>
-                <input v-model="searchQuery" type="text" placeholder="Cari nama guru atau staf..."
-                  class="block w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-lg text-sm shadow-inner focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white placeholder-gray-400 focus:outline-none" />
+                <input
+                  v-model="searchQuery"
+                  type="text"
+                  placeholder="Cari nama guru atau staf..."
+                  class="block w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-lg text-sm shadow-inner focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white placeholder-gray-400 focus:outline-none"
+                />
               </div>
 
               <!-- Category Filter Card -->
               <div
-                class="w-full bg-gray-50 dark:bg-slate-900/50 p-5 lg:p-6 rounded-lg shadow-inner border border-gray-200 dark:border-slate-700 flex flex-col gap-4">
-                <h4 class="text-sm md:text-md font-bold text-gray-900 dark:text-white flex items-center">
-                  <svg class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z">
-                    </path>
+                class="w-full bg-gray-50 dark:bg-slate-900/50 p-5 lg:p-6 rounded-lg shadow-inner border border-gray-200 dark:border-slate-700 flex flex-col gap-4"
+              >
+                <h4
+                  class="text-sm md:text-md font-bold text-gray-900 dark:text-white flex items-center"
+                >
+                  <svg
+                    class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                    ></path>
                   </svg>
                   Kategori:
                 </h4>
                 <div class="relative pb-1">
-                  <div ref="categoryContainerRef" @scroll="checkScroll"
-                    class="flex flex-wrap items-center gap-2 md:gap-2.5 max-h-40 md:max-h-60 overflow-y-auto pr-2 pb-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-slate-500">
-                    <button v-for="category in categories" :key="category.id" @click="changeCategory(category.id)"
+                  <div
+                    ref="categoryContainerRef"
+                    @scroll="checkScroll"
+                    class="flex flex-wrap items-center gap-2 md:gap-2.5 max-h-40 md:max-h-60 overflow-y-auto pr-2 pb-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-slate-500"
+                  >
+                    <button
+                      v-for="category in categories"
+                      :key="category.id"
+                      @click="changeCategory(category.id)"
                       class="px-3.5 md:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-300 focus:outline-none flex items-center border"
-                      :class="activeCategory === category.id
+                      :class="
+                        activeCategory === category.id
                           ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
                           : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400 shadow-sm'
-                        ">
+                      "
+                    >
                       {{ category.name }}
                       <span class="ml-1 text-[11px] font-bold opacity-70">
                         ({{ getCategoryCount(category.id) }})
@@ -250,10 +286,13 @@ onBeforeUnmount(() => {
                     </button>
                   </div>
                   <!-- Scroll Down Indicator -->
-                  <div v-show="canScrollDown"
-                    class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-gray-50 dark:from-slate-900 to-transparent pointer-events-none z-10 flex justify-center items-end">
+                  <div
+                    v-show="canScrollDown"
+                    class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-gray-50 dark:from-slate-900 to-transparent pointer-events-none z-10 flex justify-center items-end"
+                  >
                     <div
-                      class="text-sm font-semibold text-gray-500 dark:text-gray-400 flex items-center animate-bounce pb-2">
+                      class="text-sm font-semibold text-gray-500 dark:text-gray-400 flex items-center animate-bounce pb-2"
+                    >
                       <PhArrowDown class="w-4 h-4 mr-1.5" />
                       Scroll ke bawah
                     </div>
@@ -262,27 +301,49 @@ onBeforeUnmount(() => {
               </div>
             </div>
 
-            <Transition mode="out-in" enter-active-class="transition-all duration-500 ease-out"
+            <Transition
+              mode="out-in"
+              enter-active-class="transition-all duration-500 ease-out"
               enter-from-class="opacity-0 translate-y-8 sm:scale-95"
               enter-to-class="opacity-100 translate-y-0 sm:scale-100"
               leave-active-class="transition-all duration-200 ease-in"
               leave-from-class="opacity-100 translate-y-0 sm:scale-100"
-              leave-to-class="opacity-0 -translate-y-4 sm:scale-95">
+              leave-to-class="opacity-0 -translate-y-4 sm:scale-95"
+            >
               <!-- SKELETON LOADER -->
-              <div v-if="isFetching" key="loader" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div v-for="i in 6" :key="`skel-${i}`"
-                  class="bg-gray-50 dark:bg-slate-700/30 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-[320px] relative animate-pulse">
+              <div
+                v-if="isFetching"
+                key="loader"
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              >
+                <div
+                  v-for="i in 6"
+                  :key="`skel-${i}`"
+                  class="bg-gray-50 dark:bg-slate-700/30 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-[320px] relative animate-pulse"
+                >
                   <div class="h-24 bg-gray-200 dark:bg-slate-700 w-full"></div>
-                  <div class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10">
+                  <div
+                    class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
+                  >
                     <div
-                      class="w-28 h-28 rounded-full bg-gray-300 dark:bg-slate-600 -mt-14 mb-4 border-4 border-gray-50 dark:border-slate-800">
-                    </div>
-                    <div class="h-5 w-3/4 bg-gray-200 dark:bg-slate-700 rounded-full mb-3"></div>
-                    <div class="h-4 w-1/2 bg-gray-200 dark:bg-slate-700 rounded-full mb-6"></div>
-                    <div class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-6 mt-auto"></div>
+                      class="w-28 h-28 rounded-full bg-gray-300 dark:bg-slate-600 -mt-14 mb-4 border-4 border-gray-50 dark:border-slate-800"
+                    ></div>
+                    <div
+                      class="h-5 w-3/4 bg-gray-200 dark:bg-slate-700 rounded-full mb-3"
+                    ></div>
+                    <div
+                      class="h-4 w-1/2 bg-gray-200 dark:bg-slate-700 rounded-full mb-6"
+                    ></div>
+                    <div
+                      class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-6 mt-auto"
+                    ></div>
                     <div class="flex gap-3">
-                      <div class="w-9 h-9 rounded-full bg-gray-200 dark:bg-slate-700"></div>
-                      <div class="w-9 h-9 rounded-full bg-gray-200 dark:bg-slate-700"></div>
+                      <div
+                        class="w-9 h-9 rounded-full bg-gray-200 dark:bg-slate-700"
+                      ></div>
+                      <div
+                        class="w-9 h-9 rounded-full bg-gray-200 dark:bg-slate-700"
+                      ></div>
                     </div>
                   </div>
                 </div>
@@ -293,71 +354,108 @@ onBeforeUnmount(() => {
                 <!-- Tampilan 'Semua' (Struktur Organisasi) -->
                 <template v-if="activeCategory === 'semua'">
                   <template v-for="cat in organizationCategories" :key="cat.id">
-                    <div v-if="getStaffByCategoryInSemua(cat.id).length > 0" class="mb-12">
+                    <div
+                      v-if="getStaffByCategoryInSemua(cat.id).length > 0"
+                      class="mb-12"
+                    >
                       <div class="flex items-center gap-4 mb-8">
-                        <h2 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white shrink-0"
-                          style="font-family: 'Oswald', sans-serif">
+                        <h2
+                          class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white shrink-0"
+                          style="font-family: 'Oswald', sans-serif"
+                        >
                           {{ cat.name }}
                         </h2>
                         <div class="h-px bg-gray-200 dark:bg-slate-700 flex-1"></div>
                       </div>
                       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div v-for="(staff, index) in getStaffByCategoryInSemua(cat.id)" :key="staff.id"
+                        <div
+                          v-for="(staff, index) in getStaffByCategoryInSemua(cat.id)"
+                          :key="staff.id"
                           class="group bg-gray-50 dark:bg-slate-700/30 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
                           :style="{
                             animationDelay: `${index * 100}ms`,
                             animationFillMode: 'both',
-                          }">
-                          <div class="h-24 relative overflow-hidden bg-blue-600 dark:bg-slate-700"></div>
-                          <div class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10">
+                          }"
+                        >
+                          <div
+                            class="h-24 relative overflow-hidden bg-blue-600 dark:bg-slate-700"
+                          ></div>
+                          <div
+                            class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
+                          >
                             <div class="relative -mt-14 mb-4">
                               <div
-                                class="w-28 h-28 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500">
-                                <img :src="staff.image"
-                                  class="w-full h-full object-cover rounded-full border-2 border-gray-100 dark:border-slate-700" />
+                                class="w-28 h-28 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
+                              >
+                                <img
+                                  :src="staff.image"
+                                  class="w-full h-full object-cover rounded-full border-2 border-gray-100 dark:border-slate-700"
+                                />
                               </div>
                             </div>
                             <h3
                               class="font-bold text-gray-900 dark:text-white text-lg mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1"
-                              :title="staff.name">
+                              :title="staff.name"
+                            >
                               {{ staff.name }}
                             </h3>
                             <div class="mb-3">
                               <span
                                 class="inline-flex items-center px-3 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[12px] font-bold tracking-wide"
-                                style="font-family: 'Kalam', cursive">
+                                style="font-family: 'Kalam', cursive"
+                              >
                                 {{ staff.role }}
                               </span>
                             </div>
                             <p
-                              class="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-5 flex items-center justify-center gap-1.5">
-                              <svg class="w-4 h-4 text-gray-800 dark:text-gray-200" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                  d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2">
-                                </path>
+                              class="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-5 flex items-center justify-center gap-1.5"
+                            >
+                              <svg
+                                class="w-4 h-4 text-gray-800 dark:text-gray-200"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2.5"
+                                  d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
+                                ></path>
                               </svg>
                               NIP. {{ staff.nip || "-" }}
                             </p>
                             <div
-                              class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto">
-                            </div>
+                              class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
+                            ></div>
                             <div class="flex gap-3">
                               <button
                                 class="w-9 h-9 rounded-full bg-white hover:bg-red-50 dark:bg-slate-800 dark:hover:bg-red-900/50 flex items-center justify-center text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors shadow-sm"
-                                title="Email">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                title="Email"
+                              >
+                                <svg
+                                  class="w-4 h-4"
+                                  fill="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
                                   <path
-                                    d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4.236l-8 4.882-8-4.882V6.095l8 4.882 8-4.882v2.141z">
-                                  </path>
+                                    d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4.236l-8 4.882-8-4.882V6.095l8 4.882 8-4.882v2.141z"
+                                  ></path>
                                 </svg>
                               </button>
-                              <button @click.stop
+                              <button
+                                @click.stop
                                 class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors shadow-sm"
-                                title="LinkedIn">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                title="LinkedIn"
+                              >
+                                <svg
+                                  class="w-4 h-4"
+                                  fill="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
                                   <path
-                                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+                                  />
                                 </svg>
                               </button>
                             </div>
@@ -368,14 +466,25 @@ onBeforeUnmount(() => {
                   </template>
 
                   <!-- Jika Data Kosong di Kategori 'Semua' -->
-                  <div v-if="allStaffList.length === 0"
-                    class="py-16 flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-slate-900/50 rounded-lg border-2 border-dashed border-gray-200 dark:border-slate-700">
+                  <div
+                    v-if="allStaffList.length === 0"
+                    class="py-16 flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-slate-900/50 rounded-lg border-2 border-dashed border-gray-200 dark:border-slate-700"
+                  >
                     <div
-                      class="w-16 h-16 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-gray-400 mb-4 shadow-sm">
-                      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                        </path>
+                      class="w-16 h-16 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-gray-400 mb-4 shadow-sm"
+                    >
+                      <svg
+                        class="w-8 h-8"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                        ></path>
                       </svg>
                     </div>
                     <h3 class="text-lg font-bold text-gray-900 dark:text-white">
@@ -394,68 +503,102 @@ onBeforeUnmount(() => {
                 <template v-else>
                   <div class="mb-12">
                     <div class="flex items-center gap-4 mb-8">
-                      <h2 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white shrink-0"
-                        style="font-family: 'Oswald', sans-serif">
+                      <h2
+                        class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white shrink-0"
+                        style="font-family: 'Oswald', sans-serif"
+                      >
                         {{ activeCategoryName }}
                       </h2>
                       <div class="h-px bg-gray-200 dark:bg-slate-700 flex-1"></div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      <div v-for="(staff, index) in filteredStaff" :key="staff.id"
+                      <div
+                        v-for="(staff, index) in filteredStaff"
+                        :key="staff.id"
                         class="group bg-gray-50 dark:bg-slate-700/30 rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-full relative transform hover:-translate-y-2 animate-fade-in-up"
                         :style="{
                           animationDelay: `${index * 100}ms`,
                           animationFillMode: 'both',
-                        }">
-                        <div class="h-24 relative overflow-hidden bg-blue-600 dark:bg-slate-700"></div>
-                        <div class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10">
+                        }"
+                      >
+                        <div
+                          class="h-24 relative overflow-hidden bg-blue-600 dark:bg-slate-700"
+                        ></div>
+                        <div
+                          class="px-6 pb-6 flex flex-col items-center text-center flex-1 relative z-10"
+                        >
                           <div class="relative -mt-14 mb-4">
                             <div
-                              class="w-28 h-28 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500">
-                              <img :src="staff.image"
-                                class="w-full h-full object-cover rounded-full border-2 border-gray-100 dark:border-slate-700" />
+                              class="w-28 h-28 rounded-full p-1 bg-white dark:bg-slate-800 shadow-md group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500"
+                            >
+                              <img
+                                :src="staff.image"
+                                class="w-full h-full object-cover rounded-full border-2 border-gray-100 dark:border-slate-700"
+                              />
                             </div>
                           </div>
                           <h3
                             class="font-bold text-gray-900 dark:text-white text-lg mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1"
-                            :title="staff.name">
+                            :title="staff.name"
+                          >
                             {{ staff.name }}
                           </h3>
                           <div class="mb-3">
                             <span
-                              class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[11px] font-bold tracking-wide">
+                              class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[11px] font-bold tracking-wide"
+                            >
                               {{ staff.role }}
                             </span>
                           </div>
                           <p
-                            class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-5 flex items-center justify-center gap-1.5">
-                            <svg class="w-4 h-4 text-gray-800 dark:text-gray-200" fill="none" stroke="currentColor"
-                              viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2">
-                              </path>
+                            class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-5 flex items-center justify-center gap-1.5"
+                          >
+                            <svg
+                              class="w-4 h-4 text-gray-800 dark:text-gray-200"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2.5"
+                                d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
+                              ></path>
                             </svg>
                             NIP. {{ staff.nip || "-" }}
                           </p>
                           <div
-                            class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto">
-                          </div>
+                            class="w-10 h-1 bg-gray-200 dark:bg-slate-700 rounded-full mb-5 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors mt-auto"
+                          ></div>
                           <div class="flex gap-3">
                             <button
                               class="w-9 h-9 rounded-full bg-white hover:bg-red-50 dark:bg-slate-800 dark:hover:bg-red-900/50 flex items-center justify-center text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors shadow-sm"
-                              title="Email">
-                              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                              title="Email"
+                            >
+                              <svg
+                                class="w-4 h-4"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                              >
                                 <path
-                                  d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4.236l-8 4.882-8-4.882V6.095l8 4.882 8-4.882v2.141z">
-                                </path>
+                                  d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4.236l-8 4.882-8-4.882V6.095l8 4.882 8-4.882v2.141z"
+                                ></path>
                               </svg>
                             </button>
-                            <button @click.stop
+                            <button
+                              @click.stop
                               class="w-9 h-9 rounded-full bg-white hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/50 flex items-center justify-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors shadow-sm"
-                              title="LinkedIn">
-                              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                              title="LinkedIn"
+                            >
+                              <svg
+                                class="w-4 h-4"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                              >
                                 <path
-                                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+                                />
                               </svg>
                             </button>
                           </div>
@@ -464,14 +607,25 @@ onBeforeUnmount(() => {
                     </div>
 
                     <!-- Jika Data Kosong -->
-                    <div v-if="filteredStaff.length === 0"
-                      class="py-16 flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-slate-900/50 rounded-lg border-2 border-dashed border-gray-200 dark:border-slate-700">
+                    <div
+                      v-if="filteredStaff.length === 0"
+                      class="py-16 flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-slate-900/50 rounded-lg border-2 border-dashed border-gray-200 dark:border-slate-700"
+                    >
                       <div
-                        class="w-16 h-16 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-gray-400 mb-4 shadow-sm">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                          </path>
+                        class="w-16 h-16 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-gray-400 mb-4 shadow-sm"
+                      >
+                        <svg
+                          class="w-8 h-8"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                          ></path>
                         </svg>
                       </div>
                       <h3 class="text-lg font-bold text-gray-900 dark:text-white">
@@ -488,30 +642,61 @@ onBeforeUnmount(() => {
                 </template>
 
                 <!-- Load More Button -->
-                <div v-if="hasMoreItems" class="flex justify-center items-center mt-12 pb-8 w-full">
-                  <div class="h-px bg-gray-200 dark:bg-slate-700 flex-grow max-w-[100px] md:max-w-[150px]"></div>
-                  <button @click="loadMore" :disabled="isLoadingMore"
-                    class="mx-5 inline-flex items-center text-sm md:text-base font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors group focus:outline-none disabled:opacity-70 disabled:cursor-not-allowed">
+                <div
+                  v-if="hasMoreItems"
+                  class="flex justify-center items-center mt-12 pb-8 w-full"
+                >
+                  <div
+                    class="h-px bg-gray-200 dark:bg-slate-700 flex-grow max-w-[100px] md:max-w-[150px]"
+                  ></div>
+                  <button
+                    @click="loadMore"
+                    :disabled="isLoadingMore"
+                    class="mx-5 inline-flex items-center text-sm md:text-base font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors group focus:outline-none disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
                     <span v-if="!isLoadingMore" class="flex items-center">
                       Muat Lebih Banyak
-                      <svg class="w-4 h-4 ml-1.5 transform group-hover:translate-y-1 transition-transform" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                      <svg
+                        class="w-4 h-4 ml-1.5 transform group-hover:translate-y-1 transition-transform"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 9l-7 7-7-7"
+                        ></path>
                       </svg>
                     </span>
                     <span v-else class="flex items-center">
-                      <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-600 dark:text-blue-400"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                        </circle>
-                        <path class="opacity-75" fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                        </path>
+                      <svg
+                        class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-600 dark:text-blue-400"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          class="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          stroke-width="4"
+                        ></circle>
+                        <path
+                          class="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       Memuat...
                     </span>
                   </button>
-                  <div class="h-px bg-gray-200 dark:bg-slate-700 flex-grow max-w-[100px] md:max-w-[150px]"></div>
+                  <div
+                    class="h-px bg-gray-200 dark:bg-slate-700 flex-grow max-w-[100px] md:max-w-[150px]"
+                  ></div>
                 </div>
               </div>
             </Transition>
