@@ -56,8 +56,8 @@ const initBgSwiper = () => {
         effect: "fade",
         fadeEffect: { crossFade: true },
         loop: totalImages > 1,
-        speed: 1500,
-        autoplay: totalImages > 1 ? { delay: 5000, disableOnInteraction: false } : false,
+        speed: 2000,
+        autoplay: totalImages > 1 ? { delay: 6000, disableOnInteraction: false } : false,
         allowTouchMove: false,
       });
     });
@@ -84,12 +84,13 @@ onMounted(() => {
   statsSwiperInstance = new Swiper(".stats-swiper", {
     loop: true,
     speed: 800,
-    autoplay: { delay: 2500, disableOnInteraction: false },
-    slidesPerView: 3,
-    spaceBetween: 5,
+    autoplay: { delay: 3000, disableOnInteraction: false },
+    slidesPerView: 2,
+    spaceBetween: 20,
     breakpoints: {
-      400: { slidesPerView: 3, spaceBetween: 10 },
-      640: { slidesPerView: 4, spaceBetween: 20 },
+      480: { slidesPerView: 3, spaceBetween: 20 },
+      768: { slidesPerView: 3, spaceBetween: 30 },
+      1024: { slidesPerView: 4, spaceBetween: 40 },
     },
   });
 });
@@ -102,9 +103,11 @@ onBeforeUnmount(() => {
 
 <template>
   <header
-    class="relative z-0 flex flex-col items-center justify-center h-screen md:h-[90vh] lg:h-screen text-center text-white overflow-hidden bg-slate-950"
+    class="relative z-0 flex flex-col justify-end min-h-screen lg:h-screen text-white overflow-hidden bg-slate-950 pb-16 md:pb-24"
   >
+    <!-- Latar Belakang Gambar / Video -->
     <div class="absolute inset-0 -z-10 overflow-hidden bg-slate-950">
+      <!-- Tampilkan Slider Jika Ada Gambar -->
       <div
         v-if="homeSliderImages.length > 0"
         class="swiper home-bg-swiper absolute inset-0 w-full h-full"
@@ -124,61 +127,80 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <video
-        v-else
-        autoplay
-        loop
-        muted
-        playsinline
-        class="absolute inset-0 w-full h-full object-cover opacity-50"
-      >
-        <source src="/img/footage.webm" type="video/webm" />
-      </video>
+      <!-- HAPUS VIDEO DEFAULT: Kini hanya menampilkan gradien kosong jika belum ada gambar -->
 
+      <!-- Gradien Overlay untuk menajamkan teks -->
       <div
-        class="absolute inset-0 bg-gradient-to-b from-transparent via-slate-950/40 to-slate-950 dark:to-black z-10 pointer-events-none"
+        class="absolute inset-0 bg-gradient-to-b from-slate-900/30 via-slate-950/60 to-slate-950 z-10 pointer-events-none"
       ></div>
     </div>
 
-    <div class="z-20 p-5">
-      <h1
-        class="text-3xl md:text-5xl lg:text-5xl font-bold tracking-wide uppercase drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]"
-        style="font-family: 'Oswald', sans-serif"
-      >
-        {{ displayedTitle }}<span class="animate-pulse font-light text-white/70">|</span>
-      </h1>
-      <p
-        class="mt-6 text-lg md:text-xl lg:text-2xl text-center transition-all duration-1000 ease-out text-gray-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] w-11/12 sm:w-full max-w-96 sm:max-w-2xl mx-auto"
-        :class="showSubtitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'"
-        style="font-family: 'Merriweather', serif"
-      >
-        <span class="inline-flex items-center justify-center">
-          <PhQuotes
-            class="w-6 h-6 sm:w-8 sm:h-8 mr-2 hidden sm:block opacity-80"
-            weight="fill"
-          />
+    <!-- Konten Utama Hero Section -->
+    <div class="container mx-auto px-6 md:px-12 z-20 w-full max-w-7xl">
+      <!-- Area Judul dan Motto (Rata Kiri) -->
+      <div class="max-w-4xl mb-12 lg:mb-20">
+        <h1
+          class="text-4xl md:text-6xl lg:text-[5rem] font-bold tracking-tight uppercase leading-none drop-shadow-xl mb-6"
+          style="font-family: 'Oswald', sans-serif"
+        >
+          {{ displayedTitle
+          }}<span class="animate-pulse font-light text-blue-500/80 ml-2">|</span>
+        </h1>
+
+        <p
+          class="text-lg md:text-2xl lg:text-3xl font-light text-slate-200 drop-shadow-md leading-relaxed md:leading-normal border-l-4 border-blue-500 pl-5 sm:pl-6 transition-all duration-1000 ease-out max-w-3xl"
+          :class="
+            showSubtitle ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+          "
+          style="font-family: 'Merriweather', serif"
+        >
           {{ slogan }}
-        </span>
-      </p>
+        </p>
+      </div>
+
+      <!-- Area Statistik Profesional (Gaya Dashboard Modern) -->
       <div
-        class="w-11/12 sm:w-full max-w-96 sm:max-w-2xl mx-auto mt-12 overflow-hidden bg-white/15 backdrop-blur-sm rounded-lg shadow-lg border border-white/20 transition-all duration-1000 delay-500 ease-out"
+        class="w-full border-t border-white/10 pt-8 transition-all duration-1000 delay-500 ease-out"
         :class="showSubtitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
       >
-        <div class="p-3 sm:p-4 stats-swiper">
-          <div class="swiper-wrapper">
-            <div
-              v-for="(stat, index) in statsArray"
-              :key="index"
-              class="text-center swiper-slide"
+        <div
+          class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-12"
+        >
+          <!-- Teks Pengantar Statistik di Sebelah Kiri -->
+          <div class="md:w-1/4 lg:w-1/5 shrink-0">
+            <h4
+              class="text-sm font-bold uppercase tracking-widest text-slate-400 mb-1"
+              style="font-family: 'Oswald', sans-serif"
             >
-              <h3 class="font-bold text-white text-base min-[400px]:text-lg sm:text-2xl">
-                {{ stat.prefix }}{{ formatStatValue(stat) }}
-              </h3>
-              <p
-                class="mt-0.5 sm:mt-1 text-[9px] min-[400px]:text-[10px] sm:text-xs font-semibold uppercase text-white/80 tracking-tighter sm:tracking-normal line-clamp-1"
-              >
-                {{ stat.label }}
-              </p>
+              Sekilas Pandang
+            </h4>
+            <p class="text-xs text-slate-500 font-medium">
+              Data & Statistik Pencapaian Sekolah
+            </p>
+          </div>
+
+          <!-- Swiper Angka Statistik di Sebelah Kanan -->
+          <div class="w-full md:w-3/4 lg:w-4/5 overflow-hidden">
+            <div class="swiper stats-swiper !overflow-visible">
+              <div class="swiper-wrapper">
+                <div
+                  v-for="(stat, index) in statsArray"
+                  :key="index"
+                  class="swiper-slide border-l border-white/10 pl-6 lg:pl-8 group"
+                >
+                  <h3
+                    class="font-light text-white text-3xl sm:text-4xl lg:text-5xl mb-2 group-hover:text-blue-400 transition-colors duration-300"
+                  >
+                    {{ stat.prefix
+                    }}<span class="font-bold">{{ formatStatValue(stat) }}</span>
+                  </h3>
+                  <p
+                    class="text-xs sm:text-sm font-semibold uppercase text-slate-400 tracking-wider"
+                  >
+                    {{ stat.label }}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -186,3 +208,12 @@ onBeforeUnmount(() => {
     </div>
   </header>
 </template>
+
+<style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;1,300&family=Oswald:wght@300;400;600;700&display=swap");
+
+/* Opsional: Membuat navigasi titik swiper jika nantinya dibutuhkan */
+:deep(.swiper-slide) {
+  height: auto;
+}
+</style>
