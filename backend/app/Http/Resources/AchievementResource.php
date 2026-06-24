@@ -23,6 +23,8 @@ class AchievementResource extends JsonResource
             'level' => $this->level,
             'year' => $this->year,
             'description' => $this->description,
+            'internalNewsId' => $this->internal_news_id,
+            'externalNewsUrl' => $this->external_news_url,
             'image' => $image,
         ];
     }

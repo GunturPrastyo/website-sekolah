@@ -17,6 +17,8 @@ return new class extends Migration
             $table->integer('year');
             $table->text('description')->nullable();
             $table->string('image')->nullable();
+            $table->foreignId('internal_news_id')->nullable()->constrained('news')->onDelete('set null');
+            $table->string('external_news_url', 2048)->nullable();
             $table->timestamps();
         });
     }

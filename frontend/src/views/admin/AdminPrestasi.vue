@@ -13,6 +13,8 @@ import {
   PhMedal,
   PhCaretDown,
   PhCheck,
+  PhLink, // New icon for link
+  PhNewspaperClipping, // New icon for news
   PhX,
 } from "@phosphor-icons/vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
@@ -36,6 +38,7 @@ const levels = [
 ];
 
 const prestasiList = ref([]);
+const newsArticles = ref([]); // New ref to store news articles
 
 const form = ref({
   id: null,
@@ -45,6 +48,9 @@ const form = ref({
   level: "kabupaten",
   year: new Date().getFullYear().toString(),
   description: "",
+  newsLinkType: "none", // 'none', 'internal', 'external'
+  internalNewsId: null,
+  externalNewsUrl: "",
   image: "",
 });
 
@@ -72,10 +78,20 @@ const fetchData = async () => {
   }
 };
 
+const fetchNewsArticles = async () => {
+  try {
+    // Fetch news articles specifically categorized as "Prestasi"
+    const response = await api.get("/api/public-news?category=prestasi&per_page=999"); // Fetch all relevant news
+    newsArticles.value = response.data.data;
+  } catch (error) {
+    console.error("Gagal mengambil data berita:", error);
+  }
+};
+
 onMounted(() => {
   fetchData();
+  fetchNewsArticles(); // Fetch news when component mounts
 });
-
 const selectCategory = (id) => {
   if (id === "ADD_NEW") {
     showNewCategoryInput.value = true;
@@ -179,6 +195,9 @@ const resetForm = () => {
     year: new Date().getFullYear().toString(),
     description: "",
     image: "",
+    newsLinkType: "none",
+    internalNewsId: null,
+    externalNewsUrl: "",
   };
   isEditing.value = false;
   showNewCategoryInput.value = false;
@@ -202,7 +221,19 @@ const addEntry = async () => {
     return;
   }
   try {
-    const response = await api.post("/api/achievements", form.value);
+    const payload = { ...form.value };
+    // Clean up payload based on newsLinkType
+    if (payload.newsLinkType === "internal") {
+      payload.externalNewsUrl = null;
+    } else if (payload.newsLinkType === "external") {
+      payload.internalNewsId = null;
+    } else {
+      // 'none'
+      payload.internalNewsId = null;
+      payload.externalNewsUrl = null;
+    }
+    delete payload.newsLinkType; // Remove newsLinkType from payload sent to API
+    const response = await api.post("/api/achievements", payload);
     prestasiList.value.unshift(response.data.data);
     isFormVisible.value = false;
     document.body.style.overflow = "";
@@ -219,7 +250,15 @@ const addEntry = async () => {
 
 const startEdit = (item) => {
   isEditing.value = true;
-  form.value = { ...item };
+  form.value = { ...item }; // Copy all properties
+  // Determine newsLinkType for editing
+  if (item.internalNewsId) {
+    form.value.newsLinkType = "internal";
+  } else if (item.externalNewsUrl) {
+    form.value.newsLinkType = "external";
+  } else {
+    form.value.newsLinkType = "none";
+  }
   isFormVisible.value = true;
   document.body.style.overflow = "hidden";
 };
@@ -234,7 +273,19 @@ const saveEntry = async () => {
     return;
   }
   try {
-    const response = await api.put(`/api/achievements/${form.value.id}`, form.value);
+    const payload = { ...form.value };
+    // Clean up payload based on newsLinkType
+    if (payload.newsLinkType === "internal") {
+      payload.externalNewsUrl = null;
+    } else if (payload.newsLinkType === "external") {
+      payload.internalNewsId = null;
+    } else {
+      // 'none'
+      payload.internalNewsId = null;
+      payload.externalNewsUrl = null;
+    }
+    delete payload.newsLinkType; // Remove newsLinkType from payload sent to API
+    const response = await api.put(`/api/achievements/${form.value.id}`, payload);
     const index = prestasiList.value.findIndex((s) => s.id === form.value.id);
     if (index !== -1) {
       prestasiList.value[index] = response.data.data;
@@ -299,6 +350,11 @@ const getCategoryName = (id) => {
 const getLevelName = (id) => {
   const level = levels.find((l) => l.id === id);
   return level ? level.name : id;
+};
+
+const getNewsSlug = (newsId) => {
+  const news = newsArticles.value.find((n) => n.id === newsId);
+  return news ? news.slug : "#"; // Return slug or a fallback
 };
 </script>
 
@@ -598,6 +654,73 @@ const getLevelName = (id) => {
                       placeholder="Jelaskan secara singkat mengenai event dan pencapaiannya..."
                     ></textarea>
                   </div>
+
+                  <!-- News Coverage Link -->
+                  <div class="md:col-span-2">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      >Liputan Berita (Opsional)</label
+                    >
+                    <div class="flex items-center gap-4 mb-3">
+                      <label class="inline-flex items-center">
+                        <input
+                          type="radio"
+                          v-model="form.newsLinkType"
+                          value="none"
+                          class="form-radio text-blue-600"
+                        />
+                        <span class="ml-2 text-gray-700 dark:text-gray-300 text-sm"
+                          >Tidak Ada</span
+                        >
+                      </label>
+                      <label class="inline-flex items-center">
+                        <input
+                          type="radio"
+                          v-model="form.newsLinkType"
+                          value="internal"
+                          class="form-radio text-blue-600"
+                        />
+                        <span class="ml-2 text-gray-700 dark:text-gray-300 text-sm"
+                          >Berita Internal</span
+                        >
+                      </label>
+                      <label class="inline-flex items-center">
+                        <input
+                          type="radio"
+                          v-model="form.newsLinkType"
+                          value="external"
+                          class="form-radio text-blue-600"
+                        />
+                        <span class="ml-2 text-gray-700 dark:text-gray-300 text-sm"
+                          >Link Eksternal</span
+                        >
+                      </label>
+                    </div>
+
+                    <div v-if="form.newsLinkType === 'internal'">
+                      <select
+                        v-model="form.internalNewsId"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option :value="null" disabled>Pilih berita internal...</option>
+                        <option
+                          v-for="news in newsArticles"
+                          :key="news.id"
+                          :value="news.id"
+                        >
+                          {{ news.title }}
+                        </option>
+                      </select>
+                    </div>
+                    <div v-else-if="form.newsLinkType === 'external'">
+                      <input
+                        type="url"
+                        v-model="form.externalNewsUrl"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Contoh: https://www.sumberberita.com/liputan-prestasi-sekolah"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </form>
@@ -734,6 +857,26 @@ const getLevelName = (id) => {
             <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 mb-2 flex-1">
               {{ prestasi.description }}
             </p>
+
+            <!-- News Coverage Link Display -->
+            <div
+              v-if="prestasi.internalNewsId || prestasi.externalNewsUrl"
+              class="mt-3 pt-3 border-t border-gray-100 dark:border-slate-700"
+            >
+              <a
+                :href="
+                  prestasi.internalNewsId
+                    ? `/artikel/${getNewsSlug(prestasi.internalNewsId)}`
+                    : prestasi.externalNewsUrl
+                "
+                target="_blank"
+                class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+              >
+                <PhNewspaperClipping class="w-4 h-4 mr-1.5" />
+                Lihat Liputan Berita
+                <PhLink class="w-3.5 h-3.5 ml-1" />
+              </a>
+            </div>
           </div>
         </div>
       </div>

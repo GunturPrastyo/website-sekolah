@@ -32,18 +32,22 @@ class AchievementController extends Controller
             'level' => 'required|string|max:255',
             'year' => 'required|integer',
             'description' => 'nullable|string',
+            'internalNewsId' => 'nullable|exists:news,id',
+            'externalNewsUrl' => 'nullable|url|max:2048',
             'image' => 'nullable|string',
         ]);
 
         $imagePath = $this->processAndSaveImage($validated['image'] ?? null, 'achievements', null, 800);
 
         $achievement = Achievement::create([
-            'title' => $validated['title'],
-            'student_name' => $validated['studentName'],
-            'category' => $validated['category'],
-            'level' => $validated['level'],
-            'year' => $validated['year'],
-            'description' => $validated['description'],
+            'title' => $validated['title'], // Keep existing fields
+            'student_name' => $validated['studentName'], // Keep existing fields
+            'category' => $validated['category'], // Keep existing fields
+            'level' => $validated['level'], // Keep existing fields
+            'year' => $validated['year'], // Keep existing fields
+            'description' => $validated['description'], // Keep existing fields
+            'internal_news_id' => $validated['internalNewsId'] ?? null, // Add new field
+            'external_news_url' => $validated['externalNewsUrl'] ?? null, // Add new field
             'image' => $imagePath,
         ]);
 
@@ -65,6 +69,8 @@ class AchievementController extends Controller
             'level' => 'required|string|max:255',
             'year' => 'required|integer',
             'description' => 'nullable|string',
+            'internalNewsId' => 'nullable|exists:news,id',
+            'externalNewsUrl' => 'nullable|url|max:2048',
             'image' => 'nullable|string',
         ]);
 
@@ -72,6 +78,8 @@ class AchievementController extends Controller
             $validated['image'] = $this->processAndSaveImage(
                 $request->input('image'), 'achievements', $achievement->image, 800
             );
+        } else if ($achievement->image && !isset($validated['image'])) {
+            $validated['image'] = $achievement->image; // Retain existing image if not explicitly removed
         }
 
         $achievement->update($validated);
