@@ -203,7 +203,10 @@ watch(
                 {{ ppdbInfo.title }}
               </h2>
               <p class="text-blue-100 text-sm md:text-base mb-6 max-w-md mx-auto">
-                {{ ppdbInfo.description }}
+                {{
+                  ppdbInfo.description ||
+                  "Pendaftaran Peserta Didik Baru (PPDB) akan segera dibuka. Daftarkan dirimu sekarang!"
+                }}
               </p>
 
               <!-- Countdown Timer -->

@@ -57,7 +57,7 @@ const emptyCardsCount = computed(() => {
 
 <template>
   <section
-    class="relative py-8 md:py-6 mt-0 md:mt-16 -mx-6 md:mx-0 bg-slate-900 overflow-hidden px-6 md:px-4 lg:px-6 mb-0 md:mb-12 md:rounded-lg shadow-xl bg-center bg-cover md:bg-fixed"
+    class="relative py-8 md:py-6 mt-0 md:mt-16 -mx-6 md:mx-0 bg-slate-900 overflow-hidden px-6 mb-0 md:mb-12 md:rounded-lg shadow-xl bg-center bg-cover md:bg-fixed"
     :style="
       appearanceSettings?.galleryBackgroundImage
         ? { backgroundImage: `url(${appearanceSettings.galleryBackgroundImage})` }
@@ -68,11 +68,11 @@ const emptyCardsCount = computed(() => {
       class="absolute inset-0 bg-linear-to-b from-blue-900/80 via-slate-900/90 to-black/95 backdrop-blur-[2px]"
     ></div>
 
-    <div class="container relative z-10 mx-auto">
+    <div class="w-full max-w-full container z-10 mx-auto">
       <div
         class="mb-8 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out"
       >
-        <div class="relative block mt-4">
+        <div class="relative block md:mt-2">
           <h2
             class="text-2xl md:text-4xl font-bold text-white mb-4 sm:mb-2 tracking-wide"
             style="font-family: 'Oswald', sans-serif"

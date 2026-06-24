@@ -156,21 +156,19 @@ const scrollToAgenda = (agendaToScrollTo) => {
 
 <template>
   <section
-    class="relative py-8 md:py-6 pb-16 md:pb-0 mt-0 md:mt-16 -mx-6 md:mx-0 bg-white dark:bg-slate-800 overflow-hidden px-6 md:px-2 mb-0 md:mb-12 md:rounded-xl shadow-xl fade-on-scroll"
+    class="relative py-8 md:py-6 pb-16 md:pb-0 mt-0 md:mt-16 -mx-6 md:mx-0 bg-white dark:bg-slate-800 overflow-hidden px-6 mb-0 md:mb-12 md:rounded-xl shadow-xl fade-on-scroll"
   >
-    <div class="container mx-auto px-0 md:px-2">
+    <div class="w-full max-w-full container z-10 mx-auto">
       <!-- Header Section -->
-      <div class="mb-6 md:mb-10">
+      <div class="mb-6 md:mt-2 md:mb-10">
         <div class="relative block">
           <h2
-            class="text-2xl md:text-4xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
+            class="text-2xl md:text-4xl font-bold text-slate-800 dark:text-white mb-4 sm:mb-2"
             style="font-family: 'Oswald', sans-serif"
           >
             Agenda Sekolah
           </h2>
-          <p
-            class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base ml-0 sm:ml-5 max-w-2xl"
-          >
+          <p class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base max-w-2xl">
             Jadwal kegiatan akademik dan non-akademik. Pantau kalender agar tidak
             tertinggal event penting kami.
           </p>

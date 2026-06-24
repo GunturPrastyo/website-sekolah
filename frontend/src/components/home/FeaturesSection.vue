@@ -36,21 +36,19 @@ onBeforeUnmount(() => {
 
 <template>
   <section
-    class="relative mt-6 -mx-6 md:-mx-6 lg:-mx-0 overflow-hidden px-0 md:px-6 mb-8"
+    class="relative pt-4 -mx-6 md:-mx-6 lg:-mx-0 overflow-hidden px-0 md:px-6 mb-8"
   >
     <div class="w-full max-w-full container z-10 mx-auto">
       <!-- HEADER -->
       <div class="mb-8 px-2 md:px-0 mt-4 sm:mt-6">
         <div class="relative block">
           <h2
-            class="text-2xl md:text-4xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-2"
+            class="text-2xl md:text-4xl font-bold text-slate-800 dark:text-white mb-2"
             style="font-family: 'Oswald', sans-serif"
           >
             Kenapa Pilih Sekolah Ini?
           </h2>
-          <p
-            class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base ml-4 max-w-2xl"
-          >
+          <p class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base max-w-2xl">
             Kenali lebih jauh berbagai keunggulan dan fasilitas yang kami sediakan
           </p>
         </div>
