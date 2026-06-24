@@ -6,6 +6,8 @@ import {
   PhCalendar,
   PhArrowDown,
   PhPaperclip,
+  PhClock,
+  PhMapPin,
 } from "@phosphor-icons/vue";
 
 const props = defineProps({
@@ -19,86 +21,38 @@ const highlightedAgendaId = ref(null);
 
 const currentDisplayedDate = ref(new Date());
 
+// Desain Profesional: Warna pastel untuk lencana/chip
 const themeClasses = {
   yellow: {
-    card:
-      "bg-white border-gray-100 hover:border-yellow-300 hover:shadow-yellow-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-yellow-500/50",
-    dateBox: "border-yellow-600 border-b-4",
-    monthBg: "bg-yellow-600 group-hover:bg-yellow-700",
-    monthText: "text-white",
-    dateBg: "bg-yellow-50",
-    dateText: "text-yellow-700 group-hover:text-yellow-800",
-    title:
-      "text-gray-900 group-hover:text-yellow-700 dark:text-slate-100 dark:group-hover:text-yellow-400",
-    infoIcon: "text-yellow-500",
-    infoText: "text-gray-700 dark:text-yellow-300",
-    fileBtn:
-      "bg-yellow-50 text-yellow-700 border border-yellow-200 hover:bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-700/50 dark:hover:bg-yellow-900/50",
-    eventBg:
-      "bg-yellow-100 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:hover:bg-yellow-900/50",
-    eventHeaderBg: "bg-yellow-400 dark:bg-yellow-600",
-    eventHeaderText: "text-yellow-900 dark:text-yellow-200 drop-shadow-md",
-    eventDayText: "text-yellow-800 dark:text-yellow-300",
+    badge:
+      "bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20",
+    dot: "bg-amber-500",
   },
   red: {
-    card:
-      "bg-white border-gray-100 hover:border-red-300 hover:shadow-red-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-red-500/50",
-    dateBox: "border-red-600 border-b-4",
-    monthBg: "bg-red-600 group-hover:bg-red-700",
-    monthText: "text-white",
-    dateBg: "bg-red-50",
-    dateText: "text-red-700 group-hover:text-red-800",
-    title:
-      "text-gray-900 group-hover:text-red-700 dark:text-slate-100 dark:group-hover:text-red-400",
-    infoIcon: "text-red-500",
-    infoText: "text-gray-700 dark:text-red-300",
-    fileBtn:
-      "bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:border-red-700/50 dark:hover:bg-red-900/50",
-    eventBg: "bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50",
-    eventHeaderBg: "bg-red-400 dark:bg-red-600",
-    eventHeaderText: "text-red-900 dark:text-red-200 drop-shadow-md",
-    eventDayText: "text-red-800 dark:text-red-300",
+    badge:
+      "bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20",
+    dot: "bg-rose-500",
   },
   green: {
-    card:
-      "bg-white border-gray-100 hover:border-green-300 hover:shadow-green-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-green-500/50",
-    dateBox: "border-green-600 border-b-4",
-    monthBg: "bg-green-600 group-hover:bg-green-700",
-    monthText: "text-white",
-    dateBg: "bg-green-50",
-    dateText: "text-green-700 group-hover:text-green-800",
-    title:
-      "text-gray-900 group-hover:text-green-700 dark:text-slate-100 dark:group-hover:text-green-400",
-    infoIcon: "text-green-500",
-    infoText: "text-gray-700 dark:text-green-300",
-    fileBtn:
-      "bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 dark:border-green-700/50 dark:hover:bg-green-900/50",
-    eventBg:
-      "bg-green-100 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-green-900/50",
-    eventHeaderBg: "bg-green-400 dark:bg-green-600",
-    eventHeaderText: "text-green-900 dark:text-green-200 drop-shadow-md",
-    eventDayText: "text-green-800 dark:text-green-300",
+    badge:
+      "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20",
+    dot: "bg-emerald-500",
   },
   blue: {
-    card:
-      "bg-white border-gray-100 hover:border-blue-300 hover:shadow-blue-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-blue-500/50",
-    dateBox: "border-blue-600 border-b-4",
-    monthBg: "bg-blue-600 group-hover:bg-blue-700",
-    monthText: "text-white",
-    dateBg: "bg-blue-50",
-    dateText: "text-blue-700 group-hover:text-blue-800",
-    title:
-      "text-gray-900 group-hover:text-blue-700 dark:text-slate-100 dark:group-hover:text-blue-400",
-    infoIcon: "text-blue-500",
-    infoText: "text-gray-700 dark:text-blue-300",
-    fileBtn:
-      "bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-700/50 dark:hover:bg-blue-900/50",
-    eventBg:
-      "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50",
-    eventHeaderBg: "bg-blue-400 dark:bg-blue-600",
-    eventHeaderText: "text-blue-900 dark:text-blue-200 drop-shadow-md",
-    eventDayText: "text-blue-800 dark:text-blue-300",
+    badge:
+      "bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20",
+    dot: "bg-blue-500",
   },
+};
+
+const getCategoryName = (color) => {
+  const map = {
+    yellow: "Akademik",
+    red: "Guru & Staf",
+    green: "Kegiatan",
+    blue: "Seminar & Acara",
+  };
+  return map[color] || "Agenda";
 };
 
 const colSpanClasses = {
@@ -231,6 +185,7 @@ const scrollToAgenda = (agendaToScrollTo) => {
         <div
           class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-5 md:p-6 flex flex-col"
         >
+          <!-- Navigasi -->
           <div class="flex items-center justify-between mb-6">
             <button
               @click="prevMonth"
@@ -238,8 +193,12 @@ const scrollToAgenda = (agendaToScrollTo) => {
             >
               <PhCaretLeft class="w-5 h-5 text-gray-600 dark:text-gray-400" />
             </button>
-            <h3 class="text-lg font-bold text-blue-950 dark:text-blue-200">
-              {{ calendarData.monthName }} {{ calendarData.year }}
+            <h3
+              class="text-lg font-bold text-slate-800 dark:text-white"
+              style="font-family: 'Plus Jakarta Sans', sans-serif"
+            >
+              {{ calendarData.monthName }}
+              <span class="font-medium text-slate-500">{{ calendarData.year }}</span>
             </h3>
             <button
               @click="nextMonth"
@@ -249,10 +208,11 @@ const scrollToAgenda = (agendaToScrollTo) => {
             </button>
           </div>
 
+          <!-- Hari -->
           <div
-            class="grid grid-cols-7 gap-2 text-center mb-2 text-xs font-bold py-1 text-gray-500 dark:text-gray-400"
+            class="grid grid-cols-7 gap-1 text-center mb-3 text-[11px] font-bold uppercase tracking-wider text-slate-400"
           >
-            <div class="text-red-500 dark:text-red-400">Min</div>
+            <div class="text-red-400">Min</div>
             <div>Sen</div>
             <div>Sel</div>
             <div>Rab</div>
@@ -261,12 +221,13 @@ const scrollToAgenda = (agendaToScrollTo) => {
             <div>Sab</div>
           </div>
 
-          <div class="grid grid-cols-7 gap-y-2 text-sm text-center">
+          <!-- Grid Tanggal & Event -->
+          <div class="grid grid-cols-7 gap-y-2 gap-x-1 text-sm text-center">
             <template v-if="isLoadingAgendas">
               <div
                 v-for="i in 35"
                 :key="'skel-cal-' + i"
-                class="py-4 mx-0.5 rounded-lg bg-slate-100 dark:bg-slate-700/50 animate-pulse"
+                class="py-4 rounded-lg bg-slate-100 dark:bg-slate-700/50 animate-pulse"
               ></div>
             </template>
             <template v-else>
@@ -274,40 +235,43 @@ const scrollToAgenda = (agendaToScrollTo) => {
                 <div v-if="item.type === 'empty'" class="py-2"></div>
                 <div
                   v-else-if="item.type === 'day'"
-                  class="py-2 mx-0.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
+                  class="py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer transition-colors font-medium"
                 >
                   {{ item.day }}
                 </div>
+                <!-- Blok Agenda -->
                 <div
                   v-else-if="item.type === 'event'"
                   :class="[
                     colSpanClasses[item.span],
-                    'relative mx-0.5 my-0.5 rounded-md overflow-hidden cursor-pointer transition-colors flex flex-col justify-between',
-                    themeClasses[item.event.color].eventBg,
+                    'relative py-1 rounded-lg group cursor-pointer',
                   ]"
                   @click="scrollToAgenda(item.event)"
                   :title="item.event.title"
                 >
                   <div
-                    :class="[
-                      themeClasses[item.event.color].eventHeaderBg,
-                      themeClasses[item.event.color].eventHeaderText,
-                      'text-[10px] font-bold px-2 py-0.5 text-left truncate',
-                    ]"
-                  >
-                    {{ item.event.title }}
-                  </div>
+                    class="absolute inset-0 bg-slate-50 dark:bg-slate-700/30 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                  ></div>
                   <div
-                    class="grid w-full py-1"
+                    class="grid w-full relative z-10"
                     :style="`grid-template-columns: repeat(${item.span}, minmax(0, 1fr))`"
                   >
                     <div
                       v-for="d in item.days"
                       :key="'day-' + d"
-                      :class="[themeClasses[item.event.color].eventDayText, 'font-bold']"
+                      class="py-1 text-slate-900 dark:text-white font-bold"
                     >
                       {{ d }}
                     </div>
+                  </div>
+                  <!-- Event Chip -->
+                  <div
+                    :class="[
+                      'relative z-10 mx-0.5 mt-0.5 px-1 sm:px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-semibold truncate',
+                      themeClasses[item.event.color].badge,
+                    ]"
+                  >
+                    {{ item.event.title }}
                   </div>
                 </div>
               </template>
@@ -315,22 +279,22 @@ const scrollToAgenda = (agendaToScrollTo) => {
           </div>
 
           <!-- Keterangan Label -->
-          <div class="mt-6 pt-4 border-t border-gray-100 dark:border-slate-700">
-            <h4 class="text-xs font-bold text-gray-400 uppercase mb-3">
-              Keterangan Label
-            </h4>
-            <div class="flex flex-wrap gap-3 text-xs text-gray-600 dark:text-gray-400">
-              <div class="flex items-center text-yellow-600 dark:text-yellow-400">
-                <span class="w-3 h-3 rounded-sm bg-yellow-400 mr-2"></span> Akademik
+          <div class="mt-8 pt-5 border-t border-gray-100 dark:border-slate-700">
+            <div
+              class="flex flex-wrap gap-x-4 gap-y-2 text-[11px] font-medium text-slate-500 dark:text-slate-400"
+            >
+              <div class="flex items-center">
+                <span class="w-2 h-2 rounded-full bg-amber-500 mr-2"></span> Akademik
               </div>
-              <div class="flex items-center text-red-600 dark:text-red-400">
-                <span class="w-3 h-3 rounded-sm bg-red-400 mr-2"></span> Guru/Staf
+              <div class="flex items-center">
+                <span class="w-2 h-2 rounded-full bg-rose-500 mr-2"></span> Guru/Staf
               </div>
-              <div class="flex items-center text-green-600 dark:text-green-400">
-                <span class="w-3 h-3 rounded-sm bg-green-400 mr-2"></span> Kegiatan
+              <div class="flex items-center">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span> Kegiatan
               </div>
-              <div class="flex items-center text-blue-600 dark:text-blue-400">
-                <span class="w-3 h-3 rounded-sm bg-blue-400 mr-2"></span> Seminar & Acara
+              <div class="flex items-center">
+                <span class="w-2 h-2 rounded-full bg-blue-500 mr-2"></span> Seminar &
+                Acara
               </div>
             </div>
           </div>
@@ -341,6 +305,7 @@ const scrollToAgenda = (agendaToScrollTo) => {
           <div
             class="absolute inset-0 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col"
           >
+            <!-- Header Daftar Agenda -->
             <div
               class="p-5 md:p-6 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex items-center shrink-0"
             >
@@ -353,28 +318,30 @@ const scrollToAgenda = (agendaToScrollTo) => {
               </h3>
             </div>
 
+            <!-- List Kontainer -->
             <div class="relative flex-1 min-h-0" ref="agendaListContainer">
               <div
-                class="absolute inset-0 p-5 md:p-6 flex flex-col gap-4 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-200 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-300"
+                class="absolute inset-0 p-5 md:p-6 flex flex-col gap-4 overflow-y-auto custom-scrollbar pr-2 sm:pr-4"
               >
                 <template v-if="isLoadingAgendas">
                   <div
                     v-for="i in 4"
                     :key="'skel-ag-' + i"
-                    class="flex flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border border-gray-100 dark:border-slate-700 animate-pulse h-[115px] sm:h-auto"
+                    class="flex p-4 sm:p-5 rounded-xl border border-gray-100 dark:border-slate-700 animate-pulse h-[115px] sm:h-auto"
                   >
                     <div
-                      class="w-[65px] h-[80px] sm:w-[95px] sm:h-[95px] rounded-xl bg-slate-200 dark:bg-slate-700 shrink-0"
+                      class="w-20 h-16 rounded-lg bg-slate-200 dark:bg-slate-700 shrink-0"
                     ></div>
-                    <div class="flex flex-col flex-1 space-y-2">
-                      <div class="h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+                    <div class="flex-1 ml-4 space-y-3 py-1">
                       <div
-                        class="h-4 w-1/2 bg-slate-200 dark:bg-slate-700 rounded mt-2"
+                        class="h-4 w-24 bg-slate-200 dark:bg-slate-700 rounded-full"
                       ></div>
-                      <div class="h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded"></div>
+                      <div class="h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+                      <div class="h-4 w-1/2 bg-slate-200 dark:bg-slate-700 rounded"></div>
                     </div>
                   </div>
                 </template>
+
                 <template v-else-if="agendas.length > 0">
                   <div
                     v-for="(agenda, index) in agendas"
@@ -384,120 +351,104 @@ const scrollToAgenda = (agendaToScrollTo) => {
                         if (el) agendaElements[agenda.id] = el;
                       }
                     "
-                    class="flex flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border hover:shadow-md transition-all duration-300 shrink-0 relative"
+                    class="flex flex-row items-stretch gap-2 sm:gap-4 p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-800 border transition-all duration-300 relative group"
                     :class="[
-                      themeClasses[agenda.color].card,
-                      highlightedAgendaId === agenda.id ? 'highlight-agenda' : '',
+                      highlightedAgendaId === agenda.id
+                        ? 'border-blue-300 dark:border-blue-500 shadow-md ring-4 ring-blue-50 dark:ring-blue-900/20'
+                        : 'border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600',
                     ]"
                   >
+                    <!-- Typographic Date dengan Lebar yang Diperbesar -->
+                    <!-- Ukuran kontainer dinaikkan menjadi w-[85px] sm:w-[110px] agar teks tidak perlu dikecilkan -->
                     <div
-                      class="rounded-xl flex flex-col items-center justify-center min-w-[65px] w-[65px] sm:min-w-[95px] sm:w-[95px] border overflow-hidden shrink-0"
-                      :class="themeClasses[agenda.color].dateBox"
+                      class="flex flex-col items-center justify-start pt-1 w-[85px] sm:w-[110px] shrink-0 text-center overflow-hidden"
                     >
-                      <div
-                        class="w-full text-center py-1 sm:py-1.5"
-                        style="font-family: 'Kalam', cursive"
-                        :class="themeClasses[agenda.color].monthBg"
+                      <span
+                        class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-0.5"
                       >
-                        <span
-                          class="text-[10px] sm:text-xs font-bold uppercase tracking-wider"
-                          :class="themeClasses[agenda.color].monthText"
-                          >{{ agenda.month }}</span
-                        >
-                      </div>
-                      <div
-                        class="w-full text-center py-1.5 sm:py-3 flex items-center justify-center min-h-[48px]"
-                        :class="themeClasses[agenda.color].dateBg"
+                        {{ agenda.month }}
+                      </span>
+                      <!-- Font size kini seragam dan konsisten untuk semua format tanggal -->
+                      <span
+                        class="text-2xl sm:text-3xl font-light text-slate-800 dark:text-white leading-none tracking-tighter whitespace-nowrap"
                       >
-                        <span
-                          class="font-extrabold leading-none tracking-tight"
-                          :class="[
-                            themeClasses[agenda.color].dateText,
-                            agenda.date.length > 2
-                              ? 'text-lg sm:text-xl'
-                              : 'text-xl sm:text-3xl',
-                          ]"
-                          style="font-family: 'Kalam', cursive"
-                          >{{ agenda.date }}</span
-                        >
-                      </div>
+                        {{ agenda.date }}
+                      </span>
                     </div>
 
+                    <!-- Clean Divider -->
                     <div
-                      class="flex flex-col justify-center flex-1"
-                      style="font-family: 'Poppins', sans-serif"
+                      class="w-px bg-slate-100 dark:bg-slate-700 self-stretch mx-1 sm:mx-3 hidden sm:block"
+                    ></div>
+
+                    <!-- Content -->
+                    <div
+                      class="flex flex-col flex-1 pl-1 sm:pl-0"
+                      style="font-family: 'Plus Jakarta Sans', sans-serif"
                     >
+                      <div class="mb-2">
+                        <span
+                          :class="[
+                            'text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide',
+                            themeClasses[agenda.color].badge,
+                          ]"
+                        >
+                          {{ getCategoryName(agenda.color) }}
+                        </span>
+                      </div>
+
                       <h4
-                        class="font-bold text-sm md:text-base leading-tight mb-1"
-                        :class="themeClasses[agenda.color].title"
+                        class="font-bold text-sm md:text-base text-slate-900 dark:text-white leading-snug mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
                       >
                         {{ agenda.title }}
                       </h4>
+
                       <div
-                        class="flex flex-col gap-1.5 mt-2"
-                        :class="themeClasses[agenda.color].infoText"
+                        class="flex flex-col gap-2 text-xs md:text-[13px] text-slate-500 dark:text-slate-400 font-medium mt-auto"
                       >
-                        <div class="flex items-start text-[11px] sm:text-xs">
-                          <svg
-                            class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                            :class="themeClasses[agenda.color].infoIcon"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          >
-                            <circle cx="12" cy="12" r="10" />
-                            <polyline points="12 6 12 12 16 14" />
-                          </svg>
-                          <span class="font-medium text-gray-600 dark:text-gray-300">{{
-                            agenda.time
-                          }}</span>
+                        <div class="flex items-center">
+                          <PhClock class="w-4 h-4 mr-2.5 shrink-0 text-slate-400" />
+                          <span>{{ agenda.time }}</span>
                         </div>
-                        <div class="flex items-start text-[11px] sm:text-xs">
-                          <svg
-                            class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                            :class="themeClasses[agenda.color].infoIcon"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          >
-                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                            <circle cx="12" cy="10" r="3" />
-                          </svg>
-                          <span class="font-medium text-gray-600 dark:text-gray-300">{{
-                            agenda.loc
-                          }}</span>
+                        <div class="flex items-start">
+                          <PhMapPin
+                            class="w-4 h-4 mr-2.5 mt-0.5 shrink-0 text-slate-400"
+                          />
+                          <span class="leading-tight">{{ agenda.loc }}</span>
                         </div>
                         <div
                           v-if="agenda.file"
-                          class="flex items-start text-[11px] sm:text-xs pt-1"
+                          class="flex items-center mt-1 pt-2 border-t border-slate-100 dark:border-slate-700"
                         >
-                          <PhPaperclip
-                            class="w-4 h-4 mr-2 mt-0.5 shrink-0"
-                            :class="themeClasses[agenda.color].infoIcon"
-                          />
+                          <PhPaperclip class="w-4 h-4 mr-2.5 shrink-0 text-blue-500" />
                           <a
                             :href="agenda.file"
                             target="_blank"
-                            class="font-medium text-blue-600 hover:underline"
-                            >Lihat Dokumen</a
+                            class="text-blue-600 hover:text-blue-700 hover:underline transition-colors"
                           >
+                            Lihat Dokumen
+                          </a>
                         </div>
                       </div>
                     </div>
                   </div>
                 </template>
+
                 <template v-else>
-                  <div class="p-6 text-center text-gray-500 m-auto">
-                    Tidak ada agenda saat ini.
+                  <div
+                    class="p-8 text-center flex flex-col items-center justify-center m-auto w-full"
+                  >
+                    <PhCalendar
+                      class="w-10 h-10 text-slate-300 dark:text-slate-600 mb-2"
+                    />
+                    <p class="text-slate-500 text-sm font-medium">
+                      Tidak ada agenda saat ini.
+                    </p>
                   </div>
                 </template>
               </div>
+
+              <!-- Fade Bottom Indicator -->
               <div
                 class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white dark:from-slate-800 to-transparent pointer-events-none z-10 flex justify-center items-end"
               >
@@ -516,9 +467,23 @@ const scrollToAgenda = (agendaToScrollTo) => {
 </template>
 
 <style scoped>
-.highlight-agenda {
-  box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
-  transform: translateY(-4px) scale(1.01);
-  z-index: 10;
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+/* Custom scrollbar yang elegan */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1; /* slate-300 */
+  border-radius: 10px;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #475569; /* slate-600 */
+}
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: #94a3b8; /* slate-400 */
 }
 </style>
