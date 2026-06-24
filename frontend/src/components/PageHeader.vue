@@ -29,6 +29,11 @@ defineProps({
 
     <slot name="bg-ornament"></slot>
 
+    <!-- Overlay Gradien Gelap di Bagian Bawah -->
+    <div
+      class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-slate-900 dark:from-slate-950 to-transparent pointer-events-none z-0"
+    ></div>
+
     <div class="container relative z-10 mx-auto px-6 text-center">
       <span
         class="inline-block px-4 md:px-5 py-1 md:py-1.5 mb-4 md:mb-5 text-base md:text-xl font-bold text-blue-900 bg-white rounded-full shadow-sm backdrop-blur tracking-wide capitalize"
