@@ -253,7 +253,7 @@ watch(
               v-for="loc in alumniLocations"
               :key="loc.id"
               tabindex="0"
-              class="absolute flex justify-center items-end group cursor-pointer hover:z-50 focus:z-50 w-8 h-10 md:w-10 md:h-12 -translate-x-1/2 -translate-y-full focus:outline-none"
+              class="absolute flex justify-center items-end group cursor-pointer hover:z-50 focus:z-50 w-7 h-9 md:w-10 md:h-12 -translate-x-1/2 -translate-y-full focus:outline-none"
               :style="{ top: loc.top, left: loc.left, zIndex: 10 }"
               @mouseenter="showTooltip($event, loc)"
               @mousemove="updateTooltipPos($event)"
@@ -270,7 +270,7 @@ watch(
               >
                 <PhMapPin
                   weight="fill"
-                  class="w-8 h-8 md:w-10 md:h-10"
+                  class="w-7 h-7 md:w-10 md:h-10"
                   :class="
                     loc.type === 'ptn'
                       ? 'text-sky-500'
@@ -282,7 +282,7 @@ watch(
                   "
                 />
                 <div
-                  class="absolute top-[8px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 md:top-[10px] md:w-3 md:h-3 bg-white rounded-full"
+                  class="absolute top-[7px] left-1/2 -translate-x-1/2 w-2 h-2 md:top-[10px] md:w-3 md:h-3 bg-white rounded-full"
                 ></div>
               </div>
             </div>
