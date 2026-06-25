@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { PhPlay, PhImage } from "@phosphor-icons/vue";
 
 const props = defineProps({
@@ -14,6 +14,24 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["play-video"]);
+
+const titleRef = ref(null);
+
+onMounted(() => {
+  // Observer mandiri agar animasi tetap berjalan meskipun diload belakangan
+  if (titleRef.value) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          entries[0].target.classList.remove("opacity-0", "translate-y-10");
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(titleRef.value);
+  }
+});
 
 const getImageUrl = (path) => {
   if (!path) return "";
@@ -70,7 +88,8 @@ const emptyCardsCount = computed(() => {
 
     <div class="w-full max-w-full container z-10 mx-auto">
       <div
-        class="mb-8 fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out"
+        ref="titleRef"
+        class="mb-8 opacity-0 translate-y-10 transition-all duration-700 ease-out"
       >
         <div class="relative block md:mt-2">
           <h2
@@ -87,7 +106,6 @@ const emptyCardsCount = computed(() => {
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 items-stretch">
-        <!-- SEKSI VIDEO -->
         <template v-if="isLoadingSchoolVideo">
           <div
             class="lg:col-span-2 relative rounded-lg overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full bg-slate-800/50 animate-pulse border border-slate-700/50"
@@ -98,12 +116,10 @@ const emptyCardsCount = computed(() => {
           </div>
         </template>
         <template v-else>
-          <!-- Kontainer utama untuk video, selalu tampil setelah loading -->
           <div
             class="lg:col-span-2 relative group rounded-lg overflow-hidden shadow-2xl h-[280px] sm:h-[400px] md:h-[450px] w-full block"
           >
             <template v-if="schoolVideoUrl">
-              <!-- Tampilkan video jika URL tersedia -->
               <template v-if="!isVideoPlaying">
                 <div class="absolute inset-0 cursor-pointer" @click="$emit('play-video')">
                   <img
@@ -150,7 +166,6 @@ const emptyCardsCount = computed(() => {
               </template>
             </template>
             <template v-else>
-              <!-- Tampilkan placeholder jika tidak ada URL video -->
               <div
                 class="absolute inset-0 flex flex-col items-center justify-center bg-blue-900/30 border border-blue-800/30 text-blue-300/50"
               >
@@ -163,11 +178,9 @@ const emptyCardsCount = computed(() => {
           </div>
         </template>
 
-        <!-- SEKSI GRID GALERI -->
         <div
           class="lg:col-span-1 grid grid-cols-2 gap-4 h-[300px] sm:h-[400px] md:h-[450px]"
         >
-          <!-- Kartu Foto Kategori -->
           <router-link
             v-for="(gallery, index) in galleriesByCategory"
             :key="gallery.category"
@@ -197,7 +210,6 @@ const emptyCardsCount = computed(() => {
             </div>
           </router-link>
 
-          <!-- Skeleton State Aman via emptyCardsCount -->
           <div
             v-for="i in emptyCardsCount"
             :key="'empty-card-' + i"
@@ -207,7 +219,6 @@ const emptyCardsCount = computed(() => {
             <span class="text-xs font-semibold opacity-50">Belum ada foto</span>
           </div>
 
-          <!-- Tombol CTA Lihat Semua (Foto ke-4) -->
           <router-link
             to="/galeri"
             class="group relative rounded-lg overflow-hidden shadow-sm h-full block bg-blue-900/40 border border-blue-800/40"
