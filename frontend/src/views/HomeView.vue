@@ -450,7 +450,7 @@ onMounted(() => {
     { threshold: 0.1 }
   );
 
-  setTimeout(observeElements, 1000);
+  observeElements(); // Call immediately
 });
 
 onBeforeUnmount(() => {
