@@ -861,17 +861,6 @@ const executeBulkDelete = async () => {
         </p>
       </div>
     </div>
-    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
-      <button
-        @click="exportData"
-        :disabled="isExporting"
-        class="inline-flex items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        <PhSpinner v-if="isExporting" class="w-5 h-5 mr-2 animate-spin" />
-        <PhDownloadSimple v-else class="w-5 h-5 mr-2" />
-        Export Data
-      </button>
-    </div>
     <!-- Form Bulk Edit -->
     <!-- The div for centering the modal content -->
     <Transition
@@ -1397,7 +1386,7 @@ const executeBulkDelete = async () => {
       <div
         class="p-6 border-b border-gray-100 dark:border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
       >
-        <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+        <div class="flex flex-col md:flex-row gap-4 w-full">
           <div class="relative flex-1 md:max-w-xs">
             <div
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
@@ -1431,13 +1420,26 @@ const executeBulkDelete = async () => {
             <option value="semua">Semua Baris</option>
           </select>
         </div>
-        <button
-          @click="showAddForm"
-          class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors w-full md:w-auto"
+        <div
+          class="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full md:w-auto justify-end"
         >
-          <PhPlusCircle class="w-5 h-5 mr-2" />
-          Tambah Data Alumni
-        </button>
+          <button
+            @click="exportData"
+            :disabled="isExporting"
+            class="inline-flex items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <PhSpinner v-if="isExporting" class="w-5 h-5 mr-2 animate-spin" />
+            <PhDownloadSimple v-else class="w-5 h-5 mr-2" />
+            Export Data
+          </button>
+          <button
+            @click="showAddForm"
+            class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+          >
+            <PhPlusCircle class="w-5 h-5 mr-2" />
+            Tambah Data Alumni
+          </button>
+        </div>
       </div>
 
       <!-- Bulk Actions Bar -->

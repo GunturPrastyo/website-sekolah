@@ -10,20 +10,19 @@ import PageHeader from "@/components/PageHeader.vue";
 import api from "@/api/index.js";
 
 const programs = ref([]);
-const appearanceSettings = ref({}); // 👈 1. State baru untuk menampung gambar dari SettingController
+const appearanceSettings = ref({});
 const isFetching = ref(true);
 
 const getImageUrl = (path, defaultUrl = "") => {
   if (!path) return defaultUrl;
   if (path.startsWith("http") || path.startsWith("data:")) return path;
 
-  const backendUrl = import.meta.env.VITE_API_URL;
-  return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
+  const backendUrl = import.meta.env.VITE_API_URL || ""; // Ensure backendUrl is a string
+  return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`; // Safely call replace
 };
 
 const handleImageError = (e) => {
-  e.target.src =
-    "https://images.unsplash.com/photo-1581093458791-9d42e7e9c1c4?q=80&w=800";
+  e.target.src = "";
 };
 
 const parseJSON = (data) => {
@@ -112,9 +111,9 @@ onMounted(() => {
   <div>
     <PageHeader
       v-if="!isFetching && appearanceSettings"
-      badge="Program Keahlian"
-      title="Kompetensi Keahlian"
-      description="Membentuk tenaga kerja profesional, kompeten, dan siap kerja yang relevan dengan kebutuhan dunia usaha dan dunia industri saat ini."
+      badge="Pilihan Jurusan"
+      title="Program Keahlian Sekolah"
+      description="Menyediakan beragam program keahlian yang membekali siswa dengan ilmu pengetahuan dan keterampilan praktis untuk meraih sukses di perguruan tinggi maupun karir."
       :bgImage="getImageUrl(appearanceSettings.headerProgramJurusan)"
     />
 

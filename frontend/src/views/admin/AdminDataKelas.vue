@@ -325,22 +325,24 @@ const getSelectedHomeroomName = computed(() => {
           Kelola data rombongan belajar, wali kelas, dan kapasitas siswa.
         </p>
       </div>
-      <button
-        @click="exportData"
-        :disabled="isExporting"
-        class="inline-flex items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        <PhSpinner v-if="isExporting" class="w-5 h-5 mr-2 animate-spin" />
-        <PhDownloadSimple v-else class="w-5 h-5 mr-2" />
-        Export Data
-      </button>
-      <button
-        @click="showAddForm"
-        class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-      >
-        <PhPlusCircle class="w-5 h-5 mr-2" />
-        Tambah Kelas
-      </button>
+      <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full md:w-auto justify-end">
+        <button
+          @click="exportData"
+          :disabled="isExporting"
+          class="inline-flex items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full md:w-auto"
+        >
+          <PhSpinner v-if="isExporting" class="w-5 h-5 mr-2 animate-spin" />
+          <PhDownloadSimple v-else class="w-5 h-5 mr-2" />
+          Export Data
+        </button>
+        <button
+          @click="showAddForm"
+          class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors w-full md:w-auto"
+        >
+          <PhPlusCircle class="w-5 h-5 mr-2" />
+          Tambah Kelas
+        </button>
+      </div>
     </div>
 
     <!-- Banner Peringatan Kekurangan Data Relasi -->
