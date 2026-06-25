@@ -303,7 +303,7 @@ onMounted(() => {
             class="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 dark:border-slate-700/50 p-6 flex flex-col items-center group hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300"
           >
             <div
-              class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+              class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
             >
               <PhFlag class="w-6 h-6" />
             </div>
@@ -324,7 +324,7 @@ onMounted(() => {
             class="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 dark:border-slate-700/50 p-6 flex flex-col items-center group hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300"
           >
             <div
-              class="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+              class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
             >
               <PhMapPin class="w-6 h-6" />
             </div>
@@ -345,7 +345,7 @@ onMounted(() => {
             class="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 dark:border-slate-700/50 p-6 flex flex-col items-center group hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300"
           >
             <div
-              class="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+              class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
             >
               <PhBuildings class="w-6 h-6" />
             </div>
