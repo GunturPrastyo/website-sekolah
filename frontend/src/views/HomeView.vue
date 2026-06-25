@@ -497,7 +497,8 @@ onBeforeUnmount(() => {
 
       <!-- 5. GALERI & VIDEO -->
       <VideoGallerySection
-        :key="schoolVideoUrl || 'loading-video'"
+        v-if="!isLoading.video"
+        :key="schoolVideoUrl"
         :appearanceSettings="appearanceSettings"
         :schoolVideoUrl="schoolVideoUrl"
         :schoolVideoTitle="schoolVideoTitle"
