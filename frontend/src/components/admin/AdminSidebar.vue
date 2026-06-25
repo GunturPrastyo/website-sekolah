@@ -76,7 +76,7 @@ const menu = computed(() => {
         children: [
           { name: "Program Jurusan", link: "/admin/program-jurusan" },
           { name: "Kurikulum", link: "/admin/kurikulum" },
-          { name: "Jadwal Pelajaran", link: "/admin/jadwal-pelajaran" },
+          // { name: "Jadwal Pelajaran", link: "/admin/jadwal-pelajaran" },
         ],
       },
       {
