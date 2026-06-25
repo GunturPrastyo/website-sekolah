@@ -152,138 +152,206 @@ onMounted(() => {
             <a
               :href="ppdbInfo.brosur"
               target="_blank"
-              class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors shadow-lg"
+              class="inline-flex items-center px-6 py-3 bg-white text-blue-800 hover:bg-blue-50 text-sm font-bold rounded-full transition-all shadow-xl hover:-translate-y-1"
             >
-              <PhDownloadSimple class="w-4 h-4 mr-2" />
+              <PhDownloadSimple class="w-5 h-5 mr-2" weight="bold" />
               Unduh Brosur PPDB
             </a>
           </div>
         </template>
       </PageHeader>
 
+      <!-- BAGIAN INFORMASI & PERSYARATAN (DI-UPGRADE) -->
       <section
-        class="py-12 md:py-10 px-6 bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700"
+        class="py-16 md:py-20 px-6 bg-slate-50 dark:bg-slate-900 border-b border-slate-200/60 dark:border-slate-800 relative overflow-hidden"
       >
-        <div class="container mx-auto max-w-full px-0 lg:px-16">
-          <div class="text-center mb-10">
+        <!-- Ornamen Latar Belakang -->
+        <div
+          class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 dark:bg-blue-600/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/4"
+        ></div>
+        <div
+          class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/5 dark:bg-indigo-600/5 rounded-full blur-3xl pointer-events-none translate-y-1/2 -translate-x-1/4"
+        ></div>
+
+        <div class="container mx-auto max-w-7xl relative z-10">
+          <div class="text-center mb-14 max-w-3xl mx-auto">
+            <h4
+              class="text-blue-600 dark:text-blue-400 font-bold tracking-widest text-xs sm:text-sm uppercase mb-3"
+              style="font-family: 'Plus Jakarta Sans', sans-serif"
+            >
+              Panduan Utama
+            </h4>
             <h2
-              class="text-3xl md:text-4xl font-bold text-blue-950 dark:text-white"
-              style="font-family: 'Oswald', sans-serif"
+              class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-4 leading-tight tracking-tight"
+              style="font-family: 'Plus Jakarta Sans', sans-serif"
             >
               Informasi & Persyaratan
             </h2>
-            <p class="text-gray-600 dark:text-gray-400 mt-2">
-              Pastikan Anda membaca ketentuan berikut sebelum mengisi formulir.
+            <p class="text-slate-600 dark:text-slate-400 text-base md:text-lg">
+              Pelajari dengan saksama seluruh ketentuan dan kualifikasi administrasi yang
+              dibutuhkan sebelum memulai proses pengisian formulir.
             </p>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+            <!-- KOLOM SYARAT PENDAFTARAN -->
             <div
-              class="bg-blue-50/20 dark:bg-slate-700/30 p-6 md:p-8 rounded-xl border border-gray-300 dark:border-slate-700 shadow-lg"
+              class="bg-white dark:bg-slate-800 rounded-3xl p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-200/60 dark:border-slate-700/60 hover:shadow-xl transition-shadow duration-500"
             >
-              <h3
-                class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
+              <div
+                class="flex items-center mb-8 pb-6 border-b border-slate-100 dark:border-slate-700/50"
               >
-                <PhListChecks class="w-6 h-6 mr-2 text-blue-950 dark:text-white" />
-                Syarat Pendaftaran
-              </h3>
+                <div
+                  class="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center mr-5 shadow-inner"
+                >
+                  <PhListChecks
+                    class="w-7 h-7 text-blue-600 dark:text-blue-400"
+                    weight="fill"
+                  />
+                </div>
+                <div>
+                  <h3
+                    class="text-2xl font-bold text-slate-900 dark:text-white"
+                    style="font-family: 'Plus Jakarta Sans', sans-serif"
+                  >
+                    Syarat Pendaftaran
+                  </h3>
+                  <p class="text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">
+                    Dokumen yang wajib dilengkapi
+                  </p>
+                </div>
+              </div>
 
-              <ul v-if="isLoading" class="space-y-4 animate-pulse">
+              <ul v-if="isLoading" class="space-y-6 animate-pulse">
                 <li v-for="i in 4" :key="'skel-syarat-' + i" class="flex items-start">
                   <div
-                    class="w-5 h-5 bg-gray-300 dark:bg-slate-600 rounded-full mr-3 shrink-0 mt-0.5"
+                    class="w-6 h-6 bg-slate-200 dark:bg-slate-700 rounded-full mr-4 shrink-0"
                   ></div>
-                  <div
-                    class="h-4 bg-gray-300 dark:bg-slate-600 rounded w-full mt-1.5"
-                  ></div>
+                  <div class="flex-1 space-y-2 pt-1">
+                    <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
+                    <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
+                  </div>
                 </li>
               </ul>
-              <ul v-else-if="syaratList.length > 0" class="space-y-4">
+
+              <ul v-else-if="syaratList.length > 0" class="space-y-5">
                 <li
                   v-for="(syarat, index) in syaratList"
                   :key="index"
-                  class="flex items-start"
+                  class="flex items-start group"
                 >
-                  <PhCheckCircle class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5" />
+                  <div
+                    class="mt-0.5 mr-4 w-6 h-6 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center shrink-0 border border-emerald-100 dark:border-emerald-800/50 group-hover:bg-emerald-100 transition-colors"
+                  >
+                    <PhCheckCircle
+                      class="w-4 h-4 text-emerald-600 dark:text-emerald-400"
+                      weight="fill"
+                    />
+                  </div>
                   <span
-                    class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"
+                    class="text-[15px] md:text-base text-slate-700 dark:text-slate-300 leading-relaxed font-medium"
+                    style="font-family: 'Plus Jakarta Sans', sans-serif"
                     >{{
                       typeof syarat === "string" ? syarat : syarat.text || syarat.desc
                     }}</span
                   >
                 </li>
               </ul>
-              <p v-else class="text-sm text-gray-500 dark:text-gray-400 italic">
-                Belum ada data syarat pendaftaran.
-              </p>
-            </div>
-
-            <div
-              class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-xl border border-gray-300 dark:border-slate-700 shadow-lg"
-            >
-              <h3
-                class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
-              >
-                <PhGitMerge class="w-6 h-6 mr-2 text-blue-950 dark:text-white" />
-                Alur Pendaftaran
-              </h3>
 
               <div
-                v-if="isLoading"
-                class="space-y-6 animate-pulse relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-gray-300 dark:before:from-slate-600 before:to-transparent"
+                v-else
+                class="text-center py-10 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700"
+              >
+                <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">
+                  Belum ada data persyaratan yang diunggah.
+                </p>
+              </div>
+            </div>
+
+            <!-- KOLOM ALUR PENDAFTARAN -->
+            <div
+              class="bg-white dark:bg-slate-800 rounded-3xl p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-200/60 dark:border-slate-700/60 hover:shadow-xl transition-shadow duration-500"
+            >
+              <div
+                class="flex items-center mb-8 pb-6 border-b border-slate-100 dark:border-slate-700/50"
               >
                 <div
-                  v-for="i in 3"
-                  :key="'skel-alur-' + i"
-                  class="relative flex items-center gap-4"
+                  class="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center mr-5 shadow-inner"
                 >
+                  <PhGitMerge
+                    class="w-7 h-7 text-indigo-600 dark:text-indigo-400"
+                    weight="fill"
+                  />
+                </div>
+                <div>
+                  <h3
+                    class="text-2xl font-bold text-slate-900 dark:text-white"
+                    style="font-family: 'Plus Jakarta Sans', sans-serif"
+                  >
+                    Alur Pendaftaran
+                  </h3>
+                  <p class="text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">
+                    Langkah-langkah proses PPDB
+                  </p>
+                </div>
+              </div>
+
+              <!-- Skeleton Alur -->
+              <div
+                v-if="isLoading"
+                class="space-y-8 animate-pulse relative before:absolute before:inset-0 before:ml-[1.1rem] before:-translate-x-px before:h-full before:w-[2px] before:bg-slate-200 dark:before:bg-slate-700"
+              >
+                <div v-for="i in 3" :key="'skel-alur-' + i" class="relative flex gap-6">
                   <div
-                    class="w-10 h-10 rounded-full bg-gray-200 dark:bg-slate-700 shrink-0 z-10"
+                    class="w-9 h-9 rounded-full bg-slate-300 dark:bg-slate-600 shrink-0 z-10 border-4 border-white dark:border-slate-800"
                   ></div>
-                  <div class="flex-1">
-                    <div
-                      class="h-4 bg-gray-300 dark:bg-slate-600 rounded w-1/2 mb-2"
-                    ></div>
-                    <div class="h-3 bg-gray-300 dark:bg-slate-600 rounded w-full"></div>
+                  <div class="flex-1 pt-1.5 space-y-2">
+                    <div class="h-5 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+                    <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
+                    <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-4/5"></div>
                   </div>
                 </div>
               </div>
+
+              <!-- Konten Alur -->
               <div
                 v-else-if="alurList.length > 0"
-                class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-blue-200 before:via-blue-200 dark:before:via-slate-600 before:to-transparent"
+                class="relative before:absolute before:inset-0 before:ml-[1.1rem] before:-translate-x-px before:h-[calc(100%-2rem)] before:w-[2px] before:bg-gradient-to-b before:from-indigo-200 before:via-blue-200 dark:before:from-indigo-900/50 dark:before:via-blue-900/50 before:to-transparent space-y-8"
               >
                 <div
                   v-for="(alur, index) in alurList"
                   :key="index"
-                  class="relative flex items-center gap-4"
+                  class="relative flex items-start gap-6 group"
                 >
                   <div
-                    class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border-2 flex items-center justify-center font-bold shrink-0 z-10"
+                    class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm shrink-0 z-10 border-[3px] border-white dark:border-slate-800 shadow-sm transition-colors duration-300"
                     :class="
                       index === alurList.length - 1
-                        ? 'border-gray-300 dark:border-slate-600 text-gray-400'
-                        : 'border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400'
+                        ? 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
+                        : 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 group-hover:bg-indigo-600 group-hover:text-white'
                     "
+                    style="font-family: 'Plus Jakarta Sans', sans-serif"
                   >
                     {{ index + 1 }}
                   </div>
-                  <div>
+                  <div class="pt-1.5">
                     <h4
-                      class="font-bold text-sm"
+                      class="text-base font-bold mb-1.5"
+                      style="font-family: 'Plus Jakarta Sans', sans-serif"
                       :class="
                         index === alurList.length - 1
-                          ? 'text-gray-400 dark:text-gray-500'
-                          : 'text-blue-950 dark:text-white'
+                          ? 'text-slate-500 dark:text-slate-400'
+                          : 'text-slate-900 dark:text-white'
                       "
                     >
                       {{ alur.title || alur.nama }}
                     </h4>
                     <p
-                      class="text-xs mt-1"
+                      class="text-[13px] md:text-sm leading-relaxed"
                       :class="
                         index === alurList.length - 1
-                          ? 'text-gray-400 dark:text-gray-500'
-                          : 'text-gray-500 dark:text-gray-400'
+                          ? 'text-slate-400 dark:text-slate-500'
+                          : 'text-slate-600 dark:text-slate-400'
                       "
                     >
                       {{ alur.desc || alur.description }}
@@ -291,43 +359,53 @@ onMounted(() => {
                   </div>
                 </div>
               </div>
-              <p v-else class="text-sm text-gray-500 dark:text-gray-400 italic">
-                Belum ada data alur pendaftaran.
-              </p>
+
+              <div
+                v-else
+                class="text-center py-10 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700"
+              >
+                <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">
+                  Belum ada data alur pendaftaran.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <section
-        class="py-12 md:py-8 px-6 bg-blue-950 dark:bg-slate-900 relative overflow-hidden border-b border-blue-900 dark:border-slate-800"
+        class="py-12 md:py-8 px-6 bg-slate-950 dark:bg-slate-950 relative overflow-hidden border-b border-slate-900"
       >
         <div class="container mx-auto max-w-full px-0 lg:px-16 relative z-10">
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             <div class="lg:col-span-5 text-center lg:text-left">
+              <h4
+                class="text-amber-400 font-bold tracking-widest text-xs sm:text-sm uppercase mb-3"
+                style="font-family: 'Plus Jakarta Sans', sans-serif"
+              >
+                Pilihan Seleksi
+              </h4>
               <h2
-                class="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight"
-                style="font-family: 'Oswald', sans-serif"
+                class="text-3xl md:text-5xl font-extrabold text-white mb-6 leading-tight"
+                style="font-family: 'Plus Jakarta Sans', sans-serif"
               >
-                Jalur Pendaftaran PPDB
+                Jalur Pendaftaran
               </h2>
-              <p
-                class="text-blue-100 dark:text-gray-300 text-base md:text-lg leading-relaxed"
-              >
+              <p class="text-slate-300 text-base md:text-lg leading-relaxed">
                 Sistem Penerimaan Peserta Didik Baru terbagi menjadi 4 jalur utama.
                 Pastikan Anda memilih jalur yang paling sesuai dengan kondisi dan
                 kualifikasi untuk memperbesar peluang diterima.
               </p>
 
               <div
-                class="hidden lg:flex items-center gap-3 text-yellow-400 font-semibold mt-8"
+                class="hidden lg:flex items-center gap-3 text-amber-400 font-semibold mt-10"
               >
                 <div
-                  class="w-10 h-10 rounded-full border-2 border-yellow-400 flex items-center justify-center animate-bounce"
+                  class="w-10 h-10 rounded-full border border-amber-400/50 flex items-center justify-center animate-bounce shadow-[0_0_15px_rgba(251,191,36,0.3)] bg-amber-400/10"
                 >
-                  <PhArrowDown class="w-5 h-5" />
+                  <PhArrowDown class="w-4 h-4" weight="bold" />
                 </div>
-                Scroll untuk melihat jalur
+                <span class="text-sm tracking-wide">Scroll untuk melihat jalur</span>
               </div>
             </div>
 
@@ -339,15 +417,15 @@ onMounted(() => {
                 class="w-full h-full flex items-center justify-center animate-pulse px-4 lg:px-10 py-8"
               >
                 <div
-                  class="bg-blue-800/40 dark:bg-slate-800/50 rounded-xl w-full max-w-sm h-full border border-blue-700/30 dark:border-slate-700/50"
+                  class="bg-slate-800/50 rounded-2xl w-full max-w-sm h-full border border-slate-700/50"
                 ></div>
               </div>
 
               <div
                 v-else-if="jalurList.length === 0"
-                class="text-center w-full text-blue-200 italic"
+                class="text-center w-full text-slate-400 font-medium"
               >
-                Belum ada data jalur pendaftaran.
+                Belum ada data jalur pendaftaran yang tersedia saat ini.
               </div>
 
               <div v-else class="fade-mask-slider w-full h-full absolute inset-0">
@@ -359,38 +437,40 @@ onMounted(() => {
                       class="swiper-slide"
                     >
                       <div
-                        class="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl relative group transform transition-all duration-500 h-full flex flex-col overflow-hidden border border-gray-100 dark:border-slate-700/60 border-b-4 border-b-yellow-400 dark:border-b-yellow-500"
+                        class="bg-slate-900/90 rounded-3xl shadow-xl hover:shadow-2xl relative group transform transition-all duration-500 h-full flex flex-col overflow-hidden border border-slate-800 hover:border-slate-700"
                       >
+                        <!-- Top Accent Bar -->
                         <div
-                          class="h-28 sm:h-36 overflow-hidden relative shrink-0 bg-blue-600 dark:bg-blue-800 transition-colors duration-500 group-hover:bg-blue-700 dark:group-hover:bg-blue-600"
-                        >
-                          <div
-                            class="absolute top-4 left-4 px-3 py-1 bg-yellow-400 text-blue-950 text-[10px] sm:text-xs font-bold rounded-full shadow-sm border border-yellow-300"
-                          >
-                            Kuota {{ jalur.kuota }}
-                          </div>
-                        </div>
+                          class="h-2 w-full bg-gradient-to-r from-amber-400 to-orange-500"
+                        ></div>
 
-                        <div
-                          class="relative z-10 px-5 sm:px-6 md:px-8 pb-16 lg:pb-8 flex-1 flex flex-col -mt-8"
-                        >
-                          <div
-                            class="w-10 h-10 sm:w-12 sm:h-12 bg-yellow-400 dark:bg-yellow-500 text-blue-950 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 shadow-md border border-yellow-300 dark:border-yellow-400 group-hover:scale-110 transition-transform"
-                          >
-                            <component
-                              :is="getIcon(index)"
-                              class="w-5 h-5 sm:w-6 sm:h-6"
-                            />
+                        <div class="p-6 sm:p-8 flex-1 flex flex-col relative z-10">
+                          <div class="flex justify-between items-start mb-6">
+                            <div
+                              class="w-12 h-12 sm:w-14 sm:h-14 bg-amber-400/10 text-amber-400 rounded-2xl flex items-center justify-center border border-amber-400/20 group-hover:scale-110 group-hover:bg-amber-400 group-hover:text-slate-900 transition-all duration-300"
+                            >
+                              <component
+                                :is="getIcon(index)"
+                                class="w-6 h-6 sm:w-7 sm:h-7"
+                                weight="duotone"
+                              />
+                            </div>
+                            <div
+                              class="px-3.5 py-1.5 bg-slate-800 border border-slate-700 text-slate-300 text-[11px] sm:text-xs font-bold rounded-full shadow-inner tracking-widest uppercase"
+                            >
+                              Kuota <span class="text-amber-400">{{ jalur.kuota }}</span>
+                            </div>
                           </div>
 
                           <h3
-                            class="text-lg sm:text-xl font-bold text-blue-950 dark:text-white mb-2"
+                            class="text-xl sm:text-2xl font-bold text-white mb-3 tracking-tight"
+                            style="font-family: 'Plus Jakarta Sans', sans-serif"
                           >
                             {{ jalur.title }}
                           </h3>
 
                           <p
-                            class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm leading-relaxed line-clamp-4 lg:line-clamp-none"
+                            class="text-slate-400 text-sm leading-relaxed line-clamp-4 lg:line-clamp-none font-medium"
                           >
                             {{ jalur.desc }}
                           </p>
@@ -411,6 +491,8 @@ onMounted(() => {
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
 .animate-fade-in {
   animation: fadeIn 0.4s ease-out forwards;
 }
@@ -450,15 +532,15 @@ onMounted(() => {
     -webkit-mask-image: linear-gradient(
       to bottom,
       transparent 0%,
-      black 10%,
-      black 90%,
+      black 5%,
+      black 95%,
       transparent 100%
     );
     mask-image: linear-gradient(
       to bottom,
       transparent 0%,
-      black 10%,
-      black 90%,
+      black 5%,
+      black 95%,
       transparent 100%
     );
   }
@@ -488,13 +570,13 @@ onMounted(() => {
 }
 
 :deep(.jalur-pagination .swiper-pagination-bullet) {
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
   margin: 6px !important;
 }
 
 :deep(.jalur-pagination .swiper-pagination-bullet-active) {
-  background-color: #ffffff;
+  background-color: #fbbf24; /* amber-400 */
   width: 24px;
   border-radius: 6px;
 }
@@ -503,7 +585,6 @@ onMounted(() => {
   :deep(.jalur-pagination .swiper-pagination-bullet-active) {
     height: 24px;
     width: 8px;
-    /* default bullet width */
   }
 }
 </style>

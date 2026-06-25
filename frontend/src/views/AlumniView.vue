@@ -11,9 +11,9 @@
     />
 
     <!-- Direktori & Persebaran Alumni Section -->
-    <section class="py-8 md:py-16 container mx-auto px-0 md:px-4 lg:px-8 relative z-10">
+    <section class="py-8 md:py-16 relative z-10 bg-white dark:bg-white">
       <div
-        class="md:rounded-2xl flex flex-col w-full overflow-hidden bg-white dark:bg-slate-800/90 shadow-sm border border-slate-100 dark:border-slate-700/60"
+        class="container mx-auto md:rounded-2xl flex flex-col w-full overflow-hidden bg-white dark:bg-white shadow-sm border border-slate-100 dark:border-slate-700/60"
       >
         <!-- Search Area -->
         <div class="px-6 md:px-12 pt-8 md:pt-10">
