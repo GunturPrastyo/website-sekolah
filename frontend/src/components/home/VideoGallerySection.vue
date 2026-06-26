@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, onMounted } from "vue";
+import api from "@/api/index.js";
 import { PhPlay, PhImage } from "@phosphor-icons/vue";
 
 const props = defineProps({
@@ -36,7 +37,7 @@ onMounted(() => {
 const getImageUrl = (path) => {
   if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:image")) return path;
-  const baseUrl = import.meta.env.VITE_API_URL;
+  const baseUrl = api.defaults.baseURL;
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
   if (cleanPath.startsWith("storage/")) {
     return `${baseUrl}/${cleanPath}`;

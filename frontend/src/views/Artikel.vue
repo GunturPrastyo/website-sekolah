@@ -29,7 +29,7 @@ const getImageUrl = (path) => {
     return "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200";
   if (path.startsWith("http") || path.startsWith("data:image")) return path;
 
-  const baseUrl = import.meta.env.VITE_API_URL;
+  const baseUrl = api.defaults.baseURL;
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
   if (cleanPath.startsWith("storage/")) {
     return `${baseUrl}/${cleanPath}`;
