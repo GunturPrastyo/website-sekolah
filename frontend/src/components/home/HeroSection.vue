@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, watch, onMounted, onBeforeUnmount } from "vue";
 import { PhQuotes } from "@phosphor-icons/vue";
+import api from "@/api/index.js";
 import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.css";
 
@@ -18,7 +19,7 @@ let statsSwiperInstance = null;
 const getImageUrl = (path) => {
   if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:")) return path;
-  const baseUrl = import.meta.env.VITE_API_URL;
+  const baseUrl = api.defaults.baseURL;
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
   if (cleanPath.startsWith("storage/")) {
     return `${baseUrl}/${cleanPath}`;

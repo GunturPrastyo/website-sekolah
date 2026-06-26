@@ -61,7 +61,7 @@ const getImageUrl = (path) => {
     return "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800";
   if (path.startsWith("http") || path.startsWith("data:")) return path;
 
-  const backendUrl = import.meta.env.VITE_API_URL;
+  const backendUrl = api.defaults.baseURL;
   const cleanBase = backendUrl.replace(/\/+$/, "");
   let cleanPath = path.replace(/^\/+/, "");
 
