@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import api from "../../api/index.js";
 import {
   PhEnvelopeSimple,
@@ -12,6 +12,7 @@ import {
 } from "@phosphor-icons/vue";
 
 const router = useRouter();
+const route = useRoute();
 
 const form = ref({
   email: "",
@@ -44,7 +45,7 @@ const fetchSettings = async () => {
 };
 
 const handleGoogleLogin = () => {
-  const backendUrl = import.meta.env.VITE_API_URL;
+  const backendUrl = api.defaults.baseURL;
   window.location.href = `${backendUrl}/api/auth/google/redirect`;
 };
 
@@ -92,6 +93,20 @@ const handleLogin = async () => {
 
 onMounted(() => {
   fetchSettings();
+
+  // Cek jika ada error dari query URL (misal: dari redirect Google Login)
+  const errorQuery = route.query.error;
+  if (errorQuery) {
+    if (errorQuery === "email_not_registered") {
+      errorMessage.value =
+        "Email yang Anda gunakan tidak terdaftar. Silakan login dengan akun yang sudah terdaftar.";
+    } else if (errorQuery === "google_auth_failed" || errorQuery === "auth_failed") {
+      errorMessage.value = "Proses autentikasi gagal. Silakan coba lagi.";
+    }
+
+    // Hapus query error dari URL agar tidak muncul lagi saat di-refresh
+    router.replace({ query: {} });
+  }
 });
 </script>
 
