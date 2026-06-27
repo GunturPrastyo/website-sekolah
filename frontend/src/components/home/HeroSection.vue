@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, watch, onMounted, onBeforeUnmount } from "vue";
+import { computed, onMounted, onBeforeUnmount } from "vue";
 import { PhQuotes } from "@phosphor-icons/vue";
 import api from "@/api/index.js";
 import Swiper from "swiper/bundle";
@@ -13,7 +13,6 @@ const props = defineProps({
   statsArray: { type: Array, required: true },
 });
 
-let bgSwiperInstance = null;
 let statsSwiperInstance = null;
 
 const getImageUrl = (path) => {
@@ -27,44 +26,36 @@ const getImageUrl = (path) => {
   return `${baseUrl}/storage/${cleanPath}`;
 };
 
-const homeSliderImages = computed(() => {
+const heroMedia = computed(() => {
   const rawData = props.appearanceSettings?.headerBeranda;
-  if (!rawData) return [];
+
+  if (!rawData || rawData === "null") {
+    return { type: "video", url: "/img/footage.webm" };
+  }
+
+  let path = rawData;
   if (
     typeof rawData === "string" &&
     (rawData.startsWith("[") || rawData.startsWith("{"))
   ) {
     try {
-      return JSON.parse(rawData);
+      const parsed = JSON.parse(rawData);
+      path = Array.isArray(parsed) ? parsed[0] : parsed;
     } catch (e) {
-      return [rawData];
+      path = rawData;
     }
+  } else if (Array.isArray(rawData)) {
+    path = rawData[0];
   }
-  if (Array.isArray(rawData)) return rawData;
-  return [rawData];
+
+  const finalUrl = getImageUrl(path);
+  const isVideo = /\.(mp4|webm|ogg)$/i.test(finalUrl);
+
+  return {
+    type: isVideo ? "video" : "image",
+    url: finalUrl,
+  };
 });
-
-const initBgSwiper = () => {
-  if (bgSwiperInstance) {
-    // PERBAIKAN: Parameter kedua diset false agar tidak bentrok dengan DOM Vue
-    bgSwiperInstance.destroy(true, false);
-    bgSwiperInstance = null;
-  }
-
-  const totalImages = homeSliderImages.value.length;
-  if (totalImages > 0) {
-    nextTick(() => {
-      bgSwiperInstance = new Swiper(".home-bg-swiper", {
-        effect: "fade",
-        fadeEffect: { crossFade: true },
-        loop: totalImages > 1,
-        speed: 2000,
-        autoplay: totalImages > 1 ? { delay: 6000, disableOnInteraction: false } : false,
-        allowTouchMove: false,
-      });
-    });
-  }
-};
 
 const formatStatValue = (stat) => {
   if (!stat.isNumber) return stat.value + (stat.suffix || "");
@@ -74,15 +65,7 @@ const formatStatValue = (stat) => {
   return stat.value;
 };
 
-watch(
-  () => props.appearanceSettings.headerBeranda,
-  () => {
-    initBgSwiper();
-  }
-);
-
 onMounted(() => {
-  initBgSwiper();
   statsSwiperInstance = new Swiper(".stats-swiper", {
     loop: true,
     speed: 800,
@@ -98,8 +81,6 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  // PERBAIKAN: Parameter kedua diset false untuk keamanan saat ganti halaman
-  if (bgSwiperInstance) bgSwiperInstance.destroy(true, false);
   if (statsSwiperInstance) statsSwiperInstance.destroy(true, false);
 });
 </script>
@@ -111,25 +92,18 @@ onBeforeUnmount(() => {
     <div class="absolute inset-0 -z-10 overflow-hidden bg-slate-950">
       <Transition name="fade-bg" mode="in-out">
         <div
-          v-if="homeSliderImages.length > 0"
-          class="swiper home-bg-swiper absolute inset-0 w-full h-full"
+          v-if="heroMedia.type === 'image'"
+          :key="'img-' + heroMedia.url"
+          class="absolute inset-0 w-full h-full"
         >
-          <div class="swiper-wrapper">
-            <div
-              v-for="(imgUrl, idx) in homeSliderImages"
-              :key="'bg-slide-' + idx"
-              class="swiper-slide w-full h-full"
-            >
-              <img
-                :src="getImageUrl(imgUrl)"
-                class="w-full h-full object-cover opacity-60 mix-blend-screen"
-                alt="Home Background Slider"
-              />
-            </div>
-          </div>
+          <img
+            :src="heroMedia.url"
+            class="w-full h-full object-cover opacity-60 mix-blend-screen"
+            alt="Hero Background"
+          />
         </div>
 
-        <div v-else class="absolute inset-0 w-full h-full">
+        <div v-else :key="'vid-' + heroMedia.url" class="absolute inset-0 w-full h-full">
           <video
             class="w-full h-full object-cover opacity-60 mix-blend-screen"
             autoplay
@@ -137,13 +111,13 @@ onBeforeUnmount(() => {
             muted
             playsinline
           >
-            <source src="/img/footage.webm" type="video/webm" />
+            <source :src="heroMedia.url" />
           </video>
         </div>
       </Transition>
 
       <div
-        class="absolute inset-0 bg-gradient-to-b from-slate-900/30 via-slate-950/60 to-slate-950 z-10 pointer-events-none"
+        class="absolute inset-0 bg-linear-to-b from-slate-900/30 via-slate-950/60 to-slate-950 z-10 pointer-events-none"
       ></div>
     </div>
 
@@ -186,7 +160,7 @@ onBeforeUnmount(() => {
           </div>
 
           <div class="w-full md:w-3/4 lg:w-4/5 overflow-hidden">
-            <div class="swiper stats-swiper !overflow-visible">
+            <div class="swiper stats-swiper overflow-visible!">
               <div class="swiper-wrapper">
                 <div
                   v-for="(stat, index) in statsArray"
@@ -217,12 +191,10 @@ onBeforeUnmount(() => {
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;1,300&family=Oswald:wght@300;400;600;700&display=swap");
 
-/* Opsional: Membuat navigasi titik swiper jika nantinya dibutuhkan */
 :deep(.swiper-slide) {
   height: auto;
 }
 
-/* PERBAIKAN: CSS untuk transisi antara gambar swiper dan video footage */
 .fade-bg-enter-active,
 .fade-bg-leave-active {
   transition: opacity 1s ease;
