@@ -48,8 +48,8 @@ class AchievementController extends Controller
             'year' => $validated['year'],
             'rank' => $validated['rank'] ?? null,
             'description' => $validated['description'] ?? null,
-            'internal_news_id' => $validated['internalNewsId'] ?? null, // Add new field
-            'external_news_url' => $validated['externalNewsUrl'] ?? null, // Add new field
+            'internal_news_id' => $validated['internalNewsId'] ?? null, 
+            'external_news_url' => $validated['externalNewsUrl'] ?? null, 
             'image' => $imagePath,
         ]);
 

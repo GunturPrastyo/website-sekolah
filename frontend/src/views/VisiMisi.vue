@@ -102,7 +102,6 @@
               <div
                 class="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed text-justify editor-content relative z-10"
                 v-html="sambutan"
-                style="font-family: 'Oswald', sans-serif"
               ></div>
 
               <div class="mt-8 pt-6 border-t border-gray-100 dark:border-slate-800 block">
@@ -149,7 +148,6 @@
             <p
               v-else
               class="text-lg sm:text-xl md:text-2xl font-medium leading-relaxed text-blue-50"
-              style="font-family: 'Oswald', sans-serif"
             >
               "{{ visi }}"
             </p>
@@ -183,7 +181,6 @@
               >
               <p
                 class="text-blue-50 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
-                style="font-family: 'Oswald', sans-serif"
               >
                 {{ item.text }}
               </p>

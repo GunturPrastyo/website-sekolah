@@ -105,7 +105,7 @@ const fetchInitialData = async () => {
         id: item.id,
         title: item.title || item.name,
         winner: item.winner || item.studentName || item.student_name || "Siswa",
-        // Perbaikan duplikasi properti rank
+        description: item.description || "",
         rank: item.rank ? parseInt(item.rank) : null,
         level: (item.level || "nasional").toLowerCase(),
         year: parseInt(item.year) || new Date().getFullYear(),
@@ -527,6 +527,12 @@ onMounted(() => {
                 >
                   {{ prestasi.title }}
                 </h3>
+
+                <p
+                  class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3 mb-4"
+                >
+                  {{ prestasi.description }}
+                </p>
 
                 <div
                   class="mt-auto mb-4 flex items-center gap-3 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700/50"
