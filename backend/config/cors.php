@@ -15,12 +15,10 @@ return [
     |
      */
 
-    // 1. Cukup buka jalur untuk semua rute di bawah prefix api/
     'paths' => ['api/*'],
 
     'allowed_methods' => ['*'],
 
-    // Mengambil URL frontend dari file .env (Lokal: localhost:5173, VPS: vercel.app)
     'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:5173')],
 
     'allowed_origins_patterns' => [],

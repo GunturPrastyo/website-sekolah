@@ -462,19 +462,6 @@ onBeforeUnmount(() => {
 
           <div v-else>
             <div class="text-center mb-10">
-              <div class="inline-flex items-center justify-center space-x-2 mb-3">
-                <span
-                  class="h-px w-8 sm:w-12 bg-blue-600 dark:bg-blue-400 rounded-full"
-                ></span>
-                <span
-                  class="text-blue-600 dark:text-blue-400 font-bold text-base sm:text-xl"
-                  style="font-family: 'Kalam', cursive"
-                  >Pilar Karakter</span
-                >
-                <span
-                  class="h-px w-8 sm:w-12 bg-blue-600 dark:bg-blue-400 rounded-full"
-                ></span>
-              </div>
               <h2
                 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight flex items-center justify-center gap-3"
               >
@@ -538,15 +525,6 @@ onBeforeUnmount(() => {
       <div
         class="relative z-10 container mx-auto max-w-full px-0 md:px-8 lg:px-4 text-center mb-12 md:mb-16"
       >
-        <div class="inline-flex items-center justify-center space-x-2 mb-3">
-          <span class="h-px w-8 sm:w-12 bg-blue-400 rounded-full"></span>
-          <span
-            class="text-blue-400 font-bold text-base sm:text-lg"
-            style="font-family: 'Kalam', cursive"
-            >Struktur Kurikulum</span
-          >
-          <span class="h-px w-8 sm:w-12 bg-blue-400 rounded-full"></span>
-        </div>
         <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4 tracking-tight">
           Silabus Pembelajaran
         </h2>

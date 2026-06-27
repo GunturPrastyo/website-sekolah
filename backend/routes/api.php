@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController; // 👈 DIPASTIKAN SUDAH DI-IMPORT
+use App\Http\Controllers\Auth\AuthenticatedSessionController; 
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\Auth\GoogleLoginController;
 use App\Http\Controllers\VisionMissionController;
@@ -33,7 +33,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // API Login (Akses Publik - Menghasilkan Token Stateless)
-Route::post('/login', [AuthenticatedSessionController::class, 'store']); // 👈 Ditambahkan titik koma (;) yang kurang
+Route::post('/login', [AuthenticatedSessionController::class, 'store']); 
 
 // Rute untuk alur Login Google (Socialite)
 Route::get('/auth/google/redirect', [GoogleLoginController::class, 'redirectToGoogle']);
@@ -118,8 +118,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             'id'    => $request->user()->id,
             'name'  => $request->user()->name,
             'email' => $request->user()->email,
-            'role'  => $request->user()->role, // 👈 Memastikan frontend menerima role asli dari token lokal
-            'avatar' => $request->user()->avatar, // 👈 Menambahkan avatar
+            'role'  => $request->user()->role, 
+            'avatar' => $request->user()->avatar, 
         ]);
     });
 
@@ -208,7 +208,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::apiResource('curriculum-subjects', CurriculumSubjectController::class);
 
         // API Profil Pelajar Pancasila
-        // Sesuai dengan config Kurikulum Merdeka framework (ATP), admin memegang kontrol penuh update data
         Route::get('/pancasila-profile', [PancasilaProfileController::class, 'show']);
         Route::post('/pancasila-profile', [PancasilaProfileController::class, 'update']);
 
