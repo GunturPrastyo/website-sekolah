@@ -17,6 +17,7 @@ import {
   PhDotsThreeVertical,
   PhFileX,
 } from "@phosphor-icons/vue";
+import api from "@/api/index.js";
 
 const categories = ref([
   { id: "semua", name: "Semua Direktori" },
@@ -38,23 +39,21 @@ const isLoading = ref(true);
 const getImageUrl = (path) => {
   if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:")) return path;
-  const baseUrl = import.meta.env.VITE_API_URL;
+  const baseUrl = api.defaults.baseURL;
   return `${baseUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
 };
 
 const fetchInitialData = async () => {
   isLoading.value = true;
   try {
-    const apiUrl = import.meta.env.VITE_API_URL;
-
     // Gunakan Promise.all untuk mengambil data unduhan dan settings secara bersamaan
     const [downloadsRes, settingsRes] = await Promise.all([
-      fetch(`${apiUrl}/api/public-downloads`),
-      fetch(`${apiUrl}/api/settings`),
+      api.get("/api/public-downloads"),
+      api.get("/api/settings"),
     ]);
 
-    const downloadsResult = await downloadsRes.json();
-    const settingsResult = await settingsRes.json();
+    const downloadsResult = downloadsRes.data;
+    const settingsResult = settingsRes.data;
 
     // Mapping Data File Unduhan
     files.value = downloadsResult.data.map((item) => {
