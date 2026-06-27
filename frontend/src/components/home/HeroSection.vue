@@ -46,7 +46,8 @@ const homeSliderImages = computed(() => {
 
 const initBgSwiper = () => {
   if (bgSwiperInstance) {
-    bgSwiperInstance.destroy(true, true);
+    // PERBAIKAN: Parameter kedua diset false agar tidak bentrok dengan DOM Vue
+    bgSwiperInstance.destroy(true, false);
     bgSwiperInstance = null;
   }
 
@@ -97,8 +98,9 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  if (bgSwiperInstance) bgSwiperInstance.destroy(true, true);
-  if (statsSwiperInstance) statsSwiperInstance.destroy(true, true);
+  // PERBAIKAN: Parameter kedua diset false untuk keamanan saat ganti halaman
+  if (bgSwiperInstance) bgSwiperInstance.destroy(true, false);
+  if (statsSwiperInstance) statsSwiperInstance.destroy(true, false);
 });
 </script>
 
@@ -106,50 +108,46 @@ onBeforeUnmount(() => {
   <header
     class="relative z-0 flex flex-col justify-end min-h-screen lg:h-screen text-white overflow-hidden bg-slate-950 pb-16 md:pb-24"
   >
-    <!-- Latar Belakang Gambar / Video -->
     <div class="absolute inset-0 -z-10 overflow-hidden bg-slate-950">
-      <!-- Tampilkan Slider Jika Ada Gambar -->
-      <div
-        v-if="homeSliderImages.length > 0"
-        class="swiper home-bg-swiper absolute inset-0 w-full h-full"
-      >
-        <div class="swiper-wrapper">
-          <div
-            v-for="(imgUrl, idx) in homeSliderImages"
-            :key="'bg-slide-' + idx"
-            class="swiper-slide w-full h-full"
-          >
-            <img
-              :src="getImageUrl(imgUrl)"
-              class="w-full h-full object-cover opacity-60 mix-blend-screen"
-              alt="Home Background Slider"
-            />
+      <Transition name="fade-bg" mode="in-out">
+        <div
+          v-if="homeSliderImages.length > 0"
+          class="swiper home-bg-swiper absolute inset-0 w-full h-full"
+        >
+          <div class="swiper-wrapper">
+            <div
+              v-for="(imgUrl, idx) in homeSliderImages"
+              :key="'bg-slide-' + idx"
+              class="swiper-slide w-full h-full"
+            >
+              <img
+                :src="getImageUrl(imgUrl)"
+                class="w-full h-full object-cover opacity-60 mix-blend-screen"
+                alt="Home Background Slider"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Tampilkan Video Footage Jika TIDAK Ada Gambar -->
-      <div v-else class="absolute inset-0 w-full h-full">
-        <video
-          class="w-full h-full object-cover opacity-60 mix-blend-screen"
-          autoplay
-          loop
-          muted
-          playsinline
-        >
-          <source src="/img/footage.webm" type="video/webm" />
-        </video>
-      </div>
+        <div v-else class="absolute inset-0 w-full h-full">
+          <video
+            class="w-full h-full object-cover opacity-60 mix-blend-screen"
+            autoplay
+            loop
+            muted
+            playsinline
+          >
+            <source src="/img/footage.webm" type="video/webm" />
+          </video>
+        </div>
+      </Transition>
 
-      <!-- Gradien Overlay untuk menajamkan teks -->
       <div
         class="absolute inset-0 bg-gradient-to-b from-slate-900/30 via-slate-950/60 to-slate-950 z-10 pointer-events-none"
       ></div>
     </div>
 
-    <!-- Konten Utama Hero Section -->
     <div class="container mx-auto px-6 md:px-12 z-20 w-full max-w-7xl">
-      <!-- Area Judul dan Motto (Rata Kiri) -->
       <div class="max-w-4xl mb-12 lg:mb-20">
         <h1
           class="text-4xl md:text-6xl lg:text-[5rem] font-bold tracking-tight uppercase leading-none drop-shadow-xl mb-6"
@@ -170,7 +168,6 @@ onBeforeUnmount(() => {
         </p>
       </div>
 
-      <!-- Area Statistik Profesional (Gaya Dashboard Modern) -->
       <div
         class="w-full border-t border-white/10 pt-8 transition-all duration-1000 delay-500 ease-out"
         :class="showSubtitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
@@ -178,7 +175,6 @@ onBeforeUnmount(() => {
         <div
           class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-12"
         >
-          <!-- Teks Pengantar Statistik di Sebelah Kiri -->
           <div class="md:w-1/4 lg:w-1/5 shrink-0">
             <h4
               class="text-sm font-bold uppercase tracking-widest text-slate-400 mb-1"
@@ -189,7 +185,6 @@ onBeforeUnmount(() => {
             <p class="text-xs text-slate-500 font-medium">Data & Statistik Sekolah</p>
           </div>
 
-          <!-- Swiper Angka Statistik di Sebelah Kanan -->
           <div class="w-full md:w-3/4 lg:w-4/5 overflow-hidden">
             <div class="swiper stats-swiper !overflow-visible">
               <div class="swiper-wrapper">
@@ -225,5 +220,16 @@ onBeforeUnmount(() => {
 /* Opsional: Membuat navigasi titik swiper jika nantinya dibutuhkan */
 :deep(.swiper-slide) {
   height: auto;
+}
+
+/* PERBAIKAN: CSS untuk transisi antara gambar swiper dan video footage */
+.fade-bg-enter-active,
+.fade-bg-leave-active {
+  transition: opacity 1s ease;
+}
+
+.fade-bg-enter-from,
+.fade-bg-leave-to {
+  opacity: 0;
 }
 </style>
