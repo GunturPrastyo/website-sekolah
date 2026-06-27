@@ -27,6 +27,15 @@ const router = createRouter({
     },
 
     {
+      path: '/auth/callback',
+      name: 'auth-callback',
+      component: () => import('../views/auth/AuthCallback.vue'),
+      meta: {
+        title: 'Processing Authentication...'
+      }
+    },
+
+    {
       path: '/',
       // name: 'home', // Removed duplicate name
       component: PublicLayout, // Use PublicLayout for public routes
@@ -293,7 +302,7 @@ router.beforeEach((to, from, next) => {
 let appSettings = null;
 
 // Ambil pengaturan web (Title & Favicon) secara asinkron dari API
-api.get('/api/settings')
+api.get('/settings')
   .then(response => {
     const result = response.data;
     if (result.success && result.data) {
@@ -332,7 +341,7 @@ router.afterEach((to, from) => {
   // Catat kunjungan jika mengakses rute publik (bukan halaman admin)
   if (!to.path.startsWith('/admin') && to.path !== '/login') {
     // Panggil API secara asinkron tanpa perlu menunggu respon (fire and forget)
-    api.get('/api/track-visitor').catch(err => {
+    api.get('/track-visitor').catch(err => {
       console.error('Gagal mencatat pengunjung:', err);
     });
   }
