@@ -28,7 +28,7 @@ const getImageUrl = (path) => {
 };
 
 const homeSliderImages = computed(() => {
-  const rawData = props.appearanceSettings?.loginBackground;
+  const rawData = props.appearanceSettings?.headerBeranda;
   if (!rawData) return [];
   if (
     typeof rawData === "string" &&
@@ -128,7 +128,18 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <!-- HAPUS VIDEO DEFAULT: Kini hanya menampilkan gradien kosong jika belum ada gambar -->
+      <!-- Tampilkan Video Footage Jika TIDAK Ada Gambar -->
+      <div v-else class="absolute inset-0 w-full h-full">
+        <video
+          class="w-full h-full object-cover opacity-60 mix-blend-screen dark:mix-blend-overlay"
+          autoplay
+          loop
+          muted
+          playsinline
+        >
+          <source src="/videos/hero-footage.mp4" type="video/mp4" />
+        </video>
+      </div>
 
       <!-- Gradien Overlay untuk menajamkan teks -->
       <div
