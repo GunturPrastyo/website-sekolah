@@ -111,39 +111,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen flex bg-white dark:bg-slate-900">
-    <div
-      class="hidden lg:flex lg:w-1/2 relative bg-blue-900 overflow-hidden items-center justify-center"
-    >
+  <div class="min-h-screen flex items-center justify-center bg-slate-900 p-4 relative">
+    <!-- Background Image & Effects -->
+    <div class="absolute inset-0">
       <img
         :src="settings.loginBackground"
         alt="School Background"
-        class="absolute inset-0 w-full h-full object-cover opacity-30 transition-all duration-1000"
+        class="absolute inset-0 w-full h-full object-cover opacity-20 transition-all duration-1000"
       />
       <div
-        class="absolute inset-0 bg-gradient-to-br from-blue-900/90 to-blue-600/90 mix-blend-multiply"
+        class="absolute inset-0 bg-gradient-to-br from-blue-950/80 via-slate-900 to-slate-950"
       ></div>
-
-      <div class="relative z-10 p-12 text-white max-w-lg">
-        <h1
-          class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight"
-          style="font-family: 'Oswald', sans-serif"
-        >
-          Portal Admin<br /><span class="text-blue-200">{{ settings.namaSekolah }}</span>
-        </h1>
-        <p class="text-lg text-blue-100/80 leading-relaxed">
-          Sistem informasi manajemen terpadu untuk mengelola konten website, data
-          akademik, dan administrasi sekolah.
-        </p>
-
-        <div class="mt-12 flex items-center gap-4 text-sm text-blue-200/60">
-          <span
-            >&copy; {{ new Date().getFullYear() }} {{ settings.namaSekolah }}. All rights
-            reserved.</span
-          >
-        </div>
-      </div>
-
       <div
         class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-50 animate-blob"
       ></div>
@@ -152,17 +130,12 @@ onMounted(() => {
       ></div>
     </div>
 
-    <div
-      class="w-full lg:w-1/2 flex items-center justify-center px-6 sm:px-12 lg:px-20 bg-white dark:bg-slate-900 relative"
-    >
-      <div class="max-w-md w-full space-y-10 relative z-10 py-12">
+    <!-- Login Card -->
+    <div class="relative z-10 w-full max-w-md">
+      <div
+        class="bg-white/5 dark:bg-slate-800/30 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 p-6 sm:p-10"
+      >
         <div class="text-center">
-          <div
-            class="lg:hidden w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/30 transform rotate-3"
-          >
-            <PhGraduationCap class="w-8 h-8 text-white -rotate-3" />
-          </div>
-
           <h2
             class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight"
             style="font-family: 'Oswald', sans-serif"
@@ -170,7 +143,7 @@ onMounted(() => {
             Selamat Datang!
           </h2>
           <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            Silakan masuk untuk melanjutkan ke dashboard.
+            Masuk ke Portal Admin {{ settings.namaSekolah }}
           </p>
         </div>
 
@@ -195,7 +168,7 @@ onMounted(() => {
                   autocomplete="email"
                   required
                   v-model="form.email"
-                  class="appearance-none rounded-xl relative block w-full pl-11 px-4 py-3.5 border border-gray-200 dark:border-slate-700 placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-slate-600"
+                  class="appearance-none rounded-xl relative block w-full pl-11 px-4 py-3.5 border border-gray-200 dark:border-slate-600 placeholder-gray-400/70 dark:placeholder-gray-500 text-gray-900 dark:text-white bg-white/80 dark:bg-slate-900/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-slate-500"
                   placeholder="admin@sman1nogosari.sch.id"
                 />
               </div>
@@ -220,7 +193,7 @@ onMounted(() => {
                   autocomplete="current-password"
                   required
                   v-model="form.password"
-                  class="appearance-none rounded-xl relative block w-full pl-11 px-4 py-3.5 border border-gray-200 dark:border-slate-700 placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-slate-600"
+                  class="appearance-none rounded-xl relative block w-full pl-11 px-4 py-3.5 border border-gray-200 dark:border-slate-600 placeholder-gray-400/70 dark:placeholder-gray-500 text-gray-900 dark:text-white bg-white/80 dark:bg-slate-900/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-slate-500"
                   placeholder="••••••••"
                 />
               </div>
@@ -233,11 +206,11 @@ onMounted(() => {
               name="remember-me"
               type="checkbox"
               v-model="form.remember"
-              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded dark:border-slate-600 dark:bg-slate-700 cursor-pointer"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded dark:border-slate-500 bg-white/50 dark:bg-slate-700/50 cursor-pointer"
             />
             <label
               for="remember-me"
-              class="ml-2 block text-sm text-gray-600 dark:text-gray-300 cursor-pointer"
+              class="ml-2 block text-sm text-gray-600 dark:text-blue-100/80 cursor-pointer"
             >
               Ingat saya
             </label>
@@ -271,7 +244,7 @@ onMounted(() => {
           <div class="mt-6 flex items-center justify-center">
             <div class="w-full border-t border-gray-200 dark:border-slate-700"></div>
             <span
-              class="px-4 text-xs uppercase tracking-wider font-semibold text-gray-400 dark:text-gray-500 bg-white dark:bg-slate-900 whitespace-nowrap"
+              class="px-4 text-xs uppercase tracking-wider font-semibold text-gray-400 dark:text-gray-500 bg-transparent whitespace-nowrap"
             >
               Atau masuk dengan
             </span>
@@ -282,7 +255,7 @@ onMounted(() => {
             <button
               type="button"
               @click="handleGoogleLogin"
-              class="w-full flex justify-center items-center py-3 px-4 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm bg-white dark:bg-slate-800 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-all duration-200"
+              class="w-full flex justify-center items-center py-3 px-4 border border-gray-200 dark:border-slate-600 rounded-xl shadow-sm bg-white/80 dark:bg-slate-900/50 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-all duration-200"
             >
               <PhGoogleLogo class="w-5 h-5 mr-2 text-red-500" weight="bold" />
               Google

@@ -137,7 +137,7 @@ onBeforeUnmount(() => {
           muted
           playsinline
         >
-          <source src="/videos/hero-footage.mp4" type="video/mp4" />
+          <source src="/img/footage.webm" type="video/webm" />
         </video>
       </div>
 
