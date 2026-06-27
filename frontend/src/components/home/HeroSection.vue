@@ -74,7 +74,7 @@ const formatStatValue = (stat) => {
 };
 
 watch(
-  () => props.appearanceSettings.loginBackground,
+  () => props.appearanceSettings.headerBeranda,
   () => {
     initBgSwiper();
   }
