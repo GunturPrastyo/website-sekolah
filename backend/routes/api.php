@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController; // 👈 DIPASTIKAN SUDAH DI-IMPORT
 use App\Http\Controllers\FacilityController;
+use App\Http\Controllers\Auth\GoogleLoginController;
 use App\Http\Controllers\VisionMissionController;
 use App\Http\Controllers\SchoolProfileController;
 use App\Http\Controllers\TimelineController;
@@ -33,6 +34,10 @@ use Illuminate\Support\Facades\Route;
 
 // API Login (Akses Publik - Menghasilkan Token Stateless)
 Route::post('/login', [AuthenticatedSessionController::class, 'store']); // 👈 Ditambahkan titik koma (;) yang kurang
+
+// Rute untuk alur Login Google (Socialite)
+Route::get('/auth/google/redirect', [GoogleLoginController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [GoogleLoginController::class, 'handleGoogleCallback']);
 
 // API Info PPDB (Akses Publik untuk halaman pendaftaran)
 Route::get('/ppdb-info', [PpdbInfoController::class, 'index']);
@@ -114,6 +119,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             'name'  => $request->user()->name,
             'email' => $request->user()->email,
             'role'  => $request->user()->role, // 👈 Memastikan frontend menerima role asli dari token lokal
+            'avatar' => $request->user()->avatar, // 👈 Menambahkan avatar
         ]);
     });
 
