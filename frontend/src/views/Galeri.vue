@@ -333,7 +333,7 @@ const onImageLoad = (id) => {
       badge="Koleksi Visual"
       title="Galeri Kegiatan"
       description="Merekam jejak langkah, fasilitas, dan berbagai momen tak terlupakan di lingkungan sekolah kami."
-      :bgImage="getImageUrl(appearanceSettings.galleryBackgroundImage)"
+      :bgImage="getImageUrl(appearanceSettings.headerGaleri)"
     />
 
     <!-- Gallery Section -->
