@@ -255,7 +255,26 @@ const addEntry = async () => {
     triggerToast("Berhasil Ditambahkan", "Data file baru telah ditambahkan ke sistem.");
     resetForm();
   } catch (error) {
-    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat mengunggah file.", "error");
+    if (error.response && error.response.status === 422) {
+      // Cek spesifik untuk error ukuran file
+      if (error.response.data.errors && error.response.data.errors.file) {
+        triggerToast(
+          "Gagal Mengunggah",
+          "Ukuran file terlalu besar. Maksimal 10 MB.",
+          "error"
+        );
+      } else {
+        // Error validasi lainnya
+        const errorMessages = Object.values(error.response.data.errors).join(" ");
+        triggerToast("Gagal Menyimpan", errorMessages, "error");
+      }
+    } else {
+      triggerToast(
+        "Gagal Menyimpan",
+        "Terjadi kesalahan pada server saat mengunggah file.",
+        "error"
+      );
+    }
   }
 };
 
@@ -289,7 +308,7 @@ const saveEntry = async () => {
     const response = await api.post(`/api/downloads/${form.value.id}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    
+
     const index = filesList.value.findIndex((s) => s.id === form.value.id);
     if (index !== -1) {
       filesList.value[index] = response.data.data;
@@ -300,7 +319,24 @@ const saveEntry = async () => {
     triggerToast("Perubahan Disimpan", "Data file berhasil diperbarui.");
     resetForm();
   } catch (error) {
-    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat memperbarui file.", "error");
+    if (error.response && error.response.status === 422) {
+      if (error.response.data.errors && error.response.data.errors.file) {
+        triggerToast(
+          "Gagal Memperbarui",
+          "Ukuran file terlalu besar. Maksimal 10 MB.",
+          "error"
+        );
+      } else {
+        const errorMessages = Object.values(error.response.data.errors).join(" ");
+        triggerToast("Gagal Menyimpan", errorMessages, "error");
+      }
+    } else {
+      triggerToast(
+        "Gagal Menyimpan",
+        "Terjadi kesalahan pada server saat memperbarui file.",
+        "error"
+      );
+    }
   }
 };
 

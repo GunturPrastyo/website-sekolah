@@ -23,7 +23,7 @@ class DownloadController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:100',
-            'file' => 'required|file|max:20480', // max 20MB
+            'file' => 'required|file|max:10240', // max 10MB
         ]);
 
         $file = $request->file('file');
@@ -56,7 +56,7 @@ class DownloadController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:100',
-            'file' => 'nullable|file|max:20480',
+            'file' => 'nullable|file|max:10240', // max 10MB
         ]);
 
         $download->name = $request->name;
