@@ -17,7 +17,7 @@ const getImageUrl = (path, defaultUrl = "") => {
   if (!path) return defaultUrl;
   if (path.startsWith("http") || path.startsWith("data:")) return path;
 
-  const backendUrl = import.meta.env.VITE_API_URL || ""; // Ensure backendUrl is a string
+  const backendUrl = api.defaults.baseURL || ""; // Ensure backendUrl is a string
   return `${backendUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`; // Safely call replace
 };
 
