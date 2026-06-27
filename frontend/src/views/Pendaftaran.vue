@@ -72,7 +72,7 @@ const fetchInitialData = async () => {
   try {
     const [ppdbResponse, settingsResponse] = await Promise.all([
       api.get("/api/ppdb-info"),
-      api.get("/api/settings"), // 👈 Mengambil data setting dinamis dari VPS
+      api.get("/api/settings"),
     ]);
 
     // Set data PPDB
