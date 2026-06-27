@@ -13,6 +13,7 @@ import {
   PhVideoCamera,
   PhCaretDown,
   PhCheck,
+  PhSpinner, // <-- Ditambahkan di sini
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -38,6 +39,7 @@ const isFormVisible = ref(false);
 const isEditing = ref(false);
 const isDeleteModalOpen = ref(false);
 const itemToDelete = ref(null);
+const isUploading = ref(false); // <-- State spinner ditambahkan di sini
 
 const showToast = ref(false);
 const toastData = ref({ title: "", message: "", type: "success" });
@@ -246,14 +248,31 @@ const triggerFileInput = () => {
 
 const handleFileUpload = (event) => {
   const files = Array.from(event.target.files);
+  let hasOversizedFile = false;
+
   files.forEach((file) => {
+    // Validasi ukuran maksimal 2 MB (2 * 1024 * 1024 bytes)
+    if (file.size > 2 * 1024 * 1024) {
+      hasOversizedFile = true;
+      return; // Lewati gambar ini dan lanjut ke gambar berikutnya
+    }
+
     const reader = new FileReader();
     reader.onload = (e) => {
       form.value.images.push(e.target.result);
     };
     reader.readAsDataURL(file);
   });
-  event.target.value = "";
+
+  if (hasOversizedFile) {
+    triggerToast(
+      "Peringatan",
+      "Beberapa gambar melebihi batas 2 MB dan tidak dimasukkan.",
+      "error"
+    );
+  }
+
+  event.target.value = ""; // Reset input
 };
 
 const removeImage = (index) => {
@@ -293,6 +312,7 @@ const addEntry = async () => {
     return;
   }
 
+  isUploading.value = true; // Jalankan spinner
   try {
     const response = await api.post("/api/galleries", form.value);
     galleryList.value.unshift(...response.data.data);
@@ -306,6 +326,8 @@ const addEntry = async () => {
     resetForm();
   } catch (error) {
     triggerToast("Gagal", "Terjadi kesalahan saat menyimpan data", "error");
+  } finally {
+    isUploading.value = false; // Matikan spinner
   }
 };
 
@@ -327,6 +349,7 @@ const saveEntry = async () => {
     return;
   }
 
+  isUploading.value = true; // Jalankan spinner
   try {
     const response = await api.put(`/api/galleries/${form.value.id}`, form.value);
     const newItems = response.data.data;
@@ -346,6 +369,8 @@ const saveEntry = async () => {
     resetForm();
   } catch (error) {
     triggerToast("Gagal", "Terjadi kesalahan saat memperbarui data", "error");
+  } finally {
+    isUploading.value = false; // Matikan spinner
   }
 };
 
@@ -441,7 +466,6 @@ const getCategoryName = (id) => {
       </div>
     </div>
 
-    <!-- Modal Form Tambah/Edit -->
     <Transition
       enter-active-class="transition-opacity duration-300"
       enter-from-class="opacity-0"
@@ -459,7 +483,6 @@ const getCategoryName = (id) => {
           class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden transform transition-all"
           @click.stop
         >
-          <!-- Modal Header -->
           <div
             class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
           >
@@ -474,11 +497,9 @@ const getCategoryName = (id) => {
             </button>
           </div>
 
-          <!-- Modal Body -->
           <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
             <form id="galleryForm" @submit.prevent="isEditing ? saveEntry() : addEntry()">
               <div class="flex flex-col gap-6">
-                <!-- Form Fields -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label
@@ -637,7 +658,6 @@ const getCategoryName = (id) => {
                   </div>
                 </div>
 
-                <!-- Image Uploader -->
                 <div
                   class="border border-gray-200 dark:border-slate-600 rounded-xl p-4 md:p-6 bg-gray-50 dark:bg-slate-700/50"
                 >
@@ -651,7 +671,6 @@ const getCategoryName = (id) => {
                     <div
                       class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3"
                     >
-                      <!-- Gambar Utama (Index 0) -->
                       <div
                         class="relative col-span-2 row-span-2 rounded-lg overflow-hidden group shadow-sm aspect-[4/3]"
                       >
@@ -670,7 +689,6 @@ const getCategoryName = (id) => {
                         </button>
                       </div>
 
-                      <!-- Grid Gambar Lainnya -->
                       <div
                         v-for="(img, index) in form.images.slice(1)"
                         :key="index + 1"
@@ -708,38 +726,46 @@ const getCategoryName = (id) => {
                     class="text-[10px] text-gray-500 dark:text-gray-400 mt-3 text-center leading-relaxed"
                   >
                     Anda dapat memilih lebih dari satu foto sekaligus untuk diunggah.
+                    (Maks 2 MB per foto)
                   </p>
                 </div>
               </div>
             </form>
           </div>
 
-          <!-- Modal Footer -->
           <div
-            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3 rounded-b-xl"
           >
             <button
               type="button"
               @click="hideForm"
-              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              :disabled="isUploading"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:bg-gray-200 dark:disabled:bg-slate-600 disabled:cursor-not-allowed"
             >
               <PhXCircle class="w-5 h-5 mr-2" /> Batal
             </button>
             <button
               type="submit"
               form="galleryForm"
-              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              :disabled="isUploading"
+              class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed"
             >
-              <PhFloppyDisk v-if="isEditing" class="w-5 h-5 mr-2" />
-              <PhPlusCircle v-else class="w-5 h-5 mr-2" />
-              {{ isEditing ? "Simpan Perubahan" : "Simpan Data" }}
+              <PhSpinner
+                v-if="isUploading"
+                class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              />
+              <PhFloppyDisk v-if="isEditing && !isUploading" class="w-5 h-5 mr-2" />
+              <PhPlusCircle v-else-if="!isEditing && !isUploading" class="w-5 h-5 mr-2" />
+              <span v-if="isUploading">{{
+                isEditing ? "Menyimpan..." : "Mengunggah..."
+              }}</span>
+              <span v-else>{{ isEditing ? "Simpan Perubahan" : "Simpan Data" }}</span>
             </button>
           </div>
         </div>
       </div>
     </Transition>
 
-    <!-- Pengaturan Video Profil -->
     <div
       v-if="userRole === 'super_admin'"
       class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm mb-8"
@@ -773,7 +799,6 @@ const getCategoryName = (id) => {
       </div>
 
       <div class="flex flex-col gap-6">
-        <!-- Input Form -->
         <div v-if="isEditingVideo" class="flex flex-col gap-4">
           <div>
             <label
@@ -860,7 +885,6 @@ const getCategoryName = (id) => {
           </div>
         </div>
 
-        <!-- Preview -->
         <div
           class="relative w-full aspect-video lg:aspect-[21/9] rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800 flex items-center justify-center"
         >
@@ -881,7 +905,6 @@ const getCategoryName = (id) => {
       </div>
     </div>
 
-    <!-- List/Grid -->
     <div
       class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
     >
@@ -968,7 +991,6 @@ const getCategoryName = (id) => {
           class="group relative overflow-hidden rounded-xl shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-200 dark:bg-slate-800 block break-inside-avoid mb-4 md:mb-6 transform-gpu"
           :class="{ 'ring-2 ring-blue-500 shadow-md': selectedItems.includes(item.id) }"
         >
-          <!-- Checkbox Multiple Select -->
           <label
             class="absolute top-3 left-3 z-40 cursor-pointer flex items-center justify-center w-8 h-8 rounded-full bg-white/90 dark:bg-slate-800/90 shadow-sm border border-gray-200 dark:border-slate-600 opacity-0 group-hover:opacity-100 transition-opacity"
             :class="{ 'opacity-100 !border-blue-500': selectedItems.includes(item.id) }"
@@ -981,7 +1003,6 @@ const getCategoryName = (id) => {
             />
           </label>
 
-          <!-- Floating Actions -->
           <div
             class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-slate-800/90 p-1 rounded-lg border border-gray-100 dark:border-slate-700 z-40"
           >
@@ -1001,7 +1022,6 @@ const getCategoryName = (id) => {
             </button>
           </div>
 
-          <!-- Image -->
           <img
             v-if="item.image"
             :src="item.image"
@@ -1014,12 +1034,10 @@ const getCategoryName = (id) => {
             <PhImage class="w-12 h-12 opacity-50" />
           </div>
 
-          <!-- Dark Overlay on Hover -->
           <div
             class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
           ></div>
 
-          <!-- Bottom Left Text -->
           <div
             class="absolute bottom-0 left-0 p-3 md:p-5 w-full z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
           >

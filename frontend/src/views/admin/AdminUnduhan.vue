@@ -10,6 +10,7 @@ import {
   PhMagnifyingGlass,
   PhFile,
   PhFileText,
+  PhSpinner,
   PhArchive,
   PhImage,
   PhDownloadSimple,
@@ -39,6 +40,7 @@ const form = ref({
 const isFormVisible = ref(false);
 const isEditing = ref(false);
 const isDeleteModalOpen = ref(false);
+const isUploading = ref(false);
 const itemToDelete = ref(null);
 
 const showToast = ref(false);
@@ -214,6 +216,13 @@ const showAddForm = () => {
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (file) {
+    // Validasi ukuran maksimal 10 MB (10 * 1024 * 1024 bytes)
+    if (file.size > 10 * 1024 * 1024) {
+      triggerToast("Peringatan", "Ukuran file terlalu besar. Maksimal 10 MB.", "error");
+      event.target.value = ""; // Reset input file
+      return;
+    }
+
     form.value.file = file;
     if (!form.value.name) {
       form.value.name = file.name;
@@ -245,6 +254,7 @@ const addEntry = async () => {
   formData.append("category", form.value.category);
   formData.append("file", form.value.file);
 
+  isUploading.value = true;
   try {
     const response = await api.post("/api/downloads", formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -256,7 +266,6 @@ const addEntry = async () => {
     resetForm();
   } catch (error) {
     if (error.response && error.response.status === 422) {
-      // Cek spesifik untuk error ukuran file
       if (error.response.data.errors && error.response.data.errors.file) {
         triggerToast(
           "Gagal Mengunggah",
@@ -264,17 +273,20 @@ const addEntry = async () => {
           "error"
         );
       } else {
-        // Error validasi lainnya
         const errorMessages = Object.values(error.response.data.errors).join(" ");
         triggerToast("Gagal Menyimpan", errorMessages, "error");
       }
     } else {
+      console.error("Upload error (store):", error);
       triggerToast(
         "Gagal Menyimpan",
-        "Terjadi kesalahan pada server saat mengunggah file.",
+        error.response?.data?.message ||
+          "Terjadi kesalahan pada server. Periksa konsol untuk detail.",
         "error"
       );
     }
+  } finally {
+    isUploading.value = false;
   }
 };
 
@@ -304,6 +316,7 @@ const saveEntry = async () => {
     formData.append("file", form.value.file);
   }
 
+  isUploading.value = true;
   try {
     const response = await api.post(`/api/downloads/${form.value.id}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -331,12 +344,16 @@ const saveEntry = async () => {
         triggerToast("Gagal Menyimpan", errorMessages, "error");
       }
     } else {
+      console.error("Upload error (update):", error);
       triggerToast(
         "Gagal Menyimpan",
-        "Terjadi kesalahan pada server saat memperbarui file.",
+        error.response?.data?.message ||
+          "Terjadi kesalahan pada server. Periksa konsol untuk detail.",
         "error"
       );
     }
+  } finally {
+    isUploading.value = false;
   }
 };
 
@@ -417,7 +434,6 @@ const getCategoryName = (id) => {
       </button>
     </div>
 
-    <!-- Modal Form Tambah/Edit -->
     <Transition
       enter-active-class="transition-opacity duration-300"
       enter-from-class="opacity-0"
@@ -435,7 +451,6 @@ const getCategoryName = (id) => {
           class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col transform transition-all"
           @click.stop
         >
-          <!-- Modal Header -->
           <div
             class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 rounded-t-xl"
           >
@@ -450,7 +465,6 @@ const getCategoryName = (id) => {
             </button>
           </div>
 
-          <!-- Modal Body -->
           <div class="p-6 overflow-visible flex-1">
             <form id="unduhanForm" @submit.prevent="isEditing ? saveEntry() : addEntry()">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -631,32 +645,39 @@ const getCategoryName = (id) => {
             </form>
           </div>
 
-          <!-- Modal Footer -->
           <div
             class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3 rounded-b-xl"
           >
             <button
               type="button"
               @click="hideForm"
-              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              :disabled="isUploading"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:bg-gray-200 dark:disabled:bg-slate-600 disabled:cursor-not-allowed"
             >
               <PhXCircle class="w-5 h-5 mr-2" /> Batal
             </button>
             <button
               type="submit"
               form="unduhanForm"
-              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              :disabled="isUploading"
+              class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed"
             >
-              <PhFloppyDisk v-if="isEditing" class="w-5 h-5 mr-2" />
-              <PhPlusCircle v-else class="w-5 h-5 mr-2" />
-              {{ isEditing ? "Simpan Perubahan" : "Unggah File" }}
+              <PhSpinner
+                v-if="isUploading"
+                class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              />
+              <PhFloppyDisk v-if="isEditing && !isUploading" class="w-5 h-5 mr-2" />
+              <PhPlusCircle v-else-if="!isEditing && !isUploading" class="w-5 h-5 mr-2" />
+              <span v-if="isUploading">{{
+                isEditing ? "Menyimpan..." : "Mengunggah..."
+              }}</span>
+              <span v-else>{{ isEditing ? "Simpan Perubahan" : "Unggah File" }}</span>
             </button>
           </div>
         </div>
       </div>
     </Transition>
 
-    <!-- Data Table -->
     <div
       class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden"
     >
