@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('category');
             $table->string('level');
             $table->integer('year');
+            $table->integer('rank')->after('year')->nullable()->comment('Peringkat/Juara, misal: 1, 2, 3');
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->foreignId('internal_news_id')->nullable()->constrained('news')->onDelete('set null');

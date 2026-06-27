@@ -24,7 +24,7 @@
         <div class="flex lg:hidden items-center gap-3 mb-8 md:px-12">
           <h2
             class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-wide"
-            style="font-family: 'Kalam', cursive"
+            style="font-family: 'Oswald', sans-serif"
           >
             Sambutan Kepala Sekolah
           </h2>
@@ -60,7 +60,12 @@
                 <div
                   class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6"
                 >
-                  <h4 class="text-white font-bold text-xl">{{ principal.name }}</h4>
+                  <h4
+                    class="text-white font-bold text-xl"
+                    style="font-family: 'Oswald', sans-serif"
+                  >
+                    {{ principal.name }}
+                  </h4>
                   <p class="text-gray-300 text-sm font-medium mt-1">
                     {{ principal.position }}
                   </p>
@@ -74,7 +79,7 @@
             <div class="hidden lg:flex items-center gap-3 mb-6">
               <h2
                 class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-wide"
-                style="font-family: 'Kalam', cursive"
+                style="font-family: 'Oswald', sans-serif"
               >
                 Sambutan Kepala Sekolah
               </h2>
@@ -97,10 +102,14 @@
               <div
                 class="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed text-justify editor-content relative z-10"
                 v-html="sambutan"
+                style="font-family: 'Oswald', sans-serif"
               ></div>
 
               <div class="mt-8 pt-6 border-t border-gray-100 dark:border-slate-800 block">
-                <p class="font-bold text-gray-800 dark:text-white text-lg">
+                <p
+                  class="font-bold text-gray-800 dark:text-white text-lg"
+                  style="font-family: 'Oswald', sans-serif"
+                >
                   {{ principal.name }}
                 </p>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -129,7 +138,7 @@
           <div>
             <h3
               class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6 tracking-wide"
-              style="font-family: 'Kalam', cursive"
+              style="font-family: 'Oswald', sans-serif"
             >
               Visi
             </h3>
@@ -140,6 +149,7 @@
             <p
               v-else
               class="text-lg sm:text-xl md:text-2xl font-medium leading-relaxed text-blue-50"
+              style="font-family: 'Oswald', sans-serif"
             >
               "{{ visi }}"
             </p>
@@ -154,7 +164,7 @@
           >
             <h3
               class="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-wide"
-              style="font-family: 'Kalam', cursive"
+              style="font-family: 'Oswald', sans-serif"
             >
               Misi
             </h3>
@@ -173,6 +183,7 @@
               >
               <p
                 class="text-blue-50 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
+                style="font-family: 'Oswald', sans-serif"
               >
                 {{ item.text }}
               </p>
@@ -304,7 +315,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap");
 
 .editor-content :deep(p) {
   margin-bottom: 1.25rem;

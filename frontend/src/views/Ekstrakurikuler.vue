@@ -282,7 +282,7 @@ onBeforeUnmount(() => {
       <div class="container relative z-10 mx-auto max-w-full">
         <div
           id="ekskul-list-container"
-          class="bg-white dark:bg-slate-800 shadow-sm md:shadow-md border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-8 lg:p-10 flex flex-col lg:flex-row items-start gap-8 lg:gap-12 w-full lg:mt-8"
+          class="bg-white dark:bg-slate-800 shadow-sm md:shadow-md border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-8 lg:p-10 flex flex-col lg:flex-row items-start gap-8 lg:gap-12 w-full md:mb-12"
         >
           <!-- KIRI: Daftar Card Ekstrakurikuler -->
           <div class="flex-1 w-full order-2 lg:order-1">

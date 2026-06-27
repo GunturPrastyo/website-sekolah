@@ -121,7 +121,7 @@ onBeforeUnmount(() => {
           >
             <img
               :src="getImageUrl(imgUrl)"
-              class="w-full h-full object-cover opacity-60 mix-blend-screen dark:mix-blend-overlay"
+              class="w-full h-full object-cover opacity-60 mix-blend-screen"
               alt="Home Background Slider"
             />
           </div>
@@ -131,7 +131,7 @@ onBeforeUnmount(() => {
       <!-- Tampilkan Video Footage Jika TIDAK Ada Gambar -->
       <div v-else class="absolute inset-0 w-full h-full">
         <video
-          class="w-full h-full object-cover opacity-60 mix-blend-screen dark:mix-blend-overlay"
+          class="w-full h-full object-cover opacity-60 mix-blend-screen"
           autoplay
           loop
           muted

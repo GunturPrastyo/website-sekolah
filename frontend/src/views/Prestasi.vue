@@ -105,7 +105,8 @@ const fetchInitialData = async () => {
         id: item.id,
         title: item.title || item.name,
         winner: item.winner || item.studentName || item.student_name || "Siswa",
-        rank: parseInt(item.rank) || 1,
+        // Perbaikan duplikasi properti rank
+        rank: item.rank ? parseInt(item.rank) : null,
         level: (item.level || "nasional").toLowerCase(),
         year: parseInt(item.year) || new Date().getFullYear(),
         type: item.category || "akademik",
@@ -203,36 +204,46 @@ const animateValue = (key, target, duration = 2000) => {
   window.requestAnimationFrame(step);
 };
 
-// Modifikasi getRankStyle untuk gaya yang lebih premium (Soft Colors)
+// Konversi Warna Badge Dinamis untuk Juara (Emas, Perak, Perunggu, Umum)
 const getRankStyle = (rank) => {
-  switch (rank) {
+  if (!rank) {
+    return {
+      badge:
+        "bg-blue-100/90 dark:bg-blue-500/20 border border-blue-200 dark:border-blue-500/30 text-blue-700 dark:text-blue-400 backdrop-blur-md shadow-sm",
+      text: "Penghargaan",
+      icon: PhCertificate,
+    };
+  }
+
+  const rankNum = parseInt(rank);
+  switch (rankNum) {
     case 1:
       return {
         badge:
-          "bg-amber-100/90 dark:bg-amber-500/20 border border-amber-200 dark:border-amber-500/30 text-amber-700 dark:text-amber-400 backdrop-blur-md shadow-sm",
-        text: "Juara 1",
+          "bg-yellow-100/90 dark:bg-yellow-600/30 border border-yellow-400 dark:border-yellow-500/50 text-yellow-800 dark:text-yellow-400 backdrop-blur-md shadow-sm",
+        text: "Juara 1 (Emas)",
         icon: PhMedal,
       };
     case 2:
       return {
         badge:
-          "bg-slate-100/90 dark:bg-slate-500/20 border border-slate-200 dark:border-slate-500/30 text-slate-700 dark:text-slate-300 backdrop-blur-md shadow-sm",
-        text: "Juara 2",
+          "bg-slate-200/90 dark:bg-slate-500/30 border border-slate-300 dark:border-slate-400/50 text-slate-700 dark:text-slate-300 backdrop-blur-md shadow-sm",
+        text: "Juara 2 (Perak)",
         icon: PhMedal,
       };
     case 3:
       return {
         badge:
-          "bg-orange-100/90 dark:bg-orange-500/20 border border-orange-200 dark:border-orange-500/30 text-orange-700 dark:text-orange-400 backdrop-blur-md shadow-sm",
-        text: "Juara 3",
+          "bg-orange-100/90 dark:bg-orange-700/30 border border-orange-300 dark:border-orange-500/50 text-orange-800 dark:text-orange-400 backdrop-blur-md shadow-sm",
+        text: "Juara 3 (Perunggu)",
         icon: PhMedal,
       };
     default:
       return {
         badge:
-          "bg-blue-100/90 dark:bg-blue-500/20 border border-blue-200 dark:border-blue-500/30 text-blue-700 dark:text-blue-400 backdrop-blur-md shadow-sm",
-        text: "Finalis / Penghargaan",
-        icon: PhCertificate,
+          "bg-emerald-100/90 dark:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-400 backdrop-blur-md shadow-sm",
+        text: `Juara ${rankNum}`,
+        icon: PhMedal,
       };
   }
 };
@@ -468,6 +479,7 @@ onMounted(() => {
                 ></div>
 
                 <div
+                  v-if="prestasi.rank"
                   class="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full z-10"
                   :class="getRankStyle(prestasi.rank).badge"
                 >

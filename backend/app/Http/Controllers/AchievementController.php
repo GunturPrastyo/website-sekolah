@@ -31,6 +31,7 @@ class AchievementController extends Controller
             'category' => 'required|string|max:255',
             'level' => 'required|string|max:255',
             'year' => 'required|integer',
+            'rank' => 'nullable|integer|min:1',
             'description' => 'nullable|string',
             'internalNewsId' => 'nullable|exists:news,id',
             'externalNewsUrl' => 'nullable|url|max:2048',
@@ -40,12 +41,13 @@ class AchievementController extends Controller
         $imagePath = $this->processAndSaveImage($validated['image'] ?? null, 'achievements', null, 800);
 
         $achievement = Achievement::create([
-            'title' => $validated['title'], // Keep existing fields
-            'student_name' => $validated['studentName'], // Keep existing fields
-            'category' => $validated['category'], // Keep existing fields
-            'level' => $validated['level'], // Keep existing fields
-            'year' => $validated['year'], // Keep existing fields
-            'description' => $validated['description'], // Keep existing fields
+            'title' => $validated['title'],
+            'student_name' => $validated['studentName'],
+            'category' => $validated['category'],
+            'level' => $validated['level'],
+            'year' => $validated['year'],
+            'rank' => $validated['rank'] ?? null,
+            'description' => $validated['description'] ?? null,
             'internal_news_id' => $validated['internalNewsId'] ?? null, // Add new field
             'external_news_url' => $validated['externalNewsUrl'] ?? null, // Add new field
             'image' => $imagePath,
@@ -68,21 +70,37 @@ class AchievementController extends Controller
             'category' => 'required|string|max:255',
             'level' => 'required|string|max:255',
             'year' => 'required|integer',
+            'rank' => 'nullable|integer|min:1',
             'description' => 'nullable|string',
             'internalNewsId' => 'nullable|exists:news,id',
             'externalNewsUrl' => 'nullable|url|max:2048',
             'image' => 'nullable|string',
         ]);
 
-        if ($request->has('image')) {
-            $validated['image'] = $this->processAndSaveImage(
-                $request->input('image'), 'achievements', $achievement->image, 800
+        $updateData = [
+            'title' => $validated['title'],
+            'student_name' => $validated['studentName'],
+            'category' => $validated['category'],
+            'level' => $validated['level'],
+            'year' => $validated['year'],
+            'rank' => $validated['rank'] ?? null,
+            'description' => $validated['description'] ?? null,
+            'internal_news_id' => $validated['internalNewsId'] ?? null,
+            'external_news_url' => $validated['externalNewsUrl'] ?? null,
+        ];
+
+        // Cek jika ada gambar baru (base64) yang diunggah
+        if (!empty($validated['image']) && str_starts_with($validated['image'], 'data:image')) {
+            $updateData['image'] = $this->processAndSaveImage(
+                $validated['image'], 'achievements', $achievement->image, 800
             );
-        } else if ($achievement->image && !isset($validated['image'])) {
-            $validated['image'] = $achievement->image; // Retain existing image if not explicitly removed
+        } // Cek jika gambar dihapus (dikirim sebagai string kosong atau null)
+        else if (empty($validated['image']) && $achievement->image) {
+            $this->deleteOldImage($achievement->image);
+            $updateData['image'] = null;
         }
 
-        $achievement->update($validated);
+        $achievement->update($updateData);
 
         return response()->json([
             'success' => true,

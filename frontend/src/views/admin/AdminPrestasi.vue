@@ -13,8 +13,8 @@ import {
   PhMedal,
   PhCaretDown,
   PhCheck,
-  PhLink, // New icon for link
-  PhNewspaperClipping, // New icon for news
+  PhLink,
+  PhNewspaperClipping,
   PhX,
 } from "@phosphor-icons/vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
@@ -38,7 +38,7 @@ const levels = [
 ];
 
 const prestasiList = ref([]);
-const newsArticles = ref([]); // New ref to store news articles
+const newsArticles = ref([]);
 
 const form = ref({
   id: null,
@@ -46,9 +46,10 @@ const form = ref({
   studentName: "",
   category: "akademik",
   level: "kabupaten",
+  rank: null,
   year: new Date().getFullYear().toString(),
   description: "",
-  newsLinkType: "none", // 'none', 'internal', 'external'
+  newsLinkType: "none",
   internalNewsId: null,
   externalNewsUrl: "",
   image: "",
@@ -80,8 +81,7 @@ const fetchData = async () => {
 
 const fetchNewsArticles = async () => {
   try {
-    // Fetch news articles specifically categorized as "Prestasi"
-    const response = await api.get("/api/public-news?category=prestasi&per_page=999"); // Fetch all relevant news
+    const response = await api.get("/api/public-news?category=prestasi&per_page=999");
     newsArticles.value = response.data.data;
   } catch (error) {
     console.error("Gagal mengambil data berita:", error);
@@ -90,8 +90,9 @@ const fetchNewsArticles = async () => {
 
 onMounted(() => {
   fetchData();
-  fetchNewsArticles(); // Fetch news when component mounts
+  fetchNewsArticles();
 });
+
 const selectCategory = (id) => {
   if (id === "ADD_NEW") {
     showNewCategoryInput.value = true;
@@ -192,6 +193,7 @@ const resetForm = () => {
     studentName: "",
     category: "akademik",
     level: "kabupaten",
+    rank: null,
     year: new Date().getFullYear().toString(),
     description: "",
     image: "",
@@ -208,7 +210,6 @@ const resetForm = () => {
 const showAddForm = () => {
   resetForm();
   isFormVisible.value = true;
-  document.body.style.overflow = "hidden";
 };
 
 const addEntry = async () => {
@@ -222,21 +223,23 @@ const addEntry = async () => {
   }
   try {
     const payload = { ...form.value };
-    // Clean up payload based on newsLinkType
+
+    // Pastikan rank di-parse sebagai integer atau null sebelum dikirim
+    payload.rank = payload.rank ? parseInt(payload.rank) : null;
+
     if (payload.newsLinkType === "internal") {
       payload.externalNewsUrl = null;
     } else if (payload.newsLinkType === "external") {
       payload.internalNewsId = null;
     } else {
-      // 'none'
       payload.internalNewsId = null;
       payload.externalNewsUrl = null;
     }
-    delete payload.newsLinkType; // Remove newsLinkType from payload sent to API
+    delete payload.newsLinkType;
+
     const response = await api.post("/api/achievements", payload);
     prestasiList.value.unshift(response.data.data);
     isFormVisible.value = false;
-    document.body.style.overflow = "";
     triggerToast(
       "Berhasil Ditambahkan",
       "Data prestasi baru telah ditambahkan ke sistem."
@@ -250,8 +253,11 @@ const addEntry = async () => {
 
 const startEdit = (item) => {
   isEditing.value = true;
-  form.value = { ...item }; // Copy all properties
-  // Determine newsLinkType for editing
+  form.value = { ...item };
+
+  // Perbaikan utama: Pastikan rank dikonversi ke tipe angka agar tidak hilang di input number
+  form.value.rank = item.rank ? parseInt(item.rank) : null;
+
   if (item.internalNewsId) {
     form.value.newsLinkType = "internal";
   } else if (item.externalNewsUrl) {
@@ -260,7 +266,6 @@ const startEdit = (item) => {
     form.value.newsLinkType = "none";
   }
   isFormVisible.value = true;
-  document.body.style.overflow = "hidden";
 };
 
 const saveEntry = async () => {
@@ -274,24 +279,26 @@ const saveEntry = async () => {
   }
   try {
     const payload = { ...form.value };
-    // Clean up payload based on newsLinkType
+
+    // Pastikan rank di-parse sebagai integer atau null sebelum dikirim
+    payload.rank = payload.rank ? parseInt(payload.rank) : null;
+
     if (payload.newsLinkType === "internal") {
       payload.externalNewsUrl = null;
     } else if (payload.newsLinkType === "external") {
       payload.internalNewsId = null;
     } else {
-      // 'none'
       payload.internalNewsId = null;
       payload.externalNewsUrl = null;
     }
-    delete payload.newsLinkType; // Remove newsLinkType from payload sent to API
+    delete payload.newsLinkType;
+
     const response = await api.put(`/api/achievements/${form.value.id}`, payload);
     const index = prestasiList.value.findIndex((s) => s.id === form.value.id);
     if (index !== -1) {
       prestasiList.value[index] = response.data.data;
     }
     isFormVisible.value = false;
-    document.body.style.overflow = "";
     triggerToast("Perubahan Disimpan", "Data prestasi berhasil diperbarui.");
     resetForm();
   } catch (error) {
@@ -303,7 +310,6 @@ const saveEntry = async () => {
 const hideForm = () => {
   resetForm();
   isFormVisible.value = false;
-  document.body.style.overflow = "";
 };
 
 const deleteEntry = (id) => {
@@ -338,6 +344,7 @@ const filteredPrestasi = computed(() => {
     (item) =>
       item.title.toLowerCase().includes(query) ||
       item.studentName.toLowerCase().includes(query) ||
+      (item.rank && item.rank.toString().includes(query)) ||
       item.year.toString().includes(query)
   );
 });
@@ -354,381 +361,342 @@ const getLevelName = (id) => {
 
 const getNewsSlug = (newsId) => {
   const news = newsArticles.value.find((n) => n.id === newsId);
-  return news ? news.slug : "#"; // Return slug or a fallback
+  return news ? news.slug : "#";
 };
 </script>
 
 <template>
   <main class="flex-1 overflow-y-auto px-6 md:px-10 py-8">
-    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-      <div>
+    <div v-if="isFormVisible">
+      <div class="mb-8">
         <h2
           class="text-3xl font-bold text-gray-800 dark:text-white"
           style="font-family: 'Oswald', sans-serif"
         >
           Manajemen Prestasi
+          {{ isEditing ? "Edit Data Prestasi" : "Tambah Data Prestasi Baru" }}
         </h2>
         <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
           Kelola data pencapaian dan penghargaan yang diraih oleh siswa maupun sekolah.
+          Isi detail prestasi pada formulir di bawah ini.
         </p>
       </div>
-      <button
-        v-if="!isFormVisible"
-        @click="showAddForm"
-        class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-      >
-        <PhPlusCircle class="w-5 h-5 mr-2" />
-        Tambah Prestasi
-      </button>
-    </div>
 
-    <!-- Modal Form Tambah/Edit -->
-    <Transition
-      enter-active-class="transition-opacity duration-300"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition-opacity duration-300"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
       <div
-        v-if="isFormVisible"
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
-        @click="hideForm"
+        class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm mt-8"
       >
-        <div
-          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden transform transition-all"
-          @click.stop
-        >
-          <!-- Modal Header -->
-          <div
-            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
-          >
-            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
-              {{ isEditing ? "Edit Data Prestasi" : "Tambah Data Prestasi Baru" }}
-            </h3>
-            <button
-              @click="hideForm"
-              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-            >
-              <PhX class="w-6 h-6" />
-            </button>
-          </div>
+        <form id="prestasiForm" @submit.prevent="isEditing ? saveEntry() : addEntry()">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-1">
+              <ImageUploader
+                v-model="form.image"
+                label="Foto / Dokumentasi (Opsional)"
+                containerClass="w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] mx-auto"
+                imageClass="object-cover rounded-xl"
+              />
+              <p
+                class="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center lg:text-left max-w-sm mx-auto"
+              >
+                Dapat berupa foto penyerahan piala, sertifikat, atau aksi saat perlombaan.
+              </p>
+            </div>
 
-          <!-- Modal Body -->
-          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
-            <form
-              id="prestasiForm"
-              @submit.prevent="isEditing ? saveEntry() : addEntry()"
-            >
-              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Image Uploader -->
-                <div class="lg:col-span-1">
-                  <ImageUploader
-                    v-model="form.image"
-                    label="Foto / Dokumentasi (Opsional)"
-                    containerClass="w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] mx-auto"
-                    imageClass="object-cover rounded-xl"
-                  />
-                  <p
-                    class="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center lg:text-left max-w-sm mx-auto"
+            <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="md:col-span-2">
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Judul / Nama Prestasi</label
+                >
+                <input
+                  type="text"
+                  v-model="form.title"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Contoh: Juara 1 Olimpiade Sains Nasional"
+                />
+              </div>
+
+              <div class="md:col-span-2">
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Nama Peraih (Siswa / Tim)</label
+                >
+                <input
+                  type="text"
+                  v-model="form.studentName"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Contoh: Ahmad Faisal atau Tim Basket Putra"
+                />
+              </div>
+
+              <div class="md:col-span-1">
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Kategori</label
+                >
+                <div v-if="!showNewCategoryInput" class="relative">
+                  <button
+                    type="button"
+                    @click="isCategoryDropdownOpen = !isCategoryDropdownOpen"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-left focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex justify-between items-center transition-colors"
+                    :class="
+                      form.category
+                        ? 'text-gray-900 dark:text-white'
+                        : 'text-gray-500 dark:text-gray-400'
+                    "
                   >
-                    Dapat berupa foto penyerahan piala, sertifikat, atau aksi saat
-                    perlombaan.
-                  </p>
+                    <span class="truncate">{{
+                      getCategoryName(form.category) || "Pilih kategori..."
+                    }}</span>
+                    <PhCaretDown
+                      class="w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200"
+                      :class="{ 'rotate-180': isCategoryDropdownOpen }"
+                    />
+                  </button>
+
+                  <div
+                    v-if="isCategoryDropdownOpen"
+                    @click="isCategoryDropdownOpen = false"
+                    class="fixed inset-0 z-40"
+                  ></div>
+
+                  <Transition
+                    enter-active-class="transition ease-out duration-100"
+                    enter-from-class="opacity-0 translate-y-[-10px]"
+                    enter-to-class="opacity-100 translate-y-0"
+                    leave-active-class="transition ease-in duration-100"
+                    leave-from-class="opacity-100 translate-y-0"
+                    leave-to-class="opacity-0 translate-y-[-10px]"
+                  >
+                    <div
+                      v-if="isCategoryDropdownOpen"
+                      class="absolute top-full z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl max-h-60 overflow-y-auto custom-scrollbar"
+                    >
+                      <ul class="py-1 text-sm">
+                        <li
+                          v-for="(cat, index) in categories"
+                          :key="cat.id"
+                          class="hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 transition-colors group"
+                        >
+                          <div
+                            v-if="editingCategoryIndex === index"
+                            class="flex items-center gap-2 w-full px-4 py-2"
+                            @click.stop
+                          >
+                            <input
+                              type="text"
+                              v-model="editingCategoryName"
+                              class="flex-1 px-2 py-1 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 focus:ring-blue-500 focus:border-blue-500"
+                              @keydown.enter.prevent="saveEditCategory(index)"
+                              @keydown.esc.prevent="cancelEditCategory()"
+                            />
+                            <button
+                              type="button"
+                              @click="saveEditCategory(index)"
+                              class="p-1 text-green-600 hover:bg-green-100 rounded"
+                              title="Simpan"
+                            >
+                              <PhCheck class="w-4 h-4" />
+                            </button>
+                            <button
+                              type="button"
+                              @click="cancelEditCategory()"
+                              class="p-1 text-gray-500 hover:bg-gray-200 rounded"
+                              title="Batal"
+                            >
+                              <PhX class="w-4 h-4" />
+                            </button>
+                          </div>
+                          <div
+                            v-else
+                            class="flex items-center justify-between w-full px-4 py-2.5 cursor-pointer"
+                            @click="selectCategory(cat.id)"
+                          >
+                            <span class="truncate pr-2">{{ cat.name }}</span>
+                            <div
+                              class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 shrink-0"
+                              @click.stop
+                            >
+                              <button
+                                type="button"
+                                @click="startEditCategory(index, cat.name)"
+                                class="p-1 text-blue-600 hover:bg-blue-100 rounded transition-colors"
+                                title="Edit Kategori"
+                              >
+                                <PhPencilSimple class="w-4 h-4" />
+                              </button>
+                              <button
+                                type="button"
+                                @click="handleDeleteCategory(index)"
+                                class="p-1 text-red-600 hover:bg-red-100 rounded transition-colors"
+                                title="Hapus Kategori"
+                              >
+                                <PhTrash class="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </li>
+                        <li
+                          @click="selectCategory('ADD_NEW')"
+                          class="px-4 py-2.5 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer font-semibold text-blue-600 dark:text-blue-400 border-t border-gray-100 dark:border-slate-700 transition-colors sticky bottom-0 bg-white dark:bg-slate-800"
+                        >
+                          + Tambah Kategori Baru...
+                        </li>
+                      </ul>
+                    </div>
+                  </Transition>
                 </div>
-
-                <!-- Form Fields -->
-                <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div class="md:col-span-2">
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                      >Judul / Nama Prestasi</label
-                    >
-                    <input
-                      type="text"
-                      v-model="form.title"
-                      required
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Contoh: Juara 1 Olimpiade Sains Nasional"
-                    />
-                  </div>
-
-                  <div class="md:col-span-2">
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                      >Nama Peraih (Siswa / Tim)</label
-                    >
-                    <input
-                      type="text"
-                      v-model="form.studentName"
-                      required
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Contoh: Ahmad Faisal atau Tim Basket Putra"
-                    />
-                  </div>
-
-                  <div class="md:col-span-1">
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                      >Kategori</label
-                    >
-                    <div v-if="!showNewCategoryInput" class="relative">
-                      <button
-                        type="button"
-                        @click="isCategoryDropdownOpen = !isCategoryDropdownOpen"
-                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-left focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex justify-between items-center transition-colors"
-                        :class="
-                          form.category
-                            ? 'text-gray-900 dark:text-white'
-                            : 'text-gray-500 dark:text-gray-400'
-                        "
-                      >
-                        <span class="truncate">{{
-                          getCategoryName(form.category) || "Pilih kategori..."
-                        }}</span>
-                        <PhCaretDown
-                          class="w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200"
-                          :class="{ 'rotate-180': isCategoryDropdownOpen }"
-                        />
-                      </button>
-
-                      <div
-                        v-if="isCategoryDropdownOpen"
-                        @click="isCategoryDropdownOpen = false"
-                        class="fixed inset-0 z-40"
-                      ></div>
-
-                      <Transition
-                        enter-active-class="transition ease-out duration-100"
-                        enter-from-class="opacity-0 translate-y-[-10px]"
-                        enter-to-class="opacity-100 translate-y-0"
-                        leave-active-class="transition ease-in duration-100"
-                        leave-from-class="opacity-100 translate-y-0"
-                        leave-to-class="opacity-0 translate-y-[-10px]"
-                      >
-                        <div
-                          v-if="isCategoryDropdownOpen"
-                          class="absolute top-full z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl max-h-60 overflow-y-auto custom-scrollbar"
-                        >
-                          <ul class="py-1 text-sm">
-                            <li
-                              v-for="(cat, index) in categories"
-                              :key="cat.id"
-                              class="hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 transition-colors group"
-                            >
-                              <div
-                                v-if="editingCategoryIndex === index"
-                                class="flex items-center gap-2 w-full px-4 py-2"
-                                @click.stop
-                              >
-                                <input
-                                  type="text"
-                                  v-model="editingCategoryName"
-                                  class="flex-1 px-2 py-1 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 focus:ring-blue-500 focus:border-blue-500"
-                                  @keydown.enter.prevent="saveEditCategory(index)"
-                                  @keydown.esc.prevent="cancelEditCategory()"
-                                />
-                                <button
-                                  type="button"
-                                  @click="saveEditCategory(index)"
-                                  class="p-1 text-green-600 hover:bg-green-100 rounded"
-                                  title="Simpan"
-                                >
-                                  <PhCheck class="w-4 h-4" />
-                                </button>
-                                <button
-                                  type="button"
-                                  @click="cancelEditCategory()"
-                                  class="p-1 text-gray-500 hover:bg-gray-200 rounded"
-                                  title="Batal"
-                                >
-                                  <PhX class="w-4 h-4" />
-                                </button>
-                              </div>
-                              <div
-                                v-else
-                                class="flex items-center justify-between w-full px-4 py-2.5 cursor-pointer"
-                                @click="selectCategory(cat.id)"
-                              >
-                                <span class="truncate pr-2">{{ cat.name }}</span>
-                                <div
-                                  class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 shrink-0"
-                                  @click.stop
-                                >
-                                  <button
-                                    type="button"
-                                    @click="startEditCategory(index, cat.name)"
-                                    class="p-1 text-blue-600 hover:bg-blue-100 rounded transition-colors"
-                                    title="Edit Kategori"
-                                  >
-                                    <PhPencilSimple class="w-4 h-4" />
-                                  </button>
-                                  <button
-                                    type="button"
-                                    @click="handleDeleteCategory(index)"
-                                    class="p-1 text-red-600 hover:bg-red-100 rounded transition-colors"
-                                    title="Hapus Kategori"
-                                  >
-                                    <PhTrash class="w-4 h-4" />
-                                  </button>
-                                </div>
-                              </div>
-                            </li>
-                            <li
-                              @click="selectCategory('ADD_NEW')"
-                              class="px-4 py-2.5 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer font-semibold text-blue-600 dark:text-blue-400 border-t border-gray-100 dark:border-slate-700 transition-colors sticky bottom-0 bg-white dark:bg-slate-800"
-                            >
-                              + Tambah Kategori Baru...
-                            </li>
-                          </ul>
-                        </div>
-                      </Transition>
-                    </div>
-                    <div v-else class="flex gap-2">
-                      <input
-                        type="text"
-                        v-model="newCategoryName"
-                        class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Ketik nama kategori..."
-                        @keydown.enter.prevent="addNewCategory"
-                      />
-                      <button
-                        type="button"
-                        @click="addNewCategory"
-                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                      >
-                        Simpan
-                      </button>
-                      <button
-                        type="button"
-                        @click="cancelNewCategory"
-                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 dark:bg-slate-600 dark:text-gray-300 dark:hover:bg-slate-500 transition-colors text-sm font-medium"
-                      >
-                        Batal
-                      </button>
-                    </div>
-                  </div>
-
-                  <div class="md:col-span-1">
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                      >Tingkat</label
-                    >
-                    <select
-                      v-model="form.level"
-                      required
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option v-for="lvl in levels" :key="lvl.id" :value="lvl.id">
-                        {{ lvl.name }}
-                      </option>
-                    </select>
-                  </div>
-
-                  <div class="md:col-span-1">
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                      >Tahun Perolehan</label
-                    >
-                    <input
-                      type="number"
-                      v-model="form.year"
-                      required
-                      min="1990"
-                      :max="new Date().getFullYear() + 1"
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Contoh: 2024"
-                    />
-                  </div>
-
-                  <div class="md:col-span-2">
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                      >Deskripsi Singkat</label
-                    >
-                    <textarea
-                      v-model="form.description"
-                      rows="3"
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Jelaskan secara singkat mengenai event dan pencapaiannya..."
-                    ></textarea>
-                  </div>
-
-                  <!-- News Coverage Link -->
-                  <div class="md:col-span-2">
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                      >Liputan Berita (Opsional)</label
-                    >
-                    <div class="flex items-center gap-4 mb-3">
-                      <label class="inline-flex items-center">
-                        <input
-                          type="radio"
-                          v-model="form.newsLinkType"
-                          value="none"
-                          class="form-radio text-blue-600"
-                        />
-                        <span class="ml-2 text-gray-700 dark:text-gray-300 text-sm"
-                          >Tidak Ada</span
-                        >
-                      </label>
-                      <label class="inline-flex items-center">
-                        <input
-                          type="radio"
-                          v-model="form.newsLinkType"
-                          value="internal"
-                          class="form-radio text-blue-600"
-                        />
-                        <span class="ml-2 text-gray-700 dark:text-gray-300 text-sm"
-                          >Berita Internal</span
-                        >
-                      </label>
-                      <label class="inline-flex items-center">
-                        <input
-                          type="radio"
-                          v-model="form.newsLinkType"
-                          value="external"
-                          class="form-radio text-blue-600"
-                        />
-                        <span class="ml-2 text-gray-700 dark:text-gray-300 text-sm"
-                          >Link Eksternal</span
-                        >
-                      </label>
-                    </div>
-
-                    <div v-if="form.newsLinkType === 'internal'">
-                      <select
-                        v-model="form.internalNewsId"
-                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                      >
-                        <option :value="null" disabled>Pilih berita internal...</option>
-                        <option
-                          v-for="news in newsArticles"
-                          :key="news.id"
-                          :value="news.id"
-                        >
-                          {{ news.title }}
-                        </option>
-                      </select>
-                    </div>
-                    <div v-else-if="form.newsLinkType === 'external'">
-                      <input
-                        type="url"
-                        v-model="form.externalNewsUrl"
-                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Contoh: https://www.sumberberita.com/liputan-prestasi-sekolah"
-                      />
-                    </div>
-                  </div>
+                <div v-else class="flex gap-2">
+                  <input
+                    type="text"
+                    v-model="newCategoryName"
+                    class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Ketik nama kategori..."
+                    @keydown.enter.prevent="addNewCategory"
+                  />
+                  <button
+                    type="button"
+                    @click="addNewCategory"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                  >
+                    Simpan
+                  </button>
+                  <button
+                    type="button"
+                    @click="cancelNewCategory"
+                    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 dark:bg-slate-600 dark:text-gray-300 dark:hover:bg-slate-500 transition-colors text-sm font-medium"
+                  >
+                    Batal
+                  </button>
                 </div>
               </div>
-            </form>
+
+              <div class="md:col-span-1">
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Tingkat</label
+                >
+                <select
+                  v-model="form.level"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option v-for="lvl in levels" :key="lvl.id" :value="lvl.id">
+                    {{ lvl.name }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="md:col-span-1">
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Peringkat / Juara</label
+                >
+                <input
+                  type="number"
+                  min="1"
+                  v-model.number="form.rank"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Contoh: 1"
+                />
+              </div>
+
+              <div class="md:col-span-1">
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Tahun Perolehan</label
+                >
+                <input
+                  type="number"
+                  v-model="form.year"
+                  required
+                  min="1990"
+                  :max="new Date().getFullYear() + 1"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Contoh: 2024"
+                />
+              </div>
+
+              <div class="md:col-span-2">
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Deskripsi Singkat</label
+                >
+                <textarea
+                  v-model="form.description"
+                  rows="3"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Jelaskan secara singkat mengenai event dan pencapaiannya..."
+                ></textarea>
+              </div>
+
+              <div class="md:col-span-2">
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >Liputan Berita (Opsional)</label
+                >
+                <div class="flex items-center gap-4 mb-3">
+                  <label class="inline-flex items-center">
+                    <input
+                      type="radio"
+                      v-model="form.newsLinkType"
+                      value="none"
+                      class="form-radio text-blue-600"
+                    />
+                    <span class="ml-2 text-gray-700 dark:text-gray-300 text-sm"
+                      >Tidak Ada</span
+                    >
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input
+                      type="radio"
+                      v-model="form.newsLinkType"
+                      value="internal"
+                      class="form-radio text-blue-600"
+                    />
+                    <span class="ml-2 text-gray-700 dark:text-gray-300 text-sm"
+                      >Berita Internal</span
+                    >
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input
+                      type="radio"
+                      v-model="form.newsLinkType"
+                      value="external"
+                      class="form-radio text-blue-600"
+                    />
+                    <span class="ml-2 text-gray-700 dark:text-gray-300 text-sm"
+                      >Link Eksternal</span
+                    >
+                  </label>
+                </div>
+
+                <div v-if="form.newsLinkType === 'internal'">
+                  <select
+                    v-model="form.internalNewsId"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option :value="null" disabled>Pilih berita internal...</option>
+                    <option v-for="news in newsArticles" :key="news.id" :value="news.id">
+                      {{ news.title }}
+                    </option>
+                  </select>
+                </div>
+                <div v-else-if="form.newsLinkType === 'external'">
+                  <input
+                    type="url"
+                    v-model="form.externalNewsUrl"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Contoh: https://www.sumberberita.com/liputan-prestasi-sekolah"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
-          <!-- Modal Footer -->
           <div
-            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+            class="pt-6 border-t border-gray-100 dark:border-slate-700 flex justify-end gap-3 mt-6"
           >
             <button
               type="button"
@@ -747,135 +715,163 @@ const getNewsSlug = (newsId) => {
               {{ isEditing ? "Simpan Perubahan" : "Simpan Data" }}
             </button>
           </div>
-        </div>
+        </form>
       </div>
-    </Transition>
+    </div>
 
-    <!-- List/Grid -->
-    <div
-      class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
-    >
-      <div class="mb-6 relative max-w-md">
-        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <PhMagnifyingGlass class="w-5 h-5 text-gray-400" />
+    <div v-else>
+      <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2
+            class="text-3xl font-bold text-gray-800 dark:text-white"
+            style="font-family: 'Oswald', sans-serif"
+          >
+            Manajemen Prestasi
+          </h2>
+          <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+            Kelola data pencapaian dan penghargaan yang diraih oleh siswa maupun sekolah.
+          </p>
         </div>
-        <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Cari judul, nama peraih, atau tahun..."
-          class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-        />
+        <button
+          @click="showAddForm"
+          class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+        >
+          <PhPlusCircle class="w-5 h-5 mr-2" />
+          Tambah Prestasi
+        </button>
       </div>
 
       <div
-        v-if="filteredPrestasi.length === 0"
-        class="py-12 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
+        class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm"
       >
-        <div
-          class="mx-auto w-16 h-16 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-4"
-        >
-          <PhTrophy class="w-8 h-8 text-gray-400 dark:text-gray-500" />
-        </div>
-        <p>Tidak ada data prestasi yang ditemukan.</p>
-      </div>
-
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        <div
-          v-for="prestasi in filteredPrestasi"
-          :key="prestasi.id"
-          class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-600 shadow-sm flex flex-col overflow-hidden relative group"
-        >
-          <!-- Floating Actions -->
+        <div class="mb-6 relative max-w-md">
           <div
-            class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-slate-800/90 p-1 rounded-lg border border-gray-100 dark:border-slate-700 z-10"
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
           >
-            <button
-              @click="startEdit(prestasi)"
-              class="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-md"
-              title="Edit"
-            >
-              <PhPencilSimple class="w-4 h-4" />
-            </button>
-            <button
-              @click="deleteEntry(prestasi.id)"
-              class="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-slate-700 rounded-md"
-              title="Hapus"
-            >
-              <PhTrash class="w-4 h-4" />
-            </button>
+            <PhMagnifyingGlass class="w-5 h-5 text-gray-400" />
           </div>
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Cari judul, nama peraih, atau tahun..."
+            class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          />
+        </div>
 
-          <!-- Image Thumbnail -->
-          <div class="w-full aspect-[16/9] bg-gray-100 dark:bg-slate-700 relative">
-            <img
-              v-if="prestasi.image"
-              :src="prestasi.image"
-              class="w-full h-full object-cover"
-            />
-            <div
-              v-else
-              class="w-full h-full flex items-center justify-center text-gray-400"
-            >
-              <PhTrophy class="w-12 h-12 opacity-50" />
-            </div>
-
-            <!-- Badges -->
-            <div class="absolute bottom-3 left-3 flex flex-wrap gap-2">
-              <span
-                class="bg-blue-600/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded"
-              >
-                {{ getCategoryName(prestasi.category) }}
-              </span>
-              <span
-                class="bg-yellow-500/90 backdrop-blur-sm px-2.5 py-1 text-yellow-900 text-[10px] font-bold uppercase tracking-wider rounded flex items-center"
-              >
-                <PhMedal class="w-3 h-3 mr-1" />
-                {{ getLevelName(prestasi.level) }}
-              </span>
-            </div>
+        <div
+          v-if="filteredPrestasi.length === 0"
+          class="py-12 text-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl"
+        >
+          <div
+            class="mx-auto w-16 h-16 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-4"
+          >
+            <PhTrophy class="w-8 h-8 text-gray-400 dark:text-gray-500" />
           </div>
+          <p>Tidak ada data prestasi yang ditemukan.</p>
+        </div>
 
-          <!-- Content Info -->
-          <div class="p-5 flex flex-col flex-1">
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div
+            v-for="prestasi in filteredPrestasi"
+            :key="prestasi.id"
+            class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-600 shadow-sm flex flex-col overflow-hidden relative group"
+          >
             <div
-              class="flex items-center text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 gap-3"
+              class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-slate-800/90 p-1 rounded-lg border border-gray-100 dark:border-slate-700 z-10"
             >
-              <span class="flex items-center text-blue-600 dark:text-blue-400">
-                <PhCalendar class="w-4 h-4 mr-1" /> Tahun {{ prestasi.year }}
-              </span>
-              <span class="flex items-center">
-                <PhUser class="w-4 h-4 mr-1" /> {{ prestasi.studentName }}
-              </span>
+              <button
+                @click="startEdit(prestasi)"
+                class="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-md"
+                title="Edit"
+              >
+                <PhPencilSimple class="w-4 h-4" />
+              </button>
+              <button
+                @click="deleteEntry(prestasi.id)"
+                class="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-slate-700 rounded-md"
+                title="Hapus"
+              >
+                <PhTrash class="w-4 h-4" />
+              </button>
             </div>
 
-            <h4
-              class="font-bold text-gray-900 dark:text-white text-lg mb-2 leading-tight"
-            >
-              {{ prestasi.title }}
-            </h4>
-
-            <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 mb-2 flex-1">
-              {{ prestasi.description }}
-            </p>
-
-            <!-- News Coverage Link Display -->
-            <div
-              v-if="prestasi.internalNewsId || prestasi.externalNewsUrl"
-              class="mt-3 pt-3 border-t border-gray-100 dark:border-slate-700"
-            >
-              <a
-                :href="
-                  prestasi.internalNewsId
-                    ? `/artikel/${getNewsSlug(prestasi.internalNewsId)}`
-                    : prestasi.externalNewsUrl
-                "
-                target="_blank"
-                class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+            <div class="w-full aspect-video bg-gray-100 dark:bg-slate-700 relative">
+              <img
+                v-if="prestasi.image"
+                :src="prestasi.image"
+                class="w-full h-full object-cover"
+              />
+              <div
+                v-else
+                class="w-full h-full flex items-center justify-center text-gray-400"
               >
-                <PhNewspaperClipping class="w-4 h-4 mr-1.5" />
-                Lihat Liputan Berita
-                <PhLink class="w-3.5 h-3.5 ml-1" />
-              </a>
+                <PhTrophy class="w-12 h-12 opacity-50" />
+              </div>
+
+              <div class="absolute bottom-3 left-3 flex flex-wrap gap-2">
+                <span
+                  class="bg-blue-600/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded"
+                >
+                  {{ getCategoryName(prestasi.category) }}
+                </span>
+                <span
+                  class="bg-yellow-500/90 backdrop-blur-sm px-2.5 py-1 text-yellow-900 text-[10px] font-bold uppercase tracking-wider rounded flex items-center"
+                >
+                  <PhMedal class="w-3 h-3 mr-1" />
+                  {{ getLevelName(prestasi.level) }}
+                </span>
+                <span
+                  v-if="prestasi.rank"
+                  class="bg-green-600/90 backdrop-blur-sm px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded flex items-center"
+                >
+                  <PhMedal class="w-3 h-3 mr-1" />
+                  Juara {{ prestasi.rank }}
+                </span>
+              </div>
+            </div>
+
+            <div class="p-5 flex flex-col flex-1">
+              <div
+                class="flex items-center text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 gap-3"
+              >
+                <span class="flex items-center text-blue-600 dark:text-blue-400">
+                  <PhCalendar class="w-4 h-4 mr-1" /> Tahun {{ prestasi.year }}
+                </span>
+                <span class="flex items-center">
+                  <PhUser class="w-4 h-4 mr-1" /> {{ prestasi.studentName }}
+                </span>
+              </div>
+
+              <h4
+                class="font-bold text-gray-900 dark:text-white text-lg mb-2 leading-tight"
+              >
+                {{ prestasi.title }}
+              </h4>
+
+              <p
+                class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 mb-2 flex-1"
+              >
+                {{ prestasi.description }}
+              </p>
+
+              <div
+                v-if="prestasi.internalNewsId || prestasi.externalNewsUrl"
+                class="mt-3 pt-3 border-t border-gray-100 dark:border-slate-700"
+              >
+                <a
+                  :href="
+                    prestasi.internalNewsId
+                      ? `/artikel/${getNewsSlug(prestasi.internalNewsId)}`
+                      : prestasi.externalNewsUrl
+                  "
+                  target="_blank"
+                  class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                >
+                  <PhNewspaperClipping class="w-4 h-4 mr-1.5" />
+                  Lihat Liputan Berita
+                  <PhLink class="w-3.5 h-3.5 ml-1" />
+                </a>
+              </div>
             </div>
           </div>
         </div>

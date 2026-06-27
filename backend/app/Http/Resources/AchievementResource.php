@@ -21,6 +21,7 @@ class AchievementResource extends JsonResource
             'studentName' => $this->student_name,
             'category' => $this->category,
             'level' => $this->level,
+            'rank' => $this->rank,
             'year' => $this->year,
             'description' => $this->description,
             'internalNewsId' => $this->internal_news_id,
