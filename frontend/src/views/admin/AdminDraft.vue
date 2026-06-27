@@ -323,7 +323,7 @@ const getImageUrl = (path) => {
   if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:image")) return path;
 
-  const baseUrl = import.meta.env.VITE_API_URL;
+  const baseUrl = api.defaults.baseURL;
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
   if (cleanPath.startsWith("storage/")) {
     return `${baseUrl}/${cleanPath}`;
