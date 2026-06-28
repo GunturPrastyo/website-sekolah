@@ -183,20 +183,23 @@ const startEdit = (item) => {
   document.body.style.overflow = "hidden";
 };
 
-const saveEntry = () => {
+const saveEntry = async () => {
   if (!form.value.title || !form.value.startDate) {
     triggerToast("Gagal Menyimpan", "Judul dan Tanggal Mulai wajib diisi!", "error");
     return;
   }
 
-  const index = agendaList.value.findIndex((a) => a.id === form.value.id);
-  if (index !== -1) {
-    agendaList.value[index] = { ...form.value };
-    agendaList.value.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-  }
+  try {
+    await api.put(`/api/agendas/${form.value.id}`, form.value);
 
-  hideForm();
-  triggerToast("Perubahan Disimpan", "Data agenda berhasil diperbarui.");
+    await fetchData();
+
+    hideForm();
+    triggerToast("Perubahan Disimpan", "Data agenda berhasil diperbarui.");
+  } catch (error) {
+    console.error("Gagal memperbarui agenda:", error);
+    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat memperbarui data.", "error");
+  }
 };
 
 const deleteEntry = (id) => {
@@ -204,11 +207,19 @@ const deleteEntry = (id) => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (itemToDelete.value !== null) {
-    agendaList.value = agendaList.value.filter((a) => a.id !== itemToDelete.value);
-    itemToDelete.value = null;
-    triggerToast("Data Dihapus", "Data agenda berhasil dihapus dari sistem.", "info");
+    try {
+      await api.delete(`/api/agendas/${itemToDelete.value}`);
+
+      await fetchData();
+
+      itemToDelete.value = null;
+      triggerToast("Data Dihapus", "Data agenda berhasil dihapus dari sistem.", "info");
+    } catch (error) {
+      console.error("Gagal menghapus agenda:", error);
+      triggerToast("Gagal", "Terjadi kesalahan saat menghapus data", "error");
+    }
   }
   isDeleteModalOpen.value = false;
 };
