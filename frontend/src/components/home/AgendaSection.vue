@@ -153,30 +153,10 @@ const scrollToAgenda = (agendaToScrollTo) => {
   });
 };
 
-// Fungsi untuk Sembunyikan URL dengan Blob
-const openDocument = async (url) => {
-  if (!url) return;
-
-  try {
-    const response = await fetch(url);
-    const blob = await response.blob();
-
-    // Bikin URL lokal browser yang pakai domain frontend
-    const blobUrl = URL.createObjectURL(blob);
-    window.open(blobUrl, "_blank");
-
-    // Revoke object url untuk hemat memori
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
-  } catch (error) {
-    // Kalau diblokir CORS atau gagal, buka dengan cara biasa
-    window.open(url, "_blank");
-  }
-};
-
-const getFilename = (url) => {
-  if (!url) return "";
-
-  return url.substring(url.lastIndexOf("/") + 1);
+const getAgendaDocumentLink = (attachmentUrl) => {
+  if (!attachmentUrl) return "#";
+  const filename = attachmentUrl.split("/").pop();
+  return `/download/agenda/${filename}`;
 };
 </script>
 
@@ -429,13 +409,13 @@ const getFilename = (url) => {
                           class="flex items-center mt-1 pt-2 border-t border-slate-100 dark:border-slate-700"
                         >
                           <PhPaperclip class="w-4 h-4 mr-2.5 shrink-0 text-blue-500" />
-                          <router-link
-                            :to="`/dokumen/${getFilename(agenda.attachment)}`"
+                          <a
+                            :href="getAgendaDocumentLink(agenda.attachment)"
                             target="_blank"
-                            class="text-blue-600 hover:text-blue-700 hover:underline transition-colors font-medium"
+                            class="text-blue-600 hover:text-blue-700 hover:underline transition-colors text-left focus:outline-none"
                           >
                             Lihat Dokumen
-                          </router-link>
+                          </a>
                         </div>
                       </div>
                     </div>

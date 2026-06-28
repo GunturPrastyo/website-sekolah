@@ -5,8 +5,7 @@ import Fasilitas from '@/views/FasilitasView.vue'
 import GuruStaf from '@/views/GuruStaf.vue'
 import Kurikulum from '@/views/KurikulumView.vue'
 import Alumni from '@/views/AlumniView.vue'
-import AdminLayout from '@/layouts/AdminLayout.vue'
-import DocumentViewer from '@/components/DocumentViewer.vue';
+import AdminLayout from '@/layouts/AdminLayout.vue' 
 
 
 import PublicLayout from '@/layouts/PublicLayout.vue' // Import PublicLayout
@@ -116,11 +115,6 @@ const router = createRouter({
           name: 'unduhan',
           component: () => import('../views/UnduhanView.vue')
         },
-        {
-          path: '/dokumen/:filename',
-          name: 'DocumentViewer',
-          component: DocumentViewer
-        }
       ]
     },
     {
@@ -265,7 +259,17 @@ const router = createRouter({
 
       ]
     }
-
+    ,
+    {
+      path: '/download/agenda/:filename',
+      name: 'download-agenda',
+      beforeEnter: (to, from, next) => {
+        const filename = to.params.filename;
+        // Asumsi path di backend adalah /storage/agendas/
+        const fileUrl = `${api.defaults.baseURL}/storage/agendas/${filename}`;
+        window.location.href = fileUrl;
+      }
+    }
 
   ]
 })
@@ -285,7 +289,7 @@ router.beforeEach((to, from, next) => {
       // Cari meta spesifik dari child route yang cocok
       const matchedRoute = to.matched.slice().reverse().find(r => r.meta && r.meta.roles);
       const roles = matchedRoute ? matchedRoute.meta.roles : (to.meta.roles || []);
-
+      
       // Jika rute memiliki batasan roles dan role pengguna tidak termasuk
       if (roles.length > 0 && !roles.includes(userRole)) {
         next({ name: 'dashboard' }); // Tendang kembali ke dashboard / fallback
@@ -313,13 +317,13 @@ api.get('api/settings')
     const result = response.data;
     if (result.success && result.data) {
       appSettings = result.data;
-
+      
       // Mengatur Favicon
       if (appSettings.favicon) {
         let link = document.querySelector("link[rel~='icon']");
         if (link) link.href = appSettings.favicon;
       }
-
+      
       // Memperbarui title untuk halaman yang saat ini sedang dibuka
       updateDocumentTitle(router.currentRoute.value);
     }
@@ -329,7 +333,7 @@ api.get('api/settings')
 // Fungsi untuk memperbarui document.title secara dinamis berdasarkan rute
 function updateDocumentTitle(route) {
   const baseTitle = appSettings?.namaSekolah || 'Website Sekolah';
-
+  
   // Mengambil judul dari atribut meta, jika tidak ada, gunakan dari nama rute (diformat rapi)
   let pageTitle = route.meta?.title;
   if (!pageTitle && route.name) {
@@ -337,8 +341,8 @@ function updateDocumentTitle(route) {
   }
 
   // Format judul: "Nama Halaman | Nama Sekolah" (contoh: "Visi Misi | SMAN 1 Nogosari")
-  document.title = (pageTitle && pageTitle.toLowerCase() !== 'home')
-    ? `${pageTitle} | ${baseTitle}`
+  document.title = (pageTitle && pageTitle.toLowerCase() !== 'home') 
+    ? `${pageTitle} | ${baseTitle}` 
     : baseTitle;
 }
 
