@@ -2047,7 +2047,7 @@ const executeBulkDelete = async () => {
                           <img
                             v-if="inst.logo"
                             :src="inst.logo"
-                            class="w-full h-full object-contain p-1"
+                            class="w-full h-full object-cover p-1"
                           />
                           <span v-else class="text-[10px] text-gray-400">Logo</span>
                           <div

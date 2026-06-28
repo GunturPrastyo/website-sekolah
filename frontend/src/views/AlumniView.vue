@@ -329,7 +329,7 @@
                           <img
                             v-if="inst.logo"
                             :src="inst.logo"
-                            class="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal"
+                            class="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal"
                             :alt="inst.name"
                           />
                           <PhBuildings

@@ -331,11 +331,11 @@ watch(
                 class="flex items-center gap-3 bg-gray-50 dark:bg-slate-700/50 p-2 rounded-lg border border-gray-100 dark:border-slate-600/50"
               >
                 <div
-                  class="w-8 h-8 rounded-full bg-white dark:bg-slate-700 border p-1 shrink-0 flex items-center justify-center"
+                  class="w-8 h-8 rounded-full bg-white dark:bg-slate-700 border shrink-0 flex items-center justify-center overflow-hidden"
                 >
                   <img
                     :src="inst.logo || 'https://img.icons8.com/color/96/school.png'"
-                    class="w-full h-full object-contain"
+                    class="w-full h-full object-cover"
                   />
                 </div>
                 <div class="flex flex-col flex-1 min-w-0">
