@@ -279,8 +279,8 @@ watch(
                   Info Pendaftaran
                 </router-link>
                 <a
-                  v-if="ppdbInfo.brochure_file"
-                  :href="ppdbInfo.brochure_file"
+                  v-if="ppdbInfo.brosur_path"
+                  :href="ppdbInfo.brosur_path"
                   target="_blank"
                   class="px-6 py-3.5 bg-gray-50/10 text-white font-semibold rounded-xl border border-white/50 hover:bg-gray-50/20 transition-all flex items-center justify-center text-sm md:text-base"
                 >
