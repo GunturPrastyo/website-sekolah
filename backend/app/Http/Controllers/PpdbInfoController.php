@@ -71,4 +71,21 @@ class PpdbInfoController extends Controller
 
         return response()->json(['message' => 'Brosur berhasil dihapus']);
     }
+
+    public function downloadBrosur()
+    {
+        $ppdbInfo = PpdbInfo::first();
+
+        if (!$ppdbInfo || !$ppdbInfo->brosur_path) {
+            return response()->json(['message' => 'File brosur tidak ditemukan.'], 404);
+        }
+
+        $path = $ppdbInfo->brosur_path;
+
+        if (Storage::disk('public')->exists($path)) {
+            return response()->download(storage_path('app/public/' . $path));
+        }
+
+        return response()->json(['message' => 'File tidak ditemukan di penyimpanan.'], 404);
+    }
 }
