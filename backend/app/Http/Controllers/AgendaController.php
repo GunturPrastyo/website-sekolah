@@ -31,14 +31,20 @@ class AgendaController extends Controller
             'attachment' => 'nullable|string',
         ]);
 
+        $slug = Str::slug($validated['title']);
+
         if (!empty($validated['attachment'])) {
             if (str_starts_with($validated['attachment'], 'data:image')) {
-                // Proses sebagai gambar
-                $validated['attachment'] = $this->processAndSaveImage($validated['attachment'], 'agendas', null, 1200);
+                // Proses sebagai gambar, simpan dengan nama sementara lalu rename
+                $tempPath = $this->processAndSaveImage($validated['attachment'], 'agendas', null, 1200);
+                $extension = pathinfo($tempPath, PATHINFO_EXTENSION);
+                $newPath = 'agendas/' . $slug . '-' . time() . '.' . $extension;
+                Storage::disk('public')->move($tempPath, $newPath);
+                $validated['attachment'] = $newPath;
             } elseif (str_starts_with($validated['attachment'], 'data:application/pdf')) {
                 // Proses sebagai PDF
                 $data = substr($validated['attachment'], strpos($validated['attachment'], ',') + 1);
-                $filename = 'agendas/' . Str::random(20) . '.pdf';
+                $filename = 'agendas/' . $slug . '-' . time() . '.pdf';
                 Storage::disk('public')->put($filename, base64_decode($data));
                 $validated['attachment'] = $filename;
             }
@@ -69,20 +75,29 @@ class AgendaController extends Controller
             'attachment' => 'nullable|string',
         ]);
 
+        $slug = Str::slug($validated['title']);
+
         if ($request->has('attachment')) {
             $attachment = $request->input('attachment');
             if (str_starts_with($attachment, 'data:image')) {
-                $validated['attachment'] = $this->processAndSaveImage($attachment, 'agendas', $agenda->attachment, 1200);
+                $tempPath = $this->processAndSaveImage($attachment, 'agendas', $agenda->attachment, 1200);
+                $extension = pathinfo($tempPath, PATHINFO_EXTENSION);
+                $newPath = 'agendas/' . $slug . '-' . time() . '.' . $extension;
+                Storage::disk('public')->move($tempPath, $newPath);
+                $validated['attachment'] = $newPath;
             } elseif (str_starts_with($attachment, 'data:application/pdf')) {
                 $this->deleteOldImage($agenda->attachment);
                 $data = substr($attachment, strpos($attachment, ',') + 1);
-                $filename = 'agendas/' . Str::random(20) . '.pdf';
+                $filename = 'agendas/' . $slug . '-' . time() . '.pdf';
                 Storage::disk('public')->put($filename, base64_decode($data));
                 $validated['attachment'] = $filename;
-            } else {
+            } elseif (empty($attachment)) {
                 // Jika dikirim null atau string kosong, hapus file lama
                 $this->deleteOldImage($agenda->attachment);
                 $validated['attachment'] = null;
+            } else {
+                // Jika attachment tidak berubah (berupa URL), bersihkan domain sebelum simpan ke DB
+                $validated['attachment'] = preg_replace('#^https?://[^/]+/storage/#', '', $attachment);
             }
         }
 
