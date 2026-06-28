@@ -262,12 +262,10 @@ const router = createRouter({
     ,
     {
       path: '/download/agenda/:filename',
-      name: 'download-agenda',
-      beforeEnter: (to, from, next) => {
-        const filename = to.params.filename;
-        // Asumsi path di backend adalah /storage/agendas/
-        const fileUrl = `${api.defaults.baseURL}/storage/agendas/${filename}`;
-        window.location.href = fileUrl;
+      name: 'document-viewer-agenda',
+      component: () => import('../views/DocumentViewer.vue'),
+      meta: {
+        title: 'Lihat Dokumen'
       }
     }
 
