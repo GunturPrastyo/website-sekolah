@@ -415,12 +415,12 @@ const scrollToAgenda = (agendaToScrollTo) => {
                           <span class="leading-tight">{{ agenda.loc }}</span>
                         </div>
                         <div
-                          v-if="agenda.file"
+                          v-if="agenda.attachment"
                           class="flex items-center mt-1 pt-2 border-t border-slate-100 dark:border-slate-700"
                         >
                           <PhPaperclip class="w-4 h-4 mr-2.5 shrink-0 text-blue-500" />
                           <a
-                            :href="agenda.file"
+                            :href="agenda.attachment"
                             target="_blank"
                             class="text-blue-600 hover:text-blue-700 hover:underline transition-colors"
                           >

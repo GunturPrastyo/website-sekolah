@@ -297,6 +297,7 @@ const fetchAgendas = async () => {
           loc: agenda.location,
           color: color,
           file: agenda.attachment || null,
+          attachment: agenda.attachment || null,
           startDate: startDate,
           endDate: endDate || startDate,
         };
