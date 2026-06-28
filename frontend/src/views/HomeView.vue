@@ -70,7 +70,8 @@ const alumniLocations = ref([]);
 const ppdbInfo = ref({
   academic_year: "2026/2027",
   title: "Siap Menjadi Bagian dari Kami?",
-  description: "Pendaftaran segera dibuka.",
+  description:
+    "Wujudkan potensi terbaikmu di sini. Pantau terus informasi terbaru, pendaftaran akan segera dibuka.",
   opening_date: null,
   brochure_file: null,
   registration_link: null,
