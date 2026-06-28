@@ -172,6 +172,12 @@ const openDocument = async (url) => {
     window.open(url, "_blank");
   }
 };
+
+const getFilename = (url) => {
+  if (!url) return "";
+
+  return url.substring(url.lastIndexOf("/") + 1);
+};
 </script>
 
 <template>
@@ -423,12 +429,13 @@ const openDocument = async (url) => {
                           class="flex items-center mt-1 pt-2 border-t border-slate-100 dark:border-slate-700"
                         >
                           <PhPaperclip class="w-4 h-4 mr-2.5 shrink-0 text-blue-500" />
-                          <button
-                            @click.prevent="openDocument(agenda.attachment)"
-                            class="text-blue-600 hover:text-blue-700 hover:underline transition-colors text-left focus:outline-none"
+                          <router-link
+                            :to="`/dokumen/${getFilename(agenda.attachment)}`"
+                            target="_blank"
+                            class="text-blue-600 hover:text-blue-700 hover:underline transition-colors font-medium"
                           >
                             Lihat Dokumen
-                          </button>
+                          </router-link>
                         </div>
                       </div>
                     </div>
