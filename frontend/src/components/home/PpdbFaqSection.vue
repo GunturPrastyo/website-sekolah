@@ -1,6 +1,7 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch, computed } from "vue";
 import { PhDownloadSimple } from "@phosphor-icons/vue";
+import api from "@/api/index.js";
 
 const props = defineProps({
   appearanceSettings: { type: Object, required: true },
@@ -13,6 +14,18 @@ const activeFaq = ref(null);
 const toggleFaq = (index) => {
   activeFaq.value = activeFaq.value === index ? null : index;
 };
+
+const brochureUrl = computed(() => {
+  const path = props.ppdbInfo.brosur_path;
+  if (!path) return null;
+  if (path.startsWith("http")) return path;
+
+  // Menggunakan base URL dari API untuk membentuk URL absolut
+  const baseUrl = api.defaults.baseURL.endsWith("/")
+    ? api.defaults.baseURL
+    : `${api.defaults.baseURL}/`;
+  return `${baseUrl}storage/${path.replace(/^storage\//, "")}`;
+});
 
 // Logika Countdown dipindah ke komponen ini agar tidak membebani parent
 const ppdbCountdown = ref({ days: "00", hours: "00", minutes: "00", seconds: "00" });
@@ -279,9 +292,10 @@ watch(
                   Info Pendaftaran
                 </router-link>
                 <a
-                  v-if="ppdbInfo.brosur_path"
-                  :href="ppdbInfo.brosur_path"
+                  v-if="brochureUrl"
+                  :href="brochureUrl"
                   target="_blank"
+                  download
                   class="px-6 py-3.5 bg-gray-50/10 text-white font-semibold rounded-xl border border-white/50 hover:bg-gray-50/20 transition-all flex items-center justify-center text-sm md:text-base"
                 >
                   <PhDownloadSimple class="w-5 h-5 mr-2" /> Unduh Brosur
