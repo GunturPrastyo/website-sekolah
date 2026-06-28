@@ -152,6 +152,26 @@ const scrollToAgenda = (agendaToScrollTo) => {
     }
   });
 };
+
+// Fungsi untuk Sembunyikan URL dengan Blob
+const openDocument = async (url) => {
+  if (!url) return;
+
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+
+    // Bikin URL lokal browser yang pakai domain frontend
+    const blobUrl = URL.createObjectURL(blob);
+    window.open(blobUrl, "_blank");
+
+    // Revoke object url untuk hemat memori
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+  } catch (error) {
+    // Kalau diblokir CORS atau gagal, buka dengan cara biasa
+    window.open(url, "_blank");
+  }
+};
 </script>
 
 <template>
@@ -159,7 +179,6 @@ const scrollToAgenda = (agendaToScrollTo) => {
     class="relative py-8 md:py-6 pb-16 md:pb-0 mt-0 md:mt-16 -mx-6 md:mx-0 bg-white dark:bg-slate-800 overflow-hidden px-6 mb-0 md:mb-12 md:rounded-xl shadow-xl fade-on-scroll"
   >
     <div class="w-full max-w-full container z-10 mx-auto">
-      <!-- Header Section -->
       <div class="mb-6 md:mt-2 md:mb-10">
         <div class="relative block">
           <h2
@@ -175,15 +194,12 @@ const scrollToAgenda = (agendaToScrollTo) => {
         </div>
       </div>
 
-      <!-- Main Grid Layout -->
       <div
         class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-stretch md:pb-8 md:pr-2"
       >
-        <!-- KIRI: Kalender -->
         <div
           class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-5 md:p-6 flex flex-col"
         >
-          <!-- Navigasi -->
           <div class="flex items-center justify-between mb-6">
             <button
               @click="prevMonth"
@@ -206,7 +222,6 @@ const scrollToAgenda = (agendaToScrollTo) => {
             </button>
           </div>
 
-          <!-- Hari -->
           <div
             class="grid grid-cols-7 gap-1 text-center mb-3 text-[11px] font-bold uppercase tracking-wider text-slate-400"
           >
@@ -219,7 +234,6 @@ const scrollToAgenda = (agendaToScrollTo) => {
             <div>Sab</div>
           </div>
 
-          <!-- Grid Tanggal & Event -->
           <div class="grid grid-cols-7 gap-y-2 gap-x-1 text-sm text-center">
             <template v-if="isLoadingAgendas">
               <div
@@ -237,7 +251,6 @@ const scrollToAgenda = (agendaToScrollTo) => {
                 >
                   {{ item.day }}
                 </div>
-                <!-- Blok Agenda -->
                 <div
                   v-else-if="item.type === 'event'"
                   :class="[
@@ -262,7 +275,6 @@ const scrollToAgenda = (agendaToScrollTo) => {
                       {{ d }}
                     </div>
                   </div>
-                  <!-- Event Chip -->
                   <div
                     :class="[
                       'relative z-10 mx-0.5 mt-0.5 px-1 sm:px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-semibold truncate',
@@ -276,7 +288,6 @@ const scrollToAgenda = (agendaToScrollTo) => {
             </template>
           </div>
 
-          <!-- Keterangan Label -->
           <div class="mt-8 pt-5 border-t border-gray-100 dark:border-slate-700">
             <div
               class="flex flex-wrap gap-x-4 gap-y-2 text-[11px] font-medium text-slate-500 dark:text-slate-400"
@@ -298,12 +309,10 @@ const scrollToAgenda = (agendaToScrollTo) => {
           </div>
         </div>
 
-        <!-- KANAN: Daftar Agenda -->
         <div class="lg:col-span-7 relative h-[540px] md:h-[640px] lg:h-auto">
           <div
             class="absolute inset-0 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col"
           >
-            <!-- Header Daftar Agenda -->
             <div
               class="p-5 md:p-6 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex items-center shrink-0"
             >
@@ -316,7 +325,6 @@ const scrollToAgenda = (agendaToScrollTo) => {
               </h3>
             </div>
 
-            <!-- List Kontainer -->
             <div class="relative flex-1 min-h-0" ref="agendaListContainer">
               <div
                 class="absolute inset-0 p-5 md:p-6 flex flex-col gap-4 overflow-y-auto custom-scrollbar pr-2 sm:pr-4"
@@ -356,8 +364,6 @@ const scrollToAgenda = (agendaToScrollTo) => {
                         : 'border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600',
                     ]"
                   >
-                    <!-- Typographic Date dengan Lebar yang Diperbesar -->
-                    <!-- Ukuran kontainer dinaikkan menjadi w-[85px] sm:w-[110px] agar teks tidak perlu dikecilkan -->
                     <div
                       class="flex flex-col items-center justify-start pt-1 w-[85px] sm:w-[110px] shrink-0 text-center overflow-hidden"
                     >
@@ -366,7 +372,6 @@ const scrollToAgenda = (agendaToScrollTo) => {
                       >
                         {{ agenda.month }}
                       </span>
-                      <!-- Font size kini seragam dan konsisten untuk semua format tanggal -->
                       <span
                         class="text-2xl sm:text-3xl font-light text-slate-800 dark:text-white leading-none tracking-tighter whitespace-nowrap"
                       >
@@ -374,12 +379,10 @@ const scrollToAgenda = (agendaToScrollTo) => {
                       </span>
                     </div>
 
-                    <!-- Clean Divider -->
                     <div
                       class="w-px bg-slate-100 dark:bg-slate-700 self-stretch mx-1 sm:mx-3 hidden sm:block"
                     ></div>
 
-                    <!-- Content -->
                     <div
                       class="flex flex-col flex-1 pl-1 sm:pl-0"
                       style="font-family: 'Plus Jakarta Sans', sans-serif"
@@ -414,18 +417,18 @@ const scrollToAgenda = (agendaToScrollTo) => {
                           />
                           <span class="leading-tight">{{ agenda.loc }}</span>
                         </div>
+
                         <div
                           v-if="agenda.attachment"
                           class="flex items-center mt-1 pt-2 border-t border-slate-100 dark:border-slate-700"
                         >
                           <PhPaperclip class="w-4 h-4 mr-2.5 shrink-0 text-blue-500" />
-                          <a
-                            :href="agenda.attachment"
-                            target="_blank"
-                            class="text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+                          <button
+                            @click.prevent="openDocument(agenda.attachment)"
+                            class="text-blue-600 hover:text-blue-700 hover:underline transition-colors text-left focus:outline-none"
                           >
                             Lihat Dokumen
-                          </a>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -446,7 +449,6 @@ const scrollToAgenda = (agendaToScrollTo) => {
                 </template>
               </div>
 
-              <!-- Fade Bottom Indicator -->
               <div
                 class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white dark:from-slate-800 to-transparent pointer-events-none z-10 flex justify-center items-end"
               >
