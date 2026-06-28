@@ -36,7 +36,7 @@ class GalleryController extends Controller
 
             $categoriesData = [
                 'total' => Gallery::where('status', 'approved')->count(),
-                'first_image' => Gallery::where('status', 'approved')->orderBy('created_at', 'desc')->value('image'),
+                'first_image' => Gallery::where('status', 'approved')->inRandomOrder()->value('image'),
                 'list' => $categories
             ];
         }
