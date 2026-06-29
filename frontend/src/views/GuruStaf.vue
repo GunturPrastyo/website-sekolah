@@ -213,7 +213,7 @@ onBeforeUnmount(() => {
       badge="Profil Sekolah"
       title="Guru & Staf Sekolah"
       description="Mengenal lebih dekat para pendidik dan tenaga kependidikan yang berperan penting dalam membimbing serta mendukung perkembangan siswa."
-      :bgImage="getImageUrl(appearanceSettings.headerGuruStaf)"
+      :bgImage="appearanceSettings.headerGuruStaf"
     />
 
     <!-- Main Content -->
