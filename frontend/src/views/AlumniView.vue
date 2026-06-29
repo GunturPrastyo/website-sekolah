@@ -1,6 +1,6 @@
 <template>
   <div
-    class="overflow-x-hidden w-full bg-slate-50/50 dark:bg-slate-900 min-h-screen relative"
+    class="overflow-x-hidden w-full bg-slate-50/50 dark:bg-slate-900 min-h-screen relative font-jakarta"
   >
     <!-- Header / Hero Section -->
     <PageHeader
@@ -32,7 +32,6 @@
                 v-model="searchQuery"
                 placeholder="Cari berdasarkan Nama, NISN, atau Instansi..."
                 class="w-full pl-12 pr-12 py-4 bg-slate-50/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-900 dark:text-white text-base transition-all outline-none"
-                style="font-family: 'Plus Jakarta Sans', sans-serif"
               />
               <div
                 v-if="isLoadingAlumni"
@@ -56,7 +55,6 @@
               <select
                 v-model="selectedYear"
                 class="w-full py-4 pl-5 pr-10 bg-slate-50/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-900 dark:text-white text-base transition-all outline-none appearance-none cursor-pointer font-medium"
-                style="font-family: 'Plus Jakarta Sans', sans-serif"
               >
                 <option value="">Semua Angkatan</option>
                 <option v-for="year in availableYears" :key="year" :value="year">
@@ -116,7 +114,6 @@
                   <div class="flex-1 min-w-0 pt-0.5">
                     <h4
                       class="font-bold text-slate-900 dark:text-white text-base md:text-lg truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
-                      style="font-family: 'Plus Jakarta Sans', sans-serif"
                     >
                       {{ alumni.name }}
                     </h4>
@@ -229,7 +226,6 @@
                   >
                     <div
                       class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs rounded-lg py-1.5 px-3 whitespace-nowrap shadow-xl font-semibold flex items-center gap-2"
-                      style="font-family: 'Plus Jakarta Sans', sans-serif"
                     >
                       {{ loc.name }}
                       <span
@@ -299,7 +295,6 @@
                     </h4>
                     <h3
                       class="text-xl md:text-2xl font-extrabold text-slate-900 dark:text-white leading-tight mb-3"
-                      style="font-family: 'Plus Jakarta Sans', sans-serif"
                     >
                       {{ selectedLocation.name }}
                     </h3>
@@ -533,6 +528,10 @@ const getStatusColor = (status) => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+.font-jakarta {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
 
 .custom-scrollbar::-webkit-scrollbar {
   width: 5px;
