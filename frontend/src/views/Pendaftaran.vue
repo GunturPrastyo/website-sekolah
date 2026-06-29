@@ -16,7 +16,6 @@ import {
 import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.css";
 
-// Reactive State
 const ppdbInfo = ref(null);
 const appearanceSettings = ref({});
 const isLoading = ref(true);
@@ -27,7 +26,6 @@ const getIcon = (index) => {
   return iconMap[index % iconMap.length];
 };
 
-// Helper parser JSON/Teks baris baru dari Database
 const parseJson = (data) => {
   if (!data) return [];
   if (typeof data === "string") {
@@ -67,7 +65,6 @@ const jalurList = computed(() => {
   }));
 });
 
-// Fungsi gabungan untuk mengambil data PPDB dan Global Settings secara paralel (bersamaan)
 const fetchInitialData = async () => {
   try {
     const [ppdbResponse, settingsResponse] = await Promise.all([
@@ -75,10 +72,8 @@ const fetchInitialData = async () => {
       api.get("/api/settings"),
     ]);
 
-    // Set data PPDB
     ppdbInfo.value = ppdbResponse.data?.data || ppdbResponse.data;
 
-    // Set data global settings jika request sukses
     if (settingsResponse.data?.success) {
       appearanceSettings.value = settingsResponse.data.data;
     }
@@ -97,7 +92,7 @@ const fetchInitialData = async () => {
 // Inisialisasi Slider Swiper
 const initSwiper = () => {
   new Swiper(".jalur-swiper", {
-    direction: "horizontal", // default slider horizontal untuk versi Mobile
+    direction: "horizontal",
     loop: true,
     loopAdditionalSlides: 4,
     speed: 800,
@@ -109,7 +104,7 @@ const initSwiper = () => {
     centeredSlides: true,
     spaceBetween: 20,
     mousewheel: {
-      forceToAxis: true, // Menghindari halaman tertahan saat scroll beda sumbu
+      forceToAxis: true,
     },
     grabCursor: true,
     pagination: {
@@ -118,7 +113,7 @@ const initSwiper = () => {
     },
     breakpoints: {
       1024: {
-        direction: "vertical", // Beralih ke slider vertikal untuk versi Desktop
+        direction: "vertical",
         slidesPerView: 1.5,
         spaceBetween: 24,
       },
@@ -126,7 +121,6 @@ const initSwiper = () => {
   });
 };
 
-// Panggil fungsi pengambilan data saat komponen dimuat
 onMounted(() => {
   fetchInitialData();
 });
@@ -182,7 +176,8 @@ onMounted(() => {
               class="bg-blue-50/20 dark:bg-slate-700/30 p-6 md:p-8 rounded-xl border border-gray-300 dark:border-slate-700 shadow-lg"
             >
               <h3
-                class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
+                class="text-2xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
+                style="font-family: 'Oswald', sans-serif"
               >
                 <PhListChecks class="w-6 h-6 mr-2 text-blue-950 dark:text-white" />
                 Syarat Pendaftaran
@@ -222,7 +217,8 @@ onMounted(() => {
               class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-xl border border-gray-300 dark:border-slate-700 shadow-lg"
             >
               <h3
-                class="text-xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
+                class="text-2xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
+                style="font-family: 'Oswald', sans-serif"
               >
                 <PhGitMerge class="w-6 h-6 mr-2 text-blue-950 dark:text-white" />
                 Alur Pendaftaran

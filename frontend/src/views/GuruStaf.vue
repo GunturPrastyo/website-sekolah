@@ -1,17 +1,7 @@
 <script setup>
-import { ref, computed, onMounted, nextTick, watch, onBeforeUnmount } from "vue";
-import { PhArrowDown } from "@phosphor-icons/vue";
+import { ref, computed, onMounted, watch, onBeforeUnmount } from "vue";
 import PageHeader from "@/components/PageHeader.vue";
 import api from "@/api/index.js";
-
-const changeCategory = (id) => {
-  activeCategory.value = id;
-  if (window.innerWidth < 768) {
-    const contentEl = document.getElementById("staff-content");
-    if (contentEl)
-      window.scrollTo({ top: contentEl.offsetTop - 100, behavior: "smooth" });
-  }
-};
 
 const categories = computed(() => {
   const uniqueRoles = [...new Set(staffList.value.map((s) => s.role).filter(Boolean))];
@@ -63,6 +53,35 @@ const organizationCategories = computed(() => {
 
   return dynamicCategories;
 });
+
+// Dropdown state
+const isDropdownOpen = ref(false);
+const dropdownRef = ref(null);
+const dropdownItemsPerPage = 7;
+const dropdownCurrentPage = ref(1);
+
+const paginatedCategories = computed(() => {
+  const start = (dropdownCurrentPage.value - 1) * dropdownItemsPerPage;
+  const end = start + dropdownItemsPerPage;
+  return categories.value.slice(start, end);
+});
+
+const totalDropdownPages = computed(() => {
+  return Math.ceil(categories.value.length / dropdownItemsPerPage);
+});
+
+const selectCategory = (id) => {
+  activeCategory.value = id;
+  isDropdownOpen.value = false;
+};
+
+const changeDropdownPage = (direction) => {
+  if (direction === "next" && dropdownCurrentPage.value < totalDropdownPages.value) {
+    dropdownCurrentPage.value++;
+  } else if (direction === "prev" && dropdownCurrentPage.value > 1) {
+    dropdownCurrentPage.value--;
+  }
+};
 
 const activeCategory = ref("semua");
 const searchQuery = ref("");
@@ -120,15 +139,21 @@ const fetchInitialData = async () => {
 
 watch([activeCategory, searchQuery], () => {
   itemsToShow.value = itemsPerPage;
-  fetchInitialData();
+  dropdownCurrentPage.value = 1;
+  // Data difilter di sisi klien, tidak perlu mengambil ulang.
+  // Perilaku scroll asli dipindahkan ke sini untuk seluler.
+  if (window.innerWidth < 768) {
+    const contentEl = document.getElementById("staff-content");
+    if (contentEl) {
+      window.scrollTo({ top: contentEl.offsetTop - 100, behavior: "smooth" });
+    }
+  }
 });
 
 const loadMore = () => {
   isLoadingMore.value = true;
-  setTimeout(() => {
-    itemsToShow.value += itemsPerPage;
-    isLoadingMore.value = false;
-  }, 800);
+  itemsToShow.value += itemsPerPage;
+  isLoadingMore.value = false;
 };
 
 // Base Computed properties
@@ -165,31 +190,19 @@ const activeCategoryName = computed(() => {
   return categories.value.find((c) => c.id === activeCategory.value)?.name || "";
 });
 
-const categoryContainerRef = ref(null);
-const canScrollDown = ref(false);
-
-const checkScroll = () => {
-  if (categoryContainerRef.value) {
-    const { scrollTop, scrollHeight, clientHeight } = categoryContainerRef.value;
-    canScrollDown.value =
-      scrollHeight > clientHeight &&
-      Math.ceil(scrollTop + clientHeight) < scrollHeight - 2;
+const closeDropdownOnOutsideClick = (event) => {
+  if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
+    isDropdownOpen.value = false;
   }
 };
 
-watch(categories, () => {
-  nextTick(() => {
-    checkScroll();
-  });
-});
-
 onMounted(() => {
   fetchInitialData();
-  window.addEventListener("resize", checkScroll);
+  document.addEventListener("click", closeDropdownOnOutsideClick);
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener("resize", checkScroll);
+  document.removeEventListener("click", closeDropdownOnOutsideClick);
 });
 </script>
 
@@ -212,9 +225,9 @@ onBeforeUnmount(() => {
           <!-- Content -->
           <main id="staff-content" class="w-full">
             <!-- Search Bar & Filter Group -->
-            <div class="flex flex-col gap-6 mb-12">
+            <div class="flex flex-col md:flex-row items-center gap-4 mb-12">
               <!-- Search Bar -->
-              <div class="relative w-full lg:w-1/2 group">
+              <div class="relative w-full flex-1 group">
                 <div
                   class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
                 >
@@ -240,64 +253,136 @@ onBeforeUnmount(() => {
                 />
               </div>
 
-              <!-- Category Filter Card -->
-              <div
-                class="w-full bg-gray-50 dark:bg-slate-900/50 p-5 lg:p-6 rounded-lg shadow-inner border border-gray-200 dark:border-slate-700 flex flex-col gap-4"
-              >
-                <h4
-                  class="text-sm md:text-md font-bold text-gray-900 dark:text-white flex items-center"
+              <!-- Custom Category Filter Dropdown -->
+              <div class="relative w-full md:w-72 shrink-0" ref="dropdownRef">
+                <!-- Dropdown Button -->
+                <button
+                  @click="isDropdownOpen = !isDropdownOpen"
+                  class="relative block w-full pl-12 pr-10 py-3.5 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-lg text-sm shadow-inner focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white placeholder-gray-400 focus:outline-none cursor-pointer font-medium text-left"
+                  style="font-family: 'Plus Jakarta Sans', sans-serif"
                 >
-                  <svg
-                    class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-                    ></path>
-                  </svg>
-                  Kategori:
-                </h4>
-                <div class="relative pb-1">
                   <div
-                    ref="categoryContainerRef"
-                    @scroll="checkScroll"
-                    class="flex flex-wrap items-center gap-2 md:gap-2.5 max-h-40 md:max-h-60 overflow-y-auto pr-2 pb-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-slate-500"
+                    class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
                   >
-                    <button
-                      v-for="category in categories"
-                      :key="category.id"
-                      @click="changeCategory(category.id)"
-                      class="px-3.5 md:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-300 focus:outline-none flex items-center border"
-                      :class="
-                        activeCategory === category.id
-                          ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
-                          : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400 shadow-sm'
-                      "
+                    <svg
+                      class="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      {{ category.name }}
-                      <span class="ml-1 text-[11px] font-bold opacity-70">
-                        ({{ getCategoryCount(category.id) }})
-                      </span>
-                    </button>
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.5"
+                        d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                      ></path>
+                    </svg>
                   </div>
-                  <!-- Scroll Down Indicator -->
-                  <div
-                    v-show="canScrollDown"
-                    class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-gray-50 dark:from-slate-900 to-transparent pointer-events-none z-10 flex justify-center items-end"
+                  <span class="truncate block"
+                    >{{ activeCategoryName }} ({{
+                      getCategoryCount(activeCategory)
+                    }})</span
                   >
-                    <div
-                      class="text-sm font-semibold text-gray-500 dark:text-gray-400 flex items-center animate-bounce pb-2"
+                  <div
+                    class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"
+                  >
+                    <svg
+                      class="w-5 h-5 text-gray-400 transition-transform duration-300"
+                      :class="{ 'rotate-180': isDropdownOpen }"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      <PhArrowDown class="w-4 h-4 mr-1.5" />
-                      Scroll ke bawah
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.5"
+                        d="M19 9l-7 7-7-7"
+                      ></path>
+                    </svg>
+                  </div>
+                </button>
+
+                <!-- Dropdown Panel -->
+                <Transition
+                  enter-active-class="transition ease-out duration-100"
+                  enter-from-class="transform opacity-0 scale-95"
+                  enter-to-class="transform opacity-100 scale-100"
+                  leave-active-class="transition ease-in duration-75"
+                  leave-from-class="transform opacity-100 scale-100"
+                  leave-to-class="transform opacity-0 scale-95"
+                >
+                  <div
+                    v-if="isDropdownOpen"
+                    class="absolute top-full mt-2 w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg shadow-2xl z-20 overflow-hidden flex flex-col"
+                  >
+                    <div class="overflow-y-auto" style="max-height: 280px">
+                      <button
+                        v-for="cat in paginatedCategories"
+                        :key="cat.id"
+                        @click="selectCategory(cat.id)"
+                        class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-700/50 transition-colors flex justify-between items-center"
+                        :class="{
+                          'bg-blue-50 dark:bg-slate-700 text-blue-600 dark:text-blue-400':
+                            activeCategory === cat.id,
+                          'text-gray-700 dark:text-gray-300': activeCategory !== cat.id,
+                        }"
+                      >
+                        <span class="truncate">{{ cat.name }}</span>
+                        <span class="text-xs font-bold opacity-70 ml-2"
+                          >({{ getCategoryCount(cat.id) }})</span
+                        >
+                      </button>
+                    </div>
+                    <!-- Pagination -->
+                    <div
+                      v-if="totalDropdownPages > 1"
+                      class="flex items-center justify-between p-2 border-t border-gray-100 dark:border-slate-700/50 bg-gray-50/50 dark:bg-slate-900/20 shrink-0"
+                    >
+                      <button
+                        @click="changeDropdownPage('prev')"
+                        :disabled="dropdownCurrentPage === 1"
+                        class="p-2 rounded-md text-gray-500 hover:bg-gray-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                      >
+                        <svg
+                          class="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M15 19l-7-7 7-7"
+                          ></path>
+                        </svg>
+                      </button>
+                      <span class="text-xs font-semibold text-gray-600 dark:text-gray-400"
+                        >{{ dropdownCurrentPage }} / {{ totalDropdownPages }}</span
+                      >
+                      <button
+                        @click="changeDropdownPage('next')"
+                        :disabled="dropdownCurrentPage === totalDropdownPages"
+                        class="p-2 rounded-md text-gray-500 hover:bg-gray-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                      >
+                        <svg
+                          class="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 5l7 7-7 7"
+                          ></path>
+                        </svg>
+                      </button>
                     </div>
                   </div>
-                </div>
+                </Transition>
               </div>
             </div>
 
@@ -710,6 +795,7 @@ onBeforeUnmount(() => {
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 
 @keyframes fadeInUp {
   from {
