@@ -228,7 +228,7 @@ const handleFileUpload = async (event) => {
   try {
     let xlsx;
     try {
-      xlsx = await import(/* @vite-ignore */ "xlsx");
+      xlsx = await import("xlsx");
     } catch (err) {
       triggerToast(
         "Library Tidak Ditemukan",
@@ -354,7 +354,7 @@ const exportData = async () => {
     isExporting.value = true;
     let xlsx;
     try {
-      xlsx = await import(/* @vite-ignore */ "xlsx");
+      xlsx = await import("xlsx");
     } catch (err) {
       triggerToast(
         "Library Tidak Ditemukan",
@@ -416,7 +416,7 @@ const downloadTemplate = async () => {
   try {
     let xlsx;
     try {
-      xlsx = await import(/* @vite-ignore */ "xlsx");
+      xlsx = await import("xlsx");
     } catch (err) {
       triggerToast(
         "Library Tidak Ditemukan",
@@ -709,7 +709,6 @@ const executeBulkDelete = async () => {
       </div>
     </div>
 
-    <!-- Banner Peringatan Kekurangan Data Relasi -->
     <div
       v-if="!isLoadingData && (classesList.length === 0 || majors.length === 0)"
       class="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 rounded-r-lg shadow-sm"
@@ -756,7 +755,6 @@ const executeBulkDelete = async () => {
       </div>
     </div>
 
-    <!-- Form Import Modal -->
     <Transition
       enter-active-class="transition-opacity duration-300"
       enter-from-class="opacity-0"
@@ -871,7 +869,6 @@ const executeBulkDelete = async () => {
               </ol>
             </div>
           </div>
-          <!-- UI Mapping Kolom -->
           <div class="p-6" v-else>
             <div class="mb-4">
               <h4 class="text-lg font-bold text-gray-800 dark:text-white">
@@ -979,7 +976,6 @@ const executeBulkDelete = async () => {
       </div>
     </Transition>
 
-    <!-- Form Tambah/Edit Manual -->
     <Transition
       enter-active-class="transition-opacity duration-300"
       enter-from-class="opacity-0"
@@ -1175,7 +1171,6 @@ const executeBulkDelete = async () => {
       </div>
     </Transition>
 
-    <!-- Form Bulk Edit -->
     <Transition
       enter-active-class="transition-opacity duration-300"
       enter-from-class="opacity-0"
@@ -1310,7 +1305,6 @@ const executeBulkDelete = async () => {
       </div>
     </Transition>
 
-    <!-- Data Table & Filters -->
     <div
       class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-visible"
     >
@@ -1370,7 +1364,6 @@ const executeBulkDelete = async () => {
         </div>
       </div>
 
-      <!-- Bulk Actions Bar -->
       <Transition
         enter-active-class="transition-all duration-300 ease-out"
         enter-from-class="opacity-0 -translate-y-4"
@@ -1586,7 +1579,6 @@ const executeBulkDelete = async () => {
         </table>
       </div>
 
-      <!-- Pagination Controls -->
       <div
         v-if="totalPages > 1"
         class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm rounded-b-2xl"
