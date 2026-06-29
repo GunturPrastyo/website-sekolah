@@ -161,7 +161,7 @@ onMounted(() => {
         <div class="container mx-auto max-w-full px-0 lg:px-16">
           <div class="text-center mb-10">
             <h2
-              class="text-3xl md:text-4xl font-bold text-blue-950 dark:text-white"
+              class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white"
               style="font-family: 'Oswald', sans-serif"
             >
               Informasi & Persyaratan
@@ -176,10 +176,10 @@ onMounted(() => {
               class="bg-blue-50/20 dark:bg-slate-700/30 p-6 md:p-8 rounded-xl border border-gray-300 dark:border-slate-700 shadow-lg"
             >
               <h3
-                class="text-2xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
+                class="text-2xl font-bold text-gray-900 dark:text-white mb-5 flex items-center"
                 style="font-family: 'Oswald', sans-serif"
               >
-                <PhListChecks class="w-6 h-6 mr-2 text-blue-950 dark:text-white" />
+                <PhListChecks class="w-6 h-6 mr-2 text-gray-900 dark:text-white" />
                 Syarat Pendaftaran
               </h3>
 
@@ -217,10 +217,10 @@ onMounted(() => {
               class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-xl border border-gray-300 dark:border-slate-700 shadow-lg"
             >
               <h3
-                class="text-2xl font-bold text-blue-950 dark:text-white mb-5 flex items-center"
+                class="text-2xl font-bold text-gray-900 dark:text-white mb-5 flex items-center"
                 style="font-family: 'Oswald', sans-serif"
               >
-                <PhGitMerge class="w-6 h-6 mr-2 text-blue-950 dark:text-white" />
+                <PhGitMerge class="w-6 h-6 mr-2 text-gray-900 dark:text-white" />
                 Alur Pendaftaran
               </h3>
 

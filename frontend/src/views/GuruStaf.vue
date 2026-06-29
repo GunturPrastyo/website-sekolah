@@ -793,8 +793,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 
 @keyframes fadeInUp {
