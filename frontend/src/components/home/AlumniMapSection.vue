@@ -217,7 +217,7 @@ watch(
         class="relative z-10 md:w-3/5 lg:w-2/3 w-full flex items-center justify-center min-h-[220px] md:min-h-[280px] mt-2 md:mt-0 p-1 md:p-0"
       >
         <div
-          class="relative w-full max-w-4xl group/map transition-transform duration-700 ease-out hover:scale-105 aspect-[2.5/1] md:aspect-[2/1] lg:aspect-[3.5/1]"
+          class="relative w-full max-w-4xl group/map transition-transform duration-700 ease-out aspect-[2.5/1] md:aspect-[2/1] lg:aspect-[3.5/1]"
         >
           <img
             src="/img/indonesia.svg"
@@ -267,7 +267,7 @@ watch(
                 class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-1 md:w-5 md:h-2 bg-black/40 rounded-[100%] blur-[2px] group-hover:scale-50 transition-transform duration-300"
               ></div>
               <div
-                class="relative drop-shadow-[0_5px_8px_rgba(0,0,0,0.4)] group-hover:-translate-y-2 transition-transform duration-300 origin-bottom"
+                class="relative drop-shadow-[0_5px_8px_rgba(0,0,0,0.4)] transition-transform duration-300 origin-bottom"
               >
                 <PhMapPin
                   weight="fill"
