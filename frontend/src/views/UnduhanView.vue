@@ -158,7 +158,7 @@ const downloadFile = (file) => {
   <PageHeader
     v-if="!isLoading && appearanceSettings"
     badge="Pusat Unduhan"
-    title="Materi & Dokumen Sekolah"
+    title="Dokumen Sekolah"
     description="Akses mudah dan cepat untuk mengunduh berbagai berkas penting, brosur PPDB, kalender akademik, surat keputusan, hingga materi pembelajaran."
     :bgImage="getImageUrl(appearanceSettings.headerUnduhan)"
   />
