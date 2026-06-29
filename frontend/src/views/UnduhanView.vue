@@ -141,7 +141,13 @@ const activeCategoryName = computed(() => {
 
 const downloadFile = (file) => {
   if (file.url) {
-    window.open(file.url, "_blank");
+    const link = document.createElement("a");
+    link.href = file.url;
+
+    link.setAttribute("download", file.name || "download");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   } else {
     alert("URL file tidak tersedia");
   }

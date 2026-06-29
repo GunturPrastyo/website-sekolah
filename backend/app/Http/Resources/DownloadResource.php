@@ -11,7 +11,8 @@ class DownloadResource extends JsonResource
     {
         $data = parent::toArray($request);
         $data['date'] = $this->created_at ? $this->created_at->format('d M Y') : null;
-        $data['file_url'] = asset('storage/' . $this->file_path);
+        
+        $data['file_url'] = url('api/public-downloads/' . $this->id . '/download');
         return $data;
     }
 }

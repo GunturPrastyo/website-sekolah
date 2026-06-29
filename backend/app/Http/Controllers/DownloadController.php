@@ -104,4 +104,19 @@ class DownloadController extends Controller
             'message' => 'File berhasil dihapus'
         ]);
     }
+
+    public function publicDownload(Download $download)
+    {
+        if (!$download->file_path) {
+            return response()->json(['message' => 'File path tidak ditemukan.'], 404);
+        }
+
+        $path = $download->file_path;
+
+        if (Storage::disk('public')->exists($path)) {
+            return response()->download(storage_path('app/public/' . $path));
+        }
+
+        return response()->json(['message' => 'File tidak ditemukan di penyimpanan.'], 404);
+    }
 }

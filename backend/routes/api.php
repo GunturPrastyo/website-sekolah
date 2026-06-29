@@ -100,6 +100,7 @@ Route::get('/public-agendas', [AgendaController::class, 'index']);
 
 // API Unduhan (Akses Publik)
 Route::get('/public-downloads', [DownloadController::class, 'index']);
+Route::get('/public-downloads/{download}/download', [DownloadController::class, 'publicDownload']);
 
 // API Data Persebaran Peta Alumni (Akses Publik)
 Route::get('/public-map-locations', [MapLocationController::class, 'index']);
@@ -113,7 +114,6 @@ Route::get('/public-alumnis', [AlumniController::class, 'publicIndex']);
 // ======================================================================
 Route::middleware(['auth:sanctum'])->group(function () {
     
-    // Mengambil data user aktif secara aman lewat validasi Token Bearer
     Route::get('/user', function (Request $request) {
         return response()->json([
             'id'    => $request->user()->id,
@@ -121,6 +121,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             'email' => $request->user()->email,
             'role'  => $request->user()->role, 
             'avatar' => $request->user()->avatar, 
+            'provider' => $request->user()->provider
         ]);
     });
 
