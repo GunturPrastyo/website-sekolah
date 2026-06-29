@@ -231,7 +231,8 @@ const exportData = async () => {
     isExporting.value = true;
     let xlsx;
     try {
-      xlsx = await import(/* @vite-ignore */ "xlsx");
+      // FIX: Tag @vite-ignore dihapus agar Vercel melakukan build pada library xlsx
+      xlsx = await import("xlsx");
     } catch (err) {
       triggerToast(
         "Library Tidak Ditemukan",
@@ -345,7 +346,6 @@ const getSelectedHomeroomName = computed(() => {
       </div>
     </div>
 
-    <!-- Banner Peringatan Kekurangan Data Relasi -->
     <div
       v-if="!isLoadingData && (majors.length === 0 || staffList.length === 0)"
       class="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 rounded-r-lg shadow-sm"
@@ -392,7 +392,6 @@ const getSelectedHomeroomName = computed(() => {
       </div>
     </div>
 
-    <!-- Form Tambah/Edit -->
     <Transition
       enter-active-class="transition-opacity duration-300"
       enter-from-class="opacity-0"
@@ -431,7 +430,6 @@ const getSelectedHomeroomName = computed(() => {
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                     >Wali Kelas</label
                   >
-                  <!-- Custom Dropdown Wali Kelas -->
                   <button
                     type="button"
                     @click="
@@ -460,14 +458,12 @@ const getSelectedHomeroomName = computed(() => {
                     />
                   </button>
 
-                  <!-- Invisible Overlay to close dropdown -->
                   <div
                     v-if="isHomeroomDropdownOpen"
                     @click="isHomeroomDropdownOpen = false"
                     class="fixed inset-0 z-40"
                   ></div>
 
-                  <!-- Dropdown Content (Arah ke bawah, Lazy Loading, Search) -->
                   <Transition
                     enter-active-class="transition ease-out duration-100"
                     enter-from-class="opacity-0 -translate-y-2"
@@ -480,7 +476,6 @@ const getSelectedHomeroomName = computed(() => {
                       v-if="isHomeroomDropdownOpen"
                       class="absolute top-full left-0 right-0 z-[120] mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-md shadow-2xl overflow-hidden flex flex-col"
                     >
-                      <!-- Search Bar Inside Dropdown -->
                       <div
                         class="p-2 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50"
                       >
@@ -499,7 +494,6 @@ const getSelectedHomeroomName = computed(() => {
                         </div>
                       </div>
 
-                      <!-- Paginated List -->
                       <ul
                         class="max-h-60 overflow-y-auto custom-scrollbar py-1 text-sm relative"
                       >
@@ -531,7 +525,6 @@ const getSelectedHomeroomName = computed(() => {
                         </li>
                       </ul>
 
-                      <!-- Pagination Controls -->
                       <div
                         v-if="homeroomTotalPages > 1"
                         class="p-2 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-between items-center text-xs"
@@ -679,7 +672,6 @@ const getSelectedHomeroomName = computed(() => {
       </div>
     </Transition>
 
-    <!-- Data Table & Filters -->
     <div
       class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden"
     >
