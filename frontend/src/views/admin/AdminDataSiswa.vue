@@ -669,7 +669,7 @@ const executeBulkDelete = async () => {
 
 <template>
   <main class="flex-1 overflow-y-auto px-6 md:px-10 py-8">
-    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="mb-8">
       <div>
         <h2
           class="text-3xl font-bold text-gray-800 dark:text-white"
@@ -682,7 +682,7 @@ const executeBulkDelete = async () => {
           Dapodik.
         </p>
       </div>
-      <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+      <div class="mt-4 flex flex-col sm:flex-row gap-2 sm:gap-3">
         <button
           @click="exportData"
           :disabled="isExporting"
