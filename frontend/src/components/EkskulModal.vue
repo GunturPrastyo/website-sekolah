@@ -191,14 +191,6 @@ const closeModal = () => {
               >
                 Tutup
               </button>
-              <router-link
-                to="/pendaftaran"
-                @click="closeModal"
-                class="px-5 py-2.5 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors flex items-center shadow-md shadow-blue-500/30 focus:outline-none"
-              >
-                Daftar Ekskul
-                <PhArrowRight class="w-4 h-4 ml-2" />
-              </router-link>
             </div>
           </div>
         </div>
