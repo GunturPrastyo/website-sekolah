@@ -58,7 +58,7 @@ const fetchInitialData = async () => {
     // Mapping Data File Unduhan
     files.value = downloadsResult.data.map((item) => {
       let ext = "file";
-      const filePath = item.file || item.file_path;
+      const filePath = item.file_path;
       if (filePath) {
         const parts = filePath.split(".");
         ext = parts[parts.length - 1].toLowerCase();
@@ -66,7 +66,7 @@ const fetchInitialData = async () => {
 
       return {
         id: item.id,
-        name: item.title || "Dokumen Unduhan",
+        name: item.name || "Dokumen Unduhan",
         type: ext,
         size: item.size || "-",
         date: new Date(item.created_at).toLocaleDateString("id-ID", {
@@ -77,7 +77,7 @@ const fetchInitialData = async () => {
         category: item.category
           ? item.category.toLowerCase().replace(/\s+/g, "-")
           : "umum",
-        url: filePath,
+        url: item.file_url,
       };
     });
 
