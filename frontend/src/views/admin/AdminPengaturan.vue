@@ -786,7 +786,7 @@ const updateProfile = async () => {
               >
                 <ImageUploader
                   v-model="appearanceSettings.headerPendaftaran"
-                  label="Info PPDB"
+                  label="Informasi PPDB"
                   containerClass="w-full aspect-[21/9]"
                 />
               </div>

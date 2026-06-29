@@ -327,7 +327,7 @@ const removeBrosur = async () => {
         class="text-3xl font-bold text-gray-800 dark:text-white"
         style="font-family: 'Oswald', sans-serif"
       >
-        Manajemen Info PPDB
+        Manajemen Informasi PPDB
       </h2>
       <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
         Kelola informasi Syarat, Alur, dan Jalur Pendaftaran
