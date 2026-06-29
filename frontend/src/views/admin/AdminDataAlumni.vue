@@ -15,6 +15,8 @@ import {
   PhDownloadSimple,
   PhCheck,
   PhSpinner,
+  PhIdentificationCard,
+  PhBriefcase,
 } from "@phosphor-icons/vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -380,6 +382,7 @@ const showAddMapForm = () => {
   isMapEditing.value = false;
   mapInstDropdownOpen.value = null;
   isMapFormVisible.value = true;
+  document.body.style.overflow = "hidden"; // Kunci scroll background
 };
 
 const openEditMap = (loc) => {
@@ -387,6 +390,7 @@ const openEditMap = (loc) => {
   isMapEditing.value = true;
   mapInstDropdownOpen.value = null;
   isMapFormVisible.value = true;
+  document.body.style.overflow = "hidden"; // Kunci scroll background
 };
 
 const hideMapForm = () => {
@@ -401,6 +405,7 @@ const hideMapForm = () => {
     left: "50%",
     institutions: [],
   };
+  document.body.style.overflow = ""; // Kembalikan scroll background
 };
 
 const saveMapLocation = async () => {
@@ -571,11 +576,13 @@ const resetForm = () => {
 const hideForm = () => {
   resetForm();
   isFormVisible.value = false;
+  document.body.style.overflow = ""; // Kembalikan scroll background
 };
 
 const showAddForm = () => {
   resetForm();
   isFormVisible.value = true;
+  document.body.style.overflow = "hidden"; // Kunci scroll background
 };
 
 const addEntry = async () => {
@@ -627,6 +634,7 @@ const startEdit = (item) => {
   form.value = { ...item };
   searchStudent.value = `${item.nisn} - ${item.name}`;
   isFormVisible.value = true;
+  document.body.style.overflow = "hidden"; // Kunci scroll background
 };
 
 const saveEntry = async () => {
@@ -693,7 +701,8 @@ const exportData = async () => {
     isExporting.value = true;
     let xlsx;
     try {
-      xlsx = await import(/* @vite-ignore */ "xlsx");
+      // FIX: Menghilangkan /* @vite-ignore */ agar library dibundle oleh Vite saat deploy
+      xlsx = await import("xlsx");
     } catch (err) {
       triggerToast(
         "Library Tidak Ditemukan",
@@ -877,8 +886,8 @@ const executeBulkDelete = async () => {
         </p>
       </div>
     </div>
-    <!-- Form Bulk Edit -->
-    <!-- The div for centering the modal content -->
+
+    <!-- Form Bulk Edit Modal -->
     <Transition
       enter-active-class="transition-opacity duration-300"
       enter-from-class="opacity-0"
@@ -889,7 +898,7 @@ const executeBulkDelete = async () => {
     >
       <div
         v-if="isBulkEditModalOpen"
-        class="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
         @click="closeBulkEditModal"
       >
         <div
@@ -968,14 +977,14 @@ const executeBulkDelete = async () => {
           >
             <button
               @click="closeBulkEditModal"
-              class="px-4 py-2 border rounded-md text-sm"
+              class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-600"
             >
               Batal
             </button>
             <button
               @click="executeBulkEdit"
               :disabled="isBulkSubmitting"
-              class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center"
+              class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center"
             >
               <PhSpinner v-if="isBulkSubmitting" class="w-4 h-4 mr-2 animate-spin" />
               {{ isBulkSubmitting ? "Menyimpan..." : "Simpan Perubahan" }}
@@ -985,21 +994,26 @@ const executeBulkDelete = async () => {
       </div>
     </Transition>
 
-    <!-- Form Tambah/Edit Manual -->
+    <!-- Form Tambah/Edit Manual Modal -->
     <Transition
-      enter-active-class="transition-all duration-500 ease-out"
-      enter-from-class="opacity-0 -translate-y-4 max-h-0"
-      enter-to-class="opacity-100 translate-y-0 max-h-[1000px]"
-      leave-active-class="transition-all duration-300 ease-in"
-      leave-from-class="opacity-100 translate-y-0 max-h-[1000px]"
-      leave-to-class="opacity-0 -translate-y-4 max-h-0"
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
     >
-      <div v-if="isFormVisible" class="mb-8 overflow-hidden">
+      <div
+        v-if="isFormVisible"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        @click="hideForm"
+      >
         <div
-          class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 w-full flex flex-col relative"
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh] overflow-hidden transform transition-all"
+          @click.stop
         >
           <div
-            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 rounded-t-xl"
+            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
           >
             <h3 class="text-xl font-bold text-gray-800 dark:text-white">
               {{ isEditing ? "Edit Data Alumni" : "Tambah Alumni Baru" }}
@@ -1011,346 +1025,381 @@ const executeBulkDelete = async () => {
               <PhX class="w-6 h-6" />
             </button>
           </div>
-          <div class="p-6 flex-1">
+          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
             <form id="alumniForm" @submit.prevent="isEditing ? saveEntry() : addEntry()">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div v-if="!isEditing" class="md:col-span-2 relative">
-                  <div class="flex justify-between items-end mb-1">
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                      Pilih Siswa (Bisa lebih dari satu)
-                      <span
-                        v-if="selectedStudentsForAdd.length > 0"
-                        class="ml-1 text-blue-600 dark:text-blue-400 font-bold"
-                        >({{ selectedStudentsForAdd.length }} dipilih)</span
+              <!-- Group 1: Identitas Siswa -->
+              <div class="mb-6">
+                <h4
+                  class="text-sm font-bold text-gray-600 dark:text-white flex items-center mb-4 uppercase tracking-wider"
+                >
+                  <PhIdentificationCard class="w-5 h-5 mr-2" />
+                  Identitas Siswa
+                </h4>
+                <div
+                  class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-blue-50/50 dark:bg-slate-800/50 p-4 rounded-xl border border-blue-100 dark:border-slate-700"
+                >
+                  <div v-if="!isEditing" class="md:col-span-2 relative">
+                    <div class="flex justify-between items-end mb-1">
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                       >
-                    </label>
-                    <div class="flex items-center gap-2">
-                      <span
-                        class="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium"
-                      >
-                        Sisa:
-                        {{ totalUnassignedStudents - selectedStudentsForAdd.length }}
-                        siswa
-                      </span>
-                      <button
-                        v-if="selectedStudentsForAdd.length > 1"
-                        type="button"
-                        @click="selectedStudentsForAdd = []"
-                        class="text-xs text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-medium transition-colors"
-                      >
-                        Kosongkan Pilihan
-                      </button>
-                    </div>
-                  </div>
-                  <div
-                    class="flex flex-wrap gap-2 mb-2 max-h-32 overflow-y-auto custom-scrollbar p-1 rounded-lg"
-                    :class="
-                      selectedStudentsForAdd.length > 6
-                        ? 'border border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-800/50'
-                        : ''
-                    "
-                    v-if="selectedStudentsForAdd.length > 0"
-                  >
-                    <span
-                      v-for="(siswa, index) in selectedStudentsForAdd"
-                      :key="siswa.id"
-                      class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
-                    >
-                      {{ siswa.nisn }} - {{ siswa.name }}
-                      <button
-                        type="button"
-                        @click="removeSelectedStudent(index)"
-                        class="shrink-0 ml-1.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-blue-400 hover:bg-blue-200 hover:text-blue-600 focus:outline-none focus:bg-blue-500 focus:text-white dark:hover:bg-blue-800 dark:hover:text-blue-200"
-                      >
-                        <PhX class="h-3 w-3" />
-                      </button>
-                    </span>
-                  </div>
-                  <input
-                    type="text"
-                    v-model="searchStudent"
-                    @input="onSearchInput"
-                    @focus="isDropdownOpen = true"
-                    @blur="closeDropdown"
-                    placeholder="Ketik NISN atau Nama Siswa lalu klik untuk memilih..."
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                  />
-                  <div
-                    v-if="isDropdownOpen"
-                    @scroll="onDropdownScroll"
-                    class="absolute z-10 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg max-h-48 overflow-y-auto"
-                  >
-                    <div
-                      v-if="filteredUnassignedAlumni.length === 0 && !isLoadingUnassigned"
-                      class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400"
-                    >
-                      Siswa tidak ditemukan
-                    </div>
-                    <div
-                      v-for="siswa in filteredUnassignedAlumni"
-                      :key="siswa.nisn"
-                      @mousedown.prevent="selectStudent(siswa)"
-                      class="px-4 py-2 text-sm cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-800 dark:text-gray-200"
-                    >
-                      {{ siswa.nisn }} - {{ siswa.name }}
-                    </div>
-                    <div
-                      v-if="isLoadingUnassigned"
-                      class="px-4 py-2 text-sm text-center text-blue-500 dark:text-blue-400"
-                    >
-                      Memuat data...
-                    </div>
-                  </div>
-                </div>
-
-                <div v-if="isEditing" class="md:col-span-2 relative">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >
-                    Cari Siswa
-                  </label>
-                  <input
-                    type="text"
-                    v-model="searchStudent"
-                    @input="onSearchInput"
-                    @focus="isDropdownOpen = true"
-                    @blur="closeDropdown"
-                    placeholder="Ketik NISN atau Nama Siswa..."
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                  />
-                  <div
-                    v-if="isDropdownOpen"
-                    @scroll="onDropdownScroll"
-                    class="absolute z-10 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg max-h-48 overflow-y-auto"
-                  >
-                    <div
-                      v-if="filteredUnassignedAlumni.length === 0 && !isLoadingUnassigned"
-                      class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400"
-                    >
-                      Siswa tidak ditemukan
-                    </div>
-                    <div
-                      v-for="siswa in filteredUnassignedAlumni"
-                      :key="siswa.nisn"
-                      @mousedown.prevent="selectStudent(siswa)"
-                      class="px-4 py-2 text-sm cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-800 dark:text-gray-200"
-                    >
-                      {{ siswa.nisn }} - {{ siswa.name }}
-                    </div>
-                    <div
-                      v-if="isLoadingUnassigned"
-                      class="px-4 py-2 text-sm text-center text-blue-500 dark:text-blue-400"
-                    >
-                      Memuat data...
-                    </div>
-                  </div>
-                </div>
-
-                <div v-if="isEditing" class="md:col-span-1">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >NISN</label
-                  >
-                  <input
-                    type="text"
-                    v-model="form.nisn"
-                    disabled
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 cursor-not-allowed placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                    placeholder="005XXXXXXX"
-                  />
-                </div>
-                <div v-if="isEditing" class="md:col-span-1">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >Nama Lengkap</label
-                  >
-                  <input
-                    type="text"
-                    v-model="form.name"
-                    disabled
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 cursor-not-allowed placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                    placeholder="Nama alumni"
-                  />
-                </div>
-                <div class="md:col-span-1">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >Tahun Lulus</label
-                  >
-                  <input
-                    type="text"
-                    v-model="form.year"
-                    required
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                    placeholder="2023"
-                  />
-                </div>
-                <div class="md:col-span-1">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >Status</label
-                  >
-                  <select
-                    v-model="form.status"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option
-                      v-for="status in statusAlumniList"
-                      :key="status"
-                      :value="status"
-                    >
-                      {{ status }}
-                    </option>
-                  </select>
-                </div>
-                <div class="md:col-span-2">
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >Instansi / Tempat (Kampus / Perusahaan)</label
-                  >
-                  <div v-show="!showNewInstansiInput" class="relative">
-                    <button
-                      type="button"
-                      @click="isInstansiDropdownOpen = !isInstansiDropdownOpen"
-                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-left focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex justify-between items-center transition-colors"
-                      :class="
-                        form.instansi
-                          ? 'text-gray-900 dark:text-white'
-                          : 'text-gray-500 dark:text-gray-400'
-                      "
-                    >
-                      <span class="truncate">{{
-                        form.instansi || "Pilih Instansi..."
-                      }}</span>
-                      <PhCaretDown
-                        class="w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200"
-                        :class="{ 'rotate-180': isInstansiDropdownOpen }"
-                      />
-                    </button>
-
-                    <div
-                      v-if="isInstansiDropdownOpen"
-                      @click="isInstansiDropdownOpen = false"
-                      class="fixed inset-0 z-40"
-                    ></div>
-
-                    <Transition
-                      enter-active-class="transition ease-out duration-100"
-                      enter-from-class="opacity-0 translate-y-[-10px]"
-                      enter-to-class="opacity-100 translate-y-0"
-                      leave-active-class="transition ease-in duration-100"
-                      leave-from-class="opacity-100 translate-y-0"
-                      leave-to-class="opacity-0 translate-y-[-10px]"
-                    >
-                      <div
-                        v-if="isInstansiDropdownOpen"
-                        class="absolute top-full z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl max-h-60 overflow-y-auto custom-scrollbar"
-                      >
-                        <ul class="py-1 text-sm">
-                          <li
-                            v-for="(inst, index) in institutionList"
-                            :key="index"
-                            class="hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 transition-colors group"
-                          >
-                            <div
-                              v-if="editingInstansiIndex === index"
-                              class="flex items-center gap-2 w-full px-4 py-2"
-                              @click.stop
-                            >
-                              <input
-                                type="text"
-                                v-model="editingInstansiName"
-                                class="flex-1 px-2 py-1 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 focus:ring-blue-500 focus:border-blue-500"
-                                @keydown.enter.prevent="saveEditInstansi(index)"
-                                @keydown.esc.prevent="cancelEditInstansi()"
-                              />
-                              <button
-                                type="button"
-                                @click="saveEditInstansi(index)"
-                                class="p-1 text-green-600 hover:bg-green-100 rounded"
-                                title="Simpan"
-                              >
-                                <PhCheck class="w-4 h-4" />
-                              </button>
-                              <button
-                                type="button"
-                                @click="cancelEditInstansi()"
-                                class="p-1 text-gray-500 hover:bg-gray-200 rounded"
-                                title="Batal"
-                              >
-                                <PhX class="w-4 h-4" />
-                              </button>
-                            </div>
-                            <div
-                              v-else
-                              class="flex items-center justify-between w-full px-4 py-2.5 cursor-pointer"
-                              @click="selectInstansi(inst)"
-                            >
-                              <span class="truncate pr-2">{{ inst }}</span>
-                              <div
-                                class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 shrink-0"
-                                @click.stop
-                              >
-                                <button
-                                  type="button"
-                                  @click="startEditInstansi(index, inst)"
-                                  class="p-1 text-blue-600 hover:bg-blue-100 rounded transition-colors"
-                                  title="Edit Instansi"
-                                >
-                                  <PhPencilSimple class="w-4 h-4" />
-                                </button>
-                                <button
-                                  type="button"
-                                  @click="handleDeleteInstansi(index)"
-                                  class="p-1 text-red-600 hover:bg-red-100 rounded transition-colors"
-                                  title="Hapus Instansi"
-                                >
-                                  <PhTrash class="w-4 h-4" />
-                                </button>
-                              </div>
-                            </div>
-                          </li>
-                          <li
-                            @click="selectInstansi('ADD_NEW')"
-                            class="px-4 py-2.5 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer font-semibold text-blue-600 dark:text-blue-400 border-t border-gray-100 dark:border-slate-700 transition-colors sticky bottom-0 bg-white dark:bg-slate-800"
-                          >
-                            + Tambah Instansi Baru...
-                          </li>
-                        </ul>
+                        Pilih Siswa (Bisa lebih dari satu)
+                        <span
+                          v-if="selectedStudentsForAdd.length > 0"
+                          class="ml-1 text-blue-600 dark:text-blue-400 font-bold"
+                          >({{ selectedStudentsForAdd.length }} dipilih)</span
+                        >
+                      </label>
+                      <div class="flex items-center gap-2">
+                        <span
+                          class="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium"
+                        >
+                          Sisa:
+                          {{ totalUnassignedStudents - selectedStudentsForAdd.length }}
+                          siswa
+                        </span>
+                        <button
+                          v-if="selectedStudentsForAdd.length > 1"
+                          type="button"
+                          @click="selectedStudentsForAdd = []"
+                          class="text-xs text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-medium transition-colors"
+                        >
+                          Kosongkan Pilihan
+                        </button>
                       </div>
-                    </Transition>
-                  </div>
-                  <div v-show="showNewInstansiInput" class="flex gap-2">
+                    </div>
+                    <div
+                      class="flex flex-wrap gap-2 mb-2 max-h-32 overflow-y-auto custom-scrollbar p-1 rounded-lg"
+                      :class="
+                        selectedStudentsForAdd.length > 6
+                          ? 'border border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-800/50'
+                          : ''
+                      "
+                      v-if="selectedStudentsForAdd.length > 0"
+                    >
+                      <span
+                        v-for="(siswa, index) in selectedStudentsForAdd"
+                        :key="siswa.id"
+                        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800 shadow-sm"
+                      >
+                        {{ siswa.nisn }} - {{ siswa.name }}
+                        <button
+                          type="button"
+                          @click="removeSelectedStudent(index)"
+                          class="shrink-0 ml-1.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-blue-400 hover:bg-blue-200 hover:text-blue-600 focus:outline-none focus:bg-blue-500 focus:text-white dark:hover:bg-blue-800 dark:hover:text-blue-200"
+                        >
+                          <PhX class="h-3 w-3" />
+                        </button>
+                      </span>
+                    </div>
                     <input
                       type="text"
-                      v-model="newInstansiName"
-                      class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                      placeholder="Ketik nama instansi baru..."
-                      @keydown.enter.prevent="addNewInstansi"
+                      v-model="searchStudent"
+                      @input="onSearchInput"
+                      @focus="isDropdownOpen = true"
+                      @blur="closeDropdown"
+                      placeholder="Ketik NISN atau Nama Siswa lalu klik untuk memilih..."
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60 shadow-sm"
                     />
-                    <button
-                      type="button"
-                      @click="addNewInstansi"
-                      class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                    <div
+                      v-if="isDropdownOpen"
+                      @scroll="onDropdownScroll"
+                      class="absolute z-10 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl max-h-48 overflow-y-auto custom-scrollbar"
                     >
-                      Simpan
-                    </button>
-                    <button
-                      type="button"
-                      @click="cancelNewInstansi"
-                      class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 dark:bg-slate-600 dark:text-gray-300 dark:hover:bg-slate-500 transition-colors text-sm font-medium"
+                      <div
+                        v-if="
+                          filteredUnassignedAlumni.length === 0 && !isLoadingUnassigned
+                        "
+                        class="px-4 py-3 text-sm text-center text-gray-500 dark:text-gray-400"
+                      >
+                        Siswa tidak ditemukan
+                      </div>
+                      <div
+                        v-for="siswa in filteredUnassignedAlumni"
+                        :key="siswa.nisn"
+                        @mousedown.prevent="selectStudent(siswa)"
+                        class="px-4 py-2.5 text-sm cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-800 dark:text-gray-200 border-b border-gray-50 dark:border-slate-700/50 last:border-0"
+                      >
+                        <span class="font-mono text-gray-500 dark:text-gray-400 mr-2">{{
+                          siswa.nisn
+                        }}</span>
+                        <span class="font-medium">{{ siswa.name }}</span>
+                      </div>
+                      <div
+                        v-if="isLoadingUnassigned"
+                        class="px-4 py-3 text-sm text-center text-blue-500 dark:text-blue-400 flex items-center justify-center"
+                      >
+                        <PhSpinner class="w-4 h-4 mr-2 animate-spin" /> Memuat data...
+                      </div>
+                    </div>
+                  </div>
+
+                  <div v-if="isEditing" class="md:col-span-2 relative">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                     >
-                      Batal
-                    </button>
+                      Ganti Siswa
+                    </label>
+                    <input
+                      type="text"
+                      v-model="searchStudent"
+                      @input="onSearchInput"
+                      @focus="isDropdownOpen = true"
+                      @blur="closeDropdown"
+                      placeholder="Ketik NISN atau Nama Siswa..."
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60 shadow-sm"
+                    />
+                    <div
+                      v-if="isDropdownOpen"
+                      @scroll="onDropdownScroll"
+                      class="absolute z-10 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl max-h-48 overflow-y-auto custom-scrollbar"
+                    >
+                      <div
+                        v-if="
+                          filteredUnassignedAlumni.length === 0 && !isLoadingUnassigned
+                        "
+                        class="px-4 py-3 text-sm text-center text-gray-500 dark:text-gray-400"
+                      >
+                        Siswa tidak ditemukan
+                      </div>
+                      <div
+                        v-for="siswa in filteredUnassignedAlumni"
+                        :key="siswa.nisn"
+                        @mousedown.prevent="selectStudent(siswa)"
+                        class="px-4 py-2.5 text-sm cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-800 dark:text-gray-200 border-b border-gray-50 dark:border-slate-700/50 last:border-0"
+                      >
+                        <span class="font-mono text-gray-500 dark:text-gray-400 mr-2">{{
+                          siswa.nisn
+                        }}</span>
+                        <span class="font-medium">{{ siswa.name }}</span>
+                      </div>
+                      <div
+                        v-if="isLoadingUnassigned"
+                        class="px-4 py-3 text-sm text-center text-blue-500 dark:text-blue-400 flex items-center justify-center"
+                      >
+                        <PhSpinner class="w-4 h-4 mr-2 animate-spin" /> Memuat data...
+                      </div>
+                    </div>
+                  </div>
+
+                  <div v-if="isEditing" class="md:col-span-1">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      >NISN</label
+                    >
+                    <input
+                      type="text"
+                      v-model="form.nisn"
+                      disabled
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 cursor-not-allowed placeholder-gray-400/60 dark:placeholder-slate-500/60 shadow-sm"
+                      placeholder="005XXXXXXX"
+                    />
+                  </div>
+                  <div v-if="isEditing" class="md:col-span-1">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      >Nama Lengkap</label
+                    >
+                    <input
+                      type="text"
+                      v-model="form.name"
+                      disabled
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 cursor-not-allowed placeholder-gray-400/60 dark:placeholder-slate-500/60 shadow-sm"
+                      placeholder="Nama alumni"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Group 2: Informasi Karir -->
+              <div>
+                <h4
+                  class="text-sm font-bold text-gray-600 dark:text-white flex items-center mb-4 uppercase tracking-wider"
+                >
+                  <PhBriefcase class="w-5 h-5 mr-2" />
+                  Informasi Kelanjutan Karir
+                </h4>
+                <div
+                  class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm"
+                >
+                  <div class="md:col-span-1">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      >Tahun Lulus</label
+                    >
+                    <input
+                      type="text"
+                      v-model="form.year"
+                      required
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                      placeholder="2023"
+                    />
+                  </div>
+                  <div class="md:col-span-1">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      >Status</label
+                    >
+                    <select
+                      v-model="form.status"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option
+                        v-for="status in statusAlumniList"
+                        :key="status"
+                        :value="status"
+                      >
+                        {{ status }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="md:col-span-2">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      >Instansi / Tempat (Kampus / Perusahaan)</label
+                    >
+                    <div v-show="!showNewInstansiInput" class="relative">
+                      <button
+                        type="button"
+                        @click="isInstansiDropdownOpen = !isInstansiDropdownOpen"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-left focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex justify-between items-center transition-colors"
+                        :class="
+                          form.instansi
+                            ? 'text-gray-900 dark:text-white'
+                            : 'text-gray-500 dark:text-gray-400'
+                        "
+                      >
+                        <span class="truncate">{{
+                          form.instansi || "Pilih Instansi..."
+                        }}</span>
+                        <PhCaretDown
+                          class="w-4 h-4 text-gray-400 shrink-0 transition-transform duration-200"
+                          :class="{ 'rotate-180': isInstansiDropdownOpen }"
+                        />
+                      </button>
+
+                      <div
+                        v-if="isInstansiDropdownOpen"
+                        @click="isInstansiDropdownOpen = false"
+                        class="fixed inset-0 z-[110]"
+                      ></div>
+
+                      <Transition
+                        enter-active-class="transition ease-out duration-100"
+                        enter-from-class="opacity-0 translate-y-[-10px]"
+                        enter-to-class="opacity-100 translate-y-0"
+                        leave-active-class="transition ease-in duration-100"
+                        leave-from-class="opacity-100 translate-y-0"
+                        leave-to-class="opacity-0 translate-y-[-10px]"
+                      >
+                        <div
+                          v-if="isInstansiDropdownOpen"
+                          class="absolute top-full z-[120] w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl max-h-60 overflow-y-auto custom-scrollbar"
+                        >
+                          <ul class="py-1 text-sm">
+                            <li
+                              v-for="(inst, index) in institutionList"
+                              :key="index"
+                              class="hover:bg-blue-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 transition-colors group"
+                            >
+                              <div
+                                v-if="editingInstansiIndex === index"
+                                class="flex items-center gap-2 w-full px-4 py-2"
+                                @click.stop
+                              >
+                                <input
+                                  type="text"
+                                  v-model="editingInstansiName"
+                                  class="flex-1 px-2 py-1 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 focus:ring-blue-500 focus:border-blue-500"
+                                  @keydown.enter.prevent="saveEditInstansi(index)"
+                                  @keydown.esc.prevent="cancelEditInstansi()"
+                                />
+                                <button
+                                  type="button"
+                                  @click="saveEditInstansi(index)"
+                                  class="p-1 text-green-600 hover:bg-green-100 rounded"
+                                  title="Simpan"
+                                >
+                                  <PhCheck class="w-4 h-4" />
+                                </button>
+                                <button
+                                  type="button"
+                                  @click="cancelEditInstansi()"
+                                  class="p-1 text-gray-500 hover:bg-gray-200 rounded"
+                                  title="Batal"
+                                >
+                                  <PhX class="w-4 h-4" />
+                                </button>
+                              </div>
+                              <div
+                                v-else
+                                class="flex items-center justify-between w-full px-4 py-2.5 cursor-pointer"
+                                @click="selectInstansi(inst)"
+                              >
+                                <span class="truncate pr-2">{{ inst }}</span>
+                                <div
+                                  class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 shrink-0"
+                                  @click.stop
+                                >
+                                  <button
+                                    type="button"
+                                    @click="startEditInstansi(index, inst)"
+                                    class="p-1 text-blue-600 hover:bg-blue-100 rounded transition-colors"
+                                    title="Edit Instansi"
+                                  >
+                                    <PhPencilSimple class="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    @click="handleDeleteInstansi(index)"
+                                    class="p-1 text-red-600 hover:bg-red-100 rounded transition-colors"
+                                    title="Hapus Instansi"
+                                  >
+                                    <PhTrash class="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+                            </li>
+                            <li
+                              @click="selectInstansi('ADD_NEW')"
+                              class="px-4 py-2.5 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer font-semibold text-blue-600 dark:text-blue-400 border-t border-gray-100 dark:border-slate-700 transition-colors sticky bottom-0 bg-white dark:bg-slate-800"
+                            >
+                              + Tambah Instansi Baru...
+                            </li>
+                          </ul>
+                        </div>
+                      </Transition>
+                    </div>
+                    <div v-show="showNewInstansiInput" class="flex gap-2">
+                      <input
+                        type="text"
+                        v-model="newInstansiName"
+                        class="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                        placeholder="Ketik nama instansi baru..."
+                        @keydown.enter.prevent="addNewInstansi"
+                      />
+                      <button
+                        type="button"
+                        @click="addNewInstansi"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                      >
+                        Simpan
+                      </button>
+                      <button
+                        type="button"
+                        @click="cancelNewInstansi"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 dark:bg-slate-600 dark:text-gray-300 dark:hover:bg-slate-500 transition-colors text-sm font-medium"
+                      >
+                        Batal
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </form>
           </div>
           <div
-            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3 rounded-b-xl"
+            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
           >
             <button
               type="button"
@@ -1363,7 +1412,7 @@ const executeBulkDelete = async () => {
               form="alumniForm"
               type="submit"
               :disabled="isSubmitting"
-              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
             >
               <PhSpinner v-if="isSubmitting" class="w-5 h-5 mr-2 animate-spin" />
               <PhFloppyDisk v-else-if="isEditing" class="w-5 h-5 mr-2" />
@@ -1698,22 +1747,26 @@ const executeBulkDelete = async () => {
         </button>
       </div>
 
-      <!-- Form Tambah/Edit Peta -->
+      <!-- Form Tambah/Edit Peta Modal -->
       <Transition
-        enter-active-class="transition-all duration-500 ease-out"
-        enter-from-class="opacity-0 -translate-y-4 max-h-0"
-        enter-to-class="opacity-100 translate-y-0 max-h-[1500px]"
-        leave-active-class="transition-all duration-300 ease-in"
-        leave-from-class="opacity-100 translate-y-0 max-h-[1500px]"
-        leave-to-class="opacity-0 -translate-y-4 max-h-0"
+        enter-active-class="transition-opacity duration-300"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition-opacity duration-300"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
       >
-        <div v-if="isMapFormVisible" class="mb-8 overflow-hidden">
+        <div
+          v-if="isMapFormVisible"
+          class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+          @click="hideMapForm"
+        >
           <div
-            class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 w-full flex flex-col overflow-hidden"
+            class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-5xl flex flex-col max-h-[95vh] overflow-hidden transform transition-all"
             @click.stop
           >
             <div
-              class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
+              class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 shrink-0"
             >
               <h3 class="text-xl font-bold text-gray-800 dark:text-white">
                 {{ isMapEditing ? "Edit Lokasi Peta" : "Tambah Lokasi Peta Baru" }}
@@ -1739,7 +1792,7 @@ const executeBulkDelete = async () => {
                   <input
                     type="text"
                     v-model="mapForm.name"
-                    class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60 shadow-sm"
                     placeholder="Contoh: Jawa Tengah"
                   />
                 </div>
@@ -1752,34 +1805,41 @@ const executeBulkDelete = async () => {
                   <div
                     ref="mapContainerRef"
                     @click="handleMapClick"
-                    class="relative w-full aspect-2/1 bg-blue-50 dark:bg-slate-900 rounded-lg overflow-hidden border border-gray-300 dark:border-slate-600 cursor-crosshair"
+                    class="relative w-full aspect-2/1 bg-blue-50 dark:bg-slate-900 rounded-lg overflow-hidden border border-gray-300 dark:border-slate-600 cursor-crosshair shadow-inner"
                   >
                     <img
                       src="/img/indonesia.svg"
                       class="absolute inset-0 w-full h-full object-fill opacity-60 dark:opacity-80 dark:invert pointer-events-none"
                     />
                     <div
-                      class="absolute flex justify-center items-end w-6 h-8 -translate-x-1/2 -translate-y-full pointer-events-none"
+                      class="absolute flex justify-center items-end w-6 h-8 -translate-x-1/2 -translate-y-full pointer-events-none transition-all duration-200"
                       :style="{ top: mapForm.top, left: mapForm.left }"
                     >
-                      <PhMapPin weight="fill" class="w-6 h-8 text-red-500 drop-shadow" />
+                      <PhMapPin
+                        weight="fill"
+                        class="w-8 h-10 text-red-500 drop-shadow-md"
+                      />
                     </div>
                   </div>
                   <div class="flex gap-4 mt-3">
                     <div class="flex-1">
-                      <label class="text-xs text-gray-500 font-medium">Top (%)</label>
+                      <label class="text-xs text-gray-500 font-medium"
+                        >Sumbu Y (Top %)</label
+                      >
                       <input
                         type="text"
                         v-model="mapForm.top"
-                        class="w-full px-2 py-1 text-sm border rounded bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+                        class="w-full px-3 py-1.5 text-sm border rounded bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white shadow-sm"
                       />
                     </div>
                     <div class="flex-1">
-                      <label class="text-xs text-gray-500 font-medium">Left (%)</label>
+                      <label class="text-xs text-gray-500 font-medium"
+                        >Sumbu X (Left %)</label
+                      >
                       <input
                         type="text"
                         v-model="mapForm.left"
-                        class="w-full px-2 py-1 text-sm border rounded bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+                        class="w-full px-3 py-1.5 text-sm border rounded bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white shadow-sm"
                       />
                     </div>
                   </div>
@@ -1787,33 +1847,34 @@ const executeBulkDelete = async () => {
               </div>
 
               <!-- Kolom Kanan: Daftar Instansi -->
-              <div class="space-y-4">
+              <div class="space-y-4 flex flex-col h-full max-h-full">
                 <div
-                  class="flex justify-between items-center bg-gray-50 dark:bg-slate-700/50 p-3 rounded-lg border border-gray-100 dark:border-slate-600"
+                  class="flex justify-between items-center bg-blue-50 dark:bg-slate-700/50 p-3 rounded-lg border border-blue-100 dark:border-slate-600 shrink-0"
                 >
-                  <label class="block text-sm font-bold text-gray-700 dark:text-gray-300"
-                    >Daftar Universitas / Instansi</label
+                  <label class="block text-sm font-bold text-blue-800 dark:text-blue-300"
+                    >Daftar Universitas / Instansi di Wilayah Ini</label
                   >
                 </div>
 
                 <div
-                  class="space-y-4 max-h-87.5 overflow-y-auto pr-2 custom-scrollbar pb-2"
+                  class="space-y-4 overflow-y-auto pr-2 custom-scrollbar flex-1 pb-2"
                   ref="instansiListContainer"
                 >
                   <div
                     v-for="(inst, idx) in mapForm.institutions"
                     :key="idx"
-                    class="p-4 border-2 border-gray-200 dark:border-slate-600 rounded-xl bg-gray-50 dark:bg-slate-700/30 relative group shadow-sm"
+                    class="p-4 border-2 border-gray-200 dark:border-slate-600 rounded-xl bg-gray-50 dark:bg-slate-700/30 relative group shadow-sm transition-all"
                   >
                     <button
                       @click="removeInstitution(idx)"
                       class="absolute top-2 right-2 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30 rounded p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Hapus instansi dari peta ini"
                     >
                       <PhTrash class="w-4 h-4" />
                     </button>
                     <div class="space-y-3 pr-6">
                       <div>
-                        <label class="text-xs text-gray-500 mb-1 block"
+                        <label class="text-xs text-gray-500 mb-1 block font-medium"
                           >Nama Instansi</label
                         >
                         <div class="relative">
@@ -1823,7 +1884,7 @@ const executeBulkDelete = async () => {
                               mapInstDropdownOpen =
                                 mapInstDropdownOpen === idx ? null : idx
                             "
-                            class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 flex justify-between items-center text-left transition-colors"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 flex justify-between items-center text-left transition-colors shadow-sm"
                           >
                             <span class="truncate">{{
                               inst.name || "Pilih Instansi..."
@@ -1836,7 +1897,7 @@ const executeBulkDelete = async () => {
                           <div
                             v-if="mapInstDropdownOpen === idx"
                             @click="mapInstDropdownOpen = null"
-                            class="fixed inset-0 z-40"
+                            class="fixed inset-0 z-[110]"
                           ></div>
                           <Transition
                             enter-active-class="transition ease-out duration-100"
@@ -1848,13 +1909,13 @@ const executeBulkDelete = async () => {
                           >
                             <div
                               v-if="mapInstDropdownOpen === idx"
-                              class="absolute top-full z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl max-h-48 overflow-y-auto custom-scrollbar"
+                              class="absolute top-full z-[120] w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl max-h-48 overflow-y-auto custom-scrollbar"
                             >
                               <ul class="py-1 text-sm">
                                 <li
                                   v-for="(item, i) in availableInstitutions"
                                   :key="i"
-                                  class="transition-colors"
+                                  class="transition-colors border-b border-gray-50 dark:border-slate-700/50 last:border-0"
                                   :class="
                                     item.isSelected
                                       ? 'bg-gray-100 dark:bg-slate-800/80 opacity-60 cursor-not-allowed'
@@ -1862,7 +1923,7 @@ const executeBulkDelete = async () => {
                                   "
                                 >
                                   <div
-                                    class="px-4 py-2 flex justify-between items-center"
+                                    class="px-4 py-2.5 flex justify-between items-center"
                                     :class="
                                       item.isSelected
                                         ? 'cursor-not-allowed'
@@ -1876,7 +1937,7 @@ const executeBulkDelete = async () => {
                                     "
                                   >
                                     <span
-                                      class="truncate pr-2"
+                                      class="truncate pr-2 font-medium"
                                       :class="
                                         item.isSelected
                                           ? 'text-gray-500 line-through'
@@ -1919,55 +1980,59 @@ const executeBulkDelete = async () => {
                       </div>
                       <div class="flex gap-3">
                         <div class="flex-1">
-                          <label class="text-xs text-gray-500 mb-1 block">Jenis</label>
+                          <label class="text-xs text-gray-500 mb-1 block font-medium"
+                            >Kategori</label
+                          >
                           <select
                             v-model="inst.type"
-                            class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 shadow-sm"
                           >
                             <option value="ptn">PTN</option>
                             <option value="kedinasan">Kedinasan</option>
                             <option value="instansi">BUMN / Instansi</option>
                           </select>
                         </div>
-                        <div class="w-24">
-                          <label class="text-xs text-gray-500 mb-1 block"
+                        <div class="w-28">
+                          <label class="text-xs text-gray-500 mb-1 block font-medium"
                             >Jml Alumni</label
                           >
                           <input
                             type="number"
                             v-model="inst.alumni"
                             placeholder="0"
-                            class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 dark:text-white focus:ring-1 focus:ring-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 placeholder-gray-400/60 dark:placeholder-slate-500/60 shadow-sm"
                           />
                         </div>
                       </div>
                       <div class="mt-1">
-                        <label class="text-xs text-gray-500 block mb-1"
+                        <label class="text-xs text-gray-500 block mb-1 font-medium"
                           >Logo Instansi (Opsional)</label
                         >
                         <div class="flex items-center gap-3">
                           <div
-                            class="w-12 h-12 border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden relative group"
+                            class="w-14 h-14 border-2 border-gray-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden relative group shadow-sm"
                           >
                             <img
                               v-if="inst.logo"
                               :src="inst.logo"
                               class="w-full h-full object-cover p-1"
                             />
-                            <span v-else class="text-[10px] text-gray-400">Logo</span>
+                            <span v-else class="text-[10px] text-gray-400 font-medium"
+                              >No Logo</span
+                            >
                             <div
                               v-if="inst.logo"
-                              class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer"
+                              class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer backdrop-blur-sm"
                               @click="inst.logo = ''"
                             >
-                              <PhTrash class="w-4 h-4 text-white" />
+                              <PhTrash class="w-5 h-5 text-red-400" />
                             </div>
                           </div>
                           <div class="flex-1">
                             <label
-                              class="cursor-pointer inline-flex items-center px-2.5 py-1.5 border border-gray-300 dark:border-slate-600 rounded shadow-sm text-xs font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
+                              class="cursor-pointer inline-flex items-center px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm text-xs font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
                             >
-                              Pilih Gambar
+                              Pilih Gambar Upload
                               <input
                                 type="file"
                                 accept="image/*"
@@ -1982,14 +2047,14 @@ const executeBulkDelete = async () => {
                   </div>
                   <div
                     v-if="mapForm.institutions.length === 0"
-                    class="text-center text-sm text-gray-500 py-8 border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg"
+                    class="text-center text-sm text-gray-500 py-8 border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-xl bg-gray-50/50 dark:bg-slate-800/50"
                   >
-                    Belum ada instansi yang ditambahkan.
+                    Belum ada instansi yang ditambahkan pada titik ini.
                   </div>
 
                   <button
                     @click="addInstitution"
-                    class="w-full py-3 border-2 border-dashed border-blue-300 dark:border-blue-700/50 rounded-xl text-blue-600 dark:text-blue-400 font-bold hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center justify-center"
+                    class="w-full py-3.5 border-2 border-dashed border-blue-300 dark:border-blue-700/50 rounded-xl text-blue-600 dark:text-blue-400 font-bold hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center justify-center shadow-sm"
                   >
                     <PhPlusCircle class="w-5 h-5 mr-2" /> Tambah Instansi / Kampus Baru
                   </button>
@@ -1998,18 +2063,18 @@ const executeBulkDelete = async () => {
             </div>
 
             <div
-              class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
+              class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3 shrink-0"
             >
               <button
                 @click="hideMapForm"
-                class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-600"
+                class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-600 shadow-sm"
               >
                 Batal
               </button>
               <button
                 @click="saveMapLocation"
                 :disabled="isSubmitting"
-                class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
               >
                 <PhSpinner v-if="isSubmitting" class="w-5 h-5 mr-2 animate-spin" />
                 <PhFloppyDisk v-else class="w-5 h-5 mr-2" />
