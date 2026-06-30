@@ -1005,11 +1005,11 @@ const executeBulkDelete = async () => {
     >
       <div
         v-if="isFormVisible"
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
+        class="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6 overflow-y-auto"
         @click="hideForm"
       >
         <div
-          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh] overflow-hidden transform transition-all"
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl flex flex-col transform transition-all my-auto"
           @click.stop
         >
           <div
@@ -1025,7 +1025,7 @@ const executeBulkDelete = async () => {
               <PhX class="w-6 h-6" />
             </button>
           </div>
-          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
+          <div class="p-6">
             <form id="alumniForm" @submit.prevent="isEditing ? saveEntry() : addEntry()">
               <!-- Group 1: Identitas Siswa -->
               <div class="mb-6">
