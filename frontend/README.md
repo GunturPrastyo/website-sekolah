@@ -21,12 +21,11 @@ Bagian frontend dari aplikasi website sekolah. Dibangun menggunakan Vue.js 3 dan
     ```
 
 3.  **Konfigurasi Environment:**
-    Buat file baru bernama `.env` di dalam direktori `frontend`. Salin konten dari `.env.example` (jika ada) atau buat dari awal dengan isi berikut:
-    ```env
-    # URL lengkap ke backend Laravel Anda
-    VITE_API_BASE_URL=http://localhost:8000
+    Salin file `.env.example` menjadi file baru bernama `.env`. Perintah ini akan membuat file konfigurasi lokal Anda.
+    ```bash
+    cp .env.example .env
     ```
-    Pastikan `VITE_API_BASE_URL` menunjuk ke URL server backend Laravel Anda yang sedang berjalan.
+    Pastikan variabel di dalam file `.env` yang baru sudah benar. Secara default, `VITE_API_BASE_URL` akan diatur ke `http://localhost:8000`, yang sesuai untuk development lokal dengan backend Laravel.
 
 4.  **Menjalankan Server Development:**
     Untuk menjalankan aplikasi di mode development dengan *hot-reloading*.
