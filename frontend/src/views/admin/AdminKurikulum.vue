@@ -1047,9 +1047,7 @@ const getMajorName = (id) => {
       class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm"
     >
       <!-- Kolom Pencarian, Filter & Tombol Tambah -->
-      <div
-        class="mb-8 space-y-4"
-      >
+      <div class="mb-8 space-y-4">
         <div class="flex justify-end">
           <button
             v-if="!isFormVisible"

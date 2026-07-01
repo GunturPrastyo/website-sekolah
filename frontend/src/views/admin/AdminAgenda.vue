@@ -281,19 +281,6 @@ const nextMonth = () => {
   );
 };
 
-const getColSpanClass = (span) => {
-  const map = {
-    1: "col-span-1",
-    2: "col-span-2",
-    3: "col-span-3",
-    4: "col-span-4",
-    5: "col-span-5",
-    6: "col-span-6",
-    7: "col-span-7",
-  };
-  return map[span] || "col-span-1";
-};
-
 const calendarBlocks = computed(() => {
   const year = currentDate.value.getFullYear();
   const month = currentDate.value.getMonth();
@@ -308,84 +295,33 @@ const calendarBlocks = computed(() => {
 
   const blocks = [];
   for (let i = 0; i < firstDay; i++) {
-    blocks.push({ type: "empty", span: 1 });
+    blocks.push({ type: "empty" });
   }
 
-  let currentDay = 1;
-  let currentWeekday = firstDay;
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(
+      2,
+      "0"
+    )}`;
 
-  while (currentDay <= daysInMonth) {
-    const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(
-      currentDay
-    ).padStart(2, "0")}`;
-
-    // Cek apakah ada agenda yang jatuh pada tanggal ini
-    const dayAgendas = agendaList.value.filter((a) => {
-      if (a.endDate) {
-        return dateStr >= a.startDate && dateStr <= a.endDate;
-      }
-      return dateStr === a.startDate;
-    });
-
-    if (dayAgendas.length > 0) {
-      // Pilih event pertama untuk ditampilkan sebagai span (mirip Gantt chart HomeView)
-      const event = dayAgendas[0];
-
-      let span = 1;
-      let d = currentDay + 1;
-      let w = currentWeekday + 1;
-
-      while (w < 7 && d <= daysInMonth) {
-        const nextDateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(
-          d
-        ).padStart(2, "0")}`;
-        const isSameEvent =
-          (event.endDate &&
-            nextDateStr >= event.startDate &&
-            nextDateStr <= event.endDate) ||
-          (!event.endDate && nextDateStr === event.startDate);
-
-        if (isSameEvent) {
-          span++;
-          d++;
-          w++;
-        } else {
-          break;
+    const dayAgendas = agendaList.value
+      .filter((a) => {
+        if (a.endDate) {
+          return dateStr >= a.startDate && dateStr <= a.endDate;
         }
-      }
+        return dateStr === a.startDate;
+      })
+      .slice(0, 3); // Batasi maksimal 3 agenda per hari agar tidak terlalu ramai
 
-      const dates = [];
-      for (let i = 0; i < span; i++) {
-        dates.push({
-          date: currentDay + i,
-          isSunday: (currentWeekday + i) % 7 === 0,
-          isToday:
-            `${year}-${String(month + 1).padStart(2, "0")}-${String(
-              currentDay + i
-            ).padStart(2, "0")}` === todayStr,
-        });
-      }
+    const currentWeekday = new Date(year, month, day).getDay();
 
-      blocks.push({
-        type: "event",
-        span,
-        event,
-        dates,
-      });
-
-      currentDay += span;
-      currentWeekday = (currentWeekday + span) % 7;
-    } else {
-      blocks.push({
-        type: "day",
-        span: 1,
-        date: currentDay,
-        isSunday: currentWeekday === 0,
-        isToday: dateStr === todayStr,
-      });
-      currentDay++;
-      currentWeekday = (currentWeekday + 1) % 7;
-    }
+    blocks.push({
+      type: "day",
+      date: day,
+      isSunday: currentWeekday === 0,
+      isToday: dateStr === todayStr,
+      agendas: dayAgendas,
+    });
   }
   return blocks;
 });
@@ -669,7 +605,7 @@ const calendarBlocks = computed(() => {
         </div>
       </div>
 
-      <div class="grid grid-cols-7 gap-1 md:gap-2 text-center mb-2">
+      <div class="grid grid-cols-7 text-center mb-2">
         <div class="text-xs font-semibold text-red-400/80 dark:text-red-400/70 py-2">
           Min
         </div>
@@ -693,70 +629,41 @@ const calendarBlocks = computed(() => {
         </div>
       </div>
 
-      <div class="grid grid-cols-7 gap-y-2 gap-x-1 md:gap-x-2 text-sm text-center">
+      <div
+        class="grid grid-cols-7 text-sm border-t border-l border-gray-200 dark:border-slate-700"
+      >
         <template v-for="(block, index) in calendarBlocks" :key="index">
-          <div v-if="block.type === 'empty'" class="py-2"></div>
+          <div
+            v-if="block.type === 'empty'"
+            class="h-32 border-b border-r border-gray-200 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-800/20"
+          ></div>
 
           <div
             v-else-if="block.type === 'day'"
-            class="py-1.5 mx-0.5 rounded-xl cursor-pointer transition-all duration-200 flex items-center justify-center group"
-            :class="
-              block.isSunday
-                ? 'hover:bg-red-50/50 dark:hover:bg-red-900/20'
-                : 'hover:bg-slate-50 dark:hover:bg-slate-700/30'
-            "
+            class="h-32 border-b border-r border-gray-200 dark:border-slate-700 p-1.5 relative flex flex-col"
           >
             <span
-              class="w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300"
-              :class="
+              class="w-7 h-7 flex items-center justify-center rounded-full mb-1 text-xs font-semibold"
+              :class="[
                 block.isToday
-                  ? 'bg-blue-500 text-white shadow-sm font-semibold scale-110'
+                  ? 'bg-blue-500 text-white shadow'
                   : block.isSunday
-                  ? 'text-red-400 dark:text-red-400/80 font-medium group-hover:text-red-500'
-                  : 'text-slate-600 dark:text-slate-400 font-medium group-hover:text-blue-600 dark:group-hover:text-blue-400'
-              "
+                  ? 'text-red-500'
+                  : 'text-slate-700 dark:text-slate-300',
+              ]"
             >
               {{ block.date }}
             </span>
-          </div>
-
-          <div
-            v-else-if="block.type === 'event'"
-            class="mx-0.5 relative rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-md flex flex-col justify-between group"
-            :class="[
-              getColSpanClass(block.span),
-              getColorConfig(block.event.color).calBg,
-            ]"
-            :title="block.event.title"
-            @click="startEdit(block.event)"
-          >
-            <div
-              class="text-[10px] font-semibold px-2.5 py-1 text-left truncate transition-colors"
-              :class="getColorConfig(block.event.color).calHeader"
-            >
-              {{ block.event.title }}
-            </div>
-            <div
-              class="grid w-full py-1.5"
-              :style="`grid-template-columns: repeat(${block.span}, minmax(0, 1fr))`"
-            >
+            <div class="flex-1 overflow-y-auto space-y-1 text-left custom-scrollbar pr-1">
               <div
-                v-for="d in block.dates"
-                :key="d.date"
-                class="flex items-center justify-center"
+                v-for="agenda in block.agendas"
+                :key="agenda.id"
+                @click="startEdit(agenda)"
+                class="text-[10px] font-bold px-1.5 py-0.5 rounded-md cursor-pointer truncate"
+                :class="getColorConfig(agenda.color).bg"
+                :title="agenda.title"
               >
-                <span
-                  class="w-7 h-7 flex items-center justify-center rounded-full font-medium transition-transform group-hover:scale-105"
-                  :class="[
-                    d.isToday
-                      ? 'bg-blue-500 text-white shadow-sm font-semibold'
-                      : d.isSunday
-                      ? 'text-red-400 dark:text-red-400/80'
-                      : getColorConfig(block.event.color).calText,
-                  ]"
-                >
-                  {{ d.date }}
-                </span>
+                {{ agenda.title }}
               </div>
             </div>
           </div>
