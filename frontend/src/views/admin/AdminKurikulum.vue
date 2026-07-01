@@ -1048,9 +1048,19 @@ const getMajorName = (id) => {
     >
       <!-- Kolom Pencarian, Filter & Tombol Tambah -->
       <div
-        class="mb-8 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4"
+        class="mb-8 space-y-4"
       >
-        <div class="flex flex-col md:flex-row gap-3 w-full xl:w-auto">
+        <div class="flex justify-end">
+          <button
+            v-if="!isFormVisible"
+            @click="showAddForm"
+            class="inline-flex w-full sm:w-auto items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors shrink-0"
+          >
+            <PhPlusCircle class="w-5 h-5 mr-2" />
+            Tambah Mata Pelajaran
+          </button>
+        </div>
+        <div class="flex flex-col md:flex-row gap-3 w-full">
           <div class="relative w-full md:w-64 shrink-0">
             <div
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
@@ -1082,16 +1092,6 @@ const getMajorName = (id) => {
               {{ major.name }}
             </option>
           </select>
-        </div>
-        <div class="flex flex-col sm:flex-row gap-3 w-full xl:w-auto shrink-0">
-          <button
-            v-if="!isFormVisible"
-            @click="showAddForm"
-            class="inline-flex w-full sm:w-auto items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors shrink-0"
-          >
-            <PhPlusCircle class="w-5 h-5 mr-2" />
-            Tambah Mata Pelajaran
-          </button>
         </div>
       </div>
 
