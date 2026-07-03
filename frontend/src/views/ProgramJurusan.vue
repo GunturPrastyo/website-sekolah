@@ -124,7 +124,7 @@ onMounted(() => {
         <section
           v-for="i in 3"
           :key="i"
-          class="relative py-16 md:py-24 px-6 overflow-hidden z-10"
+          class="relative py-16 md:py-24 px-0 lg:px-8 overflow-hidden z-10"
         >
           <div class="container relative z-10 mx-auto max-w-6xl">
             <div
