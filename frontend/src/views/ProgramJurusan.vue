@@ -189,7 +189,7 @@ onMounted(() => {
         <section
           v-for="(program, index) in programs"
           :key="program.id"
-          class="relative py-16 md:py-24 px-0 lg:px-8 transition-colors duration-700 ease-in-out overflow-hidden z-10 bg-fixed bg-cover bg-center"
+          class="relative py-16 md:py-24 transition-colors duration-700 ease-in-out overflow-hidden z-10 bg-fixed bg-cover bg-center"
           :style="
             program.background_img
               ? { backgroundImage: `url(${program.background_img})` }
