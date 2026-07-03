@@ -27,9 +27,9 @@ defineProps({
       class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-slate-900 dark:from-slate-950 to-transparent pointer-events-none z-0"
     ></div>
 
-    <div class="container relative z-10 mx-auto px-6 text-center">
+    <div class="container relative z-10 mx-auto px-8 lg:px-16 text-left">
       <span
-        class="inline-block px-4 md:px-5 py-1 md:py-1.5 mb-4 md:mb-5 text-base md:text-xl font-bold text-blue-900 bg-white rounded-full shadow-sm backdrop-blur tracking-wide capitalize"
+        class="block mb-1 md:mb-2 text-base md:text-xl font-bold text-blue-300 tracking-wide capitalize"
         style="font-family: 'Kalam', cursive"
       >
         {{ badge }}
@@ -40,9 +40,7 @@ defineProps({
       >
         {{ title }}
       </h1>
-      <p
-        class="text-blue-100 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
-      >
+      <p class="text-blue-100 text-sm sm:text-base md:text-lg max-w-3xl leading-relaxed">
         {{ description }}
       </p>
     </div>
