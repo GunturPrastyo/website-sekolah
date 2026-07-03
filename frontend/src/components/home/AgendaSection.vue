@@ -78,11 +78,29 @@ const calendarData = computed(() => {
 const prevMonth = () => {
   const d = currentDisplayedDate.value;
   currentDisplayedDate.value = new Date(d.getFullYear(), d.getMonth() - 1, 1);
+  highlightedAgendaId.value = null;
 };
 const nextMonth = () => {
   const d = currentDisplayedDate.value;
   currentDisplayedDate.value = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+  highlightedAgendaId.value = null;
 };
+
+const filteredAgendas = computed(() => {
+  if (!props.agendas || props.agendas.length === 0) {
+    return [];
+  }
+  const targetYear = currentDisplayedDate.value.getFullYear();
+  const targetMonth = currentDisplayedDate.value.getMonth();
+
+  return props.agendas.filter((agenda) => {
+    if (!agenda.startDate) return false;
+    const agendaDate = new Date(agenda.startDate);
+    return (
+      agendaDate.getFullYear() === targetYear && agendaDate.getMonth() === targetMonth
+    );
+  });
+});
 
 const calendarGrid = computed(() => {
   const year = currentDisplayedDate.value.getFullYear();
@@ -334,9 +352,9 @@ const getAgendaDocumentLink = (attachmentUrl) => {
                   </div>
                 </template>
 
-                <template v-else-if="agendas.length > 0">
+                <template v-else-if="filteredAgendas.length > 0">
                   <div
-                    v-for="(agenda, index) in agendas"
+                    v-for="(agenda, index) in filteredAgendas"
                     :key="index"
                     :ref="
                       (el) => {
@@ -430,7 +448,7 @@ const getAgendaDocumentLink = (attachmentUrl) => {
                       class="w-10 h-10 text-slate-300 dark:text-slate-600 mb-2"
                     />
                     <p class="text-slate-500 text-sm font-medium">
-                      Tidak ada agenda saat ini.
+                      Tidak ada agenda untuk bulan ini.
                     </p>
                   </div>
                 </template>
