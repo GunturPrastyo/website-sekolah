@@ -18,36 +18,14 @@ import {
   PhMapTrifold,
   PhHourglass,
   PhGlobe,
-  PhUsersThree,
-  PhHeart,
-  PhGlobeHemisphereWest,
-  PhUserCheck,
-  PhLightbulb,
-  PhPalette,
   PhMagnifyingGlass,
   PhWarningCircle,
   PhFileX,
   PhCaretRight,
-  PhCaretLeft,
   PhInfo,
   PhCaretDown,
   PhBookmark,
   PhCheckCircle,
-  PhSpinner,
-  PhStar,
-  PhHandshake,
-  PhHandsClapping,
-  PhPlant,
-  PhRecycle,
-  PhScales,
-  PhShieldCheck,
-  PhBrain,
-  PhTree,
-  PhHandHeart,
-  PhPerson,
-  PhUsersFour,
-  PhHandsPraying,
-  PhSparkle,
 } from "@phosphor-icons/vue";
 import { educationIcons } from "@/components/IconPicker.vue";
 
@@ -82,12 +60,6 @@ const iconMap = {
   PhMapTrifold,
   PhHourglass,
   PhGlobe,
-  PhUsersThree,
-  PhHeart,
-  PhGlobeHemisphereWest,
-  PhUserCheck,
-  PhLightbulb,
-  PhPalette,
   PhMagnifyingGlass,
   PhWarningCircle,
   PhFileX,
@@ -96,20 +68,6 @@ const iconMap = {
   PhCaretDown,
   PhBookmark,
   PhCheckCircle,
-  PhStar,
-  PhHandshake,
-  PhHandsClapping,
-  PhPlant,
-  PhRecycle,
-  PhScales,
-  PhShieldCheck,
-  PhBrain,
-  PhTree,
-  PhHandHeart,
-  PhPerson,
-  PhUsersFour,
-  PhHandsPraying,
-  PhSparkle,
 };
 
 const getDarkColorClass = (colorClass) => {
@@ -146,12 +104,6 @@ const grades = ref([]);
 const curriculumData = ref({});
 const isFetching = ref(true);
 
-const pancasilaProfile = ref({
-  title: "Profil Pelajar Pancasila",
-  description: "Memuat deskripsi...",
-  dimensions: [],
-});
-
 // Fungsi pembantu menambal URL gambar header dinamis
 const getImageUrl = (path) => {
   if (!path) return "";
@@ -163,33 +115,14 @@ const getImageUrl = (path) => {
 const fetchCurriculum = async () => {
   isFetching.value = true;
   try {
-    const [currRes, progRes, pancaRes, settingsRes] = await Promise.all([
+    const [currRes, progRes, settingsRes] = await Promise.all([
       api.get("/api/public-curriculum-subjects"),
       api.get("/api/public-programs").catch(() => null),
-      api.get("/api/public-pancasila-profile").catch(() => null),
       api.get("/api/settings").catch(() => null),
     ]);
 
     if (settingsRes && settingsRes.data?.success) {
       appearanceSettings.value = settingsRes.data.data;
-    }
-
-    if (pancaRes && pancaRes.data && pancaRes.data.data) {
-      const pd = pancaRes.data.data;
-      pancasilaProfile.value.title = pd.title || pancasilaProfile.value.title;
-      pancasilaProfile.value.description =
-        pd.description || pancasilaProfile.value.description;
-      if (pd.dimensions && pd.dimensions.length > 0) {
-        let dims = pd.dimensions;
-        if (typeof dims === "string") {
-          try {
-            dims = JSON.parse(dims);
-          } catch (e) {}
-        }
-        if (Array.isArray(dims) && dims.length > 0) {
-          pancasilaProfile.value.dimensions = dims;
-        }
-      }
     }
 
     if (progRes && progRes.data && progRes.data.data) {
@@ -406,138 +339,12 @@ onBeforeUnmount(() => {
     />
 
     <!-- Main Content Section -->
-    <section class="pt-8 md:pt-12 pb-12 px-6 bg-gray-50 dark:bg-slate-900">
-      <div class="container mx-auto max-w-full px-0 lg:px-16">
-        <!-- Profil Pelajar Pancasila -->
-        <div>
-          <div v-if="isFetching" class="w-full">
-            <div class="text-center mb-10">
-              <div class="inline-flex items-center justify-center space-x-2 mb-3">
-                <span
-                  class="h-px w-8 sm:w-12 bg-blue-200 dark:bg-blue-400/50 rounded-full animate-pulse"
-                ></span>
-                <div
-                  class="h-6 w-32 bg-blue-200 dark:bg-blue-900/50 rounded animate-pulse"
-                ></div>
-                <span
-                  class="h-px w-8 sm:w-12 bg-blue-200 dark:bg-blue-400/50 rounded-full animate-pulse"
-                ></span>
-              </div>
-              <div
-                class="h-10 w-3/4 max-w-md mx-auto bg-gray-200 dark:bg-slate-700 rounded-lg animate-pulse mb-4"
-              ></div>
-              <div class="space-y-2 max-w-2xl mx-auto">
-                <div
-                  class="h-4 w-full bg-gray-200 dark:bg-slate-700 rounded animate-pulse"
-                ></div>
-                <div
-                  class="h-4 w-5/6 mx-auto bg-gray-200 dark:bg-slate-700 rounded animate-pulse"
-                ></div>
-              </div>
-            </div>
-            <div
-              class="grid gap-6 mx-auto grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full"
-            >
-              <div
-                v-for="i in 6"
-                :key="i"
-                class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 animate-pulse"
-              >
-                <div
-                  class="w-12 h-12 shrink-0 rounded-full bg-gray-200 dark:bg-slate-700"
-                ></div>
-                <div class="flex-1 space-y-3 py-1">
-                  <div class="h-5 w-3/4 bg-gray-200 dark:bg-slate-700 rounded"></div>
-                  <div class="space-y-2">
-                    <div
-                      class="h-3 w-full bg-gray-100 dark:bg-slate-700/50 rounded"
-                    ></div>
-                    <div class="h-3 w-5/6 bg-gray-100 dark:bg-slate-700/50 rounded"></div>
-                    <div class="h-3 w-4/6 bg-gray-100 dark:bg-slate-700/50 rounded"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div v-else>
-            <div class="text-center mb-10">
-              <h2
-                class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight flex items-center justify-center gap-3"
-              >
-                {{ pancasilaProfile.title }}
-              </h2>
-              <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                {{ pancasilaProfile.description }}
-              </p>
-            </div>
-            <div
-              class="grid gap-6 mx-auto w-full"
-              :class="{
-                'grid-cols-1': pancasilaProfile.dimensions.length === 1,
-                'grid-cols-1 md:grid-cols-2': pancasilaProfile.dimensions.length === 2,
-                'grid-cols-1 md:grid-cols-2 lg:grid-cols-3':
-                  pancasilaProfile.dimensions.length >= 3 ||
-                  pancasilaProfile.dimensions.length === 0,
-              }"
-            >
-              <div
-                v-for="(dim, idx) in pancasilaProfile.dimensions"
-                :key="idx"
-                class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 flex items-start gap-4 transition-transform hover:-translate-y-1"
-              >
-                <div
-                  class="w-12 h-12 shrink-0 rounded-full flex items-center justify-center shadow-md"
-                  :class="getDarkColorClass(dim.color)"
-                  :style="
-                    dim.color && dim.color.startsWith('#')
-                      ? { backgroundColor: dim.color }
-                      : {}
-                  "
-                >
-                  <component :is="iconMap[dim.icon] || iconMap.PhHeart" class="w-6 h-6" />
-                </div>
-                <div>
-                  <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-1">
-                    {{ dim.name }}
-                  </h4>
-                  <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                    {{ dim.desc }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Interactive Syllabus Area (Full Width to Footer) -->
     <section
-      class="relative py-12 px-6 border-t border-blue-800/30 dark:border-slate-800 bg-center bg-cover overflow-hidden"
+      id="syllabus-top"
+      class="pt-12 md:pt-16 pb-16 px-6 bg-gray-50 dark:bg-slate-900"
     >
-      <!-- Background Overlay -->
       <div
-        class="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900/90 dark:from-slate-900/95 dark:to-slate-950/95 backdrop-blur-[2px]"
-      ></div>
-
-      <!-- Header Silabus -->
-      <div
-        class="relative z-10 container mx-auto max-w-full px-0 md:px-8 lg:px-4 text-center mb-12 md:mb-16"
-      >
-        <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4 tracking-tight">
-          Silabus Pembelajaran
-        </h2>
-        <p
-          class="text-blue-100/80 dark:text-gray-400 max-w-2xl mx-auto text-sm sm:text-base"
-        >
-          Eksplorasi daftar mata pelajaran beserta rincian materi yang akan dipelajari
-          sesuai dengan jenjang kelas dan peminatan yang dipilih.
-        </p>
-      </div>
-
-      <div
-        class="container relative z-10 mx-auto max-w-full px-0 lg:px-16 flex flex-col lg:flex-row gap-8 lg:gap-12 items-start"
+        class="container mx-auto max-w-full px-0 lg:px-16 flex flex-col lg:flex-row gap-8 lg:gap-12 items-start"
       >
         <!-- Sidebar Tabs (Tingkat Kelas) -->
         <div class="w-full lg:w-1/3">
@@ -545,13 +352,13 @@ onBeforeUnmount(() => {
           <div class="mb-10">
             <div class="relative">
               <PhMagnifyingGlass
-                class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300 pointer-events-none z-10"
+                class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10"
               />
               <input
                 v-model="searchQuery"
                 type="text"
                 placeholder="Cari mata pelajaran..."
-                class="w-full pl-12 pr-5 py-4 rounded-xl border-2 border-white/10 bg-white/10 backdrop-blur-sm text-white placeholder:text-blue-200/70 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition-all shadow-sm text-base"
+                class="w-full pl-12 pr-5 py-4 rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm text-base"
               />
             </div>
           </div>
@@ -560,29 +367,31 @@ onBeforeUnmount(() => {
           <div v-if="isFetching" class="mb-10">
             <div class="flex items-center gap-4 mb-6">
               <div
-                class="h-8 w-40 bg-white/10 dark:bg-slate-700/50 rounded animate-pulse"
+                class="h-8 w-40 bg-gray-200 dark:bg-slate-700/50 rounded animate-pulse"
               ></div>
-              <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
+              <div class="h-px bg-gray-200 dark:bg-slate-700 flex-1"></div>
             </div>
             <div class="flex flex-col gap-3">
               <div
                 v-for="i in 3"
                 :key="i"
-                class="w-full p-5 rounded-lg border-2 border-white/5 bg-white/5 dark:bg-slate-800/30 animate-pulse flex justify-between items-center"
+                class="w-full p-5 rounded-lg border border-gray-100 bg-white dark:bg-slate-800/30 animate-pulse flex justify-between items-center"
               >
                 <div class="space-y-2 flex-1">
-                  <div class="h-5 w-1/2 bg-white/10 dark:bg-slate-700/50 rounded"></div>
-                  <div class="h-3 w-1/3 bg-white/10 dark:bg-slate-700/50 rounded"></div>
+                  <div class="h-5 w-1/2 bg-gray-200 dark:bg-slate-700/50 rounded"></div>
+                  <div class="h-3 w-1/3 bg-gray-200 dark:bg-slate-700/50 rounded"></div>
                 </div>
-                <div class="w-5 h-5 rounded bg-white/10 dark:bg-slate-700/50"></div>
+                <div class="w-5 h-5 rounded bg-gray-200 dark:bg-slate-700/50"></div>
               </div>
             </div>
           </div>
           <!-- Jenjang Kelas Data -->
           <div v-else class="mb-10">
             <div class="flex items-center gap-4 mb-6">
-              <h2 class="text-xl md:text-2xl font-bold text-white">Jenjang Kelas</h2>
-              <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
+              <h2 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
+                Jenjang Kelas
+              </h2>
+              <div class="h-px bg-gray-200 dark:bg-slate-700 flex-1"></div>
             </div>
             <div class="flex flex-col gap-3">
               <button
@@ -592,8 +401,8 @@ onBeforeUnmount(() => {
                 class="w-full text-left p-5 rounded-lg transition-all duration-300 border-2"
                 :class="
                   activeGrade === grade.id
-                    ? 'bg-white border-white text-blue-600 shadow-xl shadow-black/10 dark:bg-slate-800 dark:border-slate-700 dark:text-white'
-                    : 'bg-white/10 backdrop-blur-sm border-white/10 hover:bg-white/20 hover:border-white/30 text-blue-50 dark:bg-slate-800/50 dark:hover:bg-slate-800 dark:border-slate-700/50 dark:text-gray-300 shadow-sm'
+                    ? 'bg-blue-600 border-transparent text-white shadow-lg shadow-blue-500/20'
+                    : 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:border-gray-300 dark:hover:border-slate-600 shadow-sm'
                 "
               >
                 <div class="flex justify-between items-center">
@@ -614,21 +423,21 @@ onBeforeUnmount(() => {
           <div v-if="isFetching" class="mb-6">
             <div class="flex items-center gap-4 mb-6">
               <div
-                class="h-8 w-48 bg-white/10 dark:bg-slate-700/50 rounded animate-pulse"
+                class="h-8 w-48 bg-gray-200 dark:bg-slate-700/50 rounded animate-pulse"
               ></div>
-              <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
+              <div class="h-px bg-gray-200 dark:bg-slate-700 flex-1"></div>
             </div>
             <div class="flex flex-col gap-3">
               <div
                 v-for="i in 3"
                 :key="i"
-                class="w-full p-5 rounded-lg border-2 border-white/5 bg-white/5 dark:bg-slate-800/30 animate-pulse flex justify-between items-center"
+                class="w-full p-5 rounded-lg border border-gray-100 bg-white dark:bg-slate-800/30 animate-pulse flex justify-between items-center"
               >
                 <div class="space-y-2 flex-1">
-                  <div class="h-5 w-1/2 bg-white/10 dark:bg-slate-700/50 rounded"></div>
-                  <div class="h-3 w-1/3 bg-white/10 dark:bg-slate-700/50 rounded"></div>
+                  <div class="h-5 w-1/2 bg-gray-200 dark:bg-slate-700/50 rounded"></div>
+                  <div class="h-3 w-1/3 bg-gray-200 dark:bg-slate-700/50 rounded"></div>
                 </div>
-                <div class="w-5 h-5 rounded bg-white/10 dark:bg-slate-700/50"></div>
+                <div class="w-5 h-5 rounded bg-gray-200 dark:bg-slate-700/50"></div>
               </div>
             </div>
           </div>
@@ -636,18 +445,18 @@ onBeforeUnmount(() => {
           <div v-else class="mb-6">
             <div class="flex items-center gap-4 mb-3">
               <h2
-                class="text-xl md:text-2xl font-bold text-white flex items-center gap-2"
+                class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2"
               >
                 Peminatan / Jurusan
                 <button
                   @click="showMajorInfo = !showMajorInfo"
-                  class="text-blue-300 hover:text-white transition-colors focus:outline-none"
+                  class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors focus:outline-none"
                   title="Informasi Peminatan"
                 >
                   <PhInfo class="w-5 h-5 md:w-6 md:h-6" />
                 </button>
               </h2>
-              <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
+              <div class="h-px bg-gray-200 dark:bg-slate-700 flex-1"></div>
             </div>
 
             <Transition
@@ -660,7 +469,7 @@ onBeforeUnmount(() => {
             >
               <div
                 v-if="showMajorInfo"
-                class="mb-4 p-3 bg-blue-800/40 border border-blue-400/30 rounded-lg text-xs sm:text-sm text-blue-100 leading-relaxed shadow-sm"
+                class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800/50 rounded-lg text-xs sm:text-sm text-blue-700 dark:text-blue-300 leading-relaxed shadow-sm"
               >
                 Mata pelajaran kategori <strong>Umum (Fase E)</strong> secara otomatis
                 akan tersedia dan ditampilkan di semua pilihan peminatan.
@@ -675,8 +484,8 @@ onBeforeUnmount(() => {
                 class="w-full text-left p-5 rounded-lg transition-all duration-300 border-2"
                 :class="
                   activeMajor === major.id
-                    ? 'bg-white border-white text-blue-600 shadow-xl shadow-black/10 dark:bg-slate-800 dark:border-slate-700 dark:text-white'
-                    : 'bg-white/10 backdrop-blur-sm border-white/10 hover:bg-white/20 hover:border-white/30 text-blue-50 dark:bg-slate-800/50 dark:hover:bg-slate-800 dark:border-slate-700/50 dark:text-gray-300 shadow-sm'
+                    ? 'bg-blue-600 border-transparent text-white shadow-lg shadow-blue-500/20'
+                    : 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:border-gray-300 dark:hover:border-slate-600 shadow-sm'
                 "
               >
                 <div class="flex justify-between items-center">
@@ -695,12 +504,12 @@ onBeforeUnmount(() => {
 
           <!-- Info Box Mini -->
           <div
-            class="mt-10 bg-white/10 backdrop-blur-md p-5 rounded-lg border border-white/20 dark:bg-slate-800 dark:border-slate-700 shadow-sm"
+            class="mt-10 bg-white p-5 rounded-lg border border-gray-100 dark:bg-slate-800 dark:border-slate-700 shadow-sm"
           >
-            <h4 class="font-bold text-white mb-2 flex items-center">
+            <h4 class="font-bold text-gray-900 dark:text-white mb-2 flex items-center">
               <PhInfo class="w-4 h-4 mr-2" /> Info Silabus
             </h4>
-            <p class="text-sm text-blue-100 dark:text-gray-400 leading-relaxed">
+            <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
               Klik pada setiap mata pelajaran di samping untuk melihat rincian topik
               pembelajaran (Capaian Pembelajaran) yang akan dibahas selama dua semester.
             </p>
@@ -708,7 +517,7 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- Main Content (Syllabus Accordion) -->
-        <div class="w-full lg:w-2/3" id="syllabus-top">
+        <div class="w-full lg:w-2/3">
           <Transition
             mode="out-in"
             enter-active-class="transition-all duration-400 ease-out"
@@ -723,9 +532,9 @@ onBeforeUnmount(() => {
                 <!-- Category Header Skeleton -->
                 <div class="flex items-center gap-4 mb-6">
                   <div
-                    class="h-8 w-48 bg-white/10 dark:bg-slate-700/50 rounded animate-pulse"
+                    class="h-8 w-48 bg-gray-200 dark:bg-slate-700/50 rounded animate-pulse"
                   ></div>
-                  <div class="h-px bg-white/10 dark:bg-slate-700/50 flex-1"></div>
+                  <div class="h-px bg-gray-200 dark:bg-slate-700/50 flex-1"></div>
                 </div>
 
                 <!-- Subject Accordions Skeleton -->
@@ -733,23 +542,23 @@ onBeforeUnmount(() => {
                   <div
                     v-for="j in 3"
                     :key="j"
-                    class="bg-white/5 dark:bg-slate-800/50 rounded-lg p-5 md:p-6 flex items-center justify-between gap-4 animate-pulse border border-white/5 dark:border-slate-700/50"
+                    class="bg-white dark:bg-slate-800/50 rounded-lg p-5 md:p-6 flex items-center justify-between gap-4 animate-pulse border border-gray-100 dark:border-slate-700/50"
                   >
                     <div class="flex items-center gap-4 w-full text-left">
                       <div
-                        class="w-12 h-12 shrink-0 rounded-lg bg-white/10 dark:bg-slate-700/50"
+                        class="w-12 h-12 shrink-0 rounded-lg bg-gray-200 dark:bg-slate-700/50"
                       ></div>
                       <div class="space-y-3 flex-1 py-1">
                         <div
-                          class="h-5 w-1/3 bg-white/10 dark:bg-slate-700/50 rounded"
+                          class="h-5 w-1/3 bg-gray-200 dark:bg-slate-700/50 rounded"
                         ></div>
                         <div
-                          class="h-4 w-2/3 bg-white/10 dark:bg-slate-700/50 rounded"
+                          class="h-4 w-2/3 bg-gray-200 dark:bg-slate-700/50 rounded"
                         ></div>
                       </div>
                     </div>
                     <div
-                      class="shrink-0 w-8 h-8 rounded-full bg-white/10 dark:bg-slate-700/50"
+                      class="shrink-0 w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700/50"
                     ></div>
                   </div>
                 </div>
@@ -764,10 +573,10 @@ onBeforeUnmount(() => {
               >
                 <!-- Category Header -->
                 <div class="flex items-center gap-4 mb-6">
-                  <h2 class="text-xl md:text-2xl font-bold text-white">
+                  <h2 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
                     {{ category.category }}
                   </h2>
-                  <div class="h-px bg-white/20 dark:bg-slate-700 flex-1"></div>
+                  <div class="h-px bg-gray-200 dark:bg-slate-700 flex-1"></div>
                 </div>
 
                 <!-- Subject Accordions -->
@@ -778,8 +587,8 @@ onBeforeUnmount(() => {
                     class="bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-transparent dark:border-slate-700 overflow-hidden transition-all"
                     :class="
                       expandedSubject === subject.id
-                        ? 'ring-4 ring-white/30 dark:ring-blue-500/40 shadow-xl'
-                        : 'hover:border-white/50 hover:shadow-xl'
+                        ? 'ring-2 ring-blue-500/50 shadow-xl'
+                        : 'hover:border-gray-300 dark:hover:border-slate-600 hover:shadow-xl'
                     "
                   >
                     <!-- Accordion Header (Clickable) -->
@@ -863,22 +672,22 @@ onBeforeUnmount(() => {
               <!-- Empty State jika tidak ada data -->
               <div
                 v-if="currentSyllabus.length === 0"
-                class="py-16 text-center bg-white/10 dark:bg-slate-800/80 backdrop-blur-sm rounded-lg border border-dashed border-white/30 dark:border-slate-700"
+                class="py-16 text-center bg-white dark:bg-slate-800 rounded-lg border border-dashed border-gray-200 dark:border-slate-700"
               >
                 <div
-                  class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 dark:bg-slate-700 mb-4 text-white"
+                  class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-slate-700 mb-4 text-gray-400 dark:text-gray-500"
                 >
                   <component
                     :is="searchQuery ? PhWarningCircle : PhFileX"
                     class="w-8 h-8"
                   />
                 </div>
-                <h3 class="text-lg font-bold text-white">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">
                   {{
                     searchQuery ? "Pelajaran Tidak Ditemukan" : "Silabus Belum Tersedia"
                   }}
                 </h3>
-                <p class="text-blue-100 dark:text-gray-400 mt-1">
+                <p class="text-gray-500 dark:text-gray-400 mt-1">
                   {{
                     searchQuery
                       ? `Tidak ada mata pelajaran yang cocok dengan kata kunci "${searchQuery}".`
@@ -890,13 +699,13 @@ onBeforeUnmount(() => {
               <!-- Pagination Controls -->
               <div
                 v-if="totalPages > 1 && flattenedSyllabus.length > 0"
-                class="flex justify-between items-center mt-10 w-full border-t border-white/10 pt-6"
+                class="flex justify-between items-center mt-10 w-full border-t border-gray-200 dark:border-slate-700 pt-6"
               >
                 <!-- Tombol Sebelumnya -->
                 <button
                   @click="currentPage > 1 ? currentPage-- : null"
                   :disabled="currentPage === 1"
-                  class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 text-white hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium text-sm md:text-base border border-white/5 hover:border-white/20"
+                  class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium text-sm md:text-base border border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:hover:border-slate-600"
                 >
                   <PhCaretLeft class="w-5 h-5" />
                   <span class="hidden sm:inline">Sebelumnya</span>
@@ -911,8 +720,8 @@ onBeforeUnmount(() => {
                     class="w-10 h-10 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center border border-transparent"
                     :class="
                       currentPage === page
-                        ? 'bg-blue-600 text-white shadow-lg border-blue-400 scale-110'
-                        : 'bg-white/10 text-white hover:bg-white/20 hover:border-white/30'
+                        ? 'bg-blue-600 text-white shadow-lg border-blue-500 scale-110'
+                        : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700'
                     "
                   >
                     {{ page }}
@@ -922,7 +731,7 @@ onBeforeUnmount(() => {
                 <button
                   @click="currentPage < totalPages ? currentPage++ : null"
                   :disabled="currentPage === totalPages"
-                  class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 text-white hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium text-sm md:text-base border border-white/5 hover:border-white/20"
+                  class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium text-sm md:text-base border border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:hover:border-slate-600"
                 >
                   <span class="hidden sm:inline">Selanjutnya</span>
                   <PhCaretRight class="w-5 h-5" />

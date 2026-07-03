@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, nextTick, onBeforeUpdate } from "vue";
+import { ref, computed, onMounted } from "vue";
 import {
   PhPlusCircle,
   PhPencilSimple,
@@ -9,31 +9,8 @@ import {
   PhMagnifyingGlass,
   PhBookOpen,
   PhX,
-  PhHeart,
-  PhGlobeHemisphereWest,
-  PhGlobe,
-  PhUsers,
-  PhUserCheck,
-  PhLightbulb,
-  PhPalette,
-  PhBook,
-  PhLightning,
   PhCaretDown,
   PhCheck,
-  PhStar,
-  PhHandshake,
-  PhHandsClapping,
-  PhPlant,
-  PhRecycle,
-  PhScales,
-  PhShieldCheck,
-  PhBrain,
-  PhTree,
-  PhHandHeart,
-  PhPerson,
-  PhUsersFour,
-  PhHandsPraying,
-  PhSparkle,
   PhInfo,
 } from "@phosphor-icons/vue";
 import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
@@ -148,77 +125,6 @@ const handleDeleteCategory = (index) => {
   isCategoryDropdownOpen.value = false;
 };
 
-// Konfigurasi Ikon Cadangan (jika tidak ada di IconPicker)
-const fallbackIcons = {
-  PhHeart,
-  PhGlobeHemisphereWest,
-  PhGlobe,
-  PhUsers,
-  PhUserCheck,
-  PhLightbulb,
-  PhPalette,
-  PhBookOpen,
-  PhBook,
-  PhLightning,
-  PhStar,
-  PhHandshake,
-  PhHandsClapping,
-  PhPlant,
-  PhRecycle,
-  PhScales,
-  PhShieldCheck,
-  PhBrain,
-  PhTree,
-  PhHandHeart,
-  PhPerson,
-  PhUsersFour,
-  PhHandsPraying,
-  PhSparkle,
-};
-
-const getIconComponent = (iconName) => {
-  if (educationIcons && educationIcons[iconName]) return educationIcons[iconName];
-  return fallbackIcons[iconName] || PhBookOpen;
-};
-
-const getDarkColorClass = (colorClass) => {
-  if (colorClass && colorClass.startsWith("#")) return "text-white";
-  const colorMap = {
-    "text-slate-500": "bg-slate-600 dark:bg-slate-500 text-white",
-    "text-blue-500": "bg-blue-600 dark:bg-blue-500 text-white",
-    "text-red-500": "bg-red-600 dark:bg-red-500 text-white",
-    "text-green-500": "bg-green-600 dark:bg-green-500 text-white",
-    "text-yellow-500": "bg-yellow-500 dark:bg-yellow-600 text-white",
-    "text-purple-500": "bg-purple-600 dark:bg-purple-500 text-white",
-    "text-orange-500": "bg-orange-500 dark:bg-orange-600 text-white",
-    "text-pink-500": "bg-pink-600 dark:bg-pink-500 text-white",
-    "text-teal-500": "bg-teal-600 dark:bg-teal-500 text-white",
-    "text-gray-500": "bg-gray-600 dark:bg-gray-500 text-white",
-    "text-emerald-500": "bg-emerald-600 dark:bg-emerald-500 text-white",
-    "text-cyan-500": "bg-cyan-600 dark:bg-cyan-500 text-white",
-    "text-indigo-500": "bg-indigo-600 dark:bg-indigo-500 text-white",
-    "text-rose-500": "bg-rose-600 dark:bg-rose-500 text-white",
-  };
-  return colorMap[colorClass] || "bg-blue-600 dark:bg-blue-500 text-white";
-};
-
-// State Profil Pelajar Pancasila
-const pppData = ref({
-  title: "Profil Pelajar Pancasila",
-  description:
-    "Kurikulum kami berfokus pada pembentukan karakter siswa yang berlandaskan 6 dimensi Profil Pelajar Pancasila.",
-  dimensions: [],
-});
-
-const isPPPModalVisible = ref(false);
-const tempPPPData = ref({});
-
-const dimensionRefs = ref([]);
-
-onBeforeUpdate(() => {
-  dimensionRefs.value = [];
-});
-
 const subjectList = ref([]);
 
 const form = ref({
@@ -245,47 +151,13 @@ const filterGrade = ref("semua");
 const filterMajor = ref("semua");
 const showMajorInfo = ref(false);
 
-const openPPPModal = () => {
-  tempPPPData.value = JSON.parse(JSON.stringify(pppData.value));
-  isPPPModalVisible.value = true;
-  document.body.style.overflow = "hidden";
-};
-
-const closePPPModal = () => {
-  isPPPModalVisible.value = false;
-  document.body.style.overflow = "";
-};
-
-const removeDimension = (index) => {
-  tempPPPData.value.dimensions.splice(index, 1);
-};
-
-const addDimension = async () => {
-  tempPPPData.value.dimensions.push({
-    id: Date.now(),
-    name: "",
-    desc: "",
-    icon: "PhHeart",
-    color: "text-blue-500",
-  });
-
-  await nextTick();
-
-  const lastDimensionEl = dimensionRefs.value[dimensionRefs.value.length - 1];
-  if (lastDimensionEl) {
-    lastDimensionEl.scrollIntoView({ behavior: "smooth", block: "center" });
-  }
-};
-
 const fetchData = async () => {
   try {
-    const [subjectsRes, pppRes, programsRes] = await Promise.all([
+    const [subjectsRes, programsRes] = await Promise.all([
       api.get("/api/curriculum-subjects"),
-      api.get("/api/pancasila-profile"),
       api.get("/api/programs"),
     ]);
     subjectList.value = subjectsRes.data.data;
-    pppData.value = pppRes.data.data;
 
     const programsData = programsRes.data.data.map((p) => ({
       id: p.id,
@@ -305,22 +177,6 @@ const fetchData = async () => {
 onMounted(() => {
   fetchData();
 });
-
-const savePPPData = async () => {
-  if (!tempPPPData.value.title.trim() || !tempPPPData.value.description.trim()) {
-    triggerToast("Gagal Menyimpan", "Judul dan deskripsi utama wajib diisi!", "error");
-    return;
-  }
-  try {
-    await api.post("/api/pancasila-profile", tempPPPData.value);
-    await fetchData();
-    closePPPModal();
-    triggerToast("Profil Disimpan", "Data Profil Pelajar Pancasila berhasil diperbarui.");
-  } catch (error) {
-    console.error("Gagal menyimpan Profil Pelajar Pancasila:", error);
-    triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat menyimpan data.", "error");
-  }
-};
 
 const triggerToast = (title, message, type = "success") => {
   toastData.value = { title, message, type };

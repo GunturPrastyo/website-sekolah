@@ -86,9 +86,6 @@ Route::get('/public-programs', [ProgramController::class, 'index']);
 // API Kurikulum (Akses Publik)
 Route::get('/public-curriculum-subjects', [CurriculumSubjectController::class, 'index']);
 
-// API Profil Pelajar Pancasila (Akses Publik)
-Route::get('/public-pancasila-profile', [PancasilaProfileController::class, 'show']);
-
 // API Ekstrakurikuler (Akses Publik)
 Route::get('/public-extracurriculars', [ExtracurricularController::class, 'index']);
 
@@ -208,10 +205,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         // API Kurikulum (Mata Pelajaran)
         Route::apiResource('curriculum-subjects', CurriculumSubjectController::class);
-
-        // API Profil Pelajar Pancasila
-        Route::get('/pancasila-profile', [PancasilaProfileController::class, 'show']);
-        Route::post('/pancasila-profile', [PancasilaProfileController::class, 'update']);
 
         // API Jadwal Pelajaran
         Route::apiResource('lesson-schedules', LessonScheduleController::class);
