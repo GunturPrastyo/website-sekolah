@@ -77,10 +77,7 @@ const getNewsSlug = (newsId) => {
   return news?.slug || newsId;
 };
 
-const getImageUrl = (
-  path,
-  defaultUrl = "https://images.unsplash.com/photo-1517840901100-8179e98d84ae?q=80&w=800"
-) => {
+const getImageUrl = (path, defaultUrl = "") => {
   if (!path) return defaultUrl;
   if (path.startsWith("http") || path.startsWith("data:")) return path;
   const backendUrl = api.defaults.baseURL;
@@ -88,8 +85,7 @@ const getImageUrl = (
 };
 
 const handleImageError = (e) => {
-  e.target.src =
-    "https://images.unsplash.com/photo-1517840901100-8179e98d84ae?q=80&w=800";
+  e.target.src = "";
 };
 
 const fetchInitialData = async () => {
@@ -285,7 +281,7 @@ onMounted(() => {
     </PageHeader>
 
     <section class="pb-24 px-6 relative z-10">
-      <div class="container mx-auto max-w-7xl px-0 lg:px-4">
+      <div class="container mx-auto max-w-full px-0 lg:px-8">
         <div
           class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12 -mt-16 md:-mt-20 relative z-20"
         >
