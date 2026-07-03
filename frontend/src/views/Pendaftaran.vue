@@ -159,18 +159,6 @@ onMounted(() => {
         class="py-12 md:py-10 px-6 bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700"
       >
         <div class="container mx-auto max-w-full px-0 lg:px-16">
-          <div class="text-center mb-10">
-            <h2
-              class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white"
-              style="font-family: 'Oswald', sans-serif"
-            >
-              Informasi & Persyaratan
-            </h2>
-            <p class="text-gray-600 dark:text-gray-400 mt-2">
-              Pastikan Anda membaca ketentuan berikut sebelum mengisi formulir.
-            </p>
-          </div>
-
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             <div
               class="bg-blue-50/20 dark:bg-slate-700/30 p-6 md:p-8 rounded-xl border border-gray-300 dark:border-slate-700 shadow-lg"
