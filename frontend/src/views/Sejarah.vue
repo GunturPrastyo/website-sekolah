@@ -318,24 +318,20 @@ onBeforeUnmount(() => {
       >
         <!-- Bridging Title -->
         <div
-          class="mb-10 md:mb-18 text-center fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out pt-6 md:pt-12"
+          class="mb-10 md:mb-18 md:px-8 text-left fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out pt-6 md:pt-12"
         >
-          <div class="inline-flex items-center justify-center space-x-2 mb-4">
-            <span class="h-px w-8 sm:w-12 bg-blue-400 rounded-full"></span>
-            <span
-              class="text-blue-400 font-bold text-lg sm:text-xl tracking-wider"
-              style="font-family: 'Kalam', cursive"
-              >Lini Masa</span
-            >
-            <span class="h-px w-8 sm:w-12 bg-blue-400 rounded-full"></span>
-          </div>
+          <span
+            class="text-blue-400 font-bold text-lg sm:text-xl tracking-wider mb-4 block"
+            style="font-family: 'Kalam', cursive"
+            >Lini Masa</span
+          >
           <h2
             class="text-2xl min-[400px]:text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-3 min-[400px]:mb-4 sm:mb-6 tracking-tight"
           >
             Jejak Langkah Kami
           </h2>
           <p
-            class="text-blue-100 dark:text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
+            class="text-blue-100 dark:text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed"
           >
             Menelusuri kembali tonggak sejarah dan perjalanan panjang berdirinya institusi
             pendidikan kami hingga menjadi seperti sekarang.
