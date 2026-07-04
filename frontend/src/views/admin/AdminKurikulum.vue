@@ -12,6 +12,14 @@ import {
   PhCaretDown,
   PhCheck,
   PhInfo,
+  PhAtom,
+  PhBrain,
+  PhUsers,
+  PhGlobe,
+  PhPalette,
+  PhHandshake,
+  PhBook,
+  PhCircle,
 } from "@phosphor-icons/vue";
 import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
@@ -150,14 +158,32 @@ const searchQuery = ref("");
 const filterGrade = ref("semua");
 const filterMajor = ref("semua");
 const showMajorInfo = ref(false);
+const isPPPModalVisible = ref(false);
+const dimensionRefs = ref([]);
 
 const fetchData = async () => {
   try {
-    const [subjectsRes, programsRes] = await Promise.all([
+    const [subjectsRes, programsRes, pppRes] = await Promise.all([
       api.get("/api/curriculum-subjects"),
       api.get("/api/programs"),
+      api.get("/api/pancasila-profiles"),
     ]);
     subjectList.value = subjectsRes.data.data;
+
+    if (pppRes.data.data && pppRes.data.data.length > 0) {
+      const pppRawData = pppRes.data.data[0];
+      let dimensions = [];
+      try {
+        dimensions =
+          typeof pppRawData.dimensions === "string"
+            ? JSON.parse(pppRawData.dimensions)
+            : pppRawData.dimensions || [];
+      } catch (e) {
+        console.error("Gagal mem-parsing dimensi PPP:", e);
+        dimensions = [];
+      }
+      pppData.value = { ...pppRawData, dimensions };
+    }
 
     const programsData = programsRes.data.data.map((p) => ({
       id: p.id,
@@ -203,6 +229,103 @@ const resetForm = () => {
   newCategoryName.value = "";
   isCategoryDropdownOpen.value = false;
   showMajorInfo.value = false;
+};
+
+const pppData = ref({
+  id: null,
+  title: "Profil Pelajar Pancasila",
+  description:
+    "Kurikulum kami berfokus pada pembentukan karakter siswa yang berlandaskan nilai-nilai luhur Pancasila.",
+  dimensions: [],
+});
+
+const tempPPPData = ref({});
+
+const allIcons = {
+  PhPlusCircle,
+  PhPencilSimple,
+  PhTrash,
+  PhXCircle,
+  PhFloppyDisk,
+  PhMagnifyingGlass,
+  PhBookOpen,
+  PhX,
+  PhCaretDown,
+  PhCheck,
+  PhInfo,
+  PhAtom,
+  PhBrain,
+  PhUsers,
+  PhGlobe,
+  PhPalette,
+  PhHandshake,
+  PhBook,
+  PhCircle,
+};
+
+const getIconComponent = (iconName) => {
+  return allIcons[iconName] || PhBook;
+};
+
+const getDarkColorClass = (color) => {
+  if (!color || !color.startsWith("#")) {
+    return "text-white";
+  }
+  // Simple brightness check to determine text color
+  const hex = color.replace("#", "");
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness > 125 ? "text-slate-800" : "text-white";
+};
+
+const openPPPModal = () => {
+  tempPPPData.value = JSON.parse(JSON.stringify(pppData.value));
+  isPPPModalVisible.value = true;
+  document.body.style.overflow = "hidden";
+};
+
+const closePPPModal = () => {
+  isPPPModalVisible.value = false;
+  document.body.style.overflow = "";
+};
+
+const addDimension = () => {
+  if (!tempPPPData.value.dimensions) {
+    tempPPPData.value.dimensions = [];
+  }
+  tempPPPData.value.dimensions.push({
+    id: `new_${Date.now()}`,
+    name: "",
+    desc: "",
+    icon: "PhCircle",
+    color: "#4299e1", // default blue
+  });
+};
+
+const removeDimension = (index) => {
+  tempPPPData.value.dimensions.splice(index, 1);
+};
+
+const savePPPData = async () => {
+  try {
+    const payload = { ...tempPPPData.value };
+    payload.dimensions = JSON.stringify(payload.dimensions);
+
+    if (payload.id) {
+      await api.put(`/api/pancasila-profiles/${payload.id}`, payload);
+    } else {
+      await api.post("/api/pancasila-profiles", payload);
+    }
+
+    await fetchData(); // Re-fetch all data to get the latest state
+    closePPPModal();
+    triggerToast("Berhasil", "Profil Pelajar Pancasila berhasil diperbarui.", "success");
+  } catch (error) {
+    console.error("Gagal menyimpan data PPP:", error);
+    triggerToast("Gagal", "Gagal menyimpan data Profil Pelajar Pancasila.", "error");
+  }
 };
 
 const showAddForm = () => {
