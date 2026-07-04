@@ -12,6 +12,7 @@ import {
   PhHandshake,
   PhBriefcase,
   PhDownloadSimple,
+  PhListNumbers,
 } from "@phosphor-icons/vue";
 import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.css";
@@ -114,7 +115,7 @@ const initSwiper = () => {
     breakpoints: {
       1024: {
         direction: "vertical",
-        slidesPerView: 1.5,
+        slidesPerView: 2.2,
         spaceBetween: 24,
       },
     },
@@ -155,131 +156,153 @@ onMounted(() => {
         </template>
       </PageHeader>
 
-      <section
-        class="py-12 md:py-10 px-6 bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700"
-      >
+      <!-- Syarat Pendaftaran Section -->
+      <section class="py-16 md:py-24 px-6 bg-gray-50 dark:bg-slate-900">
         <div class="container mx-auto max-w-full px-0 lg:px-16">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            <div
-              class="bg-blue-50/20 dark:bg-slate-700/30 p-6 md:p-8 rounded-xl border border-gray-300 dark:border-slate-700 shadow-lg"
+          <!-- Header -->
+          <div class="text-center mb-12 max-w-3xl mx-auto">
+            <h2
+              class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4"
+              style="font-family: 'Oswald', sans-serif"
             >
-              <h3
-                class="text-2xl font-bold text-gray-900 dark:text-white mb-5 flex items-center"
-                style="font-family: 'Oswald', sans-serif"
-              >
-                <PhListChecks class="w-6 h-6 mr-2 text-gray-900 dark:text-white" />
-                Syarat Pendaftaran
-              </h3>
+              Persyaratan Umum PPDB
+            </h2>
+            <p class="text-base md:text-lg text-gray-600 dark:text-gray-400">
+              Pastikan calon peserta didik baru telah memenuhi semua persyaratan yang
+              tercantum di bawah ini sebelum melakukan proses pendaftaran.
+            </p>
+          </div>
 
-              <ul v-if="isLoading" class="space-y-4 animate-pulse">
-                <li v-for="i in 4" :key="'skel-syarat-' + i" class="flex items-start">
-                  <div
-                    class="w-5 h-5 bg-gray-300 dark:bg-slate-600 rounded-full mr-3 shrink-0 mt-0.5"
-                  ></div>
-                  <div
-                    class="h-4 bg-gray-300 dark:bg-slate-600 rounded w-full mt-1.5"
-                  ></div>
-                </li>
-              </ul>
-              <ul v-else-if="syaratList.length > 0" class="space-y-4">
-                <li
-                  v-for="(syarat, index) in syaratList"
-                  :key="index"
-                  class="flex items-start"
-                >
-                  <PhCheckCircle class="w-5 h-5 text-green-500 mr-3 shrink-0 mt-0.5" />
-                  <span
-                    class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"
-                    >{{
-                      typeof syarat === "string" ? syarat : syarat.text || syarat.desc
-                    }}</span
-                  >
-                </li>
-              </ul>
-              <p v-else class="text-sm text-gray-500 dark:text-gray-400 italic">
-                Belum ada data syarat pendaftaran.
-              </p>
-            </div>
-
+          <!-- Skeleton Loader -->
+          <div
+            v-if="isLoading"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse"
+          >
             <div
-              class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-xl border border-gray-300 dark:border-slate-700 shadow-lg"
+              v-for="i in 6"
+              :key="'skel-syarat-' + i"
+              class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 flex items-start gap-4"
             >
-              <h3
-                class="text-2xl font-bold text-gray-900 dark:text-white mb-5 flex items-center"
-                style="font-family: 'Oswald', sans-serif"
-              >
-                <PhGitMerge class="w-6 h-6 mr-2 text-gray-900 dark:text-white" />
-                Alur Pendaftaran
-              </h3>
-
               <div
-                v-if="isLoading"
-                class="space-y-6 animate-pulse relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-gray-300 dark:before:from-slate-600 before:to-transparent"
-              >
-                <div
-                  v-for="i in 3"
-                  :key="'skel-alur-' + i"
-                  class="relative flex items-center gap-4"
-                >
-                  <div
-                    class="w-10 h-10 rounded-full bg-gray-200 dark:bg-slate-700 shrink-0 z-10"
-                  ></div>
-                  <div class="flex-1">
-                    <div
-                      class="h-4 bg-gray-300 dark:bg-slate-600 rounded w-1/2 mb-2"
-                    ></div>
-                    <div class="h-3 bg-gray-300 dark:bg-slate-600 rounded w-full"></div>
-                  </div>
-                </div>
+                class="w-12 h-12 bg-gray-200 dark:bg-slate-700 rounded-full shrink-0"
+              ></div>
+              <div class="flex-1 space-y-3 mt-1">
+                <div class="h-4 bg-gray-200 dark:b-slate-700 rounded w-full"></div>
+                <div class="h-4 bg-gray-200 dark:b-slate-700 rounded w-4/5"></div>
               </div>
-              <div
-                v-else-if="alurList.length > 0"
-                class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-blue-200 before:via-blue-200 dark:before:via-slate-600 before:to-transparent"
-              >
-                <div
-                  v-for="(alur, index) in alurList"
-                  :key="index"
-                  class="relative flex items-center gap-4"
-                >
-                  <div
-                    class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border-2 flex items-center justify-center font-bold shrink-0 z-10"
-                    :class="
-                      index === alurList.length - 1
-                        ? 'border-gray-300 dark:border-slate-600 text-gray-400'
-                        : 'border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400'
-                    "
-                  >
-                    {{ index + 1 }}
-                  </div>
-                  <div>
-                    <h4
-                      class="font-bold text-sm"
-                      :class="
-                        index === alurList.length - 1
-                          ? 'text-gray-400 dark:text-gray-500'
-                          : 'text-blue-950 dark:text-white'
-                      "
-                    >
-                      {{ alur.title || alur.nama }}
-                    </h4>
-                    <p
-                      class="text-xs mt-1"
-                      :class="
-                        index === alurList.length - 1
-                          ? 'text-gray-400 dark:text-gray-500'
-                          : 'text-gray-500 dark:text-gray-400'
-                      "
-                    >
-                      {{ alur.desc || alur.description }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <p v-else class="text-sm text-gray-500 dark:text-gray-400 italic">
-                Belum ada data alur pendaftaran.
-              </p>
             </div>
           </div>
+
+          <!-- Syarat List -->
+          <div
+            v-else-if="syaratList.length > 0"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            <div
+              v-for="(syarat, index) in syaratList"
+              :key="index"
+              class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm hover:shadow-lg border border-gray-200 dark:border-slate-700 transition-all duration-300 hover:-translate-y-1"
+            >
+              <div class="flex items-start gap-4">
+                <div
+                  class="w-12 h-12 flex items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 shrink-0"
+                >
+                  <PhCheckCircle class="w-6 h-6" />
+                </div>
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed pt-1">
+                  {{ typeof syarat === "string" ? syarat : syarat.text || syarat.desc }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p v-else class="text-center text-gray-500 dark:text-gray-400 italic">
+            Belum ada data syarat pendaftaran.
+          </p>
+        </div>
+      </section>
+
+      <!-- Alur Pendaftaran Section -->
+      <section class="py-16 md:py-24 px-6 bg-white dark:bg-slate-800">
+        <div class="container mx-auto max-w-4xl">
+          <!-- Header -->
+          <div class="text-center mb-16">
+            <h2
+              class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4"
+              style="font-family: 'Oswald', sans-serif"
+            >
+              Alur dan Tahapan Pendaftaran
+            </h2>
+            <p class="text-base md:text-lg text-gray-600 dark:text-gray-400">
+              Ikuti langkah-langkah berikut secara berurutan untuk menyelesaikan proses
+              pendaftaran dengan benar.
+            </p>
+          </div>
+
+          <!-- Skeleton Loader -->
+          <div v-if="isLoading" class="space-y-12 animate-pulse">
+            <div v-for="i in 3" :key="'skel-alur-' + i" class="flex items-center gap-8">
+              <div
+                class="w-16 h-16 rounded-full bg-gray-200 dark:bg-slate-700 shrink-0"
+              ></div>
+              <div class="flex-1 space-y-3">
+                <div class="h-5 bg-gray-200 dark:bg-slate-700 rounded w-1/3"></div>
+                <div class="h-4 bg-gray-200 dark:bg-slate-700 rounded w-full"></div>
+                <div class="h-4 bg-gray-200 dark:bg-slate-700 rounded w-3/4"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div
+            v-else-if="alurList.length > 0"
+            class="relative space-y-12 before:absolute before:inset-0 before:ml-8 md:before:mx-auto md:before:w-0.5 before:h-full before:w-0.5 before:bg-gray-200 dark:before:bg-slate-700"
+          >
+            <div
+              v-for="(alur, index) in alurList"
+              :key="index"
+              class="relative flex items-start md:justify-center md:even:flex-row-reverse"
+            >
+              <div
+                class="w-16 h-16 rounded-full bg-white dark:bg-slate-800 border-4 flex items-center justify-center font-bold text-xl shrink-0 z-10"
+                :class="
+                  index === alurList.length - 1
+                    ? 'border-gray-300 dark:border-slate-600 text-gray-400'
+                    : 'border-blue-500 text-blue-600 dark:text-blue-400'
+                "
+              >
+                <PhListNumbers v-if="index !== alurList.length - 1" class="w-7 h-7" />
+                <PhCheckCircle v-else class="w-7 h-7" />
+              </div>
+
+              <div
+                class="p-6 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg w-full md:w-[calc(50%-4rem)] ml-8 md:ml-0"
+                :class="
+                  index === alurList.length - 1
+                    ? 'opacity-60'
+                    : 'md:even:-ml-8 md:odd:ml-8'
+                "
+              >
+                <h4
+                  class="font-bold text-lg mb-2"
+                  :class="
+                    index === alurList.length - 1
+                      ? 'text-gray-500 dark:text-gray-400'
+                      : 'text-blue-950 dark:text-white'
+                  "
+                >
+                  {{ alur.title || alur.nama }}
+                </h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {{ alur.desc || alur.description }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p v-else class="text-center text-gray-500 dark:text-gray-400 italic">
+            Belum ada data alur pendaftaran.
+          </p>
         </div>
       </section>
 
@@ -316,7 +339,7 @@ onMounted(() => {
             </div>
 
             <div
-              class="lg:col-span-7 relative h-[380px] lg:h-[520px] w-full flex items-center justify-center"
+              class="lg:col-span-7 relative h-96 lg:h-[520px] w-full flex items-center justify-center"
             >
               <div
                 v-if="isLoading"
@@ -335,7 +358,7 @@ onMounted(() => {
               </div>
 
               <div v-else class="fade-mask-slider w-full h-full absolute inset-0">
-                <div class="swiper jalur-swiper h-full w-full lg:!py-8 lg:!px-10">
+                <div class="swiper jalur-swiper h-full w-full !lg:py-8 !lg:px-10">
                   <div class="swiper-wrapper items-stretch">
                     <div
                       v-for="(jalur, index) in jalurList"
