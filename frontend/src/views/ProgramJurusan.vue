@@ -238,7 +238,7 @@ onMounted(() => {
                   {{ program.badge }}
                 </div>
                 <h2
-                  class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out text-3xl md:text-4xl font-bold"
+                  class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out text-3xl md:text-4xl font-bold -mt-4"
                   style="font-family: 'Oswald', sans-serif"
                   :class="
                     index % 2 === 0 ? 'text-slate-900 dark:text-white' : 'text-white'

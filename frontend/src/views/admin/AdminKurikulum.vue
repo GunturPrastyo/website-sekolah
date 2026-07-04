@@ -12,14 +12,7 @@ import {
   PhCaretDown,
   PhCheck,
   PhInfo,
-  PhAtom,
-  PhBrain,
-  PhUsers,
-  PhGlobe,
-  PhPalette,
-  PhHandshake,
   PhBook,
-  PhCircle,
 } from "@phosphor-icons/vue";
 import IconPicker, { educationIcons } from "@/components/IconPicker.vue";
 import ConfirmModal from "@/components/admin/ConfirmModal.vue";
@@ -159,31 +152,14 @@ const filterGrade = ref("semua");
 const filterMajor = ref("semua");
 const showMajorInfo = ref(false);
 const isPPPModalVisible = ref(false);
-const dimensionRefs = ref([]);
 
 const fetchData = async () => {
   try {
-    const [subjectsRes, programsRes, pppRes] = await Promise.all([
+    const [subjectsRes, programsRes] = await Promise.all([
       api.get("/api/curriculum-subjects"),
       api.get("/api/programs"),
-      api.get("/api/pancasila-profiles"),
     ]);
     subjectList.value = subjectsRes.data.data;
-
-    if (pppRes.data.data && pppRes.data.data.length > 0) {
-      const pppRawData = pppRes.data.data[0];
-      let dimensions = [];
-      try {
-        dimensions =
-          typeof pppRawData.dimensions === "string"
-            ? JSON.parse(pppRawData.dimensions)
-            : pppRawData.dimensions || [];
-      } catch (e) {
-        console.error("Gagal mem-parsing dimensi PPP:", e);
-        dimensions = [];
-      }
-      pppData.value = { ...pppRawData, dimensions };
-    }
 
     const programsData = programsRes.data.data.map((p) => ({
       id: p.id,
@@ -231,16 +207,6 @@ const resetForm = () => {
   showMajorInfo.value = false;
 };
 
-const pppData = ref({
-  id: null,
-  title: "Profil Pelajar Pancasila",
-  description:
-    "Kurikulum kami berfokus pada pembentukan karakter siswa yang berlandaskan nilai-nilai luhur Pancasila.",
-  dimensions: [],
-});
-
-const tempPPPData = ref({});
-
 const allIcons = {
   PhPlusCircle,
   PhPencilSimple,
@@ -253,14 +219,7 @@ const allIcons = {
   PhCaretDown,
   PhCheck,
   PhInfo,
-  PhAtom,
-  PhBrain,
-  PhUsers,
-  PhGlobe,
-  PhPalette,
-  PhHandshake,
   PhBook,
-  PhCircle,
 };
 
 const getIconComponent = (iconName) => {
@@ -278,54 +237,6 @@ const getDarkColorClass = (color) => {
   const b = parseInt(hex.substring(4, 6), 16);
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
   return brightness > 125 ? "text-slate-800" : "text-white";
-};
-
-const openPPPModal = () => {
-  tempPPPData.value = JSON.parse(JSON.stringify(pppData.value));
-  isPPPModalVisible.value = true;
-  document.body.style.overflow = "hidden";
-};
-
-const closePPPModal = () => {
-  isPPPModalVisible.value = false;
-  document.body.style.overflow = "";
-};
-
-const addDimension = () => {
-  if (!tempPPPData.value.dimensions) {
-    tempPPPData.value.dimensions = [];
-  }
-  tempPPPData.value.dimensions.push({
-    id: `new_${Date.now()}`,
-    name: "",
-    desc: "",
-    icon: "PhCircle",
-    color: "#4299e1", // default blue
-  });
-};
-
-const removeDimension = (index) => {
-  tempPPPData.value.dimensions.splice(index, 1);
-};
-
-const savePPPData = async () => {
-  try {
-    const payload = { ...tempPPPData.value };
-    payload.dimensions = JSON.stringify(payload.dimensions);
-
-    if (payload.id) {
-      await api.put(`/api/pancasila-profiles/${payload.id}`, payload);
-    } else {
-      await api.post("/api/pancasila-profiles", payload);
-    }
-
-    await fetchData(); // Re-fetch all data to get the latest state
-    closePPPModal();
-    triggerToast("Berhasil", "Profil Pelajar Pancasila berhasil diperbarui.", "success");
-  } catch (error) {
-    console.error("Gagal menyimpan data PPP:", error);
-    triggerToast("Gagal", "Gagal menyimpan data Profil Pelajar Pancasila.", "error");
-  }
 };
 
 const showAddForm = () => {
@@ -469,233 +380,6 @@ const getMajorName = (id) => {
         </p>
       </div>
     </div>
-
-    <!-- Profil Pelajar Pancasila Section -->
-    <div
-      class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm mb-8 relative group"
-    >
-      <div class="flex justify-between items-start mb-6">
-        <div>
-          <h3
-            class="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2"
-          >
-            {{ pppData.title }}
-          </h3>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 max-w-2xl">
-            {{ pppData.description }}
-          </p>
-        </div>
-        <button
-          @click="openPPPModal"
-          class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors shrink-0"
-        >
-          <PhPencilSimple class="w-4 h-4 mr-2" />
-          Edit Profil
-        </button>
-      </div>
-
-      <div
-        class="grid gap-4 w-full"
-        :class="{
-          'grid-cols-1': pppData.dimensions.length === 1,
-          'grid-cols-1 md:grid-cols-2': pppData.dimensions.length === 2,
-          'grid-cols-1 md:grid-cols-2 lg:grid-cols-3':
-            pppData.dimensions.length >= 3 || pppData.dimensions.length === 0,
-        }"
-      >
-        <div
-          v-for="dim in pppData.dimensions"
-          :key="dim.id"
-          class="p-4 rounded-xl border border-gray-100 dark:border-slate-700 flex items-start gap-4 hover:shadow-md transition-shadow bg-gray-50 dark:bg-slate-700/30"
-        >
-          <div
-            class="w-10 h-10 shrink-0 rounded-full flex items-center justify-center shadow-sm"
-            :class="getDarkColorClass(dim.color)"
-            :style="
-              dim.color && dim.color.startsWith('#') ? { backgroundColor: dim.color } : {}
-            "
-          >
-            <component :is="getIconComponent(dim.icon)" class="w-5 h-5" />
-          </div>
-          <div>
-            <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-1">
-              {{ dim.name }}
-            </h4>
-            <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-              {{ dim.desc }}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal Edit Profil Pelajar Pancasila -->
-    <Transition
-      enter-active-class="transition-opacity duration-300"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition-opacity duration-300"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div
-        v-if="isPPPModalVisible"
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6"
-        @click="closePPPModal"
-      >
-        <div
-          class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden transform transition-all"
-          @click.stop
-        >
-          <div
-            class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-700/50"
-          >
-            <h3
-              class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2"
-            >
-              Edit Profil Pelajar Pancasila
-            </h3>
-            <button
-              @click="closePPPModal"
-              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-            >
-              <PhX class="w-6 h-6" />
-            </button>
-          </div>
-
-          <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
-            <form id="pppForm" @submit.prevent="savePPPData">
-              <div
-                class="mb-6 space-y-4 border-b border-gray-100 dark:border-slate-700 pb-6"
-              >
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >Judul Seksi</label
-                  >
-                  <input
-                    type="text"
-                    v-model="tempPPPData.title"
-                    required
-                    placeholder="Contoh: Profil Pelajar Pancasila"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 placeholder:font-light"
-                  />
-                </div>
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                    >Deskripsi Singkat</label
-                  >
-                  <textarea
-                    v-model="tempPPPData.description"
-                    required
-                    rows="2"
-                    placeholder="Contoh: Kurikulum kami berfokus pada pembentukan karakter siswa..."
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 placeholder:font-light"
-                  ></textarea>
-                </div>
-              </div>
-
-              <div class="mb-4">
-                <h4 class="font-bold text-gray-800 dark:text-white">Dimensi Karakter</h4>
-              </div>
-
-              <div class="space-y-4">
-                <div
-                  v-for="(dim, index) in tempPPPData.dimensions"
-                  :key="dim.id"
-                  :ref="(el) => (dimensionRefs[index] = el)"
-                  class="p-4 bg-gray-50 dark:bg-slate-700/30 rounded-lg border border-gray-100 dark:border-slate-600"
-                >
-                  <div class="flex justify-between items-center mb-3">
-                    <h5
-                      class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                    >
-                      Dimensi {{ index + 1 }}
-                    </h5>
-                    <button
-                      type="button"
-                      @click="removeDimension(index)"
-                      class="text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors"
-                      title="Hapus Dimensi"
-                    >
-                      <PhTrash class="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  <div class="flex flex-col gap-4">
-                    <div>
-                      <label
-                        class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
-                        >Ikon</label
-                      >
-                      <IconPicker v-model="dim.icon" v-model:color-value="dim.color" />
-                    </div>
-                    <div>
-                      <label
-                        class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
-                        >Nama Dimensi</label
-                      >
-                      <input
-                        type="text"
-                        v-model="dim.name"
-                        required
-                        placeholder="Contoh: Beriman, bertakwa kepada Tuhan YME..."
-                        class="w-full px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 text-sm placeholder-gray-400 placeholder:font-light"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
-                        >Deskripsi</label
-                      >
-                      <textarea
-                        v-model="dim.desc"
-                        required
-                        rows="2"
-                        placeholder="Masukkan deskripsi dari dimensi ini..."
-                        class="w-full px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 text-sm placeholder-gray-400 placeholder:font-light"
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Tombol Tambah Dimensi -->
-                <button
-                  type="button"
-                  @click="addDimension"
-                  class="w-full flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 group"
-                >
-                  <PhPlusCircle
-                    class="w-6 h-6 mb-1 text-gray-400 group-hover:text-blue-500 transition-colors"
-                  />
-                  <span class="text-sm font-medium">Tambah Dimensi Baru</span>
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <div
-            class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-end gap-3"
-          >
-            <button
-              type="button"
-              @click="closePPPModal"
-              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
-            >
-              <PhXCircle class="w-5 h-5 mr-2" /> Batal
-            </button>
-            <button
-              type="submit"
-              form="pppForm"
-              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors"
-            >
-              <PhFloppyDisk class="w-5 h-5 mr-2" /> Simpan Perubahan
-            </button>
-          </div>
-        </div>
-      </div>
-    </Transition>
 
     <!-- Modal Form Tambah/Edit Data -->
     <Transition
@@ -1023,7 +707,7 @@ const getMajorName = (id) => {
 
     <!-- Search & List Section -->
     <div
-      class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm"
+      class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm mt-8"
     >
       <!-- Kolom Pencarian, Filter & Tombol Tambah -->
       <div class="mb-8 space-y-4">
