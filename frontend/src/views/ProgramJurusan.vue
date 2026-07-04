@@ -124,7 +124,7 @@ onMounted(() => {
         <section
           v-for="i in 3"
           :key="i"
-          class="relative py-16 md:py-24 px-0 lg:px-8 overflow-hidden z-10"
+          class="relative py-16 md:py-24 px-8 overflow-hidden z-10"
         >
           <div class="container relative z-10 mx-auto max-w-6xl">
             <div
@@ -207,7 +207,7 @@ onMounted(() => {
             "
           ></div>
 
-          <div class="container relative z-10 mx-auto max-w-full px-0 lg:px-16">
+          <div class="container relative z-10 mx-auto max-w-full px-8 lg:px-16">
             <div
               class="flex flex-col lg:flex-row gap-10 lg:gap-16 items-center"
               :class="{ 'lg:flex-row-reverse': index % 2 !== 0 }"
