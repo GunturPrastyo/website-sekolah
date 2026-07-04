@@ -1,11 +1,6 @@
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
-import {
-  PhGraduationCap,
-  PhBookOpen,
-  PhCheckCircle,
-  PhBriefcase,
-} from "@phosphor-icons/vue";
+import { PhBookOpen, PhCheckCircle, PhBriefcase } from "@phosphor-icons/vue";
 import PageHeader from "@/components/PageHeader.vue";
 import api from "@/api/index.js";
 
@@ -236,21 +231,15 @@ onMounted(() => {
               <!-- Kolom Deskripsi -->
               <div class="w-full lg:w-1/2 space-y-6">
                 <div
-                  class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold shadow-sm border backdrop-blur-sm"
+                  class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out inline-block text-xl font-bold"
                   style="font-family: 'Kalam', cursive"
-                  :class="[
-                    index % 2 === 0 ? program.bgClass : 'bg-white/10 dark:bg-black/20',
-                    index % 2 === 0 ? program.textClass : 'text-white',
-                    index % 2 === 0
-                      ? program.borderClass
-                      : 'border-white/20 dark:border-white/10',
-                  ]"
+                  :class="[index % 2 === 0 ? program.textClass : 'text-white']"
                 >
-                  <PhGraduationCap class="w-3.5 h-3.5 mr-1.5" />
                   {{ program.badge }}
                 </div>
                 <h2
                   class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out text-3xl md:text-4xl font-bold"
+                  style="font-family: 'Oswald', sans-serif"
                   :class="
                     index % 2 === 0 ? 'text-slate-900 dark:text-white' : 'text-white'
                   "
@@ -346,3 +335,7 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap");
+</style>
