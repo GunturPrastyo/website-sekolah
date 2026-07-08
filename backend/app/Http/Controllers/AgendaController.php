@@ -50,15 +50,8 @@ class AgendaController extends Controller
             }
         }
 
-        $agenda = Agenda::create([
-            'title' => $validated['title'],
-            'start_date' => $validated['startDate'],
-            'end_date' => $validated['endDate'] ?? null,
-            'time' => $validated['time'] ?? null,
-            'location' => $validated['location'] ?? null,
-            'color' => $validated['color'],
-            'attachment' => $validated['attachment'] ?? null,
-        ]);
+        $dataForModel = AgendaResource::forModel($validated);
+        $agenda = Agenda::create($dataForModel);
 
         return new AgendaResource($agenda);
     }
@@ -101,7 +94,8 @@ class AgendaController extends Controller
             }
         }
 
-        $agenda->update($validated);
+        $dataForModel = AgendaResource::forModel($validated);
+        $agenda->update($dataForModel);
 
         return new AgendaResource($agenda);
     }
