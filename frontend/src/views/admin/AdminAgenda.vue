@@ -178,7 +178,17 @@ const addEntry = async () => {
 
 const startEdit = (item) => {
   isEditing.value = true;
-  form.value = { ...item };
+  // Salin item dan format tanggal agar sesuai dengan input type="date" (YYYY-MM-DD)
+  const formattedItem = { ...item };
+  if (formattedItem.startDate) {
+    // Ambil hanya bagian tanggal (10 karakter pertama)
+    formattedItem.startDate = formattedItem.startDate.substring(0, 10);
+  }
+  if (formattedItem.endDate) {
+    // Opsional, lakukan hal yang sama untuk tanggal selesai
+    formattedItem.endDate = formattedItem.endDate.substring(0, 10);
+  }
+  form.value = formattedItem;
   isFormVisible.value = true;
   document.body.style.overflow = "hidden";
 };
