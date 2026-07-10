@@ -110,13 +110,12 @@ const initJurusanSwiper = () => {
 };
 
 watch(
-  () => props.programs,
-  () => {
-    nextTick(() => {
-      initJurusanSwiper();
-    });
-  },
-  { deep: true }
+  () => props.isLoadingPrograms,
+  (newIsLoading, oldIsLoading) => {
+    if (oldIsLoading === true && newIsLoading === false && props.programs.length > 0) {
+      nextTick(initJurusanSwiper);
+    }
+  }
 );
 
 onBeforeUnmount(() => {
