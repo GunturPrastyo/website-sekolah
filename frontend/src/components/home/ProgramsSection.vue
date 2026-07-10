@@ -83,7 +83,8 @@ const initJurusanSwiper = () => {
   const totalPrograms = props.programs.length;
   const desktopSlides = totalPrograms > 0 ? Math.min(3, totalPrograms) : 3;
   const tabletSlides = totalPrograms > 0 ? Math.min(2, totalPrograms) : 2;
-  const enableLoop = totalPrograms > 3;
+
+  const enableLoop = totalPrograms > 1;
 
   jurusanSwiperInstance = new Swiper(".jurusan-swiper", {
     loop: enableLoop,
