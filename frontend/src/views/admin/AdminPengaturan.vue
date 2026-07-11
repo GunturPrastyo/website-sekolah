@@ -401,8 +401,10 @@ const selectHeaderPage = (key) => {
 </script>
 
 <template>
-  <main class="flex-1 overflow-y-auto px-6 md:px-10 py-8">
-    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+  <main class="flex-1 overflow-y-auto px-0 md:px-10 py-8">
+    <div
+      class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 px-6 md:px-0"
+    >
       <div>
         <h2
           class="text-3xl font-bold text-gray-800 dark:text-white"
@@ -470,7 +472,7 @@ const selectHeaderPage = (key) => {
     </div>
 
     <div
-      class="bg-white dark:bg-slate-800 rounded-b-xl border border-t-0 border-gray-200 dark:border-slate-700 shadow-sm p-6 mb-8"
+      class="bg-white dark:bg-slate-800 rounded-b-xl border border-t-0 border-gray-200 dark:border-slate-700 shadow-sm p-4 md:p-6 mb-8"
     >
       <!-- Tab Umum -->
       <div v-show="activeTab === 'umum'" class="animate-fade-in">
@@ -498,10 +500,7 @@ const selectHeaderPage = (key) => {
           </div>
 
           <!-- Kolom Kanan: Form Editor -->
-          <div
-            class="lg:col-span-3 bg-gray-50/50 dark:bg-slate-700/30 p-5 md:p-6 rounded-2xl border border-gray-200 dark:border-slate-600"
-          >
-            <!-- Identitas Sekolah & Logo -->
+          <div class="lg:col-span-3">
             <!-- Mobile Category Selector -->
             <div class="mb-6 lg:hidden">
               <label
@@ -524,268 +523,286 @@ const selectHeaderPage = (key) => {
               </button>
             </div>
             <div
-              v-if="activeGeneralCategoryKey === 'identitas'"
-              class="animate-fade-in space-y-5"
+              class="bg-gray-50/50 dark:bg-slate-700/30 p-5 md:p-6 rounded-2xl border border-gray-200 dark:border-slate-600"
             >
+              <!-- Identitas Sekolah & Logo -->
               <div
-                class="flex items-center gap-2 mb-2 pb-2 border-b border-gray-200 dark:border-slate-700"
+                v-if="activeGeneralCategoryKey === 'identitas'"
+                class="animate-fade-in space-y-5"
               >
-                <PhBuildings class="w-5 h-5 text-gray-600 dark:text-white" />
-                <h3 class="font-semibold text-gray-800 dark:text-white">
-                  Identitas Utama
-                </h3>
-              </div>
-              <div>
-                <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 mt-6"
-                  >Nama Sekolah</label
+                <div
+                  v-if="activeGeneralCategoryKey === 'identitas'"
+                  class="animate-fade-in space-y-5"
                 >
-                <input
-                  type="text"
-                  v-model="generalSettings.namaSekolah"
-                  class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                />
-              </div>
-              <div>
-                <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
-                  >Slogan / Moto Sekolah</label
-                >
-                <input
-                  type="text"
-                  v-model="generalSettings.deskripsi"
-                  placeholder="Contoh: Mencetak Generasi Unggul..."
-                  class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                />
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1.5">
-                  Akan ditampilkan sebagai teks hero di banner halaman beranda.
-                </p>
-              </div>
-              <div
-                class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-gray-200 dark:border-slate-700"
-              >
-                <div class="flex flex-col items-center justify-center h-full">
-                  <ImageUploader
-                    v-model="generalSettings.logo"
-                    label="Logo Sekolah"
-                    :isCircular="true"
-                    containerClass="w-32 mx-auto"
-                  />
-                  <p class="text-xs text-center text-gray-500 dark:text-gray-400 mt-3">
-                    Format PNG disarankan, transparan. Max 2MB.
-                  </p>
-                </div>
-                <div class="flex flex-col items-center justify-center h-full">
-                  <ImageUploader
-                    v-model="generalSettings.favicon"
-                    label="Favicon (Ikon Web)"
-                    :isCircular="true"
-                    containerClass="w-20 mx-auto"
-                  />
-                  <p class="text-xs text-center text-gray-500 dark:text-gray-400 mt-3">
-                    Ikon untuk tab browser. Rasio 1:1, Max 1MB.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Kontak & Lokasi -->
-            <div
-              v-if="activeGeneralCategoryKey === 'kontak'"
-              class="animate-fade-in space-y-5"
-            >
-              <div
-                class="flex items-center gap-2 mb-2 pb-2 border-b border-gray-200 dark:border-slate-700"
-              >
-                <PhMapPin class="w-5 h-5 text-gray-600 dark:text-white" />
-                <h3 class="font-semibold text-gray-800 dark:text-white">
-                  Kontak & Lokasi
-                </h3>
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
-                    >Email Resmi</label
-                  >
-                  <input
-                    type="email"
-                    v-model="generalSettings.email"
-                    class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                    placeholder="info@sekolah.sch.id"
-                  />
-                </div>
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
-                    >Nomor Telepon</label
-                  >
-                  <input
-                    type="text"
-                    v-model="generalSettings.telepon"
-                    class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                    placeholder="(021) 1234567"
-                  />
-                </div>
-              </div>
-
-              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-2">
-                <div class="space-y-5">
-                  <div>
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
-                      >Link Embed Peta (Google Maps)</label
-                    >
-                    <textarea
-                      v-model="generalSettings.embedMap"
-                      @input="extractLocationFromMapUrl"
-                      rows="4"
-                      class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                      :class="
-                        !isMapUrlValid && generalSettings.embedMap
-                          ? 'border-red-500 ring-2 ring-red-500 focus:ring-red-500 focus:border-red-500'
-                          : ''
-                      "
-                      placeholder="Bisa paste URL langsung atau tag <iframe> dari Google Maps..."
-                    ></textarea>
-                    <p
-                      v-if="!isMapUrlValid && generalSettings.embedMap"
-                      class="text-xs text-red-500 mt-1.5 font-medium"
-                    >
-                      URL tidak valid. Harus mengandung https://www.google.com/maps/embed
-                    </p>
-                    <p v-else class="text-xs text-gray-500 dark:text-gray-400 mt-1.5">
-                      Salin URL atribut
-                      <code
-                        class="bg-gray-100 dark:bg-slate-700 px-1 rounded text-blue-600 dark:text-blue-400"
-                        >src</code
-                      >
-                      dari iframe Google Maps, atau cukup paste seluruh tag iframe di
-                      sini.
-                    </p>
-                  </div>
-                  <div>
-                    <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
-                      >Alamat Lengkap</label
-                    >
-                    <textarea
-                      v-model="generalSettings.alamat"
-                      rows="3"
-                      class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                      placeholder="Jl. Raya Sekolah No. 123..."
-                    ></textarea>
-                  </div>
-                </div>
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
-                    >Preview Peta Lokasi</label
-                  >
                   <div
-                    class="h-[250px] w-full rounded-xl overflow-hidden border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 shadow-sm relative"
+                    class="flex items-center gap-2 mb-2 pb-2 border-b border-gray-200 dark:border-slate-700"
                   >
-                    <iframe
-                      v-if="isMapUrlValid && generalSettings.embedMap"
-                      :src="generalSettings.embedMap"
-                      width="100%"
-                      height="100%"
-                      style="border: 0"
-                      allowfullscreen=""
-                      loading="lazy"
-                    ></iframe>
-                    <div
-                      v-else
-                      class="flex flex-col items-center justify-center w-full h-full text-gray-400 dark:text-gray-500 p-6 text-center"
+                    <PhBuildings class="w-5 h-5 text-gray-600 dark:text-white" />
+                    <h3 class="font-semibold text-gray-800 dark:text-white">
+                      Identitas Utama
+                    </h3>
+                  </div>
+                  <div>
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 mt-6"
+                      >Nama Sekolah</label
                     >
-                      <PhMapPin class="w-10 h-10 mb-2 opacity-50" />
-                      <span class="text-sm"
-                        >Preview peta akan muncul di sini setelah link embed valid
-                        dimasukkan.</span
+                    <input
+                      type="text"
+                      v-model="generalSettings.namaSekolah"
+                      class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                      >Slogan / Moto Sekolah</label
+                    >
+                    <input
+                      type="text"
+                      v-model="generalSettings.deskripsi"
+                      placeholder="Contoh: Mencetak Generasi Unggul..."
+                      class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                    />
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1.5">
+                      Akan ditampilkan sebagai teks hero di banner halaman beranda.
+                    </p>
+                  </div>
+                  <div
+                    class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-gray-200 dark:border-slate-700"
+                  >
+                    <div class="flex flex-col items-center justify-center h-full">
+                      <ImageUploader
+                        v-model="generalSettings.logo"
+                        label="Logo Sekolah"
+                        :isCircular="true"
+                        containerClass="w-32 mx-auto"
+                      />
+                      <p
+                        class="text-xs text-center text-gray-500 dark:text-gray-400 mt-3"
                       >
+                        Format PNG disarankan, transparan. Max 2MB.
+                      </p>
+                    </div>
+                    <div class="flex flex-col items-center justify-center h-full">
+                      <ImageUploader
+                        v-model="generalSettings.favicon"
+                        label="Favicon (Ikon Web)"
+                        :isCircular="true"
+                        containerClass="w-20 mx-auto"
+                      />
+                      <p
+                        class="text-xs text-center text-gray-500 dark:text-gray-400 mt-3"
+                      >
+                        Ikon untuk tab browser. Rasio 1:1, Max 1MB.
+                      </p>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            <!-- Sosial Media -->
-            <div
-              v-if="activeGeneralCategoryKey === 'sosmed'"
-              class="animate-fade-in space-y-5"
-            >
-              <div
-                class="flex items-center gap-2 mb-2 pb-2 border-b border-gray-200 dark:border-slate-700"
-              >
-                <PhShareNetwork class="w-5 h-5 text-gray-600 dark:text-white" />
-                <h3 class="font-semibold text-gray-800 dark:text-white">
-                  Tautan Sosial Media
-                </h3>
-              </div>
+                <!-- Kontak & Lokasi -->
+                <div
+                  v-if="activeGeneralCategoryKey === 'kontak'"
+                  class="animate-fade-in space-y-5"
+                >
+                  <div
+                    class="flex items-center gap-2 mb-2 pb-2 border-b border-gray-200 dark:border-slate-700"
+                  >
+                    <PhMapPin class="w-5 h-5 text-gray-600 dark:text-white" />
+                    <h3 class="font-semibold text-gray-800 dark:text-white">
+                      Kontak & Lokasi
+                    </h3>
+                  </div>
 
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-6">
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5"
-                    ><PhInstagramLogo class="w-4 h-4 text-pink-600" /> Instagram</label
-                  >
-                  <input
-                    type="text"
-                    v-model="generalSettings.instagram"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                    placeholder="https://instagram.com/..."
-                  />
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                        >Email Resmi</label
+                      >
+                      <input
+                        type="email"
+                        v-model="generalSettings.email"
+                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                        placeholder="info@sekolah.sch.id"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                        >Nomor Telepon</label
+                      >
+                      <input
+                        type="text"
+                        v-model="generalSettings.telepon"
+                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                        placeholder="(021) 1234567"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-2">
+                    <div class="space-y-5">
+                      <div>
+                        <label
+                          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                          >Link Embed Peta (Google Maps)</label
+                        >
+                        <textarea
+                          v-model="generalSettings.embedMap"
+                          @input="extractLocationFromMapUrl"
+                          rows="4"
+                          class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                          :class="
+                            !isMapUrlValid && generalSettings.embedMap
+                              ? 'border-red-500 ring-2 ring-red-500 focus:ring-red-500 focus:border-red-500'
+                              : ''
+                          "
+                          placeholder="Bisa paste URL langsung atau tag <iframe> dari Google Maps..."
+                        ></textarea>
+                        <p
+                          v-if="!isMapUrlValid && generalSettings.embedMap"
+                          class="text-xs text-red-500 mt-1.5 font-medium"
+                        >
+                          URL tidak valid. Harus mengandung
+                          https://www.google.com/maps/embed
+                        </p>
+                        <p v-else class="text-xs text-gray-500 dark:text-gray-400 mt-1.5">
+                          Salin URL atribut
+                          <code
+                            class="bg-gray-100 dark:bg-slate-700 px-1 rounded text-blue-600 dark:text-blue-400"
+                            >src</code
+                          >
+                          dari iframe Google Maps, atau cukup paste seluruh tag iframe di
+                          sini.
+                        </p>
+                      </div>
+                      <div>
+                        <label
+                          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                          >Alamat Lengkap</label
+                        >
+                        <textarea
+                          v-model="generalSettings.alamat"
+                          rows="3"
+                          class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                          placeholder="Jl. Raya Sekolah No. 123..."
+                        ></textarea>
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                        >Preview Peta Lokasi</label
+                      >
+                      <div
+                        class="h-[250px] w-full rounded-xl overflow-hidden border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 shadow-sm relative"
+                      >
+                        <iframe
+                          v-if="isMapUrlValid && generalSettings.embedMap"
+                          :src="generalSettings.embedMap"
+                          width="100%"
+                          height="100%"
+                          style="border: 0"
+                          allowfullscreen=""
+                          loading="lazy"
+                        ></iframe>
+                        <div
+                          v-else
+                          class="flex flex-col items-center justify-center w-full h-full text-gray-400 dark:text-gray-500 p-6 text-center"
+                        >
+                          <PhMapPin class="w-10 h-10 mb-2 opacity-50" />
+                          <span class="text-sm"
+                            >Preview peta akan muncul di sini setelah link embed valid
+                            dimasukkan.</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5"
-                    ><PhFacebookLogo class="w-4 h-4 text-blue-600" /> Facebook</label
+
+                <!-- Sosial Media -->
+                <div
+                  v-if="activeGeneralCategoryKey === 'sosmed'"
+                  class="animate-fade-in space-y-5"
+                >
+                  <div
+                    class="flex items-center gap-2 mb-2 pb-2 border-b border-gray-200 dark:border-slate-700"
                   >
-                  <input
-                    type="text"
-                    v-model="generalSettings.facebook"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                    placeholder="https://facebook.com/..."
-                  />
-                </div>
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5"
-                    ><PhYoutubeLogo class="w-4 h-4 text-red-600" /> YouTube</label
-                  >
-                  <input
-                    type="text"
-                    v-model="generalSettings.youtube"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                    placeholder="https://youtube.com/..."
-                  />
-                </div>
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5"
-                    ><PhTwitterLogo class="w-4 h-4 text-gray-800 dark:text-gray-200" /> X
-                    (Twitter)</label
-                  >
-                  <input
-                    type="text"
-                    v-model="generalSettings.x"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                    placeholder="https://x.com/..."
-                  />
-                </div>
-                <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5"
-                    ><PhTiktokLogo class="w-4 h-4 text-black dark:text-gray-200" />
-                    TikTok</label
-                  >
-                  <input
-                    type="text"
-                    v-model="generalSettings.tiktok"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                    placeholder="https://tiktok.com/@..."
-                  />
+                    <PhShareNetwork class="w-5 h-5 text-gray-600 dark:text-white" />
+                    <h3 class="font-semibold text-gray-800 dark:text-white">
+                      Tautan Sosial Media
+                    </h3>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-6">
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5"
+                        ><PhInstagramLogo class="w-4 h-4 text-pink-600" />
+                        Instagram</label
+                      >
+                      <input
+                        type="text"
+                        v-model="generalSettings.instagram"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                        placeholder="https://instagram.com/..."
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5"
+                        ><PhFacebookLogo class="w-4 h-4 text-blue-600" /> Facebook</label
+                      >
+                      <input
+                        type="text"
+                        v-model="generalSettings.facebook"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                        placeholder="https://facebook.com/..."
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5"
+                        ><PhYoutubeLogo class="w-4 h-4 text-red-600" /> YouTube</label
+                      >
+                      <input
+                        type="text"
+                        v-model="generalSettings.youtube"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                        placeholder="https://youtube.com/..."
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5"
+                        ><PhTwitterLogo
+                          class="w-4 h-4 text-gray-800 dark:text-gray-200"
+                        />
+                        X (Twitter)</label
+                      >
+                      <input
+                        type="text"
+                        v-model="generalSettings.x"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                        placeholder="https://x.com/..."
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5"
+                        ><PhTiktokLogo class="w-4 h-4 text-black dark:text-gray-200" />
+                        TikTok</label
+                      >
+                      <input
+                        type="text"
+                        v-model="generalSettings.tiktok"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                        placeholder="https://tiktok.com/@..."
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
