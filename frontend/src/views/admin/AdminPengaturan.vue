@@ -854,10 +854,7 @@ const selectHeaderPage = (key) => {
               </div>
 
               <!-- Kolom Kanan: Form Editor -->
-              <div
-                class="lg:col-span-3 bg-gray-50/50 dark:bg-slate-700/30 p-5 md:p-6 rounded-2xl border border-gray-200 dark:border-slate-600"
-              >
-                <!-- Mobile Page Selector -->
+              <div class="lg:col-span-3">
                 <div class="mb-6 lg:hidden">
                   <label
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
@@ -875,84 +872,89 @@ const selectHeaderPage = (key) => {
                   </button>
                 </div>
 
-                <div v-if="activeHeaderPage" class="animate-fade-in">
-                  <h4
-                    class="text-lg font-bold text-gray-800 dark:text-white mb-1 flex items-center gap-2"
-                  >
-                    <component
-                      :is="activeHeaderPage.icon || PhImage"
-                      class="w-5 h-5 text-gray-800 dark:text-gray-400"
-                    />
-
-                    <span class="text-gray-800 dark:text-gray-400">{{
-                      activeHeaderPage.label
-                    }}</span>
-                  </h4>
-                  <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                    Atur konten yang akan tampil pada komponen
-                    {{ activeHeaderPage.label }}.
-                  </p>
-
-                  <div v-if="!activeHeaderPage.type" class="space-y-5">
-                    <div>
-                      <label
-                        class="flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
-                        ><PhTextT class="w-4 h-4" /> Judul Halaman</label
-                      >
-                      <input
-                        type="text"
-                        v-model="appearanceSettings[activeHeaderPageKey + '_title']"
-                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                        :placeholder="'Judul untuk halaman ' + activeHeaderPage.label"
+                <div
+                  class="bg-gray-50/50 dark:bg-slate-700/30 p-5 md:p-6 rounded-2xl border border-gray-200 dark:border-slate-600"
+                >
+                  <div v-if="activeHeaderPage" class="animate-fade-in">
+                    <h4
+                      class="text-lg font-bold text-gray-800 dark:text-white mb-1 flex items-center gap-2"
+                    >
+                      <component
+                        :is="activeHeaderPage.icon || PhImage"
+                        class="w-5 h-5 text-gray-800 dark:text-gray-400"
                       />
-                    </div>
-                    <div>
-                      <label
-                        class="flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
-                        ><PhTextAa class="w-4 h-4" /> Deskripsi Singkat</label
-                      >
-                      <textarea
-                        v-model="appearanceSettings[activeHeaderPageKey + '_description']"
-                        rows="3"
-                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
-                        :placeholder="
-                          'Deskripsi singkat untuk halaman ' + activeHeaderPage.label
-                        "
-                      ></textarea>
-                    </div>
-                    <div>
-                      <label
-                        class="flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
-                        ><PhImage class="w-4 h-4" /> Gambar Latar</label
-                      >
-                      <ImageUploader
-                        v-model="appearanceSettings[activeHeaderPageKey + '_bgImage']"
-                        :label="`Gambar Latar Halaman ${activeHeaderPage.label}`"
-                        containerClass="w-full"
-                        :style="{ aspectRatio: '21/9' }"
-                      />
-                    </div>
-                  </div>
 
-                  <div v-if="activeHeaderPage.type === 'image_only'" class="space-y-5">
-                    <div>
-                      <ImageUploader
-                        v-model="appearanceSettings[activeHeaderPageKey]"
-                        :label="`Gambar untuk ${activeHeaderPage.label}`"
-                        :accept="activeHeaderPage.accept || 'image/*'"
-                        containerClass="w-full"
-                        :style="{ aspectRatio: activeHeaderPage.aspect || '21/9' }"
-                      />
-                      <p
-                        v-if="activeHeaderPage.note"
-                        class="text-xs text-gray-500 dark:text-gray-400 mt-3"
-                      >
-                        <span class="font-semibold text-blue-600 dark:text-blue-400"
-                          >Info:</span
+                      <span class="text-gray-800 dark:text-gray-400">{{
+                        activeHeaderPage.label
+                      }}</span>
+                    </h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                      Atur konten yang akan tampil pada komponen
+                      {{ activeHeaderPage.label }}.
+                    </p>
+
+                    <div v-if="!activeHeaderPage.type" class="space-y-5">
+                      <div>
+                        <label
+                          class="flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                          ><PhTextT class="w-4 h-4" /> Judul Halaman</label
                         >
-                        {{ activeHeaderPage.note }}
+                        <input
+                          type="text"
+                          v-model="appearanceSettings[activeHeaderPageKey + '_title']"
+                          class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                          :placeholder="'Judul untuk halaman ' + activeHeaderPage.label"
                         />
-                      </p>
+                      </div>
+                      <div>
+                        <label
+                          class="flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                          ><PhTextAa class="w-4 h-4" /> Deskripsi Singkat</label
+                        >
+                        <textarea
+                          v-model="
+                            appearanceSettings[activeHeaderPageKey + '_description']
+                          "
+                          rows="3"
+                          class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                          :placeholder="
+                            'Deskripsi singkat untuk halaman ' + activeHeaderPage.label
+                          "
+                        ></textarea>
+                      </div>
+                      <div>
+                        <label
+                          class="flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                          ><PhImage class="w-4 h-4" /> Gambar Latar</label
+                        >
+                        <ImageUploader
+                          v-model="appearanceSettings[activeHeaderPageKey + '_bgImage']"
+                          :label="`Gambar Latar Halaman ${activeHeaderPage.label}`"
+                          containerClass="w-full"
+                          :style="{ aspectRatio: '21/9' }"
+                        />
+                      </div>
+                    </div>
+
+                    <div v-if="activeHeaderPage.type === 'image_only'" class="space-y-5">
+                      <div>
+                        <ImageUploader
+                          v-model="appearanceSettings[activeHeaderPageKey]"
+                          :label="`Gambar untuk ${activeHeaderPage.label}`"
+                          :accept="activeHeaderPage.accept || 'image/*'"
+                          containerClass="w-full"
+                          :style="{ aspectRatio: activeHeaderPage.aspect || '21/9' }"
+                        />
+                        <p
+                          v-if="activeHeaderPage.note"
+                          class="text-xs text-gray-500 dark:text-gray-400 mt-3"
+                        >
+                          <span class="font-semibold text-blue-600 dark:text-blue-400"
+                            >Info:</span
+                          >
+                          {{ activeHeaderPage.note }}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
