@@ -268,9 +268,12 @@ onBeforeUnmount(() => {
     <PageHeader
       v-if="appearanceSettings"
       badge="Informasi Publik"
-      title="Berita & Artikel Sekolah"
-      description="Ikuti terus perkembangan, kegiatan, prestasi, dan pengumuman terbaru seputar lingkungan sekolah."
-      :bgImage="appearanceSettings.headerBerita"
+      :title="appearanceSettings.headerBerita_title || 'Berita & Artikel Sekolah'"
+      :description="
+        appearanceSettings.headerBerita_description ||
+        'Ikuti terus perkembangan, kegiatan, prestasi, dan pengumuman terbaru seputar lingkungan sekolah.'
+      "
+      :bgImage="getImageUrl(appearanceSettings.headerBerita_bgImage)"
     />
 
     <!-- News Section -->

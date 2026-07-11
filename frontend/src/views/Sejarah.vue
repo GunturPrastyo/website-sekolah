@@ -160,9 +160,12 @@ onBeforeUnmount(() => {
     <PageHeader
       v-if="!isLoading && appearanceSettings"
       badge="Profil Sekolah"
-      title="Sejarah Singkat"
-      description="Menelusuri jejak historis, tonggak perkembangan, dan kisah perjalanan berdirinya sekolah kami dari masa ke masa."
-      :bgImage="getImageUrl(appearanceSettings.headerSejarah)"
+      :title="appearanceSettings.headerSejarah_title || 'Sejarah Singkat Sekolah'"
+      :description="
+        appearanceSettings.headerSejarah_description ||
+        'Menelusuri jejak historis, tonggak perkembangan, dan kisah perjalanan berdirinya sekolah kami dari masa ke masa.'
+      "
+      :bgImage="getImageUrl(appearanceSettings.headerSejarah_bgImage)"
     />
 
     <!-- Profil Singkat Section -->

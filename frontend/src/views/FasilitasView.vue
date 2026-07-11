@@ -1,30 +1,20 @@
 <template>
   <div>
+    <PageHeader
+      v-if="!isLoading"
+      badge="Sarana & Prasarana"
+      :title="appearanceSettings.headerFasilitas_title || 'Fasilitas Sekolah'"
+      :description="
+        appearanceSettings.headerFasilitas_description ||
+        'Jelajahi berbagai fasilitas modern yang mendukung pengalaman belajar siswa secara optimal di lingkungan sekolah kami.'
+      "
+      :bgImage="getImageUrl(appearanceSettings.headerFasilitas_bgImage)"
+    />
+
     <section class="relative z-20 px-0 dark:bg-slate-900 min-h-screen">
       <main class="w-full">
         <!-- HEADER TRANSITION -->
         <template v-if="isLoading">
-          <!-- Skeleton Header -->
-          <div
-            class="relative h-[350px] md:h-[400px] lg:h-[450px] overflow-hidden shadow-lg lg:rounded-b-2xl border-b border-gray-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 animate-pulse"
-          >
-            <div class="absolute bottom-0 left-0 w-full p-2 md:p-14 py-8">
-              <div class="container mx-auto max-w-7xl px-4 md:px-0">
-                <div
-                  class="h-8 w-40 bg-slate-300 dark:bg-slate-700 rounded-full mb-4"
-                ></div>
-                <div
-                  class="h-10 w-3/4 md:w-1/2 bg-slate-300 dark:bg-slate-700 rounded-lg mb-4"
-                ></div>
-                <div
-                  class="h-4 w-full md:w-2/3 bg-slate-300 dark:bg-slate-700 rounded mb-2"
-                ></div>
-                <div
-                  class="h-4 w-5/6 md:w-1/2 bg-slate-300 dark:bg-slate-700 rounded"
-                ></div>
-              </div>
-            </div>
-          </div>
           <!-- Skeleton Content -->
           <div class="container mx-auto max-w-full px-0 md:px-6 lg:px-8 py-0 md:py-8">
             <div
@@ -67,90 +57,6 @@
           </div>
         </template>
         <template v-else>
-          <Transition
-            mode="out-in"
-            enter-active-class="transition-all duration-700 ease-out"
-            enter-from-class="opacity-0 translate-y-8"
-            enter-to-class="opacity-100 translate-y-0"
-            leave-active-class="transition-all duration-300 ease-in"
-            leave-from-class="opacity-100 translate-y-0"
-            leave-to-class="opacity-0 -translate-y-8"
-          >
-            <div
-              v-if="currentCategory"
-              :key="currentCategory.id + '-header'"
-              class="relative h-[350px] md:h-[400px] lg:h-[450px] overflow-hidden shadow-lg lg:rounded-b-2xl border-b border-gray-200 dark:border-slate-800"
-            >
-              <img
-                :src="currentCategory.coverImage"
-                class="absolute inset-0 w-full h-full object-cover scale-105 animate-slow-zoom"
-                alt="Fasilitas Header"
-              />
-              <div
-                class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-slate-900/20"
-              ></div>
-
-              <div class="absolute bottom-0 left-0 w-full p-2 md:p-14 py-8 text-white">
-                <div class="container mx-auto max-w-7xl">
-                  <span
-                    class="inline-block px-4 py-1.5 mb-4 text-md font-extrabold text-blue-900 bg-white backdrop-blur-sm dark:bg-blue-900/40 dark:text-blue-300 rounded-full shadow-sm"
-                    style="font-family: 'Kalam', cursive"
-                  >
-                    Fasilitas Unggulan
-                  </span>
-
-                  <h1
-                    class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 drop-shadow-md break-words"
-                  >
-                    {{ currentCategory.name }}
-                  </h1>
-
-                  <p
-                    class="text-blue-50 text-sm md:text-base max-w-2xl leading-relaxed drop-shadow"
-                  >
-                    Jelajahi berbagai fasilitas modern yang mendukung pengalaman belajar
-                    siswa secara optimal di lingkungan sekolah kami.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div
-              v-else
-              key="empty-header"
-              class="relative h-[350px] md:h-[400px] lg:h-[450px] overflow-hidden shadow-lg lg:rounded-b-2xl border-b border-gray-200 dark:border-slate-800 bg-slate-900"
-            >
-              <img
-                :src="defaultImage"
-                class="absolute inset-0 w-full h-full object-cover scale-105 animate-slow-zoom opacity-50"
-                alt="Fasilitas Header"
-              />
-              <div
-                class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-slate-900/20"
-              ></div>
-              <div class="absolute bottom-0 left-0 w-full p-2 md:p-14 py-8 text-white">
-                <div class="container mx-auto max-w-7xl px-4 md:px-0">
-                  <span
-                    class="inline-block px-4 py-1.5 mb-4 text-md font-extrabold text-blue-900 bg-white backdrop-blur-sm dark:bg-blue-900/40 dark:text-blue-300 rounded-full shadow-sm"
-                    style="font-family: 'Kalam', cursive"
-                  >
-                    Fasilitas Unggulan
-                  </span>
-                  <h1
-                    class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 drop-shadow-md"
-                  >
-                    Fasilitas Sekolah
-                  </h1>
-                  <p
-                    class="text-blue-50 text-sm md:text-base max-w-2xl leading-relaxed drop-shadow"
-                  >
-                    Jelajahi berbagai fasilitas modern yang mendukung pengalaman belajar
-                    siswa secara optimal di lingkungan sekolah kami.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Transition>
-
           <!-- CONTENT AREA -->
           <div
             v-if="facilityCategories.length > 0"
@@ -373,12 +279,25 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import api from "@/api/index.js";
-import { PhArrowsOut, PhImage, PhX, PhBuildings } from "@phosphor-icons/vue";
+import { PhX, PhBuildings } from "@phosphor-icons/vue";
+import PageHeader from "@/components/PageHeader.vue";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 
 const facilityCategories = ref([]);
 const isLoading = ref(true);
 const defaultImage = ref("/img/gedung.jpg");
+const appearanceSettings = ref({});
+
+const getImageUrl = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http") || path.startsWith("data:image")) return path;
+  const baseUrl = api.defaults.baseURL;
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+  if (cleanPath.startsWith("storage/")) {
+    return `${baseUrl}/${cleanPath}`;
+  }
+  return `${baseUrl}/storage/${cleanPath}`;
+};
 
 const fetchSchoolProfile = async () => {
   try {
@@ -404,7 +323,11 @@ const fetchSchoolProfile = async () => {
 const fetchFacilities = async () => {
   isLoading.value = true;
   try {
-    const response = await api.get("/api/fasilitas");
+    const [response, settingsRes] = await Promise.all([
+      api.get("/api/fasilitas"),
+      api.get("/api/settings"),
+    ]);
+
     if (response.data?.data) {
       facilityCategories.value = response.data.data.map((f) => {
         let coverImage = defaultImage.value;
@@ -446,6 +369,10 @@ const fetchFacilities = async () => {
       if (facilityCategories.value.length > 0) {
         activeCategory.value = facilityCategories.value[0].id;
       }
+    }
+
+    if (settingsRes.data?.success) {
+      appearanceSettings.value = settingsRes.data.data;
     }
   } catch (error) {
     console.error("Gagal memuat data fasilitas:", error);
@@ -565,33 +492,6 @@ const currentCategory = computed(() => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap");
-
-/* Custom Scrollbar for Sidebar Nav */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #e5e7eb;
-  border-radius: 10px;
-}
-.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #475569;
-}
-
-@keyframes slow-zoom {
-  0% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1.15);
-  }
-}
-.animate-slow-zoom {
-  animation: slow-zoom 20s alternate infinite ease-in-out;
-}
 
 /* Responsivitas untuk konten rich text editor */
 :deep(.editor-content-preview) {

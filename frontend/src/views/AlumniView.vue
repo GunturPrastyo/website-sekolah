@@ -5,9 +5,12 @@
     <!-- Header / Hero Section -->
     <PageHeader
       badge="Jejak Langkah Lulusan"
-      title="Direktori & Persebaran Alumni"
-      description="Temukan jejak sukses para alumni sekolah kami yang tersebar di berbagai perguruan tinggi favorit dan instansi bergengsi di seluruh Indonesia."
-      :bgImage="appearanceSettings.headerAlumni"
+      :title="appearanceSettings.headerAlumni_title || 'Direktori & Persebaran Alumni'"
+      :description="
+        appearanceSettings.headerAlumni_description ||
+        'Temukan jejak sukses para alumni sekolah kami yang tersebar di berbagai perguruan tinggi favorit dan instansi bergengsi di seluruh Indonesia.'
+      "
+      :bgImage="getImageUrl(appearanceSettings.headerAlumni_bgImage)"
     />
 
     <!-- Direktori & Persebaran Alumni Section -->
@@ -428,6 +431,17 @@ import {
   PhXCircle,
   PhArrowDown,
 } from "@phosphor-icons/vue";
+
+const getImageUrl = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http") || path.startsWith("data:image")) return path;
+  const baseUrl = api.defaults.baseURL;
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+  if (cleanPath.startsWith("storage/")) {
+    return `${baseUrl}/${cleanPath}`;
+  }
+  return `${baseUrl}/storage/${cleanPath}`;
+};
 
 // Reactive State
 const mapLocations = ref([]);

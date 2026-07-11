@@ -331,9 +331,12 @@ const onImageLoad = (id) => {
     <PageHeader
       v-if="appearanceSettings"
       badge="Koleksi Visual"
-      title="Galeri Kegiatan"
-      description="Merekam jejak langkah, fasilitas, dan berbagai momen tak terlupakan di lingkungan sekolah kami."
-      :bgImage="getImageUrl(appearanceSettings.headerGaleri)"
+      :title="appearanceSettings.headerGaleri_title || 'Galeri Foto & Video'"
+      :description="
+        appearanceSettings.headerGaleri_description ||
+        'Merekam jejak langkah, fasilitas, dan berbagai momen tak terlupakan di lingkungan sekolah kami.'
+      "
+      :bgImage="getImageUrl(appearanceSettings.headerGaleri_bgImage)"
     />
 
     <!-- Gallery Section -->

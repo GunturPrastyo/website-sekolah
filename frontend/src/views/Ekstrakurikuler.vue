@@ -266,9 +266,12 @@ onBeforeUnmount(() => {
     <PageHeader
       v-if="!isFetching && appearanceSettings"
       badge="Akademik"
-      title="Ekstrakurikuler & Klub Siswa"
-      description="Kembangkan bakat, minat, dan potensimu di luar jam pelajaran melalui berbagai pilihan kegiatan ekstrakurikuler yang seru dan inspiratif."
-      :bgImage="appearanceSettings.headerEkskul"
+      :title="appearanceSettings.headerEkskul_title || 'Ekstrakurikuler & Klub Siswa'"
+      :description="
+        appearanceSettings.headerEkskul_description ||
+        'Kembangkan bakat, minat, dan potensimu di luar jam pelajaran melalui berbagai pilihan kegiatan ekstrakurikuler yang seru dan inspiratif.'
+      "
+      :bgImage="getImageUrl(appearanceSettings.headerEkskul_bgImage)"
     />
 
     <!-- Gallery Section -->

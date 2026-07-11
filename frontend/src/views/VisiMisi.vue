@@ -3,9 +3,12 @@
     <PageHeader
       v-if="!isLoading && appearanceSettings"
       badge="Profil Sekolah"
-      title="Visi, Misi & Sambutan"
-      description="Arah pandang, cita-cita luhur, dan komitmen strategis sekolah dalam menyelenggarakan pendidikan unggul, serta sambutan hangat dari Kepala Sekolah."
-      :bgImage="getImageUrl(appearanceSettings.headerVisiMisi)"
+      :title="appearanceSettings.headerVisiMisi_title || 'Visi, Misi & Sambutan'"
+      :description="
+        appearanceSettings.headerVisiMisi_description ||
+        'Arah pandang, cita-cita luhur, dan komitmen strategis sekolah dalam menyelenggarakan pendidikan unggul, serta sambutan hangat dari Kepala Sekolah.'
+      "
+      :bgImage="getImageUrl(appearanceSettings.headerVisiMisi_bgImage)"
     />
 
     <!-- Sambutan Kepala Sekolah Section -->
