@@ -111,6 +111,56 @@ const appearanceSettings = ref({
 
 const headerPagesConfig = ref([
   {
+    group: "Halaman Utama",
+    icon: PhHouse,
+    pages: [
+      {
+        key: "headerBeranda",
+        label: "Banner Utama",
+        type: "image_only",
+        aspect: "24/9",
+        note: "Mendukung format gambar (JPG/PNG) dan video (MP4/WebM).",
+        accept: "image/*,video/mp4,video/webm",
+      },
+      {
+        key: "benefitFasilitasImage",
+        label: "Benefit: Fasilitas",
+        type: "image_only",
+        aspect: "4/3",
+      },
+      {
+        key: "benefitGuruImage",
+        label: "Benefit: Guru",
+        type: "image_only",
+        aspect: "4/3",
+      },
+      {
+        key: "benefitPrestasiImage",
+        label: "Benefit: Prestasi",
+        type: "image_only",
+        aspect: "4/3",
+      },
+      {
+        key: "programCoverImage",
+        label: "Cover Jurusan",
+        type: "image_only",
+        aspect: "4/3",
+      },
+      {
+        key: "ppdbBackgroundImage",
+        label: "Latar Belakang FAQ PPDB",
+        type: "image_only",
+        aspect: "21/9",
+      },
+      {
+        key: "galleryBackgroundImage",
+        label: "Latar Belakang Video & Galeri",
+        type: "image_only",
+        aspect: "21/9",
+      },
+    ],
+  },
+  {
     group: "Profil Sekolah",
     icon: PhBuildings,
     pages: [
@@ -142,9 +192,21 @@ const headerPagesConfig = ref([
       { key: "headerUnduhan", label: "Unduhan File" },
     ],
   },
+  {
+    group: "Sistem & Autentikasi",
+    icon: PhLockKey,
+    pages: [
+      {
+        key: "loginBackground",
+        label: "Background Halaman Login",
+        type: "image_only",
+        aspect: "21/9",
+      },
+    ],
+  },
 ]);
 
-const activeHeaderPageKey = ref("headerSejarah");
+const activeHeaderPageKey = ref("headerBeranda");
 
 const activeHeaderPage = computed(() => {
   for (const group of headerPagesConfig.value) {
@@ -651,94 +713,6 @@ const updateProfile = async () => {
             website publik.
           </p>
 
-          <!-- Group: Komponen Beranda -->
-          <div class="mb-8">
-            <div
-              class="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200 dark:border-slate-700"
-            >
-              <PhHouse class="w-5 h-5 text-blue-600 dark:text-blue-400" />
-              <h4 class="font-semibold text-gray-800 dark:text-white">Halaman Utama</h4>
-            </div>
-
-            <div
-              class="bg-gray-50/50 dark:bg-slate-700/30 p-5 rounded-xl border border-gray-200 dark:border-slate-600 mb-5"
-            >
-              <ImageUploader
-                v-model="appearanceSettings.headerBeranda"
-                label="Banner Beranda Utama"
-                accept="image/*,video/mp4,video/webm"
-                containerClass="w-full aspect-[21/9] md:aspect-[24/9]"
-              />
-              <p
-                class="text-xs text-gray-500 dark:text-gray-400 mt-3 flex items-center gap-1"
-              >
-                <span class="font-semibold text-blue-600 dark:text-blue-400">Info:</span>
-                Mendukung format gambar (JPG/PNG) dan video (MP4/WebM). Disarankan
-                resolusi lanskap lebar.
-              </p>
-            </div>
-
-            <h5 class="font-semibold text-gray-700 dark:text-gray-300 mb-3 text-sm">
-              Gambar Komponen Beranda
-            </h5>
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.benefitFasilitasImage"
-                  label="Kenapa Pilih Kami 1 (Fasilitas)"
-                  containerClass="w-full aspect-[4/3]"
-                />
-              </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.benefitGuruImage"
-                  label="Kenapa Pilih Kami 2 (Guru)"
-                  containerClass="w-full aspect-[4/3]"
-                />
-              </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.benefitPrestasiImage"
-                  label="Kenapa Pilih Kami 3 (Prestasi)"
-                  containerClass="w-full aspect-[4/3]"
-                />
-              </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.programCoverImage"
-                  label="Cover Jurusan Pilihan"
-                  containerClass="w-full aspect-[4/3]"
-                />
-              </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.ppdbBackgroundImage"
-                  label="Gambar Latar FAQ PPDB"
-                  containerClass="w-full aspect-[21/9]"
-                />
-              </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.galleryBackgroundImage"
-                  label="Gambar Latar Video & Galeri"
-                  containerClass="w-full aspect-[21/9]"
-                />
-              </div>
-            </div>
-          </div>
-
           <!-- Group: Header Halaman Statis -->
           <div class="mb-8">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
@@ -748,7 +722,7 @@ const updateProfile = async () => {
               >
                 <div v-for="group in headerPagesConfig" :key="group.group" class="mb-4">
                   <h5
-                    class="flex items-center gap-2 text-sm font-semibold text-gray-500 dark:text-gray-400 px-3 mb-2"
+                    class="flex items-center gap-2 text-sm font-bold text-gray-800 dark:text-gray-400 px-3 mb-2"
                   >
                     <component :is="group.icon" class="w-4 h-4" />
                     {{ group.group }}
@@ -779,18 +753,21 @@ const updateProfile = async () => {
                   <h4
                     class="text-lg font-bold text-gray-800 dark:text-white mb-1 flex items-center gap-2"
                   >
-                    <PhImage class="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                    
-                    <span class="text-blue-600 dark:text-blue-400">{{
+                    <component
+                      :is="activeHeaderPage.icon || PhImage"
+                      class="w-5 h-5 text-gray-800 dark:text-gray-400"
+                    />
+
+                    <span class="text-gray-800 dark:text-gray-400">{{
                       activeHeaderPage.label
                     }}</span>
                   </h4>
                   <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                    Atur konten yang akan tampil pada banner halaman
+                    Atur konten yang akan tampil pada komponen
                     {{ activeHeaderPage.label }}.
                   </p>
 
-                  <div class="space-y-5">
+                  <div v-if="!activeHeaderPage.type" class="space-y-5">
                     <div>
                       <label
                         class="flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
@@ -825,34 +802,38 @@ const updateProfile = async () => {
                       <ImageUploader
                         v-model="appearanceSettings[activeHeaderPageKey + '_bgImage']"
                         :label="`Gambar Latar Halaman ${activeHeaderPage.label}`"
-                        containerClass="w-full aspect-[21/9]"
+                        containerClass="w-full"
+                        :style="{ aspectRatio: '21/9' }"
                       />
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <!-- Group: Sistem & Autentikasi -->
-          <div class="mb-4">
-            <div
-              class="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200 dark:border-slate-700"
-            >
-              <PhLockKey class="w-5 h-5 text-blue-600 dark:text-blue-400" />
-              <h4 class="font-semibold text-gray-800 dark:text-white">
-                Sistem & Autentikasi
-              </h4>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.loginBackground"
-                  label="Background Halaman Login"
-                  containerClass="w-full aspect-[21/9]"
-                />
+                  <div v-if="activeHeaderPage.type === 'image_only'" class="space-y-5">
+                    <div>
+                      <label
+                        class="flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                        ><PhImage class="w-4 h-4" /> Gambar</label
+                      >
+                      <ImageUploader
+                        v-model="appearanceSettings[activeHeaderPageKey]"
+                        :label="`Gambar untuk ${activeHeaderPage.label}`"
+                        :accept="activeHeaderPage.accept || 'image/*'"
+                        containerClass="w-full"
+                        :style="{ aspectRatio: activeHeaderPage.aspect || '21/9' }"
+                      />
+                      <p
+                        v-if="activeHeaderPage.note"
+                        class="text-xs text-gray-500 dark:text-gray-400 mt-3"
+                      >
+                        <span class="font-semibold text-blue-600 dark:text-blue-400"
+                          >Info:</span
+                        >
+                        {{ activeHeaderPage.note }}
+                        />
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
