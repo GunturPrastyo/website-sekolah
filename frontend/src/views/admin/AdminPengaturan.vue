@@ -20,6 +20,7 @@ import {
   PhYoutubeLogo,
   PhTwitterLogo,
   PhTiktokLogo,
+  PhCaretUpDown,
 } from "@phosphor-icons/vue";
 import ImageUploader from "@/components/admin/ImageUploader.vue";
 import ToastNotification from "@/components/admin/ToastNotification.vue";
@@ -34,6 +35,10 @@ const generalSettingsCategories = ref([
   { key: "sosmed", label: "Sosial Media", icon: PhShareNetwork },
 ]);
 const activeGeneralCategoryKey = ref("identitas");
+
+// State untuk Bottom Sheet Mobile
+const isSheetOpen = ref(false);
+const sheetContent = ref("general"); // 'general' atau 'appearance'
 
 // Toast
 const showToast = ref(false);
@@ -224,6 +229,12 @@ const activeHeaderPage = computed(() => {
   return null;
 });
 
+const activeGeneralCategory = computed(() => {
+  return generalSettingsCategories.value.find(
+    (c) => c.key === activeGeneralCategoryKey.value
+  );
+});
+
 // State Akun
 const currentUser = ref({
   name: "",
@@ -368,6 +379,25 @@ const updateProfile = async () => {
     triggerToast("Gagal Menyimpan", "Terjadi kesalahan saat memperbarui profil", "error");
   }
 };
+
+const openSheet = (type) => {
+  sheetContent.value = type;
+  isSheetOpen.value = true;
+};
+
+const closeSheet = () => {
+  isSheetOpen.value = false;
+};
+
+const selectGeneralCategory = (key) => {
+  activeGeneralCategoryKey.value = key;
+  closeSheet();
+};
+
+const selectHeaderPage = (key) => {
+  activeHeaderPageKey.value = key;
+  closeSheet();
+};
 </script>
 
 <template>
@@ -447,7 +477,7 @@ const updateProfile = async () => {
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
           <!-- Kolom Kiri: Navigasi Kategori -->
           <div
-            class="lg:col-span-1 lg:sticky lg:top-6 bg-white dark:bg-slate-800/50 p-4 rounded-xl border border-gray-200 dark:border-slate-700"
+            class="hidden lg:block lg:col-span-1 lg:sticky lg:top-6 bg-white dark:bg-slate-800/50 p-4 rounded-xl border border-gray-200 dark:border-slate-700"
           >
             <ul class="space-y-1">
               <li v-for="cat in generalSettingsCategories" :key="cat.key">
@@ -472,6 +502,27 @@ const updateProfile = async () => {
             class="lg:col-span-3 bg-gray-50/50 dark:bg-slate-700/30 p-5 md:p-6 rounded-2xl border border-gray-200 dark:border-slate-600"
           >
             <!-- Identitas Sekolah & Logo -->
+            <!-- Mobile Category Selector -->
+            <div class="mb-6 lg:hidden">
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                >Pilih Kategori</label
+              >
+              <button
+                @click="openSheet('general')"
+                type="button"
+                class="w-full flex justify-between items-center px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+              >
+                <span v-if="activeGeneralCategory" class="flex items-center gap-2">
+                  <component
+                    :is="activeGeneralCategory.icon"
+                    class="w-5 h-5 text-gray-500"
+                  />
+                  {{ activeGeneralCategory.label }}
+                </span>
+                <PhCaretUpDown class="w-5 h-5 text-gray-400" />
+              </button>
+            </div>
             <div
               v-if="activeGeneralCategoryKey === 'identitas'"
               class="animate-fade-in space-y-5"
@@ -758,7 +809,7 @@ const updateProfile = async () => {
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
               <!-- Kolom Kiri: Navigasi Halaman -->
               <div
-                class="lg:col-span-1 lg:sticky lg:top-6 bg-white dark:bg-slate-800/50 p-4 rounded-xl border border-gray-200 dark:border-slate-700"
+                class="hidden lg:block lg:col-span-1 lg:sticky lg:top-6 bg-white dark:bg-slate-800/50 p-4 rounded-xl border border-gray-200 dark:border-slate-700"
               >
                 <div v-for="group in headerPagesConfig" :key="group.group" class="mb-4">
                   <h5
@@ -789,6 +840,24 @@ const updateProfile = async () => {
               <div
                 class="lg:col-span-3 bg-gray-50/50 dark:bg-slate-700/30 p-5 md:p-6 rounded-2xl border border-gray-200 dark:border-slate-600"
               >
+                <!-- Mobile Page Selector -->
+                <div class="mb-6 lg:hidden">
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                    >Pilih Halaman</label
+                  >
+                  <button
+                    @click="openSheet('appearance')"
+                    type="button"
+                    class="w-full flex justify-between items-center px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                  >
+                    <span v-if="activeHeaderPage" class="flex items-center gap-2">
+                      {{ activeHeaderPage.label }}
+                    </span>
+                    <PhCaretUpDown class="w-5 h-5 text-gray-400" />
+                  </button>
+                </div>
+
                 <div v-if="activeHeaderPage" class="animate-fade-in">
                   <h4
                     class="text-lg font-bold text-gray-800 dark:text-white mb-1 flex items-center gap-2"
@@ -952,6 +1021,75 @@ const updateProfile = async () => {
       @close="showToast = false"
     />
   </main>
+
+  <!-- Mobile Bottom Sheet for Category Selection -->
+  <teleport to="body">
+    <transition name="fade">
+      <div
+        v-if="isSheetOpen"
+        @click="closeSheet"
+        class="fixed inset-0 bg-black/40 z-[99] lg:hidden"
+      ></div>
+    </transition>
+    <transition name="sheet">
+      <div
+        v-if="isSheetOpen"
+        class="fixed bottom-0 left-0 right-0 z-[100] bg-white dark:bg-slate-800 rounded-t-2xl shadow-2xl max-h-[80vh] flex flex-col lg:hidden"
+      >
+        <div class="p-4 border-b border-gray-200 dark:border-slate-700 shrink-0">
+          <h3 class="font-bold text-lg text-gray-900 dark:text-white text-center">
+            {{ sheetContent === "general" ? "Pilih Kategori" : "Pilih Halaman" }}
+          </h3>
+        </div>
+        <div class="overflow-y-auto p-2">
+          <!-- Content for General Settings -->
+          <ul v-if="sheetContent === 'general'" class="space-y-1">
+            <li v-for="cat in generalSettingsCategories" :key="cat.key">
+              <button
+                @click="selectGeneralCategory(cat.key)"
+                class="w-full text-left text-sm px-3 py-3 rounded-lg transition-colors flex items-center gap-3"
+                :class="
+                  activeGeneralCategoryKey === cat.key
+                    ? 'bg-blue-100 dark:bg-blue-900/50 font-semibold text-blue-700 dark:text-blue-300'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700'
+                "
+              >
+                <component :is="cat.icon" class="w-5 h-5" />
+                {{ cat.label }}
+              </button>
+            </li>
+          </ul>
+
+          <!-- Content for Appearance Settings -->
+          <div v-if="sheetContent === 'appearance'" class="space-y-2">
+            <div v-for="group in headerPagesConfig" :key="group.group" class="mb-2">
+              <h5
+                class="flex items-center gap-2 text-xs font-bold text-gray-500 dark:text-gray-400 px-3 mb-1 uppercase tracking-wider"
+              >
+                <component :is="group.icon" class="w-4 h-4" />
+                {{ group.group }}
+              </h5>
+              <ul class="space-y-1">
+                <li v-for="page in group.pages" :key="page.key">
+                  <button
+                    @click="selectHeaderPage(page.key)"
+                    class="w-full text-left text-sm px-3 py-3 rounded-lg transition-colors flex items-center gap-2"
+                    :class="
+                      activeHeaderPageKey === page.key
+                        ? 'bg-blue-100 dark:bg-blue-900/50 font-semibold text-blue-700 dark:text-blue-300'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700'
+                    "
+                  >
+                    {{ page.label }}
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+  </teleport>
 </template>
 
 <style scoped>
@@ -980,5 +1118,23 @@ const updateProfile = async () => {
 }
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #475569;
+}
+
+/* Transitions for Bottom Sheet */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+.sheet-enter-active,
+.sheet-leave-active {
+  transition: transform 0.3s ease-out;
+}
+.sheet-enter-from,
+.sheet-leave-to {
+  transform: translateY(100%);
 }
 </style>
