@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, markRaw } from "vue";
 import api from "@/api/index.js";
 import {
   PhGear,
@@ -30,9 +30,9 @@ const activeTab = ref(userRole.value === "super_admin" ? "umum" : "akun");
 
 // State untuk navigasi kategori di tab "Pengaturan Umum"
 const generalSettingsCategories = ref([
-  { key: "identitas", label: "Identitas Utama", icon: PhBuildings },
-  { key: "kontak", label: "Kontak & Lokasi", icon: PhMapPin },
-  { key: "sosmed", label: "Sosial Media", icon: PhShareNetwork },
+  { key: "identitas", label: "Identitas Utama", icon: markRaw(PhBuildings) },
+  { key: "kontak", label: "Kontak & Lokasi", icon: markRaw(PhMapPin) },
+  { key: "sosmed", label: "Sosial Media", icon: markRaw(PhShareNetwork) },
 ]);
 const activeGeneralCategoryKey = ref("identitas");
 
@@ -125,7 +125,7 @@ const appearanceSettings = ref({
 const headerPagesConfig = ref([
   {
     group: "Halaman Utama",
-    icon: PhHouse,
+    icon: markRaw(PhHouse),
     pages: [
       {
         key: "headerBeranda",
@@ -175,7 +175,7 @@ const headerPagesConfig = ref([
   },
   {
     group: "Profil Sekolah",
-    icon: PhBuildings,
+    icon: markRaw(PhBuildings),
     pages: [
       { key: "headerSejarah", label: "Sejarah" },
       { key: "headerVisiMisi", label: "Visi & Misi" },
@@ -185,7 +185,7 @@ const headerPagesConfig = ref([
   },
   {
     group: "Akademik & Kesiswaan",
-    icon: PhGraduationCap,
+    icon: markRaw(PhGraduationCap),
     pages: [
       { key: "headerKurikulum", label: "Kurikulum" },
       { key: "headerProgramJurusan", label: "Program Jurusan" },
@@ -196,7 +196,7 @@ const headerPagesConfig = ref([
   },
   {
     group: "Publikasi & Media",
-    icon: PhMegaphone,
+    icon: markRaw(PhMegaphone),
     pages: [
       { key: "headerPendaftaran", label: "Informasi PPDB" },
       { key: "headerBerita", label: "Berita" },
@@ -207,7 +207,7 @@ const headerPagesConfig = ref([
   },
   {
     group: "Sistem & Autentikasi",
-    icon: PhLockKey,
+    icon: markRaw(PhLockKey),
     pages: [
       {
         key: "loginBackground",
