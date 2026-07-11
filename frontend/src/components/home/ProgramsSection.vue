@@ -84,7 +84,6 @@ const initJurusanSwiper = () => {
   const desktopSlides = totalPrograms > 0 ? Math.min(3, totalPrograms) : 3;
   const tabletSlides = totalPrograms > 0 ? Math.min(2, totalPrograms) : 2;
 
-  // PERBAIKAN: Loop hanya diaktifkan jika jumlah program lebih dari jumlah slide desktop
   const enableLoop = totalPrograms > desktopSlides;
 
   jurusanSwiperInstance = new Swiper(".jurusan-swiper", {
@@ -94,7 +93,7 @@ const initJurusanSwiper = () => {
       delay: 3000,
       disableOnInteraction: false,
     },
-    // PERBAIKAN: Observer ditambahkan agar Swiper mendeteksi perubahan dari Vue
+
     observer: true,
     observeParents: true,
     slidesPerView: 1,

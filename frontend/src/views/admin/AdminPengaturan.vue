@@ -11,6 +11,8 @@ import {
   PhMegaphone,
   PhUser,
   PhLockKey,
+  PhTextT,
+  PhTextAa,
   PhMapPin,
   PhShareNetwork,
   PhInstagramLogo,
@@ -56,20 +58,48 @@ const generalSettings = ref({
 // State Tampilan
 const appearanceSettings = ref({
   headerBeranda: "",
-  headerSejarah: "",
-  headerVisiMisi: "",
-  headerFasilitas: "",
-  headerGuruStaf: "",
-  headerEkskul: "",
-  headerKurikulum: "",
-  headerAlumni: "",
-  headerProgramJurusan: "",
-  headerPrestasi: "",
-  headerPendaftaran: "",
-  headerBerita: "",
-  headerGaleri: "",
-  headerArtikel: "",
-  headerUnduhan: "",
+  headerSejarah_title: "",
+  headerSejarah_description: "",
+  headerSejarah_bgImage: "",
+  headerVisiMisi_title: "",
+  headerVisiMisi_description: "",
+  headerVisiMisi_bgImage: "",
+  headerFasilitas_title: "",
+  headerFasilitas_description: "",
+  headerFasilitas_bgImage: "",
+  headerGuruStaf_title: "",
+  headerGuruStaf_description: "",
+  headerGuruStaf_bgImage: "",
+  headerEkskul_title: "",
+  headerEkskul_description: "",
+  headerEkskul_bgImage: "",
+  headerKurikulum_title: "",
+  headerKurikulum_description: "",
+  headerKurikulum_bgImage: "",
+  headerAlumni_title: "",
+  headerAlumni_description: "",
+  headerAlumni_bgImage: "",
+  headerProgramJurusan_title: "",
+  headerProgramJurusan_description: "",
+  headerProgramJurusan_bgImage: "",
+  headerPrestasi_title: "",
+  headerPrestasi_description: "",
+  headerPrestasi_bgImage: "",
+  headerPendaftaran_title: "",
+  headerPendaftaran_description: "",
+  headerPendaftaran_bgImage: "",
+  headerBerita_title: "",
+  headerBerita_description: "",
+  headerBerita_bgImage: "",
+  headerGaleri_title: "",
+  headerGaleri_description: "",
+  headerGaleri_bgImage: "",
+  headerArtikel_title: "",
+  headerArtikel_description: "",
+  headerArtikel_bgImage: "",
+  headerUnduhan_title: "",
+  headerUnduhan_description: "",
+  headerUnduhan_bgImage: "",
   benefitFasilitasImage: "",
   benefitGuruImage: "",
   benefitPrestasiImage: "",
@@ -77,6 +107,51 @@ const appearanceSettings = ref({
   loginBackground: "",
   ppdbBackgroundImage: "",
   galleryBackgroundImage: "",
+});
+
+const headerPagesConfig = ref([
+  {
+    group: "Profil Sekolah",
+    icon: PhBuildings,
+    pages: [
+      { key: "headerSejarah", label: "Sejarah" },
+      { key: "headerVisiMisi", label: "Visi & Misi" },
+      { key: "headerFasilitas", label: "Fasilitas" },
+      { key: "headerGuruStaf", label: "Guru & Staf" },
+    ],
+  },
+  {
+    group: "Akademik & Kesiswaan",
+    icon: PhGraduationCap,
+    pages: [
+      { key: "headerKurikulum", label: "Kurikulum" },
+      { key: "headerProgramJurusan", label: "Program Jurusan" },
+      { key: "headerEkskul", label: "Ekstrakurikuler" },
+      { key: "headerPrestasi", label: "Prestasi Siswa" },
+      { key: "headerAlumni", label: "Data Alumni" },
+    ],
+  },
+  {
+    group: "Publikasi & Media",
+    icon: PhMegaphone,
+    pages: [
+      { key: "headerPendaftaran", label: "Informasi PPDB" },
+      { key: "headerBerita", label: "Berita" },
+      { key: "headerArtikel", label: "Artikel" },
+      { key: "headerGaleri", label: "Galeri Foto & Video" },
+      { key: "headerUnduhan", label: "Unduhan File" },
+    ],
+  },
+]);
+
+const activeHeaderPageKey = ref("headerSejarah");
+
+const activeHeaderPage = computed(() => {
+  for (const group of headerPagesConfig.value) {
+    const found = group.pages.find((p) => p.key === activeHeaderPageKey.value);
+    if (found) return found;
+  }
+  return null;
 });
 
 // State Akun
@@ -572,10 +647,11 @@ const updateProfile = async () => {
             Pengaturan Header Halaman
           </h3>
           <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
-            Kelola gambar latar (banner) untuk setiap halaman pada website publik.
+            Kelola judul, deskripsi, dan gambar latar (banner) untuk setiap halaman pada
+            website publik.
           </p>
 
-          <!-- Group: Beranda -->
+          <!-- Group: Komponen Beranda -->
           <div class="mb-8">
             <div
               class="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200 dark:border-slate-700"
@@ -663,168 +739,97 @@ const updateProfile = async () => {
             </div>
           </div>
 
-          <!-- Group: Profil Sekolah -->
+          <!-- Group: Header Halaman Statis -->
           <div class="mb-8">
-            <div
-              class="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200 dark:border-slate-700"
-            >
-              <PhBuildings class="w-5 h-5 text-blue-600 dark:text-blue-400" />
-              <h4 class="font-semibold text-gray-800 dark:text-white">Profil Sekolah</h4>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+              <!-- Kolom Kiri: Navigasi Halaman -->
               <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+                class="lg:col-span-1 lg:sticky lg:top-6 bg-white dark:bg-slate-800/50 p-4 rounded-xl border border-gray-200 dark:border-slate-700"
               >
-                <ImageUploader
-                  v-model="appearanceSettings.headerSejarah"
-                  label="Sejarah"
-                  containerClass="w-full aspect-[21/9]"
-                />
+                <div v-for="group in headerPagesConfig" :key="group.group" class="mb-4">
+                  <h5
+                    class="flex items-center gap-2 text-sm font-semibold text-gray-500 dark:text-gray-400 px-3 mb-2"
+                  >
+                    <component :is="group.icon" class="w-4 h-4" />
+                    {{ group.group }}
+                  </h5>
+                  <ul class="space-y-1">
+                    <li v-for="page in group.pages" :key="page.key">
+                      <button
+                        @click="activeHeaderPageKey = page.key"
+                        class="w-full text-left text-sm px-3 py-2 rounded-md transition-colors flex items-center gap-2"
+                        :class="
+                          activeHeaderPageKey === page.key
+                            ? 'bg-blue-100 dark:bg-blue-900/50 font-semibold text-blue-700 dark:text-blue-300'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700'
+                        "
+                      >
+                        {{ page.label }}
+                      </button>
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.headerVisiMisi"
-                  label="Visi & Misi"
-                  containerClass="w-full aspect-[21/9]"
-                />
-              </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.headerFasilitas"
-                  label="Fasilitas"
-                  containerClass="w-full aspect-[21/9]"
-                />
-              </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.headerGuruStaf"
-                  label="Guru & Staf"
-                  containerClass="w-full aspect-[21/9]"
-                />
-              </div>
-            </div>
-          </div>
 
-          <!-- Group: Akademik & Kesiswaan -->
-          <div class="mb-8">
-            <div
-              class="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200 dark:border-slate-700"
-            >
-              <PhGraduationCap class="w-5 h-5 text-blue-600 dark:text-blue-400" />
-              <h4 class="font-semibold text-gray-800 dark:text-white">
-                Akademik & Kesiswaan
-              </h4>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+              <!-- Kolom Kanan: Form Editor -->
               <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
+                class="lg:col-span-3 bg-gray-50/50 dark:bg-slate-700/30 p-5 md:p-6 rounded-2xl border border-gray-200 dark:border-slate-600"
               >
-                <ImageUploader
-                  v-model="appearanceSettings.headerKurikulum"
-                  label="Kurikulum"
-                  containerClass="w-full aspect-[21/9]"
-                />
-              </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.headerProgramJurusan"
-                  label="Program Jurusan"
-                  containerClass="w-full aspect-[21/9]"
-                />
-              </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.headerEkskul"
-                  label="Ekstrakurikuler"
-                  containerClass="w-full aspect-[21/9]"
-                />
-              </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.headerPrestasi"
-                  label="Prestasi Siswa"
-                  containerClass="w-full aspect-[21/9]"
-                />
-              </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.headerAlumni"
-                  label="Data Alumni"
-                  containerClass="w-full aspect-[21/9]"
-                />
-              </div>
-            </div>
-          </div>
+                <div v-if="activeHeaderPage" class="animate-fade-in">
+                  <h4
+                    class="text-lg font-bold text-gray-800 dark:text-white mb-1 flex items-center gap-2"
+                  >
+                    <PhImage class="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                    
+                    <span class="text-blue-600 dark:text-blue-400">{{
+                      activeHeaderPage.label
+                    }}</span>
+                  </h4>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                    Atur konten yang akan tampil pada banner halaman
+                    {{ activeHeaderPage.label }}.
+                  </p>
 
-          <!-- Group: Publikasi & Media -->
-          <div class="mb-4">
-            <div
-              class="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200 dark:border-slate-700"
-            >
-              <PhMegaphone class="w-5 h-5 text-blue-600 dark:text-blue-400" />
-              <h4 class="font-semibold text-gray-800 dark:text-white">
-                Publikasi & Media
-              </h4>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.headerPendaftaran"
-                  label="Informasi PPDB"
-                  containerClass="w-full aspect-[21/9]"
-                />
-              </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.headerBerita"
-                  label="Berita"
-                  containerClass="w-full aspect-[21/9]"
-                />
-              </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.headerArtikel"
-                  label="Artikel"
-                  containerClass="w-full aspect-[21/9]"
-                />
-              </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.headerGaleri"
-                  label="Galeri Foto & Video"
-                  containerClass="w-full aspect-[21/9]"
-                />
-              </div>
-              <div
-                class="bg-gray-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-gray-200 dark:border-slate-600"
-              >
-                <ImageUploader
-                  v-model="appearanceSettings.headerUnduhan"
-                  label="Unduhan File"
-                  containerClass="w-full aspect-[21/9]"
-                />
+                  <div class="space-y-5">
+                    <div>
+                      <label
+                        class="flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                        ><PhTextT class="w-4 h-4" /> Judul Halaman</label
+                      >
+                      <input
+                        type="text"
+                        v-model="appearanceSettings[activeHeaderPageKey + '_title']"
+                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                        :placeholder="'Judul untuk halaman ' + activeHeaderPage.label"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                        ><PhTextAa class="w-4 h-4" /> Deskripsi Singkat</label
+                      >
+                      <textarea
+                        v-model="appearanceSettings[activeHeaderPageKey + '_description']"
+                        rows="3"
+                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm placeholder-gray-400/60 dark:placeholder-slate-500/60"
+                        :placeholder="
+                          'Deskripsi singkat untuk halaman ' + activeHeaderPage.label
+                        "
+                      ></textarea>
+                    </div>
+                    <div>
+                      <label
+                        class="flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                        ><PhImage class="w-4 h-4" /> Gambar Latar</label
+                      >
+                      <ImageUploader
+                        v-model="appearanceSettings[activeHeaderPageKey + '_bgImage']"
+                        :label="`Gambar Latar Halaman ${activeHeaderPage.label}`"
+                        containerClass="w-full aspect-[21/9]"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
