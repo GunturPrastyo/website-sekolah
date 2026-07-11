@@ -18,32 +18,28 @@ class SettingController extends Controller
 {
     use ImageUploadTrait;
 
-    /**
-     * @var array<int, string>
-     */
-    private array $fileKeys = [
-        'logo', 'favicon', 'headerBeranda',
-        'headerSejarah_bgImage', 'headerVisiMisi_bgImage',
-        'headerFasilitas_bgImage', 'headerGuruStaf_bgImage', 'headerEkskul_bgImage', 'headerKurikulum_bgImage',
-        'headerAlumni_bgImage', 'headerProgramJurusan_bgImage', 'headerPrestasi_bgImage', 'headerPendaftaran_bgImage',
-        'headerBerita_bgImage', 'headerGaleri_bgImage', 'headerArtikel_bgImage', 'headerUnduhan_bgImage',
-        'benefitFasilitasImage', 'benefitGuruImage', 'benefitPrestasiImage',
-        'programCoverImage', 'loginBackground', 'ppdbBackgroundImage', 'galleryBackgroundImage'
-    ];
-
     public function index()
     {
-      
+        // Ambil data dari cache
         $settings = Cache::rememberForever('global_settings', function () {
             return Setting::pluck('value', 'key')->all();
         });
 
+        // List key yang bertindak sebagai file gambar/media sesuai array kodinganmu
+        $fileKeys = [
+            'logo', 'favicon', 'headerBeranda', 'headerSejarah', 'headerVisiMisi',
+            'headerFasilitas', 'headerGuruStaf', 'headerEkskul', 'headerKurikulum',
+            'headerAlumni', 'headerProgramJurusan', 'headerPrestasi', 'headerPendaftaran',
+            'headerBerita', 'headerGaleri', 'headerArtikel', 'headerUnduhan',
+            'benefitFasilitasImage', 'benefitGuruImage', 'benefitPrestasiImage',
+            'programCoverImage', 'loginBackground', 'ppdbBackgroundImage', 'galleryBackgroundImage'
+        ];
+
         foreach ($settings as $key => $value) {
-           
-            if (in_array($key, $this->fileKeys) && is_string($value) && $value) {
+            if (in_array($key, $fileKeys) && $value) {
                 
                 if (str_starts_with($value, 'http')) {
-                   
+                    // Ambil path setelah kata '/storage/'
                     $parts = explode('/storage/', $value);
                     $cleanPath = end($parts);
                 } else {
@@ -100,15 +96,22 @@ class SettingController extends Controller
     {
         $data = $request->all();
 
+        $fileKeys = [
+            'logo', 'favicon', 'headerBeranda', 'headerSejarah', 'headerVisiMisi',
+            'headerFasilitas', 'headerGuruStaf', 'headerEkskul', 'headerKurikulum',
+            'headerAlumni', 'headerProgramJurusan', 'headerPrestasi', 'headerPendaftaran',
+            'headerBerita', 'headerGaleri', 'headerArtikel', 'headerUnduhan',
+            'benefitFasilitasImage', 'benefitGuruImage', 'benefitPrestasiImage',
+            'programCoverImage', 'loginBackground', 'ppdbBackgroundImage', 'galleryBackgroundImage'
+        ];
+
         foreach ($data as $key => $value) {
-            
-            if (in_array($key, $this->fileKeys) && is_string($value) && $value) {
+            if (in_array($key, $fileKeys) && $value) {
                 if (preg_match('/^data:(image|video)\/(\w+);base64,/', $value)) {
 
                     $oldSetting = Setting::where('key', $key)->first();
                     $oldPath = $oldSetting ? $oldSetting->value : null;
 
-                   
                     if ($oldPath && str_starts_with($oldPath, 'http')) {
                         $parts = explode('/storage/', $oldPath);
                         $oldPath = end($parts);
@@ -116,9 +119,11 @@ class SettingController extends Controller
 
                    
                     $relativePath = $this->processAndSaveImage($value, 'settings', $oldPath);
+
+                 
                     $value = $relativePath;
                 } elseif (str_starts_with($value, 'http')) {
-                   
+                
                     $parts = explode('/storage/', $value);
                     $value = end($parts);
                 }
@@ -130,15 +135,13 @@ class SettingController extends Controller
             );
         }
 
+        
         Cache::forget('global_settings');
-
-        $response = $this->index();
-        $responseData = json_decode($response->getContent(), true);
 
         return response()->json([
             'success' => true,
             'message' => 'Pengaturan berhasil disimpan.',
-            'data' => $responseData['data'] ?? Setting::pluck('value', 'key')->all()
+            'data' => Setting::pluck('value', 'key')->all()
         ]);
     }
 }
