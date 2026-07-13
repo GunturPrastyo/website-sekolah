@@ -90,9 +90,11 @@ watch(
         class="absolute inset-0 bg-gradient-to-b from-blue-900/80 via-slate-900/90 to-black/95 backdrop-blur-[2px]"
       ></div>
 
-      <div class="relative z-10 flex flex-col gap-10 lg:gap-12 items-center">
+      <div
+        class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-stretch"
+      >
         <!-- FAQ Kolom Kiri -->
-        <div class="w-full flex flex-col justify-center p-0 sm:p-4">
+        <div class="flex flex-col justify-center p-0 sm:p-4">
           <div class="mb-8 md:mb-10 text-center lg:text-left">
             <h2
               class="text-2xl md:text-4xl font-bold text-white mb-3"
@@ -169,7 +171,7 @@ watch(
 
         <!-- CTA Kolom Kanan -->
         <div
-          class="relative w-full lg:max-w-5xl py-12 md:py-16 bg-gradient-to-br from-blue-600 to-blue-800 border border-blue-500/30 px-6 md:px-10 text-center rounded-2xl shadow-xl overflow-hidden flex flex-col justify-center items-center"
+          class="relative py-12 md:py-16 bg-gradient-to-br from-blue-600 to-blue-800 border border-blue-500/30 px-6 md:px-10 text-center rounded-lg shadow-xl overflow-hidden flex flex-col justify-center items-center"
         >
           <div
             class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"

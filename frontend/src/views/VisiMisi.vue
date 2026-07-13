@@ -82,7 +82,7 @@
           <div class="w-full lg:w-2/3 mt-4 lg:mt-0 md:px-12 lg:px-0">
             <div class="hidden lg:flex items-center gap-3 mb-6">
               <h2
-                class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-wide"
+                class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-300 tracking-wide"
                 style="font-family: 'Oswald', sans-serif"
               >
                 Sambutan Kepala Sekolah
@@ -128,81 +128,13 @@
       </div>
     </section>
 
-    <!-- Pembatas Section -->
-    <div class="border-t border-gray-200 dark:border-slate-700"></div>
-
-    <!-- Visi & Misi Section -->
-    <section class="relative w-full bg-white dark:bg-slate-900 py-12 md:py-16">
-      <div class="container mx-auto max-w-7xl px-6 md:px-4">
-        <div
-          class="flex flex-col lg:flex-row w-full items-center gap-8 md:gap-12 lg:gap-16"
-        >
-          <div class="w-full lg:w-5/12">
-            <div>
-              <h3
-                class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6 tracking-wide text-gray-900 dark:text-white"
-                style="font-family: 'Oswald', sans-serif"
-              >
-                Visi
-              </h3>
-              <div
-                v-if="isLoading"
-                class="animate-pulse h-12 bg-gray-200 dark:bg-slate-700 rounded w-full"
-              ></div>
-              <p
-                v-else
-                class="text-lg sm:text-xl md:text-2xl font-medium leading-relaxed text-gray-700 dark:text-gray-300 italic"
-              >
-                "{{ visi }}"
-              </p>
-            </div>
-          </div>
-
-          <div class="w-full lg:w-7/12">
-            <div class="mb-6 md:mb-8 pb-4 border-b border-gray-200 dark:border-slate-700">
-              <h3
-                class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white tracking-wide"
-                style="font-family: 'Oswald', sans-serif"
-              >
-                Misi
-              </h3>
-            </div>
-
-            <div v-if="isLoading" class="animate-pulse space-y-4">
-              <div class="h-12 bg-gray-200 dark:bg-slate-700 rounded w-full"></div>
-              <div class="h-12 bg-gray-200 dark:bg-slate-700 rounded w-full"></div>
-              <div class="h-12 bg-gray-200 dark:bg-slate-700 rounded w-full"></div>
-            </div>
-            <ul v-else class="space-y-4 md:space-y-6">
-              <li
-                v-for="(item, index) in misi"
-                :key="index"
-                class="flex items-start group"
-              >
-                <span
-                  class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-gray-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-gray-200 dark:border-slate-700"
-                  >{{ index + 1 }}</span
-                >
-                <p
-                  class="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
-                >
-                  {{ item.text }}
-                </p>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
     <!-- Visi & Misi Section -->
     <section class="relative w-full bg-fixed bg-center bg-cover overflow-hidden">
-      <div
-        class="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-950/95 to-slate-950 dark:from-slate-900/90 dark:via-slate-950/95 dark:to-black backdrop-blur-[2px] z-0"
-      ></div>
+      <div class="absolute inset-0 z-0 bg-white/90 dark:bg-slate-900/90"></div>
 
       <div class="flex flex-col lg:flex-row w-full relative z-10">
         <div
-          class="w-full lg:w-6/12 p-8 sm:p-10 md:p-16 lg:p-24 text-white flex flex-col justify-center"
+          class="w-full lg:w-6/12 p-8 sm:p-10 md:p-16 lg:p-24 text-gray-800 dark:text-gray-300 flex flex-col justify-center"
         >
           <div>
             <h3
@@ -225,13 +157,13 @@
         </div>
 
         <div
-          class="w-full lg:w-7/12 p-8 sm:p-10 md:p-16 lg:p-24 flex flex-col justify-center text-white"
+          class="w-full lg:w-7/12 p-8 sm:p-10 md:p-16 lg:p-24 flex flex-col justify-center text-gray-800 dark:text-gray-300"
         >
           <div
             class="mb-6 md:mb-8 pb-4 border-b border-blue-800/60 dark:border-slate-700"
           >
             <h3
-              class="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-wide"
+              class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-300 tracking-wide"
               style="font-family: 'Oswald', sans-serif"
             >
               Misi
