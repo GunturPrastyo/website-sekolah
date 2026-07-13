@@ -133,13 +133,14 @@ onBeforeUnmount(() => {
       >
         <div class="relative block">
           <h2
-            class="text-2xl md:text-4xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
+            class="fade-on-scroll opacity-0 -translate-x-10 transition-all duration-700 ease-out text-2xl md:text-4xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
             style="font-family: 'Oswald', sans-serif"
           >
             Berita & Pengumuman
           </h2>
           <div
-            class="flex flex-col md:flex-row md:justify-between md:items-end ml-0 sm:ml-4 gap-4"
+            class="fade-on-scroll opacity-0 translate-x-10 transition-all duration-700 ease-out flex flex-col md:flex-row md:justify-between md:items-end ml-0 sm:ml-4 gap-4"
+            style="transition-delay: 150ms"
           >
             <p
               class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base max-w-2xl"
@@ -159,7 +160,10 @@ onBeforeUnmount(() => {
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-0 lg:gap-8 items-stretch">
-        <div class="lg:col-span-2 flex flex-col gap-6">
+        <div
+          class="fade-on-scroll opacity-0 -translate-x-10 transition-all duration-700 ease-out lg:col-span-2 flex flex-col gap-6"
+          style="transition-delay: 300ms"
+        >
           <template v-if="isLoadingNews">
             <div
               class="rounded-lg overflow-hidden shadow-lg h-[280px] sm:h-[350px] md:h-[400px] w-full bg-slate-200 dark:bg-slate-700 animate-pulse relative"
@@ -298,7 +302,10 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
-        <div class="lg:col-span-1 relative h-[550px] lg:h-auto mt-0 md:mt-8 lg:mt-0">
+        <div
+          class="fade-on-scroll opacity-0 translate-x-10 transition-all duration-700 ease-out lg:col-span-1 relative h-[550px] lg:h-auto mt-0 md:mt-8 lg:mt-0"
+          style="transition-delay: 450ms"
+        >
           <div
             class="absolute inset-0 bg-white dark:bg-slate-800 rounded-xl shadow-md border border-gray-100 dark:border-slate-700 flex flex-col overflow-hidden"
           >
