@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onMounted, onBeforeUnmount, watch } from "vue";
+import { ref, reactive, nextTick, onMounted, onBeforeUnmount } from "vue";
 import api from "@/api/index.js";
 
 // IMPORT SEMUA KOMPONEN
@@ -95,6 +95,7 @@ const isLoading = reactive({
 });
 
 let scrollObserver = null;
+let typewriterInterval = null;
 let statsAnimationId = null;
 
 // FUNGSI FETCH API
@@ -114,8 +115,14 @@ const fetchSettings = async () => {
 
       if (fullTitle.value !== newTitle) {
         fullTitle.value = newTitle;
+        if (isTypewriterStarted.value) {
+          displayedTitle.value = newTitle;
+        } else {
+          startTypewriter();
+        }
+      } else {
+        if (!isTypewriterStarted.value) startTypewriter();
       }
-      startTypewriter();
     }
   } catch (error) {
     if (!isTypewriterStarted.value) startTypewriter();
@@ -158,9 +165,10 @@ const fetchSchoolStats = async () => {
 const fetchPrograms = async () => {
   try {
     const res = await api.get("/api/public-programs");
-    programs.value = res.data?.data || [];
+    if (res.data?.data) programs.value = res.data.data;
   } finally {
     isLoading.programs = false;
+    nextTick(observeElements);
   }
 };
 
@@ -174,6 +182,7 @@ const fetchNewsAndAnnouncements = async () => {
     if (annRes.data?.data) announcements.value = annRes.data.data;
   } finally {
     isLoading.news = false;
+    nextTick(observeElements);
   }
 };
 
@@ -295,6 +304,7 @@ const fetchAgendas = async () => {
     }
   } finally {
     isLoading.agendas = false;
+    nextTick(observeElements);
   }
 };
 
@@ -308,6 +318,7 @@ const fetchSchoolVideo = async () => {
     }
   } finally {
     isLoading.video = false;
+    nextTick(observeElements);
   }
 };
 
@@ -320,6 +331,7 @@ const fetchPpdbInfo = async () => {
     }
   } finally {
     isLoading.ppdb = false;
+    nextTick(observeElements);
   }
 };
 
@@ -353,6 +365,7 @@ const fetchAlumniLocations = async () => {
     }
   } finally {
     isLoading.map = false;
+    nextTick(observeElements);
   }
 };
 
@@ -388,19 +401,22 @@ const animateStats = () => {
 };
 
 const startTypewriter = () => {
-  if (isTypewriterStarted.value || !fullTitle.value) return;
+  if (isTypewriterStarted.value && displayedTitle.value.length > 0) return;
   isTypewriterStarted.value = true;
+
+  if (typewriterInterval) clearInterval(typewriterInterval);
 
   let i = 0;
   displayedTitle.value = "";
 
-  const interval = setInterval(() => {
+  typewriterInterval = setInterval(() => {
     if (i < fullTitle.value.length) {
       displayedTitle.value += fullTitle.value.charAt(i);
       i++;
     } else {
-      clearInterval(interval);
+      clearInterval(typewriterInterval);
       showSubtitle.value = true;
+      setTimeout(animateStats, 500);
     }
   }, 120);
 };
@@ -408,72 +424,57 @@ const startTypewriter = () => {
 const observeElements = () => {
   if (!scrollObserver) return;
   // Membaca DOM di frame berikutnya agar tidak mengganggu render awal
-  document.querySelectorAll(".lazy-section").forEach((el) => {
-    scrollObserver.observe(el);
+  requestAnimationFrame(() => {
+    document.querySelectorAll(".fade-on-scroll:not([data-observed])").forEach((el) => {
+      scrollObserver.observe(el);
+      el.dataset.observed = "true";
+    });
   });
 };
 
 onMounted(() => {
-  // 1. Ambil data yang penting untuk tampilan awal (Above the Fold)
+  const cachedHeader = localStorage.getItem("app_headerBeranda");
+  if (cachedHeader) appearanceSettings.value.headerBeranda = cachedHeader;
+
+  // 1. Ambil data prioritas/krusial terlebih dahulu
   fetchSettings();
   fetchSchoolStats();
+  fetchPpdbInfo();
 
-  // 2. Setup Intersection Observer untuk memuat data & komponen lainnya saat di-scroll
+  // 2. Tunda pengambilan data sekunder agar UI bisa dirender tanpa stuttering
+  setTimeout(() => {
+    fetchPrograms();
+    fetchAgendas();
+    fetchGalleries();
+    fetchSchoolVideo();
+    fetchNewsAndAnnouncements();
+    fetchAlumniLocations();
+  }, 100);
+
+  if (fullTitle.value && !isTypewriterStarted.value) startTypewriter();
+
+  // 3. Setup Observer dengan performa lebih baik
   scrollObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add("is-visible");
-
-          const section = entry.target.dataset.section;
-          if (section && !sectionsVisible[section]) {
-            sectionsVisible[section] = true; // Tandai sebagai terlihat untuk memicu rendering
-            // Panggil fungsi fetch yang sesuai
-            switch (section) {
-              case "alumni":
-                fetchAlumniLocations();
-                break;
-              case "programs":
-                fetchPrograms();
-                break;
-              case "news":
-                fetchNewsAndAnnouncements();
-                break;
-              case "video":
-                fetchSchoolVideo();
-                fetchGalleries();
-                break;
-              case "agenda":
-                fetchAgendas();
-                break;
-              case "ppdb":
-                fetchPpdbInfo();
-                break;
-            }
-          }
           scrollObserver.unobserve(entry.target);
         }
       });
     },
     {
-      rootMargin: "0px 0px 50px 0px", // Mulai load 50px sebelum masuk viewport
-      threshold: 0,
+      rootMargin: "0px 0px -50px 0px",
+      threshold: 0.05,
     }
   );
 
   observeElements();
-
-  // Animasikan statistik setelah subtitle muncul
-  const unwatch = watch(showSubtitle, (newValue) => {
-    if (newValue) {
-      animateStats();
-      unwatch(); // Hentikan watcher setelah dijalankan sekali
-    }
-  });
 });
 
 onBeforeUnmount(() => {
   if (scrollObserver) scrollObserver.disconnect();
+  if (typewriterInterval) clearInterval(typewriterInterval);
   if (statsAnimationId) cancelAnimationFrame(statsAnimationId);
 });
 </script>
@@ -490,11 +491,11 @@ onBeforeUnmount(() => {
     />
 
     <main class="px-6 bg-gray-100 dark:bg-gray-900 overflow-hidden">
-      <div data-section="features" class="lazy-section">
+      <div class="fade-on-scroll">
         <FeaturesSection :appearanceSettings="appearanceSettings" />
       </div>
 
-      <div data-section="alumni" class="lazy-section">
+      <div class="fade-on-scroll">
         <AlumniMapSection
           :alumniLocations="alumniLocations"
           :alumniStatsTarget="alumniStatsTarget"
@@ -502,7 +503,7 @@ onBeforeUnmount(() => {
         />
       </div>
 
-      <div data-section="programs" class="lazy-section">
+      <div class="fade-on-scroll">
         <ProgramsSection
           :appearanceSettings="appearanceSettings"
           :programs="programs"
@@ -510,7 +511,7 @@ onBeforeUnmount(() => {
         />
       </div>
 
-      <div data-section="news" class="lazy-section">
+      <div class="fade-on-scroll">
         <NewsSection
           :recentNews="news"
           :announcements="announcements"
@@ -518,8 +519,9 @@ onBeforeUnmount(() => {
         />
       </div>
 
-      <div data-section="video" class="lazy-section">
+      <div class="fade-on-scroll">
         <VideoGallerySection
+          v-if="!isLoading.video"
           :key="schoolVideoUrl"
           :appearanceSettings="appearanceSettings"
           :schoolVideoUrl="schoolVideoUrl"
@@ -533,11 +535,11 @@ onBeforeUnmount(() => {
         />
       </div>
 
-      <div data-section="agenda" class="lazy-section">
+      <div class="fade-on-scroll">
         <AgendaSection :agendas="agendas" :isLoadingAgendas="isLoading.agendas" />
       </div>
 
-      <div data-section="ppdb" class="lazy-section">
+      <div class="fade-on-scroll">
         <PpdbFaqSection
           :appearanceSettings="appearanceSettings"
           :ppdbInfo="ppdbInfo"
@@ -551,14 +553,14 @@ onBeforeUnmount(() => {
 
 <style scoped>
 /* Kelas khusus untuk menangani animasi scroll lewat GPU */
-.lazy-section {
+.fade-on-scroll {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translateY(20px);
   will-change: transform, opacity;
-  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease-out;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease-out;
 }
 
-.lazy-section.is-visible {
+.fade-on-scroll.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
