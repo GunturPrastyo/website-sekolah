@@ -52,7 +52,7 @@ const heroMedia = computed(() => {
   const isVideo = /\.(mp4|webm|ogg)$/i.test(finalUrl);
 
   return {
-    type: isVideo ? "video" : "url",
+    type: isVideo ? "video" : "image",
     url: finalUrl,
   };
 });
@@ -92,20 +92,20 @@ onBeforeUnmount(() => {
     <div class="absolute inset-0 -z-10 overflow-hidden bg-slate-950">
       <Transition name="fade-bg" mode="in-out">
         <div
-          v-if="heroMedia.type !== 'video'"
+          v-if="heroMedia.type === 'image'"
           :key="'img-' + heroMedia.url"
           class="absolute inset-0 w-full h-full"
         >
           <img
             :src="heroMedia.url"
-            class="w-full h-full object-cover brightness-[0.85]"
+            class="w-full h-full object-cover opacity-40 mix-blend-screen"
             alt="Hero Background"
           />
         </div>
 
         <div v-else :key="'vid-' + heroMedia.url" class="absolute inset-0 w-full h-full">
           <video
-            class="w-full h-full object-cover brightness-[0.85]"
+            class="w-full h-full object-cover opacity-40 mix-blend-screen"
             autoplay
             loop
             muted
@@ -117,7 +117,7 @@ onBeforeUnmount(() => {
       </Transition>
 
       <div
-        class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-950 z-10 pointer-events-none"
+        class="absolute inset-0 bg-linear-to-b from-slate-900/30 via-slate-950/60 to-slate-950 z-10 pointer-events-none"
       ></div>
     </div>
 
