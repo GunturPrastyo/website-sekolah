@@ -3,6 +3,7 @@ defineProps({
   badge: { type: String, required: true },
   title: { type: String, required: true },
   description: { type: String, required: true },
+  currentPage: { type: String, default: "" },
   bgImage: { type: String, default: "" },
 });
 </script>
@@ -53,6 +54,15 @@ defineProps({
       >
         {{ description }}
       </p>
+
+      <div
+        v-if="currentPage"
+        class="mt-4 md:mt-6 text-sm text-blue-200/80 flex items-center gap-1"
+      >
+        <router-link to="/" class="hover:text-white transition-colors">Home</router-link>
+        <span class="mx-1">&gt;</span>
+        <span class="font-semibold text-white">{{ currentPage }}</span>
+      </div>
     </div>
   </div>
 </template>

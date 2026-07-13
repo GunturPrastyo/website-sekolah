@@ -165,6 +165,7 @@ onBeforeUnmount(() => {
         appearanceSettings.headerSejarah_description ||
         'Menelusuri jejak historis, tonggak perkembangan, dan kisah perjalanan berdirinya sekolah kami dari masa ke masa.'
       "
+      currentPage="Sejarah Sekolah"
       :bgImage="getImageUrl(appearanceSettings.headerSejarah_bgImage)"
     />
 
