@@ -434,6 +434,8 @@ onMounted(() => {
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+
           const section = entry.target.dataset.section;
           if (section && !sectionsVisible[section]) {
             sectionsVisible[section] = true; // Tandai sebagai terlihat untuk memicu rendering
@@ -499,11 +501,11 @@ onBeforeUnmount(() => {
     />
 
     <main class="px-6 bg-gray-100 dark:bg-gray-900 overflow-hidden">
-      <div data-section="features" class="lazy-section fade-on-scroll">
+      <div data-section="features" class="lazy-section">
         <FeaturesSection :appearanceSettings="appearanceSettings" />
       </div>
 
-      <div data-section="alumni" class="lazy-section fade-on-scroll">
+      <div data-section="alumni" class="lazy-section">
         <AlumniMapSection
           v-if="sectionsVisible.alumni"
           :alumniLocations="alumniLocations"
@@ -512,7 +514,7 @@ onBeforeUnmount(() => {
         />
       </div>
 
-      <div data-section="programs" class="lazy-section fade-on-scroll">
+      <div data-section="programs" class="lazy-section">
         <ProgramsSection
           v-if="sectionsVisible.programs"
           :appearanceSettings="appearanceSettings"
@@ -521,7 +523,7 @@ onBeforeUnmount(() => {
         />
       </div>
 
-      <div data-section="news" class="lazy-section fade-on-scroll">
+      <div data-section="news" class="lazy-section">
         <NewsSection
           v-if="sectionsVisible.news"
           :recentNews="news"
@@ -530,7 +532,7 @@ onBeforeUnmount(() => {
         />
       </div>
 
-      <div data-section="video" class="lazy-section fade-on-scroll">
+      <div data-section="video" class="lazy-section">
         <VideoGallerySection
           v-if="sectionsVisible.video"
           :key="schoolVideoUrl"
@@ -546,7 +548,7 @@ onBeforeUnmount(() => {
         />
       </div>
 
-      <div data-section="agenda" class="lazy-section fade-on-scroll">
+      <div data-section="agenda" class="lazy-section">
         <AgendaSection
           v-if="sectionsVisible.agenda"
           :agendas="agendas"
@@ -554,7 +556,7 @@ onBeforeUnmount(() => {
         />
       </div>
 
-      <div data-section="ppdb" class="lazy-section fade-on-scroll">
+      <div data-section="ppdb" class="lazy-section">
         <PpdbFaqSection
           v-if="sectionsVisible.ppdb"
           :appearanceSettings="appearanceSettings"
