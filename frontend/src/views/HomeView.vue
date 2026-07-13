@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onMounted, onBeforeUnmount } from "vue";
+import { ref, reactive, onMounted, onBeforeUnmount, watch } from "vue";
 import api from "@/api/index.js";
 
 // IMPORT SEMUA KOMPONEN
@@ -18,17 +18,6 @@ const slogan = ref(localStorage.getItem("app_sloganSekolah") || "");
 const displayedTitle = ref("");
 const showSubtitle = ref(false);
 const isTypewriterStarted = ref(false);
-
-// State untuk melacak komponen mana yang sudah terlihat
-const sectionsVisible = reactive({
-  features: false,
-  alumni: false,
-  programs: false,
-  news: false,
-  video: false,
-  agenda: false,
-  ppdb: false,
-});
 
 const appearanceSettings = ref({
   loginBackground: "",
@@ -507,7 +496,6 @@ onBeforeUnmount(() => {
 
       <div data-section="alumni" class="lazy-section">
         <AlumniMapSection
-          v-if="sectionsVisible.alumni"
           :alumniLocations="alumniLocations"
           :alumniStatsTarget="alumniStatsTarget"
           :isLoading="isLoading.map"
@@ -516,7 +504,6 @@ onBeforeUnmount(() => {
 
       <div data-section="programs" class="lazy-section">
         <ProgramsSection
-          v-if="sectionsVisible.programs"
           :appearanceSettings="appearanceSettings"
           :programs="programs"
           :isLoadingPrograms="isLoading.programs"
@@ -525,7 +512,6 @@ onBeforeUnmount(() => {
 
       <div data-section="news" class="lazy-section">
         <NewsSection
-          v-if="sectionsVisible.news"
           :recentNews="news"
           :announcements="announcements"
           :isLoadingNews="isLoading.news"
@@ -534,7 +520,6 @@ onBeforeUnmount(() => {
 
       <div data-section="video" class="lazy-section">
         <VideoGallerySection
-          v-if="sectionsVisible.video"
           :key="schoolVideoUrl"
           :appearanceSettings="appearanceSettings"
           :schoolVideoUrl="schoolVideoUrl"
@@ -549,16 +534,11 @@ onBeforeUnmount(() => {
       </div>
 
       <div data-section="agenda" class="lazy-section">
-        <AgendaSection
-          v-if="sectionsVisible.agenda"
-          :agendas="agendas"
-          :isLoadingAgendas="isLoading.agendas"
-        />
+        <AgendaSection :agendas="agendas" :isLoadingAgendas="isLoading.agendas" />
       </div>
 
       <div data-section="ppdb" class="lazy-section">
         <PpdbFaqSection
-          v-if="sectionsVisible.ppdb"
           :appearanceSettings="appearanceSettings"
           :ppdbInfo="ppdbInfo"
           :faqs="faqs"
