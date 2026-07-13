@@ -57,8 +57,7 @@ const appearanceSettings = ref({});
 const isFetching = ref(true);
 
 const getImageUrl = (path) => {
-  if (!path)
-    return "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800";
+  if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:")) return path;
 
   const backendUrl = api.defaults.baseURL;

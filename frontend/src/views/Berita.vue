@@ -63,8 +63,7 @@ const skeletonCount = computed(() => {
 });
 
 const getImageUrl = (path) => {
-  if (!path)
-    return "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800";
+  if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:image")) return path;
 
   const baseUrl = api.defaults.baseURL;
