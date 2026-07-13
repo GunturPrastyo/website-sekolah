@@ -318,6 +318,7 @@ const fetchSchoolVideo = async () => {
     }
   } finally {
     isLoading.video = false;
+    nextTick(observeElements);
   }
 };
 
@@ -330,6 +331,7 @@ const fetchPpdbInfo = async () => {
     }
   } finally {
     isLoading.ppdb = false;
+    nextTick(observeElements);
   }
 };
 
@@ -443,13 +445,18 @@ onMounted(() => {
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add("opacity-100", "translate-y-0");
-          entry.target.classList.remove("opacity-0", "translate-y-10");
+          entry.target.classList.add("opacity-100", "translate-y-0", "translate-x-0");
+          entry.target.classList.remove(
+            "opacity-0",
+            "translate-y-10",
+            "translate-x-10",
+            "-translate-x-10"
+          );
           scrollObserver.unobserve(entry.target);
         }
       });
     },
-    { threshold: 0.1 }
+    { threshold: 0.1 } // Elemen dianggap terlihat jika 10% areanya masuk viewport
   );
 
   observeElements(); // Call immediately
@@ -498,30 +505,38 @@ onBeforeUnmount(() => {
       />
 
       <!-- 5. GALERI & VIDEO -->
-      <VideoGallerySection
-        v-if="!isLoading.video"
-        :key="schoolVideoUrl"
-        :appearanceSettings="appearanceSettings"
-        :schoolVideoUrl="schoolVideoUrl"
-        :schoolVideoTitle="schoolVideoTitle"
-        :schoolVideoDesc="schoolVideoDesc"
-        :isLoadingSchoolVideo="isLoading.video"
-        :isVideoPlaying="isVideoPlaying"
-        :galleriesByCategory="galleriesByCategory"
-        :fourthGalleryImage="fourthGalleryImage"
-        @play-video="isVideoPlaying = true"
-      />
+      <div
+        class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out"
+      >
+        <VideoGallerySection
+          v-if="!isLoading.video"
+          :key="schoolVideoUrl"
+          :appearanceSettings="appearanceSettings"
+          :schoolVideoUrl="schoolVideoUrl"
+          :schoolVideoTitle="schoolVideoTitle"
+          :schoolVideoDesc="schoolVideoDesc"
+          :isLoadingSchoolVideo="isLoading.video"
+          :isVideoPlaying="isVideoPlaying"
+          :galleriesByCategory="galleriesByCategory"
+          :fourthGalleryImage="fourthGalleryImage"
+          @play-video="isVideoPlaying = true"
+        />
+      </div>
 
       <!-- 6. AGENDA KALENDER -->
       <AgendaSection :agendas="agendas" :isLoadingAgendas="isLoading.agendas" />
 
       <!-- 7. FAQ & PPDB -->
-      <PpdbFaqSection
-        :appearanceSettings="appearanceSettings"
-        :ppdbInfo="ppdbInfo"
-        :faqs="faqs"
-        :isLoading="isLoading.ppdb"
-      />
+      <div
+        class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out"
+      >
+        <PpdbFaqSection
+          :appearanceSettings="appearanceSettings"
+          :ppdbInfo="ppdbInfo"
+          :faqs="faqs"
+          :isLoading="isLoading.ppdb"
+        />
+      </div>
     </main>
   </div>
 </template>
