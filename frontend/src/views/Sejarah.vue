@@ -170,8 +170,17 @@ onBeforeUnmount(() => {
     />
 
     <!-- Profil Singkat Section -->
-    <section class="pt-8 md:pt-12 pb-8 md:pb-10 bg-white dark:bg-slate-800">
-      <div class="container mx-auto max-w-full px-8 sm:px-16">
+    <section
+      class="relative overflow-hidden pt-8 md:pt-12 pb-8 md:pb-10 bg-white dark:bg-slate-800"
+    >
+      <!-- Background Pattern -->
+      <div class="absolute inset-0 h-full w-full bg-white dark:bg-slate-800">
+        <div
+          class="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] dark:bg-[radial-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:20px_20px]"
+        ></div>
+      </div>
+
+      <div class="container relative mx-auto max-w-full px-8 sm:px-16">
         <div
           class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out flex flex-col lg:flex-row items-center gap-10 lg:gap-16"
         >
@@ -315,6 +324,13 @@ onBeforeUnmount(() => {
     <section
       class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-white dark:bg-slate-800"
     >
+      <!-- Background Pattern -->
+      <div class="absolute inset-0 h-full w-full bg-white dark:bg-slate-800">
+        <div
+          class="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] dark:bg-[radial-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:20px_20px]"
+        ></div>
+      </div>
+
       <div
         class="container relative z-10 mx-auto px-5 sm:px-8 md:px-14 lg:px-16 w-full max-w-full"
       >
