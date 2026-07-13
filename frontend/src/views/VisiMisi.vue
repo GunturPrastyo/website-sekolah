@@ -149,7 +149,7 @@
             ></div>
             <p
               v-else
-              class="text-lg sm:text-xl md:text-2xl font-medium leading-relaxed text-blue-50"
+              class="text-lg sm:text-xl md:text-2xl font-medium leading-relaxed text-gray-800 dark:text-gray-300"
             >
               "{{ visi }}"
             </p>
@@ -178,11 +178,11 @@
           <ul v-else class="space-y-4 md:space-y-6">
             <li v-for="(item, index) in misi" :key="index" class="flex items-start group">
               <span
-                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-slate-800 text-blue-200 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-white/20 dark:border-slate-700"
+                class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-slate-800 text-gray-800 dark:text-gray-300 group-hover:bg-blue-500 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-white/20 dark:border-slate-700"
                 >{{ index + 1 }}</span
               >
               <p
-                class="text-blue-50 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
+                class="text-gray-800 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
               >
                 {{ item.text }}
               </p>
