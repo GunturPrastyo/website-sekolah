@@ -180,18 +180,21 @@ const getAgendaDocumentLink = (attachmentUrl) => {
 
 <template>
   <section
-    class="relative py-8 md:py-6 pb-16 md:pb-0 mt-0 md:mt-16 -mx-6 md:mx-0 bg-white dark:bg-slate-800 overflow-hidden px-6 mb-0 md:mb-12 md:rounded-xl shadow-xl fade-on-scroll"
+    class="relative py-8 md:py-6 pb-16 md:pb-0 mt-0 md:mt-16 -mx-6 md:mx-0 bg-white dark:bg-slate-800 overflow-hidden px-6 mb-0 md:mb-12 md:rounded-xl shadow-xl"
   >
     <div class="w-full max-w-full container z-10 mx-auto">
       <div class="mb-6 md:mt-2 md:mb-10">
         <div class="relative block">
           <h2
-            class="text-2xl md:text-4xl font-bold text-slate-800 dark:text-white mb-4 sm:mb-2"
+            class="fade-on-scroll opacity-0 -translate-x-10 transition-all duration-700 ease-out text-2xl md:text-4xl font-bold text-slate-800 dark:text-white mb-4 sm:mb-2"
             style="font-family: 'Oswald', sans-serif"
           >
             Agenda Sekolah
           </h2>
-          <p class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base max-w-2xl">
+          <p
+            class="fade-on-scroll opacity-0 translate-x-10 transition-all duration-700 ease-out text-slate-800/80 dark:text-slate-300 text-sm md:text-base max-w-2xl"
+            style="transition-delay: 150ms"
+          >
             Jadwal kegiatan akademik dan non-akademik. Pantau kalender agar tidak
             tertinggal event penting kami.
           </p>
@@ -202,7 +205,8 @@ const getAgendaDocumentLink = (attachmentUrl) => {
         class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-stretch md:pb-8 md:pr-2"
       >
         <div
-          class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-5 md:p-6 flex flex-col"
+          class="fade-on-scroll opacity-0 -translate-x-10 transition-all duration-700 ease-out lg:col-span-5 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-5 md:p-6 flex flex-col"
+          style="transition-delay: 300ms"
         >
           <div class="flex items-center justify-between mb-6">
             <button
@@ -313,7 +317,10 @@ const getAgendaDocumentLink = (attachmentUrl) => {
           </div>
         </div>
 
-        <div class="lg:col-span-7 relative h-[540px] md:h-[640px] lg:h-auto">
+        <div
+          class="fade-on-scroll opacity-0 translate-x-10 transition-all duration-700 ease-out lg:col-span-7 relative h-[540px] md:h-[640px] lg:h-auto"
+          style="transition-delay: 450ms"
+        >
           <div
             class="absolute inset-0 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col"
           >
