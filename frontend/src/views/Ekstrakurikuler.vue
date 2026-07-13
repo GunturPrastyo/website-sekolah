@@ -276,7 +276,7 @@ onBeforeUnmount(() => {
 
     <!-- Gallery Section -->
     <section
-      class="relative pt-0 md:pt-6 pb-0 md:px-6 min-h-screen bg-gradient-to-b from-blue-50/50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden"
+      class="relative pt-0 md:pt-6 pb-0 md:px-6 min-h-screen bg-gray-50 dark:bg-slate-900 overflow-hidden"
     >
       <div
         class="absolute top-0 right-0 w-96 h-96 bg-blue-400/10 dark:bg-blue-600/10 rounded-full blur-3xl -translate-y-1/4 translate-x-1/4 pointer-events-none"
@@ -285,7 +285,7 @@ onBeforeUnmount(() => {
       <div class="container relative z-10 mx-auto max-w-full">
         <div
           id="ekskul-list-container"
-          class="bg-white dark:bg-slate-800 shadow-sm md:shadow-md border-y md:border border-gray-100 dark:border-slate-700 p-5 md:p-8 lg:p-10 flex flex-col lg:flex-row items-start gap-8 lg:gap-12 w-full md:mb-12"
+          class="bg-gray-50 dark:bg-slate-900 p-5 md:p-8 lg:p-10 flex flex-col lg:flex-row items-start gap-8 lg:gap-12 w-full md:mb-12"
         >
           <!-- KIRI: Daftar Card Ekstrakurikuler -->
           <div class="flex-1 w-full order-2 lg:order-1">
