@@ -21,18 +21,20 @@ defineProps({
     <div v-if="bgImage" class="absolute inset-0 z-0">
       <img
         :src="bgImage"
-        class="w-full h-full object-cover opacity-30 md:opacity-40"
+        class="w-full h-full object-cover opacity-40 md:opacity-50"
         alt="Header Background"
       />
-      <!-- Tambahan overlay gelap transparan (opsional) agar teks makin kontras -->
-      <div class="absolute inset-0 bg-slate-900/30"></div>
+      <!-- Overlay gradien untuk kontras teks yang lebih baik -->
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-900/10 to-transparent"
+      ></div>
     </div>
 
     <slot name="bg-ornament"></slot>
 
     <!-- Overlay Gradien Gelap di Bagian Bawah untuk Transisi Halus -->
     <div
-      class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-slate-900 dark:from-slate-950 to-transparent pointer-events-none z-0"
+      class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-slate-900/95 dark:from-slate-950/95 to-transparent pointer-events-none z-0"
     ></div>
 
     <!-- Content -->
