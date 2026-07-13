@@ -274,6 +274,7 @@ onBeforeUnmount(() => {
         'Ikuti terus perkembangan, kegiatan, prestasi, dan pengumuman terbaru seputar lingkungan sekolah.'
       "
       :bgImage="getImageUrl(appearanceSettings.headerBerita_bgImage)"
+      currentPage="Berita"
     />
 
     <!-- News Section -->

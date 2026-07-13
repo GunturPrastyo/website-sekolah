@@ -9,6 +9,7 @@
         'Jelajahi berbagai fasilitas modern yang mendukung pengalaman belajar siswa secara optimal di lingkungan sekolah kami.'
       "
       :bgImage="getImageUrl(appearanceSettings.headerFasilitas_bgImage)"
+      currentPage="Fasilitas"
     />
 
     <section class="relative z-20 px-0 dark:bg-slate-900 min-h-screen">

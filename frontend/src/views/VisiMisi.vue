@@ -9,6 +9,7 @@
         'Arah pandang, cita-cita luhur, dan komitmen strategis sekolah dalam menyelenggarakan pendidikan unggul, serta sambutan hangat dari Kepala Sekolah.'
       "
       :bgImage="getImageUrl(appearanceSettings.headerVisiMisi_bgImage)"
+      currentPage="Visi & Misi"
     />
 
     <!-- Sambutan Kepala Sekolah Section -->

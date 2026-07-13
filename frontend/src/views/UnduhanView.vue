@@ -161,6 +161,7 @@ const downloadFile = (file) => {
     title="Dokumen Sekolah"
     description="Akses mudah dan cepat untuk mengunduh berbagai berkas penting, brosur PPDB, kalender akademik, surat keputusan, hingga materi pembelajaran."
     :bgImage="getImageUrl(appearanceSettings.headerUnduhan)"
+    currentPage="Unduhan"
   />
 
   <section class="py-0 md:py-12 bg-gray-50 dark:bg-gray-900 min-h-[60vh]">

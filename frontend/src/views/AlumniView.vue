@@ -11,6 +11,7 @@
         'Temukan jejak sukses para alumni sekolah kami yang tersebar di berbagai perguruan tinggi favorit dan instansi bergengsi di seluruh Indonesia.'
       "
       :bgImage="getImageUrl(appearanceSettings.headerAlumni_bgImage)"
+      currentPage="Alumni"
     />
 
     <!-- Direktori & Persebaran Alumni Section -->

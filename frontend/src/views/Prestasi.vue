@@ -270,6 +270,7 @@ onMounted(() => {
       title="Prestasi & Penghargaan"
       description="Dedikasi, kerja keras, dan semangat pantang menyerah siswa-siswi kami yang berhasil menorehkan tinta emas di berbagai ajang perlombaan bergengsi."
       :bgImage="getImageUrl(appearanceSettings.headerPrestasi)"
+      currentPage="Prestasi"
     >
       <template #bg-ornament>
         <div

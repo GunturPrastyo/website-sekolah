@@ -137,6 +137,7 @@ onMounted(() => {
         title="Informasi PPDB"
         description="Pusat Informasi Penerimaan Peserta Didik Baru (PPDB). Temukan panduan lengkap mengenai tata cara pendaftaran, persyaratan, alur, dan berbagai jalur penerimaan yang tersedia untuk calon peserta didik baru."
         :bgImage="appearanceSettings.ppdbBackgroundImage"
+        currentPage="Pendaftaran"
       >
         <template #bg-ornament>
           <div

@@ -272,6 +272,7 @@ onBeforeUnmount(() => {
         'Kembangkan bakat, minat, dan potensimu di luar jam pelajaran melalui berbagai pilihan kegiatan ekstrakurikuler yang seru dan inspiratif.'
       "
       :bgImage="getImageUrl(appearanceSettings.headerEkskul_bgImage)"
+      currentPage="Ekstrakurikuler"
     />
 
     <!-- Gallery Section -->

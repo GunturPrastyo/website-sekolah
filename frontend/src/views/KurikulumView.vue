@@ -336,6 +336,7 @@ onBeforeUnmount(() => {
       title="Silabus & Kurikulum Digital"
       description="Jelajahi struktur kurikulum interaktif kami yang dirancang khusus untuk membekali siswa dengan kompetensi abad 21 (Kurikulum Merdeka)."
       :bgImage="getImageUrl(appearanceSettings.headerKurikulum)"
+      currentPage="Kurikulum"
     />
 
     <!-- Main Content Section -->

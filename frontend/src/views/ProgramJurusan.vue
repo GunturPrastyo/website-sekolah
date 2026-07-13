@@ -110,6 +110,7 @@ onMounted(() => {
       title="Program Keahlian Sekolah"
       description="Menyediakan beragam program keahlian yang membekali siswa dengan ilmu pengetahuan dan keterampilan praktis untuk meraih sukses di perguruan tinggi maupun karir."
       :bgImage="getImageUrl(appearanceSettings.headerProgramJurusan_bgImage)"
+      currentPage="Program Keahlian"
     />
 
     <!-- Program Details Section -->

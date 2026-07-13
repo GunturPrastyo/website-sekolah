@@ -337,6 +337,7 @@ const onImageLoad = (id) => {
         'Merekam jejak langkah, fasilitas, dan berbagai momen tak terlupakan di lingkungan sekolah kami.'
       "
       :bgImage="getImageUrl(appearanceSettings.headerGaleri_bgImage)"
+      currentPage="Galeri"
     />
 
     <!-- Gallery Section -->

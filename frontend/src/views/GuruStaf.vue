@@ -214,6 +214,7 @@ onBeforeUnmount(() => {
       title="Guru & Staf Sekolah"
       description="Mengenal lebih dekat para pendidik dan tenaga kependidikan yang berperan penting dalam membimbing serta mendukung perkembangan siswa."
       :bgImage="appearanceSettings.headerGuruStaf"
+      currentPage="Guru & Staf"
     />
 
     <!-- Main Content -->
