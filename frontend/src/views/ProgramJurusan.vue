@@ -218,7 +218,7 @@ onMounted(() => {
                   :class="program.decorationClass"
                 ></div>
                 <div
-                  class="relative rounded-lg overflow-hidden shadow-2xl aspect-video md:aspect-[4/3] border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-800 z-10 transition-colors duration-700 ease-in-out"
+                  class="relative rounded-lg overflow-hidden shadow-2xl aspect-[4/3] border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-800 z-10 transition-colors duration-700 ease-in-out"
                 >
                   <img
                     :src="program.image"
