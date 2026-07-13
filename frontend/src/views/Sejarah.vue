@@ -308,15 +308,13 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
+    <!-- Pembatas Section -->
+    <div class="border-t border-gray-200 dark:border-slate-700"></div>
+
     <!-- Timeline Section -->
     <section
-      class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-blue-950 dark:bg-gray-900 bg-fixed bg-center bg-cover"
+      class="pt-6 pb-12 md:pb-24 min-h-screen relative overflow-hidden bg-white dark:bg-slate-800"
     >
-      <!-- Overlay Parallax untuk memastikan teks tetap bisa dibaca -->
-      <div
-        class="absolute inset-0 bg-blue-950/90 dark:bg-gray-900/90 backdrop-blur-[2px]"
-      ></div>
-
       <div
         class="container relative z-10 mx-auto px-5 sm:px-8 md:px-14 lg:px-16 w-full max-w-full"
       >
@@ -325,17 +323,17 @@ onBeforeUnmount(() => {
           class="mb-10 md:mb-18 md:px-8 text-left fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out pt-6 md:pt-12"
         >
           <span
-            class="text-blue-400 font-bold text-lg tracking-wider mb-4 block"
+            class="text-blue-600 dark:text-blue-400 font-bold text-lg tracking-wider mb-4 block"
             style="font-family: 'Kalam', cursive"
             >Lini Masa</span
           >
           <h2
-            class="text-2xl min-[400px]:text-3xl md:text-4xl font-extrabold text-white mb-3 min-[400px]:mb-4 sm:mb-6 tracking-tight"
+            class="text-2xl min-[400px]:text-3xl md:text-4xl font-extrabold text-blue-950 dark:text-white mb-3 min-[400px]:mb-4 sm:mb-6 tracking-tight"
           >
             Jejak Langkah Kami
           </h2>
           <p
-            class="text-blue-100 dark:text-gray-400 text-sm md:text-base max-w-2xl leading-relaxed"
+            class="text-gray-600 dark:text-gray-400 text-sm md:text-base max-w-2xl leading-relaxed"
           >
             Menelusuri kembali tonggak sejarah dan perjalanan panjang berdirinya institusi
             pendidikan kami hingga menjadi seperti sekarang.
@@ -344,7 +342,7 @@ onBeforeUnmount(() => {
 
         <div v-if="isLoading" class="relative wrap overflow-hidden h-full">
           <div
-            class="hidden min-[400px]:block absolute z-0 w-1 bg-blue-900 dark:bg-slate-800 h-full left-6 sm:left-8 transform -translate-x-1/2 rounded-full"
+            class="hidden min-[400px]:block absolute z-0 w-1 bg-gray-200 dark:bg-slate-700 h-full left-6 sm:left-8 transform -translate-x-1/2 rounded-full"
           ></div>
           <div
             v-for="i in 3"
@@ -352,13 +350,13 @@ onBeforeUnmount(() => {
             class="relative z-10 flex items-center w-full mb-8 min-[400px]:mb-12 last:mb-0 group animate-pulse"
           >
             <div
-              class="hidden min-[400px]:flex absolute left-6 sm:left-8 transform -translate-x-1/2 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-blue-950 dark:border-slate-950 shadow-lg z-20 bg-slate-800"
+              class="hidden min-[400px]:flex absolute left-6 sm:left-8 transform -translate-x-1/2 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-white dark:border-slate-800 shadow-lg z-20 bg-gray-200 dark:bg-slate-700"
             >
-              <div class="w-5 h-5 bg-slate-600 rounded-full"></div>
+              <div class="w-5 h-5 bg-gray-300 dark:bg-slate-600 rounded-full"></div>
             </div>
             <div class="ml-0 min-[400px]:ml-16 sm:ml-20 lg:ml-24 flex-1 w-full">
               <div
-                class="relative z-10 flex flex-col bg-white dark:bg-slate-800 rounded-xl shadow-xl overflow-hidden p-5 min-[400px]:p-6 md:p-8 lg:p-10"
+                class="relative z-10 flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-xl overflow-hidden p-5 min-[400px]:p-6 md:p-8 lg:p-10"
               >
                 <div class="mb-4 min-[400px]:mb-5">
                   <div
@@ -389,29 +387,35 @@ onBeforeUnmount(() => {
           class="relative wrap overflow-hidden h-full"
         >
           <div
-            class="hidden min-[400px]:block absolute z-0 w-1 bg-blue-900 dark:bg-slate-800 h-full left-6 sm:left-8 transform -translate-x-1/2 rounded-full"
+            class="hidden min-[400px]:block absolute z-0 w-1 bg-gray-200 dark:bg-slate-700 h-full left-6 sm:left-8 transform -translate-x-1/2 rounded-full"
           ></div>
           <div
             class="relative z-10 flex items-center w-full mb-8 min-[400px]:mb-12 group"
           >
             <div
-              class="hidden min-[400px]:flex absolute left-6 sm:left-8 transform -translate-x-1/2 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-blue-950 dark:border-slate-950 shadow-lg z-20 bg-blue-900 text-blue-400"
+              class="hidden min-[400px]:flex absolute left-6 sm:left-8 transform -translate-x-1/2 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-white dark:border-slate-800 shadow-lg z-20 bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400"
             >
               <PhClockCounterClockwise class="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <div class="ml-0 min-[400px]:ml-16 sm:ml-20 lg:ml-24 flex-1 w-full">
               <div
-                class="relative flex flex-col bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl shadow-xl p-5 min-[400px]:p-6 md:p-8 lg:p-10 text-center"
+                class="relative flex flex-col bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-xl p-5 min-[400px]:p-6 md:p-8 lg:p-10 text-center"
               >
                 <div
-                  class="mx-auto w-16 h-16 bg-blue-50/10 rounded-full flex items-center justify-center mb-4"
+                  class="mx-auto w-16 h-16 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mb-4"
                 >
-                  <PhClockCounterClockwise class="w-8 h-8 text-blue-200" />
+                  <PhClockCounterClockwise
+                    class="w-8 h-8 text-gray-400 dark:text-gray-500"
+                  />
                 </div>
-                <h3 class="text-xl md:text-2xl font-bold text-white mb-2">
+                <h3
+                  class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white mb-2"
+                >
                   Riwayat Sejarah Belum Tersedia
                 </h3>
-                <p class="text-blue-100 text-sm md:text-base max-w-lg mx-auto">
+                <p
+                  class="text-gray-500 dark:text-gray-400 text-sm md:text-base max-w-lg mx-auto"
+                >
                   Informasi mengenai lini masa dan sejarah institusi sedang dalam tahap
                   penyusunan. Silakan kembali lagi nanti.
                 </p>
@@ -423,7 +427,7 @@ onBeforeUnmount(() => {
         <div v-else class="relative wrap overflow-hidden h-full" ref="timelineRef">
           <!-- Garis Tengah Timeline (Latar Belakang) -->
           <div
-            class="hidden min-[400px]:block absolute z-0 w-1 bg-blue-900 dark:bg-slate-800 h-full left-6 sm:left-8 transform -translate-x-1/2 rounded-full"
+            class="hidden min-[400px]:block absolute z-0 w-1 bg-gray-200 dark:bg-slate-700 h-full left-6 sm:left-8 transform -translate-x-1/2 rounded-full"
           >
             <!-- Garis Animasi Menjalar (Foreground) -->
             <div
@@ -440,11 +444,11 @@ onBeforeUnmount(() => {
           >
             <!-- Ikon Lingkaran Timeline -->
             <div
-              class="hidden min-[400px]:flex absolute left-6 sm:left-8 transform -translate-x-1/2 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-blue-950 dark:border-slate-950 shadow-lg z-20 group-hover:scale-110 transition-all duration-500"
+              class="hidden min-[400px]:flex absolute left-6 sm:left-8 transform -translate-x-1/2 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-white dark:border-slate-800 shadow-lg z-20 group-hover:scale-110 transition-all duration-500"
               :class="
                 currentProgress >= index / timeline.length
                   ? 'bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]'
-                  : 'bg-blue-900 dark:bg-slate-800 text-blue-400 dark:text-gray-400'
+                  : 'bg-gray-200 dark:bg-slate-700 text-gray-500 dark:text-gray-400'
               "
             >
               <component
@@ -459,11 +463,11 @@ onBeforeUnmount(() => {
                 class="group/card relative hover:-translate-y-1.5 transition-transform duration-400"
               >
                 <div
-                  class="hidden md:block absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-slate-800 transform rotate-45 z-20 -left-3"
+                  class="hidden md:block absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-slate-900 transform rotate-45 z-20 -left-3"
                 ></div>
 
                 <div
-                  class="relative z-10 flex flex-col bg-white dark:bg-slate-800 rounded-xl shadow-xl group-hover/card:shadow-2xl overflow-hidden transition-shadow duration-400 p-5 min-[400px]:p-6 md:p-8 lg:p-10"
+                  class="relative z-10 flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-xl group-hover/card:shadow-2xl overflow-hidden transition-shadow duration-400 p-5 min-[400px]:p-6 md:p-8 lg:p-10"
                 >
                   <!-- Badge Tahun -->
                   <div class="mb-4 min-[400px]:mb-5">
