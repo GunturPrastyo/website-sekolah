@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
+import { ref, reactive, nextTick, onMounted, onBeforeUnmount } from "vue";
 import api from "@/api/index.js";
 
 // IMPORT SEMUA KOMPONEN
@@ -96,6 +96,7 @@ const isLoading = reactive({
 
 let scrollObserver = null;
 let typewriterInterval = null;
+let statsAnimationId = null;
 
 // FUNGSI FETCH API
 const fetchSettings = async () => {
@@ -103,7 +104,6 @@ const fetchSettings = async () => {
     const res = await api.get("/api/settings");
     if (res.data?.success) {
       appearanceSettings.value = { ...appearanceSettings.value, ...res.data.data };
-
       const newTitle = res.data.data.namaSekolah || "";
       slogan.value = res.data.data.deskripsi || "";
 
@@ -168,6 +168,7 @@ const fetchPrograms = async () => {
     if (res.data?.data) programs.value = res.data.data;
   } finally {
     isLoading.programs = false;
+    nextTick(observeElements);
   }
 };
 
@@ -181,6 +182,7 @@ const fetchNewsAndAnnouncements = async () => {
     if (annRes.data?.data) announcements.value = annRes.data.data;
   } finally {
     isLoading.news = false;
+    nextTick(observeElements);
   }
 };
 
@@ -276,17 +278,14 @@ const fetchAgendas = async () => {
             agenda.kategori ||
             ""
           ).toLowerCase();
-          if (type.includes("akademik")) {
-            color = "yellow";
-          } else if (
+          if (type.includes("akademik")) color = "yellow";
+          else if (
             type.includes("guru") ||
             type.includes("staf") ||
             type.includes("pendidik")
-          ) {
+          )
             color = "red";
-          } else if (type.includes("kegiatan") || type.includes("lomba")) {
-            color = "green";
-          }
+          else if (type.includes("kegiatan") || type.includes("lomba")) color = "green";
         }
         return {
           id: agenda.id,
@@ -305,6 +304,7 @@ const fetchAgendas = async () => {
     }
   } finally {
     isLoading.agendas = false;
+    nextTick(observeElements);
   }
 };
 
@@ -365,31 +365,37 @@ const fetchAlumniLocations = async () => {
     }
   } finally {
     isLoading.map = false;
+    nextTick(observeElements);
   }
 };
 
 // ANIMASI & INIT
-let statsAnimationId = null;
 const animateStats = () => {
   if (statsAnimationId) cancelAnimationFrame(statsAnimationId);
   const duration = 3000;
   let startTimestamp = null;
   const startValues = statsArray.value.map((stat) => (stat.isNumber ? stat.value : 0));
+
   const step = (timestamp) => {
     if (!startTimestamp) startTimestamp = timestamp;
     const progress = Math.min((timestamp - startTimestamp) / duration, 1);
     const easeProgress = 1 - Math.pow(1 - progress, 4);
+
     statsArray.value.forEach((stat, i) => {
-      if (stat.isNumber)
+      if (stat.isNumber) {
         stat.value = Math.floor(
           startValues[i] + easeProgress * (stat.target - startValues[i])
         );
+      }
     });
-    if (progress < 1) statsAnimationId = window.requestAnimationFrame(step);
-    else
+
+    if (progress < 1) {
+      statsAnimationId = window.requestAnimationFrame(step);
+    } else {
       statsArray.value.forEach((stat) => {
         if (stat.isNumber) stat.value = stat.target;
       });
+    }
   };
   statsAnimationId = window.requestAnimationFrame(step);
 };
@@ -417,9 +423,12 @@ const startTypewriter = () => {
 
 const observeElements = () => {
   if (!scrollObserver) return;
-  document.querySelectorAll(".fade-on-scroll:not([data-observed])").forEach((el) => {
-    scrollObserver.observe(el);
-    el.dataset.observed = "true";
+  // Membaca DOM di frame berikutnya agar tidak mengganggu render awal
+  requestAnimationFrame(() => {
+    document.querySelectorAll(".fade-on-scroll:not([data-observed])").forEach((el) => {
+      scrollObserver.observe(el);
+      el.dataset.observed = "true";
+    });
   });
 };
 
@@ -427,49 +436,51 @@ onMounted(() => {
   const cachedHeader = localStorage.getItem("app_headerBeranda");
   if (cachedHeader) appearanceSettings.value.headerBeranda = cachedHeader;
 
+  // 1. Ambil data prioritas/krusial terlebih dahulu
   fetchSettings();
   fetchSchoolStats();
   fetchPpdbInfo();
 
-  // Panggil fungsi fetch data segera setelah komponen dimount
-  fetchPrograms();
-  fetchAgendas();
-  fetchGalleries();
-  fetchSchoolVideo();
-  fetchNewsAndAnnouncements();
-  fetchAlumniLocations();
+  // 2. Tunda pengambilan data sekunder agar UI bisa dirender tanpa stuttering
+  setTimeout(() => {
+    fetchPrograms();
+    fetchAgendas();
+    fetchGalleries();
+    fetchSchoolVideo();
+    fetchNewsAndAnnouncements();
+    fetchAlumniLocations();
+  }, 100);
 
   if (fullTitle.value && !isTypewriterStarted.value) startTypewriter();
 
+  // 3. Setup Observer dengan performa lebih baik
   scrollObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add("opacity-100", "translate-y-0", "translate-x-0");
-          entry.target.classList.remove(
-            "opacity-0",
-            "translate-y-10",
-            "translate-x-10",
-            "-translate-x-10"
-          );
+          entry.target.classList.add("is-visible");
           scrollObserver.unobserve(entry.target);
         }
       });
     },
-    { threshold: 0.1 } // Elemen dianggap terlihat jika 10% areanya masuk viewport
+    {
+      rootMargin: "0px 0px -50px 0px",
+      threshold: 0.05,
+    }
   );
 
-  observeElements(); // Call immediately
+  observeElements();
 });
 
 onBeforeUnmount(() => {
   if (scrollObserver) scrollObserver.disconnect();
   if (typewriterInterval) clearInterval(typewriterInterval);
+  if (statsAnimationId) cancelAnimationFrame(statsAnimationId);
 });
 </script>
 
 <template>
-  <div class="w-full overflow-x-hidden">
+  <div class="w-full overflow-hidden box-border">
     <HeroSection
       :appearanceSettings="appearanceSettings"
       :statsArray="statsArray"
@@ -479,35 +490,36 @@ onBeforeUnmount(() => {
       @start-typewriter="startTypewriter"
     />
 
-    <main class="px-6 bg-gray-100 dark:bg-gray-900">
-      <!-- 1. FITUR SEKOLAH -->
-      <FeaturesSection :appearanceSettings="appearanceSettings" />
+    <main class="px-6 bg-gray-100 dark:bg-gray-900 overflow-hidden">
+      <div class="fade-on-scroll">
+        <FeaturesSection :appearanceSettings="appearanceSettings" />
+      </div>
 
-      <!-- 2. ALUMNI -->
-      <AlumniMapSection
-        :alumniLocations="alumniLocations"
-        :alumniStatsTarget="alumniStatsTarget"
-        :isLoading="isLoading.map"
-      />
+      <div class="fade-on-scroll">
+        <AlumniMapSection
+          :alumniLocations="alumniLocations"
+          :alumniStatsTarget="alumniStatsTarget"
+          :isLoading="isLoading.map"
+        />
+      </div>
 
-      <!-- 3. JURUSAN -->
-      <ProgramsSection
-        :appearanceSettings="appearanceSettings"
-        :programs="programs"
-        :isLoadingPrograms="isLoading.programs"
-      />
+      <div class="fade-on-scroll">
+        <ProgramsSection
+          :appearanceSettings="appearanceSettings"
+          :programs="programs"
+          :isLoadingPrograms="isLoading.programs"
+        />
+      </div>
 
-      <!-- 4. BERITA & PENGUMUMAN -->
-      <NewsSection
-        :recentNews="news"
-        :announcements="announcements"
-        :isLoadingNews="isLoading.news"
-      />
+      <div class="fade-on-scroll">
+        <NewsSection
+          :recentNews="news"
+          :announcements="announcements"
+          :isLoadingNews="isLoading.news"
+        />
+      </div>
 
-      <!-- 5. GALERI & VIDEO -->
-      <div
-        class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out"
-      >
+      <div class="fade-on-scroll">
         <VideoGallerySection
           v-if="!isLoading.video"
           :key="schoolVideoUrl"
@@ -523,13 +535,11 @@ onBeforeUnmount(() => {
         />
       </div>
 
-      <!-- 6. AGENDA KALENDER -->
-      <AgendaSection :agendas="agendas" :isLoadingAgendas="isLoading.agendas" />
+      <div class="fade-on-scroll">
+        <AgendaSection :agendas="agendas" :isLoadingAgendas="isLoading.agendas" />
+      </div>
 
-      <!-- 7. FAQ & PPDB -->
-      <div
-        class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out"
-      >
+      <div class="fade-on-scroll">
         <PpdbFaqSection
           :appearanceSettings="appearanceSettings"
           :ppdbInfo="ppdbInfo"
@@ -540,3 +550,18 @@ onBeforeUnmount(() => {
     </main>
   </div>
 </template>
+
+<style scoped>
+/* Kelas khusus untuk menangani animasi scroll lewat GPU */
+.fade-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  will-change: transform, opacity;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease-out;
+}
+
+.fade-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
