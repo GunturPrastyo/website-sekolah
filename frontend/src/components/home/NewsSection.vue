@@ -42,18 +42,14 @@ const getImageUrl = (path) => {
   if (path.startsWith("http") || path.startsWith("data:image")) return path;
   const baseUrl = api.defaults.baseURL;
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-  if (cleanPath.startsWith("storage/")) {
-    return `${baseUrl}/${cleanPath}`;
-  }
+  if (cleanPath.startsWith("storage/")) return `${baseUrl}/${cleanPath}`;
   return `${baseUrl}/storage/${cleanPath}`;
 };
 
 const getNewsImage = (newsItem) => {
   if (!newsItem) return "";
   let imagePath = newsItem.image;
-  if (newsItem.images && newsItem.images.length > 0) {
-    imagePath = newsItem.images[0];
-  }
+  if (newsItem.images && newsItem.images.length > 0) imagePath = newsItem.images[0];
   if (!imagePath) return "";
   return getImageUrl(imagePath);
 };
@@ -112,9 +108,7 @@ onMounted(() => {
   resizeObserver = new ResizeObserver(() => {
     checkScroll();
   });
-  if (announcementsWrapper.value) {
-    resizeObserver.observe(announcementsWrapper.value);
-  }
+  if (announcementsWrapper.value) resizeObserver.observe(announcementsWrapper.value);
   setTimeout(checkScroll, 600);
 });
 
@@ -133,14 +127,13 @@ onBeforeUnmount(() => {
       >
         <div class="relative block">
           <h2
-            class="fade-on-scroll opacity-0 -translate-x-10 transition-all duration-700 ease-out text-2xl md:text-4xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
+            class="text-2xl md:text-4xl font-bold text-slate-800 dark:text-white pl-4 border-l-4 border-blue-600 dark:border-blue-500 mb-4 sm:mb-2"
             style="font-family: 'Oswald', sans-serif"
           >
             Berita & Pengumuman
           </h2>
           <div
-            class="fade-on-scroll opacity-0 translate-x-10 transition-all duration-700 ease-out flex flex-col md:flex-row md:justify-between md:items-end ml-0 sm:ml-4 gap-4"
-            style="transition-delay: 150ms"
+            class="flex flex-col md:flex-row md:justify-between md:items-end ml-0 sm:ml-4 gap-4"
           >
             <p
               class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base max-w-2xl"
@@ -152,18 +145,14 @@ onBeforeUnmount(() => {
               to="/berita"
               class="hidden md:inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-semibold transition-colors shrink-0 md:pb-4 md:-mb-px border-b-2 border-transparent hover:border-blue-600 dark:hover:border-blue-400"
             >
-              Lihat berita lainnya
-              <PhCaretRight class="w-4 h-4 ml-1" />
+              Lihat berita lainnya <PhCaretRight class="w-4 h-4 ml-1" />
             </router-link>
           </div>
         </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-0 lg:gap-8 items-stretch">
-        <div
-          class="fade-on-scroll opacity-0 -translate-x-10 transition-all duration-700 ease-out lg:col-span-2 flex flex-col gap-6"
-          style="transition-delay: 300ms"
-        >
+        <div class="lg:col-span-2 flex flex-col gap-6">
           <template v-if="isLoadingNews">
             <div
               class="rounded-lg overflow-hidden shadow-lg h-[280px] sm:h-[350px] md:h-[400px] w-full bg-slate-200 dark:bg-slate-700 animate-pulse relative"
@@ -215,13 +204,15 @@ onBeforeUnmount(() => {
                   class="mt-4 flex items-center justify-between text-gray-300 text-xs md:text-sm"
                 >
                   <div class="flex items-center">
-                    <PhCalendarBlank class="w-4 h-4 mr-1.5" />
-                    {{ formatDate(mainNews.created_at) }}
+                    <PhCalendarBlank class="w-4 h-4 mr-1.5" />{{
+                      formatDate(mainNews.created_at)
+                    }}
                   </div>
-                  <span class="flex items-center font-medium">
-                    <PhEye class="w-4 h-4 mr-1.5 text-blue-400" />
-                    {{ mainNews.views || 0 }}
-                  </span>
+                  <span class="flex items-center font-medium"
+                    ><PhEye class="w-4 h-4 mr-1.5 text-blue-400" />{{
+                      mainNews.views || 0
+                    }}</span
+                  >
                 </div>
               </div>
             </router-link>
@@ -287,12 +278,14 @@ onBeforeUnmount(() => {
                       class="mt-auto flex items-center justify-between text-gray-500 dark:text-slate-400 text-[10px] sm:text-xs pt-1"
                     >
                       <div class="flex items-center">
-                        <PhCalendarBlank class="w-3 h-3 mr-1" />
-                        {{ formatDate(news.created_at) }}
+                        <PhCalendarBlank class="w-3 h-3 mr-1" />{{
+                          formatDate(news.created_at)
+                        }}
                       </div>
                       <span class="flex items-center font-medium"
-                        ><PhEye class="w-3 h-3 mr-1 text-blue-400" />
-                        {{ news.views || 0 }}</span
+                        ><PhEye class="w-3 h-3 mr-1 text-blue-400" />{{
+                          news.views || 0
+                        }}</span
                       >
                     </div>
                   </div>
@@ -302,10 +295,7 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
-        <div
-          class="fade-on-scroll opacity-0 translate-x-10 transition-all duration-700 ease-out lg:col-span-1 relative h-[550px] lg:h-auto mt-0 md:mt-8 lg:mt-0"
-          style="transition-delay: 450ms"
-        >
+        <div class="lg:col-span-1 relative h-[550px] lg:h-auto mt-0 md:mt-8 lg:mt-0">
           <div
             class="absolute inset-0 bg-white dark:bg-slate-800 rounded-xl shadow-md border border-gray-100 dark:border-slate-700 flex flex-col overflow-hidden"
           >

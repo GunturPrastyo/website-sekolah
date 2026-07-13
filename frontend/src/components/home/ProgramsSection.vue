@@ -54,17 +54,12 @@ const programIconMap = {
 
 const iconList = [PhFlask, PhGlobe, PhTranslate, PhMonitor, PhBookOpen, PhGraduationCap];
 
-const getProgramGradient = (index) => {
-  return programGradients[index % programGradients.length];
-};
+const getProgramGradient = (index) => programGradients[index % programGradients.length];
 
 const getProgramIcon = (iconOrIndex) => {
-  if (typeof iconOrIndex === "string" && programIconMap[iconOrIndex]) {
+  if (typeof iconOrIndex === "string" && programIconMap[iconOrIndex])
     return programIconMap[iconOrIndex];
-  }
-  if (typeof iconOrIndex === "number") {
-    return iconList[iconOrIndex % iconList.length];
-  }
+  if (typeof iconOrIndex === "number") return iconList[iconOrIndex % iconList.length];
   return PhGraduationCap;
 };
 
@@ -76,38 +71,25 @@ const stripTags = (html) => {
 };
 
 const initJurusanSwiper = () => {
-  if (jurusanSwiperInstance) {
-    jurusanSwiperInstance.destroy(true, true);
-  }
+  if (jurusanSwiperInstance) jurusanSwiperInstance.destroy(true, true);
 
   const totalPrograms = props.programs.length;
   const desktopSlides = totalPrograms > 0 ? Math.min(3, totalPrograms) : 3;
   const tabletSlides = totalPrograms > 0 ? Math.min(2, totalPrograms) : 2;
-
   const enableLoop = totalPrograms > desktopSlides;
 
   jurusanSwiperInstance = new Swiper(".jurusan-swiper", {
     loop: enableLoop,
     speed: 800,
-    autoplay: {
-      delay: 3000,
-      disableOnInteraction: false,
-    },
-
+    autoplay: { delay: 3000, disableOnInteraction: false },
     observer: true,
     observeParents: true,
     slidesPerView: 1,
     spaceBetween: 0,
     pagination: { el: ".jurusan-pagination", clickable: true },
     breakpoints: {
-      768: {
-        slidesPerView: tabletSlides,
-        spaceBetween: 0,
-      },
-      1024: {
-        slidesPerView: desktopSlides,
-        spaceBetween: 0,
-      },
+      768: { slidesPerView: tabletSlides, spaceBetween: 0 },
+      1024: { slidesPerView: desktopSlides, spaceBetween: 0 },
     },
   });
 };
@@ -144,25 +126,19 @@ onBeforeUnmount(() => {
         ></div>
         <div class="relative z-10 -mt-12 pl-4 pr-4 md:px-14 max-w-2xl text-white">
           <h2
-            class="fade-on-scroll opacity-0 -translate-x-10 transition-all duration-700 ease-out text-3xl md:text-5xl font-bold mb-2 md:mb-4"
+            class="text-3xl md:text-5xl font-bold mb-2 md:mb-4"
             style="font-family: 'Oswald', sans-serif"
           >
             Pilihan Jurusan Unggulan
           </h2>
-          <p
-            class="fade-on-scroll opacity-0 translate-x-10 transition-all duration-700 ease-out text-sm md:text-xl text-gray-200"
-            style="transition-delay: 150ms"
-          >
+          <p class="text-sm md:text-xl text-gray-200">
             Temukan minat dan bakatmu dengan pilihan jurusan terbaik untuk masa depanmu.
           </p>
         </div>
       </div>
 
       <div class="relative z-20 mt-[-80px] md:mt-[-100px]">
-        <div
-          class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out max-w-[90%] mx-auto md:max-w-[95%]"
-          style="transition-delay: 300ms"
-        >
+        <div class="max-w-[90%] mx-auto md:max-w-[95%]">
           <div
             class="swiper jurusan-swiper rounded-lg md:rounded-2xl overflow-hidden shadow-xl"
           >
@@ -198,7 +174,6 @@ onBeforeUnmount(() => {
                     class="absolute inset-0 bg-gradient-to-br transition-colors duration-500"
                     :class="getProgramGradient(index)"
                   ></div>
-
                   <div
                     class="relative z-10 p-6 pb-14 sm:p-8 flex flex-col justify-start h-full text-white"
                   >
@@ -210,17 +185,14 @@ onBeforeUnmount(() => {
                         class="w-7 h-7"
                       />
                     </div>
-
                     <h3 class="text-xl md:text-2xl font-bold mb-2 text-white">
                       {{ program.title }}
                     </h3>
-
                     <p
                       class="text-xs sm:text-sm md:text-base text-blue-100 mb-4 leading-relaxed line-clamp-3"
                     >
                       {{ program.description || stripTags(program.content) }}
                     </p>
-
                     <router-link
                       to="/program-jurusan"
                       class="inline-flex items-center text-xs sm:text-sm font-bold text-white group-hover:text-blue-200 transition-colors w-fit mt-auto"
@@ -240,7 +212,6 @@ onBeforeUnmount(() => {
                 </div>
               </template>
             </div>
-
             <div
               class="jurusan-pagination absolute bottom-4 left-0 z-30 flex w-full justify-center mb-0"
             ></div>

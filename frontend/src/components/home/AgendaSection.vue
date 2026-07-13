@@ -21,7 +21,6 @@ const highlightedAgendaId = ref(null);
 
 const currentDisplayedDate = ref(new Date());
 
-// Desain Profesional: Warna pastel untuk lencana/chip
 const themeClasses = {
   yellow: {
     badge:
@@ -87,9 +86,7 @@ const nextMonth = () => {
 };
 
 const filteredAgendas = computed(() => {
-  if (!props.agendas || props.agendas.length === 0) {
-    return [];
-  }
+  if (!props.agendas || props.agendas.length === 0) return [];
   const targetYear = currentDisplayedDate.value.getFullYear();
   const targetMonth = currentDisplayedDate.value.getMonth();
 
@@ -140,7 +137,6 @@ const calendarGrid = computed(() => {
         if (nextDayDate >= start && nextDayDate <= end) span++;
         else break;
       }
-
       const daysArr = Array.from({ length: span }, (_, i) => currentDay + i);
       gridItems.push({ type: "event", span, days: daysArr, event: eventOnDay });
       currentDay += span;
@@ -186,15 +182,12 @@ const getAgendaDocumentLink = (attachmentUrl) => {
       <div class="mb-6 md:mt-2 md:mb-10">
         <div class="relative block">
           <h2
-            class="fade-on-scroll opacity-0 -translate-x-10 transition-all duration-700 ease-out text-2xl md:text-4xl font-bold text-slate-800 dark:text-white mb-4 sm:mb-2"
+            class="text-2xl md:text-4xl font-bold text-slate-800 dark:text-white mb-4 sm:mb-2"
             style="font-family: 'Oswald', sans-serif"
           >
             Agenda Sekolah
           </h2>
-          <p
-            class="fade-on-scroll opacity-0 translate-x-10 transition-all duration-700 ease-out text-slate-800/80 dark:text-slate-300 text-sm md:text-base max-w-2xl"
-            style="transition-delay: 150ms"
-          >
+          <p class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base max-w-2xl">
             Jadwal kegiatan akademik dan non-akademik. Pantau kalender agar tidak
             tertinggal event penting kami.
           </p>
@@ -205,8 +198,7 @@ const getAgendaDocumentLink = (attachmentUrl) => {
         class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-stretch md:pb-8 md:pr-2"
       >
         <div
-          class="fade-on-scroll opacity-0 -translate-x-10 transition-all duration-700 ease-out lg:col-span-5 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-5 md:p-6 flex flex-col"
-          style="transition-delay: 300ms"
+          class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-5 md:p-6 flex flex-col"
         >
           <div class="flex items-center justify-between mb-6">
             <button
@@ -317,10 +309,7 @@ const getAgendaDocumentLink = (attachmentUrl) => {
           </div>
         </div>
 
-        <div
-          class="fade-on-scroll opacity-0 translate-x-10 transition-all duration-700 ease-out lg:col-span-7 relative h-[540px] md:h-[640px] lg:h-auto"
-          style="transition-delay: 450ms"
-        >
+        <div class="lg:col-span-7 relative h-[540px] md:h-[640px] lg:h-auto">
           <div
             class="absolute inset-0 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col"
           >
@@ -380,14 +369,12 @@ const getAgendaDocumentLink = (attachmentUrl) => {
                     >
                       <span
                         class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-0.5"
+                        >{{ agenda.month }}</span
                       >
-                        {{ agenda.month }}
-                      </span>
                       <span
                         class="text-2xl sm:text-3xl font-light text-slate-800 dark:text-white leading-none tracking-tighter whitespace-nowrap"
+                        >{{ agenda.date }}</span
                       >
-                        {{ agenda.date }}
-                      </span>
                     </div>
 
                     <div
@@ -408,27 +395,24 @@ const getAgendaDocumentLink = (attachmentUrl) => {
                           {{ getCategoryName(agenda.color) }}
                         </span>
                       </div>
-
                       <h4
                         class="font-bold text-sm md:text-base text-slate-900 dark:text-white leading-snug mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
                       >
                         {{ agenda.title }}
                       </h4>
-
                       <div
                         class="flex flex-col gap-2 text-xs md:text-[13px] text-slate-500 dark:text-slate-400 font-medium mt-auto"
                       >
                         <div class="flex items-center">
-                          <PhClock class="w-4 h-4 mr-2.5 shrink-0 text-slate-400" />
-                          <span>{{ agenda.time }}</span>
+                          <PhClock class="w-4 h-4 mr-2.5 shrink-0 text-slate-400" /><span
+                            >{{ agenda.time }}</span
+                          >
                         </div>
                         <div class="flex items-start">
                           <PhMapPin
                             class="w-4 h-4 mr-2.5 mt-0.5 shrink-0 text-slate-400"
-                          />
-                          <span class="leading-tight">{{ agenda.loc }}</span>
+                          /><span class="leading-tight">{{ agenda.loc }}</span>
                         </div>
-
                         <div
                           v-if="agenda.attachment"
                           class="flex items-center mt-1 pt-2 border-t border-slate-100 dark:border-slate-700"
@@ -438,9 +422,8 @@ const getAgendaDocumentLink = (attachmentUrl) => {
                             :href="getAgendaDocumentLink(agenda.attachment)"
                             target="_blank"
                             class="text-blue-600 hover:text-blue-700 hover:underline transition-colors text-left focus:outline-none"
+                            >Lihat Dokumen</a
                           >
-                            Lihat Dokumen
-                          </a>
                         </div>
                       </div>
                     </div>
@@ -480,8 +463,6 @@ const getAgendaDocumentLink = (attachmentUrl) => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
-
-/* Custom scrollbar yang elegan */
 .custom-scrollbar::-webkit-scrollbar {
   width: 5px;
 }
@@ -489,13 +470,13 @@ const getAgendaDocumentLink = (attachmentUrl) => {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1; /* slate-300 */
+  background-color: #cbd5e1;
   border-radius: 10px;
 }
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #475569; /* slate-600 */
+  background-color: #475569;
 }
 .custom-scrollbar:hover::-webkit-scrollbar-thumb {
-  background-color: #94a3b8; /* slate-400 */
+  background-color: #94a3b8;
 }
 </style>

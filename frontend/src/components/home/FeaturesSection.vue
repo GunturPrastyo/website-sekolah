@@ -3,9 +3,7 @@ import { onMounted, onBeforeUnmount } from "vue";
 import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.css";
 
-defineProps({
-  appearanceSettings: { type: Object, required: true },
-});
+defineProps({ appearanceSettings: { type: Object, required: true } });
 
 let alasanSwiperInstance = null;
 
@@ -39,33 +37,27 @@ onBeforeUnmount(() => {
     class="relative pt-4 -mx-6 md:-mx-6 lg:-mx-0 overflow-hidden px-0 md:px-6 mb-8"
   >
     <div class="w-full max-w-full container z-10 mx-auto">
-      <!-- HEADER -->
       <div class="mb-8 px-2 md:px-0 mt-4 sm:mt-6">
         <div class="relative block">
           <h2
-            class="fade-on-scroll opacity-0 -translate-x-10 transition-all duration-700 ease-out text-2xl md:text-4xl font-bold text-slate-800 dark:text-white mb-2"
+            class="text-2xl md:text-4xl font-bold text-slate-800 dark:text-white mb-2"
             style="font-family: 'Oswald', sans-serif"
           >
             Kenapa Pilih Sekolah Ini?
           </h2>
-          <p
-            class="fade-on-scroll opacity-0 translate-x-10 transition-all duration-700 ease-out text-slate-800/80 dark:text-slate-300 text-sm md:text-base max-w-2xl"
-            style="transition-delay: 150ms"
-          >
+          <p class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base max-w-2xl">
             Kenali lebih jauh berbagai keunggulan dan fasilitas yang kami sediakan
           </p>
         </div>
       </div>
 
-      <!-- SWIPER / GRID -->
       <div class="swiper alasan-swiper overflow-visible px-4 md:px-0">
         <div
           class="swiper-wrapper md:grid md:grid-cols-4 md:auto-rows-[280px] lg:auto-rows-[320px] md:gap-6"
         >
           <!-- FASILITAS -->
           <div
-            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-500 ease-out swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[290px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500 before:absolute before:inset-0 before:bg-inherit before:blur-[3px] md:before:blur-none"
-            style="transition-delay: 300ms"
+            class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[290px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500 before:absolute before:inset-0 before:bg-inherit before:blur-[3px] md:before:blur-none"
             :style="{
               backgroundImage: `url(${
                 appearanceSettings.benefitFasilitasImage || '/img/fasilitas.jpg'
@@ -116,8 +108,7 @@ onBeforeUnmount(() => {
 
           <!-- GURU -->
           <div
-            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-500 ease-out swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[290px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500 before:absolute before:inset-0 before:bg-inherit before:blur-[3px] md:before:blur-none"
-            style="transition-delay: 450ms"
+            class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[290px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500 before:absolute before:inset-0 before:bg-inherit before:blur-[3px] md:before:blur-none"
             :style="{
               backgroundImage: `url(${
                 appearanceSettings.benefitGuruImage || '/img/pengajar.jpg'
@@ -168,8 +159,7 @@ onBeforeUnmount(() => {
 
           <!-- PRESTASI -->
           <div
-            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-500 ease-out swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[290px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500 before:absolute before:inset-0 before:bg-inherit before:blur-[3px] md:before:blur-none"
-            style="transition-delay: 600ms"
+            class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[290px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500 before:absolute before:inset-0 before:bg-inherit before:blur-[3px] md:before:blur-none"
             :style="{
               backgroundImage: `url(${
                 appearanceSettings.benefitPrestasiImage || '/img/prestasi.jpg'
@@ -218,7 +208,6 @@ onBeforeUnmount(() => {
             </div>
           </div>
         </div>
-
         <div
           class="alasan-pagination absolute bottom-4 z-20 w-full flex justify-center md:hidden mb-6"
         ></div>

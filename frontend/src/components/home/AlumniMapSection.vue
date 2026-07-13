@@ -13,8 +13,6 @@ const alumniStats = ref({
   ptn: { value: 0 },
   instansi: { value: 0 },
 });
-
-// Posisi cache agar skeleton akurat
 const cachedMapLocations = localStorage.getItem("alumniMapCache");
 const defaultSkeletons = [
   { top: "73%", left: "27%" },
@@ -25,7 +23,6 @@ const skeletonLocations = ref(
   cachedMapLocations ? JSON.parse(cachedMapLocations) : defaultSkeletons
 );
 
-// Tooltip Logic
 const tooltip = ref({ show: false, x: 0, y: 0, tailOffset: 0, data: null });
 const showTooltip = (e, loc) => {
   tooltip.value.show = true;
@@ -36,9 +33,7 @@ const updateTooltipPos = (e) => {
   if (!tooltip.value.show) return;
   const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
   const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
-
   let tooltipX = clientX;
-  // Sesuaikan setengah lebar tooltip: mobile 260px (130), desktop 288px (144)
   const tooltipHalfWidth = window.innerWidth < 768 ? 130 : 144;
   const margin = 16;
   let tailOffset = 0;
@@ -64,7 +59,6 @@ const hideTooltip = () => {
   tooltip.value.tailOffset = 0;
 };
 
-// Animasi Angka
 let alumniAnimationId = null;
 const isAlumniStatsVisible = ref(false);
 
@@ -72,7 +66,6 @@ const animateAlumniStats = () => {
   if (alumniAnimationId) cancelAnimationFrame(alumniAnimationId);
   const duration = 2500;
   let startTimestamp = null;
-
   const startAlumni = alumniStats.value.alumni.value;
   const startPtn = alumniStats.value.ptn.value;
   const startInstansi = alumniStats.value.instansi.value;
@@ -108,8 +101,6 @@ onMounted(() => {
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add("opacity-100", "translate-x-0");
-          entry.target.classList.remove("opacity-0", "-translate-x-10");
           isAlumniStatsVisible.value = true;
           animateAlumniStats();
           observer.unobserve(entry.target);
@@ -118,11 +109,9 @@ onMounted(() => {
     },
     { threshold: 0.1 }
   );
-
   const target = document.querySelector(".alumni-stats-container");
   if (target) observer.observe(target);
 });
-
 onBeforeUnmount(() => {
   if (observer) observer.disconnect();
 });
@@ -151,7 +140,7 @@ watch(
       ></div>
 
       <div
-        class="relative z-10 md:w-2/5 lg:w-1/3 mx-0 sm:mx-6 mt-4 md:mt-0 px-0 opacity-0 -translate-x-10 transition-all duration-700 ease-out alumni-stats-container"
+        class="relative z-10 md:w-2/5 lg:w-1/3 mx-0 sm:mx-6 mt-4 md:mt-0 px-0 alumni-stats-container"
       >
         <h3
           class="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2"
@@ -163,7 +152,6 @@ watch(
           Tersebar di berbagai perguruan tinggi favorit dan sukses berkarir di berbagai
           sektor industri terkemuka.
         </p>
-
         <div class="grid grid-cols-3 gap-2 sm:gap-4">
           <div>
             <h4
@@ -214,8 +202,7 @@ watch(
       </div>
 
       <div
-        class="fade-on-scroll opacity-0 translate-x-10 transition-all duration-700 ease-out relative z-10 md:w-3/5 lg:w-2/3 w-full flex items-center justify-center min-h-[220px] md:min-h-[280px] mt-2 md:mt-0 p-1 md:p-0"
-        style="transition-delay: 200ms"
+        class="relative z-10 md:w-3/5 lg:w-2/3 w-full flex items-center justify-center min-h-[220px] md:min-h-[280px] mt-2 md:mt-0 p-1 md:p-0"
       >
         <div
           class="relative w-full max-w-4xl group/map transition-transform duration-700 ease-out aspect-[2.5/1] md:aspect-[2/1] lg:aspect-[3.5/1]"

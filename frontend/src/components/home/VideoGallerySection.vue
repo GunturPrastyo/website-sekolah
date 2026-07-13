@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import api from "@/api/index.js";
 import { PhPlay, PhImage } from "@phosphor-icons/vue";
 
@@ -13,65 +13,39 @@ const props = defineProps({
   galleriesByCategory: { type: Array, default: () => [] },
   fourthGalleryImage: { type: String, default: null },
 });
-
 const emit = defineEmits(["play-video"]);
-
-const titleRef = ref(null);
-
-onMounted(() => {
-  // Observer mandiri agar animasi tetap berjalan meskipun diload belakangan
-  if (titleRef.value) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          entries[0].target.classList.remove("opacity-0", "translate-y-10");
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(titleRef.value);
-  }
-});
 
 const getImageUrl = (path) => {
   if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:image")) return path;
   const baseUrl = api.defaults.baseURL;
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-  if (cleanPath.startsWith("storage/")) {
-    return `${baseUrl}/${cleanPath}`;
-  }
+  if (cleanPath.startsWith("storage/")) return `${baseUrl}/${cleanPath}`;
   return `${baseUrl}/storage/${cleanPath}`;
 };
 
 const videoEmbedUrl = computed(() => {
   if (!props.schoolVideoUrl) return "";
-  const url = props.schoolVideoUrl;
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-  const match = url.match(regExp);
-  if (match && match[2].length === 11) {
+  const match = props.schoolVideoUrl.match(regExp);
+  if (match && match[2].length === 11)
     return `https://www.youtube.com/embed/${match[2]}?autoplay=1&rel=0`;
-  }
-  return url;
+  return props.schoolVideoUrl;
 });
 
 const videoThumbnail = computed(() => {
   if (!props.schoolVideoUrl)
     return "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop";
-  const url = props.schoolVideoUrl;
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-  const match = url.match(regExp);
-  if (match && match[2].length === 11) {
+  const match = props.schoolVideoUrl.match(regExp);
+  if (match && match[2].length === 11)
     return `https://img.youtube.com/vi/${match[2]}/maxresdefault.jpg`;
-  }
   return "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop";
 });
 
-const emptyCardsCount = computed(() => {
-  const currentLength = props.galleriesByCategory ? props.galleriesByCategory.length : 0;
-  return Math.max(0, 3 - currentLength);
-});
+const emptyCardsCount = computed(() =>
+  Math.max(0, 3 - (props.galleriesByCategory ? props.galleriesByCategory.length : 0))
+);
 </script>
 
 <template>
@@ -88,10 +62,7 @@ const emptyCardsCount = computed(() => {
     ></div>
 
     <div class="w-full max-w-full container z-10 mx-auto">
-      <div
-        ref="titleRef"
-        class="mb-8 opacity-0 translate-y-10 transition-all duration-700 ease-out"
-      >
+      <div class="mb-8">
         <div class="relative block md:mt-2">
           <h2
             class="text-2xl md:text-4xl font-bold text-white mb-4 sm:mb-2 tracking-wide"
@@ -183,7 +154,7 @@ const emptyCardsCount = computed(() => {
           class="lg:col-span-1 grid grid-cols-2 gap-4 h-[300px] sm:h-[400px] md:h-[450px]"
         >
           <router-link
-            v-for="(gallery, index) in galleriesByCategory"
+            v-for="gallery in galleriesByCategory"
             :key="gallery.category"
             :to="{
               path: '/galeri',
