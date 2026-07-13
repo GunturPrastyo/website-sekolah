@@ -278,10 +278,6 @@ onBeforeUnmount(() => {
     <section
       class="relative pt-0 md:pt-6 pb-0 md:px-6 min-h-screen bg-gray-50 dark:bg-slate-900 overflow-hidden"
     >
-      <div
-        class="absolute top-0 right-0 w-96 h-96 bg-blue-400/10 dark:bg-blue-600/10 rounded-full blur-3xl -translate-y-1/4 translate-x-1/4 pointer-events-none"
-      ></div>
-
       <div class="container relative z-10 mx-auto max-w-full">
         <div
           id="ekskul-list-container"
