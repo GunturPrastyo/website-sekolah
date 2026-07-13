@@ -43,12 +43,15 @@ onBeforeUnmount(() => {
       <div class="mb-8 px-2 md:px-0 mt-4 sm:mt-6">
         <div class="relative block">
           <h2
-            class="text-2xl md:text-4xl font-bold text-slate-800 dark:text-white mb-2"
+            class="fade-on-scroll opacity-0 -translate-x-10 transition-all duration-700 ease-out text-2xl md:text-4xl font-bold text-slate-800 dark:text-white mb-2"
             style="font-family: 'Oswald', sans-serif"
           >
             Kenapa Pilih Sekolah Ini?
           </h2>
-          <p class="text-slate-800/80 dark:text-slate-300 text-sm md:text-base max-w-2xl">
+          <p
+            class="fade-on-scroll opacity-0 translate-x-10 transition-all duration-700 ease-out text-slate-800/80 dark:text-slate-300 text-sm md:text-base max-w-2xl"
+            style="transition-delay: 150ms"
+          >
             Kenali lebih jauh berbagai keunggulan dan fasilitas yang kami sediakan
           </p>
         </div>
@@ -61,7 +64,8 @@ onBeforeUnmount(() => {
         >
           <!-- FASILITAS -->
           <div
-            class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[290px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500 before:absolute before:inset-0 before:bg-inherit before:blur-[3px] md:before:blur-none"
+            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-500 ease-out swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[290px] md:min-h-0 md:col-span-2 md:row-span-2 transition-shadow duration-500 before:absolute before:inset-0 before:bg-inherit before:blur-[3px] md:before:blur-none"
+            style="transition-delay: 300ms"
             :style="{
               backgroundImage: `url(${
                 appearanceSettings.benefitFasilitasImage || '/img/fasilitas.jpg'
@@ -112,7 +116,8 @@ onBeforeUnmount(() => {
 
           <!-- GURU -->
           <div
-            class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[290px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500 before:absolute before:inset-0 before:bg-inherit before:blur-[3px] md:before:blur-none"
+            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-500 ease-out swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[290px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500 before:absolute before:inset-0 before:bg-inherit before:blur-[3px] md:before:blur-none"
+            style="transition-delay: 450ms"
             :style="{
               backgroundImage: `url(${
                 appearanceSettings.benefitGuruImage || '/img/pengajar.jpg'
@@ -163,7 +168,8 @@ onBeforeUnmount(() => {
 
           <!-- PRESTASI -->
           <div
-            class="swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[290px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500 before:absolute before:inset-0 before:bg-inherit before:blur-[3px] md:before:blur-none"
+            class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-500 ease-out swiper-slide md:!w-auto relative bg-center bg-cover md:bg-fixed sm:rounded-lg overflow-hidden shadow-lg hover:shadow-2xl group flex flex-col min-h-[290px] md:min-h-0 md:col-span-2 md:row-span-1 transition-shadow duration-500 before:absolute before:inset-0 before:bg-inherit before:blur-[3px] md:before:blur-none"
+            style="transition-delay: 600ms"
             :style="{
               backgroundImage: `url(${
                 appearanceSettings.benefitPrestasiImage || '/img/prestasi.jpg'
