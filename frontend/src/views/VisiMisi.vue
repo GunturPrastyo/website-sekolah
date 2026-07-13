@@ -129,7 +129,7 @@
     </section>
 
     <!-- Visi Section -->
-    <section class="relative w-full bg-gray-50 dark:bg-slate-800 py-16 md:py-24">
+    <section class="relative w-full bg-white dark:bg-slate-900 py-16 md:py-24">
       <div class="container mx-auto px-6 max-w-6xl">
         <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
           <div class="w-full lg:w-5/12 text-center lg:text-left">
