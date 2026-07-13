@@ -27,10 +27,10 @@ class SettingController extends Controller
 
         // List key yang bertindak sebagai file gambar/media sesuai array kodinganmu
         $fileKeys = [
-            'logo', 'favicon', 'headerBeranda', 'headerSejarah', 'headerVisiMisi',
-            'headerFasilitas', 'headerGuruStaf', 'headerEkskul', 'headerKurikulum',
-            'headerAlumni', 'headerProgramJurusan', 'headerPrestasi', 'headerPendaftaran',
-            'headerBerita', 'headerGaleri', 'headerArtikel', 'headerUnduhan',
+            'logo', 'favicon', 'headerBeranda_bgImage', 'headerSejarah_bgImage', 'headerVisiMisi_bgImage',
+            'headerFasilitas_bgImage', 'headerGuruStaf_bgImage', 'headerEkskul_bgImage', 'headerKurikulum_bgImage',
+            'headerAlumni_bgImage', 'headerProgramJurusan_bgImage', 'headerPrestasi_bgImage', 'headerPendaftaran_bgImage',
+            'headerBerita_bgImage', 'headerGaleri_bgImage', 'headerArtikel_bgImage', 'headerUnduhan_bgImage',
             'benefitFasilitasImage', 'benefitGuruImage', 'benefitPrestasiImage',
             'programCoverImage', 'loginBackground', 'ppdbBackgroundImage', 'galleryBackgroundImage'
         ];
@@ -97,10 +97,10 @@ class SettingController extends Controller
         $data = $request->all();
 
         $fileKeys = [
-            'logo', 'favicon', 'headerBeranda', 'headerSejarah', 'headerVisiMisi',
-            'headerFasilitas', 'headerGuruStaf', 'headerEkskul', 'headerKurikulum',
-            'headerAlumni', 'headerProgramJurusan', 'headerPrestasi', 'headerPendaftaran',
-            'headerBerita', 'headerGaleri', 'headerArtikel', 'headerUnduhan',
+            'logo', 'favicon', 'headerBeranda_bgImage', 'headerSejarah_bgImage', 'headerVisiMisi_bgImage',
+            'headerFasilitas_bgImage', 'headerGuruStaf_bgImage', 'headerEkskul_bgImage', 'headerKurikulum_bgImage',
+            'headerAlumni_bgImage', 'headerProgramJurusan_bgImage', 'headerPrestasi_bgImage', 'headerPendaftaran_bgImage',
+            'headerBerita_bgImage', 'headerGaleri_bgImage', 'headerArtikel_bgImage', 'headerUnduhan_bgImage',
             'benefitFasilitasImage', 'benefitGuruImage', 'benefitPrestasiImage',
             'programCoverImage', 'loginBackground', 'ppdbBackgroundImage', 'galleryBackgroundImage'
         ];
