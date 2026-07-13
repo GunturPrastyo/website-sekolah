@@ -144,19 +144,25 @@ onBeforeUnmount(() => {
         ></div>
         <div class="relative z-10 -mt-12 pl-4 pr-4 md:px-14 max-w-2xl text-white">
           <h2
-            class="text-3xl md:text-5xl font-bold mb-2 md:mb-4"
+            class="fade-on-scroll opacity-0 -translate-x-10 transition-all duration-700 ease-out text-3xl md:text-5xl font-bold mb-2 md:mb-4"
             style="font-family: 'Oswald', sans-serif"
           >
             Pilihan Jurusan Unggulan
           </h2>
-          <p class="text-sm md:text-xl text-gray-200">
+          <p
+            class="fade-on-scroll opacity-0 translate-x-10 transition-all duration-700 ease-out text-sm md:text-xl text-gray-200"
+            style="transition-delay: 150ms"
+          >
             Temukan minat dan bakatmu dengan pilihan jurusan terbaik untuk masa depanmu.
           </p>
         </div>
       </div>
 
       <div class="relative z-20 mt-[-80px] md:mt-[-100px]">
-        <div class="max-w-[90%] mx-auto md:max-w-[95%]">
+        <div
+          class="fade-on-scroll opacity-0 translate-y-10 transition-all duration-700 ease-out max-w-[90%] mx-auto md:max-w-[95%]"
+          style="transition-delay: 300ms"
+        >
           <div
             class="swiper jurusan-swiper rounded-lg md:rounded-2xl overflow-hidden shadow-xl"
           >
