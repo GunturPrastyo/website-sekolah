@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-blue-50 dark:bg-slate-900 overflow-x-hidden relative w-full">
+  <div class="bg-gray-50 dark:bg-slate-900 overflow-x-hidden relative w-full">
     <Navbar />
     <main>
       <router-view v-slot="{ Component, route }">
