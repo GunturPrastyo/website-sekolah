@@ -108,8 +108,8 @@ onMounted(() => {
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add("opacity-100", "translate-y-0");
-          entry.target.classList.remove("opacity-0", "translate-y-10");
+          entry.target.classList.add("opacity-100", "translate-x-0");
+          entry.target.classList.remove("opacity-0", "-translate-x-10");
           isAlumniStatsVisible.value = true;
           animateAlumniStats();
           observer.unobserve(entry.target);
@@ -151,7 +151,7 @@ watch(
       ></div>
 
       <div
-        class="relative z-10 md:w-2/5 lg:w-1/3 mx-0 sm:mx-6 mt-4 md:mt-0 px-0 opacity-0 translate-y-10 transition-all duration-700 ease-out alumni-stats-container"
+        class="relative z-10 md:w-2/5 lg:w-1/3 mx-0 sm:mx-6 mt-4 md:mt-0 px-0 opacity-0 -translate-x-10 transition-all duration-700 ease-out alumni-stats-container"
       >
         <h3
           class="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2"
@@ -214,7 +214,8 @@ watch(
       </div>
 
       <div
-        class="relative z-10 md:w-3/5 lg:w-2/3 w-full flex items-center justify-center min-h-[220px] md:min-h-[280px] mt-2 md:mt-0 p-1 md:p-0"
+        class="fade-on-scroll opacity-0 translate-x-10 transition-all duration-700 ease-out relative z-10 md:w-3/5 lg:w-2/3 w-full flex items-center justify-center min-h-[220px] md:min-h-[280px] mt-2 md:mt-0 p-1 md:p-0"
+        style="transition-delay: 200ms"
       >
         <div
           class="relative w-full max-w-4xl group/map transition-transform duration-700 ease-out aspect-[2.5/1] md:aspect-[2/1] lg:aspect-[3.5/1]"
