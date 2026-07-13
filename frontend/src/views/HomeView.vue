@@ -469,7 +469,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="overflow-x-hidden w-full max-w-full">
+  <div class="w-full overflow-x-hidden">
     <HeroSection
       :appearanceSettings="appearanceSettings"
       :statsArray="statsArray"
