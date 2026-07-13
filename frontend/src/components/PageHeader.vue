@@ -10,7 +10,7 @@ defineProps({
 
 <template>
   <div
-    class="relative pt-32 pb-24 lg:pt-44 lg:pb-32 overflow-hidden"
+    class="relative pt-36 pb-28 lg:pt-48 lg:pb-36 overflow-hidden"
     :class="
       bgImage
         ? 'bg-slate-900 dark:bg-slate-950'
