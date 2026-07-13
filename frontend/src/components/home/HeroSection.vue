@@ -98,14 +98,14 @@ onBeforeUnmount(() => {
         >
           <img
             :src="heroMedia.url"
-            class="w-full h-full object-cover opacity-80 mix-blend-screen"
+            class="w-full h-full object-cover opacity-90 mix-blend-screen"
             alt="Hero Background"
           />
         </div>
 
         <div v-else :key="'vid-' + heroMedia.url" class="absolute inset-0 w-full h-full">
           <video
-            class="w-full h-full object-cover opacity-80 mix-blend-screen"
+            class="w-full h-full object-cover opacity-90 mix-blend-screen"
             autoplay
             loop
             muted
