@@ -128,6 +128,72 @@
       </div>
     </section>
 
+    <!-- Pembatas Section -->
+    <div class="border-t border-gray-200 dark:border-slate-700"></div>
+
+    <!-- Visi & Misi Section -->
+    <section class="relative w-full bg-white dark:bg-slate-900 py-12 md:py-16">
+      <div class="container mx-auto max-w-7xl px-6 md:px-4">
+        <div
+          class="flex flex-col lg:flex-row w-full items-center gap-8 md:gap-12 lg:gap-16"
+        >
+          <div class="w-full lg:w-5/12">
+            <div>
+              <h3
+                class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6 tracking-wide text-gray-900 dark:text-white"
+                style="font-family: 'Oswald', sans-serif"
+              >
+                Visi
+              </h3>
+              <div
+                v-if="isLoading"
+                class="animate-pulse h-12 bg-gray-200 dark:bg-slate-700 rounded w-full"
+              ></div>
+              <p
+                v-else
+                class="text-lg sm:text-xl md:text-2xl font-medium leading-relaxed text-gray-700 dark:text-gray-300 italic"
+              >
+                "{{ visi }}"
+              </p>
+            </div>
+          </div>
+
+          <div class="w-full lg:w-7/12">
+            <div class="mb-6 md:mb-8 pb-4 border-b border-gray-200 dark:border-slate-700">
+              <h3
+                class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white tracking-wide"
+                style="font-family: 'Oswald', sans-serif"
+              >
+                Misi
+              </h3>
+            </div>
+
+            <div v-if="isLoading" class="animate-pulse space-y-4">
+              <div class="h-12 bg-gray-200 dark:bg-slate-700 rounded w-full"></div>
+              <div class="h-12 bg-gray-200 dark:bg-slate-700 rounded w-full"></div>
+              <div class="h-12 bg-gray-200 dark:bg-slate-700 rounded w-full"></div>
+            </div>
+            <ul v-else class="space-y-4 md:space-y-6">
+              <li
+                v-for="(item, index) in misi"
+                :key="index"
+                class="flex items-start group"
+              >
+                <span
+                  class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-gray-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-full flex items-center justify-center font-bold text-sm md:text-base mt-0.5 mr-3 md:mr-5 shadow-sm border border-gray-200 dark:border-slate-700"
+                  >{{ index + 1 }}</span
+                >
+                <p
+                  class="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg pt-1 md:pt-1.5 leading-relaxed"
+                >
+                  {{ item.text }}
+                </p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
     <!-- Visi & Misi Section -->
     <section class="relative w-full bg-fixed bg-center bg-cover overflow-hidden">
       <div
