@@ -11,7 +11,7 @@
     <div class="container flex items-center justify-between max-w-6xl mx-auto">
       <router-link
         to="/"
-        class="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl font-bold transition-colors tracking-wide"
+        class="flex items-center gap-1.5 sm:gap-3 text-base sm:text-xl font-bold transition-colors tracking-wide"
         :class="{
           'text-gray-800 dark:text-white': isNavbarScrolled || isMobileMenuOpen,
           'text-white': !isNavbarScrolled && !isMobileMenuOpen,
@@ -22,7 +22,7 @@
           v-if="settings.logo"
           :src="settings.logo"
           alt="Logo Sekolah"
-          class="h-8 md:h-10 w-auto"
+          class="h-7 md:h-10 w-auto"
         />
         <span>{{ settings.namaSekolah }}</span>
       </router-link>
