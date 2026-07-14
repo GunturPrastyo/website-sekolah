@@ -26,7 +26,17 @@ defineProps({
       />
     </div>
 
-    <slot name="bg-ornament"></slot>
+    <!-- Decorative Bubbles -->
+    <div v-if="!bgImage" class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      <div
+        class="absolute -bottom-24 -left-24 w-80 h-80 bg-blue-800/10 rounded-full animate-pulse"
+      ></div>
+      <div class="absolute -top-10 -right-24 w-96 h-96 bg-blue-800/10 rounded-full"></div>
+      <div
+        class="absolute bottom-32 right-10 w-48 h-48 bg-slate-700/10 rounded-full animate-pulse delay-75"
+      ></div>
+      <div class="absolute top-20 left-1/3 w-32 h-32 bg-slate-700/5 rounded-full"></div>
+    </div>
 
     <!-- Overlay Gradien Gelap dari Bawah ke Atas -->
     <div
