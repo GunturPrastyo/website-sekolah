@@ -48,6 +48,13 @@ Backend API untuk aplikasi website sekolah. Dibangun menggunakan framework Larav
     DB_USERNAME=user_database_anda
     DB_PASSWORD=password_database_anda
 
+    # Konfigurasi Redis (Sangat direkomendasikan untuk production)
+    CACHE_DRIVER=redis
+    SESSION_DRIVER=redis
+    REDIS_HOST=127.0.0.1
+    REDIS_PASSWORD=null
+    REDIS_PORT=6379
+
     # Konfigurasi Google Login (Opsional)
     # Dapatkan dari Google Cloud Console
     GOOGLE_CLIENT_ID=
