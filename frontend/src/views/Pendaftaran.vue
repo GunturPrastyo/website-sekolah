@@ -20,6 +20,43 @@ const ppdbInfo = ref(null);
 const appearanceSettings = ref({});
 const isLoading = ref(true);
 
+const form = ref({
+  name: "",
+  nisn: "",
+  school_origin: "",
+  path: "",
+  parent_name: "",
+  phone_number: "",
+});
+const isSubmitting = ref(false);
+const submitSuccess = ref(false);
+const submitError = ref(null);
+
+const submitForm = async () => {
+  isSubmitting.value = true;
+  submitSuccess.value = false;
+  submitError.value = null;
+  try {
+    await api.post("/api/ppdb-register", form.value);
+    submitSuccess.value = true;
+    form.value = {
+      name: "",
+      nisn: "",
+      school_origin: "",
+      path: "",
+      parent_name: "",
+      phone_number: "",
+    };
+  } catch (error) {
+    console.error("Gagal mengirim data pendaftaran:", error);
+    submitError.value =
+      error.response?.data?.message ||
+      "Terjadi kesalahan saat mengirim data. Silakan coba lagi.";
+  } finally {
+    isSubmitting.value = false;
+  }
+};
+
 const iconMap = [PhMapPin, PhMedal, PhHandshake, PhBriefcase];
 
 const getIcon = (index) => {
@@ -284,6 +321,132 @@ onMounted(() => {
         </div>
       </section>
 
+      <section class="py-12 md:py-16 px-6 bg-gray-50 dark:bg-slate-800/50">
+        <div class="container mx-auto max-w-4xl">
+          <div class="text-center mb-8 md:mb-12">
+            <h2
+              class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white"
+              style="font-family: 'Oswald', sans-serif"
+            >
+              Formulir Pendaftaran Online
+            </h2>
+            <p
+              class="mt-3 text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto"
+            >
+              Lengkapi formulir di bawah ini untuk melakukan pendaftaran awal. Pastikan
+              data yang Anda masukkan sudah benar.
+            </p>
+          </div>
+
+          <div
+            class="bg-white dark:bg-slate-900 p-6 md:p-10 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-700"
+          >
+            <form @submit.prevent="submitForm">
+              <div
+                v-if="submitSuccess"
+                class="p-4 mb-6 bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-600 rounded-lg text-center"
+              >
+                <PhCheckCircle class="w-8 h-8 text-green-500 mx-auto mb-2" />
+                <h4 class="font-bold text-green-800 dark:text-green-300">
+                  Pendaftaran Berhasil!
+                </h4>
+                <p class="text-sm text-green-700 dark:text-green-400">
+                  Terima kasih, data Anda telah kami terima. Kami akan segera menghubungi
+                  Anda untuk proses selanjutnya.
+                </p>
+              </div>
+              <div
+                v-if="submitError"
+                class="p-4 mb-6 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-600 rounded-lg text-center"
+              >
+                <p class="text-sm font-medium text-red-700 dark:text-red-300">
+                  {{ submitError }}
+                </p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="md:col-span-2">
+                  <label for="name" class="form-label">Nama Lengkap Calon Siswa</label>
+                  <input
+                    type="text"
+                    id="name"
+                    v-model="form.name"
+                    required
+                    class="form-input"
+                    placeholder="Contoh: Budi Sanjaya"
+                  />
+                </div>
+                <div>
+                  <label for="nisn" class="form-label">NISN</label>
+                  <input
+                    type="text"
+                    id="nisn"
+                    v-model="form.nisn"
+                    required
+                    class="form-input"
+                    placeholder="Masukkan 10 digit NISN"
+                  />
+                </div>
+                <div>
+                  <label for="school_origin" class="form-label">Asal Sekolah</label>
+                  <input
+                    type="text"
+                    id="school_origin"
+                    v-model="form.school_origin"
+                    required
+                    class="form-input"
+                    placeholder="Contoh: SMP Negeri 1 Jakarta"
+                  />
+                </div>
+                <div class="md:col-span-2">
+                  <label for="path" class="form-label">Jalur Pendaftaran</label>
+                  <select id="path" v-model="form.path" required class="form-input">
+                    <option value="" disabled>Pilih jalur pendaftaran</option>
+                    <option
+                      v-for="jalur in jalurList"
+                      :key="jalur.title"
+                      :value="jalur.title"
+                    >
+                      {{ jalur.title }}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label for="parent_name" class="form-label">Nama Orang Tua/Wali</label>
+                  <input
+                    type="text"
+                    id="parent_name"
+                    v-model="form.parent_name"
+                    required
+                    class="form-input"
+                    placeholder="Nama lengkap orang tua atau wali"
+                  />
+                </div>
+                <div>
+                  <label for="phone_number" class="form-label"
+                    >Nomor Telepon/WhatsApp Aktif</label
+                  >
+                  <input
+                    type="tel"
+                    id="phone_number"
+                    v-model="form.phone_number"
+                    required
+                    class="form-input"
+                    placeholder="Contoh: 081234567890"
+                  />
+                </div>
+              </div>
+              <div class="mt-8 text-center">
+                <button type="submit" :disabled="isSubmitting" class="btn-primary">
+                  <span v-if="isSubmitting">Mengirim Data...</span>
+                  <span v-else>Kirim Formulir Pendaftaran</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
       <section
         class="py-12 md:py-8 px-6 bg-blue-950 dark:bg-slate-900 relative overflow-hidden border-b border-blue-900 dark:border-slate-800"
       >
@@ -490,5 +653,17 @@ onMounted(() => {
     width: 8px;
     /* default bullet width */
   }
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1;
+}
+
+.form-input {
+  @apply w-full px-4 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors placeholder-gray-400 dark:placeholder-gray-500;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold rounded-lg transition-colors shadow-lg disabled:bg-blue-400 dark:disabled:bg-blue-800 disabled:cursor-not-allowed;
 }
 </style>
