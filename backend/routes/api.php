@@ -42,6 +42,7 @@ Route::get('/auth/google/callback', [GoogleLoginController::class, 'handleGoogle
 // API Info PPDB (Akses Publik untuk halaman pendaftaran)
 Route::get('/ppdb-info', [PpdbInfoController::class, 'index']);
 Route::get('/ppdb-info/brosur/download', [PpdbInfoController::class, 'downloadBrosur']);
+Route::post('/ppdb-register', [PpdbInfoController::class, 'register']);
 
 // API Pengaturan Umum (Akses Publik untuk mengambil data konfigurasi dan tampilan)
 Route::get('/settings', [SettingController::class, 'index']);
