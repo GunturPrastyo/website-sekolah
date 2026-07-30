@@ -257,7 +257,7 @@
               class="absolute left-0 z-10 mt-2 w-48 origin-top-left rounded-md bg-white dark:bg-slate-800 py-2 text-gray-800 dark:text-gray-200 shadow-lg"
             >
               <router-link
-                to="/pendaftaran"
+                to="/informasi-ppdb"
                 @click="closeDropdowns"
                 class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
                 >Informasi PPDB</router-link
@@ -294,7 +294,13 @@
         >
       </div>
 
-      <div class="hidden items-center lg:flex"></div>
+      <div class="hidden items-center lg:flex">
+        <router-link
+          to="/pendaftaran"
+          class="rounded-full bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+          >Pendaftaran</router-link
+        >
+      </div>
 
       <!-- Mobile Menu Button -->
       <div class="flex items-center gap-2 lg:hidden">
@@ -515,7 +521,7 @@
             class="mt-1 overflow-hidden transition-all duration-300 ease-in-out pl-4 pr-2 space-y-1"
           >
             <router-link
-              to="/pendaftaran"
+              to="/informasi-ppdb"
               @click="closeMobileMenu"
               class="block rounded-md px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-slate-700/50 transition-colors"
               >Informasi PPDB</router-link
@@ -541,6 +547,15 @@
           class="block rounded-lg px-4 py-2.5 text-base font-medium hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400 transition-colors"
           >Galeri</router-link
         >
+
+        <div class="pt-2 mt-2 border-t border-gray-100 dark:border-slate-700/50">
+          <router-link
+            to="/pendaftaran"
+            @click="closeMobileMenu"
+            class="block w-full rounded-xl bg-blue-600 px-4 py-3 text-center font-semibold text-white shadow-md shadow-blue-500/30 transition-colors hover:bg-blue-700 active:scale-[0.98]"
+            >Pendaftaran</router-link
+          >
+        </div>
       </div>
     </div>
   </nav>
