@@ -284,7 +284,7 @@ watch(
                 </a>
                 <router-link
                   v-else
-                  to="/pendaftaran"
+                  to="/informasi-ppdb"
                   class="px-6 py-3.5 bg-yellow-400 text-blue-950 font-bold rounded-xl shadow-lg hover:bg-yellow-300 hover:scale-105 transition-all text-sm md:text-base animate-float flex items-center justify-center"
                 >
                   Info Pendaftaran
